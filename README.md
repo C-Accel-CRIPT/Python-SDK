@@ -1,12 +1,11 @@
 # CRIPT Python SDK
 
-
+[![License](./CRIPT_full_logo_colored_transparent.png)](https://criptapp.org)
 
 [![License](https://img.shields.io/github/license/C-Accel-CRIPT/cript?style=flat-square)](https://github.com/C-Accel-CRIPT/cript/blob/master/LICENSE.txt)
-[![Python](https://img.shields.io/badge/Language-Python%203.9+-blue?style=flat-square&logo=python)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Language-Python%203.7+-blue?style=flat-square&logo=python)](https://www.python.org/)
 [![Code style is black](https://img.shields.io/badge/Code%20Style-black-000000.svg?style=flat-square&logo=python)](https://github.com/psf/black)
 [![Link to CRIPT website](https://img.shields.io/badge/platform-criptapp.org-blueviolet?style=flat-square)](https://criptapp.org/)
-[![CRIPT Blog Link](https://img.shields.io/badge/Blog-blog.criptapp.org-blueviolet?style=flat-square)](https://blog.criptapp.org)
 [![Material MkDocs](https://img.shields.io/badge/Docs-mkdocs--material-blueviolet?style=flat-square&logo=markdown)](https://squidfunk.github.io/mkdocs-material/)
 
 ## What is it?
@@ -34,10 +33,11 @@ To learn more about the CRIPT Python SDK please check the [CRIPT-SDK documentati
 ---
 
 ## Release Notes
+Please visit the [Python SDK Documentation Release Notes](https://python_SDK_docs_release_notes) or within the [GitHub Releases page](https://github.com)
 
-For updates and release notes please visit the [CRIPT blog](https://blog.criptapp.org)
+---
 
-### Software development
+## We Invite Contribution
 
 You are welcome to contribute code via PR to this repository.
 For the developmet, we are using [trunk.io](https://trunk.io) to achieve a consistent coding style.

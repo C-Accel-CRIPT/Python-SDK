@@ -32,10 +32,14 @@ To learn more about the CRIPT Python SDK please check the [CRIPT-SDK documentati
 
 ---
 
+<!--
+
 ## Release Notes
-Please visit the [Python SDK Documentation Release Notes](https://python_SDK_docs_release_notes) or within the [GitHub Releases page](https://github.com)
+Please visit the [Python SDK Documentation Release Notes](#) or within the [GitHub Releases page](#) 
 
 ---
+
+-->
 
 ## We Invite Contribution
 

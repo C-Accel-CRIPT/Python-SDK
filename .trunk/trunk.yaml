@@ -1,0 +1,32 @@
+version: 0.1
+cli:
+  version: 1.2.1
+plugins:
+  sources:
+    - id: trunk
+      ref: v0.0.8
+      uri: https://github.com/trunk-io/plugins
+lint:
+  enabled:
+    - markdownlint@0.32.2
+    - git-diff-check
+    - taplo@0.7.0
+    - actionlint@1.6.22
+    - black@22.12.0
+    - oxipng@7.0.0
+    - gitleaks@8.15.2
+    - isort@5.11.2
+    - flake8@6.0.0
+    - prettier@2.8.1
+runtimes:
+  enabled:
+    - go@1.18.3
+    - node@16.14.2
+    - python@3.10.8
+actions:
+  disabled:
+  enabled:
+    - trunk-announce
+    - trunk-upgrade-available
+    - trunk-check-pre-push
+    - trunk-fmt-pre-commit

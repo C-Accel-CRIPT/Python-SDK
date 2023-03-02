@@ -1,0 +1,2 @@
+class PrimaryNode:
+    pass

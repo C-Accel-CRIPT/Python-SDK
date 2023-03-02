@@ -34,3 +34,6 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# ignore mypy cache
+.mypy_cache/

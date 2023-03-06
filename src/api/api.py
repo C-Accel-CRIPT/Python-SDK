@@ -1,7 +1,11 @@
 import json
 import warnings
+
 from src.exceptions import ConnectionError
 from src.nodes.primary_nodes import PrimaryNode
+from src.nodes.primary_nodes.project import project
+from src.nodes.supporting_nodes.group import Group
+from src.nodes.supporting_nodes.user import User
 
 
 class API:
@@ -35,10 +39,10 @@ class API:
     def save(node: PrimaryNode) -> None:
         pass
 
-    def get_my_groups():
+    def get_my_groups() -> Group:
         pass
 
-    def get_my_projects():
+    def get_my_projects() -> project:
         pass
 
     def delete(node: PrimaryNode, no_input: bool = False) -> None:
@@ -68,13 +72,12 @@ class API:
             if confirm not in ["y", "yes"]:
                 print(f"Deletion cancelled for node: {node}")
                 return
-            
 
         # if no_input is True or it got passed the confirmation then send an http request to delete the node
         print(f"deleting {node}")
-        # TODO http request to delete the node in JSON form 
+        # TODO http request to delete the node in JSON form
 
-    def get_my_user():
+    def get_my_user() -> User:
         """
         This method can be called to get the user node associated with your account.
 
@@ -86,6 +89,10 @@ class API:
         # return user node
         # or just print out the json, and that should work for the first version
         return
+
+    def search(node_type, search_mode, value_to_search) -> PrimaryNode:
+        pass
+
 
 if __name__ == "__main__":
     api = API("http://criptapp.org", "123456")

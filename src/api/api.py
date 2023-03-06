@@ -74,6 +74,18 @@ class API:
         print(f"deleting {node}")
         # TODO http request to delete the node in JSON form 
 
+    def get_my_user():
+        """
+        This method can be called to get the user node associated with your account.
+
+        Returns:
+            User (User): The user associated with your account
+        """
+        # TODO send http request to get user node in JSON
+        # convert user JSON into user node
+        # return user node
+        # or just print out the json, and that should work for the first version
+        return
 
 if __name__ == "__main__":
     api = API("http://criptapp.org", "123456")

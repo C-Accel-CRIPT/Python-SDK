@@ -43,20 +43,36 @@ class API:
 
     def delete(node: PrimaryNode, no_input: bool = False) -> None:
         """ "
+        This method can be called when the user wants to delete a node.
+        By default it will prompt the user with "are you sure you want to delete this node?",
+        however, this can be silenced by setting the no_input parameter to True.
+
         Args:
             node (PrimaryNode): node to delete
 
-            no_input (boolean): by default before deleting a node it asks the user if they are sure they want to delete this node. However, if the user wants to delete nodes without being prompted they can set the no_input = True and the the API object will delete the node without prompting the user
+            no_input (boolean): by default before deleting a node it asks the user if they are sure they want to delete this node.
+            However, if the user wants to delete nodes without being prompted they can set the no_input = True
+            and the the API object will delete the node without prompting the user
+
+        Returns:
+            None
         """
-        # if user did not set no_input mode, then ask the user if they are sure
+        # ask for confirmation before deleting the node
         if no_input == False:
-            # get input and convert it to lowercase for easy/consistent comparison
-            confirmation: str = input(
+            # get the user input and convert it to lowercase
+            confirm: str = input(
                 f"are you sure you want to delete {node}? (y/n): "
             ).lower()
 
-            if confirmation == "y" or confirmation == "yes":
-                print("DELETING THE NODE!")
+            # if confirmation is not yes then cancel it and continue
+            if confirm not in ["y", "yes"]:
+                print(f"Deletion cancelled for node: {node}")
+                return
+            
+
+        # if no_input is True or it got passed the confirmation then send an http request to delete the node
+        print(f"deleting {node}")
+        # TODO http request to delete the node in JSON form 
 
 
 if __name__ == "__main__":

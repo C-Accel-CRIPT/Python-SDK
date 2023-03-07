@@ -2,6 +2,8 @@ import json
 import warnings
 from typing import List, Literal
 
+import requests
+
 from src.api._valid_search_modes import _VALID_SEARCH_MODES
 from src.nodes.primary_nodes import PrimaryNode
 from src.nodes.primary_nodes.project import Project
@@ -10,9 +12,9 @@ from src.nodes.supporting_nodes.user import User
 
 
 class API:
-    host: str
-    _token: str
-    _db_schema: json
+    host: str = ""
+    _token: str = ""
+    _db_schema: json = None
 
     def __init__(self, host: str, token: str) -> None:
         """
@@ -36,6 +38,29 @@ class API:
         #     pass
         # except Exception:
         #     raise ConnectionError
+
+    def _get_db_schema(self):
+        """
+        Sends a GET request to CRIPT to get the database schema and returns it.
+        The database schema can be used for validating the JSON request
+        before submitting it to CRIPT.
+
+        1. Checks if the class variable is already set and if it is then it just returns that.
+        2. If db schema is not already saved, then it makes a request to get it from CRIPT
+        3. after successfully getting it from CRIPT, it sets the class variable
+
+        Returns:
+            json: database schema
+        """
+        # if db_schema is already set then just return it
+        if self._db_schema:
+            return self._db_schema
+
+        # if db_schema is not already set, then request it
+        response = requests.get(f"{self.host}/api/v1/schema/")
+
+        self._db_schema = response.json()
+        return self._db_schema
 
     def save(self, node: PrimaryNode) -> None:
         pass
@@ -95,7 +120,7 @@ class API:
                node_type: PrimaryNode,
                search_mode: Literal[_VALID_SEARCH_MODES],
                value_to_search: str,
-               ) -> List[PrimaryNode]:
+               ):
         """
         This is the method used to do perform a search on the CRIPT platform
 
@@ -111,4 +136,4 @@ class API:
 
 
 if __name__ == "__main__":
-    api = API("http://criptapp.org", "123456")
+    api = API("http://development.api.criptapp.org/", "123456")

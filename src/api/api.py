@@ -39,7 +39,7 @@ class API:
         # except Exception:
         #     raise ConnectionError
 
-    def _get_db_schema(self):
+    def _get_db_schema(self) -> json:
         """
         Sends a GET request to CRIPT to get the database schema and returns it.
         The database schema can be used for validating the JSON request

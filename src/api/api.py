@@ -97,10 +97,15 @@ class API:
                value_to_search: str,
                ) -> List[PrimaryNode]:
         """
+        This is the method used to do perform a search on the CRIPT platform
+
         Args:
             node_type (PrimaryNode): type of node that you are searching for
             search_mode (str): type of search you want to do. You can search by name, UUID, URL, etc.
             value_to_search (str): what you are searching for
+
+        Returns:
+            List of nodes that matched the search
         """
         pass
 

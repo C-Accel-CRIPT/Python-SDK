@@ -116,11 +116,12 @@ class API:
         # or just print out the json, and that should work for the first version
         pass
 
-    def search(self,
-               node_type: PrimaryNode,
-               search_mode: Literal[_VALID_SEARCH_MODES],
-               value_to_search: str,
-               ):
+    def search(
+        self,
+        node_type: PrimaryNode,
+        search_mode: Literal[_VALID_SEARCH_MODES],
+        value_to_search: str,
+    ):
         """
         This is the method used to do perform a search on the CRIPT platform
 

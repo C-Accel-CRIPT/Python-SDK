@@ -8,5 +8,5 @@ _VALID_SEARCH_MODES = (
     "chemical_id",
     "identifiers",
     "created_by",
-    "public"
+    "public",
 )

@@ -1,9 +1,10 @@
 import json
 import warnings
+from typing import List, Literal
 
-from src.exceptions import ConnectionError
+from src.api._valid_search_modes import _VALID_SEARCH_MODES
 from src.nodes.primary_nodes import PrimaryNode
-from src.nodes.primary_nodes.project import project
+from src.nodes.primary_nodes.project import Project
 from src.nodes.supporting_nodes.group import Group
 from src.nodes.supporting_nodes.user import User
 
@@ -36,19 +37,19 @@ class API:
         # except Exception:
         #     raise ConnectionError
 
-    def save(node: PrimaryNode) -> None:
+    def save(self, node: PrimaryNode) -> None:
         pass
 
-    def get_my_groups() -> Group:
+    def get_my_groups(self) -> Group:
         pass
 
-    def get_my_projects() -> project:
+    def get_my_projects(self) -> List[Project]:
         pass
 
-    def delete(node: PrimaryNode, no_input: bool = False) -> None:
+    def delete(self, node: PrimaryNode, no_input: bool = False) -> None:
         """ "
         This method can be called when the user wants to delete a node.
-        By default it will prompt the user with "are you sure you want to delete this node?",
+        By default, it will prompt the user with "are you sure you want to delete this node?",
         however, this can be silenced by setting the no_input parameter to True.
 
         Args:
@@ -56,7 +57,7 @@ class API:
 
             no_input (boolean): by default before deleting a node it asks the user if they are sure they want to delete this node.
             However, if the user wants to delete nodes without being prompted they can set the no_input = True
-            and the the API object will delete the node without prompting the user
+            and the API object will delete the node without prompting the user
 
         Returns:
             None
@@ -77,7 +78,7 @@ class API:
         print(f"deleting {node}")
         # TODO http request to delete the node in JSON form
 
-    def get_my_user() -> User:
+    def get_my_user(self) -> User:
         """
         This method can be called to get the user node associated with your account.
 
@@ -88,9 +89,19 @@ class API:
         # convert user JSON into user node
         # return user node
         # or just print out the json, and that should work for the first version
-        return
+        pass
 
-    def search(node_type, search_mode, value_to_search) -> PrimaryNode:
+    def search(self,
+               node_type: PrimaryNode,
+               search_mode: Literal[_VALID_SEARCH_MODES],
+               value_to_search: str,
+               ) -> List[PrimaryNode]:
+        """
+        Args:
+            node_type (PrimaryNode): type of node that you are searching for
+            search_mode (str): type of search you want to do. You can search by name, UUID, URL, etc.
+            value_to_search (str): what you are searching for
+        """
         pass
 
 

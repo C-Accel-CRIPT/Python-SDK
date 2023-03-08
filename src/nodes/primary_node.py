@@ -15,4 +15,3 @@ class PrimaryNode(ABC):
         -------
         str: A string representation of a primary node.
         """
-

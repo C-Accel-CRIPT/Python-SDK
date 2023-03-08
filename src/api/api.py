@@ -167,7 +167,3 @@ class API:
             List of nodes that matched the search.
         """
         pass
-
-
-if __name__ == "__main__":
-    api = API("http://development.api.criptapp.org/", "123456")

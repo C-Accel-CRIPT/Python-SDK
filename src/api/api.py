@@ -18,12 +18,23 @@ class API:
 
     def __init__(self, host: str, token: str) -> None:
         """
-        initialize object with host and token
-        if host is using "http" then give a warning
+        Initialize object with host and token.
 
-        Args:
-            host (str): CRIPT host to connect to such as "https://criptapp.org"
-            token (str): CRIPT API Token used to connect to CRIPT
+        Parameters
+        ----------
+        host : str
+            CRIPT host to connect to such as "https://criptapp.org"
+        token : str
+            CRIPT API Token used to connect to CRIPT
+
+        Warns
+        -----
+        UserWarning
+            If `host` is using "http".
+
+        Returns
+        -------
+        None
         """
         self.host = host
         self._token = token
@@ -49,8 +60,10 @@ class API:
         2. If db schema is not already saved, then it makes a request to get it from CRIPT
         3. after successfully getting it from CRIPT, it sets the class variable
 
-        Returns:
-            json: database schema
+        Returns
+        -------
+        json
+            The database schema in JSON format.
         """
         # if db_schema is already set then just return it
         if self._db_schema:
@@ -73,19 +86,27 @@ class API:
 
     def delete(self, node: PrimaryNode, no_input: bool = False) -> None:
         """ "
-        This method can be called when the user wants to delete a node.
-        By default, it will prompt the user with "are you sure you want to delete this node?",
-        however, this can be silenced by setting the no_input parameter to True.
+        Deletes the given node.
 
-        Args:
-            node (PrimaryNode): node to delete
+        Parameters
+        ----------
+        node : PrimaryNode
+            The node to delete.
+        no_input : bool, optional, default=False
+            If True, the function will delete the node without prompting the user
+            for confirmation (default is False).
 
-            no_input (boolean): by default before deleting a node it asks the user if they are sure they want to delete this node.
-            However, if the user wants to delete nodes without being prompted they can set the no_input = True
-            and the API object will delete the node without prompting the user
-
-        Returns:
+        Returns
+        -------
+        NoneType
             None
+
+        Notes
+        -----
+        By default, this function prompts the user with "are you sure you want to
+        delete this node?" before proceeding with the deletion. If the `no_input`
+        parameter is set to True, the prompt will be suppressed and the node will be
+        deleted without confirmation.
         """
         # ask for confirmation before deleting the node
         if no_input == False:
@@ -99,16 +120,22 @@ class API:
                 print(f"Deletion cancelled for node: {node}")
                 return
 
-        # if no_input is True or it got passed the confirmation then send an http request to delete the node
+        # if no_input is True or it got passed the confirmation then send a http request to delete the node
         print(f"deleting {node}")
         # TODO http request to delete the node in JSON form
 
     def get_my_user(self) -> User:
         """
-        This method can be called to get the user node associated with your account.
+        Returns the user node associated with the user's account using the token.
 
-        Returns:
-            User (User): The user associated with your account
+        Returns
+        -------
+        User: User
+            The user node associated with the user's account.
+
+        Notes
+        -----
+        This function retrieves the user node associated with the user's account.
         """
         # TODO send http request to get user node in JSON
         # convert user JSON into user node
@@ -123,15 +150,21 @@ class API:
         value_to_search: str,
     ):
         """
-        This is the method used to do perform a search on the CRIPT platform
+        This is the method used to perform a search on the CRIPT platform.
 
-        Args:
-            node_type (PrimaryNode): type of node that you are searching for
-            search_mode (str): type of search you want to do. You can search by name, UUID, URL, etc.
-            value_to_search (str): what you are searching for
+        Parameters
+        ----------
+        node_type : PrimaryNode
+            Type of node that you are searching for.
+        search_mode : str
+            Type of search you want to do. You can search by name, UUID, URL, etc.
+        value_to_search : str
+            What you are searching for.
 
-        Returns:
-            List of nodes that matched the search
+        Returns
+        -------
+        List[Node]
+            List of nodes that matched the search.
         """
         pass
 

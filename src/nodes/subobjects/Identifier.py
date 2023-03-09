@@ -1,0 +1,4 @@
+class Identifier:
+    """
+    Identifier subobject
+    """

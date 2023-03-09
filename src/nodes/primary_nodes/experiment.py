@@ -1,9 +1,9 @@
 from src.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
-class Project(PrimaryBaseNode):
+class Experiment(PrimaryBaseNode):
     """
-    Project node class as described in the data model
+    Experiment node
     """
 
     pass

@@ -1,0 +1,87 @@
+site_name: CRIPT Python SDK
+
+repo_url: https://github.com/C-Accel-CRIPT/Python-SDK
+repo_name: C-Accel-CRIPT/Python-SDK
+
+theme:
+  name: material
+  # below is the favicon image and documentation logo
+  logo: assets/images/CRIPT_full_logo_colored_transparent.png
+  favicon: assets/images/favicon.ico
+  icon:
+    admonition:
+      alert: octicons/alert-16
+  features:
+    - content.code.copy
+    - navigation.path
+    - nagivation.tracking
+    - navigation.footer
+
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+# This links the CRIPT logo to the CRIPT homepage
+extra:
+  homepage: https://criptapp.org
+#  social:
+#    - icon: fontawesome/brands/twitter
+#      link: https://twitter.com/squidfunk
+#      name: squidfunk on Twitter  
+copyright: © 2023 MIT | All Rights Reserved
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_bases: true
+            show_source: true
+            docstring_style: google
+
+nav:
+  - Home: index.md
+
+markdown_extensions:
+  - toc:
+      baselevel: 2
+      permalink: True
+  - attr_list
+  - md_in_html
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.tabbed:
+      alternate_style: true  
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg

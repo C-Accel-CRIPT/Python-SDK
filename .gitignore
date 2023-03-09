@@ -35,5 +35,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 
-# ignore mypy
+# ignore mypy cache
 .mypy_cache/
+
+# pytest cache
+.pytest_cache

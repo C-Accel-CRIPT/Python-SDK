@@ -5,4 +5,5 @@ class User:
     Note: A user cannot be created or modified using the SDK.
     This object is for read-only purposes only.
     """
+
     pass

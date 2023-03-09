@@ -5,4 +5,5 @@ class Reference(PrimaryBaseNode):
     """
     Reference node
     """
+
     pass

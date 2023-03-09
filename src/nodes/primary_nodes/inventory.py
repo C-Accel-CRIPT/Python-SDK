@@ -5,4 +5,5 @@ class Inventory(PrimaryBaseNode):
     """
     Inventory Node
     """
+
     pass

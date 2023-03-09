@@ -5,4 +5,5 @@ class Collection(PrimaryBaseNode):
     """
     Collection class
     """
+
     pass

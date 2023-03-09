@@ -5,4 +5,5 @@ class Process(PrimaryBaseNode):
     """
     Process node
     """
+
     pass

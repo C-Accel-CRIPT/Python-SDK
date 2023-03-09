@@ -5,4 +5,5 @@ class Software(PrimaryBaseNode):
     """
     Software node
     """
+
     pass

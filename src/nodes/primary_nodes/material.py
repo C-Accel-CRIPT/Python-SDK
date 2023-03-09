@@ -5,4 +5,5 @@ class Material(PrimaryBaseNode):
     """
     Material node
     """
+
     pass

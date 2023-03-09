@@ -5,4 +5,5 @@ class Project(PrimaryBaseNode):
     """
     Project node class as described in the data model
     """
+
     pass

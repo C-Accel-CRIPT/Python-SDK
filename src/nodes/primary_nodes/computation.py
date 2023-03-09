@@ -5,4 +5,5 @@ class Computation(PrimaryBaseNode):
     """
     Computation node
     """
+
     pass

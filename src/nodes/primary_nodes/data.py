@@ -5,4 +5,5 @@ class Data(PrimaryBaseNode):
     """
     Data node
     """
+
     pass

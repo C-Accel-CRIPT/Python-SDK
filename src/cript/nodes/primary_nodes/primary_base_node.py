@@ -1,17 +1,17 @@
 from abc import ABC
 from dataclasses import dataclass, asdict
-
+from src.nodes import BaseNode
 from src.nodes.supporting_nodes.user import User
 
 
-class PrimaryBaseNode(ABC):
+class PrimaryBaseNode(BaseNode, ABC):
     """
     Abstract class that defines what it means to be a PrimaryNode,
     and other primary nodes can inherit from.
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes:
+    class JsonAttributes(BaseNode.JsonAttributes):
         """
         All shared attributes between all Primary nodes and set to their default values
         """
@@ -26,6 +26,10 @@ class PrimaryBaseNode(ABC):
         notes: str = ""
 
     _json_attrs: JsonAttributes
+
+    def __init__(self, node:str):
+        super().__init__(node)
+
 
     def __str__(self) -> str:
         """
@@ -52,7 +56,7 @@ class PrimaryBaseNode(ABC):
         str
             A string representation of the primary node common attributes.
         """
-        return str(asdict(self._json_attrs))
+        return super().__str__(self)
 
 
     @property

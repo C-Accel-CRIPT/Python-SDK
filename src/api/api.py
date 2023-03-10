@@ -123,6 +123,7 @@ class API:
         # if no_input is True or it got passed the confirmation then send a http request to delete the node
         print(f"deleting {node}")
         # TODO http request to delete the node in JSON form
+        pass
 
     def get_my_user(self) -> User:
         """

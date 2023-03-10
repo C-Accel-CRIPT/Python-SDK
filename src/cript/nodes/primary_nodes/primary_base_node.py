@@ -1,7 +1,6 @@
 import dataclasses
 from abc import ABC
 from dataclasses import dataclass
-from typing import Union
 
 from src.nodes.supporting_nodes.user import User
 
@@ -17,8 +16,8 @@ class PrimaryBaseNode(ABC):
         """
         All shared attributes between all Primary nodes and set to their default values
         """
-        url: Union[str, None] = None
-        uid: Union[str, None] = None
+        url: str = ""
+        uid: str = ""
         locked: bool = False
         model_version: str = ""
         updated_by: User = None

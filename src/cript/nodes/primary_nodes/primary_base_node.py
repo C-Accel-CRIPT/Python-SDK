@@ -1,6 +1,8 @@
+import dataclasses
 from abc import ABC
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Union
+
 from src.nodes.supporting_nodes.user import User
 
 
@@ -11,7 +13,7 @@ class PrimaryBaseNode(ABC):
     """
 
     @dataclass(frozen=True)
-    class NodeAttributes:
+    class BaseNodeAttributes:
         """
         All shared attributes between all Primary nodes and set to their default values
         """
@@ -27,12 +29,14 @@ class PrimaryBaseNode(ABC):
 
     def __str__(self) -> str:
         """
-        Return a string representation of a primary node.
+        Return a string representation of a primary node dataclass attributes.
         Every node that inherits from this class should overwrite it to best fit
         their use case, but this provides a nice default value just in case
 
         Returns
         -------
-        str: A string representation of a primary node.
+        str: A string representation of a primary node common attributes.
         """
-        pass
+        attrs_dict = {f.name: getattr(self.BaseNodeAttributes, f.name) for f in
+                      dataclasses.fields(self.BaseNodeAttributes)}
+        return str(attrs_dict)

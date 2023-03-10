@@ -35,7 +35,8 @@ class PrimaryBaseNode(ABC):
 
         Returns
         -------
-        str: A string representation of a primary node common attributes.
+        str
+            A string representation of the primary node common attributes.
         """
         attrs_dict = {f.name: getattr(self.BaseNodeAttributes, f.name) for f in
                       dataclasses.fields(self.BaseNodeAttributes)}

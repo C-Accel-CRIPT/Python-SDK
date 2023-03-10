@@ -18,6 +18,7 @@ def cript_api() -> cript.API:
 def test_get_db_schema(cript_api):
     """
     just checks if that function gives anything back or not.
+
     Parameters
     ----------
     cript_api
@@ -34,6 +35,7 @@ def test_get_db_schema(cript_api):
 def test_api_save_material(cript_api):
     """
     Tests if API object can successfully save a node
+
     Parameters
     ----------
     cript_api
@@ -73,8 +75,9 @@ def test_api_update_material(cript_api):
 
     Returns
     -------
-
+    None
     """
+    pass
 
 
 def test_api_delete_material(cript_api):
@@ -88,5 +91,6 @@ def test_api_delete_material(cript_api):
 
     Returns
     -------
-
+    None
     """
+    pass

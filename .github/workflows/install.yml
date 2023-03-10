@@ -28,4 +28,7 @@ jobs:
         run: python3 -m pip install .
         
       - name: Check installation
-        run: python3 -c "import cript"
+        run: |
+          python3 -c "import cript"
+          python3 -c "import cript.nodes"
+          python3 -c "import cript.nodes.primary_nodes"

@@ -1,5 +1,5 @@
 from abc import ABC
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Union
 from src.nodes.supporting_nodes.user import User
 
@@ -35,3 +35,4 @@ class PrimaryBaseNode(ABC):
         -------
         str: A string representation of a primary node.
         """
+        pass

@@ -1,6 +1,6 @@
 from .primary_nodes import (
     Collection,
-    Computational_Process,
+    ComputationalProcess,
     Computation,
     Data,
     Experiment,
@@ -10,3 +10,21 @@ from .primary_nodes import (
     Reference,
     Software,
 )
+
+from .subobjects import (
+    Algorithm,
+    Citation,
+    Equipment,
+    Identifier,
+    Ingredient,
+    Parameter,
+    Property,
+    Quantity,
+    SoftwareConfiguration,
+    )
+
+from .supporting_nodes import (
+    File,
+    Group,
+    User,
+    )

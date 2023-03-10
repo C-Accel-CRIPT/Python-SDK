@@ -32,6 +32,20 @@ class PrimaryBaseNode(ABC):
         Every node that inherits from this class should overwrite it to best fit
         their use case, but this provides a nice default value just in case
 
+        Examples
+        --------
+        {
+        'url': '',
+        'uid': '',
+        'locked': False,
+        'model_version': '',
+        'updated_by': None,
+        'created_by': None,
+        'public': False,
+        'notes': ''
+        }
+
+
         Returns
         -------
         str

@@ -1,6 +1,6 @@
 import dataclasses
 from abc import ABC
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 from src.nodes.supporting_nodes.user import User
 
@@ -12,7 +12,7 @@ class PrimaryBaseNode(ABC):
     """
 
     @dataclass(frozen=True)
-    class BaseNodeAttributes:
+    class JsonAttributes:
         """
         All shared attributes between all Primary nodes and set to their default values
         """
@@ -25,6 +25,8 @@ class PrimaryBaseNode(ABC):
         public: bool = False
         name: str = ""
         notes: str = ""
+
+    _json_attrs: JsonAttributes
 
     def __str__(self) -> str:
         """
@@ -51,6 +53,4 @@ class PrimaryBaseNode(ABC):
         str
             A string representation of the primary node common attributes.
         """
-        attrs_dict = {f.name: getattr(self.BaseNodeAttributes, f.name) for f in
-                      dataclasses.fields(self.BaseNodeAttributes)}
-        return str(attrs_dict)
+        return str(asdict(self._json_attrs))

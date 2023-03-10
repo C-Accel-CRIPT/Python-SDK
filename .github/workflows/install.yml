@@ -27,3 +27,6 @@ jobs:
 
       - name: Install via Pip
         run: pip install .
+        
+      - name: Check installation
+        run: python -c "import cript"

@@ -76,12 +76,19 @@ class API:
         return self._db_schema
 
     def save(self, node: PrimaryNode) -> None:
+        # TODO create a giant JSON from the primary node given and send that to
+        #   the backend with a POST request
+        #   the user will just hit save and the program needs to figure out
+        #   the saving of new or updating
+        #   save is POST request and update would be PATCH request
         pass
 
-    def get_my_groups(self) -> Group:
+    def get_my_groups(self) -> List[Group]:
+        # TODO send http request to backend to get all of the users Groups
         pass
 
     def get_my_projects(self) -> List[Project]:
+        # TODO send http request to backend to get all of the users Projects
         pass
 
     def delete(self, node: PrimaryNode, no_input: bool = False) -> None:
@@ -167,4 +174,5 @@ class API:
         List[Node]
             List of nodes that matched the search.
         """
+        # TODO send search query and get the result back
         pass

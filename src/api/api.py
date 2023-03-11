@@ -32,6 +32,11 @@ class API:
         UserWarning
             If `host` is using "http".
 
+        Raises
+        ------
+        ConnectionError
+            If it cannot connect to CRIPT with the provided host and token
+
         Returns
         -------
         None
@@ -83,12 +88,57 @@ class API:
         #   save is POST request and update would be PATCH request
         pass
 
+    def get_my_user(self) -> User:
+        """
+        Returns the user node associated with the user's account using the token.
+
+        Returns
+        -------
+        User: User
+            The user node associated with the user's account.
+
+        Notes
+        -----
+        This function retrieves the user node associated with the user's account.
+        """
+        # TODO send http request to get user node in JSON
+        # convert user JSON into user node
+        # return user node
+        # or just print out the json, and that should work for the first version
+        pass
+
     def get_my_groups(self) -> List[Group]:
         # TODO send http request to backend to get all of the users Groups
         pass
 
     def get_my_projects(self) -> List[Project]:
         # TODO send http request to backend to get all of the users Projects
+        pass
+
+    def search(
+            self,
+            node_type: PrimaryNode,
+            search_mode: Literal[_VALID_SEARCH_MODES],
+            value_to_search: str,
+    ):
+        """
+        This is the method used to perform a search on the CRIPT platform.
+
+        Parameters
+        ----------
+        node_type : PrimaryNode
+            Type of node that you are searching for.
+        search_mode : str
+            Type of search you want to do. You can search by name, UUID, URL, etc.
+        value_to_search : str
+            What you are searching for.
+
+        Returns
+        -------
+        List[Node]
+            List of nodes that matched the search.
+        """
+        # TODO send search query and get the result back
         pass
 
     def delete(self, node: PrimaryNode, no_input: bool = False) -> None:
@@ -130,49 +180,4 @@ class API:
         # if no_input is True or it got passed the confirmation then send a http request to delete the node
         print(f"deleting {node}")
         # TODO http request to delete the node in JSON form
-        pass
-
-    def get_my_user(self) -> User:
-        """
-        Returns the user node associated with the user's account using the token.
-
-        Returns
-        -------
-        User: User
-            The user node associated with the user's account.
-
-        Notes
-        -----
-        This function retrieves the user node associated with the user's account.
-        """
-        # TODO send http request to get user node in JSON
-        # convert user JSON into user node
-        # return user node
-        # or just print out the json, and that should work for the first version
-        pass
-
-    def search(
-        self,
-        node_type: PrimaryNode,
-        search_mode: Literal[_VALID_SEARCH_MODES],
-        value_to_search: str,
-    ):
-        """
-        This is the method used to perform a search on the CRIPT platform.
-
-        Parameters
-        ----------
-        node_type : PrimaryNode
-            Type of node that you are searching for.
-        search_mode : str
-            Type of search you want to do. You can search by name, UUID, URL, etc.
-        value_to_search : str
-            What you are searching for.
-
-        Returns
-        -------
-        List[Node]
-            List of nodes that matched the search.
-        """
-        # TODO send search query and get the result back
         pass

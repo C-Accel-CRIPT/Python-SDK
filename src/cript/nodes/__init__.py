@@ -28,3 +28,5 @@ from cript.nodes.supporting_nodes import (
     Group,
     User,
     )
+
+from .util import NodeEncoder

@@ -1,7 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass, asdict
-from src.nodes import BaseNode
-from src.nodes.supporting_nodes.user import User
+from ..core import BaseNode
+from ..supporting_nodes.user import User
 
 
 class PrimaryBaseNode(BaseNode, ABC):
@@ -25,7 +25,7 @@ class PrimaryBaseNode(BaseNode, ABC):
         name: str = ""
         notes: str = ""
 
-    _json_attrs: JsonAttributes
+    _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(self, node:str):
         super().__init__(node)

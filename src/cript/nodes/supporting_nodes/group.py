@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from ..core import BaseNode
 
+
 class Group(BaseNode):
     """
     CRIPT Group node as described in the CRIPT data model

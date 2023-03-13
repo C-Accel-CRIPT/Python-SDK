@@ -1,4 +1,4 @@
-from .primary_nodes import (
+from cript.nodes.primary_nodes import (
     Collection,
     ComputationalProcess,
     Computation,
@@ -11,7 +11,7 @@ from .primary_nodes import (
     Software,
 )
 
-from .subobjects import (
+from cript.nodes.subobjects import (
     Algorithm,
     Citation,
     Equipment,
@@ -23,7 +23,7 @@ from .subobjects import (
     SoftwareConfiguration,
     )
 
-from .supporting_nodes import (
+from cript.nodes.supporting_nodes import (
     File,
     Group,
     User,

@@ -1,4 +1,4 @@
-from .nodes import (
+from cript.nodes import (
     Collection,
     ComputationalProcess,
     Computation,

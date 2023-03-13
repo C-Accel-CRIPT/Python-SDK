@@ -22,4 +22,4 @@ from cript.nodes import (
     Group,
     User,
     NodeEncoder,
-    )
+)

@@ -15,6 +15,7 @@ class PrimaryBaseNode(BaseNode, ABC):
         """
         All shared attributes between all Primary nodes and set to their default values
         """
+
         url: str = ""
         uid: str = ""
         locked: bool = False
@@ -27,9 +28,8 @@ class PrimaryBaseNode(BaseNode, ABC):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, node:str):
+    def __init__(self, node: str):
         super().__init__(node)
-
 
     def __str__(self) -> str:
         """
@@ -58,31 +58,38 @@ class PrimaryBaseNode(BaseNode, ABC):
         """
         return super().__str__()
 
-
     @property
     def url(self):
         return self._json_attrs.url
+
     @property
     def uid(self):
         return self._json_attrs.uid
+
     @property
     def locked(self):
         return self._json_attrs.locked
+
     @property
     def model_version(self):
         return self._json_attrs.model_version
+
     @property
     def updated_by(self):
         return self._json_attrs.updated_by
+
     @property
     def created_by(self):
         return self._json_attrs.created_by
+
     @property
     def public(self):
         return self._json_attrs.public
+
     @property
     def name(self):
         return self._json_attrs.name
+
     @property
     def notes(self):
         return self._json_attrs.notes

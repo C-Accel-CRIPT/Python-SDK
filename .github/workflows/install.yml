@@ -28,4 +28,7 @@ jobs:
         run: python3 -m pip install .
         
       - name: Check installation
-        run: python3 -c "import cript"
+        run: |
+          python3 -m pip install pytest
+          python3 -c "import cript"
+          python3 -m pytest

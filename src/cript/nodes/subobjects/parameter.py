@@ -42,7 +42,7 @@ class Parameter(BaseNode):
 
     @property
     def value(self) -> Union[int, float, str]:
-        return self._json_attrs.key
+        return self._json_attrs.value
     @value.setter
     def value(self, new_value:Union[int, float, str]):
         self._json_attrs = replace(self._json_attrs, value=new_value)

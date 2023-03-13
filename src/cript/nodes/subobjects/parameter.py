@@ -36,6 +36,7 @@ class Parameter(BaseNode):
     ):
         super().__init__(node="Parameter")
         self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit)
+        self.validate()
 
     @property
     def key(self) -> str:
@@ -44,6 +45,7 @@ class Parameter(BaseNode):
     @key.setter
     def key(self, new_key: str):
         self._json_attrs = replace(self._json_attrs, key=new_key)
+        self.validate()
 
     @property
     def value(self) -> Union[int, float, str]:
@@ -52,6 +54,7 @@ class Parameter(BaseNode):
     @value.setter
     def value(self, new_value: Union[int, float, str]):
         self._json_attrs = replace(self._json_attrs, value=new_value)
+        self.validate()
 
     @property
     def unit(self) -> str:
@@ -60,3 +63,4 @@ class Parameter(BaseNode):
     @unit.setter
     def unit(self, new_unit: str):
         self._json_attrs = replace(self._json_attrs, unit=new_unit)
+        self.validate()

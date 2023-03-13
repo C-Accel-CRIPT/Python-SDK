@@ -34,9 +34,7 @@ def test_algorithm():
     assert a_str == get_algorithm_string()
     a.parameter += [get_parameter()]
     a_str= get_algorithm_string()
-    print(a_str.find("parameter\": []"), a_str)
     a_str2 = a_str.replace("parameter\": []", f"parameter\": [{get_parameter_string()}]")
-    print(a_str2)
 
     assert a_str2 == json.dumps(a, cls=cript.NodeEncoder)
     a.key = "berendsen"

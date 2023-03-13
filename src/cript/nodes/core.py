@@ -28,3 +28,13 @@ class BaseNode(ABC):
             A string representation of the node.
         """
         return str(asdict(self._json_attrs))
+
+    def validate(self) -> None:
+        """
+        Validate this node (and all its children) against the schema provided by the data bank.
+
+        Raises:
+        -------
+        Exception with more error information.
+        """
+        pass

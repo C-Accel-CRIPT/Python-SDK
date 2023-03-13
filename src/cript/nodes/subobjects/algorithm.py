@@ -17,7 +17,7 @@ class Algorithm(BaseNode):
         # citation
 
     _json_attrs: JsonAttributes = JsonAttributes()
-    def __init__(self, key:str, type:str, parameter:List[Parameter]):
+    def __init__(self, key:str, type:str, parameter:List[Parameter]=[]):
         super().__init__(node="Algorithm")
         self._json_attrs = replace(self._json_attrs, key=key, type=type, parameter=parameter)
 
@@ -42,4 +42,4 @@ class Algorithm(BaseNode):
 
     @parameter.setter
     def parameter(self, new_parameter:List[Parameter]):
-        self._json_attrs(self._json_attrs, parameter=new_parameter)
+        self._json_attrs = replace(self._json_attrs, parameter=new_parameter)

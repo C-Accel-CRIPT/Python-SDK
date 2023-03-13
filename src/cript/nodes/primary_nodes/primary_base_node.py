@@ -1,7 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass, asdict
-from ..core import BaseNode
-from ..supporting_nodes.user import User
+from cript.nodes.core import BaseNode
+from cript.nodes.supporting_nodes.user import User
 
 
 class PrimaryBaseNode(BaseNode, ABC):
@@ -56,7 +56,7 @@ class PrimaryBaseNode(BaseNode, ABC):
         str
             A string representation of the primary node common attributes.
         """
-        return super().__str__(self)
+        return super().__str__()
 
     @property
     def url(self):

@@ -1,4 +1,4 @@
-class ConnectionError(Exception):
+class CRIPTConnectionError(Exception):
     """
     Raised when the API object cannot connect to CRIPT with the given host and token
     """

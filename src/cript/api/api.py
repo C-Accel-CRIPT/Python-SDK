@@ -9,6 +9,7 @@ from src.nodes.primary_nodes import PrimaryNode
 from src.nodes.primary_nodes.project import Project
 from src.nodes.supporting_nodes.group import Group
 from src.nodes.supporting_nodes.user import User
+from src.cript.api.exceptions import CRIPTConnectionError
 
 
 class API:
@@ -49,11 +50,11 @@ class API:
             warnings.warn("HTTP is an unsafe protocol please consider using HTTPS")
 
         # check that api can connect to CRIPT with host and token
-        # try:
-        #     # TODO send an http request to check connection with host and token
-        #     pass
-        # except Exception:
-        #     raise ConnectionError
+        try:
+            # TODO send an http request to check connection with host and token
+            pass
+        except Exception:
+            raise CRIPTConnectionError
 
     def _get_db_schema(self) -> json:
         """

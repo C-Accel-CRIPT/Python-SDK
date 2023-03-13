@@ -4,7 +4,7 @@ from typing import List, Literal
 
 import requests
 
-from src.api._valid_search_modes import _VALID_SEARCH_MODES
+from src.cript.api._valid_search_modes import _VALID_SEARCH_MODES
 from src.nodes.primary_nodes import PrimaryNode
 from src.nodes.primary_nodes.project import Project
 from src.nodes.supporting_nodes.group import Group

@@ -1,6 +1,7 @@
 from typing import Union
 from dataclasses import dataclass, replace
-from ..core import BaseNode
+from cript.nodes.core import BaseNode
+from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 
 class Parameter(BaseNode):
@@ -23,14 +24,21 @@ class Parameter(BaseNode):
         self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit)
         self.validate()
 
+    def validate(self):
+        super().validate()
+        print("TODO. Remove this dummy validation of parameter")
+        if not isinstance(self._json_attrs.value, float):
+            raise CRIPTNodeSchemaError
+
+
     @property
     def key(self) -> str:
         return self._json_attrs.key
 
     @key.setter
     def key(self, new_key: str):
-        self._json_attrs = replace(self._json_attrs, key=new_key)
-        self.validate()
+        new_attrs = replace(self._json_attrs, key=new_key)
+        self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def value(self) -> Union[int, float, str]:
@@ -38,8 +46,8 @@ class Parameter(BaseNode):
 
     @value.setter
     def value(self, new_value: Union[int, float, str]):
-        self._json_attrs = replace(self._json_attrs, value=new_value)
-        self.validate()
+        new_attrs = replace(self._json_attrs, value=new_value)
+        self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def unit(self) -> str:
@@ -47,5 +55,5 @@ class Parameter(BaseNode):
 
     @unit.setter
     def unit(self, new_unit: str):
-        self._json_attrs = replace(self._json_attrs, unit=new_unit)
-        self.validate()
+        new_attrs = replace(self._json_attrs, unit=new_unit)
+        self._update_json_attrs_if_valid(new_attrs)

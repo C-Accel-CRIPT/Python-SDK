@@ -43,8 +43,8 @@ class Algorithm(BaseNode):
 
     @key.setter
     def key(self, new_key: str):
-        self._json_attrs = replace(self._json_attrs, key=new_key)
-        self.validate()
+        new_attrs = replace(self._json_attrs, key=new_key)
+        self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def type(self) -> str:
@@ -52,8 +52,8 @@ class Algorithm(BaseNode):
 
     @type.setter
     def type(self, new_type: str):
-        self._json_attrs = replace(self._json_attrs, type=new_type)
-        self.validate()
+        new_attrs = replace(self._json_attrs, type=new_type)
+        self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def parameter(self) -> List[Parameter]:
@@ -61,8 +61,8 @@ class Algorithm(BaseNode):
 
     @parameter.setter
     def parameter(self, new_parameter: List[Parameter]):
-        self._json_attrs = replace(self._json_attrs, parameter=new_parameter)
-        self.validate()
+        new_attrs = replace(self._json_attrs, parameter=new_parameter)
+        self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def citation(self):
@@ -70,5 +70,5 @@ class Algorithm(BaseNode):
 
     @citation.setter
     def citation(self, new_citation):
-        self._json_attrs = replace(self._json_attrs, citation=new_citation)
-        self.validate()
+        new_attrs = replace(self._json_attrs, citation=new_citation)
+        self._update_json_attrs_if_valid(new_attrs)

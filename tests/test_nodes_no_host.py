@@ -1,6 +1,8 @@
 import json
 import copy
 import cript
+import pytest
+from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 
 def get_parameter():
@@ -17,13 +19,16 @@ def get_algorithm():
 def get_algorithm_string():
     return "{'node': 'Algorithm', 'key': 'mc_barostat', 'type': 'barostat', 'parameter': [], 'citation': []}".replace("'", "\"")
 
-def test_paramter():
+def test_parameter():
     p = get_parameter()
     p_str = json.dumps(p, cls=cript.NodeEncoder)
     assert p_str == get_parameter_string()
     p.key = "advanced_sampling"
     assert p.key == "advanced_sampling"
     p.value = 15.
+    assert p.value == 15.
+    with pytest.raises(CRIPTNodeSchemaError):
+        p.value = None
     assert p.value == 15.
     p.unit = "m"
     assert p.unit == "m"
@@ -43,4 +48,4 @@ def test_algorithm():
     assert a.type == "integration"
 
     #Add citation test, once we have citation implemted
-test_algorithm()
+test_parameter()

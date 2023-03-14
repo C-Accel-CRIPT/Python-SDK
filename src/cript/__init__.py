@@ -21,4 +21,5 @@ from cript.nodes import (
     File,
     Group,
     User,
-    )
+    NodeEncoder,
+)

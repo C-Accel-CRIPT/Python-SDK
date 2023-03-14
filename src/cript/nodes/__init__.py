@@ -21,10 +21,12 @@ from cript.nodes.subobjects import (
     Property,
     Quantity,
     SoftwareConfiguration,
-    )
+)
 
 from cript.nodes.supporting_nodes import (
     File,
     Group,
     User,
-    )
+)
+
+from cript.nodes.util import NodeEncoder

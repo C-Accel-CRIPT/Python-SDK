@@ -1,0 +1,51 @@
+from typing import Union
+from dataclasses import dataclass, replace
+from ..core import BaseNode
+
+
+class Parameter(BaseNode):
+    """Parameter"""
+
+    @dataclass(frozen=True)
+    class JsonAttributes(BaseNode.JsonAttributes):
+        node: str = "Parameter"
+        key: str = ""
+        value: Union[int, float, str] = ""
+        # We explictly allow None for unit here (instead of empty str), this presents number without physical unit, like counting particles or dimensionless numbers.
+        unit: Union[str, None] = None
+
+    _json_attrs: JsonAttributes = JsonAttributes()
+
+    def __init__(
+        self, key: str, value: Union[int, float], unit: Union[str, None] = None
+    ):
+        super().__init__(node="Parameter")
+        self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit)
+        self.validate()
+
+    @property
+    def key(self) -> str:
+        return self._json_attrs.key
+
+    @key.setter
+    def key(self, new_key: str):
+        self._json_attrs = replace(self._json_attrs, key=new_key)
+        self.validate()
+
+    @property
+    def value(self) -> Union[int, float, str]:
+        return self._json_attrs.value
+
+    @value.setter
+    def value(self, new_value: Union[int, float, str]):
+        self._json_attrs = replace(self._json_attrs, value=new_value)
+        self.validate()
+
+    @property
+    def unit(self) -> str:
+        return self._json_attrs.unit
+
+    @unit.setter
+    def unit(self, new_unit: str):
+        self._json_attrs = replace(self._json_attrs, unit=new_unit)
+        self.validate()

@@ -1,4 +1,4 @@
-from src.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
 class Reference(PrimaryBaseNode):

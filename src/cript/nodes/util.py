@@ -1,7 +1,7 @@
 import json
 
 from dataclasses import asdict
-from .core import BaseNode
+from cript.nodes.core import BaseNode
 
 
 class NodeEncoder(json.JSONEncoder):

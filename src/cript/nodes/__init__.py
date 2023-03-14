@@ -29,4 +29,4 @@ from cript.nodes.supporting_nodes import (
     User,
 )
 
-from .util import NodeEncoder
+from cript.nodes.util import NodeEncoder

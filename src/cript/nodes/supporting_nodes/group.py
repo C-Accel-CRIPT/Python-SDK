@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from ..core import BaseNode
+from cript.nodes.core import BaseNode
 
 
 class Group(BaseNode):

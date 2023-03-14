@@ -17,6 +17,23 @@ def get_algorithm():
 def get_algorithm_string():
     return "{'node': 'Algorithm', 'key': 'mc_barostat', 'type': 'barostat', 'parameter': [], 'citation': []}".replace("'", "\"")
 
+def get_reference():
+    reference = cript.Reference("journal_article",
+                                authors = ["Ludwig Schneider", "Marcus Müller"],
+                                journal= "Computer Physics Communications",
+                                publisher = "Elsevier",
+                                year = 2019,
+                                pages = [463, 476],
+                                doi = "10.1016/j.cpc.2018.08.011",
+                                issn = "0010-4655",
+                                website = "https://www.sciencedirect.com/science/article/pii/S0010465518303072")
+    return reference
+
+def get_citation():
+    citation = cript.Citation("reference", get_reference())
+    return citation
+
+
 def test_parameter():
     p = get_parameter()
     p_str = p.json
@@ -51,4 +68,7 @@ def test_algorithm():
     a.type = "integration"
     assert a.type == "integration"
 
+
     #Add citation test, once we have citation implemted
+test_parameter()
+print(get_reference())

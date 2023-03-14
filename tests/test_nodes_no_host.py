@@ -1,5 +1,3 @@
-import json
-import copy
 import cript
 import pytest
 from cript.nodes.exceptions import CRIPTNodeSchemaError
@@ -21,13 +19,9 @@ def get_algorithm_string():
 
 def test_parameter():
     p = get_parameter()
-    p_str = json.dumps(p, cls=cript.NodeEncoder)
-    print(p_str)
-    assert p_str == get_parameter_string()
-    p = cript.Parameter._from_json(json.loads(p_str))
+    p_str = p.json
     assert p_str == get_parameter_string()
     p = cript.load_nodes_from_json(p_str)
-    print(p)
     assert p_str == get_parameter_string()
 
     p.key = "advanced_sampling"
@@ -42,15 +36,15 @@ def test_parameter():
 
 def test_algorithm():
     a = get_algorithm()
-    a_str= json.dumps(a, cls=cript.NodeEncoder)
+    a_str= a.json
     assert a_str == get_algorithm_string()
     a.parameter += [get_parameter()]
     a_str= get_algorithm_string()
     a_str2 = a_str.replace("parameter\": []", f"parameter\": [{get_parameter_string()}]")
-    assert a_str2 == json.dumps(a, cls=cript.NodeEncoder)
+    assert a_str2 == a.json
 
     a2 = cript.load_nodes_from_json(a_str2)
-    assert a_str2 == json.dumps(a2, cls=cript.NodeEncoder)
+    assert a_str2 == a2.json
 
     a.key = "berendsen"
     assert a.key == "berendsen"
@@ -58,4 +52,3 @@ def test_algorithm():
     assert a.type == "integration"
 
     #Add citation test, once we have citation implemted
-test_algorithm()

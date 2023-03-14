@@ -61,3 +61,14 @@ class BaseNode(ABC):
         attrs = cls.JsonAttributes(**json)
         node._update_json_attrs_if_valid(attrs)
         return node
+
+
+    @property
+    def json(self):
+        """
+        User facing access to get the JSON of a node.
+        """
+        # Delayed import to avoid circular imports
+        from cript.nodes.util import NodeEncoder
+
+        return json.dumps(self, cls=NodeEncoder)

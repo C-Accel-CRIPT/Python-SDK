@@ -24,3 +24,11 @@ def _node_json_hook(node_str:str):
         if BaseNode in pyclass.__bases__:
             if key == node_dict.get("node"):
                 return pyclass._from_json(node_dict)
+    # Fall back
+    return node_dict
+
+def load_nodes_from_json(nodes_json:str):
+    """
+    User facing function, that return a node and all its children from a json input.
+    """
+    return json.loads(nodes_json, object_hook=_node_json_hook)

@@ -29,4 +29,7 @@ from cript.nodes.supporting_nodes import (
     User,
 )
 
-from cript.nodes.util import NodeEncoder
+from cript.nodes.util import (
+    NodeEncoder,
+    load_nodes_from_json,
+    )

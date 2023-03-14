@@ -26,7 +26,7 @@ def test_parameter():
     assert p_str == get_parameter_string()
     p = cript.Parameter._from_json(json.loads(p_str))
     assert p_str == get_parameter_string()
-    p = json.loads(p_str, object_hook=cript.nodes.util._node_json_hook)
+    p = cript.load_nodes_from_json(p_str)
     print(p)
     assert p_str == get_parameter_string()
 
@@ -49,7 +49,7 @@ def test_algorithm():
     a_str2 = a_str.replace("parameter\": []", f"parameter\": [{get_parameter_string()}]")
     assert a_str2 == json.dumps(a, cls=cript.NodeEncoder)
 
-    a2 = json.loads(a_str2, object_hook=cript.nodes.util._node_json_hook)
+    a2 = cript.load_nodes_from_json(a_str2)
     assert a_str2 == json.dumps(a2, cls=cript.NodeEncoder)
 
     a.key = "berendsen"

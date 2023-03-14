@@ -6,26 +6,7 @@ from cript.nodes.subobjects.citation import Citation
 
 
 class Algorithm(BaseNode):
-    """The <a href="../algorithm" target="_blank">`Algorithm`</a>
-    object represents an algorithm that can be used as part of a
-    <a href="/../nodes/computation" target="_blank">`Computation`</a> object. For example,
-    the computation might consist of a clustering algorithm or sorting a algorithm.
-
-    Args:
-        key (str): Algorithm key
-        type (str): Algorithm type
-        parameters (list[Union[Parameter, dict]], optional): List of parameters linked to this algorithm
-        citations (list[Union[Citation, dict]], optional): List of citations linked to this algorithm
-
-    ``` py title="Example"
-    algorithm = Algorithm(
-        key="mc_barostat",
-        type="barostat",
-        parameters=[],
-        citations=[],
-    )
-    ```
-    """
+    """    """
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):

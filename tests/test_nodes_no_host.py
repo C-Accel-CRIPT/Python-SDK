@@ -22,7 +22,14 @@ def get_algorithm_string():
 def test_parameter():
     p = get_parameter()
     p_str = json.dumps(p, cls=cript.NodeEncoder)
+    print(p_str)
     assert p_str == get_parameter_string()
+    p = cript.Parameter._from_json(json.loads(p_str))
+    assert p_str == get_parameter_string()
+    p = json.loads(p_str, object_hook=cript.nodes.util._node_json_hook)
+    print(p)
+    assert p_str == get_parameter_string()
+
     p.key = "advanced_sampling"
     assert p.key == "advanced_sampling"
     p.value = 15.
@@ -40,12 +47,15 @@ def test_algorithm():
     a.parameter += [get_parameter()]
     a_str= get_algorithm_string()
     a_str2 = a_str.replace("parameter\": []", f"parameter\": [{get_parameter_string()}]")
-
     assert a_str2 == json.dumps(a, cls=cript.NodeEncoder)
+
+    a2 = json.loads(a_str2, object_hook=cript.nodes.util._node_json_hook)
+    assert a_str2 == json.dumps(a2, cls=cript.NodeEncoder)
+
     a.key = "berendsen"
     assert a.key == "berendsen"
     a.type = "integration"
     assert a.type == "integration"
 
     #Add citation test, once we have citation implemted
-test_parameter()
+test_algorithm()

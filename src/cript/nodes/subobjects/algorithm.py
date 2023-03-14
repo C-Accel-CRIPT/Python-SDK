@@ -25,6 +25,7 @@ class Algorithm(BaseNode):
         type: str,
         parameter: List[Parameter] = None,
         citation: List[Citation] = None,
+            **kwargs # ignored
     ):
         if parameter is None:
             parameter = []

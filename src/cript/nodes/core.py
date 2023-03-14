@@ -49,3 +49,15 @@ class BaseNode(ABC):
         """
 
         pass
+
+    @classmethod
+    def _from_json(cls, json:dict):
+        # Child nodes can inherit and overwrite this. They should call super()._from_json first, and modified the returned object after if necessary.
+
+        # This creates a basic version of the intended node.
+        # All attributes from the backend are passed over, but some like created_by are ignored
+        node = cls(**json)
+        # Now we push the full json attributes into the class if it is valid
+        attrs = cls.JsonAttributes(**json)
+        node._update_json_attrs_if_valid(attrs)
+        return node

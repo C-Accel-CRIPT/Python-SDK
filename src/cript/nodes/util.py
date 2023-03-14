@@ -1,7 +1,9 @@
 import json
+import inspect
 
 from dataclasses import asdict
 from cript.nodes.core import BaseNode
+import cript.nodes
 
 
 class NodeEncoder(json.JSONEncoder):
@@ -9,3 +11,16 @@ class NodeEncoder(json.JSONEncoder):
         if isinstance(obj, BaseNode):
             return asdict(obj._json_attrs)
         return json.JSONEncoder.default(self, obj)
+
+
+def _node_json_hook(node_str:str):
+    """
+    Internal function, used as a hook for json deserialization.
+    """
+    node_dict = dict(node_str)
+
+    # Iterate over all nodes in cript to find the correct one here
+    for key, pyclass in inspect.getmembers(cript.nodes, inspect.isclass):
+        if BaseNode in pyclass.__bases__:
+            if key == node_dict.get("node"):
+                return pyclass._from_json(node_dict)

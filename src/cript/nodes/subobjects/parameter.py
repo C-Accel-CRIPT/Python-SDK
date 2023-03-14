@@ -4,23 +4,7 @@ from ..core import BaseNode
 
 
 class Parameter(BaseNode):
-    """The <a href="../parameter" target="_blank">`Parameter`</a> object
-    represents an input parameter to an <a href="../algorithm" target="_blank">`Algorithm`</a>.
-    For example, the update frequency with which a Monte-Carlo algorithm is applied during the simulation is a paramter.
-
-    Args:
-        key (str): Parameter key
-        value (Union[int, float]): Parameter value
-        unit (Union[str, None], optional): Parameter unit
-
-    ``` py title="Example"
-    parameter = Parameter(
-        key="update_frequency",
-        value=10,
-        unit="1/ns",
-    )
-    ```
-    """
+    """Parameter    """
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):

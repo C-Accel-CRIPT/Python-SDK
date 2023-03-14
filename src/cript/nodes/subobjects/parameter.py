@@ -4,13 +4,14 @@ from ..core import BaseNode
 
 
 class Parameter(BaseNode):
-    """Parameter    """
+    """Parameter"""
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
         node: str = "Parameter"
         key: str = ""
         value: Union[int, float, str] = ""
+        # We explictly allow None for unit here (instead of empty str), this presents number without physical unit, like counting particles or dimensionless numbers.
         unit: Union[str, None] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()

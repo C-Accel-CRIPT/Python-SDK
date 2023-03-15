@@ -55,11 +55,9 @@ def is_schema_valid(node: json) -> bool:
 
     db_schema = _get_db_schema()
 
-    node_json = json.loads(node)
-
     # TODO currently validate says every syntactically valid JSON is valid
     # TODO do we want invalid schema to raise an exception?
-    if validate(node_json, db_schema):
+    if validate(node, db_schema):
         return True
     else:
         return False

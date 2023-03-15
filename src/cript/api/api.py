@@ -5,11 +5,14 @@ from typing import List, Literal
 import requests
 
 from src.cript.api._valid_search_modes import _VALID_SEARCH_MODES
-from src.nodes.primary_nodes import PrimaryNode
-from src.nodes.primary_nodes.project import Project
-from src.nodes.supporting_nodes.group import Group
-from src.nodes.supporting_nodes.user import User
+from src.cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from src.cript.nodes.primary_nodes.project import Project
+from src.cript.nodes.supporting_nodes.group import Group
+from src.cript.nodes.supporting_nodes.user import User
 from src.cript.api.exceptions import CRIPTConnectionError
+
+# global host for other functions to use
+_HOST = ""
 
 
 class API:
@@ -43,6 +46,11 @@ class API:
         None
         """
         self.host = host
+
+        # set global host for other functions to use the correct host
+        global _HOST
+        _HOST = self.host
+
         self._token = token
 
         # if host is using unsafe "http://" then give a warning
@@ -56,32 +64,7 @@ class API:
         except Exception:
             raise CRIPTConnectionError
 
-    def _get_db_schema(self) -> json:
-        """
-        Sends a GET request to CRIPT to get the database schema and returns it.
-        The database schema can be used for validating the JSON request
-        before submitting it to CRIPT.
-
-        1. Checks if the class variable is already set and if it is then it just returns that.
-        2. If db schema is not already saved, then it makes a request to get it from CRIPT
-        3. after successfully getting it from CRIPT, it sets the class variable
-
-        Returns
-        -------
-        json
-            The database schema in JSON format.
-        """
-        # if db_schema is already set then just return it
-        if self._db_schema:
-            return self._db_schema
-
-        # if db_schema is not already set, then request it
-        response = requests.get(f"{self.host}/api/v1/schema/")
-
-        self._db_schema = response.json()
-        return self._db_schema
-
-    def save(self, node: PrimaryNode) -> None:
+    def save(self, node: PrimaryBaseNode) -> None:
         # TODO create a giant JSON from the primary node given and send that to
         #   the backend with a POST request
         #   the user will just hit save and the program needs to figure out
@@ -118,7 +101,7 @@ class API:
 
     def search(
             self,
-            node_type: PrimaryNode,
+            node_type: PrimaryBaseNode,
             search_mode: Literal[_VALID_SEARCH_MODES],
             value_to_search: str,
     ):
@@ -142,7 +125,7 @@ class API:
         # TODO send search query and get the result back
         pass
 
-    def delete(self, node: PrimaryNode, no_input: bool = False) -> None:
+    def delete(self, node: PrimaryBaseNode, no_input: bool = False) -> None:
         """ "
         Deletes the given node.
 

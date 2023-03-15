@@ -72,6 +72,47 @@ class API:
         #   save is POST request and update would be PATCH request
         pass
 
+    def delete(self, node: PrimaryBaseNode, no_input: bool = False) -> None:
+        """ "
+        Deletes the given node.
+
+        Parameters
+        ----------
+        node : PrimaryNode
+            The node to delete.
+        no_input : bool, optional, default=False
+            If True, the function will delete the node without prompting the user
+            for confirmation (default is False).
+
+        Returns
+        -------
+        NoneType
+            None
+
+        Notes
+        -----
+        By default, this function prompts the user with "are you sure you want to
+        delete this node?" before proceeding with the deletion. If the `no_input`
+        parameter is set to True, the prompt will be suppressed and the node will be
+        deleted without confirmation.
+        """
+        # ask for confirmation before deleting the node
+        if no_input == False:
+            # get the user input and convert it to lowercase
+            confirm: str = input(
+                f"are you sure you want to delete {node}? (y/n): "
+            ).lower()
+
+            # if confirmation is not yes then cancel it and continue
+            if confirm not in ["y", "yes"]:
+                print(f"Deletion cancelled for node: {node}")
+                return
+
+        # if no_input is True or it got passed the confirmation then send a http request to delete the node
+        print(f"deleting {node}")
+        # TODO http request to delete the node in JSON form
+        pass
+
     def get_my_user(self) -> User:
         """
         Returns the user node associated with the user's account using the token.
@@ -123,45 +164,4 @@ class API:
             List of nodes that matched the search.
         """
         # TODO send search query and get the result back
-        pass
-
-    def delete(self, node: PrimaryBaseNode, no_input: bool = False) -> None:
-        """ "
-        Deletes the given node.
-
-        Parameters
-        ----------
-        node : PrimaryNode
-            The node to delete.
-        no_input : bool, optional, default=False
-            If True, the function will delete the node without prompting the user
-            for confirmation (default is False).
-
-        Returns
-        -------
-        NoneType
-            None
-
-        Notes
-        -----
-        By default, this function prompts the user with "are you sure you want to
-        delete this node?" before proceeding with the deletion. If the `no_input`
-        parameter is set to True, the prompt will be suppressed and the node will be
-        deleted without confirmation.
-        """
-        # ask for confirmation before deleting the node
-        if no_input == False:
-            # get the user input and convert it to lowercase
-            confirm: str = input(
-                f"are you sure you want to delete {node}? (y/n): "
-            ).lower()
-
-            # if confirmation is not yes then cancel it and continue
-            if confirm not in ["y", "yes"]:
-                print(f"Deletion cancelled for node: {node}")
-                return
-
-        # if no_input is True or it got passed the confirmation then send a http request to delete the node
-        print(f"deleting {node}")
-        # TODO http request to delete the node in JSON form
         pass

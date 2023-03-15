@@ -3,7 +3,7 @@ import json
 import requests
 from jsonschema import validate
 
-from src.cript.api.api import _HOST
+from cript.api.api import _HOST
 
 _DB_SCHEMA: json = None
 

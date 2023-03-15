@@ -4,12 +4,12 @@ from typing import List, Literal
 
 import requests
 
-from src.cript.api._valid_search_modes import _VALID_SEARCH_MODES
-from src.cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
-from src.cript.nodes.primary_nodes.project import Project
-from src.cript.nodes.supporting_nodes.group import Group
-from src.cript.nodes.supporting_nodes.user import User
-from src.cript.api.exceptions import CRIPTConnectionError
+from cript.api._valid_search_modes import _VALID_SEARCH_MODES
+from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.primary_nodes.project import Project
+from cript.nodes.supporting_nodes.group import Group
+from cript.nodes.supporting_nodes.user import User
+from cript.api.exceptions import CRIPTConnectionError
 
 # global host for other functions to use
 _HOST = ""

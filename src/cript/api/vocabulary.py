@@ -3,8 +3,8 @@ from typing import Union
 
 import requests
 
-from src.cript.api.api import _HOST
-from src.cript.api.exceptions import InvalidVocabulary
+from cript.api.api import _HOST
+from cript.api.exceptions import InvalidVocabulary
 
 # dictionary of the entire controlled vocabulary
 _ENTIRE_CONTROLLED_VOCABULARY: dict = {}

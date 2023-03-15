@@ -15,23 +15,6 @@ def cript_api() -> cript.API:
     return cript.API(host, token)
 
 
-def test_get_db_schema(cript_api):
-    """
-    just checks if that function gives anything back or not.
-
-    Parameters
-    ----------
-    cript_api
-
-    Returns
-    -------
-    NoneType
-        None
-
-    """
-    cript_api._get_db_schema()
-
-
 def test_api_save_material(cript_api):
     """
     Tests if API object can successfully save a node

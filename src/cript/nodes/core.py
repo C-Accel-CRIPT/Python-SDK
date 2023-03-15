@@ -73,7 +73,7 @@ class BaseNode(ABC):
 
         return json.dumps(self, cls=NodeEncoder)
 
-    def remove_child(self, child:BaseNode) -> bool:
+    def remove_child(self, child) -> bool:
         """
         This safely removes the first found child node from the parent.
         This requires exact node as we test with `is` instead of `==`.

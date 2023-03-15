@@ -52,3 +52,12 @@ def test_algorithm():
     assert a.type == "integration"
 
     #Add citation test, once we have citation implemted
+
+def test_removing_nodes():
+    a = get_algorithm()
+    p = get_parameter()
+    a.parameter += [p]
+    a.remove_child(p)
+    assert a.json == get_algorithm_string()
+
+    # Add test to remove node not from a list, once we have one

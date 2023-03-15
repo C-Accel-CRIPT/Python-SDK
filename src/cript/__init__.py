@@ -22,4 +22,5 @@ from cript.nodes import (
     Group,
     User,
     NodeEncoder,
+    load_nodes_from_json,
 )

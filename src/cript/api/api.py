@@ -78,7 +78,7 @@ class API:
 
         Parameters
         ----------
-        node : PrimaryNode
+        node : PrimaryBaseNode
             The node to delete.
         no_input : bool, optional, default=False
             If True, the function will delete the node without prompting the user
@@ -151,7 +151,7 @@ class API:
 
         Parameters
         ----------
-        node_type : PrimaryNode
+        node_type : PrimaryBaseNode
             Type of node that you are searching for.
         search_mode : str
             Type of search you want to do. You can search by name, UUID, URL, etc.

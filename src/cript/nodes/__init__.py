@@ -32,4 +32,4 @@ from cript.nodes.supporting_nodes import (
 from cript.nodes.util import (
     NodeEncoder,
     load_nodes_from_json,
-    )
+)

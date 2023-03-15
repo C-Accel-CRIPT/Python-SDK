@@ -4,8 +4,11 @@ class CRIPTNodeSchemaError(Exception):
 
     This is a dummy implementation. This needs to be way more sophisticated for good error reporting.
     """
+
     def __init__(self):
         pass
 
     def __str__(self):
-        return "Dummy Schema validation failed. TODO replace with actual implementation."
+        return (
+            "Dummy Schema validation failed. TODO replace with actual implementation."
+        )

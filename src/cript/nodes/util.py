@@ -13,7 +13,7 @@ class NodeEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-def _node_json_hook(node_str:str):
+def _node_json_hook(node_str: str):
     """
     Internal function, used as a hook for json deserialization.
     """
@@ -27,7 +27,8 @@ def _node_json_hook(node_str:str):
     # Fall back
     return node_dict
 
-def load_nodes_from_json(nodes_json:str):
+
+def load_nodes_from_json(nodes_json: str):
     """
     User facing function, that return a node and all its children from a json input.
     """

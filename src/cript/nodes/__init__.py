@@ -7,8 +7,6 @@ from cript.nodes.primary_nodes import (
     Inventory,
     Process,
     Project,
-    Reference,
-    Software,
 )
 
 from cript.nodes.subobjects import (
@@ -21,6 +19,8 @@ from cript.nodes.subobjects import (
     Property,
     Quantity,
     SoftwareConfiguration,
+    Reference,
+    Software,
 )
 
 from cript.nodes.supporting_nodes import (

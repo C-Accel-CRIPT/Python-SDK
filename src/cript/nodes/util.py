@@ -23,7 +23,11 @@ def _node_json_hook(node_str:str):
     for key, pyclass in inspect.getmembers(cript.nodes, inspect.isclass):
         if BaseNode in pyclass.__bases__:
             if key == node_dict.get("node"):
-                return pyclass._from_json(node_dict)
+                try:
+                    return pyclass._from_json(node_dict)
+                except Exception as exc:
+                    print(f"JSON deserialization failed for Node type {key} with JSON str: {node_str}")
+                    raise exc
     # Fall back
     return node_dict
 

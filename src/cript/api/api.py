@@ -160,7 +160,7 @@ class API:
 
         Returns
         -------
-        List[Node]
+        List[BaseNode]
             List of nodes that matched the search.
         """
         # TODO send search query and get the result back

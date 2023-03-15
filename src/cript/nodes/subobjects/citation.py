@@ -2,7 +2,7 @@ from copy import copy
 from typing import Union
 from dataclasses import dataclass, replace
 from cript.nodes.core import BaseNode
-from cript.nodes.primary_nodes.reference import Reference
+from cript.nodes.subobjects.reference import Reference
 
 class Citation(BaseNode):
     """

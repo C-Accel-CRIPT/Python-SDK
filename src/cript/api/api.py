@@ -24,6 +24,8 @@ class API:
         ----------
         host : str
             CRIPT host to connect to such as "https://criptapp.org"
+            if host ends with a "/" such as "https://criptapp.org/"
+            then it strips it to always be uniform
         token : str
             CRIPT API Token used to connect to CRIPT
 
@@ -41,6 +43,10 @@ class API:
         -------
         None
         """
+
+        # strip ending slash to make host always uniform
+        host = host.rstrip("/")
+
         self.host = host
         self._token = token
 

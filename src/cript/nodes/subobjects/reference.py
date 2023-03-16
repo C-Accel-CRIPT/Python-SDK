@@ -60,6 +60,9 @@ class Reference(BaseNode):
                                    website = website)
         self.validate()
 
+    @property
+    def url(self):
+        return self._json_attrs.url
 
     @property
     def type(self):

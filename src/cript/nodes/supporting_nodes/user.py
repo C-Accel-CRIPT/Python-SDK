@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Union
 
 from cript.nodes.core import BaseNode
 from cript.nodes.supporting_nodes.group import Group
@@ -27,7 +27,9 @@ class User:
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, json):
+    def __init__(
+        self, username: str, email: str, orcid: str, groups: Union[Group, List[Group]]
+    ):
         """
         Json from CRIPT API to be converted to a node
 

@@ -100,6 +100,7 @@ class BaseNode(ABC):
 
             attr_key = asdict(node._json_attrs).get(key)
 
+            # To save code paths, I convert non-lists into lists with one element.
             if not isinstance(attr_key, list):
                 attr_key = [attr_key]
             if not isinstance(value, list):
@@ -133,6 +134,7 @@ class BaseNode(ABC):
         if recursion_depth != 0:
             for field in self._json_attrs.__dataclass_fields__:
                 value = getattr(self._json_attrs, field)
+                # To save code paths, I convert non-lists into lists with one element.
                 if not isinstance(value, list):
                     value = [value]
                 for v in value:

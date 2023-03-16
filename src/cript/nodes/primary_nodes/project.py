@@ -45,6 +45,22 @@ class Project(PrimaryBaseNode):
         None
         """
         super().__init__(node="Project")
+        self._json_attrs = replace(self._json_attrs, name=name, group=group)
+        self.validate()
+        pass
+
+    def validate(self) -> None:
+        """
+        validates project node
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        CRIPTNodeSchemaError
+        """
         pass
 
     # ------------------ Properties ------------------

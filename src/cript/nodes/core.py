@@ -1,8 +1,12 @@
 import copy
+import datetime
 import json
 from abc import ABC
-from dataclasses import dataclass, asdict, replace
-from cript.nodes.exceptions import CRIPTNodeSchemaError
+from dataclasses import asdict, replace
+from dataclasses import dataclass
+
+from cript.nodes.exceptions import UneditableAttributeError
+
 
 class BaseNode(ABC):
     """
@@ -13,7 +17,14 @@ class BaseNode(ABC):
 
     @dataclass(frozen=True)
     class JsonAttributes:
+        """
+        all common node attributes
+        """
+
         node: str = ""
+        url: str = None
+        updated_at: datetime = None
+        created_at: datetime = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -31,12 +42,12 @@ class BaseNode(ABC):
         """
         return str(asdict(self._json_attrs))
 
-    def _update_json_attrs_if_valid(self, new_json_attr:JsonAttributes):
+    def _update_json_attrs_if_valid(self, new_json_attr: JsonAttributes):
         tmp_obj = copy.copy(self)
         tmp_obj._json_attrs = new_json_attr
         # Throws invalid exception before object is modified.
         tmp_obj.validate()
-        # After validation we can assign the attributes to actual object
+        # After validation, we can assign the attributes to actual object
         self._json_attrs = new_json_attr
 
     def validate(self) -> None:
@@ -51,8 +62,10 @@ class BaseNode(ABC):
         pass
 
     @classmethod
-    def _from_json(cls, json:dict):
-        # Child nodes can inherit and overwrite this. They should call super()._from_json first, and modified the returned object after if necessary.
+    def _from_json(cls, json: dict):
+        # Child nodes can inherit and overwrite this.
+        # They should call super()._from_json first,
+        # and modified the returned object after if necessary.
 
         # This creates a basic version of the intended node.
         # All attributes from the backend are passed over, but some like created_by are ignored
@@ -62,7 +75,7 @@ class BaseNode(ABC):
         node._update_json_attrs_if_valid(attrs)
         return node
 
-
+    # ------------------ properties ------------------
     @property
     def json(self):
         """
@@ -72,3 +85,84 @@ class BaseNode(ABC):
         from cript.nodes.util import NodeEncoder
 
         return json.dumps(self, cls=NodeEncoder)
+
+    @property
+    def url(self) -> str:
+        """
+        gets the url for the node
+
+        Returns
+        -------
+        url: str
+            node url
+        """
+        return self._json_attrs.url
+
+    @url.setter
+    def url(self, value) -> None:
+        """
+        User cannot set the URL for any nodes.
+        Attempt to do so will raise an UneditableAttributeError
+
+        Parameters
+        ----------
+        value
+
+        Returns
+        -------
+        None
+        """
+        raise UneditableAttributeError
+
+    @property
+    def updated_at(self) -> datetime:
+        """
+        gets the updated_at time for the node
+
+        Returns
+        -------
+        datetime
+            The datetime that the node was edited at
+        """
+        return self._json_attrs.updated_at
+
+    @updated_at.setter
+    def updated_at(self, value) -> None:
+        """
+        User cannot set the updated_at for any nodes.
+        Attempt to do so will raise an UneditableAttributeError
+        Parameters
+        ----------
+        value
+
+        Returns
+        -------
+        None
+        """
+        raise UneditableAttributeError
+
+    @property
+    def created_at(self) -> datetime:
+        """
+
+        Returns
+        -------
+
+        """
+        return self._json_attrs.created_at
+
+    @created_at.setter
+    def created_at(self, value) -> None:
+        """
+        User cannot set the created_at for any nodes.
+        Attempt to do so will raise an UneditableAttributeError
+
+        Parameters
+        ----------
+        value
+
+        Returns
+        -------
+        None
+        """
+        raise UneditableAttributeError

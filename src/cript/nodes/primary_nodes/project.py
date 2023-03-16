@@ -59,6 +59,44 @@ class Project(PrimaryBaseNode):
         new_attrs = replace(self._json_attrs, group=new_group)
         self._update_json_attrs_if_valid(new_attrs)
 
+    def _set_node_or_list(self, field_name: str, new_node: Union[BaseNode, List[BaseNode]]):
+        """
+        This method sets a field that is a list of node or a single node for this project.
+        The user can pass in either a node (such as collection, material, or file )
+        to be appended to the list of collections
+        or the user can pass in a list of collections to replace the old list of collections.
+        This method works by checking if the argument is a list or a single node and
+        then behaves accordingly.
+
+        Parameters
+        ----------
+        field_name: str
+            field name within the dataclass JsonAttributes
+
+        new_node: Union[BaseNode, List[BaseNode]
+            new node to append to node list
+            or new list of nodes to replace the current list
+
+        Returns
+        -------
+        None
+        """
+        if isinstance(new_node, list):
+            # replace the old list with the new list
+            # TODO see if you can write **{field_name: new_node} in a better way
+            new_attrs = replace(self._json_attrs, **{field_name: new_node})
+            # TODO this needs a more DRY way of handling this
+            self._update_json_attrs_if_valid(new_attrs)
+
+        # if appending a single node to the list
+        # get the old list, append the node, and replace the field
+        else:
+            # TODO see if you can write this better
+            new_list: List[BaseNode] = getattr(self._json_attrs, field_name)
+            new_list.append(new_node)
+            new_attrs = replace(self._json_attrs, **{field_name: new_list})
+            self._update_json_attrs_if_valid(new_attrs)
+
     # Collection
     @property
     def collection(self) -> List[Collection]:

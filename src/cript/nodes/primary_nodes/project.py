@@ -31,11 +31,14 @@ class Project(PrimaryBaseNode):
 
     def __init__(self, name: str, group: Group):
         """
+        Create a Project node with Project name and Group
 
         Parameters
         ----------
-        name
-        group
+        name: str
+            project name
+        group: Group
+            Group that owns the Project
 
         Returns
         -------
@@ -50,17 +53,24 @@ class Project(PrimaryBaseNode):
     @property
     def name(self) -> str:
         """
+        name property getter method
 
+        Returns
+        -------
+        name: str
+            project name
         """
         return self._json_attrs.name
 
     @name.setter
     def name(self, new_name: str):
         """
-        
+        Setter for the project name
+
         Parameters
         ----------
-        new_name
+        new_name: str
+            new project name
 
         Returns
         -------
@@ -73,16 +83,24 @@ class Project(PrimaryBaseNode):
     @property
     def group(self) -> Group:
         """
+        group property getter method
+
+        Returns
+        -------
+        group: Group
+            Group that owns the project
         """
         return self._json_attrs.group
 
     @group.setter
     def group(self, new_group: Group):
         """
-        
+        Sets the group the project belongs to
+
         Parameters
         ----------
-        new_group
+        new_group: Group
+            new Group object
 
         Returns
         -------
@@ -134,10 +152,12 @@ class Project(PrimaryBaseNode):
     @property
     def collection(self) -> List[Collection]:
         """
+        Collection property getter method
 
         Returns
         -------
-
+        Collection: List[Collection]
+            the list of collections within this project
         """
         return self._json_attrs.collection
 
@@ -147,10 +167,19 @@ class Project(PrimaryBaseNode):
     @collection.setter
     def collection(self, new_collection: Union[Collection, List[Collection]]):
         """
+        Setter for the collection.
+
+        User has 2 options
+        1. pass a single collection that can be added to the list of collections
+        2. the user can pass a list of collections that will replace the current list of collections
+
+        simply calls the _set_node_or_list() method with field name and parameter passed into here
 
         Parameters
         ----------
-        new_collection
+        new_collection: Union[Collection, List[Collection]
+            Either a single collection to be added to the list of collections
+            or a list of collections to replace the current list of collections
 
         Returns
         -------
@@ -162,21 +191,26 @@ class Project(PrimaryBaseNode):
     @property
     def material(self) -> List[Material]:
         """
+        Material property getter method. Gets the list of materials within the project
 
         Returns
         -------
-        None
+        Material: List[Material]
+            List of materials that belongs to this project
         """
         return self._json_attrs.material
 
     @material.setter
     def material(self, new_material: Union[Material, List[Material]]):
         """
-        This method sets the Material for this project.
-        The user can pass in either a Material to be appended to the list of Material
-        or the user can pass in a list of Material to replace the old list of Material.
-        This method works by checking if the argument is a list or Material object and
-        behaves accordingly.
+        Setter for the material.
+
+        User has 2 options
+        1. pass a single material that can be added to the list of material
+        2. the user can pass a list of material that will replace the current list of material
+
+        simply calls the _set_node_or_list() method with field name and a single node or list of nodes
+
 
         Parameters
         ----------
@@ -194,17 +228,26 @@ class Project(PrimaryBaseNode):
     @property
     def file(self) -> List[File]:
         """
+        file property getter method.
+
+        Returns
+        -------
+        File: Lis[File]
+            list of files that belongs in this project
         """
         return self._json_attrs.file
 
     @file.setter
     def file(self, new_file: Union[File, List[File]]):
         """
-       This method sets the File for this project.
-       The user can pass in either a File to be appended to the list of File
-       or the user can pass in a list of File to replace the old list of File.
-       This method works by checking if the argument is a list or File object and
-       behaves accordingly.
+        Setter for the file.
+
+        User has 2 options
+        1. pass a single file that can be added to the list of file
+        2. the user can pass a list of file that will replace the current list of file
+
+        simply calls the _set_node_or_list() method with field name and a single node or list of nodes
+
 
        Parameters
        ----------

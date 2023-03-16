@@ -38,6 +38,11 @@ def get_citation():
 
 def get_citation_string():
     return "{'node': 'Citation', 'type': 'reference', 'reference':}".replace("'reference':", f"'reference': {get_reference_string()}").replace("'", "\"")
+def get_software():
+    software = cript.Software("SOMA", "0.7.0", "https://gitlab.com/InnocentBug/SOMA")
+    return software
+def get_software_string():
+    return "{'node': 'Software', 'url': '', 'name': 'SOMA', 'version': '0.7.0', 'source': 'https://gitlab.com/InnocentBug/SOMA'}".replace("'", "\"")
 def test_parameter():
     p = get_parameter()
     p_str = p.json
@@ -119,3 +124,16 @@ def test_citation():
     new_ref.title = "foo bar"
     c.reference = new_ref
     assert c.reference == new_ref
+
+def test_software():
+    s = get_software()
+    assert s.json == get_software_string()
+    s2 = cript.load_nodes_from_json(s.json)
+    assert s2.json == s.json
+
+    s2.name = "PySAGES"
+    assert s2.name == "PySAGES"
+    s2.version = "v0.3.0"
+    assert s2.version == "v0.3.0"
+    s2.source = "https://github.com/SSAGESLabs/PySAGES"
+    assert s2.source == "https://github.com/SSAGESLabs/PySAGES"

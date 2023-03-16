@@ -7,7 +7,7 @@ from cript.nodes.supporting_nodes.group import Group
 
 class User:
     """
-    The User node as described in the CRIPT data model
+    The User node
 
     Note: A user cannot be created or modified using the SDK.
     This object is for read-only purposes only.
@@ -26,6 +26,16 @@ class User:
         groups = List[Group]
 
     _json_attrs: JsonAttributes = JsonAttributes()
+
+    def __init__(self, json):
+        """
+        Json from CRIPT API to be converted to a node
+
+        Parameters
+        ----------
+        json
+        """
+        pass
 
     # ------------------ properties ------------------
 

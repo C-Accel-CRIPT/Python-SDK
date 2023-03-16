@@ -51,6 +51,16 @@ class Group(BaseNode):
         self._json_attrs = replace(self._json_attrs, name=name, admins=admin, users=user)
         self.validate()
 
-    def validate(self):
-        # TODO add validate method
+    def validate(self) -> None:
+        """
+        validates Group node
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        CRIPTNodeSchemaError
+        """
         pass

@@ -1,5 +1,6 @@
 import copy
 import json
+from typing import List
 from abc import ABC
 from dataclasses import dataclass, asdict, replace
 from cript.nodes.exceptions import CRIPTNodeSchemaError
@@ -72,3 +73,71 @@ class BaseNode(ABC):
         from cript.nodes.util import NodeEncoder
 
         return json.dumps(self, cls=NodeEncoder)
+
+    def find_children(self, search_attr:dict, recursion_depth:int=-1) -> List:
+        """
+        Finds all the children in a given tree of nodes (specified by its root),
+        that match the criteria of search_attr.
+        If a node is present multiple times in the graph, it is only once in the search results.
+
+        recursion_dept: Max depth of recursion into the tree. Helpful if circles are expected. -1 specifies no limit
+
+        search_attr: dict
+           Dictionary that specifies which JSON attributes have to be present in a given node.
+           If an attribute is a list, it it is suffiecient if the specified attributes are in the list,
+           if others are present too, that does not exclude the child.
+
+           Example: search_attr = `{"node": "Parameter"}` finds all "Parameter" nodes.
+                    search_attr = `{"node": "Algorithm", "parameter": {"name" : "update_frequency"}}` finds all "Algorithm" nodes, that have a parameter "update_frequency".
+                                  Since parameter is a list an alternative notation is ``{"node": "Algorithm", "parameter": [{"name" : "update_frequency"}]}` and Algorithms are not excluded they have more paramters.
+                    search_attr = `{"node": "Algorithm", "parameter": [{"name" : "update_frequency"}, {"name" : "cutoff_distance"}]}` finds all algoritms that have a parameter "update_frequency" and "cutoff_distance".
+
+        """
+        def is_attr_present(node:BaseNode, key, value):
+            """
+            Helper function that checks if an attribute is present in a node.
+            """
+
+            attr_key = asdict(node._json_attrs).get(key)
+
+            if not isinstance(attr_key, list):
+                attr_key = [attr_key]
+            if not isinstance(value, list):
+                value = [value]
+
+            number_values_found = 0
+            for v in value:
+                if v in attr_key:
+                    number_values_found += 1
+
+                for attr in attr_key:
+                    if isinstance(attr, BaseNode) and isinstance(v, dict):
+
+                        if len(attr.find_children(v, 0)) > 0:
+                            number_values_found += 1
+                            break
+            return number_values_found == len(value)
+
+
+        found_children = []
+
+        # Handle self
+        found_attr = 0
+        for key, value in search_attr.items():
+            if is_attr_present(self, key, value):
+                found_attr += 1
+        if found_attr == len(search_attr):
+            found_children += [self]
+
+        # Handle recursion
+        if recursion_depth != 0:
+            for field in self._json_attrs.__dataclass_fields__:
+                value = getattr(self._json_attrs, field)
+                if not isinstance(value, list):
+                    value = [value]
+                for v in value:
+                    try: # Try every attribute for recursion
+                        found_children += v.find_children(search_attr, recursion_depth-1)
+                    except AttributeError:
+                        pass
+        return found_children

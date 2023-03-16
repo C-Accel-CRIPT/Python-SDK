@@ -32,6 +32,18 @@ class BaseNode(ABC):
         """
         return str(asdict(self._json_attrs))
 
+    def __deepcopy__(self, memo):
+        new_attr = copy.deepcopy(asdict(self._json_attrs), memo)
+        defautl_attr = asdict(self.__class__.JsonAttributes())
+        attributes_to_erase = ["url", "uid"]
+        for key in attributes_to_erase:
+            new_attr[key] = defautl_attr[key]
+
+        # Create the new node, similar to from_json
+        node = self.__class__(**new_attr)
+        node._update_json_attrs_if_valid(self.__class__.JsonAttributes(**new_attr))
+        return node
+
     def _update_json_attrs_if_valid(self, new_json_attr:JsonAttributes):
         tmp_obj = copy.copy(self)
         tmp_obj._json_attrs = new_json_attr

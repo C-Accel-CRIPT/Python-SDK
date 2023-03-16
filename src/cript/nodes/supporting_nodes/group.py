@@ -48,7 +48,9 @@ class Group(BaseNode):
         None
         """
         super().__init__(node="Group")
-        self._json_attrs = replace(self._json_attrs, name=name, admins=admin, users=user)
+        self._json_attrs = replace(
+            self._json_attrs, name=name, admins=admin, users=user
+        )
         self.validate()
 
     def validate(self) -> None:

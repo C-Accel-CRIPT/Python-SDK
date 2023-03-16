@@ -34,10 +34,14 @@ class BaseNode(ABC):
 
     def __deepcopy__(self, memo):
         new_attr = copy.deepcopy(asdict(self._json_attrs), memo)
-        defautl_attr = asdict(self.__class__.JsonAttributes())
+        default_attr = asdict(self.__class__.JsonAttributes())
         attributes_to_erase = ["url", "uid"]
         for key in attributes_to_erase:
-            new_attr[key] = defautl_attr[key]
+            try:
+                new_attr[key] = default_attr[key]
+            except KeyError:
+                # Only change the erasing attribute if they are present.
+                pass
 
         # Create the new node, similar to from_json
         node = self.__class__(**new_attr)

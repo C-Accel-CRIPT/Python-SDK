@@ -2,9 +2,9 @@ from dataclasses import dataclass, replace
 from typing import List, Union, Any
 
 from cript.nodes.core import BaseNode
-from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
+from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.supporting_nodes.file import File
 from cript.nodes.supporting_nodes.group import Group
 

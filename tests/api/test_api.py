@@ -10,8 +10,9 @@ def cript_api() -> cript.API:
     Returns:
         API: The created API instance.
     """
-    host = "http://development.api.criptapp.org/"
-    token = "123456"
+    host: str = "http://development.api.criptapp.org/"
+    token: str = "123456"
+
     return cript.API(host, token)
 
 

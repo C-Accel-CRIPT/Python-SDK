@@ -1,5 +1,6 @@
 import cript
 import pytest
+from cript.api.schema_validation import _get_db_schema
 
 
 @pytest.fixture(scope="session")
@@ -10,8 +11,9 @@ def cript_api() -> cript.API:
     Returns:
         API: The created API instance.
     """
-    host = "http://development.api.criptapp.org/"
-    token = "123456"
+    host: str = "http://development.api.criptapp.org"
+    token: str = "123456"
+
     return cript.API(host, token)
 
 
@@ -29,7 +31,7 @@ def test_get_db_schema(cript_api):
         None
 
     """
-    return cript._get_db_schema()
+    return _get_db_schema()
 
 
 def test_db_schema_success(cript_api):

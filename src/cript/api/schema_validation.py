@@ -3,8 +3,6 @@ import json
 import requests
 from jsonschema import validate
 
-from cript.api.api import _HOST
-
 _DB_SCHEMA: json = None
 
 
@@ -23,6 +21,7 @@ def _get_db_schema() -> json:
     json
         The database schema in JSON format.
     """
+    host: str = "https://development.api.criptapp.org"
     global _DB_SCHEMA
 
     # if db_schema is already set then just return it
@@ -30,7 +29,7 @@ def _get_db_schema() -> json:
         return _DB_SCHEMA
 
     # if db_schema is not already set, then request it
-    response = requests.get(f"{_HOST}/api/v1/schema/").json()
+    response = requests.get(f"{host}/api/v1/schema/").json()
     _DB_SCHEMA = response
 
     return _DB_SCHEMA

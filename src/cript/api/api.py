@@ -11,14 +11,10 @@ from cript.nodes.supporting_nodes.group import Group
 from cript.nodes.supporting_nodes.user import User
 from cript.api.exceptions import CRIPTConnectionError
 
-# global host for other functions to use
-_HOST = ""
-
 
 class API:
     host: str = ""
     _token: str = ""
-    _db_schema: json = None
 
     def __init__(self, host: str, token: str) -> None:
         """
@@ -46,11 +42,6 @@ class API:
         None
         """
         self.host = host
-
-        # set global host for other functions to use the correct host
-        global _HOST
-        _HOST = self.host
-
         self._token = token
 
         # if host is using unsafe "http://" then give a warning

@@ -143,6 +143,7 @@ class Project(PrimaryBaseNode):
 
     # TODO collection, material, and file (all lists) have the same logic,
     #   make a single function to take care of it
+    # Collection
     @collection.setter
     def collection(self, new_collection: Union[Collection, List[Collection]]):
         """

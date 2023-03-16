@@ -17,6 +17,11 @@ def get_algorithm():
 def get_algorithm_string():
     return "{'node': 'Algorithm', 'key': 'mc_barostat', 'type': 'barostat', 'parameter': [], 'citation': []}".replace("'", "\"")
 
+def get_identifier():
+    identifier = cript.Identifier("names", ["styrene", "vinylbenzene"])
+    return identifier
+def get_identifier_string():
+    return "{'node': 'Identifier', 'key': 'names', 'value': ['styrene', 'vinylbenzene']}".replace("'", "\"")
 def test_parameter():
     p = get_parameter()
     p_str = p.json
@@ -52,3 +57,14 @@ def test_algorithm():
     assert a.type == "integration"
 
     #Add citation test, once we have citation implemted
+
+def test_identifier():
+    idx = get_identifier()
+    assert idx.json == get_identifier_string()
+    idx2 = cript.load_nodes_from_json(idx.json)
+    assert idx2.json == idx.json
+
+    idx2.key = "smiles"
+    assert idx2.key == "smiles"
+    idx2.value = "c1ccccc1C=C"
+    assert idx2.value == "c1ccccc1C=C"

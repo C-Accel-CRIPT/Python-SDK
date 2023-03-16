@@ -16,6 +16,9 @@ class Project(PrimaryBaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
+        """
+        all Project attributes
+        """
         node: str = "Project"
         # project name
         name: str = ""
@@ -33,6 +36,10 @@ class Project(PrimaryBaseNode):
         ----------
         name
         group
+
+        Returns
+        -------
+        None
         """
         super().__init__(node="Project")
         pass
@@ -42,24 +49,50 @@ class Project(PrimaryBaseNode):
     # Project Name
     @property
     def name(self) -> str:
+        """
+
+        """
         return self._json_attrs.name
 
     @name.setter
     def name(self, new_name: str):
+        """
+        
+        Parameters
+        ----------
+        new_name
+
+        Returns
+        -------
+        None
+        """
         new_attrs = replace(self._json_attrs, name=new_name)
         self._update_json_attrs_if_valid(new_attrs)
 
     # GROUP
     @property
     def group(self) -> Group:
+        """
+        """
         return self._json_attrs.group
 
     @group.setter
     def group(self, new_group: Group):
+        """
+        
+        Parameters
+        ----------
+        new_group
+
+        Returns
+        -------
+        None
+        """
         new_attrs = replace(self._json_attrs, group=new_group)
         self._update_json_attrs_if_valid(new_attrs)
 
-    def _set_node_or_list(self, field_name: str, new_node: Union[BaseNode, List[BaseNode]]):
+    # TODO consider switching any to BaseNode 
+    def _set_node_or_list(self, field_name: str, new_node: Union[Any, List[Any]]):
         """
         This method sets a field that is a list of node or a single node for this project.
         The user can pass in either a node (such as collection, material, or file )
@@ -100,6 +133,12 @@ class Project(PrimaryBaseNode):
     # Collection
     @property
     def collection(self) -> List[Collection]:
+        """
+
+        Returns
+        -------
+
+        """
         return self._json_attrs.collection
 
     # TODO collection, material, and file (all lists) have the same logic,
@@ -107,34 +146,26 @@ class Project(PrimaryBaseNode):
     @collection.setter
     def collection(self, new_collection: Union[Collection, List[Collection]]):
         """
-        This method sets the collection for this project.
-        The user can pass in either a collection to be appended to the list of collection
-        or the user can pass in a list of collections to replace the old list of collections.
-        This method works by checking if the argument is a list or collection object and
-        behaves accordingly.
 
         Parameters
         ----------
-        new_collection: Collection or List[Collection]
-            new collection to append to collection list
-            or new list of collections to replace the current list
+        new_collection
+
+        Returns
+        -------
+        None
         """
-
-        if isinstance(new_collection, list):
-            new_attrs = replace(self._json_attrs, collection=new_collection)
-            self._update_json_attrs_if_valid(new_attrs)
-
-        # if appending a single collection to the list
-        # get the old list, append the collection, and replace the field
-        else:
-            new_list: List[Collection] = self._json_attrs.collection
-            new_list.append(new_collection)
-            new_attrs = replace(self._json_attrs, collection=new_list)
-            self._update_json_attrs_if_valid(new_attrs)
+        self._set_node_or_list("collection", new_collection)
 
     # Material
     @property
     def material(self) -> List[Material]:
+        """
+
+        Returns
+        -------
+        None
+        """
         return self._json_attrs.material
 
     @material.setter
@@ -151,34 +182,37 @@ class Project(PrimaryBaseNode):
         new_material: Material or List[Material]
             new Material to append to Material list
             or new list of Material to replace the current list
-        """
-        if isinstance(new_material, list):
-            new_attrs = replace(self._json_attrs, collection=new_material)
-            self._update_json_attrs_if_valid(new_attrs)
 
-        # if appending a single material to the list
-        # get the old list, append the material, and replace the field
-        else:
-            new_list: List[Collection] = self._json_attrs.collection
-            new_list.append(new_material)
-            new_attrs = replace(self._json_attrs, collection=new_list)
-            self._update_json_attrs_if_valid(new_attrs)
+        Returns
+        -------
+        None
+        """
+        self._set_node_or_list("material", new_material)
 
     # File
     @property
     def file(self) -> List[File]:
+        """
+        """
         return self._json_attrs.file
 
     @file.setter
     def file(self, new_file: Union[File, List[File]]):
-        if isinstance(new_file, list):
-            new_attrs = replace(self._json_attrs, file=new_file)
-            self._update_json_attrs_if_valid(new_attrs)
+        """
+       This method sets the File for this project.
+       The user can pass in either a File to be appended to the list of File
+       or the user can pass in a list of File to replace the old list of File.
+       This method works by checking if the argument is a list or File object and
+       behaves accordingly.
 
-            # if appending a single material to the list
-            # get the old list, append the material, and replace the field
-        else:
-            new_list: List[File] = self._json_attrs.file
-            new_list.append(new_file)
-            new_attrs = replace(self._json_attrs, file=new_list)
-            self._update_json_attrs_if_valid(new_attrs)
+       Parameters
+       ----------
+       new_file: File or List[File]
+           new File to append to File list
+           or new list of File to replace the current list
+
+       Returns
+       -------
+       None
+       """
+        self._set_node_or_list("file", new_file)

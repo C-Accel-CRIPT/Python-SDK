@@ -52,3 +52,34 @@ def test_algorithm():
     assert a.type == "integration"
 
     #Add citation test, once we have citation implemted
+
+def test_search():
+    a = get_algorithm()
+    find_algorithms = a.find_children({"node": "Algorithm", "key":"mc_barostat"})
+    assert find_algorithms == [a]
+    find_algorithms = a.find_children({"node": "Algorithm", "key":"mc"})
+    assert find_algorithms == []
+
+    p1 = get_parameter()
+    p2 = get_parameter()
+    p2.key = "advanced_sampling"
+    p2.value = 15.
+    p2.unit = "m"
+    a.parameter += [p1, p2]
+
+    find_parameter = a.find_children({"key": "advanced_sampling"})
+    assert find_parameter == [p2]
+
+    find_parameter = a.find_children({"key": "update_frequency"})
+    assert find_parameter == [p1]
+
+    find_parameter = a.find_children({"key": "update"})
+    assert find_parameter == []
+
+    find_algorithms = a.find_children({"parameter": {"key":"advanced_sampling"}})
+    assert find_algorithms == [a]
+    find_algorithms = a.find_children({"parameter": [{"key":"advanced_sampling"}, {"key": "update_frequency"}]})
+    assert find_algorithms == [a]
+
+    find_algorithms = a.find_children({"parameter": [{"key":"advanced_sampling"}, {"key": "update_frequency"}, {"foo": "bar"}]})
+    assert find_algorithms == []

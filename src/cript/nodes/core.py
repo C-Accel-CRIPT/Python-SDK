@@ -131,6 +131,7 @@ class BaseNode(ABC):
         """
         User cannot set the updated_at for any nodes.
         Attempt to do so will raise an UneditableAttributeError
+
         Parameters
         ----------
         value

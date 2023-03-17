@@ -12,6 +12,7 @@ def test_group_to_json():
     """
     tests if the group node can be correctly serialized to JSON
     """
+    pass
 
 
 def test_get_group_name():

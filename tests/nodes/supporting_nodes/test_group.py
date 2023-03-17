@@ -8,6 +8,12 @@ def test_create_group_from_json():
     pass
 
 
+def test_group_to_json():
+    """
+    tests if the group node can be correctly serialized to JSON
+    """
+
+
 def test_get_group_name():
     """
     tests if it can correctly get the group name from the group node

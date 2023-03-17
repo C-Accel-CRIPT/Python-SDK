@@ -16,10 +16,7 @@ def cript_api():
     cript.API
         api object used to interact with CRIPT
     """
-    host: str = "https://cript.org"
-    token: str = "123465"
-
-    return cript.API(host=host, token=token)
+    return cript.API(host="https://cript.org", token="123465")
 
 
 def test_file_to_json():
@@ -36,7 +33,7 @@ def test_file_from_json():
     pass
 
 
-def test_create_save_file(cript_api):
+def test_create_and_save_file(cript_api):
     """
     * tests that it can create a file with only required attributes
     * tests that it can save a file
@@ -49,6 +46,7 @@ def test_create_save_file(cript_api):
 def test_create_file_with_all_attributes():
     """
     tests that it can create a file with all optional attributes
+    indirectly tests the controlled vocabulary as well
     """
     my_file = cript.File(
         source="https://example.com",
@@ -56,6 +54,23 @@ def test_create_file_with_all_attributes():
         extension="csv",
         data_dictionary="this is my data dictionary",
     )
+
+
+def test_create_file_invalid_vocabulary():
+    """
+    try to create a file node with invalid vocabulary
+    it should raise InvalidVocabulary error
+    """
+    pass
+
+
+def test_update_file_with_invalid_vocabulary():
+    """
+    create a file node with valid vocabulary
+    then update the file node to have invalid vocabulary
+    it should raise a InvalidVocabulary error
+    """
+    pass
 
 
 def test_get_file_from_cript():

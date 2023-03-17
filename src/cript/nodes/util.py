@@ -3,6 +3,7 @@ import inspect
 
 from dataclasses import asdict
 from cript.nodes.core import BaseNode
+from cript.nodes.exceptions import CRIPTJsonDeserializationError
 import cript.nodes
 
 
@@ -26,8 +27,7 @@ def _node_json_hook(node_str:str):
                 try:
                     return pyclass._from_json(node_dict)
                 except Exception as exc:
-                    print(f"JSON deserialization failed for Node type {key} with JSON str: {node_str}")
-                    raise exc
+                    raise CRIPTJsonDeserializationError(key, node_str) from exc
     # Fall back
     return node_dict
 

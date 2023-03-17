@@ -1,6 +1,7 @@
 import cript
 import pytest
-from cript.nodes.exceptions import CRIPTNodeSchemaError
+from dataclasses import replace
+from cript.nodes.exceptions import CRIPTNodeSchemaError, CRIPTJsonSerializationError, CRIPTJsonDeserializationError
 
 
 def get_parameter():
@@ -137,3 +138,24 @@ def test_software():
     assert s2.version == "v0.3.0"
     s2.source = "https://github.com/SSAGESLabs/PySAGES"
     assert s2.source == "https://github.com/SSAGESLabs/PySAGES"
+
+
+def test_json_error():
+
+    faulty_json = "{'node': 'Parameter', 'foo': 'bar'}".replace("'", "\"")
+    with pytest.raises(CRIPTJsonDeserializationError):
+        node = cript.load_nodes_from_json(faulty_json)
+
+    faulty_json = "{'node': 'Parameter', 'key': 'update_frequency', 'value': 1000.0, 'unit': '1/ns', 'foo': 'bar'}".replace("'", "\"")
+    with pytest.raises(CRIPTJsonDeserializationError):
+        node = cript.load_nodes_from_json(faulty_json)
+
+    parameter = get_parameter()
+    # Let's break the node by violating the data model
+    parameter._json_attrs = replace(parameter._json_attrs, value=None)
+    with pytest.raises(CRIPTJsonSerializationError):
+        parameter.json
+    # Let's break it completely
+    parameter._json_attrs = None
+    with pytest.raises(CRIPTJsonSerializationError):
+        parameter.json

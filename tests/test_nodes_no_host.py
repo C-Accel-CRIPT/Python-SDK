@@ -84,8 +84,9 @@ def test_reference():
 
     r2.authors = ["Ludwig Schneider"]
     assert str(r2.authors) == "['Ludwig Schneider']"
-    r2.url = "https://test.url"
-    assert  r2.url == "https://test.url"
+    with pytest.raises(AttributeError):
+        r2.url = "https://test.url"
+
     r2.type = "dissertation"
     assert r2.type == "dissertation"
     r2.title = "Rheology and Structure Formation in Complex Polymer Melts"

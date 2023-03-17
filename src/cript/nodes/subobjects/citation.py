@@ -22,19 +22,19 @@ class Citation(BaseNode):
         self.validate()
 
     @property
-    def type(self):
+    def type(self) -> str:
         return self._json_attrs.type
 
     @type.setter
-    def type(self, new_type):
+    def type(self, new_type:str):
         new_attrs = replace(self._json_attrs, type=new_type)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def reference(self):
+    def reference(self) -> str:
         return self._json_attrs.reference
 
     @reference.setter
-    def reference(self, new_reference):
+    def reference(self, new_reference:str):
         new_attrs = replace(self._json_attrs, reference=new_reference)
         self._update_json_attrs_if_valid(new_attrs)

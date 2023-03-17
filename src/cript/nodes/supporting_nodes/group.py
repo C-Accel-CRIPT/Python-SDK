@@ -1,9 +1,9 @@
 from dataclasses import dataclass, replace
-from typing import List, Union, Any
+from typing import List, Union
 
 from cript.nodes.core import BaseNode
-from cript.nodes.supporting_nodes.user import User
 from cript.nodes.exceptions import UneditableAttributeError
+from cript.nodes.supporting_nodes.user import User
 
 
 class Group(BaseNode):

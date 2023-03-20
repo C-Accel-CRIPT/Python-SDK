@@ -30,15 +30,24 @@ class API:
     def __init__(self, host: str, token: str) -> None:
         """
         Initialize object with host and token.
+        It is necessary to use a `with` context manager with the API like so:
+        ```
+        with cript.API('https://criptapp.org', 'secret_token') as api:
+           # node creation, api.save(), etc.
+        ```
 
         Parameters
         ----------
         host : str
             CRIPT host to connect to such as "https://criptapp.org"
             if host ends with a "/" such as "https://criptapp.org/"
-            then it strips it to always be uniform
+            then it strips it to always be uniform.
+            This host address is the same that use to login to cript website.
+
         token : str
             CRIPT API Token used to connect to CRIPT
+            You can find your personal token on the cript website at User > Security Settings.
+            The user icon is in the top right.
 
         Warns
         -----

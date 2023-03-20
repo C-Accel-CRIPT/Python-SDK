@@ -1,8 +1,10 @@
 import copy
 import json
 from abc import ABC
-from dataclasses import dataclass, asdict, replace
+from dataclasses import asdict, dataclass, replace
+
 from cript.nodes.exceptions import CRIPTNodeSchemaError
+
 
 class BaseNode(ABC):
     """
@@ -31,7 +33,7 @@ class BaseNode(ABC):
         """
         return str(asdict(self._json_attrs))
 
-    def _update_json_attrs_if_valid(self, new_json_attr:JsonAttributes):
+    def _update_json_attrs_if_valid(self, new_json_attr: JsonAttributes):
         tmp_obj = copy.copy(self)
         tmp_obj._json_attrs = new_json_attr
         # Throws invalid exception before object is modified.
@@ -51,7 +53,7 @@ class BaseNode(ABC):
         pass
 
     @classmethod
-    def _from_json(cls, json:dict):
+    def _from_json(cls, json: dict):
         # Child nodes can inherit and overwrite this. They should call super()._from_json first, and modified the returned object after if necessary.
 
         # This creates a basic version of the intended node.
@@ -61,7 +63,6 @@ class BaseNode(ABC):
         attrs = cls.JsonAttributes(**json)
         node._update_json_attrs_if_valid(attrs)
         return node
-
 
     @property
     def json(self):

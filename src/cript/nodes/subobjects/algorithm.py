@@ -1,12 +1,13 @@
+from dataclasses import dataclass, field, replace
 from typing import List
-from dataclasses import dataclass, replace, field
+
 from cript.nodes.core import BaseNode
-from cript.nodes.subobjects.parameter import Parameter
 from cript.nodes.subobjects.citation import Citation
+from cript.nodes.subobjects.parameter import Parameter
 
 
 class Algorithm(BaseNode):
-    """    """
+    """ """
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
@@ -25,7 +26,7 @@ class Algorithm(BaseNode):
         type: str,
         parameter: List[Parameter] = None,
         citation: List[Citation] = None,
-            **kwargs # ignored
+        **kwargs  # ignored
     ):
         if parameter is None:
             parameter = []
@@ -36,7 +37,6 @@ class Algorithm(BaseNode):
             self._json_attrs, key=key, type=type, parameter=parameter
         )
         self.validate()
-
 
     @property
     def key(self) -> str:

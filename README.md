@@ -12,7 +12,6 @@ THIS IS NOT THE CURRENTLY SUPPORTED PYTHON SDK FOR CRIPT (criptapp.org).
 USE THIS PYTHON SDK INSTEAD: [cript](https://github.com/C-Accel-CRIPT/cript)
 THIS IS WORK AND PROGRESS AND SUBJECT TO CHANGES!
 
-
 ## What is it?
 
 The CRIPT Python SDK allows programmatic access to the [CRIPT platform](https://criptapp.org). It can help automate uploading your data to CRIPT, and aims to allow for manipulation of your CRIPT data through the python language. This is a perfect tool for users who have python experience and have large amount of data to upload to [CRIPT](https://criptapp.org).
@@ -40,7 +39,7 @@ To learn more about the CRIPT Python SDK please check the [CRIPT-SDK documentati
 <!--
 
 ## Release Notes
-Please visit the [Python SDK Documentation Release Notes](#) or within the [GitHub Releases page](#) 
+Please visit the [Python SDK Documentation Release Notes](#) or within the [GitHub Releases page](#)
 
 ---
 

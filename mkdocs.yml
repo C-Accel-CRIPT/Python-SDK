@@ -41,7 +41,7 @@ extra:
 #  social:
 #    - icon: fontawesome/brands/twitter
 #      link: https://twitter.com/squidfunk
-#      name: squidfunk on Twitter  
+#      name: squidfunk on Twitter
 copyright: © 2023 MIT | All Rights Reserved
 
 extra_css:
@@ -79,7 +79,7 @@ markdown_extensions:
   - pymdownx.mark
   - pymdownx.tilde
   - pymdownx.tabbed:
-      alternate_style: true  
+      alternate_style: true
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.emoji:

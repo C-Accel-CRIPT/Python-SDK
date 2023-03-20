@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 from cript.nodes.core import BaseNode
 
 

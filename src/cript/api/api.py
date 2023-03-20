@@ -1,7 +1,8 @@
+import os
 import copy
 import json
 import warnings
-from typing import List, Literal
+from typing import List, Literal, Union
 
 import requests
 
@@ -11,6 +12,9 @@ from cript.nodes.primary_nodes.project import Project
 from cript.nodes.supporting_nodes.group import Group
 from cript.nodes.supporting_nodes.user import User
 from cript.api.exceptions import CRIPTConnectionError, CRIPTAPIAccessError
+
+# Current token string length
+_MINIMUM_TOKEN_LENGTH = 46
 
 _global_cached_api = None
 
@@ -27,7 +31,7 @@ class API:
     _host: str = ""
     _token: str = ""
 
-    def __init__(self, host: str, token: str) -> None:
+    def __init__(self, host: Union[str, None], token: [str, None]) -> None:
         """
         Initialize object with host and token.
         It is necessary to use a `with` context manager with the API like so:
@@ -38,16 +42,20 @@ class API:
 
         Parameters
         ----------
-        host : str
+        host : str, None
             CRIPT host to connect to such as "https://criptapp.org"
             if host ends with a "/" such as "https://criptapp.org/"
             then it strips it to always be uniform.
             This host address is the same that use to login to cript website.
 
-        token : str
+            If `None` is specified, the host is inferred from the environment variable `CRIPT_HOST`.
+
+        token : str, None
             CRIPT API Token used to connect to CRIPT
             You can find your personal token on the cript website at User > Security Settings.
             The user icon is in the top right.
+            If `None` is specified, the token is inferred from the environment variable `CRIPT_TOKEN`.
+
 
         Warns
         -----
@@ -64,6 +72,16 @@ class API:
         None
         """
 
+        if host is None:
+            host = os.environ.get("CRIPT_HOST")
+            if host is None:
+                raise RuntimeError("API initilized with `host=None` but environment variable `CRIPT_HOST` not found.\n"
+                                   "Set the environment variable (preferred) or specify the host explictly at the creation of API.")
+        if token is None:
+            token = os.environ.get("CRIPT_TOKEN")
+            if token is None:
+                raise RuntimeError("API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n"
+                                   "Set the environment variable (preferred) or specify the token explictly at the creation of API.")
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
 
@@ -76,7 +94,7 @@ class API:
             # TODO send an http request to check connection with host and token
             pass
         except Exception as exc:
-            raise CRIPTConnectionError from exc
+            raise CRIPTConnectionError(host, token) from exc
 
         # Only assign to class after the connection is made
         self._host = host

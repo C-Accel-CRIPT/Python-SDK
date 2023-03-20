@@ -1,10 +1,21 @@
+from cript.api.api import _MINIMUM_TOKEN_LENGTH
+
+
 class CRIPTConnectionError(Exception):
     """
     Raised when the API object cannot connect to CRIPT with the given host and token
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, host, token):
+        self.host = host
+
+        # Do not store full token in stack trace for security reasons
+        if len(token) < _MINIMUM_TOKEN_LENGTH:
+            raise RuntimeError(f"Invalid short token {len(token)}, mininmum length: {_MINIMUM_TOKEN_LENGTH}.")
+        uncovered_chars = _MINIMUM_TOKEN_LENGTH//4
+        self.token = token[:uncovered_chars]
+        self.token += "*"*(len(token)-2*uncovered_chars)
+        self.token += token[-uncovered_chars:]
 
     def __str__(self) -> str:
         """
@@ -14,7 +25,7 @@ class CRIPTConnectionError(Exception):
         str
             Explanation of the error
         """
-        return "Could not connect to CRIPT with the given host and token. Please be sure both host and token are entered correctly."
+        return f"Could not connect to CRIPT with the given host ({self.host}) and token ({self.token}). Please be sure both host and token are entered correctly."
 
 
 class InvalidVocabulary(Exception):
@@ -39,4 +50,9 @@ class CRIPTAPIAccessError(Exception):
         pass
     def __str__(self) -> str:
         ret_str = "An operation you requested (see stack trace) requires that you connect to a CRIPT host via an cript.API object first.\n"
-        ret_str +=
+        ret_str += "This is common for node creation, validation and modification.\n"
+        ret_str += "It is necessary that you connect with the API via a context manager like this:\n"
+        ret_str += "`with cript.API('https://criptapp.org/', secret_token) as api:\n"
+        ret_str += "\t# code that use the API object explicitly (`api.save(..)`) or implicitly (`cript.Experiment(...)`)."
+        ret_str += "See documentation of cript.API for more details."
+        return ret_str

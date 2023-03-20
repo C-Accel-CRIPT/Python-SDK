@@ -13,9 +13,6 @@ from cript.nodes.supporting_nodes.group import Group
 from cript.nodes.supporting_nodes.user import User
 from cript.api.exceptions import CRIPTConnectionError, CRIPTAPIAccessError
 
-# Current token string length
-_MINIMUM_TOKEN_LENGTH = 46
-
 _global_cached_api = None
 
 def _get_global_cached_api():
@@ -87,7 +84,7 @@ class API:
 
         # if host is using unsafe "http://" then give a warning
         if host.startswith("http://"):
-            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS")
+            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
 
         # check that api can connect to CRIPT with host and token
         try:
@@ -99,6 +96,20 @@ class API:
         # Only assign to class after the connection is made
         self._host = host
         self._token = token
+
+
+    def __enter__(self):
+        # Store the last active global API (might be None)
+        global _global_cached_api
+        self._previous_global_cached_api = copy.copy(_global_cached_api)
+        _global_cached_api = self
+        return self
+
+    def __exit__(self, type, value, traceback):
+        # Restore the previously active global API (might be None)
+        global _global_cached_api
+        _global_cached_api = self._previous_global_cached_api
+
 
     @property
     def host(self):

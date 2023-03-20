@@ -1,5 +1,5 @@
-from cript.api.api import _MINIMUM_TOKEN_LENGTH
-
+# Current token string length
+_MINIMUM_TOKEN_LENGTH = 46
 
 class CRIPTConnectionError(Exception):
     """

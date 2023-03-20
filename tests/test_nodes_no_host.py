@@ -10,9 +10,9 @@ def get_parameter():
 
 
 def get_parameter_string():
-    return "{'node': 'Parameter', 'key': 'update_frequency', 'value': 1000.0, 'unit': '1/ns'}".replace(
-        "'", '"'
-    )
+    ret_str = "{'node': 'Parameter', 'key': 'update_frequency',"
+    ret_str += " 'value': 1000.0, 'unit': '1/ns'}"
+    return ret_str.replace("'", '"')
 
 
 def get_algorithm():
@@ -21,9 +21,9 @@ def get_algorithm():
 
 
 def get_algorithm_string():
-    return "{'node': 'Algorithm', 'key': 'mc_barostat', 'type': 'barostat', 'parameter': [], 'citation': []}".replace(
-        "'", '"'
-    )
+    ret_str = "{'node': 'Algorithm', 'key': 'mc_barostat', 'type': 'barostat',"
+    ret_str += " 'parameter': [], 'citation': []}"
+    return ret_str.replace("'", '"')
 
 
 def test_parameter():

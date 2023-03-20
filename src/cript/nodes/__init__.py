@@ -1,3 +1,4 @@
+# trunk-ignore-all(ruff/F401)
 from cript.nodes.primary_nodes import (
     Collection,
     Computation,

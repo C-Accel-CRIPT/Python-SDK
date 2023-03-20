@@ -3,13 +3,12 @@ import json
 from abc import ABC
 from dataclasses import asdict, dataclass, replace
 
-from cript.nodes.exceptions import CRIPTNodeSchemaError
-
 
 class BaseNode(ABC):
     """
     This abstract class is the base of all CRIPT nodes.
-    It offers access to a json attribute class, which reflects the data model JSON attributes.
+    It offers access to a json attribute class,
+    which reflects the data model JSON attributes.
     Also, some basic shared functionality is provided by this base class.
     """
 
@@ -54,7 +53,8 @@ class BaseNode(ABC):
 
     @classmethod
     def _from_json(cls, json: dict):
-        # Child nodes can inherit and overwrite this. They should call super()._from_json first, and modified the returned object after if necessary.
+        # Child nodes can inherit and overwrite this.
+        # They should call super()._from_json first, and modified the returned object after if necessary.
 
         # This creates a basic version of the intended node.
         # All attributes from the backend are passed over, but some like created_by are ignored

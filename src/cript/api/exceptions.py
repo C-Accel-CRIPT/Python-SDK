@@ -29,3 +29,14 @@ class InvalidVocabulary(Exception):
 
     def __str__(self) -> str:
         return f"The vocabulary entered does not exist within the CRIPT controlled vocabulary. Please pick a valid CRIPT vocabulary from {self.vocab_URL}"
+
+
+class CRIPTAPIAccessError(Exception):
+    """
+    Exception to be raise when the cached API object is requested, but no cached API exists yet.
+    """
+    def __init__(self):
+        pass
+    def __str__(self) -> str:
+        ret_str = "An operation you requested (see stack trace) requires that you connect to a CRIPT host via an cript.API object first.\n"
+        ret_str +=

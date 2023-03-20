@@ -1,3 +1,4 @@
+import copy
 import json
 import warnings
 from typing import List, Literal
@@ -9,11 +10,21 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
 from cript.nodes.supporting_nodes.group import Group
 from cript.nodes.supporting_nodes.user import User
-from cript.api.exceptions import CRIPTConnectionError
+from cript.api.exceptions import CRIPTConnectionError, CRIPTAPIAccessError
 
+_global_cached_api = None
+
+def _get_global_cached_api():
+    """
+    Read-Only access to the globally cached API object.
+    Raises an exception if no global API object is cached yet.
+    """
+    if _global_cached_api is None:
+        raise CRIPTAPIAccessError
+    return copy.copy(_global_cached_api)
 
 class API:
-    host: str = ""
+    _host: str = ""
     _token: str = ""
 
     def __init__(self, host: str, token: str) -> None:
@@ -47,19 +58,28 @@ class API:
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
 
-        self.host = host
-        self._token = token
-
         # if host is using unsafe "http://" then give a warning
-        if self.host.startswith("http://"):
+        if host.startswith("http://"):
             warnings.warn("HTTP is an unsafe protocol please consider using HTTPS")
 
         # check that api can connect to CRIPT with host and token
         try:
             # TODO send an http request to check connection with host and token
             pass
-        except Exception:
-            raise CRIPTConnectionError
+        except Exception as exc:
+            raise CRIPTConnectionError from exc
+
+        # Only assign to class after the connection is made
+        self._host = host
+        self._token = token
+
+    @property
+    def host(self):
+        """
+        Read only access to the currently connected host.
+        If the connection to a new host is desired, create a new API object.
+        """
+        return self._host
 
     def save(self, node: PrimaryBaseNode) -> None:
         # TODO create a giant JSON from the primary node given and send that to

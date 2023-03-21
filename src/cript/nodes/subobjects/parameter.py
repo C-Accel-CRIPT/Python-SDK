@@ -1,5 +1,6 @@
-from typing import Union
 from dataclasses import dataclass, replace
+from typing import Union
+
 from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 
@@ -12,16 +13,17 @@ class Parameter(BaseNode):
         node: str = "Parameter"
         key: str = ""
         value: Union[int, float, str] = ""
-        # We explictly allow None for unit here (instead of empty str), this presents number without physical unit, like counting particles or dimensionless numbers.
+        # We explictly allow None for unit here (instead of empty str),
+        # this presents number without physical unit, like counting
+        # particles or dimensionless numbers.
         unit: Union[str, None] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     # Note that the key word args are ignored.
-    # They are just here, such that we can feed more kwargs in that we get from the back end.
-    def __init__(
-            self, key: str, value: Union[int, float], unit: Union[str, None] = None, **kwargs
-    ):
+    # They are just here, such that we can feed more kwargs
+    # in that we get from the back end.
+    def __init__(self, key: str, value: Union[int, float], unit: Union[str, None] = None, **kwargs):
         super().__init__(node="Parameter")
         self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit)
         self.validate()
@@ -31,7 +33,6 @@ class Parameter(BaseNode):
         print("TODO. Remove this dummy validation of parameter")
         if not isinstance(self._json_attrs.value, float):
             raise CRIPTNodeSchemaError
-
 
     @property
     def key(self) -> str:

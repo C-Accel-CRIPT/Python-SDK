@@ -1,7 +1,8 @@
+# trunk-ignore-all(ruff/F401)
 from cript.nodes.primary_nodes import (
     Collection,
-    ComputationalProcess,
     Computation,
+    ComputationalProcess,
     Data,
     Experiment,
     Inventory,
@@ -10,7 +11,6 @@ from cript.nodes.primary_nodes import (
     Reference,
     Software,
 )
-
 from cript.nodes.subobjects import (
     Algorithm,
     Citation,
@@ -22,14 +22,5 @@ from cript.nodes.subobjects import (
     Quantity,
     SoftwareConfiguration,
 )
-
-from cript.nodes.supporting_nodes import (
-    File,
-    Group,
-    User,
-)
-
-from cript.nodes.util import (
-    NodeEncoder,
-    load_nodes_from_json,
-    )
+from cript.nodes.supporting_nodes import File, Group, User
+from cript.nodes.util import NodeEncoder, load_nodes_from_json

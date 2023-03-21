@@ -1,5 +1,6 @@
 from abc import ABC
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
+
 from cript.nodes.core import BaseNode
 from cript.nodes.supporting_nodes.user import User
 

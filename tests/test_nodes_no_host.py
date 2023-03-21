@@ -26,6 +26,17 @@ def get_algorithm_string():
     return ret_str.replace("'", '"')
 
 
+def get_quantity():
+    quantity = cript.Quantity("mass", 11.2, "kg", 0.2, "std")
+    return quantity
+
+
+def get_quantity_string():
+    ret_str = "{'node': 'Quantity', 'key': 'mass', 'value': 11.2, "
+    ret_str += "'unit': 'kg', 'uncertainty': 0.2, 'uncertainty_type': 'std'}"
+    return ret_str.replace("'", '"')
+
+
 def test_parameter():
     p = get_parameter()
     p_str = p.json
@@ -62,3 +73,19 @@ def test_algorithm():
     assert a.type == "integration"
 
     # Add citation test, once we have citation implemted
+
+
+def test_quantity():
+    q = get_quantity()
+    assert q.json == get_quantity_string()
+    assert cript.load_nodes_from_json(get_quantity_string()).json == q.json
+
+    q.key = "volume"
+    assert q.key == "volume"
+    q.value = 0.5
+    assert q.value == 0.5
+    q.unit = "l"
+    assert q.unit == "l"
+    q.set_uncertainty(0.1, "var")
+    assert q.uncertainty == 0.1
+    assert q.uncertainty_type == "var"

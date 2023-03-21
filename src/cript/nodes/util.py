@@ -1,9 +1,9 @@
-import json
 import inspect
-
+import json
 from dataclasses import asdict
-from cript.nodes.core import BaseNode
+
 import cript.nodes
+from cript.nodes.core import BaseNode
 
 
 class NodeEncoder(json.JSONEncoder):

@@ -1,5 +1,6 @@
-import cript
 import pytest
+
+import cript
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 
@@ -9,20 +10,15 @@ def get_parameter():
 
 
 def get_parameter_string():
-    return "{'node': 'Parameter', 'key': 'update_frequency', 'value': 1000.0, 'unit': '1/ns'}".replace(
-        "'", '"'
-    )
-
-
-def get_algorithm():
-    algorithm = cript.Algorithm("mc_barostat", "barostat")
-    return algorithm
+    ret_str = "{'node': 'Parameter', 'key': 'update_frequency',"
+    ret_str += " 'value': 1000.0, 'unit': '1/ns'}"
+    return ret_str.replace("'", '"')
 
 
 def get_algorithm_string():
-    return "{'node': 'Algorithm', 'key': 'mc_barostat', 'type': 'barostat', 'parameter': [], 'citation': []}".replace(
-        "'", '"'
-    )
+    ret_str = "{'node': 'Algorithm', 'key': 'mc_barostat', 'type': 'barostat',"
+    ret_str += " 'parameter': [], 'citation': []}"
+    return ret_str.replace("'", '"')
 
 
 def test_parameter():
@@ -61,13 +57,9 @@ def test_algorithm():
     assert a.type == "integration"
 
     # Add citation test, once we have citation implemted
-
-
 def test_removing_nodes():
     a = get_algorithm()
     p = get_parameter()
     a.parameter += [p]
     a.remove_child(p)
     assert a.json == get_algorithm_string()
-
-    # Add test to remove node not from a list, once we have one

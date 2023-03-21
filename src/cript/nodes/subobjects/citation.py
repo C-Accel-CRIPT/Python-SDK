@@ -1,4 +1,3 @@
-from copy import copy
 from dataclasses import dataclass, replace
 from typing import Union
 

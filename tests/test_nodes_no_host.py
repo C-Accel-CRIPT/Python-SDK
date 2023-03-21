@@ -42,9 +42,12 @@ def get_reference():
 
 
 def get_reference_string():
-    return "{'node': 'Reference', 'url': '', 'type': 'journal_article', 'title': '', 'authors': ['Ludwig Schneider', 'Marcus M\\u00fcller'], 'journal': 'Computer Physics Communications', 'publisher': 'Elsevier', 'year': 2019, 'issue': null, 'pages': [463, 476], 'doi': '10.1016/j.cpc.2018.08.011', 'issn': '0010-4655', 'arxiv_id': '', 'pmid': null, 'website': 'https://www.sciencedirect.com/science/article/pii/S0010465518303072'}".replace(
-        "'", '"'
-    )
+    ret_str = "{'node': 'Reference', 'url': '', 'type': 'journal_article', 'title': '', 'authors':"
+    ret_str += " ['Ludwig Schneider', 'Marcus M\\u00fcller'], 'journal': 'Computer Physics Communications', "
+    ret_str += "'publisher': 'Elsevier', 'year': 2019, 'issue': null, 'pages': [463, 476], "
+    ret_str += "'doi': '10.1016/j.cpc.2018.08.011', 'issn': '0010-4655', 'arxiv_id': '', "
+    ret_str += "'pmid': null, 'website': 'https://www.sciencedirect.com/science/article/pii/S0010465518303072'}"
+    return ret_str.replace("'", '"')
 
 
 def get_citation():

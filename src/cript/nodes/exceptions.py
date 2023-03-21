@@ -2,8 +2,10 @@ class CRIPTNodeSchemaError(Exception):
     """
     Exception that is raised when a DB schema validation fails for a node.
 
-    This is a dummy implementation. This needs to be way more sophisticated for good error reporting.
+    This is a dummy implementation.
+    This needs to be way more sophisticated for good error reporting.
     """
+
     def __init__(self):
         pass
 

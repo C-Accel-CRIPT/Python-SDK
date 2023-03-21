@@ -2,6 +2,7 @@ import pytest
 
 import cript
 from cript.api.schema_validation import _get_db_schema
+from cript.api.vocabulary import _get_controlled_vocabulary
 
 
 @pytest.fixture(scope="session")
@@ -77,7 +78,7 @@ def test_get_vocabulary(cript_api):
     NoneType
         None
     """
-    return cript._get_controlled_vocabulary()
+    return _get_controlled_vocabulary()
 
 
 def test_vocabulary_success(cript_api):

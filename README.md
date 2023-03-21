@@ -7,7 +7,7 @@
 [![Link to CRIPT website](https://img.shields.io/badge/platform-criptapp.org-blueviolet?style=flat-square)](https://criptapp.org/)
 [![Using Pytest](https://img.shields.io/badge/Dependecnies-pytest-green?style=flat-square&logo=Pytest)](https://docs.pytest.org/en/7.2.x/)
 [![Using mypy to test typings](https://img.shields.io/badge/Dependecnies-mypy-blueviolet?style=flat-square&logo=python)](https://mypy.readthedocs.io/en/stable/)
-[![Using JSONSchema](https://img.shields.io/badge/Dependecnies-jsonschema-blueviolet?style=flat-square&logo=json)](https://python-JSONSchema.readthedocs.io/en/stable/)
+[![Using JSONSchema](https://img.shields.io/badge/Dependencies-jsonschema-blueviolet?style=flat-square&logo=json)](https://python-JSONSchema.readthedocs.io/en/stable/)
 [![Using Requests Library](https://img.shields.io/badge/Dependecnies-Requests-blueviolet?style=flat-square&logo=python)](https://requests.readthedocs.io/en/latest/)
 [![Material MkDocs](https://img.shields.io/badge/Docs-mkdocs--material-blueviolet?style=flat-square&logo=markdown)](https://squidfunk.github.io/mkdocs-material/)
 

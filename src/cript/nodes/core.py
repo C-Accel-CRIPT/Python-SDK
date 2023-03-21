@@ -1,13 +1,14 @@
 import copy
 import json
 from abc import ABC
-from dataclasses import dataclass, asdict, replace
-from cript.nodes.exceptions import CRIPTNodeSchemaError
+from dataclasses import asdict, dataclass, replace
+
 
 class BaseNode(ABC):
     """
     This abstract class is the base of all CRIPT nodes.
-    It offers access to a json attribute class, which reflects the data model JSON attributes.
+    It offers access to a json attribute class,
+    which reflects the data model JSON attributes.
     Also, some basic shared functionality is provided by this base class.
     """
 
@@ -31,7 +32,7 @@ class BaseNode(ABC):
         """
         return str(asdict(self._json_attrs))
 
-    def _update_json_attrs_if_valid(self, new_json_attr:JsonAttributes):
+    def _update_json_attrs_if_valid(self, new_json_attr: JsonAttributes):
         tmp_obj = copy.copy(self)
         tmp_obj._json_attrs = new_json_attr
         # Throws invalid exception before object is modified.
@@ -51,8 +52,9 @@ class BaseNode(ABC):
         pass
 
     @classmethod
-    def _from_json(cls, json:dict):
-        # Child nodes can inherit and overwrite this. They should call super()._from_json first, and modified the returned object after if necessary.
+    def _from_json(cls, json: dict):
+        # Child nodes can inherit and overwrite this.
+        # They should call super()._from_json first, and modified the returned object after if necessary.
 
         # This creates a basic version of the intended node.
         # All attributes from the backend are passed over, but some like created_by are ignored
@@ -61,7 +63,6 @@ class BaseNode(ABC):
         attrs = cls.JsonAttributes(**json)
         node._update_json_attrs_if_valid(attrs)
         return node
-
 
     @property
     def json(self):

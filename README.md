@@ -12,6 +12,7 @@
 [![Material MkDocs](https://img.shields.io/badge/Docs-mkdocs--material-blueviolet?style=flat-square&logo=markdown)](https://squidfunk.github.io/mkdocs-material/)
 
 ## Disclaimer
+
 This is the successor to the original [CRIPT Python SDK](https://github.com/C-Accel-CRIPT/cript). The new CRIPT Python SDK is still under development, and we will officially release it as soon as it is ready. For now please use the [original CRIPT Python SDK](https://github.com/C-Accel-CRIPT/cript)
 
 ---
@@ -43,7 +44,7 @@ To learn more about the CRIPT Python SDK please check the [CRIPT-SDK documentati
 <!--
 
 ## Release Notes
-Please visit the [Python SDK Documentation Release Notes](#) or within the [GitHub Releases page](#) 
+Please visit the [Python SDK Documentation Release Notes](#) or within the [GitHub Releases page](#)
 
 ---
 

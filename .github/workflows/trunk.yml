@@ -3,11 +3,14 @@ name: CI
 on:
   push:
     branches:
+      - main
+      - develop
       - trunk-merge/**
   pull_request:
     branches:
       - main
       - develop
+      - trunk-merge/**
 
 jobs:
   trunk:

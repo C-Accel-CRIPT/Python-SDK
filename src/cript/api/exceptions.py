@@ -1,4 +1,3 @@
-
 class CRIPTConnectionError(Exception):
     """
     Raised when the API object cannot connect to CRIPT with the given host and token
@@ -7,9 +6,9 @@ class CRIPTConnectionError(Exception):
     def __init__(self, host, token):
         self.host = host
         # Do not store full token in stack trace for security reasons
-        uncovered_chars = len(token)//4
+        uncovered_chars = len(token) // 4
         self.token = token[:uncovered_chars]
-        self.token += "*"*(len(token)-2*uncovered_chars)
+        self.token += "*" * (len(token) - 2 * uncovered_chars)
         self.token += token[-uncovered_chars:]
 
     def __str__(self) -> str:
@@ -47,10 +46,13 @@ class CRIPTAPIAccessError(Exception):
     """
     Exception to be raise when the cached API object is requested, but no cached API exists yet.
     """
+
     def __init__(self):
         pass
+
     def __str__(self) -> str:
-        ret_str = "An operation you requested (see stack trace) requires that you connect to a CRIPT host via an cript.API object first.\n"
+        ret_str = "An operation you requested (see stack trace) requires that you "
+        ret_str += " connect to a CRIPT host via an cript.API object first.\n"
         ret_str += "This is common for node creation, validation and modification.\n"
         ret_str += "It is necessary that you connect with the API via a context manager like this:\n"
         ret_str += "`with cript.API('https://criptapp.org/', secret_token) as api:\n"

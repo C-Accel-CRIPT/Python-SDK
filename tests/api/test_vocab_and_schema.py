@@ -78,7 +78,7 @@ def test_get_vocabulary(cript_api):
     NoneType
         None
     """
-    # return _get_controlled_vocabulary()
+    return _get_controlled_vocabulary()
 
 
 def test_vocabulary_success(cript_api):

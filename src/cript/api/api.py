@@ -1,19 +1,17 @@
-import os
 import copy
-
+import os
 import warnings
 from typing import List, Literal, Union
 
 from cript.api._valid_search_modes import _VALID_SEARCH_MODES
-from cript.api.exceptions import CRIPTConnectionError
+from cript.api.exceptions import CRIPTAPIAccessError, CRIPTConnectionError
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
 from cript.nodes.supporting_nodes.group import Group
 from cript.nodes.supporting_nodes.user import User
-from cript.api.exceptions import CRIPTConnectionError, CRIPTAPIAccessError
-
 
 _global_cached_api = None
+
 
 def _get_global_cached_api():
     """
@@ -23,6 +21,7 @@ def _get_global_cached_api():
     if _global_cached_api is None:
         raise CRIPTAPIAccessError
     return copy.copy(_global_cached_api)
+
 
 class API:
     _host: str = ""
@@ -72,13 +71,17 @@ class API:
         if host is None:
             host = os.environ.get("CRIPT_HOST")
             if host is None:
-                raise RuntimeError("API initilized with `host=None` but environment variable `CRIPT_HOST` not found.\n"
-                                   "Set the environment variable (preferred) or specify the host explictly at the creation of API.")
+                raise RuntimeError(
+                    "API initilized with `host=None` but environment variable `CRIPT_HOST` not found.\n"
+                    "Set the environment variable (preferred) or specify the host explictly at the creation of API."
+                )
         if token is None:
             token = os.environ.get("CRIPT_TOKEN")
             if token is None:
-                raise RuntimeError("API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n"
-                                   "Set the environment variable (preferred) or specify the token explictly at the creation of API.")
+                raise RuntimeError(
+                    "API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n"
+                    "Set the environment variable (preferred) or specify the token explictly at the creation of API."
+                )
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
 
@@ -97,7 +100,6 @@ class API:
         self._host = host
         self._token = token
 
-
     def __enter__(self):
         # Store the last active global API (might be None)
         global _global_cached_api
@@ -109,7 +111,6 @@ class API:
         # Restore the previously active global API (might be None)
         global _global_cached_api
         _global_cached_api = self._previous_global_cached_api
-
 
     @property
     def host(self):

@@ -31,7 +31,11 @@ class Parameter(BaseNode):
     def validate(self):
         super().validate()
         # TODO. Remove this dummy validation of parameter
-        if not (isinstance(self._json_attrs.value, float) or isinstance(self._json_attrs.value, int) or isinstance(self._json_attrs.value, str)):
+        if not (
+            isinstance(self._json_attrs.value, float)
+            or isinstance(self._json_attrs.value, int)
+            or isinstance(self._json_attrs.value, str)
+        ):
             raise CRIPTNodeSchemaError
 
     @property

@@ -27,26 +27,37 @@ def get_algorithm_string():
 
 
 def get_reference():
-    reference = cript.Reference("journal_article",
-                                authors = ["Ludwig Schneider", "Marcus Müller"],
-                                journal= "Computer Physics Communications",
-                                publisher = "Elsevier",
-                                year = 2019,
-                                pages = [463, 476],
-                                doi = "10.1016/j.cpc.2018.08.011",
-                                issn = "0010-4655",
-                                website = "https://www.sciencedirect.com/science/article/pii/S0010465518303072")
+    reference = cript.Reference(
+        "journal_article",
+        authors=["Ludwig Schneider", "Marcus Müller"],
+        journal="Computer Physics Communications",
+        publisher="Elsevier",
+        year=2019,
+        pages=[463, 476],
+        doi="10.1016/j.cpc.2018.08.011",
+        issn="0010-4655",
+        website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+    )
     return reference
 
+
 def get_reference_string():
-    return "{'node': 'Reference', 'url': '', 'type': 'journal_article', 'title': '', 'authors': ['Ludwig Schneider', 'Marcus M\\u00fcller'], 'journal': 'Computer Physics Communications', 'publisher': 'Elsevier', 'year': 2019, 'issue': null, 'pages': [463, 476], 'doi': '10.1016/j.cpc.2018.08.011', 'issn': '0010-4655', 'arxiv_id': '', 'pmid': null, 'website': 'https://www.sciencedirect.com/science/article/pii/S0010465518303072'}".replace("'", "\"")
+    return "{'node': 'Reference', 'url': '', 'type': 'journal_article', 'title': '', 'authors': ['Ludwig Schneider', 'Marcus M\\u00fcller'], 'journal': 'Computer Physics Communications', 'publisher': 'Elsevier', 'year': 2019, 'issue': null, 'pages': [463, 476], 'doi': '10.1016/j.cpc.2018.08.011', 'issn': '0010-4655', 'arxiv_id': '', 'pmid': null, 'website': 'https://www.sciencedirect.com/science/article/pii/S0010465518303072'}".replace(
+        "'", '"'
+    )
+
 
 def get_citation():
     citation = cript.Citation("reference", get_reference())
     return citation
 
+
 def get_citation_string():
-    return "{'node': 'Citation', 'type': 'reference', 'reference':}".replace("'reference':", f"'reference': {get_reference_string()}").replace("'", "\"")
+    return "{'node': 'Citation', 'type': 'reference', 'reference':}".replace(
+        "'reference':", f"'reference': {get_reference_string()}"
+    ).replace("'", '"')
+
+
 def test_parameter():
     p = get_parameter()
     p_str = p.json
@@ -85,6 +96,7 @@ def test_algorithm():
     a.citation += [get_citation()]
     assert a.citation[0].json == get_citation().json
 
+
 def test_reference():
     r = get_reference()
     assert r.json == get_reference_string()
@@ -119,6 +131,7 @@ def test_reference():
     assert r2.pmid == 0
     r2.website = "http://hdl.handle.net/11858/00-1735-0000-002e-e60c-c"
     assert r2.website == "http://hdl.handle.net/11858/00-1735-0000-002e-e60c-c"
+
 
 def test_citation():
     c = get_citation()

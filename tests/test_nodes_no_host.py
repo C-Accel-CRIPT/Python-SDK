@@ -73,9 +73,9 @@ def get_software():
 
 
 def get_software_string():
-    return "{'node': 'Software', 'url': '', 'name': 'SOMA', 'version': '0.7.0', 'source': 'https://gitlab.com/InnocentBug/SOMA'}".replace(
-        "'", '"'
-    )
+    ret_str = "{'node': 'Software', 'url': '', 'name': 'SOMA',"
+    ret_str += " 'version': '0.7.0', 'source': 'https://gitlab.com/InnocentBug/SOMA'}"
+    return ret_str.replace("'", '"')
 
 
 def test_parameter():
@@ -163,6 +163,7 @@ def test_citation():
     c.reference = new_ref
     assert c.reference == new_ref
 
+
 def test_software():
     s = get_software()
     assert s.json == get_software_string()
@@ -180,13 +181,13 @@ def test_software():
 def test_json_error():
     faulty_json = "{'node': 'Parameter', 'foo': 'bar'}".replace("'", '"')
     with pytest.raises(CRIPTJsonDeserializationError):
-        node = cript.load_nodes_from_json(faulty_json)
+        cript.load_nodes_from_json(faulty_json)
 
     faulty_json = "{'node': 'Parameter', 'key': 'update_frequency', 'value': 1000.0, 'unit': '1/ns', 'foo': 'bar'}".replace(
         "'", '"'
     )
     with pytest.raises(CRIPTJsonDeserializationError):
-        node = cript.load_nodes_from_json(faulty_json)
+        cript.load_nodes_from_json(faulty_json)
 
     parameter = get_parameter()
     # Let's break the node by violating the data model

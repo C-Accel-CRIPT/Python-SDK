@@ -9,6 +9,7 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 class Collection(PrimaryBaseNode):
     """
     Collection class
+    [data model](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=8)
     """
 
     @dataclass(frozen=True)

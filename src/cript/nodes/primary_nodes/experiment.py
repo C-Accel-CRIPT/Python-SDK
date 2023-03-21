@@ -28,14 +28,14 @@ class Experiment(PrimaryBaseNode):
         citation: List[Citation] = None
 
     def __init__(
-            self,
-            name: str,
-            process: List[Process] = None,
-            computation: List[Computation] = None,
-            computational_process: List[ComputationalProcess] = None,
-            data: List[Data] = None,
-            funding: List[str] = None,
-            citation: List[Citation] = None,
+        self,
+        name: str,
+        process: List[Process] = None,
+        computation: List[Computation] = None,
+        computational_process: List[ComputationalProcess] = None,
+        data: List[Data] = None,
+        funding: List[str] = None,
+        citation: List[Citation] = None,
     ):
         super().__init__(node="Experiment")
         self._json_attrs = replace(
@@ -46,7 +46,7 @@ class Experiment(PrimaryBaseNode):
             computational_process=computational_process,
             data=data,
             funding=funding,
-            citation=citation
+            citation=citation,
         )
 
         # check if the code is still valid
@@ -121,7 +121,9 @@ class Experiment(PrimaryBaseNode):
         return self._json_attrs.computational_process
 
     @computational_process.setter
-    def computational_process(self, new_computational_process_list: List[ComputationalProcess]) -> None:
+    def computational_process(
+        self, new_computational_process_list: List[ComputationalProcess]
+    ) -> None:
         """
         set the list of computational_process for this experiment
 
@@ -134,7 +136,9 @@ class Experiment(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, computational_process=new_computational_process_list)
+        new_attrs = replace(
+            self._json_attrs, computational_process=new_computational_process_list
+        )
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -220,4 +224,3 @@ class Experiment(PrimaryBaseNode):
         """
         new_attrs = replace(self._json_attrs, citation=new_citation_list)
         self._update_json_attrs_if_valid(new_attrs)
-

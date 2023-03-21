@@ -22,14 +22,5 @@ from cript.nodes.subobjects import (
     Quantity,
     SoftwareConfiguration,
 )
-
-from cript.nodes.supporting_nodes import (
-    File,
-    Group,
-    User,
-)
-
-from cript.nodes.util import (
-    NodeEncoder,
-    load_nodes_from_json,
-)
+from cript.nodes.supporting_nodes import File, Group, User
+from cript.nodes.util import NodeEncoder, load_nodes_from_json

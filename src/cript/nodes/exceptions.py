@@ -10,6 +10,4 @@ class CRIPTNodeSchemaError(Exception):
         pass
 
     def __str__(self):
-        return (
-            "Dummy Schema validation failed. TODO replace with actual implementation."
-        )
+        return "Dummy Schema validation failed. TODO replace with actual implementation."

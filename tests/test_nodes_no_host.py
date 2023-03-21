@@ -15,6 +15,11 @@ def get_parameter_string():
     return ret_str.replace("'", '"')
 
 
+def get_algorithm():
+    algorithm = cript.Algorithm("mc_barostat", "barostat")
+    return algorithm
+
+
 def get_algorithm_string():
     ret_str = "{'node': 'Algorithm', 'key': 'mc_barostat', 'type': 'barostat',"
     ret_str += " 'parameter': [], 'citation': []}"
@@ -57,6 +62,8 @@ def test_algorithm():
     assert a.type == "integration"
 
     # Add citation test, once we have citation implemted
+
+
 def test_removing_nodes():
     a = get_algorithm()
     p = get_parameter()

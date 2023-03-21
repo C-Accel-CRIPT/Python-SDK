@@ -4,7 +4,6 @@ from abc import ABC
 from dataclasses import asdict, dataclass, replace
 
 
-
 class BaseNode(ABC):
     """
     This abstract class is the base of all CRIPT nodes.
@@ -79,7 +78,8 @@ class BaseNode(ABC):
         This safely removes the first found child node from the parent.
         This requires exact node as we test with `is` instead of `==`.
 
-        returns True if child was found and deleted, False if child not found, raise DB schema exception if deletion violates DB schema.
+        returns True if child was found and deleted, False if child not found,
+        raise DB schema exception if deletion violates DB schema.
         """
 
         # If we delete a child, we have to replace that with a default value.
@@ -89,13 +89,9 @@ class BaseNode(ABC):
         for field in self._json_attrs.__dataclass_fields__:
             value = getattr(self._json_attrs, field)
             if value is child:
-                new_attrs = replace(
-                    new_attrs, **{field: getattr(default_json_attrs, field)}
-                )
+                new_attrs = replace(new_attrs, **{field: getattr(default_json_attrs, field)})
                 # We only want to delete the first found child
-            elif not isinstance(
-                value, str
-            ):  # Strings are iterable, but we don't want them
+            elif not isinstance(value, str):  # Strings are iterable, but we don't want them
                 try:  # Try if we are facing a list at the moment
                     new_attr_list = [element for element in value]
                 except TypeError:

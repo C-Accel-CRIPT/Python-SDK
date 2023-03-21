@@ -63,6 +63,7 @@ def test_algorithm():
 
     # Add citation test, once we have citation implemted
 
+
 def test_local_search():
     a = get_algorithm()
 

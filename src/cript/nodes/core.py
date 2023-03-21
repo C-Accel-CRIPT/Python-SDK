@@ -50,7 +50,6 @@ class BaseNode(ABC):
         return node
 
     def _update_json_attrs_if_valid(self, new_json_attr: JsonAttributes):
-
         tmp_obj = copy.copy(self)
         tmp_obj._json_attrs = new_json_attr
         # Throws invalid exception before object is modified.

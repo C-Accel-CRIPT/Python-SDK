@@ -1,8 +1,8 @@
 import copy
 import json
-from typing import List
 from abc import ABC
 from dataclasses import asdict, dataclass, replace
+from typing import List
 
 
 class BaseNode(ABC):
@@ -75,7 +75,7 @@ class BaseNode(ABC):
 
         return json.dumps(self, cls=NodeEncoder)
 
-    def find_children(self, search_attr:dict, search_depth:int=-1) -> List:
+    def find_children(self, search_attr: dict, search_depth: int = -1) -> List:
         """
         Finds all the children in a given tree of nodes (specified by its root),
         that match the criteria of search_attr.
@@ -89,12 +89,18 @@ class BaseNode(ABC):
            if others are present too, that does not exclude the child.
 
            Example: search_attr = `{"node": "Parameter"}` finds all "Parameter" nodes.
-                    search_attr = `{"node": "Algorithm", "parameter": {"name" : "update_frequency"}}` finds all "Algorithm" nodes, that have a parameter "update_frequency".
-                                  Since parameter is a list an alternative notation is ``{"node": "Algorithm", "parameter": [{"name" : "update_frequency"}]}` and Algorithms are not excluded they have more paramters.
-                    search_attr = `{"node": "Algorithm", "parameter": [{"name" : "update_frequency"}, {"name" : "cutoff_distance"}]}` finds all algoritms that have a parameter "update_frequency" and "cutoff_distance".
+                    search_attr = `{"node": "Algorithm", "parameter": {"name" : "update_frequency"}}`
+                                           finds all "Algorithm" nodes, that have a parameter "update_frequency".
+                                           Since parameter is a list an alternative notation is
+                                           ``{"node": "Algorithm", "parameter": [{"name" : "update_frequency"}]}`
+                                           and Algorithms are not excluded they have more paramters.
+                    search_attr = `{"node": "Algorithm", "parameter": [{"name" : "update_frequency"},
+                                           {"name" : "cutoff_distance"}]}`
+                                           finds all algoritms that have a parameter "update_frequency" and "cutoff_distance".
 
         """
-        def is_attr_present(node:BaseNode, key, value):
+
+        def is_attr_present(node: BaseNode, key, value):
             """
             Helper function that checks if an attribute is present in a node.
             """
@@ -124,11 +130,11 @@ class BaseNode(ABC):
                         if len(attr.find_children(v, 0)) > 0:
                             number_values_found += 1
                             # Since this an OR condition, we abort early.
-                            # This also doesn't inflate the number_values_count, since every OR condition should only add a max of 1.
+                            # This also doesn't inflate the number_values_count,
+                            # since every OR condition should only add a max of 1.
                             break
             # Check if the AND condition of the values is met
             return number_values_found == len(value)
-
 
         found_children = []
 
@@ -150,8 +156,8 @@ class BaseNode(ABC):
                 if not isinstance(value, list):
                     value = [value]
                 for v in value:
-                    try: # Try every attribute for recursion (duck-typing)
-                        found_children += v.find_children(search_attr, search_depth-1)
+                    try:  # Try every attribute for recursion (duck-typing)
+                        found_children += v.find_children(search_attr, search_depth - 1)
                     except AttributeError:
                         pass
         return found_children

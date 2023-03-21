@@ -61,23 +61,24 @@ def test_algorithm():
     a.type = "integration"
     assert a.type == "integration"
 
-    #Add citation test, once we have citation implemted
+    # Add citation test, once we have citation implemted
+
 
 def test_local_search():
     a = get_algorithm()
 
     # Check if we can use search to find the algoritm node, but specifying node and key
-    find_algorithms = a.find_children({"node": "Algorithm", "key":"mc_barostat"})
+    find_algorithms = a.find_children({"node": "Algorithm", "key": "mc_barostat"})
     assert find_algorithms == [a]
     # Check if it corretcly exclude the algorithm if key is specified to non-existent value
-    find_algorithms = a.find_children({"node": "Algorithm", "key":"mc"})
+    find_algorithms = a.find_children({"node": "Algorithm", "key": "mc"})
     assert find_algorithms == []
 
     # Adding 2 separate parameters to test deeper search
     p1 = get_parameter()
     p2 = get_parameter()
     p2.key = "advanced_sampling"
-    p2.value = 15.
+    p2.value = 15.0
     p2.unit = "m"
     a.parameter += [p1, p2]
 
@@ -94,12 +95,14 @@ def test_local_search():
     assert find_parameter == []
 
     # Test nested search. Here we are looking for any node that has a child node parameter as specified.
-    find_algorithms = a.find_children({"parameter": {"key":"advanced_sampling"}})
+    find_algorithms = a.find_children({"parameter": {"key": "advanced_sampling"}})
     assert find_algorithms == [a]
     # Same as before, but specifiying two children that have to be present (AND condition)
-    find_algorithms = a.find_children({"parameter": [{"key":"advanced_sampling"}, {"key": "update_frequency"}]})
+    find_algorithms = a.find_children({"parameter": [{"key": "advanced_sampling"}, {"key": "update_frequency"}]})
     assert find_algorithms == [a]
 
     # Test that the main node is correctly excluded if we specify an additionally non-existent paramter
-    find_algorithms = a.find_children({"parameter": [{"key":"advanced_sampling"}, {"key": "update_frequency"}, {"foo": "bar"}]})
+    find_algorithms = a.find_children(
+        {"parameter": [{"key": "advanced_sampling"}, {"key": "update_frequency"}, {"foo": "bar"}]}
+    )
     assert find_algorithms == []

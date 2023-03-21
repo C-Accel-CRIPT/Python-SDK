@@ -1,3 +1,4 @@
+# trunk-ignore-all(ruff/F401)
 from cript.nodes.subobjects.algorithm import Algorithm
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.equipment import Equipment

@@ -1,12 +1,21 @@
 # CRIPT Python SDK
 
-[![License](./CRIPT_full_logo_colored_transparent.png)](https://criptapp.org)
-
-[![License](https://img.shields.io/github/license/C-Accel-CRIPT/cript?style=flat-square)](https://github.com/C-Accel-CRIPT/cript/blob/master/LICENSE.txt)
+[![License](./CRIPT_full_logo_colored_transparent.png)](https://github.com/C-Accel-CRIPT/Python-SDK/blob/develop/LICENSE.md)
+[![License](https://img.shields.io/github/license/C-Accel-CRIPT/cript?style=flat-square)](https://github.com/C-Accel-CRIPT/Python-SDK/blob/develop/LICENSE.md)
 [![Python](https://img.shields.io/badge/Language-Python%203.7+-blue?style=flat-square&logo=python)](https://www.python.org/)
 [![Code style is black](https://img.shields.io/badge/Code%20Style-black-000000.svg?style=flat-square&logo=python)](https://github.com/psf/black)
 [![Link to CRIPT website](https://img.shields.io/badge/platform-criptapp.org-blueviolet?style=flat-square)](https://criptapp.org/)
+[![Using Pytest](https://img.shields.io/badge/Dependecnies-pytest-green?style=flat-square&logo=Pytest)](https://docs.pytest.org/en/7.2.x/)
+[![Using mypy to test typings](https://img.shields.io/badge/Dependecnies-mypy-blueviolet?style=flat-square&logo=python)](https://mypy.readthedocs.io/en/stable/)
+[![Using JSONSchema](https://img.shields.io/badge/Dependecnies-jsonschema-blueviolet?style=flat-square&logo=json)](https://python-JSONSchema.readthedocs.io/en/stable/)
+[![Using Requests Library](https://img.shields.io/badge/Dependecnies-Requests-blueviolet?style=flat-square&logo=python)](https://requests.readthedocs.io/en/latest/)
 [![Material MkDocs](https://img.shields.io/badge/Docs-mkdocs--material-blueviolet?style=flat-square&logo=markdown)](https://squidfunk.github.io/mkdocs-material/)
+
+## Disclaimer
+
+This is the successor to the original [CRIPT Python SDK](https://github.com/C-Accel-CRIPT/cript). The new CRIPT Python SDK is still under development, and we will officially release it as soon as it is ready. For now please use the [original CRIPT Python SDK](https://github.com/C-Accel-CRIPT/cript)
+
+---
 
 ## What is it?
 
@@ -35,7 +44,7 @@ To learn more about the CRIPT Python SDK please check the [CRIPT-SDK documentati
 <!--
 
 ## Release Notes
-Please visit the [Python SDK Documentation Release Notes](#) or within the [GitHub Releases page](#) 
+Please visit the [Python SDK Documentation Release Notes](#) or within the [GitHub Releases page](#)
 
 ---
 

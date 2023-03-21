@@ -63,7 +63,6 @@ def convert_json_to_experiment() -> None:
     2. convert the json into an experiment node
     3. assert that the experiment node that is produced is equal to the experiment node you expected
 
-
     Returns
     -------
     None

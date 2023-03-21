@@ -37,6 +37,36 @@ class Experiment(PrimaryBaseNode):
         funding: List[str] = None,
         citation: List[Citation] = None,
     ):
+        """
+        create an Experiment node
+
+        Parameters
+        ----------
+        name: str
+            name of Experiment
+
+        process: List[Process]
+            list of Process nodes for this Experiment
+
+        computation: List[Computation]
+            list of computation nodes for this Experiment
+
+        computational_process: List[ComputationalProcess]
+            list of computational_process nodes for this Experiment
+
+        data: List[Data]
+            list of data nodes for this experiment
+
+        funding: List[str]
+            list of the funders names for this Experiment
+
+        citation: List[Citation]
+            list of Citation nodes for this experiment
+
+        Returns
+        -------
+        None
+        """
         super().__init__(node="Experiment")
         self._json_attrs = replace(
             self._json_attrs,
@@ -51,7 +81,6 @@ class Experiment(PrimaryBaseNode):
 
         # check if the code is still valid
         self.validate()
-        return
 
     @property
     def process(self) -> List[Process]:

@@ -121,6 +121,19 @@ class API:
         return self._host
 
     def save(self, node: PrimaryBaseNode) -> None:
+        """
+        This method takes a primary node, serializes the class into JSON
+        and then sends the JSON to be saved to the API
+
+        Parameters
+        ----------
+        node: primary node
+            the Primary Node that the user wants to save
+
+        Returns
+        -------
+        None
+        """
         # TODO create a giant JSON from the primary node given and send that to
         #   the backend with a POST request
         #   the user will just hit save and the program needs to figure out

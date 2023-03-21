@@ -1,5 +1,3 @@
-# Current token string length
-_MINIMUM_TOKEN_LENGTH = 46
 
 class CRIPTConnectionError(Exception):
     """
@@ -8,11 +6,8 @@ class CRIPTConnectionError(Exception):
 
     def __init__(self, host, token):
         self.host = host
-
         # Do not store full token in stack trace for security reasons
-        if len(token) < _MINIMUM_TOKEN_LENGTH:
-            raise RuntimeError(f"Invalid short token {len(token)}, mininmum length: {_MINIMUM_TOKEN_LENGTH}.")
-        uncovered_chars = _MINIMUM_TOKEN_LENGTH//4
+        uncovered_chars = len(token)//4
         self.token = token[:uncovered_chars]
         self.token += "*"*(len(token)-2*uncovered_chars)
         self.token += token[-uncovered_chars:]
@@ -25,13 +20,17 @@ class CRIPTConnectionError(Exception):
         str
             Explanation of the error
         """
-        return f"Could not connect to CRIPT with the given host ({self.host}) and token ({self.token}). Please be sure both host and token are entered correctly."
+
+        ret_str = f"Could not connect to CRIPT with the given host ({self.host}) and token ({self.token})."
+        ret_str += " Please be sure both host and token are entered correctly."
+        return ret_str
 
 
 class InvalidVocabulary(Exception):
     """
     Raised when the CRIPT controlled vocabulary is invalid
     """
+
     # TODO add a the correct URL here
     vocab_URL: str = "https://cript.org/controlled-vocabulary"
 
@@ -39,7 +38,9 @@ class InvalidVocabulary(Exception):
         pass
 
     def __str__(self) -> str:
-        return f"The vocabulary entered does not exist within the CRIPT controlled vocabulary. Please pick a valid CRIPT vocabulary from {self.vocab_URL}"
+        ret_str = "The vocabulary entered does not exist within the CRIPT controlled vocabulary."
+        ret_str += f" Please pick a valid CRIPT vocabulary from {self.vocab_URL}"
+        return ret_str
 
 
 class CRIPTAPIAccessError(Exception):

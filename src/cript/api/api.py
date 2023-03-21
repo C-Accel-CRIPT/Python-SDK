@@ -1,17 +1,17 @@
 import os
 import copy
-import json
+
 import warnings
 from typing import List, Literal, Union
 
-import requests
-
 from cript.api._valid_search_modes import _VALID_SEARCH_MODES
+from cript.api.exceptions import CRIPTConnectionError
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
 from cript.nodes.supporting_nodes.group import Group
 from cript.nodes.supporting_nodes.user import User
 from cript.api.exceptions import CRIPTConnectionError, CRIPTAPIAccessError
+
 
 _global_cached_api = None
 
@@ -152,11 +152,9 @@ class API:
         deleted without confirmation.
         """
         # ask for confirmation before deleting the node
-        if no_input == False:
+        if no_input is False:
             # get the user input and convert it to lowercase
-            confirm: str = input(
-                f"are you sure you want to delete {node}? (y/n): "
-            ).lower()
+            confirm: str = input(f"are you sure you want to delete {node}? (y/n): ").lower()
 
             # if confirmation is not yes then cancel it and continue
             if confirm not in ["y", "yes"]:
@@ -196,10 +194,10 @@ class API:
         pass
 
     def search(
-            self,
-            node_type: PrimaryBaseNode,
-            search_mode: Literal[_VALID_SEARCH_MODES],
-            value_to_search: str,
+        self,
+        node_type: PrimaryBaseNode,
+        search_mode: Literal[_VALID_SEARCH_MODES],
+        value_to_search: str,
     ):
         """
         This is the method used to perform a search on the CRIPT platform.

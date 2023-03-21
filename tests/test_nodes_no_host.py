@@ -1,7 +1,13 @@
-import pytest
 from dataclasses import replace
-from cript.nodes.exceptions import CRIPTNodeSchemaError, CRIPTJsonSerializationError, CRIPTJsonDeserializationError
+
+import pytest
+
 import cript
+from cript.nodes.exceptions import (
+    CRIPTJsonDeserializationError,
+    CRIPTJsonSerializationError,
+    CRIPTNodeSchemaError,
+)
 
 
 def get_parameter():
@@ -27,31 +33,48 @@ def get_algorithm_string():
 
 
 def get_reference():
-    reference = cript.Reference("journal_article",
-                                authors = ["Ludwig Schneider", "Marcus Müller"],
-                                journal= "Computer Physics Communications",
-                                publisher = "Elsevier",
-                                year = 2019,
-                                pages = [463, 476],
-                                doi = "10.1016/j.cpc.2018.08.011",
-                                issn = "0010-4655",
-                                website = "https://www.sciencedirect.com/science/article/pii/S0010465518303072")
+    reference = cript.Reference(
+        "journal_article",
+        authors=["Ludwig Schneider", "Marcus Müller"],
+        journal="Computer Physics Communications",
+        publisher="Elsevier",
+        year=2019,
+        pages=[463, 476],
+        doi="10.1016/j.cpc.2018.08.011",
+        issn="0010-4655",
+        website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+    )
     return reference
 
+
 def get_reference_string():
-    return "{'node': 'Reference', 'url': '', 'type': 'journal_article', 'title': '', 'authors': ['Ludwig Schneider', 'Marcus M\\u00fcller'], 'journal': 'Computer Physics Communications', 'publisher': 'Elsevier', 'year': 2019, 'issue': null, 'pages': [463, 476], 'doi': '10.1016/j.cpc.2018.08.011', 'issn': '0010-4655', 'arxiv_id': '', 'pmid': null, 'website': 'https://www.sciencedirect.com/science/article/pii/S0010465518303072'}".replace("'", "\"")
+    return "{'node': 'Reference', 'url': '', 'type': 'journal_article', 'title': '', 'authors': ['Ludwig Schneider', 'Marcus M\\u00fcller'], 'journal': 'Computer Physics Communications', 'publisher': 'Elsevier', 'year': 2019, 'issue': null, 'pages': [463, 476], 'doi': '10.1016/j.cpc.2018.08.011', 'issn': '0010-4655', 'arxiv_id': '', 'pmid': null, 'website': 'https://www.sciencedirect.com/science/article/pii/S0010465518303072'}".replace(
+        "'", '"'
+    )
+
 
 def get_citation():
     citation = cript.Citation("reference", get_reference())
     return citation
 
+
 def get_citation_string():
-    return "{'node': 'Citation', 'type': 'reference', 'reference':}".replace("'reference':", f"'reference': {get_reference_string()}").replace("'", "\"")
+    return "{'node': 'Citation', 'type': 'reference', 'reference':}".replace(
+        "'reference':", f"'reference': {get_reference_string()}"
+    ).replace("'", '"')
+
+
 def get_software():
     software = cript.Software("SOMA", "0.7.0", "https://gitlab.com/InnocentBug/SOMA")
     return software
+
+
 def get_software_string():
-    return "{'node': 'Software', 'url': '', 'name': 'SOMA', 'version': '0.7.0', 'source': 'https://gitlab.com/InnocentBug/SOMA'}".replace("'", "\"")
+    return "{'node': 'Software', 'url': '', 'name': 'SOMA', 'version': '0.7.0', 'source': 'https://gitlab.com/InnocentBug/SOMA'}".replace(
+        "'", '"'
+    )
+
+
 def test_parameter():
     p = get_parameter()
     p_str = p.json
@@ -90,6 +113,7 @@ def test_algorithm():
     a.citation += [get_citation()]
     assert a.citation[0].json == get_citation().json
 
+
 def test_reference():
     r = get_reference()
     assert r.json == get_reference_string()
@@ -125,6 +149,7 @@ def test_reference():
     r2.website = "http://hdl.handle.net/11858/00-1735-0000-002e-e60c-c"
     assert r2.website == "http://hdl.handle.net/11858/00-1735-0000-002e-e60c-c"
 
+
 def test_citation():
     c = get_citation()
     assert c.json == get_citation_string()
@@ -134,6 +159,7 @@ def test_citation():
     new_ref.title = "foo bar"
     c.reference = new_ref
     assert c.reference == new_ref
+
 
 def test_software():
     s = get_software()
@@ -150,12 +176,13 @@ def test_software():
 
 
 def test_json_error():
-
-    faulty_json = "{'node': 'Parameter', 'foo': 'bar'}".replace("'", "\"")
+    faulty_json = "{'node': 'Parameter', 'foo': 'bar'}".replace("'", '"')
     with pytest.raises(CRIPTJsonDeserializationError):
         node = cript.load_nodes_from_json(faulty_json)
 
-    faulty_json = "{'node': 'Parameter', 'key': 'update_frequency', 'value': 1000.0, 'unit': '1/ns', 'foo': 'bar'}".replace("'", "\"")
+    faulty_json = "{'node': 'Parameter', 'key': 'update_frequency', 'value': 1000.0, 'unit': '1/ns', 'foo': 'bar'}".replace(
+        "'", '"'
+    )
     with pytest.raises(CRIPTJsonDeserializationError):
         node = cript.load_nodes_from_json(faulty_json)
 

@@ -1,13 +1,15 @@
-from copy import copy
-from typing import Union
 from dataclasses import dataclass, replace
+from typing import Union
+
 from cript.nodes.core import BaseNode
 from cript.nodes.subobjects.reference import Reference
+
 
 class Citation(BaseNode):
     """
     Citation subobject
     """
+
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
         node: str = "Citation"
@@ -16,7 +18,7 @@ class Citation(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, type:str, reference:Reference, **kwargs):
+    def __init__(self, type: str, reference: Reference, **kwargs):
         super().__init__(node="Citation")
         self._json_attrs = replace(self._json_attrs, type=type, reference=reference)
         self.validate()
@@ -26,7 +28,7 @@ class Citation(BaseNode):
         return self._json_attrs.type
 
     @type.setter
-    def type(self, new_type:str):
+    def type(self, new_type: str):
         new_attrs = replace(self._json_attrs, type=new_type)
         self._update_json_attrs_if_valid(new_attrs)
 
@@ -35,6 +37,6 @@ class Citation(BaseNode):
         return self._json_attrs.reference
 
     @reference.setter
-    def reference(self, new_reference:str):
+    def reference(self, new_reference: str):
         new_attrs = replace(self._json_attrs, reference=new_reference)
         self._update_json_attrs_if_valid(new_attrs)

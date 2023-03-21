@@ -1,8 +1,10 @@
 import copy
 import json
 from abc import ABC
-from dataclasses import dataclass, asdict, replace
-from cript.nodes.exceptions import CRIPTNodeSchemaError, CRIPTJsonSerializationError
+from dataclasses import asdict, dataclass, replace
+
+from cript.nodes.exceptions import CRIPTJsonSerializationError
+
 
 class BaseNode(ABC):
     """

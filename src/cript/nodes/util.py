@@ -1,10 +1,10 @@
 import inspect
 import json
 from dataclasses import asdict
-from cript.nodes.core import BaseNode
-from cript.nodes.exceptions import CRIPTJsonDeserializationError
+
 import cript.nodes
 from cript.nodes.core import BaseNode
+from cript.nodes.exceptions import CRIPTJsonDeserializationError
 
 
 class NodeEncoder(json.JSONEncoder):

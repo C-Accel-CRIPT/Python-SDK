@@ -72,6 +72,7 @@ class BaseNode(ABC):
         """
         # Delayed import to avoid circular imports
         from cript.nodes.util import NodeEncoder
+
         try:
             self.validate()
             return json.dumps(self, cls=NodeEncoder)

@@ -124,6 +124,7 @@ def test_removing_nodes():
     a.remove_child(p)
     assert a.json == get_algorithm_string()
 
+
 def test_reference():
     r = get_reference()
     assert r.json == get_reference_string()

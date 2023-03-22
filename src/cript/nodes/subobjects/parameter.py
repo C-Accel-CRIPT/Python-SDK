@@ -30,8 +30,12 @@ class Parameter(BaseNode):
 
     def validate(self):
         super().validate()
-        print("TODO. Remove this dummy validation of parameter")
-        if not isinstance(self._json_attrs.value, float):
+        # TODO. Remove this dummy validation of parameter
+        if not (
+            isinstance(self._json_attrs.value, float)
+            or isinstance(self._json_attrs.value, int)
+            or isinstance(self._json_attrs.value, str)
+        ):
             raise CRIPTNodeSchemaError
 
     @property

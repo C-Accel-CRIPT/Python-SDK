@@ -4,6 +4,7 @@ from dataclasses import asdict
 
 import cript.nodes
 from cript.nodes.core import BaseNode
+from cript.nodes.exceptions import CRIPTJsonDeserializationError
 
 
 class NodeEncoder(json.JSONEncoder):
@@ -23,7 +24,10 @@ def _node_json_hook(node_str: str):
     for key, pyclass in inspect.getmembers(cript.nodes, inspect.isclass):
         if BaseNode in pyclass.__bases__:
             if key == node_dict.get("node"):
-                return pyclass._from_json(node_dict)
+                try:
+                    return pyclass._from_json(node_dict)
+                except Exception as exc:
+                    raise CRIPTJsonDeserializationError(key, node_str) from exc
     # Fall back
     return node_dict
 

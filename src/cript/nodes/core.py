@@ -3,6 +3,8 @@ import json
 from abc import ABC
 from dataclasses import asdict, dataclass, replace
 
+from cript.nodes.exceptions import CRIPTJsonSerializationError
+
 
 class BaseNode(ABC):
     """
@@ -72,4 +74,8 @@ class BaseNode(ABC):
         # Delayed import to avoid circular imports
         from cript.nodes.util import NodeEncoder
 
-        return json.dumps(self, cls=NodeEncoder)
+        try:
+            self.validate()
+            return json.dumps(self, cls=NodeEncoder)
+        except Exception as exc:
+            raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc

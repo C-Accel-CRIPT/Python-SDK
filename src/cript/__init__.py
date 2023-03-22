@@ -9,6 +9,7 @@ from cript.nodes import (
     Project,
     Reference,
     Software,
+    Material,
     Algorithm,
     Citation,
     Equipment,

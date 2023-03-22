@@ -4,6 +4,7 @@ from cript.nodes.primary_nodes import (
     Computation,
     Data,
     Experiment,
+    Material,
     Inventory,
     Process,
     Project,
@@ -32,4 +33,4 @@ from cript.nodes.supporting_nodes import (
 from cript.nodes.util import (
     NodeEncoder,
     load_nodes_from_json,
-    )
+)

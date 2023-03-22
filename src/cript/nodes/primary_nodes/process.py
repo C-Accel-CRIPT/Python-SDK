@@ -35,6 +35,52 @@ class Process(PrimaryBaseNode):
         keywords: List[str] = None
         citations: List[Citation] = None
 
+    def __init__(
+        self,
+        ingredients: List[Ingredient],
+        type: str = "",
+        description: str = "",
+        equipments: List[Equipment] = None,
+        products: List[Material] = None,
+        waste: List[Material] = None,
+        conditions: List[Condition] = None,
+        properties: List[Property] = None,
+        keywords: List[str] = None,
+        citations: List[Citation] = None,
+    ) -> None:
+        """
+        create a process node
+
+        the only required argument is ingredient
+        the rest of the arguments are optional. They can either be set now or later
+        Parameters
+        ----------
+        ingredients: List[Ingredient]
+        type: str = ""
+        description: str = ""
+        equipments: List[Equipment] = None
+        products: List[Material] = None
+        waste: List[Material] = None
+        conditions: List[Condition] = None
+        properties: List[Property] = None
+        keywords: List[str] = None
+        citations: List[Citation] = None
+        """
+        new_attrs = replace(
+            self._json_attrs,
+            ingredients=ingredients,
+            type=type,
+            description=description,
+            equipments=equipments,
+            products=products,
+            waste=waste,
+            conditions=conditions,
+            properties=properties,
+            keywords=keywords,
+            citations=citations,
+        )
+        self._update_json_attrs_if_valid(new_attrs)
+
     # --------------- Properties -------------
 
     @property

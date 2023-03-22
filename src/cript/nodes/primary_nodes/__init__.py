@@ -7,5 +7,3 @@ from cript.nodes.primary_nodes.experiment import Experiment
 from cript.nodes.primary_nodes.inventory import Inventory
 from cript.nodes.primary_nodes.process import Process
 from cript.nodes.primary_nodes.project import Project
-from cript.nodes.primary_nodes.reference import Reference
-from cript.nodes.primary_nodes.software import Software

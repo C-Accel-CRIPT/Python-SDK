@@ -42,6 +42,7 @@ def get_quantity_string():
     ret_str += "'unit': 'kg', 'uncertainty': 0.2, 'uncertainty_type': 'std'}"
     return ret_str.replace("'", '"')
 
+
 def get_reference():
     reference = cript.Reference(
         "journal_article",
@@ -126,7 +127,6 @@ def test_algorithm():
     assert a.citation[0].json == get_citation().json
 
 
-
 def test_quantity():
     q = get_quantity()
     assert q.json == get_quantity_string()
@@ -141,6 +141,7 @@ def test_quantity():
     q.set_uncertainty(0.1, "var")
     assert q.uncertainty == 0.1
     assert q.uncertainty_type == "var"
+
 
 def test_reference():
     r = get_reference()

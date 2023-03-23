@@ -160,6 +160,7 @@ def test_local_search():
     )
     assert find_algorithms == []
 
+
 def test_removing_nodes():
     a = get_algorithm()
     p = get_parameter()

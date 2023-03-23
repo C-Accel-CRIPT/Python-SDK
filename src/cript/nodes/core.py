@@ -73,14 +73,14 @@ class BaseNode(ABC):
         """
         # Delayed import to avoid circular imports
         from cript.nodes.util import NodeEncoder
+
         try:
             self.validate()
             return json.dumps(self, cls=NodeEncoder)
         except Exception as exc:
             raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc
 
-
-    def find_children(self, search_attr: dict, search_depth: int = -1) -> List:
+    def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes=None) -> List:
         """
         Finds all the children in a given tree of nodes (specified by its root),
         that match the criteria of search_attr.
@@ -141,6 +141,14 @@ class BaseNode(ABC):
             # Check if the AND condition of the values is met
             return number_values_found == len(value)
 
+        if handled_nodes is None:
+            handled_nodes = []
+
+        # Protect agains cycles in graph, by handling every instance of a node only once
+        if self in handled_nodes:
+            return []
+        handled_nodes += [self]
+
         found_children = []
 
         # In this search we include the calling node itself.
@@ -162,7 +170,7 @@ class BaseNode(ABC):
                     value = [value]
                 for v in value:
                     try:  # Try every attribute for recursion (duck-typing)
-                        found_children += v.find_children(search_attr, search_depth - 1)
+                        found_children += v.find_children(search_attr, search_depth - 1, handled_nodes=handled_nodes)
                     except AttributeError:
                         pass
         return found_children

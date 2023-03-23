@@ -247,7 +247,7 @@ def get_property():
         structure="structure",
         method="method",
         # TODO sample_preparation
-        # TODO conditions
+        conditions=[get_condition()],
         # TODO data
         # TODO computations
         citations=[get_citation()],
@@ -260,7 +260,7 @@ def get_property_string():
     ret_str = "{'node': 'Property', 'key': 'modulus_shear', 'type': 'value', 'value': 5.0,"
     ret_str += " 'unit': 'GPa', 'uncertainty': 0.1, 'uncertainty_type': 'std', "
     ret_str += "'components': [], 'components_relative': [], 'structure': 'structure', "
-    ret_str += "'method': 'method', 'sample_preparation': null, 'conditions': [], 'data': null,"
+    ret_str += f"'method': 'method', 'sample_preparation': null, 'conditions': [{get_condition_string()}], 'data': null,"
     ret_str += f" 'computations': [], 'citations': [{get_citation_string()}], 'notes': 'notes'" + "}"
     return ret_str.replace("'", '"')
 
@@ -292,7 +292,9 @@ def test_property():
     assert p2.method == "method2"
 
     # TODO sample_preparation
-    # TODO conditions
+    assert len(p2.conditions) == 1
+    p2.conditions += [get_condition()]
+    assert len(p2.conditions) == 2
     # TODO Data
     # TODO Computations
     assert len(p2.citations) == 1
@@ -300,3 +302,58 @@ def test_property():
     assert len(p2.citations) == 2
     p2.notes = "notes2"
     assert p2.notes == "notes2"
+
+
+def get_condition():
+    c = cript.Condition(
+        "temp",
+        "value",
+        22,
+        "C",
+        "room temperature of lab",
+        uncertainty=5,
+        uncertainty_type="var",
+        set_id=0,
+        measurement_id=2,
+    )  # TODO data, material
+    return c
+
+
+def get_condition_string():
+    ret_str = "{'node': 'Condition', 'key': 'temp', 'type': 'value', "
+    ret_str += "'descriptor': 'room temperature of lab', 'value': 22, 'unit': 'C',"
+    ret_str += " 'uncertainty': 5, 'uncertainty_type': 'var', 'material': [], "
+    ret_str += "'set_id': 0, 'measurement_id': 2, 'data': null}"
+    return ret_str.replace("'", '"')
+
+
+def test_condition():
+    c = get_condition()
+    assert c.json == get_condition_string()
+    c2 = cript.load_nodes_from_json(c.json)
+    assert c2.json == c.json
+
+    c2.key = "pressure"
+    assert c2.key == "pressure"
+    c2.type = "avg"
+    assert c2.type == "avg"
+
+    c2.set_value(1, "bar")
+    assert c2.value == 1
+    assert c2.unit == "bar"
+
+    c2.descriptor = "ambient pressure"
+    assert c2.descriptor == "ambient pressure"
+
+    c2.set_uncertainty(0.1, "std")
+    assert c2.uncertainty == 0.1
+    assert c2.uncertainty_type == "std"
+
+    # TODO Material
+
+    c2.set_id = None
+    assert c2.set_id is None
+    c2.measurement_id = None
+    assert c2.measurement_id is None
+
+    # TODO data

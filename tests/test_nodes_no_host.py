@@ -409,3 +409,48 @@ def test_ingredient():
 
     i2.keyword = "monomer"
     assert i2.keyword == "monomer"
+
+
+def get_equipment():
+    e = cript.Equipment(
+        "hot plate",
+        "fancy hot plate",
+        conditions=[get_condition()],
+        # TODO FILE
+        files=[None],
+        citations=[get_citation()],
+    )
+    return e
+
+
+def get_equipment_string():
+    ret_str = "{'node': 'Equipment', 'key': 'hot plate', 'description': 'fancy hot plate', "
+    ret_str += f"'conditions': [{get_condition_string()}], 'files': [null], "
+    ret_str += f"'citations': [{get_citation_string()}]" + "}"
+    return ret_str.replace("'", '"')
+
+
+def test_equipment():
+    e = get_equipment()
+    assert e.json == get_equipment_string()
+    e2 = cript.load_nodes_from_json(e.json)
+    assert e.json == e2.json
+
+    e2.key = "glassware"
+    assert e2.key == "glassware"
+    e2.description = "Fancy glassware"
+    assert e2.description == "Fancy glassware"
+
+    assert len(e2.conditions) == 1
+    c2 = get_condition()
+    e2.conditions += [c2]
+    assert e2.conditions[1] == c2
+
+    assert len(e2.files) == 1
+    e2.files += [False]
+    assert e2.files[1] is False
+
+    cit2 = get_citation()
+    assert len(e2.citations) == 1
+    e2.citations += [cit2]
+    assert e2.citations[1] == cit2

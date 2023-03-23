@@ -357,3 +357,31 @@ def test_condition():
     assert c2.measurement_id is None
 
     # TODO data
+
+
+def get_ingredient():
+    # TODO replace material
+    i = cript.Ingredient(None, [get_quantity()], "catalyst")
+    return i
+
+
+def get_ingredient_string():
+    ret_str = "{'node': 'Ingredient', 'material': null, "
+    ret_str += f"'quantities': [{get_quantity_string()}],"
+    ret_str += " 'keyword': 'catalyst'}"
+    return ret_str.replace("'", '"')
+
+
+def test_ingredient():
+    i = get_ingredient()
+    assert i.json == get_ingredient_string()
+    i2 = cript.load_nodes_from_json(i.json)
+    assert i.json == i2.json
+
+    q2 = get_quantity()
+    i2.set_material(False, [q2])
+    assert i2.material is False
+    assert i2.quantities[0] is q2
+
+    i2.keyword = "monomer"
+    assert i2.keyword == "monomer"

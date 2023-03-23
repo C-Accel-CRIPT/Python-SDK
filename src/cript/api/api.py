@@ -141,7 +141,7 @@ class API:
         #   save is POST request and update would be PATCH request
         pass
 
-    def delete(self, node: PrimaryBaseNode, no_input: bool = False) -> None:
+    def delete(self, node: PrimaryBaseNode, ask_confirmation: bool = True) -> None:
         """ "
         Deletes the given node.
 
@@ -149,7 +149,7 @@ class API:
         ----------
         node : PrimaryBaseNode
             The node to delete.
-        no_input : bool, optional, default=False
+        ask_confirmation : bool, optional, default=True
             If True, the function will delete the node without prompting the user
             for confirmation (default is False).
 
@@ -161,16 +161,16 @@ class API:
         Notes
         -----
         By default, this function prompts the user with "are you sure you want to
-        delete this node?" before proceeding with the deletion. If the `no_input`
-        parameter is set to True, the prompt will be suppressed and the node will be
+        delete this node?" before proceeding with the deletion. If the `ask_confirmation`
+        parameter is set to False, the prompt will be suppressed and the node will be
         deleted without confirmation.
         """
         # ask for confirmation before deleting the node
-        if no_input is False:
+        if ask_confirmation:
             # get the user input and convert it to lowercase
             confirm: str = input(f"are you sure you want to delete {node}? (y/n): ").lower()
 
-            # if confirmation is not yes then cancel it and continue
+            # if confirmation is anything other than yes then cancel the delete
             if confirm not in ["y", "yes"]:
                 print(f"Deletion cancelled for node: {node}")
                 return

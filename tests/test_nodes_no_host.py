@@ -333,6 +333,8 @@ def get_condition():
         uncertainty_type="var",
         set_id=0,
         measurement_id=2,
+        material=[None],
+        data=None,
     )  # TODO data, material
     return c
 
@@ -340,7 +342,7 @@ def get_condition():
 def get_condition_string():
     ret_str = "{'node': 'Condition', 'key': 'temp', 'type': 'value', "
     ret_str += "'descriptor': 'room temperature of lab', 'value': 22, 'unit': 'C',"
-    ret_str += " 'uncertainty': 5, 'uncertainty_type': 'var', 'material': [], "
+    ret_str += " 'uncertainty': 5, 'uncertainty_type': 'var', 'material': [null], "
     ret_str += "'set_id': 0, 'measurement_id': 2, 'data': null}"
     return ret_str.replace("'", '"')
 
@@ -368,13 +370,17 @@ def test_condition():
     assert c2.uncertainty_type == "std"
 
     # TODO Material
-
+    c2.material += [True]
+    assert c2.material[0] is None
+    assert c2.material[1] is True
     c2.set_id = None
     assert c2.set_id is None
     c2.measurement_id = None
     assert c2.measurement_id is None
 
     # TODO data
+    c2.data = False
+    assert c2.data is False
 
 
 def get_ingredient():

@@ -232,3 +232,71 @@ def test_json_error():
     parameter._json_attrs = None
     with pytest.raises(CRIPTJsonSerializationError):
         parameter.json
+
+
+def get_property():
+    p = cript.Property(
+        "modulus_shear",
+        "value",
+        5.0,
+        "GPa",
+        0.1,
+        "std",
+        # TODO components
+        # TODO components_relative
+        structure="structure",
+        method="method",
+        # TODO sample_preparation
+        # TODO conditions
+        # TODO data
+        # TODO computations
+        citations=[get_citation()],
+        notes="notes",
+    )
+    return p
+
+
+def get_property_string():
+    ret_str = "{'node': 'Property', 'key': 'modulus_shear', 'type': 'value', 'value': 5.0,"
+    ret_str += " 'unit': 'GPa', 'uncertainty': 0.1, 'uncertainty_type': 'std', "
+    ret_str += "'components': [], 'components_relative': [], 'structure': 'structure', "
+    ret_str += "'method': 'method', 'sample_preparation': null, 'conditions': [], 'data': null,"
+    ret_str += f" 'computations': [], 'citations': [{get_citation_string()}], 'notes': 'notes'" + "}"
+    return ret_str.replace("'", '"')
+
+
+def test_property():
+    p = get_property()
+    assert p.json == get_property_string()
+    p2 = cript.load_nodes_from_json(p.json)
+    assert p2.json == p.json
+
+    p2.key = "modulus_loss"
+    assert p2.key == "modulus_loss"
+    p2.type = "min"
+    assert p2.type == "min"
+    p2.set_value(600.1, "MPa")
+    assert p2.value == 600.1
+    assert p2.unit == "MPa"
+
+    p2.set_uncertainty(10.5, "var")
+    assert p2.uncertainty == 10.5
+    assert p2.uncertainty_type == "var"
+
+    # TODO compoments
+    # TODO compoments_relative
+    p2.structure = "structure2"
+    assert p2.structure == "structure2"
+
+    p2.method = "method2"
+    assert p2.method == "method2"
+
+    # TODO sample_preparation
+    # TODO conditions
+    # TODO Data
+    # TODO Computations
+    assert len(p2.citations) == 1
+    p2.citations += [get_citation()]
+    assert len(p2.citations) == 2
+    p2.notes = "notes2"
+    assert p2.notes == "notes2"

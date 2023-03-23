@@ -117,6 +117,14 @@ def test_algorithm():
     assert a.citation[0].json == get_citation().json
 
 
+def test_removing_nodes():
+    a = get_algorithm()
+    p = get_parameter()
+    a.parameter += [p]
+    a.remove_child(p)
+    assert a.json == get_algorithm_string()
+
+
 def test_reference():
     r = get_reference()
     assert r.json == get_reference_string()

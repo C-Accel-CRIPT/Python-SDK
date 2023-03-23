@@ -57,7 +57,6 @@ class BaseNode(ABC):
     def _from_json(cls, json: dict):
         # Child nodes can inherit and overwrite this.
         # They should call super()._from_json first, and modified the returned object after if necessary.
-
         # This creates a basic version of the intended node.
         # All attributes from the backend are passed over, but some like created_by are ignored
         node = cls(**json)
@@ -79,3 +78,44 @@ class BaseNode(ABC):
             return json.dumps(self, cls=NodeEncoder)
         except Exception as exc:
             raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc
+
+    def remove_child(self, child) -> bool:
+        """
+        This safely removes the first found child node from the parent.
+        This requires exact node as we test with `is` instead of `==`.
+
+        returns True if child was found and deleted, False if child not found,
+        raise DB schema exception if deletion violates DB schema.
+        """
+
+        # If we delete a child, we have to replace that with a default value.
+        # The easiest way to access this default value is to get it from the the default JsonAttribute of that class
+        default_json_attrs = self.JsonAttributes()
+        new_attrs = self._json_attrs
+        for field in self._json_attrs.__dataclass_fields__:
+            value = getattr(self._json_attrs, field)
+            if value is child:
+                new_attrs = replace(new_attrs, **{field: getattr(default_json_attrs, field)})
+                # We only want to delete the first found child
+            elif not isinstance(value, str):  # Strings are iterable, but we don't want them
+                try:  # Try if we are facing a list at the moment
+                    new_attr_list = [element for element in value]
+                except TypeError:
+                    pass  # It is OK if this field is not a list
+                else:
+                    found_child = False
+                    for i, list_value in enumerate(value):
+                        if list_value is child:
+                            found_child = True
+                            del new_attr_list[i]
+                            # Only delete first child.
+                            # Important to break loop here, since value and new_attr_list are not identical any more.
+                    if found_child:
+                        new_attrs = replace(new_attrs, **{field: new_attr_list})
+                        # Again only first found place is removed
+                        break
+        # Let's see if we found the child aka the new_attrs are different than the old ones
+        if new_attrs is self._json_attrs:
+            return False
+        self._update_json_attrs_if_valid(new_attrs)
+        return True

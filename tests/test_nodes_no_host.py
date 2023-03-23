@@ -1,3 +1,4 @@
+import copy
 from dataclasses import replace
 
 import pytest
@@ -552,3 +553,42 @@ def test_computation_forcefield():
     citation2 = get_citation()
     cf2.citation += [citation2]
     assert cf2.citation[1] == citation2
+
+
+def get_software_configuration():
+    sc = cript.SoftwareConfiguration(get_software(), [get_algorithm()], "my_notes", [get_citation()])
+    return sc
+
+
+def get_software_configuration_string():
+    ret_str = "{'node': 'SoftwareConfiguration',"
+    ret_str += f" 'software': {get_software_string()}, "
+    ret_str += f"'algorithms': [{get_algorithm_string()}], "
+    ret_str += "'notes': 'my_notes', "
+    ret_str += f"'citation': [{get_citation_string()}]" + "}"
+    return ret_str.replace("'", '"')
+
+
+def test_software_configuration():
+    sc = get_software_configuration()
+    assert sc.json == get_software_configuration_string()
+    sc2 = cript.load_nodes_from_json(sc.json)
+    assert sc2.json == sc.json
+
+    software2 = copy.deepcopy(sc.software)
+    sc2.software = software2
+    assert sc2.software is not sc.software
+    assert sc2.software is software2
+
+    assert len(sc2.algorithms) == 1
+    al2 = get_algorithm()
+    sc2.algorithms += [al2]
+    assert sc2.algorithms[1] is al2
+
+    sc2.notes = "my new fancy notes"
+    assert sc2.notes == "my new fancy notes"
+
+    cit2 = get_citation()
+    assert len(sc2.citation) == 1
+    sc2.citation += [cit2]
+    assert sc2.citation[1] == cit2

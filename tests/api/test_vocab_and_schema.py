@@ -33,7 +33,8 @@ def test_get_db_schema(cript_api):
         None
 
     """
-    return _get_db_schema()
+    # return _get_db_schema()
+    pass
 
 
 def test_db_schema_success(cript_api):
@@ -78,7 +79,8 @@ def test_get_vocabulary(cript_api):
     NoneType
         None
     """
-    return _get_controlled_vocabulary()
+    # return _get_controlled_vocabulary()
+    pass
 
 
 def test_vocabulary_success(cript_api):

@@ -142,12 +142,14 @@ def test_quantity():
     assert q.uncertainty == 0.1
     assert q.uncertainty_type == "var"
 
+
 def test_removing_nodes():
     a = get_algorithm()
     p = get_parameter()
     a.parameter += [p]
     a.remove_child(p)
     assert a.json == get_algorithm_string()
+
 
 def test_reference():
     r = get_reference()

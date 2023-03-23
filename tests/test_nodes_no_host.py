@@ -498,3 +498,57 @@ def test_equipment():
     assert len(e2.citations) == 1
     e2.citations += [cit2]
     assert e2.citations[1] == cit2
+
+
+def get_computation_forcefield():
+    cf = cript.ComputationForcefield(
+        "OPLS",
+        "atom",
+        "atom -> atom",
+        "no implicit solvent",
+        "local LigParGen installation",
+        "this is a test forcefield",
+        # TODO Data
+        None,
+        [get_citation()],
+    )
+    return cf
+
+
+def get_computation_forcefield_string():
+    ret_str = "{'node': 'ComputationForcefield', 'key': 'OPLS', "
+    ret_str += "'building_block': 'atom', 'coarse_grained_mapping': 'atom -> atom', "
+    ret_str += "'implicit_solvent': 'no implicit solvent', 'source': 'local LigParGen installation',"
+    ret_str += " 'description': 'this is a test forcefield', 'data': null, "
+    ret_str += f"'citation': [{get_citation_string()}]" + "}"
+    return ret_str.replace("'", '"')
+
+
+def test_computation_forcefield():
+    cf = get_computation_forcefield()
+    assert cf.json == get_computation_forcefield_string()
+    cf2 = cript.load_nodes_from_json(cf.json)
+    assert cf.json == cf2.json
+
+    cf2.key = "Kremer-Grest"
+    assert cf2.key == "Kremer-Grest"
+
+    cf2.building_block = "monomer"
+    assert cf2.building_block == "monomer"
+
+    cf2.implicit_solvent = ""
+    assert cf2.implicit_solvent == ""
+
+    cf2.source = "Iterative Boltzmann inversion"
+    assert cf2.source == "Iterative Boltzmann inversion"
+
+    cf2.description = "generic polymer model"
+    assert cf2.description == "generic polymer model"
+
+    cf2.data = False
+    assert cf2.data is False
+
+    assert len(cf2.citation) == 1
+    citation2 = get_citation()
+    cf2.citation += [citation2]
+    assert cf2.citation[1] == citation2

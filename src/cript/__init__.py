@@ -5,6 +5,7 @@ from cript.nodes import (
     Collection,
     Computation,
     ComputationalProcess,
+    ComputationForcefield,
     Condition,
     Data,
     Equipment,

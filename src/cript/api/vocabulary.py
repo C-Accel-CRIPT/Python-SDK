@@ -3,6 +3,7 @@ from typing import Union
 
 import requests
 
+from cript.api.api import _global_cached_api
 from cript.api.exceptions import InvalidVocabulary
 
 # dictionary of the entire controlled vocabulary
@@ -28,7 +29,7 @@ def _get_controlled_vocabulary() -> dict:
 
     # if cache is empty then make request and set cache
     if len(_ENTIRE_CONTROLLED_VOCABULARY) == 0:
-        host: str = "https://development.api.criptapp.org"
+        host: str = _global_cached_api.host
         # TODO make request to API to get controlled vocabulary
         response = requests.get(f"{host}/controlled-vocabulary").json()
 

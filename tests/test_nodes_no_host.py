@@ -243,13 +243,18 @@ def get_property():
         0.1,
         "std",
         # TODO components
+        [None],
         # TODO components_relative
+        [None],
         structure="structure",
         method="method",
         # TODO sample_preparation
+        sample_preparation=None,
         conditions=[get_condition()],
         # TODO data
+        data=None,
         # TODO computations
+        computations=[None],
         citations=[get_citation()],
         notes="notes",
     )
@@ -259,9 +264,9 @@ def get_property():
 def get_property_string():
     ret_str = "{'node': 'Property', 'key': 'modulus_shear', 'type': 'value', 'value': 5.0,"
     ret_str += " 'unit': 'GPa', 'uncertainty': 0.1, 'uncertainty_type': 'std', "
-    ret_str += "'components': [], 'components_relative': [], 'structure': 'structure', "
+    ret_str += "'components': [null], 'components_relative': [null], 'structure': 'structure', "
     ret_str += f"'method': 'method', 'sample_preparation': null, 'conditions': [{get_condition_string()}], 'data': null,"
-    ret_str += f" 'computations': [], 'citations': [{get_citation_string()}], 'notes': 'notes'" + "}"
+    ret_str += f" 'computations': [null], 'citations': [{get_citation_string()}], 'notes': 'notes'" + "}"
     return ret_str.replace("'", '"')
 
 
@@ -284,7 +289,11 @@ def test_property():
     assert p2.uncertainty_type == "var"
 
     # TODO compoments
+    p2.compoments = [False]
+    assert p2.compoments[0] is False
     # TODO compoments_relative
+    p2.compoments_relative = [True]
+    assert p2.compoments_relative[0] is True
     p2.structure = "structure2"
     assert p2.structure == "structure2"
 
@@ -292,11 +301,20 @@ def test_property():
     assert p2.method == "method2"
 
     # TODO sample_preparation
+    p2.sample_preparation = False
+    assert p2.sample_preparation is False
     assert len(p2.conditions) == 1
     p2.conditions += [get_condition()]
     assert len(p2.conditions) == 2
     # TODO Data
+    p2.data = True
+    assert p2.data is True
     # TODO Computations
+    p2.computations = [None, True, False]
+    assert p2.computations[0] is None
+    assert p2.computations[1] is True
+    assert p2.computations[2] is False
+
     assert len(p2.citations) == 1
     p2.citations += [get_citation()]
     assert len(p2.citations) == 2

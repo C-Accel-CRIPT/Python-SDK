@@ -32,6 +32,17 @@ def get_algorithm_string():
     return ret_str.replace("'", '"')
 
 
+def get_quantity():
+    quantity = cript.Quantity("mass", 11.2, "kg", 0.2, "std")
+    return quantity
+
+
+def get_quantity_string():
+    ret_str = "{'node': 'Quantity', 'key': 'mass', 'value': 11.2, "
+    ret_str += "'unit': 'kg', 'uncertainty': 0.2, 'uncertainty_type': 'std'}"
+    return ret_str.replace("'", '"')
+
+
 def get_reference():
     reference = cript.Reference(
         "journal_article",
@@ -112,9 +123,24 @@ def test_algorithm():
     assert a.key == "berendsen"
     a.type = "integration"
     assert a.type == "integration"
-
     a.citation += [get_citation()]
     assert a.citation[0].json == get_citation().json
+
+
+def test_quantity():
+    q = get_quantity()
+    assert q.json == get_quantity_string()
+    assert cript.load_nodes_from_json(get_quantity_string()).json == q.json
+
+    q.key = "volume"
+    assert q.key == "volume"
+    q.value = 0.5
+    assert q.value == 0.5
+    q.unit = "l"
+    assert q.unit == "l"
+    q.set_uncertainty(0.1, "var")
+    assert q.uncertainty == 0.1
+    assert q.uncertainty_type == "var"
 
 
 def test_removing_nodes():

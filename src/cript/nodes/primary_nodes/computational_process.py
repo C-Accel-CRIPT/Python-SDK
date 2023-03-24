@@ -39,6 +39,7 @@ class ComputationalProcess(PrimaryBaseNode):
         conditions: List[Condition] = None,
         properties: List[Property] = None,
         citations: List[Citation] = None,
+        **kwargs
     ) -> None:
         """
         create a computational_process node
@@ -137,7 +138,7 @@ class ComputationalProcess(PrimaryBaseNode):
         -------
         List[Data]
         """
-        return self._json_attrs.input_data
+        return self._json_attrs.input_data.copy()
 
     @input_data.setter
     def input_data(self, new_input_data_list: List[Data]) -> None:
@@ -164,7 +165,7 @@ class ComputationalProcess(PrimaryBaseNode):
         -------
         List[Data]
         """
-        return self._json_attrs.out_put
+        return self._json_attrs.out_put.copy()
 
     @output_data.setter
     def output_data(self, new_output_data_list: List[Data]) -> None:
@@ -191,7 +192,7 @@ class ComputationalProcess(PrimaryBaseNode):
         -------
         List[Ingredient]
         """
-        return self._json_attrs.ingredients
+        return self._json_attrs.ingredients.copy()
 
     @ingredients.setter
     def ingredients(self, new_ingredients_list: List[Ingredient]) -> None:
@@ -218,7 +219,7 @@ class ComputationalProcess(PrimaryBaseNode):
         -------
         List[SoftwareConfiguration]
         """
-        return self._json_attrs.software_configurations
+        return self._json_attrs.software_configurations.copy()
 
     @software_configurations.setter
     def software_configurations(
@@ -249,7 +250,7 @@ class ComputationalProcess(PrimaryBaseNode):
         -------
         List[Condition]
         """
-        return self._json_attrs.conditions
+        return self._json_attrs.conditions.copy()
 
     @conditions.setter
     def conditions(self, new_conditions: List[Condition]) -> None:
@@ -276,7 +277,7 @@ class ComputationalProcess(PrimaryBaseNode):
         -------
         List[Property]
         """
-        return self._json_attrs.properties
+        return self._json_attrs.properties.copy()
 
     @properties.setter
     def properties(self, new_properties_list: List[Property]) -> None:
@@ -303,7 +304,7 @@ class ComputationalProcess(PrimaryBaseNode):
         -------
         List[Citation]
         """
-        return self._json_attrs.citations
+        return self._json_attrs.citations.copy()
 
     @citations.setter
     def citations(self, new_citations_list: List[Citation]) -> None:

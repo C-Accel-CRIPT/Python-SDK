@@ -1,14 +1,12 @@
-import json
-
 import requests
 from jsonschema import validate
 
 from cript.api.api import _get_global_cached_api
 
-_DB_SCHEMA: json = None
+_DB_SCHEMA: dict = None
 
 
-def _get_db_schema() -> json:
+def _get_db_schema() -> dict:
     """
     Sends a GET request to CRIPT to get the database schema and returns it.
     The database schema can be used for validating the JSON request
@@ -37,7 +35,7 @@ def _get_db_schema() -> json:
     return _DB_SCHEMA
 
 
-def is_schema_valid(node: json) -> bool:
+def is_schema_valid(node: dict) -> bool:
     """
     checks a node JSON schema against the db schema to return if it is valid or not.
     This function does not take into consideration vocabulary validation.

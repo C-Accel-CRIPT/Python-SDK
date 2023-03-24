@@ -2,22 +2,6 @@ import cript
 import pytest
 
 
-@pytest.fixture(scope="session")
-def cript_api():
-    """
-    creates an CRIPT API object, used for
-    * saving
-    * getting
-    * updating
-    * deleting
-    Returns
-    -------
-    cript.API
-        api object used to interact with CRIPT
-    """
-    return cript.API(host="https://cript.org", token="123465")
-
-
 def test_creating_project():
     """
     create a project node and then save the project node

@@ -40,6 +40,7 @@ class Computation(PrimaryBaseNode):
         software_configurations: List[SoftwareConfiguration] = None,
         conditions: List[Condition] = None,
         citations: List[Citation] = None,
+        **kwargs
     ) -> None:
         super().__init__(node="Computation")
 
@@ -97,7 +98,7 @@ class Computation(PrimaryBaseNode):
         -------
         List[Data]
         """
-        return self._json_attrs.input_data
+        return self._json_attrs.input_data.copy()
 
     @input_data.setter
     def input_data(self, new_input_data_list: List[Data]) -> None:
@@ -125,7 +126,7 @@ class Computation(PrimaryBaseNode):
         -------
         List[Data]
         """
-        return self._json_attrs.output_data
+        return self._json_attrs.output_data.copy()
 
     @output_data.setter
     def output_data(self, new_output_data_list: List[Data]) -> None:
@@ -153,7 +154,7 @@ class Computation(PrimaryBaseNode):
         -------
         List[SoftwareConfiguration]
         """
-        return self._json_attrs.software_configurations
+        return self._json_attrs.software_configurations.copy()
 
     @software_configurations.setter
     def software_configurations(
@@ -185,7 +186,7 @@ class Computation(PrimaryBaseNode):
         -------
         List[Condition]
         """
-        return self._json_attrs.conditions
+        return self._json_attrs.conditions.copy()
 
     @conditions.setter
     def conditions(self, new_condition_list: List[Condition]) -> None:
@@ -212,7 +213,7 @@ class Computation(PrimaryBaseNode):
         -------
         List[Citation]
         """
-        return self._json_attrs.citations
+        return self._json_attrs.citations.copy()
 
     @citations.setter
     def citations(self, new_citations_list: List[Citation]) -> None:

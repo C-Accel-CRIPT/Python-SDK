@@ -38,6 +38,9 @@ class Reference(BaseNode):
         pmid: int = None
         website: str = ""
 
+    _json_attrs: JsonAttributes = JsonAttributes()
+
+    # TODO fix the constructor
     def __init__(
         self,
         url: str,
@@ -46,15 +49,16 @@ class Reference(BaseNode):
         authors: List[str] = None,
         journal: str = "",
         publisher: str = "",
-        year: int = Union[int, None],
-        volume: int = Union[int, None],
+        year: Union[int, None] = None,
+        volume: Union[int, None] = None,
         issue: int = Union[int, None],
-        pages: List[int] = Union[List[int], None],
+        pages: Union[List[int], None] = None,
         doi: str = "",
         issn: str = "",
         arxiv_id: str = "",
         pmid: int = Union[int, None],
         website: str = "",
+        **kwargs
     ):
         """
         create a reference node
@@ -196,7 +200,7 @@ class Reference(BaseNode):
         -------
         List[str]
         """
-        return self._json_attrs.authors
+        return self._json_attrs.authors.copy()
 
     @authors.setter
     def authors(self, new_authors_list: List[str]) -> None:
@@ -350,7 +354,7 @@ class Reference(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def pages(self) -> int:
+    def pages(self) -> List[int]:
         """
         gets the pages of the scholarly work from this reference node
 
@@ -358,7 +362,7 @@ class Reference(BaseNode):
         -------
         int
         """
-        return self._json_attrs.pages
+        return self._json_attrs.pages.copy()
 
     @pages.setter
     def pages(self, new_pages_list: List[int]) -> None:

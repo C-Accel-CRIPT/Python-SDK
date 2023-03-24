@@ -27,6 +27,8 @@ class Experiment(PrimaryBaseNode):
         funding: List[str] = None
         citation: List[Citation] = None
 
+    _json_attrs: JsonAttributes = JsonAttributes()
+
     def __init__(
         self,
         name: str,
@@ -36,6 +38,7 @@ class Experiment(PrimaryBaseNode):
         data: List[Data] = None,
         funding: List[str] = None,
         citation: List[Citation] = None,
+        **kwargs
     ):
         """
         create an Experiment node
@@ -91,7 +94,7 @@ class Experiment(PrimaryBaseNode):
         -------
         List[Process]
         """
-        return self._json_attrs.process
+        return self._json_attrs.process.copy()
 
     @process.setter
     def process(self, new_process_list: List[Process]) -> None:
@@ -119,7 +122,7 @@ class Experiment(PrimaryBaseNode):
         -------
         List[Computation]
         """
-        return self._json_attrs.computation
+        return self._json_attrs.computation.copy()
 
     @computation.setter
     def computation(self, new_computation_list: List[Computation]) -> None:
@@ -147,7 +150,7 @@ class Experiment(PrimaryBaseNode):
         -------
         List[ComputationalProcess]
         """
-        return self._json_attrs.computational_process
+        return self._json_attrs.computational_process.copy()
 
     @computational_process.setter
     def computational_process(
@@ -179,7 +182,7 @@ class Experiment(PrimaryBaseNode):
         -------
         List[Data]
         """
-        return self._json_attrs.data
+        return self._json_attrs.data.copy()
 
     @data.setter
     def data(self, new_data_list: List[Data]) -> None:
@@ -207,7 +210,7 @@ class Experiment(PrimaryBaseNode):
         -------
         List[str]
         """
-        return self._json_attrs.funding
+        return self._json_attrs.funding.copy()
 
     @funding.setter
     def funding(self, new_funding_list: List[str]) -> None:
@@ -235,7 +238,7 @@ class Experiment(PrimaryBaseNode):
         -------
         List[Citation]
         """
-        return self._json_attrs.citation
+        return self._json_attrs.citation.copy()
 
     @citation.setter
     def citation(self, new_citation_list: List[Citation]) -> None:

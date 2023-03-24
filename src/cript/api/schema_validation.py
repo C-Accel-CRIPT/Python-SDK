@@ -3,7 +3,7 @@ import json
 import requests
 from jsonschema import validate
 
-from cript.api.api import _global_cached_api
+from cript.api.api import _get_global_cached_api
 
 _DB_SCHEMA: json = None
 
@@ -23,7 +23,7 @@ def _get_db_schema() -> json:
     json
         The database schema in JSON format.
     """
-    host: str = _global_cached_api.host
+    host: str = _get_global_cached_api().host
     global _DB_SCHEMA
 
     # if db_schema is already set then just return it

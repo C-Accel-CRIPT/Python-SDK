@@ -32,6 +32,8 @@ class Computation(PrimaryBaseNode):
 
         citations: List[Citation] = None
 
+    _json_attrs: JsonAttributes = JsonAttributes()
+
     def __init__(
         self,
         type: str,

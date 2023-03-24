@@ -26,6 +26,8 @@ class Collection(PrimaryBaseNode):
         cript_doi: str = ""
         citations: List[Citation] = None
 
+    _json_attrs: JsonAttributes = JsonAttributes()
+
     def __init__(
         self,
         name: str,

@@ -9,7 +9,8 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 class Collection(PrimaryBaseNode):
     """
     Collection class
-    [data model](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=8)
+
+    [Collection node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=8)
     """
 
     @dataclass(frozen=True)
@@ -32,6 +33,7 @@ class Collection(PrimaryBaseNode):
         inventories: List[Inventory] = None,
         crip_doi: str = "",
         citations: List[Citation] = None,
+        **kwargs
     ) -> None:
         """
         create a collection with a name
@@ -129,7 +131,7 @@ class Collection(PrimaryBaseNode):
         List[Experiment]
             list of all Experiments within this Collection
         """
-        return self._json_attrs.experiments
+        return self._json_attrs.experiments.copy()
 
     @experiments.setter
     def experiments(self, new_experiment: List[Experiment]) -> None:
@@ -158,7 +160,7 @@ class Collection(PrimaryBaseNode):
         List[Inventory]
             list of inventories in this collection
         """
-        return self._json_attrs.inventories
+        return self._json_attrs.inventories.copy()
 
     @inventories.setter
     def inventories(self, new_inventory: List[Inventory]) -> None:
@@ -215,7 +217,7 @@ class Collection(PrimaryBaseNode):
         List[Citation]:
             list of Citations within this Collection
         """
-        return self._json_attrs.citations
+        return self._json_attrs.citations.copy()
 
     @citations.setter
     def citations(self, new_citations: List[Citation]) -> None:

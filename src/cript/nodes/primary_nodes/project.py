@@ -19,6 +19,7 @@ class Project(PrimaryBaseNode):
         """
         all Project attributes
         """
+
         node: str = "Project"
         # project name
         name: str = ""
@@ -29,7 +30,7 @@ class Project(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, group: Group):
+    def __init__(self, name: str, group: Group, **kwargs):
         """
         Create a Project node with Project name and Group
 
@@ -125,7 +126,7 @@ class Project(PrimaryBaseNode):
         new_attrs = replace(self._json_attrs, group=new_group)
         self._update_json_attrs_if_valid(new_attrs)
 
-    # TODO consider switching any to BaseNode 
+    # TODO consider switching any to BaseNode
     def _set_node_or_list(self, field_name: str, new_node: Union[Any, List[Any]]):
         """
         This method sets a field that is a list of node or a single node for this project.
@@ -181,27 +182,20 @@ class Project(PrimaryBaseNode):
     #   make a single function to take care of it
     # Collection
     @collection.setter
-    def collection(self, new_collection: Union[Collection, List[Collection]]):
+    def collection(self, new_collection: List[Collection]) -> None:
         """
-        Setter for the collection.
-
-        User has 2 options
-        1. pass a single collection that can be added to the list of collections
-        2. the user can pass a list of collections that will replace the current list of collections
-
-        simply calls the _set_node_or_list() method with field name and parameter passed into here
+        set list of collections for the project node
 
         Parameters
         ----------
-        new_collection: Union[Collection, List[Collection]
-            Either a single collection to be added to the list of collections
-            or a list of collections to replace the current list of collections
+        new_collection: List[Collection]
 
         Returns
         -------
         None
         """
-        self._set_node_or_list("collection", new_collection)
+        new_attrs = replace(self._json_attrs, collection=new_collection)
+        self._update_json_attrs_if_valid(new_attrs)
 
     # Material
     @property
@@ -217,28 +211,20 @@ class Project(PrimaryBaseNode):
         return self._json_attrs.material
 
     @material.setter
-    def material(self, new_material: Union[Material, List[Material]]):
+    def material(self, new_materials: List[Material]) -> None:
         """
-        Setter for the material.
-
-        User has 2 options
-        1. pass a single material that can be added to the list of material
-        2. the user can pass a list of material that will replace the current list of material
-
-        simply calls the _set_node_or_list() method with field name and a single node or list of nodes
-
+        set the list of materials for this project
 
         Parameters
         ----------
-        new_material: Material or List[Material]
-            new Material to append to Material list
-            or new list of Material to replace the current list
+        new_materials: List[Material]
 
         Returns
         -------
         None
         """
-        self._set_node_or_list("material", new_material)
+        new_attrs = replace(self._json_attrs, material=new_materials)
+        self._update_json_attrs_if_valid(new_attrs)
 
     # File
     @property
@@ -254,25 +240,17 @@ class Project(PrimaryBaseNode):
         return self._json_attrs.file
 
     @file.setter
-    def file(self, new_file: Union[File, List[File]]):
+    def file(self, new_file_list: List[File]):
         """
-        Setter for the file.
+         Set the list of files for this project
 
-        User has 2 options
-        1. pass a single file that can be added to the list of file
-        2. the user can pass a list of file that will replace the current list of file
+        Parameters
+        ----------
+        new_file_list: File or List[File]
 
-        simply calls the _set_node_or_list() method with field name and a single node or list of nodes
-
-
-       Parameters
-       ----------
-       new_file: File or List[File]
-           new File to append to File list
-           or new list of File to replace the current list
-
-       Returns
-       -------
-       None
-       """
-        self._set_node_or_list("file", new_file)
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, file=new_file_list)
+        self._update_json_attrs_if_valid(new_attrs)

@@ -35,6 +35,8 @@ class Process(PrimaryBaseNode):
         keywords: List[str] = None
         citations: List[Citation] = None
 
+    _json_attrs: JsonAttributes = JsonAttributes()
+
     def __init__(
         self,
         ingredients: List[Ingredient],
@@ -47,6 +49,7 @@ class Process(PrimaryBaseNode):
         properties: List[Property] = None,
         keywords: List[str] = None,
         citations: List[Citation] = None,
+        **kwargs
     ) -> None:
         """
         create a process node
@@ -124,7 +127,7 @@ class Process(PrimaryBaseNode):
         List[Ingredient]
             list of ingredients for this process
         """
-        return self._json_attrs.ingredients
+        return self._json_attrs.ingredients.copy()
 
     @ingredients.setter
     def ingredients(self, new_ingredients_list: List[Ingredient]) -> None:
@@ -182,7 +185,7 @@ class Process(PrimaryBaseNode):
         -------
         None
         """
-        return self._json_attrs.equipments
+        return self._json_attrs.equipments.copy()
 
     @equipments.setter
     def equipments(self, new_equipment_list: List[Equipment]) -> None:
@@ -211,7 +214,7 @@ class Process(PrimaryBaseNode):
         List[Material]
             get a list of process products (Material nodes)
         """
-        return self._json_attrs.products
+        return self._json_attrs.products.copy()
 
     @products.setter
     def products(self, new_products_list: List[Material]) -> None:
@@ -239,7 +242,7 @@ class Process(PrimaryBaseNode):
         -------
         None
         """
-        return self._json_attrs.waste
+        return self._json_attrs.waste.copy()
 
     @waste.setter
     def waste(self, new_waste_list: List[Material]) -> None:
@@ -267,7 +270,7 @@ class Process(PrimaryBaseNode):
         -------
         None
         """
-        return self._json_attrs.conditions
+        return self._json_attrs.conditions.copy()
 
     @conditions.setter
     def conditions(self, new_condition_list: List[Condition]) -> None:
@@ -294,7 +297,7 @@ class Process(PrimaryBaseNode):
         -------
         None
         """
-        return self._json_attrs.properties
+        return self._json_attrs.properties.copy()
 
     @properties.setter
     def properties(self, new_property_list: List[Property]) -> None:
@@ -322,7 +325,7 @@ class Process(PrimaryBaseNode):
         -------
         List[str]
         """
-        return self._json_attrs.keywords
+        return self._json_attrs.keywords.copy()
 
     @keywords.setter
     def keywords(self, new_keywords_list: List[str]) -> None:
@@ -351,7 +354,7 @@ class Process(PrimaryBaseNode):
         -------
         List[Citation]
         """
-        return self._json_attrs.citations
+        return self._json_attrs.citations.copy()
 
     @citations.setter
     def citations(self, new_citations_list: List[Citation]) -> None:

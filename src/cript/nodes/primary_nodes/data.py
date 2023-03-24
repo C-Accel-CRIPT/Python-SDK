@@ -28,6 +28,8 @@ class Data(PrimaryBaseNode):
         processes: List[Process] = None
         citations: List[Citation] = None
 
+    _json_attrs: JsonAttributes = JsonAttributes()
+
     def __init__(
         self,
         type: str,
@@ -38,6 +40,7 @@ class Data(PrimaryBaseNode):
         materials: List[Material] = None,
         processes: List[Process] = None,
         citations: List[Citation] = None,
+        **kwargs
     ):
         super().__init__(node="Data")
 
@@ -95,7 +98,7 @@ class Data(PrimaryBaseNode):
         -------
         List[File]
         """
-        return self._json_attrs.files
+        return self._json_attrs.files.copy()
 
     @files.setter
     def files(self, new_files_list: List[File]) -> None:
@@ -151,7 +154,7 @@ class Data(PrimaryBaseNode):
         -------
         None
         """
-        return self._json_attrs.computations
+        return self._json_attrs.computations.copy()
 
     @computations.setter
     def computations(self, new_computation_list: List[Computation]) -> None:
@@ -171,37 +174,46 @@ class Data(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def computational_process(
-        self, new_computational_process_list: List[ComputationalProcess]
-    ) -> List[ComputationalProcess]:
+    def computational_process(self) -> ComputationalProcess:
         """
         get the computational_process for this data node
-
-        Parameters
-        ----------
-        new_computational_process_list
 
         Returns
         -------
         None
         """
-        pass
+        return self._json_attrs.computational_process
 
-    @property
-    def materials(self, new_materials_list: List[Material]) -> List[Material]:
+    @computational_process.setter
+    def computational_process(
+        self, new_computational_process: ComputationalProcess
+    ) -> None:
         """
-        gets a list of materials for this node
+        set the computational process
 
         Parameters
         ----------
-        new_materials_list: List[Material]
-            new list of materials to replace the current
+        new_computational_process: ComputationalProcess
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(
+            self._json_attrs, computational_process=new_computational_process
+        )
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    def materials(self) -> List[Material]:
+        """
+        gets a list of materials for this node
 
         Returns
         -------
         List[Material]
         """
-        return self._json_attrs.materials
+        return self._json_attrs.materials.copy()
 
     @materials.setter
     def materials(self, new_materials_list: List[Material]) -> None:
@@ -228,7 +240,7 @@ class Data(PrimaryBaseNode):
         -------
         None
         """
-        return self._json_attrs.processes
+        return self._json_attrs.processes.copy()
 
     @processes.setter
     def processes(self, new_process_list: List[Process]) -> None:
@@ -256,7 +268,7 @@ class Data(PrimaryBaseNode):
         -------
         List[Citation]
         """
-        return self._json_attrs.citations
+        return self._json_attrs.citations.copy()
 
     @citations.setter
     def citations(self, new_citations_list: List[Citation]) -> None:

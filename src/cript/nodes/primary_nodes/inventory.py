@@ -22,7 +22,9 @@ class Inventory(PrimaryBaseNode):
         node: str = "Inventory"
         material: List[Material] = None
 
-    def __init__(self, materials_list: List[Material]) -> None:
+    _json_attrs: JsonAttributes = JsonAttributes()
+
+    def __init__(self, materials_list: List[Material], **kwargs) -> None:
         """
         create an inventory node
 
@@ -49,7 +51,7 @@ class Inventory(PrimaryBaseNode):
         List[Material]
             list of materials representing the inventory within the collection
         """
-        return self._json_attrs.material
+        return self._json_attrs.material.copy()
 
     @material.setter
     def material(self, new_material_list: List[Material]):

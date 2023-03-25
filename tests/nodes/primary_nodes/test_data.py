@@ -31,9 +31,13 @@ def test_data_type_invalid_vocabulary() -> None:
     pass
 
 
-def test_getters_and_setters() -> None:
+def test_data_getters_and_setters() -> None:
     """
     tests that all the getters and setters are working fine
+
+    Notes
+    -----
+    indirectly tests setting the data type to correct vocabulary
 
     Returns
     -------
@@ -49,7 +53,8 @@ def test_serialize_data_to_json() -> None:
     pass
 
 
-def test_save_material_to_api() -> None:
+# ---------- Integration tests ----------
+def test_save_data_to_api() -> None:
     """
     tests if the data node can be saved to the API without errors and status code of 200
     """
@@ -77,9 +82,9 @@ def test_update_data_in_api() -> None:
     pass
 
 
-def test_delete_material_from_api() -> None:
+def test_delete_data_from_api() -> None:
     """
     integration test: tests that the data node can be deleted correctly from the API
-    tries to get the material from API, and it is expected for the API to give an error response
+    tries to get the data from API, and it is expected for the API to give an error response
     """
     pass

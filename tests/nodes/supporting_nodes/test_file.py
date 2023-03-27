@@ -1,11 +1,17 @@
 import pytest
 
 import cript
-from cript import File
 
 
-# @pytest.fixture(scope="session")
-def test_file_object():
+def test_create_file() -> None:
+    """
+    tests that a simple file with only required attributes can be created
+    """
+    file_node = cript.File(source="https://google.com", type="calibration")
+
+
+@pytest.fixture(scope="session")
+def file_node() -> cript.File:
     """
     test just to see if a file object can be made without any issues
     with just the required arguments
@@ -19,6 +25,7 @@ def test_file_object():
     File
     """
     my_file = cript.File(source="https://google.com", type="calibration")
+    return my_file
 
 
 def test_file_type_invalid_vocabulary() -> None:
@@ -32,19 +39,31 @@ def test_file_type_invalid_vocabulary() -> None:
     pass
 
 
-def test_file_getters_and_setters() -> None:
+def test_file_getters_and_setters(file_node) -> None:
     """
     tests that all the getters and setters are working fine
 
     Notes
     -----
     indirectly tests setting the file type to correct vocabulary
-
-    Returns
-    -------
-    None
     """
-    pass
+    # ------- new properties -------
+    new_source = "https://bing.com"
+    new_file_type = "computation_config"
+    new_file_extension = ".csv"
+    new_data_dictionary = "new data dictionary"
+
+    # ------- set properties -------
+    file_node.source = new_source
+    file_node.type = new_file_type
+    file_node.extension = new_file_extension
+    file_node.data_dictionary = new_data_dictionary
+
+    # ------- assert set and get properties are the same -------
+    assert file_node.source == new_source
+    assert file_node.type == new_file_type
+    assert file_node.extension == new_file_extension
+    assert file_node.data_dictionary == new_data_dictionary
 
 
 def test_serialize_file_to_json() -> None:

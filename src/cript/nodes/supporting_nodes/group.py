@@ -1,9 +1,12 @@
 from dataclasses import dataclass, replace
-from typing import List, Union
+from typing import List, Any
 
 from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import UneditableAttributeError
-from cript import User
+
+
+# TODO add type hints later, currently avoiding circular import
+# from cript import User
 
 
 class Group(BaseNode):
@@ -19,18 +22,18 @@ class Group(BaseNode):
 
         node: str = "Group"
         name: str = ""
-        admins: List[User] = None
-        users: List[User] = None
+        admins: List[Any] = None
+        users: List[Any] = None
         notes: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(
-        self,
-        name: str,
-        admin: List[User],
-        user: List[User] = None,
-        **kwargs
+            self,
+            name: str,
+            admin: List[Any],
+            user: List[Any] = None,
+            **kwargs
     ):
         """
         constructor for a Group node
@@ -109,7 +112,7 @@ class Group(BaseNode):
 
     # admins
     @property
-    def admins(self) -> List[User]:
+    def admins(self) -> List[Any]:
         """
         name property getter method
 
@@ -121,7 +124,7 @@ class Group(BaseNode):
         return self._json_attrs.admins
 
     @admins.setter
-    def admins(self, new_admins: List[User]) -> None:
+    def admins(self, new_admins: List[Any]) -> None:
         """
         sets admins for the Group node
 
@@ -144,7 +147,7 @@ class Group(BaseNode):
         raise UneditableAttributeError
 
     @property
-    def users(self) -> List[User]:
+    def users(self) -> List[Any]:
         """
         users that belong to this group
 
@@ -156,7 +159,7 @@ class Group(BaseNode):
         return self._json_attrs.users
 
     @users.setter
-    def users(self, new_user: List[User]) -> None:
+    def users(self, new_user: List[Any]) -> None:
         """
         sets the users for this group
 

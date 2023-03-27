@@ -1,10 +1,11 @@
 import pytest
 
+import cript
 from cript import File
 
 
-@pytest.fixture(scope="session")
-def file_object() -> File:
+# @pytest.fixture(scope="session")
+def test_file_object():
     """
     test just to see if a file object can be made without any issues
     with just the required arguments
@@ -17,7 +18,7 @@ def file_object() -> File:
     -------
     File
     """
-    pass
+    my_file = cript.File(source="https://google.com", type="calibration")
 
 
 def test_file_type_invalid_vocabulary() -> None:

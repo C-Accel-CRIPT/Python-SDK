@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-from typing import List, Union, Any
+from typing import List, Any
 
 from cript.nodes.core import BaseNode
-from cript.nodes.supporting_nodes.group import Group
 from cript.nodes.exceptions import UneditableAttributeError
 
 
@@ -20,6 +19,8 @@ class User(BaseNode):
         all User attributes
         """
 
+        from cript import Group
+
         node: str = "User"
         username: str = ""
         email: str = ""
@@ -33,7 +34,7 @@ class User(BaseNode):
         username: str,
         email: str,
         orcid: str,
-        groups: Union[Group, List[Group]] = None,
+        groups: List[Group] = None,
     ):
         """
         Json from CRIPT API to be converted to a node
@@ -64,7 +65,7 @@ class User(BaseNode):
         return self._json_attrs.username
 
     @username.setter
-    def username(self, value: Any) -> None:
+    def username(self, value: str) -> None:
         """
         User cannot set the username for the user node.
         Attempt to do so will raise an UneditableAttributeError
@@ -92,7 +93,7 @@ class User(BaseNode):
         return self._json_attrs.email
 
     @email.setter
-    def email(self, value: Any) -> None:
+    def email(self, value: str) -> None:
         """
         User cannot set the email for the user node.
         Attempt to do so will raise an UneditableAttributeError
@@ -120,7 +121,7 @@ class User(BaseNode):
         return self._json_attrs.orcid
 
     @orcid.setter
-    def orcid(self, value: Any) -> None:
+    def orcid(self, value: str) -> None:
         """
         User cannot set the orcid for the user node.
         Attempt to do so will raise an UneditableAttributeError

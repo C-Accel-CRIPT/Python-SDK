@@ -30,6 +30,7 @@ class Group(BaseNode):
         name: str,
         admin: List[User],
         user: List[User] = None,
+        **kwargs
     ):
         """
         constructor for a Group node

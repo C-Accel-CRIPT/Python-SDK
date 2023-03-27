@@ -35,6 +35,7 @@ class User(BaseNode):
         email: str,
         orcid: str,
         groups: List[Group] = None,
+        **kwargs
     ):
         """
         Json from CRIPT API to be converted to a node

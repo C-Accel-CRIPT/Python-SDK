@@ -1,4 +1,5 @@
 import copy
+
 import pytest
 
 import cript
@@ -197,6 +198,7 @@ def test_software():
     assert s2.version == "v0.3.0"
     s2.source = "https://github.com/SSAGESLabs/PySAGES"
     assert s2.source == "https://github.com/SSAGESLabs/PySAGES"
+
 
 def get_property():
     p = cript.Property(

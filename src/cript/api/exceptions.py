@@ -1,4 +1,7 @@
-class CRIPTConnectionError(Exception):
+from cript.exceptions import CRIPTException
+
+
+class CRIPTConnectionError(CRIPTException):
     """
     Raised when the API object cannot connect to CRIPT with the given host and token
     """
@@ -25,7 +28,7 @@ class CRIPTConnectionError(Exception):
         return ret_str
 
 
-class InvalidVocabulary(Exception):
+class InvalidVocabulary(CRIPTException):
     """
     Raised when the CRIPT controlled vocabulary is invalid
     """
@@ -42,7 +45,7 @@ class InvalidVocabulary(Exception):
         return ret_str
 
 
-class CRIPTAPIAccessError(Exception):
+class CRIPTAPIAccessError(CRIPTException):
     """
     Exception to be raise when the cached API object is requested, but no cached API exists yet.
     """

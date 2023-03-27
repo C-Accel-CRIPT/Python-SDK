@@ -1,4 +1,7 @@
-class CRIPTNodeSchemaError(Exception):
+from cript.exceptions import CRIPTException
+
+
+class CRIPTNodeSchemaError(CRIPTException):
     """
     Exception that is raised when a DB schema validation fails for a node.
 
@@ -13,7 +16,7 @@ class CRIPTNodeSchemaError(Exception):
         return "Dummy Schema validation failed. TODO replace with actual implementation."
 
 
-class CRIPTJsonDeserializationError(Exception):
+class CRIPTJsonDeserializationError(CRIPTException):
     """
     Exception to throw if deserialization of nodes fails.
 
@@ -27,7 +30,7 @@ class CRIPTJsonDeserializationError(Exception):
         return f"JSON deserialization failed for node type {self.node_type} with JSON str: {self.json_str}"
 
 
-class CRIPTJsonSerializationError(Exception):
+class CRIPTJsonSerializationError(CRIPTException):
     """
     Exception to throw if deserialization of nodes fails.
 

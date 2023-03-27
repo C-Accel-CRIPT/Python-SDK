@@ -9,8 +9,12 @@ class User(BaseNode):
     """
     The User node
 
-    Note: A user cannot be created or modified using the SDK.
+    Notes
+    -----
+    * A user cannot be created or modified using the SDK.
     This object is for read-only purposes only.
+
+    * type hinting some places that should be Group type as any to avoid circular import error
     """
 
     @dataclass(frozen=True)
@@ -19,13 +23,11 @@ class User(BaseNode):
         all User attributes
         """
 
-        from cript import Group
-
         node: str = "User"
         username: str = ""
         email: str = ""
         orcid: str = ""
-        groups = List[Group]
+        groups = List[Any]
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -34,7 +36,7 @@ class User(BaseNode):
         username: str,
         email: str,
         orcid: str,
-        groups: List[Group] = None,
+        groups: List[Any] = None,
         **kwargs
     ):
         """

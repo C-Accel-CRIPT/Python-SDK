@@ -56,7 +56,9 @@ class File(BaseNode):
     ):
         super().__init__(node="File")
         verify_file_source(source)
-        is_vocab_valid("file type", type)
+
+        # TODO check if vocabulary is valid or not
+        # is_vocab_valid("file type", type)
 
         self._json_attrs = replace(
             self._json_attrs,
@@ -132,7 +134,8 @@ class File(BaseNode):
         -------
         None
         """
-        is_vocab_valid("file type", self._json_attrs.type)
+        # TODO check vocabulary is valid
+        # is_vocab_valid("file type", self._json_attrs.type)
         new_attrs = replace(self._json_attrs, type=new_type)
         self._update_json_attrs_if_valid(new_attrs)
 

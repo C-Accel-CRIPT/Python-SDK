@@ -3,7 +3,7 @@ from typing import List, Union
 
 from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import UneditableAttributeError
-from cript.nodes.supporting_nodes.user import User
+from cript import User
 
 
 class Group(BaseNode):
@@ -19,8 +19,8 @@ class Group(BaseNode):
 
         node: str = "Group"
         name: str = ""
-        admins: Union[User, List[User]] = None
-        users: Union[User, List[User]] = None
+        admins: List[User] = None
+        users: List[User] = None
         notes: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -28,8 +28,8 @@ class Group(BaseNode):
     def __init__(
         self,
         name: str,
-        admin: Union[User, List[User]],
-        user: Union[User, List[User]] = None,
+        admin: List[User],
+        user: List[User] = None,
     ):
         """
         constructor for a Group node
@@ -108,19 +108,19 @@ class Group(BaseNode):
 
     # admins
     @property
-    def admins(self) -> Union[User, List]:
+    def admins(self) -> List[User]:
         """
         name property getter method
 
         Returns
         -------
-        admins: Union[User, List]
+        admins: List[User]
             an admin or list of admins
         """
         return self._json_attrs.admins
 
     @admins.setter
-    def admins(self, new_admins: Union[User, List[User]]) -> None:
+    def admins(self, new_admins: List[User]) -> None:
         """
         sets admins for the Group node
 
@@ -155,7 +155,7 @@ class Group(BaseNode):
         return self._json_attrs.users
 
     @users.setter
-    def users(self, new_user: Union[User, List[User]]) -> None:
+    def users(self, new_user: List[User]) -> None:
         """
         sets the users for this group
 

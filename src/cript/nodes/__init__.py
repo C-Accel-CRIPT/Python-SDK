@@ -12,6 +12,8 @@ from cript.nodes.primary_nodes import (
 from cript.nodes.subobjects import (
     Algorithm,
     Citation,
+    ComputationForcefield,
+    Condition,
     Equipment,
     Identifier,
     Ingredient,

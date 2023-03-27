@@ -1,10 +1,14 @@
 # trunk-ignore-all(ruff/F401)
+
+from cript.api import API, is_vocab_valid
 from cript.nodes import (
     Algorithm,
     Citation,
     Collection,
     Computation,
     ComputationalProcess,
+    ComputationForcefield,
+    Condition,
     Data,
     Equipment,
     Experiment,

@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 import cript
@@ -37,8 +39,19 @@ def file_node() -> cript.File:
     -------
     File
     """
-    my_file = cript.File(source="https://google.com", type_="calibration")
-    return my_file
+
+    # create a File node with all fields
+    my_file = cript.File(
+        source="https://criptapp.com", type_="calibration", extension=".pdf", data_dictionary="my data dictionary"
+    )
+    # use the file node for tests
+    yield my_file
+
+    # clean up file node after each test, so the file test is always uniform
+    # set the file node to original state
+    my_file = cript.File(
+        source="https://criptapp.com", type_="calibration", extension=".pdf", data_dictionary="my data dictionary "
+    )
 
 
 def test_file_type_invalid_vocabulary() -> None:
@@ -79,11 +92,22 @@ def test_file_getters_and_setters(file_node) -> None:
     assert file_node.data_dictionary == new_data_dictionary
 
 
-def test_serialize_file_to_json() -> None:
+def test_serialize_file_to_json(file_node) -> None:
     """
     tests that it can correctly turn the file node into its equivalent JSON
     """
-    pass
+
+    expected_file_node_json = {
+        "node": "File",
+        "source": "https://criptapp.com",
+        "type": "calibration",
+        "extension": ".pdf",
+        "data_dictionary": "my data dictionary",
+    }
+
+    expected_file_node_json = json.dumps(expected_file_node_json)
+
+    assert expected_file_node_json == file_node.json
 
 
 # ---------- Integration tests ----------

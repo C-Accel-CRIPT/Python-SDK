@@ -7,6 +7,7 @@ from cript.nodes.exceptions import UneditableAttributeError
 
 # TODO add type hints later, currently avoiding circular import error
 
+
 class User(BaseNode):
     """
     The User node
@@ -33,14 +34,7 @@ class User(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(
-        self,
-        username: str,
-        email: str,
-        orcid: str,
-        groups: List[Any] = None,
-        **kwargs
-    ):
+    def __init__(self, username: str, email: str, orcid: str, groups: List[Any] = None, **kwargs):
         """
         Json from CRIPT API to be converted to a node
         optionally the group can be None if the user doesn't have a group

@@ -28,13 +28,7 @@ class Group(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(
-            self,
-            name: str,
-            admins: List[Any],
-            users: List[Any] = None,
-            **kwargs
-    ):
+    def __init__(self, name: str, admins: List[Any], users: List[Any] = None, **kwargs):
         """
         constructor for a Group node
 
@@ -52,9 +46,7 @@ class Group(BaseNode):
         None
         """
         super().__init__(node="Group")
-        self._json_attrs = replace(
-            self._json_attrs, name=name, admins=admins, users=users
-        )
+        self._json_attrs = replace(self._json_attrs, name=name, admins=admins, users=users)
         self.validate()
 
     def validate(self) -> None:

@@ -51,9 +51,7 @@ class File(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(
-        self, source: str, type: str, extension: str = "", data_dictionary: str = "", **kwargs
-    ):
+    def __init__(self, source: str, type: str, extension: str = "", data_dictionary: str = "", **kwargs):
         super().__init__(node="File")
         verify_file_source(source)
 

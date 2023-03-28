@@ -104,6 +104,7 @@ class File(BaseNode):
                 # TODO upload a file to Argonne Labs or directly to the backend
                 #   get the URL of the uploaded file
                 #   set the source to the URL just gotten from argonne
+                print(file)
                 pass
 
         new_attrs = replace(self._json_attrs, source=new_source)

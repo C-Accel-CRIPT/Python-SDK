@@ -1,36 +1,26 @@
-import os
 from dataclasses import dataclass, replace
-from typing import Union
 
 from cript.nodes.core import BaseNode
 
 
-def _verify_file_source(file_source: str) -> Union[None, FileNotFoundError]:
+def _is_local_file(file_source: str) -> bool:
     """
-    checks if the file source is valid
-    1. checks if the file is a link or path to file on local storage
-        1. if source is link then it is considered valid
-    2. if file source is not a path, then it tries to get the file
-        1. if the file can be found then it returns None
-        2. if file cannot be found on local storage then it throws an error
+    determines if the file the user is uploading is a local file or a link
+
+    Parameters
+    ----------
+    file_source: str
 
     Returns
     -------
-    None
-
-    Raises
-    ------
-    FileNotFoundError
-        if file source is local path and file cannot be found on local storage
+    bool
     """
 
     # checking "http" so it works with both "https://" and "http://"
     if file_source.startswith("http"):
-        return None
-
-    # if path to file on local storage
-    if not os.path.exists(file_source):
-        raise FileNotFoundError
+        return True
+    else:
+        return False
 
 
 class File(BaseNode):
@@ -53,21 +43,21 @@ class File(BaseNode):
 
     def __init__(self, source: str, type_: str, extension: str = "", data_dictionary: str = "", **kwargs):
         super().__init__(node="File")
-        _verify_file_source(source)
 
         # TODO check if vocabulary is valid or not
         # is_vocab_valid("file type", type)
 
+        # setting every attribute except for source, which will be handled via setter
         self._json_attrs = replace(
             self._json_attrs,
-            source=source,
             type_=type_,
             extension=extension,
             data_dictionary=data_dictionary,
         )
-        self.validate()
 
-    pass
+        self.source = source
+
+        self.validate()
 
     # TODO can be made into a function
 
@@ -91,19 +81,31 @@ class File(BaseNode):
         sets the source of the file node
         the source can either be a path to a file on local storage or a link to a file
 
-        if the file source is a path to local file then it tries to check if it can find it
-        and if it cannot then it throws an error saying that the file you pointed to does not
-        exist
+        1. checks if the file source is a link or a local file path
+        2. if the source is a link such as `https://wikipedia.com` then it sets the URL as the file source
+        3. if the file source is a local file path such as
+                `C:\\Users\\my_username\\Desktop\\cript\\file.txt`
+            1. then it opens the file and reads it
+            2. uploads it to the cloud storage
+            3. gets back a URL from where in the cloud the file is found
+            4. sets that as the source
 
         Parameters
         ----------
-        new_source
+        new_source: str
 
         Returns
         -------
         None
         """
-        _verify_file_source(new_source)
+
+        if _is_local_file(new_source):
+            with open(new_source, "r") as file:
+                # TODO upload a file to Argonne Labs or directly to the backend
+                #   get the URL of the uploaded file
+                #   set the source to the URL just gotten from argonne
+                pass
+
         new_attrs = replace(self._json_attrs, source=new_source)
         self._update_json_attrs_if_valid(new_attrs)
 

@@ -7,7 +7,23 @@ def test_create_file() -> None:
     """
     tests that a simple file with only required attributes can be created
     """
-    file_node = cript.File(source="https://google.com", type="calibration")
+    file_node = cript.File(source="https://google.com", type_="calibration")
+
+
+def test_create_file_local_source(tmp_path) -> None:
+    """
+    tests that a simple file with only required attributes can be created
+    with source pointing to a local file on storage
+
+    create a temporary directory with temporary file
+    """
+
+    # create a temporary file in the temporary directory to test with
+    file_path = tmp_path / "test.txt"
+    with open(file_path, "w") as temporary_file:
+        temporary_file.write("hello world!")
+
+    file_node = cript.File(source=str(file_path), type_="calibration")
 
 
 @pytest.fixture(scope="session")
@@ -24,7 +40,7 @@ def file_node() -> cript.File:
     -------
     File
     """
-    my_file = cript.File(source="https://google.com", type="calibration")
+    my_file = cript.File(source="https://google.com", type_="calibration")
     return my_file
 
 

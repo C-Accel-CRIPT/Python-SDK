@@ -64,7 +64,7 @@ class User(BaseNode):
         return self._json_attrs.username
 
     @username.setter
-    def username(self, value: str) -> None:
+    def username(self, new_username: str) -> None:
         """
         User cannot set the username for the user node.
         Attempt to do so will raise an UneditableAttributeError
@@ -92,7 +92,7 @@ class User(BaseNode):
         return self._json_attrs.email
 
     @email.setter
-    def email(self, value: str) -> None:
+    def email(self, new_email: str) -> None:
         """
         User cannot set the email for the user node.
         Attempt to do so will raise an UneditableAttributeError
@@ -120,7 +120,7 @@ class User(BaseNode):
         return self._json_attrs.orcid
 
     @orcid.setter
-    def orcid(self, value: str) -> None:
+    def orcid(self, new_orcid: str) -> None:
         """
         User cannot set the orcid for the user node.
         Attempt to do so will raise an UneditableAttributeError
@@ -148,7 +148,7 @@ class User(BaseNode):
         return self._json_attrs.groups
 
     @groups.setter
-    def groups(self, value: Any):
+    def groups(self, new_group: Any):
         """
         User cannot set the group for the user node.
         Attempt to do so will raise an UneditableAttributeError

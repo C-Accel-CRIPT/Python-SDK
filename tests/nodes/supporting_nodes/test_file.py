@@ -29,12 +29,7 @@ def test_create_file_local_source(tmp_path) -> None:
 @pytest.fixture(scope="session")
 def file_node() -> cript.File:
     """
-    test just to see if a file object can be made without any issues
-    with just the required arguments
-
-    Notes
-    -----
-    this object is later used for other test
+    create a file node for other tests to use
 
     Returns
     -------

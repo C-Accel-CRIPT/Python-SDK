@@ -16,6 +16,10 @@ def group_node() -> cript.Group:
     """
     create a group from JSON that can be used by other tests
 
+    Notes
+    -----
+    User node should only be created from JSON and not from instantiation
+
     Returns
     -------
     Group

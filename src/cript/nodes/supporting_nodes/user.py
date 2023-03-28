@@ -46,7 +46,7 @@ class User(BaseNode):
         groups
         """
         super().__init__(node="User")
-        pass
+        self.validate()
 
     # ------------------ properties ------------------
 

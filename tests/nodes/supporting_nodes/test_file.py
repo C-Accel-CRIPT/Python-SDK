@@ -7,7 +7,9 @@ def test_create_file() -> None:
     """
     tests that a simple file with only required attributes can be created
     """
-    assert cript.File(source="https://google.com", type_="calibration")
+    file_node = cript.File(source="https://google.com", type_="calibration")
+
+    assert isinstance(file_node, cript.File)
 
 
 def test_create_file_local_source(tmp_path) -> None:

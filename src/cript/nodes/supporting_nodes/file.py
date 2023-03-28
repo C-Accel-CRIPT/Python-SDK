@@ -25,7 +25,7 @@ def _is_local_file(file_source: str) -> bool:
 
 class File(BaseNode):
     """
-    File node
+    [File node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=28)
     """
 
     @dataclass(frozen=True)

@@ -5,7 +5,7 @@ from typing import Union
 from cript.nodes.core import BaseNode
 
 
-def verify_file_source(file_source: str) -> Union[None, FileNotFoundError]:
+def _verify_file_source(file_source: str) -> Union[None, FileNotFoundError]:
     """
     checks if the file source is valid
     1. checks if the file is a link or path to file on local storage
@@ -53,7 +53,7 @@ class File(BaseNode):
 
     def __init__(self, source: str, type_: str, extension: str = "", data_dictionary: str = "", **kwargs):
         super().__init__(node="File")
-        verify_file_source(source)
+        _verify_file_source(source)
 
         # TODO check if vocabulary is valid or not
         # is_vocab_valid("file type", type)
@@ -103,7 +103,7 @@ class File(BaseNode):
         -------
         None
         """
-        verify_file_source(new_source)
+        _verify_file_source(new_source)
         new_attrs = replace(self._json_attrs, source=new_source)
         self._update_json_attrs_if_valid(new_attrs)
 

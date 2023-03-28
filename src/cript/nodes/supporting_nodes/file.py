@@ -45,13 +45,13 @@ class File(BaseNode):
         """
 
         source: str = ""
-        type: str = ""
+        type_: str = ""
         extension: str = ""
         data_dictionary: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, source: str, type: str, extension: str = "", data_dictionary: str = "", **kwargs):
+    def __init__(self, source: str, type_: str, extension: str = "", data_dictionary: str = "", **kwargs):
         super().__init__(node="File")
         verify_file_source(source)
 
@@ -61,7 +61,7 @@ class File(BaseNode):
         self._json_attrs = replace(
             self._json_attrs,
             source=source,
-            type=type,
+            type_=type_,
             extension=extension,
             data_dictionary=data_dictionary,
         )
@@ -108,25 +108,29 @@ class File(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def type(self) -> str:
+    def type_(self) -> str:
         """
         get file type
+
+        file type must come from CRIPT controlled vocabulary
 
         Returns
         -------
         str
             file type
         """
-        return self._json_attrs.type
+        return self._json_attrs.type_
 
-    @type.setter
-    def type(self, new_type) -> None:
+    @type_.setter
+    def type_(self, new_type_) -> None:
         """
         sets the file type
 
+        file type must come from CRIPT controlled vocabulary
+
         Parameters
         ----------
-        new_type
+        new_type_
 
         Returns
         -------
@@ -134,7 +138,7 @@ class File(BaseNode):
         """
         # TODO check vocabulary is valid
         # is_vocab_valid("file type", self._json_attrs.type)
-        new_attrs = replace(self._json_attrs, type=new_type)
+        new_attrs = replace(self._json_attrs, type_=new_type_)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

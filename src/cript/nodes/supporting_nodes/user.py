@@ -5,6 +5,8 @@ from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import UneditableAttributeError
 
 
+# TODO add type hints later, currently avoiding circular import error
+
 class User(BaseNode):
     """
     The User node
@@ -146,7 +148,7 @@ class User(BaseNode):
 
         Returns
         -------
-        List[Group]
+        List[Any]
             List of Group nodes that the user belongs in
         """
         return self._json_attrs.groups

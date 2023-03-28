@@ -2,9 +2,6 @@ from dataclasses import dataclass, field
 from typing import Any, List
 
 from cript.nodes.core import BaseNode
-from cript.nodes.exceptions import UneditableAttributeError
-
-# TODO add type hints later, currently avoiding circular import error
 
 
 class User(BaseNode):
@@ -15,8 +12,6 @@ class User(BaseNode):
     -----
     * A user cannot be created or modified using the SDK.
     This object is for read-only purposes only.
-
-    * type hinting some places that should be Group type as any to avoid circular import error
     """
 
     @dataclass(frozen=True)
@@ -29,6 +24,7 @@ class User(BaseNode):
         username: str = ""
         email: str = ""
         orcid: str = ""
+        # TODO add type hints later, currently avoiding circular import error
         groups: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()

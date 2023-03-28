@@ -1,7 +1,6 @@
 import pytest
 
 import cript
-from cript.nodes.exceptions import UneditableAttributeError
 
 
 def test_user_from_json():
@@ -36,7 +35,7 @@ def user_node() -> cript.User:
 
 def test_set_user_properties(user_node):
     """
-    tests that setting any user property throws an UneditableAttributeError
+    tests that setting any user property throws an AttributeError
     """
     with pytest.raises(AttributeError):
         user_node.username = "my new username"

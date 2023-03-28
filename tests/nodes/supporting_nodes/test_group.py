@@ -1,7 +1,6 @@
 import pytest
 
 import cript
-from cript.nodes.exceptions import UneditableAttributeError
 
 
 def test_create_group_from_json():
@@ -38,7 +37,7 @@ def test_group_to_json(group_node) -> None:
 
 def test_set_group_name(group_node):
     """
-    tests that setting any group property throws an UneditableAttributeError
+    tests that setting any group property throws an AttributeError
 
     Notes
     ----

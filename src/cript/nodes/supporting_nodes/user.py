@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, List
 
 from cript.nodes.core import BaseNode
@@ -9,7 +9,7 @@ from cript.nodes.exceptions import UneditableAttributeError
 
 class User(BaseNode):
     """
-    The User node
+    [User node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=27)
 
     Notes
     -----
@@ -29,7 +29,7 @@ class User(BaseNode):
         username: str = ""
         email: str = ""
         orcid: str = ""
-        groups = List[Any]
+        groups: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 

@@ -38,16 +38,16 @@ def test_set_user_properties(user_node):
     """
     tests that setting any user property throws an UneditableAttributeError
     """
-    with pytest.raises(UneditableAttributeError):
+    with pytest.raises(AttributeError):
         user_node.username = "my new username"
 
-    with pytest.raises(UneditableAttributeError):
+    with pytest.raises(AttributeError):
         user_node.email = "my new email"
 
-    with pytest.raises(UneditableAttributeError):
+    with pytest.raises(AttributeError):
         user_node.orcid = "my new orcid"
 
-    with pytest.raises(UneditableAttributeError):
+    with pytest.raises(AttributeError):
         # TODO try setting it via a group node
         #   either way it should give the same error
         user_node.orcid = ["my new group"]

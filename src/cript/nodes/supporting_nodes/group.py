@@ -1,4 +1,4 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, replace, field
 from typing import Any, List
 
 from cript.nodes.core import BaseNode
@@ -10,7 +10,11 @@ from cript.nodes.exceptions import UneditableAttributeError
 
 class Group(BaseNode):
     """
-    CRIPT Group node as described in the CRIPT data model
+    [Group Node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=27)
+
+    Notes
+    ----
+    * Group node cannot be created or edited via the Python SDK
     """
 
     @dataclass(frozen=True)
@@ -21,8 +25,8 @@ class Group(BaseNode):
 
         node: str = "Group"
         name: str = ""
-        admins: List[Any] = None
-        users: List[Any] = None
+        admins: List[Any] = field(default_factory=list)
+        users: List[Any] = field(default_factory=list)
         notes: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -152,9 +156,8 @@ class Group(BaseNode):
     @users.setter
     def users(self, new_users: List[Any]) -> None:
         """
-        sets the users for this group
+        user cannot se the list of users for the group node via the Python SDK
 
-        User cannot set the notes for any nodes.
         Attempt to do so will raise an UneditableAttributeError
 
         Parameters

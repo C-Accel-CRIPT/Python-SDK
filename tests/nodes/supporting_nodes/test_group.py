@@ -1,4 +1,7 @@
+import pytest
+
 import cript
+from cript.nodes.exceptions import UneditableAttributeError
 
 
 def test_create_group_from_json():
@@ -8,64 +11,42 @@ def test_create_group_from_json():
     pass
 
 
-def test_group_to_json():
+@pytest.fixture(scope="session")
+def group_node() -> cript.Group:
+    """
+    create a group from JSON that can be used by other tests
+
+    Returns
+    -------
+    Group
+    """
+    # TODO create group object from JSON instead of code
+    my_group = cript.Group(name="my group", admins=["admin 1"], users=["user 1"])
+    return my_group
+
+
+def test_group_to_json(group_node) -> None:
     """
     tests if the group node can be correctly serialized to JSON
     """
     pass
 
 
-def test_get_group_name():
+def test_set_group_name(group_node):
     """
-    tests if it can correctly get the group name from the group node
-    """
-    pass
+    tests that setting any group property throws an UneditableAttributeError
 
+    Notes
+    ----
+    since User nodes also cannot be created
+    instead of user node the setter is tested with a string
+    because setting the group property at all should raise an exception
+    """
+    with pytest.raises(UneditableAttributeError):
+        group_node.name = "my new group name"
 
-def test_set_group_name():
-    """
-    tests if setting the group name throws an UneditableAttributeError
-    """
-    pass
+    with pytest.raises(UneditableAttributeError):
+        group_node.users = ["my new user"]
 
-
-def test_get_group_admins():
-    """
-    tests if it can correctly get the list of admins from the group node
-    """
-    pass
-
-
-def test_set_group_admins():
-    """
-    tests if setting the group admins throws an UneditableAttributeError
-    """
-    pass
-
-
-def test_get_group_users():
-    """
-    tests if it can correctly get a user from the group node
-    """
-    pass
-
-
-def test_set_group_users():
-    """
-    tests if setting the group users throws an UneditableAttributeError
-    """
-    pass
-
-
-def test_get_group_notes():
-    """
-    tests if it can correctly get a notes from the group node
-    """
-    pass
-
-
-def test_set_group_note():
-    """
-    tests if setting the group notes throws an UneditableAttributeError
-    """
-    pass
+    with pytest.raises(UneditableAttributeError):
+        group_node.notes = "my new notes"

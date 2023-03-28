@@ -31,8 +31,8 @@ class Group(BaseNode):
     def __init__(
             self,
             name: str,
-            admin: List[Any],
-            user: List[Any] = None,
+            admins: List[Any],
+            users: List[Any] = None,
             **kwargs
     ):
         """
@@ -42,10 +42,10 @@ class Group(BaseNode):
         ----------
         name: str
             group name
-        admin: User
+        admins: Any
             administrator of this group
-        users: User
-            user or list of users that are in this Group
+        users: List[Any]
+            list of users that are in this Group
 
         Returns
         -------
@@ -53,7 +53,7 @@ class Group(BaseNode):
         """
         super().__init__(node="Group")
         self._json_attrs = replace(
-            self._json_attrs, name=name, admins=admin, users=user
+            self._json_attrs, name=name, admins=admins, users=users
         )
         self.validate()
 
@@ -118,7 +118,7 @@ class Group(BaseNode):
 
         Returns
         -------
-        admins: List[User]
+        admins: List[Any]
             an admin or list of admins
         """
         return self._json_attrs.admins
@@ -153,13 +153,13 @@ class Group(BaseNode):
 
         Returns
         -------
-        List[User]
-            users that belong to this group
+        List[Any]
+            list of users that belong to this group
         """
         return self._json_attrs.users
 
     @users.setter
-    def users(self, new_user: List[Any]) -> None:
+    def users(self, new_users: List[Any]) -> None:
         """
         sets the users for this group
 
@@ -168,7 +168,7 @@ class Group(BaseNode):
 
         Parameters
         ----------
-        new_user
+        new_users
             new user list to override
 
         Returns
@@ -195,7 +195,7 @@ class Group(BaseNode):
         return self._json_attrs.notes
 
     @notes.setter
-    def notes(self, value: str) -> None:
+    def notes(self, new_notes: str) -> None:
         """
         set notes for group
 
@@ -204,7 +204,7 @@ class Group(BaseNode):
 
         Parameters
         ----------
-        value
+        new_notes
             new user list to override
 
         Returns

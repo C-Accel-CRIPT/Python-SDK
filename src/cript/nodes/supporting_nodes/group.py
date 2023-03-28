@@ -1,9 +1,8 @@
 from dataclasses import dataclass, replace
-from typing import List, Any
+from typing import Any, List
 
 from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import UneditableAttributeError
-
 
 # TODO add type hints later, currently avoiding circular import
 # from cript import User

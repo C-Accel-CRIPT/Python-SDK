@@ -1,9 +1,10 @@
-import json
 import inspect
-
+import json
 from dataclasses import asdict
-from cript.nodes.core import BaseNode
+
 import cript.nodes
+from cript.nodes.core import BaseNode
+from cript.nodes.exceptions import CRIPTJsonDeserializationError
 
 
 class NodeEncoder(json.JSONEncoder):
@@ -13,7 +14,7 @@ class NodeEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-def _node_json_hook(node_str:str):
+def _node_json_hook(node_str: str):
     """
     Internal function, used as a hook for json deserialization.
     """
@@ -23,11 +24,15 @@ def _node_json_hook(node_str:str):
     for key, pyclass in inspect.getmembers(cript.nodes, inspect.isclass):
         if BaseNode in pyclass.__bases__:
             if key == node_dict.get("node"):
-                return pyclass._from_json(node_dict)
+                try:
+                    return pyclass._from_json(node_dict)
+                except Exception as exc:
+                    raise CRIPTJsonDeserializationError(key, node_str) from exc
     # Fall back
     return node_dict
 
-def load_nodes_from_json(nodes_json:str):
+
+def load_nodes_from_json(nodes_json: str):
     """
     User facing function, that return a node and all its children from a json input.
     """

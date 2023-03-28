@@ -18,9 +18,9 @@ def _is_local_file(file_source: str) -> bool:
 
     # checking "http" so it works with both "https://" and "http://"
     if file_source.startswith("http"):
-        return True
-    else:
         return False
+    else:
+        return True
 
 
 class File(BaseNode):

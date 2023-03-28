@@ -23,7 +23,7 @@ def test_create_file_local_source(tmp_path) -> None:
     with open(file_path, "w") as temporary_file:
         temporary_file.write("hello world!")
 
-    file_node = cript.File(source=str(file_path), type_="calibration")
+    assert cript.File(source=str(file_path), type_="calibration")
 
 
 @pytest.fixture(scope="session")

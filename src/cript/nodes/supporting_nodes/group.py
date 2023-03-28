@@ -2,10 +2,6 @@ from dataclasses import dataclass, replace, field
 from typing import Any, List
 
 from cript.nodes.core import BaseNode
-from cript.nodes.exceptions import UneditableAttributeError
-
-# TODO add type hints later, currently avoiding circular import
-# from cript import User
 
 
 class Group(BaseNode):
@@ -25,6 +21,7 @@ class Group(BaseNode):
 
         node: str = "Group"
         name: str = ""
+        # TODO add type hints later, currently avoiding circular import
         admins: List[Any] = field(default_factory=list)
         users: List[Any] = field(default_factory=list)
         notes: str = ""
@@ -67,30 +64,6 @@ class Group(BaseNode):
         """
         return self._json_attrs.name
 
-    @name.setter
-    def name(self, new_name: str) -> None:
-        """
-        Setter for the group name
-
-        User cannot set the name for any nodes.
-        Attempt to do so will raise an UneditableAttributeError
-
-        Parameters
-        ----------
-        new_name: str
-            new group name
-
-        Returns
-        -------
-        None
-
-        Raises
-        ------
-        UneditableAttributeError
-            If user attempts to set this property
-        """
-        raise UneditableAttributeError
-
     # admins
     @property
     def admins(self) -> List[Any]:
@@ -104,29 +77,6 @@ class Group(BaseNode):
         """
         return self._json_attrs.admins
 
-    @admins.setter
-    def admins(self, new_admins: List[Any]) -> None:
-        """
-        sets admins for the Group node
-
-        User cannot set the admins of the group node.
-        Attempt to do so will raise an UneditableAttributeError
-
-        Parameters
-        ----------
-        new_admins
-
-        Returns
-        -------
-        None
-
-        Raises
-        ------
-        UneditableAttributeError
-            If user attempts to set this property
-        """
-        raise UneditableAttributeError
-
     @property
     def users(self) -> List[Any]:
         """
@@ -139,29 +89,6 @@ class Group(BaseNode):
         """
         return self._json_attrs.users
 
-    @users.setter
-    def users(self, new_users: List[Any]) -> None:
-        """
-        user cannot se the list of users for the group node via the Python SDK
-
-        Attempt to do so will raise an UneditableAttributeError
-
-        Parameters
-        ----------
-        new_users
-            new user list to override
-
-        Returns
-        -------
-        None
-
-        Raises
-        ------
-        UneditableAttributeError
-            If user attempts to set this property
-        """
-        raise UneditableAttributeError
-
     @property
     def notes(self) -> str:
         """
@@ -173,27 +100,3 @@ class Group(BaseNode):
             groups notes
         """
         return self._json_attrs.notes
-
-    @notes.setter
-    def notes(self, new_notes: str) -> None:
-        """
-        set notes for group
-
-        User cannot set the notes for any nodes.
-        Attempt to do so will raise an UneditableAttributeError
-
-        Parameters
-        ----------
-        new_notes
-            new user list to override
-
-        Returns
-        -------
-        None
-
-        Raises
-        ------
-        UneditableAttributeError
-            If user attempts to set this property
-        """
-        raise UneditableAttributeError

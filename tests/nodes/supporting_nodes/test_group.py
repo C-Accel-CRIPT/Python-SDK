@@ -46,11 +46,11 @@ def test_set_group_name(group_node):
     instead of user node the setter is tested with a string
     because setting the group property at all should raise an exception
     """
-    with pytest.raises(UneditableAttributeError):
+    with pytest.raises(AttributeError):
         group_node.name = "my new group name"
 
-    with pytest.raises(UneditableAttributeError):
+    with pytest.raises(AttributeError):
         group_node.users = ["my new user"]
 
-    with pytest.raises(UneditableAttributeError):
+    with pytest.raises(AttributeError):
         group_node.notes = "my new notes"

@@ -47,8 +47,6 @@ def test_get_and_set_inventory(inventory_node) -> None:
 
 
 # --------------- Integration Tests ---------------
-
-
 def test_save_inventory(cript_api) -> None:
     """
     test that an inventory node can be saved correctly to the API

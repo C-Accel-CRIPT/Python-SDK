@@ -281,8 +281,9 @@ def test_deserialize_material_from_json() -> None:
         "computational_forcefield_count": 0,
         "created_at": "2023-03-14T00:45:02.196297Z",
         "identifier_count": 0,
+        "identifiers": [],
         "model_version": "1.0.0",
-        "node": ["Material"],
+        "node": "Material",
         "notes": "",
         "property_count": 0,
         "uid": "0x24a08",
@@ -290,7 +291,10 @@ def test_deserialize_material_from_json() -> None:
         "uuid": "403fa02c-9a84-4f9e-903c-35e535151b08",
     }
 
-    my_material = cript.load_nodes_from_json(nodes_json=json.dumps(api_material))
+    material_string = json.dumps(api_material)
+    print(material_string)
+    my_material = cript.load_nodes_from_json(nodes_json=material_string)
+    print(type(my_material))
 
     # assertions
     assert isinstance(my_material, cript.Material)
@@ -318,3 +322,6 @@ def test_delete_material_from_api() -> None:
     tries to get the material from API, and it is expected for the API to give an error response
     """
     pass
+
+
+test_deserialize_material_from_json()

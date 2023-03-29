@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 import cript
@@ -18,18 +20,17 @@ def test_create_simple_material() -> None:
     assert my_material.name == material_name
 
 
-def test_create_complex_material() -> None:
+@pytest.fixture(scope="session")
+def complex_material() -> None:
     """
-    tests that a material can be created with all optional arguments
+    complex material fixture to use for other tests
     """
 
     my_identifier = [{"alternative_names": "my material alternative name"}]
 
     my_components = [
-        cript.Material(name="my component material 1",
-                       identifiers=[{"alternative_names": "component 1 alternative name"}]),
-        cript.Material(name="my component material 2",
-                       identifiers=[{"alternative_names": "component 2 alternative name"}]),
+        cript.Material(name="my component material 1", identifiers=[{"alternative_names": "component 1 alternative name"}]),
+        cript.Material(name="my component material 2", identifiers=[{"alternative_names": "component 2 alternative name"}]),
     ]
 
     # TODO fill in a real property type later
@@ -37,15 +38,14 @@ def test_create_complex_material() -> None:
 
     my_process = cript.Process(type="affinity_pure", description="my simple material description", keywords=["anionic"])
 
-    parent_material = cript.Material(name="my parent material",
-                                     identifiers=[{"alternative_names": "parent material 1"}])
+    parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
 
     my_computation_forcefield = cript.ComputationForcefield(key="amber", building_block="atom")
 
     my_material_keywords = ["acetylene"]
 
     # construct the full material node
-    my_material = cript.Material(
+    my_complex_material = cript.Material(
         name="my complex material",
         identifiers=my_identifier,
         components=my_components,
@@ -56,15 +56,28 @@ def test_create_complex_material() -> None:
         keywords=my_material_keywords,
     )
 
+    # use complex material for other tests
+    yield my_complex_material
+
+    # reset the material to its original state
+    my_complex_material.name = "my complex material"
+    my_complex_material.identifiers = my_identifier
+    my_complex_material.components = my_components
+    my_complex_material.properties = my_properties
+    my_complex_material.process = my_process
+    my_complex_material.parent_materials = parent_material
+    my_complex_material.computation_forcefield = my_computation_forcefield
+    my_complex_material.keywords = my_material_keywords
+
     # check that the material attributes match the expected values
-    assert my_material.name == "my complex material"
-    assert my_material.identifiers == my_identifier
-    assert my_material.components == my_components
-    assert my_material.properties == my_properties
-    assert my_material.process == my_process
-    assert my_material.parent_materials == parent_material
-    assert my_material.computation_forcefield == my_computation_forcefield
-    assert my_material.keywords == my_material_keywords
+    # assert my_complex_material.name == "my complex material"
+    # assert my_complex_material.identifiers == my_identifier
+    # assert my_complex_material.components == my_components
+    # assert my_complex_material.properties == my_properties
+    # assert my_complex_material.process == my_process
+    # assert my_complex_material.parent_materials == parent_material
+    # assert my_complex_material.computation_forcefield == my_computation_forcefield
+    # assert my_complex_material.keywords == my_material_keywords
 
 
 @pytest.fixture(scope="session")
@@ -78,8 +91,7 @@ def simple_material() -> cript.Material:
     """
 
     # create material
-    my_material = cript.Material(name="my material",
-                                 identifiers=[{"alternative_names": "my material alternative name"}])
+    my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
 
     # use fixture in other tests
     yield my_material
@@ -112,22 +124,18 @@ def test_all_getters_and_setters(simple_material) -> None:
         {"preferred_name": "my preferred material name"},
     ]
 
-    new_properties = [
-        cript.Property(key="air_flow", type="modulus_shear", unit="gram", value=1.00)
-    ]
+    new_properties = [cript.Property(key="air_flow", type="modulus_shear", unit="gram", value=1.00)]
 
     new_process = [cript.Process(type="affinity_pure", description="my simple material description", keywords=["anionic"])]
 
-    new_parent_material = cript.Material(name="my parent material",
-                                     identifiers=[{"alternative_names": "parent material 1"}])
+    new_parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
 
     new_computation_forcefield = cript.ComputationForcefield(key="amber", building_block="atom")
 
     new_material_keywords = ["acetylene"]
 
     new_components = [
-        cript.Material(name="my component material 1",
-                       identifiers=[{"alternative_names": "component 1 alternative name"}]),
+        cript.Material(name="my component material 1", identifiers=[{"alternative_names": "component 1 alternative name"}]),
     ]
 
     # set all attributes for Material node
@@ -151,11 +159,101 @@ def test_all_getters_and_setters(simple_material) -> None:
     assert simple_material.components == new_components
 
 
-def test_serialize_material_to_json() -> None:
+def test_serialize_material_to_json(complex_material) -> None:
     """
     tests that it can correctly turn the material node into its equivalent JSON
     """
-    material_dict: dict = {"node": "Material", "name": "my material"}
+    # the JSON that the material should serialize to
+    expected_dict = {
+        "node": "Material",
+        "name": "my complex material",
+        "identifiers": [{"alternative_names": "my material alternative name"}],
+        "components": [
+            {
+                "node": "Material",
+                "name": "my component material 1",
+                "identifiers": [{"alternative_names": "component 1 alternative name"}],
+                "components": None,
+                "properties": None,
+                "process": None,
+                "parent_materials": None,
+                "computation_forcefield": None,
+                "keywords": None,
+            },
+            {
+                "node": "Material",
+                "name": "my component material 2",
+                "identifiers": [{"alternative_names": "component 2 alternative name"}],
+                "components": None,
+                "properties": None,
+                "process": None,
+                "parent_materials": None,
+                "computation_forcefield": None,
+                "keywords": None,
+            },
+        ],
+        "properties": [
+            {
+                "node": "Property",
+                "key": "air_flow",
+                "type": "my property type",
+                "value": 1.0,
+                "unit": "gram",
+                "uncertainty": None,
+                "uncertainty_type": "",
+                "components": [],
+                "components_relative": [],
+                "structure": "",
+                "method": "",
+                "sample_preparation": None,
+                "conditions": [],
+                "data": None,
+                "computations": [],
+                "citations": [],
+                "notes": "",
+            }
+        ],
+        "process": {
+            "node": "Process",
+            "type": "affinity_pure",
+            "ingredients": None,
+            "description": "my simple material description",
+            "equipments": None,
+            "products": None,
+            "waste": None,
+            "prerequisite_processes": [],
+            "conditions": None,
+            "properties": None,
+            "keywords": ["anionic"],
+            "citations": None,
+        },
+        "parent_materials": {
+            "node": "Material",
+            "name": "my parent material",
+            "identifiers": [{"alternative_names": "parent material 1"}],
+            "components": None,
+            "properties": None,
+            "process": None,
+            "parent_materials": None,
+            "computation_forcefield": None,
+            "keywords": None,
+        },
+        "computation_forcefield": {
+            "node": "ComputationForcefield",
+            "key": "amber",
+            "building_block": "atom",
+            "coarse_grained_mapping": "",
+            "implicit_solvent": "",
+            "source": "",
+            "description": "",
+            "data": None,
+            "citation": [],
+        },
+        "keywords": ["acetylene"],
+    }
+
+    # convert JSON str to dict for better comparison
+    assert json.loads(complex_material.json) == expected_dict
 
 
 # ---------- Integration Tests ----------

@@ -25,7 +25,7 @@ The CRIPT Python SDK allows programmatic access to the [CRIPT platform](https://
 
 ## Installation
 
-CRIPT Python SDK requires Python 3.9+
+CRIPT Python SDK requires Python 3.7+
 
 The latest released of CRIPT Python SDK is available on [Python Package Index (PyPI)](https://pypi.org/project/cript/)
 

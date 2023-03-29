@@ -1,3 +1,4 @@
+import copy
 import json
 
 import pytest
@@ -9,7 +10,7 @@ def test_create_file() -> None:
     """
     tests that a simple file with only required attributes can be created
     """
-    file_node = cript.File(source="https://google.com", type_="calibration")
+    file_node = cript.File(source="https://google.com", type="calibration")
 
     assert isinstance(file_node, cript.File)
 
@@ -27,7 +28,7 @@ def test_create_file_local_source(tmp_path) -> None:
     with open(file_path, "w") as temporary_file:
         temporary_file.write("hello world!")
 
-    assert cript.File(source=str(file_path), type_="calibration")
+    assert cript.File(source=str(file_path), type="calibration")
 
 
 @pytest.fixture(scope="session")
@@ -42,7 +43,7 @@ def file_node() -> cript.File:
 
     # create a File node with all fields
     my_file = cript.File(
-        source="https://criptapp.com", type_="calibration", extension=".pdf", data_dictionary="my data dictionary"
+        source="https://criptapp.com", type="calibration", extension=".pdf", data_dictionary="my data dictionary"
     )
     # use the file node for tests
     yield my_file
@@ -50,7 +51,7 @@ def file_node() -> cript.File:
     # clean up file node after each test, so the file test is always uniform
     # set the file node to original state
     my_file = cript.File(
-        source="https://criptapp.com", type_="calibration", extension=".pdf", data_dictionary="my data dictionary "
+        source="https://criptapp.com", type="calibration", extension=".pdf", data_dictionary="my data dictionary "
     )
 
 
@@ -79,6 +80,8 @@ def test_file_getters_and_setters(file_node) -> None:
     new_file_extension = ".csv"
     new_data_dictionary = "new data dictionary"
 
+    # You need a copy, otherwise you change the fixture for everyone sharing it.
+    file_node = copy.copy(file_node)
     # ------- set properties -------
     file_node.source = new_source
     file_node.type = new_file_type

@@ -60,14 +60,19 @@ def group_node() -> cript.Group:
     """
 
     # create group node
-    group_json = {}
-
-    group_json = json.loads(group_json)
-
-    group_node = cript.load_nodes_from_json(nodes_json=group_json)
+    group_json = {
+        "node": "Group",
+        "name": "my group name",
+        "notes": "my group notes",
+        "admins": [
+            {"node": "User", "username": "my admin username", "email": "admin_email@email.com", "orcid": "0000-0000-0000-0001"}
+        ],
+        "users": [{"node": "User", "username": "my username", "email": "user@email.com", "orcid": "0000-0000-0000-0002"}],
+    }
+    group_node = cript.load_nodes_from_json(nodes_json=str(group_json).replace("'", '"'))
 
     print("\n \n")
-    print(group_json.json)
+    print(group_node.json)
 
     # use group node in other tests
     yield group_node

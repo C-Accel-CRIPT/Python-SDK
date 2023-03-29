@@ -1,22 +1,55 @@
 import pytest
 
-from cript import Data
+import cript
+
+
+def test_create_simple_data_node() -> None:
+    """
+    create a simple data node with only required arguments
+    """
+    # my_files = [
+    #     cript.File()
+    # ]
+    #
+    # my_data_type = "afm_amp"
+    # my_data = cript.Data(type=my_data_type, files=my_files)
+    #
+    # # assertions
+    # assert isinstance(my_data, cript.Data)
+    # assert my_data.type == my_data_type
+    # assert my_data.files == my_files
+    pass
+
+
+def test_create_complex_data_node() -> None:
+    """
+    create a complex data node with all possible arguments
+    """
+    pass
 
 
 @pytest.fixture(scope="session")
-def data_object() -> Data:
+def data_object() -> cript.Data:
     """
-    test just to see if a data object can be made without any issues
-    with just the required arguments
-
-    Notes
-    -----
-    this object is later used for other test
+    create simple data object with only required attributes
 
     Returns
     -------
     Data
     """
+    # create data
+    # my_files = [cript.File()]
+    #
+    # data_type = "afm_amp"
+    # my_data = cript.Data(type=data_type, files=my_files)
+
+    # assertions
+    # assert isinstance(my_data, cript.Data)
+    # assert my_data.files == my_files
+
+    # use data node
+
+    # reset data node to original state
     pass
 
 

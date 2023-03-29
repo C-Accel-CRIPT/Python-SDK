@@ -1,23 +1,47 @@
 import pytest
 
-from cript import Material
+import cript
+
+
+def test_create_simple_material() -> None:
+    """
+    tests that a simple material can be created with only the required arguments
+    """
+
+    my_identifiers = [
+        {
+            "alternative_names": "my material alternative name"
+        }
+    ]
+
+    my_material = cript.Material(identifiers=my_identifiers)
+
+    assert my_material.identifiers == my_identifiers
 
 
 def test_create_full_material() -> None:
     """
     tests that a material can be created with all optional arguments
     """
-    pass
+    my_identifier = [
+        {
+            "alternative_names": "my material alternative name"
+        }
+    ]
+
+    my_components = [
+
+    ]
 
 
 @pytest.fixture(scope="session")
-def simple_material() -> Material:
+def simple_material() -> cript.Material:
     """
     tests that it can create a material node with only required arguments
 
     Returns
     -------
-    None
+    Material
     """
     pass
 
@@ -48,6 +72,7 @@ def test_serialize_material_to_json() -> None:
     pass
 
 
+# ---------- Integration Tests ----------
 def test_save_material_to_api() -> None:
     """
     tests if the material can be saved to the API without errors and status code of 200
@@ -62,7 +87,7 @@ def test_get_material_from_api() -> None:
     pass
 
 
-def test_serialize_json_to_material() -> None:
+def test_deserialize_material_from_json() -> None:
     """
     tests that a JSON of a material node can be correctly converted to python object
     """

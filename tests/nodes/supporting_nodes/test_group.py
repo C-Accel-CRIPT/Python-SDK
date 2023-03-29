@@ -27,18 +27,12 @@ def test_group_serialization_and_deserialization():
                 "username": "my admin username",
                 "email": "admin_email@email.com",
                 "orcid": "0000-0000-0000-0001",
-                "groups": []
+                "groups": [],
             }
         ],
         "users": [
-            {
-                "node": "User",
-                "username": "my username",
-                "email": "user@email.com",
-                "orcid": "0000-0000-0000-0002",
-                "groups": []
-            }
-        ]
+            {"node": "User", "username": "my username", "email": "user@email.com", "orcid": "0000-0000-0000-0002", "groups": []}
+        ],
     }
 
     # convert dict to JSON
@@ -70,21 +64,35 @@ def group_node() -> cript.Group:
     """
 
     # create group node
-    group_json = {
-
+    group_dict = {
+        "node": "Group",
+        "name": "my group name",
+        "notes": "my group notes",
+        "admins": [
+            {
+                "node": "User",
+                "username": "my admin username",
+                "email": "admin_email@email.com",
+                "orcid": "0000-0000-0000-0001",
+                "groups": [],
+            }
+        ],
+        "users": [
+            {"node": "User", "username": "my username", "email": "user@email.com", "orcid": "0000-0000-0000-0002", "groups": []}
+        ],
     }
 
-    group_json = json.loads(group_json)
+    # convert Group dict to JSON
+    group_json = json.dumps(group_dict)
 
+    # convert JSON to Group node
     group_node = cript.load_nodes_from_json(nodes_json=group_json)
-
-    print("\n \n")
-    print(group_json.json)
 
     # use group node in other tests
     yield group_node
 
     # reset the group node to stay consistent for all other tests
+    group_node = cript.load_nodes_from_json(nodes_json=group_json)
 
 
 def test_set_group_attributes(group_node):

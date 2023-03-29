@@ -14,6 +14,7 @@ from cript.nodes.subobjects import (
     Algorithm,
     Citation,
     Condition,
+    ComputationForcefield,
     Equipment,
     Identifier,
     Ingredient,

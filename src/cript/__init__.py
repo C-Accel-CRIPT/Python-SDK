@@ -3,6 +3,7 @@ from cript.nodes import (
     ComputationalProcess,
     Computation,
     Condition,
+    ComputationForcefield,
     Data,
     Experiment,
     Inventory,

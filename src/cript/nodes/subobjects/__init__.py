@@ -1,5 +1,6 @@
 from cript.nodes.subobjects.algorithm import Algorithm
 from cript.nodes.subobjects.citation import Citation
+from cript.nodes.subobjects.computation_forcefield import ComputationForcefield
 from cript.nodes.subobjects.condition import Condition
 from cript.nodes.subobjects.equipment import Equipment
 from cript.nodes.subobjects.identifier import Identifier

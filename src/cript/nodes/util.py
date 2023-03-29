@@ -22,7 +22,7 @@ def _node_json_hook(node_str: str):
 
     # Iterate over all nodes in cript to find the correct one here
     for key, pyclass in inspect.getmembers(cript.nodes, inspect.isclass):
-        if BaseNode in pyclass.__bases__:
+        if BaseNode in inspect.getmro(pyclass):
             if key == node_dict.get("node"):
                 try:
                     return pyclass._from_json(node_dict)

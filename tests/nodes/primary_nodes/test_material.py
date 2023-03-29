@@ -8,30 +8,61 @@ def test_create_simple_material() -> None:
     tests that a simple material can be created with only the required arguments
     """
 
-    my_identifiers = [
-        {
-            "alternative_names": "my material alternative name"
-        }
-    ]
+    my_identifiers = [{"alternative_names": "my material alternative name"}]
 
-    my_material = cript.Material(identifiers=my_identifiers)
+    material_name = "my material"
+
+    my_material = cript.Material(name=material_name, identifiers=my_identifiers)
 
     assert my_material.identifiers == my_identifiers
+    assert my_material.name == material_name
 
 
-def test_create_full_material() -> None:
+def test_create_complex_material() -> None:
     """
     tests that a material can be created with all optional arguments
     """
-    my_identifier = [
-        {
-            "alternative_names": "my material alternative name"
-        }
-    ]
+
+    my_identifier = [{"alternative_names": "my material alternative name"}]
 
     my_components = [
-
+        cript.Material(name="my component material 1", identifiers=[{"alternative_names": "component 1 alternative name"}]),
+        cript.Material(name="my component material 2", identifiers=[{"alternative_names": "component 2 alternative name"}]),
     ]
+
+    # TODO fill in a real property type later
+    my_property = cript.Property(key="air_flow", type="my property type", unit="gram", value=1.00)
+
+    my_process = cript.Process(type="affinity_pure", description="my simple material description", keywords=["anionic"])
+
+    parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
+
+    my_computation_forcefield = cript.ComputationForcefield(key="amber", building_block="atom")
+
+    my_material_keywords = ["acetylene"]
+
+    # construct the full material node
+    my_material = cript.Material(
+        name="my complex material",
+        identifiers=my_identifier,
+        components=my_components,
+        properties=my_property,
+        process=my_process,
+        parent_materials=parent_material,
+        computation_forcefield=my_computation_forcefield,
+        keywords=my_material_keywords,
+    )
+
+    # check that the material attributes match the expected values
+    assert my_material.name == "my complex material"
+    assert my_material.identifiers == my_identifier
+    assert my_material.components == my_components
+    assert my_material.properties == my_property
+    assert my_material.process == my_process
+    assert my_material.parent_materials == parent_material
+    assert my_material.computation_forcefield == my_computation_forcefield
+    assert my_material.keywords == my_material_keywords
+
 
 
 @pytest.fixture(scope="session")
@@ -69,7 +100,7 @@ def test_serialize_material_to_json() -> None:
     """
     tests that it can correctly turn the material node into its equivalent JSON
     """
-    pass
+    material_dict: dict = {"node": "Material", "name": "my material"}
 
 
 # ---------- Integration Tests ----------

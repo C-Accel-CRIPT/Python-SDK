@@ -22,7 +22,8 @@ def test_user_serialization_and_deserialization():
         "node": "User",
         "username": "my username",
         "email": "user@email.com",
-        "orcid": "0000-0000-0000-0002"
+        "orcid": "0000-0000-0000-0002",
+        "groups": []
     }
 
     user_node_json = json.dumps(user_node_dict)
@@ -35,13 +36,9 @@ def test_user_serialization_and_deserialization():
     assert user_node.email == user_node_dict["email"]
     assert user_node.orcid == user_node_dict["orcid"]
 
-    print("\n \n")
-    print(user_node_json)
-    print("\n \n")
-    print(user_node.json)
-
     # check serialize node to JSON is working correctly
-    # assert user_node.json == user_node_json
+    # convert dicts for better comparison
+    assert json.loads(user_node.json) == user_node_dict
 
 
 @pytest.fixture(scope="session")

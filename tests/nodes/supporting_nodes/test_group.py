@@ -17,7 +17,7 @@ def test_group_serialization_and_deserialization():
     * serializes the python node into json again
     * compares that the two JSONs are the same
     """
-    group_node_json = {
+    group_node_dict = {
         "node": "Group",
         "name": "my group name",
         "notes": "my group notes",
@@ -26,7 +26,8 @@ def test_group_serialization_and_deserialization():
                 "node": "User",
                 "username": "my admin username",
                 "email": "admin_email@email.com",
-                "orcid": "0000-0000-0000-0001"
+                "orcid": "0000-0000-0000-0001",
+                "groups": []
             }
         ],
         "users": [
@@ -34,27 +35,24 @@ def test_group_serialization_and_deserialization():
                 "node": "User",
                 "username": "my username",
                 "email": "user@email.com",
-                "orcid": "0000-0000-0000-0002"
+                "orcid": "0000-0000-0000-0002",
+                "groups": []
             }
         ]
     }
 
-    # convert dict to json
-    group_node_json = json.dumps(group_node_json)
-
-    # convert JSON to Group
-    actual_group_node = cript.load_nodes_from_json(nodes_json=group_node_json)
+    # convert dict to JSON
+    # convert Json to Group node
+    actual_group_node = cript.load_nodes_from_json(nodes_json=json.dumps(group_node_dict))
 
     # convert Group back to JSON
-    actual_group_node_json = actual_group_node.json
+    actual_group_node = actual_group_node.json
 
-    print("\n \n")
-    print(actual_group_node_json)
-    print("\n \n")
-    print(group_node_json)
+    # convert JSON to dict for accurate comparison
+    actual_group_node = json.loads(actual_group_node)
 
     # group node from JSON and original group JSON are equivalent
-    # assert actual_group_node_json == group_node_json
+    assert actual_group_node == group_node_dict
 
 
 @pytest.fixture(scope="session")

@@ -44,7 +44,7 @@ class Material(PrimaryBaseNode):
         computation_forcefield: List[Any] = None,
         keywords: List[str] = None,
         **kwargs
-    ) -> None:
+    ):
         """
         create a material node
 
@@ -69,7 +69,7 @@ class Material(PrimaryBaseNode):
 
         # validate keywords if they exist
         if keywords is not None:
-            self._validate_keywordss(keywordss=keywords)
+            self._validate_keywords(keywords=keywords)
 
         self._json_attrs = replace(
             self._json_attrs,

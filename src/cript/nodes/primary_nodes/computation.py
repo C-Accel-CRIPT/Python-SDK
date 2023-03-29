@@ -1,7 +1,7 @@
 from dataclasses import dataclass, replace
-from typing import List
+from typing import List, Any
 
-from cript import Data, SoftwareConfiguration, Condition, Citation
+# from cript import Data, SoftwareConfiguration, Condition, Citation
 from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -21,27 +21,28 @@ class Computation(PrimaryBaseNode):
 
         node: str = "Computation"
         type: str = ""
-        input_data: List[Data] = None
-        output_data: List[Data] = None
-        software_configurations: List[SoftwareConfiguration] = None
-        conditions: List[Condition] = None
+        # TODO add proper typing in future, using Any for now to avoid circular import error
+        input_data: List[Any] = None
+        output_data: List[Any] = None
+        software_configurations: List[Any] = None
+        conditions: List[Any] = None
 
         # TODO attribute is the class
         #   this needs getters and setters and to be included in the constructor
         # prerequisite_computation: Computation = None
 
-        citations: List[Citation] = None
+        citations: List[Any] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(
         self,
         type: str,
-        input_data: List[Data] = None,
-        output_data: List[Data] = None,
-        software_configurations: List[SoftwareConfiguration] = None,
-        conditions: List[Condition] = None,
-        citations: List[Citation] = None,
+        input_data: List[Any] = None,
+        output_data: List[Any] = None,
+        software_configurations: List[Any] = None,
+        conditions: List[Any] = None,
+        citations: List[Any] = None,
         **kwargs
     ) -> None:
         super().__init__(node="Computation")
@@ -92,7 +93,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def input_data(self) -> List[Data]:
+    def input_data(self) -> List[Any]:
         """
         get the list of input data (data nodes) for this node
 
@@ -103,7 +104,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.input_data.copy()
 
     @input_data.setter
-    def input_data(self, new_input_data_list: List[Data]) -> None:
+    def input_data(self, new_input_data_list: List[Any]) -> None:
         """
         set the input data list
 
@@ -120,7 +121,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def output_data(self) -> List[Data]:
+    def output_data(self) -> List[Any]:
         """
         get the list of output data (data nodes)
 
@@ -131,7 +132,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.output_data.copy()
 
     @output_data.setter
-    def output_data(self, new_output_data_list: List[Data]) -> None:
+    def output_data(self, new_output_data_list: List[Any]) -> None:
         """
         set the list of output data (data nodes) for this node
 
@@ -148,7 +149,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def software_configurations(self) -> List[SoftwareConfiguration]:
+    def software_configurations(self) -> List[Any]:
         """
         get the software_configurations for this computation node
 
@@ -160,7 +161,7 @@ class Computation(PrimaryBaseNode):
 
     @software_configurations.setter
     def software_configurations(
-        self, new_software_configurations_list: List[SoftwareConfiguration]
+        self, new_software_configurations_list: List[Any]
     ) -> None:
         """
         set the list of software_configurations for this computation node
@@ -180,7 +181,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def conditions(self) -> List[Condition]:
+    def conditions(self) -> List[Any]:
         """
         get the list of conditions for this computation node
 
@@ -191,7 +192,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.conditions.copy()
 
     @conditions.setter
-    def conditions(self, new_condition_list: List[Condition]) -> None:
+    def conditions(self, new_condition_list: List[Any]) -> None:
         """
         set the list of conditions for this node
 
@@ -207,7 +208,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def citations(self) -> List[Citation]:
+    def citations(self) -> List[Any]:
         """
         get the list of citations for this computation node
 
@@ -218,7 +219,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.citations.copy()
 
     @citations.setter
-    def citations(self, new_citations_list: List[Citation]) -> None:
+    def citations(self, new_citations_list: List[Any]) -> None:
         """
         set the list of citations
 

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, replace
-from typing import List
+from typing import List, Any
 
-from cript import Process, Computation, ComputationalProcess, Data, Citation
+# from cript import Process, Computation, ComputationalProcess, Data, Citation
 from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -20,24 +20,24 @@ class Experiment(PrimaryBaseNode):
         """
 
         node: str = "Experiment"
-        process: List[Process] = None
-        computation: List[Computation] = None
-        computational_process: List[ComputationalProcess] = None
-        data: List[Data] = None
+        process: List[Any] = None
+        computation: List[Any] = None
+        computational_process: List[Any] = None
+        data: List[Any] = None
         funding: List[str] = None
-        citation: List[Citation] = None
+        citation: List[Any] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(
         self,
         name: str,
-        process: List[Process] = None,
-        computation: List[Computation] = None,
-        computational_process: List[ComputationalProcess] = None,
-        data: List[Data] = None,
+        process: List[Any] = None,
+        computation: List[Any] = None,
+        computational_process: List[Any] = None,
+        data: List[Any] = None,
         funding: List[str] = None,
-        citation: List[Citation] = None,
+        citation: List[Any] = None,
         **kwargs
     ):
         """
@@ -86,7 +86,7 @@ class Experiment(PrimaryBaseNode):
         self.validate()
 
     @property
-    def process(self) -> List[Process]:
+    def process(self) -> List[Any]:
         """
         get the list of process for this experiment
 
@@ -97,7 +97,7 @@ class Experiment(PrimaryBaseNode):
         return self._json_attrs.process.copy()
 
     @process.setter
-    def process(self, new_process_list: List[Process]) -> None:
+    def process(self, new_process_list: List[Any]) -> None:
         """
         set the list of process for this experiment
 
@@ -114,7 +114,7 @@ class Experiment(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def computation(self) -> List[Computation]:
+    def computation(self) -> List[Any]:
         """
         get a list of the computations in this experiment
 
@@ -125,7 +125,7 @@ class Experiment(PrimaryBaseNode):
         return self._json_attrs.computation.copy()
 
     @computation.setter
-    def computation(self, new_computation_list: List[Computation]) -> None:
+    def computation(self, new_computation_list: List[Any]) -> None:
         """
         set the list of computations for this experiment
 
@@ -142,7 +142,7 @@ class Experiment(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def computational_process(self) -> List[ComputationalProcess]:
+    def computational_process(self) -> List[Any]:
         """
         get the list of computational_process for this experiment
 
@@ -154,7 +154,7 @@ class Experiment(PrimaryBaseNode):
 
     @computational_process.setter
     def computational_process(
-        self, new_computational_process_list: List[ComputationalProcess]
+        self, new_computational_process_list: List[Any]
     ) -> None:
         """
         set the list of computational_process for this experiment
@@ -174,7 +174,7 @@ class Experiment(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def data(self) -> List[Data]:
+    def data(self) -> List[Any]:
         """
         get the list of data for this experiment
 
@@ -185,7 +185,7 @@ class Experiment(PrimaryBaseNode):
         return self._json_attrs.data.copy()
 
     @data.setter
-    def data(self, new_data_list: List[Data]) -> None:
+    def data(self, new_data_list: List[Any]) -> None:
         """
         set the list of data for this experiment
 
@@ -230,7 +230,7 @@ class Experiment(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def citation(self) -> List[Citation]:
+    def citation(self) -> List[Any]:
         """
         get the list of citations for this experiment
 
@@ -241,7 +241,7 @@ class Experiment(PrimaryBaseNode):
         return self._json_attrs.citation.copy()
 
     @citation.setter
-    def citation(self, new_citation_list: List[Citation]) -> None:
+    def citation(self, new_citation_list: List[Any]) -> None:
         """
         set the list of citations for this experiment
 

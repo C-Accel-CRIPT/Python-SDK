@@ -1,7 +1,7 @@
 from dataclasses import dataclass, replace
-from typing import List
+from typing import List, Any
 
-from cript import Ingredient, Equipment, Material, Condition, Property, Citation
+# from cript import Ingredient, Equipment, Material, Condition, Property, Citation
 from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -21,34 +21,35 @@ class Process(PrimaryBaseNode):
 
         node: str = "Process"
         type: str = ""
-        ingredients: List[Ingredient] = None
+        # TODO add proper typing in future, using Any for now to avoid circular import error
+        ingredients: List[Any] = None
         description: str = ""
-        equipments: List[Equipment] = None
-        products: List[Material] = None
-        waste: List[Material] = None
+        equipments: List[Any] = None
+        products: List[Any] = None
+        waste: List[Any] = None
 
         # TODO node refers to itself
         # prerequisite_processes: List[Process] = None
 
-        conditions: List[Condition] = None
-        properties: List[Property] = None
+        conditions: List[Any] = None
+        properties: List[Any] = None
         keywords: List[str] = None
-        citations: List[Citation] = None
+        citations: List[Any] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(
         self,
-        ingredients: List[Ingredient],
+        ingredients: List[Any],
         type: str = "",
         description: str = "",
-        equipments: List[Equipment] = None,
-        products: List[Material] = None,
-        waste: List[Material] = None,
-        conditions: List[Condition] = None,
-        properties: List[Property] = None,
+        equipments: List[Any] = None,
+        products: List[Any] = None,
+        waste: List[Any] = None,
+        conditions: List[Any] = None,
+        properties: List[Any] = None,
         keywords: List[str] = None,
-        citations: List[Citation] = None,
+        citations: List[Any] = None,
         **kwargs
     ) -> None:
         """
@@ -118,7 +119,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def ingredients(self) -> List[Ingredient]:
+    def ingredients(self) -> List[Any]:
         """
         get a list of ingredients for this process
 
@@ -130,7 +131,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.ingredients.copy()
 
     @ingredients.setter
-    def ingredients(self, new_ingredients_list: List[Ingredient]) -> None:
+    def ingredients(self, new_ingredients_list: List[Any]) -> None:
         """
         set the list of the ingredients for this process
 
@@ -177,7 +178,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def equipments(self) -> List[Equipment]:
+    def equipments(self) -> List[Any]:
         """
         get the equipments for this process
 
@@ -188,7 +189,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.equipments.copy()
 
     @equipments.setter
-    def equipments(self, new_equipment_list: List[Equipment]) -> None:
+    def equipments(self, new_equipment_list: List[Any]) -> None:
         """
         set the list of equipments used for this process
 
@@ -205,7 +206,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def products(self) -> List[Material]:
+    def products(self) -> List[Any]:
         """
         get the list of products for this process
 
@@ -217,7 +218,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.products.copy()
 
     @products.setter
-    def products(self, new_products_list: List[Material]) -> None:
+    def products(self, new_products_list: List[Any]) -> None:
         """
         set the products list for this process
 
@@ -234,7 +235,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def waste(self) -> List[Material]:
+    def waste(self) -> List[Any]:
         """
         get the list of waste that resulted from this process
 
@@ -245,7 +246,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.waste.copy()
 
     @waste.setter
-    def waste(self, new_waste_list: List[Material]) -> None:
+    def waste(self, new_waste_list: List[Any]) -> None:
         """
         set the list of waste (Material node) for that resulted from this process
 
@@ -262,7 +263,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def conditions(self) -> List[Condition]:
+    def conditions(self) -> List[Any]:
         """
         get a list of conditions present for this process
 
@@ -273,7 +274,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.conditions.copy()
 
     @conditions.setter
-    def conditions(self, new_condition_list: List[Condition]) -> None:
+    def conditions(self, new_condition_list: List[Any]) -> None:
         """
         set the list of conditions for this process
 
@@ -289,7 +290,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def properties(self) -> List[Property]:
+    def properties(self) -> List[Any]:
         """
         get the list of Property nodes for this process
 
@@ -300,7 +301,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.properties.copy()
 
     @properties.setter
-    def properties(self, new_property_list: List[Property]) -> None:
+    def properties(self, new_property_list: List[Any]) -> None:
         """
         set the list of Property nodes for this process
 
@@ -346,7 +347,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def citations(self) -> List[Citation]:
+    def citations(self) -> List[Any]:
         """
         get the list of citations for this process
 
@@ -357,7 +358,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.citations.copy()
 
     @citations.setter
-    def citations(self, new_citations_list: List[Citation]) -> None:
+    def citations(self, new_citations_list: List[Any]) -> None:
         """
         set the list of citations for this process
 

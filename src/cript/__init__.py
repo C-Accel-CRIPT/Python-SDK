@@ -8,8 +8,6 @@ from cript.nodes import (
     Inventory,
     Process,
     Project,
-    Reference,
-    Software,
     Material,
     Algorithm,
     Citation,

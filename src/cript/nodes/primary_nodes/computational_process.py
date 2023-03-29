@@ -1,7 +1,7 @@
 from dataclasses import dataclass, replace
-from typing import List
+from typing import List, Any
 
-from cript import Data, Ingredient, SoftwareConfiguration, Condition, Property, Citation
+# from cript import Data, Ingredient, SoftwareConfiguration, Condition, Property, Citation
 from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -21,24 +21,25 @@ class ComputationalProcess(PrimaryBaseNode):
 
         node: str = "Computational_Process"
         type_: str = ""
-        input_data: List[Data] = None
-        output_data: List[Data] = None
-        ingredients: List[Ingredient] = None
-        software_configurations: List[SoftwareConfiguration] = None
-        conditions: List[Condition] = None
-        properties: List[Property] = None
-        citations: List[Citation] = None
+        # TODO add proper typing in future, using Any for now to avoid circular import error
+        input_data: List[Any] = None
+        output_data: List[Any] = None
+        ingredients: List[Any] = None
+        software_configurations: List[Any] = None
+        conditions: List[Any] = None
+        properties: List[Any] = None
+        citations: List[Any] = None
 
     def __init__(
         self,
         type_: str,
-        input_data: List[Data],
-        ingredients: List[Ingredient],
-        output_data: List[Data] = None,
-        software_configurations: List[SoftwareConfiguration] = None,
-        conditions: List[Condition] = None,
-        properties: List[Property] = None,
-        citations: List[Citation] = None,
+        input_data: List[Any],
+        ingredients: List[Any],
+        output_data: List[Any] = None,
+        software_configurations: List[Any] = None,
+        conditions: List[Any] = None,
+        properties: List[Any] = None,
+        citations: List[Any] = None,
         **kwargs
     ) -> None:
         """
@@ -130,7 +131,7 @@ class ComputationalProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def input_data(self) -> List[Data]:
+    def input_data(self) -> List[Any]:
         """
         get the input data for the computational process node
 
@@ -141,7 +142,7 @@ class ComputationalProcess(PrimaryBaseNode):
         return self._json_attrs.input_data.copy()
 
     @input_data.setter
-    def input_data(self, new_input_data_list: List[Data]) -> None:
+    def input_data(self, new_input_data_list: List[Any]) -> None:
         """
         set the input data for this computational process
 
@@ -157,7 +158,7 @@ class ComputationalProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def output_data(self) -> List[Data]:
+    def output_data(self) -> List[Any]:
         """
         get the output data for the computational_process
 
@@ -168,7 +169,7 @@ class ComputationalProcess(PrimaryBaseNode):
         return self._json_attrs.out_put.copy()
 
     @output_data.setter
-    def output_data(self, new_output_data_list: List[Data]) -> None:
+    def output_data(self, new_output_data_list: List[Any]) -> None:
         """
         set the output_data list for the computational_process
 
@@ -184,7 +185,7 @@ class ComputationalProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def ingredients(self) -> List[Ingredient]:
+    def ingredients(self) -> List[Any]:
         """
         get the ingredients list for the computational_process
 
@@ -195,7 +196,7 @@ class ComputationalProcess(PrimaryBaseNode):
         return self._json_attrs.ingredients.copy()
 
     @ingredients.setter
-    def ingredients(self, new_ingredients_list: List[Ingredient]) -> None:
+    def ingredients(self, new_ingredients_list: List[Any]) -> None:
         """
         set the ingredients list for this computational process
 
@@ -211,7 +212,7 @@ class ComputationalProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def software_configurations(self) -> List[SoftwareConfiguration]:
+    def software_configurations(self) -> List[Any]:
         """
         get a list of software_configurations for the computational process
 
@@ -223,7 +224,7 @@ class ComputationalProcess(PrimaryBaseNode):
 
     @software_configurations.setter
     def software_configurations(
-        self, new_software_configuration_list: List[SoftwareConfiguration]
+        self, new_software_configuration_list: List[Any]
     ) -> None:
         """
         set the list of software_configuration for the computational process
@@ -242,7 +243,7 @@ class ComputationalProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def conditions(self) -> List[Condition]:
+    def conditions(self) -> List[Any]:
         """
         get the list of conditions for the computational process
 
@@ -253,7 +254,7 @@ class ComputationalProcess(PrimaryBaseNode):
         return self._json_attrs.conditions.copy()
 
     @conditions.setter
-    def conditions(self, new_conditions: List[Condition]) -> None:
+    def conditions(self, new_conditions: List[Any]) -> None:
         """
         set the conditions for the computational process
 
@@ -269,7 +270,7 @@ class ComputationalProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def properties(self) -> List[Property]:
+    def properties(self) -> List[Any]:
         """
         get a list of properties
 
@@ -280,7 +281,7 @@ class ComputationalProcess(PrimaryBaseNode):
         return self._json_attrs.properties.copy()
 
     @properties.setter
-    def properties(self, new_properties_list: List[Property]) -> None:
+    def properties(self, new_properties_list: List[Any]) -> None:
         """
         set the properties list for the computational process
 
@@ -296,7 +297,7 @@ class ComputationalProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def citations(self) -> List[Citation]:
+    def citations(self) -> List[Any]:
         """
         get a list of citations for the computational process
 
@@ -307,7 +308,7 @@ class ComputationalProcess(PrimaryBaseNode):
         return self._json_attrs.citations.copy()
 
     @citations.setter
-    def citations(self, new_citations_list: List[Citation]) -> None:
+    def citations(self, new_citations_list: List[Any]) -> None:
         """
         set the citations list for the computational process node
 

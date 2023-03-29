@@ -1,7 +1,7 @@
 from dataclasses import dataclass, replace
-from typing import List
+from typing import List, Any
 
-from cript import Inventory, Experiment, Citation
+# from cript import Inventory, Experiment, Citation
 from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -21,20 +21,21 @@ class Collection(PrimaryBaseNode):
 
         node: str = "Collection"
         name: str = ""
-        experiments: List[Experiment] = None
-        inventories: List[Inventory] = None
+        # TODO add proper typing in future, using Any for now to avoid circular import error
+        experiments: List[Any] = None
+        inventories: List[Any] = None
         cript_doi: str = ""
-        citations: List[Citation] = None
+        citations: List[Any] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(
         self,
         name: str,
-        experiments: List[Experiment] = None,
-        inventories: List[Inventory] = None,
+        experiments: List[Any] = None,
+        inventories: List[Any] = None,
         crip_doi: str = "",
-        citations: List[Citation] = None,
+        citations: List[Any] = None,
         **kwargs
     ) -> None:
         """
@@ -124,7 +125,7 @@ class Collection(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def experiments(self) -> List[Experiment]:
+    def experiments(self) -> List[Any]:
         """
         get a list of all Experiments in this Collection
 
@@ -136,7 +137,7 @@ class Collection(PrimaryBaseNode):
         return self._json_attrs.experiments.copy()
 
     @experiments.setter
-    def experiments(self, new_experiment: List[Experiment]) -> None:
+    def experiments(self, new_experiment: List[Any]) -> None:
         """
         sets the Experiment list within this collection
 
@@ -153,7 +154,7 @@ class Collection(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def inventories(self) -> List[Inventory]:
+    def inventories(self) -> List[Any]:
         """
         gets a list of the inventories within this Collection
 
@@ -165,7 +166,7 @@ class Collection(PrimaryBaseNode):
         return self._json_attrs.inventories.copy()
 
     @inventories.setter
-    def inventories(self, new_inventory: List[Inventory]) -> None:
+    def inventories(self, new_inventory: List[Any]) -> None:
         """
         Sets the List of inventories within this collection to a new list
 
@@ -210,7 +211,7 @@ class Collection(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def citations(self) -> List[Citation]:
+    def citations(self) -> List[Any]:
         """
         List of Citations within this Collection
 
@@ -222,7 +223,7 @@ class Collection(PrimaryBaseNode):
         return self._json_attrs.citations.copy()
 
     @citations.setter
-    def citations(self, new_citations: List[Citation]) -> None:
+    def citations(self, new_citations: List[Any]) -> None:
         """
         set the list of citations for this Collection
 

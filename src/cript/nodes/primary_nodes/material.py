@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field, replace
-from typing import List
+from typing import List, Any
 
-from cript import Property, Process, ComputationalProcess
+# from cript import Property, Process, ComputationalProcess
 from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -22,11 +22,12 @@ class Material(PrimaryBaseNode):
         node: str = "Material"
         # identifier sub-object for the material
         identifiers: List[dict[str, str]] = field(default_factory=dict)
+        # TODO add proper typing in future, using Any for now to avoid circular import error
         components: List["Material"] = field(default_factory=list)
-        properties: List[Property] = field(default_factory=list)
-        process: List[Process] = field(default_factory=list)
+        properties: List[Any] = field(default_factory=list)
+        process: List[Any] = field(default_factory=list)
         parent_materials: List["Material"] = field(default_factory=list)
-        computation_forcefield: List[ComputationalProcess] = field(default_factory=list)
+        computation_forcefield: List[Any] = field(default_factory=list)
         keywords: List[str] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -35,10 +36,10 @@ class Material(PrimaryBaseNode):
         self,
         identifiers: List[dict[str, str]],
         components: List["Material"] = None,
-        properties: List[Property] = None,
-        process: List[Process] = None,
+        properties: List[Any] = None,
+        process: List[Any] = None,
         parent_materials: List["Material"] = None,
-        computation_forcefield: List[ComputationalProcess] = None,
+        computation_forcefield: List[Any] = None,
         keywords: List[str] = None,
         **kwargs
     ) -> None:
@@ -137,7 +138,7 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def properties(self) -> List[Property]:
+    def properties(self) -> List[Any]:
         """
         get the list of material properties
 
@@ -148,7 +149,7 @@ class Material(PrimaryBaseNode):
         return self._json_attrs.properties
 
     @properties.setter
-    def properties(self, new_properties_list: List[Property]) -> None:
+    def properties(self, new_properties_list: List[Any]) -> None:
         """
         set the list of properties for this material
 
@@ -164,7 +165,7 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def process(self) -> List[Process]:
+    def process(self) -> List[Any]:
         """
         get the list of process for this material
 
@@ -175,7 +176,7 @@ class Material(PrimaryBaseNode):
         return self._json_attrs.process
 
     @process.setter
-    def process(self, new_process_list: List[Process]) -> None:
+    def process(self, new_process_list: List[Any]) -> None:
         """
         set the list of process for this material
 
@@ -221,7 +222,7 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def computation_forcefield(self) -> List[ComputationalProcess]:
+    def computation_forcefield(self) -> List[Any]:
         """
         get the computation_forcefield for this material node
 
@@ -233,7 +234,7 @@ class Material(PrimaryBaseNode):
 
     @computation_forcefield.setter
     def computation_forcefield(
-        self, new_computation_forcefield_list: List[ComputationalProcess]
+        self, new_computation_forcefield_list: List[Any]
     ) -> None:
         """
         sets the list of computation forcefields for this material

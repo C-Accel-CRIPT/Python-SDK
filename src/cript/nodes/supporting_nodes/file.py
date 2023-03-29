@@ -35,13 +35,13 @@ class File(BaseNode):
         """
 
         source: str = ""
-        type_: str = ""
+        type: str = ""
         extension: str = ""
         data_dictionary: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, source: str, type_: str, extension: str = "", data_dictionary: str = "", **kwargs):
+    def __init__(self, source: str, type: str, extension: str = "", data_dictionary: str = "", **kwargs):
         super().__init__(node="File")
 
         # TODO check if vocabulary is valid or not
@@ -50,7 +50,7 @@ class File(BaseNode):
         # setting every attribute except for source, which will be handled via setter
         self._json_attrs = replace(
             self._json_attrs,
-            type_=type_,
+            type=type,
             extension=extension,
             data_dictionary=data_dictionary,
         )
@@ -111,7 +111,7 @@ class File(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def type_(self) -> str:
+    def type(self) -> str:
         """
         get file type
 
@@ -122,10 +122,10 @@ class File(BaseNode):
         str
             file type
         """
-        return self._json_attrs.type_
+        return self._json_attrs.type
 
-    @type_.setter
-    def type_(self, new_type_) -> None:
+    @type.setter
+    def type(self, new_type) -> None:
         """
         sets the file type
 
@@ -133,7 +133,7 @@ class File(BaseNode):
 
         Parameters
         ----------
-        new_type_
+        new_type
 
         Returns
         -------
@@ -141,7 +141,7 @@ class File(BaseNode):
         """
         # TODO check vocabulary is valid
         # is_vocab_valid("file type", self._json_attrs.type)
-        new_attrs = replace(self._json_attrs, type_=new_type_)
+        new_attrs = replace(self._json_attrs, type=new_type)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

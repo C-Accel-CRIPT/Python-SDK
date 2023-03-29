@@ -275,7 +275,34 @@ def test_deserialize_material_from_json() -> None:
     """
     tests that a JSON of a material node can be correctly converted to python object
     """
-    pass
+    api_material = {
+        "name": "my cool material",
+        "component_count": 0,
+        "computational_forcefield_count": 0,
+        "created_at": "2023-03-14T00:45:02.196297Z",
+        "identifier_count": 0,
+        "model_version": "1.0.0",
+        "node": ["Material"],
+        "notes": "",
+        "property_count": 0,
+        "uid": "0x24a08",
+        "updated_at": "2023-03-14T00:45:02.196276Z",
+        "uuid": "403fa02c-9a84-4f9e-903c-35e535151b08",
+    }
+
+    my_material = cript.load_nodes_from_json(nodes_json=json.dumps(api_material))
+
+    # assertions
+    assert isinstance(my_material, cript.Material)
+    assert my_material.name == api_material["name"]
+    assert my_material.identifiers == []
+    assert my_material.components == []
+    assert my_material.properties == []
+    assert my_material.process == []
+    assert my_material.parent_materials == []
+    assert my_material.computation_forcefield == []
+    assert my_material.keywords == []
+    assert my_material.notes == api_material["notes"]
 
 
 def test_update_material_to_api() -> None:

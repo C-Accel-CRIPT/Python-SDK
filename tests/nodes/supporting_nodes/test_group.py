@@ -89,14 +89,7 @@ def group_node() -> cript.Group:
     # reset the group node to stay consistent for all other tests
 
 
-def test_group_to_json(group_node) -> None:
-    """
-    tests if the group node can be correctly serialized to JSON
-    """
-    pass
-
-
-def test_set_group_name(group_node):
+def test_set_group_attributes(group_node):
     """
     tests that setting any group property throws an AttributeError
 

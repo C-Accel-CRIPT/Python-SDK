@@ -26,16 +26,19 @@ def test_create_complex_material() -> None:
     my_identifier = [{"alternative_names": "my material alternative name"}]
 
     my_components = [
-        cript.Material(name="my component material 1", identifiers=[{"alternative_names": "component 1 alternative name"}]),
-        cript.Material(name="my component material 2", identifiers=[{"alternative_names": "component 2 alternative name"}]),
+        cript.Material(name="my component material 1",
+                       identifiers=[{"alternative_names": "component 1 alternative name"}]),
+        cript.Material(name="my component material 2",
+                       identifiers=[{"alternative_names": "component 2 alternative name"}]),
     ]
 
     # TODO fill in a real property type later
-    my_property = cript.Property(key="air_flow", type="my property type", unit="gram", value=1.00)
+    my_properties = [cript.Property(key="air_flow", type="my property type", unit="gram", value=1.00)]
 
     my_process = cript.Process(type="affinity_pure", description="my simple material description", keywords=["anionic"])
 
-    parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
+    parent_material = cript.Material(name="my parent material",
+                                     identifiers=[{"alternative_names": "parent material 1"}])
 
     my_computation_forcefield = cript.ComputationForcefield(key="amber", building_block="atom")
 
@@ -46,7 +49,7 @@ def test_create_complex_material() -> None:
         name="my complex material",
         identifiers=my_identifier,
         components=my_components,
-        properties=my_property,
+        properties=my_properties,
         process=my_process,
         parent_materials=parent_material,
         computation_forcefield=my_computation_forcefield,
@@ -57,12 +60,11 @@ def test_create_complex_material() -> None:
     assert my_material.name == "my complex material"
     assert my_material.identifiers == my_identifier
     assert my_material.components == my_components
-    assert my_material.properties == my_property
+    assert my_material.properties == my_properties
     assert my_material.process == my_process
     assert my_material.parent_materials == parent_material
     assert my_material.computation_forcefield == my_computation_forcefield
     assert my_material.keywords == my_material_keywords
-
 
 
 @pytest.fixture(scope="session")
@@ -74,7 +76,16 @@ def simple_material() -> cript.Material:
     -------
     Material
     """
-    pass
+
+    # create material
+    my_material = cript.Material(name="my material",
+                                 identifiers=[{"alternative_names": "my material alternative name"}])
+
+    # use fixture in other tests
+    yield my_material
+
+    # reset material to original state
+    my_material = my_material
 
 
 def test_invalid_material_keywords() -> None:
@@ -85,7 +96,7 @@ def test_invalid_material_keywords() -> None:
     pass
 
 
-def test_all_getters_and_setters() -> None:
+def test_all_getters_and_setters(simple_material) -> None:
     """
     tests the getters and setters for the simple material object
 
@@ -93,7 +104,51 @@ def test_all_getters_and_setters() -> None:
     2. gets every possible attribute for the simple_material object
     3. asserts that what was set and what was gotten are the same
     """
-    pass
+    # new attributes
+    new_name = "new material name"
+
+    new_identifiers = [
+        {"alternative_names": "my material alternative name"},
+        {"preferred_name": "my preferred material name"},
+    ]
+
+    new_properties = [
+        cript.Property(key="air_flow", type="modulus_shear", unit="gram", value=1.00)
+    ]
+
+    new_process = [cript.Process(type="affinity_pure", description="my simple material description", keywords=["anionic"])]
+
+    new_parent_material = cript.Material(name="my parent material",
+                                     identifiers=[{"alternative_names": "parent material 1"}])
+
+    new_computation_forcefield = cript.ComputationForcefield(key="amber", building_block="atom")
+
+    new_material_keywords = ["acetylene"]
+
+    new_components = [
+        cript.Material(name="my component material 1",
+                       identifiers=[{"alternative_names": "component 1 alternative name"}]),
+    ]
+
+    # set all attributes for Material node
+    simple_material.name = new_name
+    simple_material.identifiers = new_identifiers
+    simple_material.properties = new_properties
+    simple_material.process = new_process
+    simple_material.parent_materials = new_parent_material
+    simple_material.computation_forcefield = new_computation_forcefield
+    simple_material.keywords = new_material_keywords
+    simple_material.components = new_components
+
+    # get all attributes and assert that they are equal to the setter
+    assert simple_material.name == new_name
+    assert simple_material.identifiers == new_identifiers
+    assert simple_material.properties == new_properties
+    assert simple_material.process == new_process
+    assert simple_material.parent_materials == new_parent_material
+    assert simple_material.computation_forcefield == new_computation_forcefield
+    assert simple_material.keywords == new_material_keywords
+    assert simple_material.components == new_components
 
 
 def test_serialize_material_to_json() -> None:

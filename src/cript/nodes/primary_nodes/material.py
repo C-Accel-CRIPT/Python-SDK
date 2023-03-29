@@ -20,6 +20,7 @@ class Material(PrimaryBaseNode):
         """
 
         node: str = "Material"
+        name: str = ""
         # identifier sub-object for the material
         identifiers: List[dict[str, str]] = field(default_factory=dict)
         # TODO add proper typing in future, using Any for now to avoid circular import error
@@ -34,6 +35,7 @@ class Material(PrimaryBaseNode):
 
     def __init__(
         self,
+        name: str,
         identifiers: List[dict[str, str]],
         components: List["Material"] = None,
         properties: List[Any] = None,
@@ -48,6 +50,7 @@ class Material(PrimaryBaseNode):
 
         Parameters
         ----------
+        name: str
         identifiers: List[dict[str, str]]
 
         components: List["Material"], default=None
@@ -70,6 +73,7 @@ class Material(PrimaryBaseNode):
 
         self._json_attrs = replace(
             self._json_attrs,
+            name=name,
             identifiers=identifiers,
             components=components,
             properties=properties,
@@ -80,6 +84,34 @@ class Material(PrimaryBaseNode):
         )
 
     # ------------ Properties ------------
+    @property
+    def name(self) -> str:
+        """
+        get material name
+
+        Returns
+        -------
+        str
+            material name
+        """
+        return self._json_attrs.name
+
+    @name.setter
+    def name(self, new_name: str) -> None:
+        """
+        set the name of the material
+
+        Parameters
+        ----------
+        new_name: str
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, name=new_name)
+        self._update_json_attrs_if_valid(new_attrs)
+
     @property
     def identifiers(self) -> List[dict[str, str]]:
         """

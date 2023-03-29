@@ -27,10 +27,7 @@ class Process(PrimaryBaseNode):
         equipments: List[Any] = None
         products: List[Any] = None
         waste: List[Any] = None
-
-        # TODO node refers to itself
-        # prerequisite_processes: List[Process] = None
-
+        prerequisite_processes: List["Process"] = None
         conditions: List[Any] = None
         properties: List[Any] = None
         keywords: List[str] = None
@@ -39,18 +36,18 @@ class Process(PrimaryBaseNode):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(
-        self,
-        ingredients: List[Any],
-        type: str = "",
-        description: str = "",
-        equipments: List[Any] = None,
-        products: List[Any] = None,
-        waste: List[Any] = None,
-        conditions: List[Any] = None,
-        properties: List[Any] = None,
-        keywords: List[str] = None,
-        citations: List[Any] = None,
-        **kwargs
+            self,
+            ingredients: List[Any],
+            type: str = "",
+            description: str = "",
+            equipments: List[Any] = None,
+            products: List[Any] = None,
+            waste: List[Any] = None,
+            conditions: List[Any] = None,
+            properties: List[Any] = None,
+            keywords: List[str] = None,
+            citations: List[Any] = None,
+            **kwargs
     ) -> None:
         """
         create a process node
@@ -260,6 +257,33 @@ class Process(PrimaryBaseNode):
         None
         """
         new_attrs = replace(self._json_attrs, waste=new_waste_list)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    def prerequisite_processes(self) -> List["Process"]:
+        """
+        get the prerequisite process node
+
+        Returns
+        -------
+        List[Process]
+        """
+        return self._json_attrs.prerequisite_processes
+
+    @prerequisite_processes.setter
+    def prerequisite_processes(self, new_prerequisite_processes_list: List["Process"]) -> None:
+        """
+        set the prerequisite_processes for the process node
+
+        Parameters
+        ----------
+        new_prerequisite_processes_list: List["Process"]
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, conditions=new_prerequisite_processes_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

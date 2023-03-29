@@ -20,7 +20,7 @@ class Inventory(PrimaryBaseNode):
         """
 
         node: str = "Inventory"
-        material: List[Material] = None
+        materials: List[Material] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -39,10 +39,10 @@ class Inventory(PrimaryBaseNode):
         """
 
         super().__init__(node="Inventory")
-        self._json_attrs = replace(self._json_attrs, material=materials_list)
+        self._json_attrs = replace(self._json_attrs, materials=materials_list)
 
     @property
-    def material(self) -> List[Material]:
+    def materials(self) -> List[Material]:
         """
         get the list of materials in this inventory
 
@@ -51,10 +51,10 @@ class Inventory(PrimaryBaseNode):
         List[Material]
             list of materials representing the inventory within the collection
         """
-        return self._json_attrs.material.copy()
+        return self._json_attrs.materials.copy()
 
-    @material.setter
-    def material(self, new_material_list: List[Material]):
+    @materials.setter
+    def materials(self, new_material_list: List[Material]):
         """
         set the list of materials for this inventory node
 
@@ -67,5 +67,5 @@ class Inventory(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, material=new_material_list)
+        new_attrs = replace(self._json_attrs, materials=new_material_list)
         self._update_json_attrs_if_valid(new_attrs)

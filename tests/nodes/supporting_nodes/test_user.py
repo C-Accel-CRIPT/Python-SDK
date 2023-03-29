@@ -18,12 +18,7 @@ def test_user_serialization_and_deserialization():
     * to check that the user node is created correctly
     """
 
-    user_node_dict = {
-        "node": "User",
-        "username": "my username",
-        "email": "user@email.com",
-        "orcid": "0000-0000-0000-0002"
-    }
+    user_node_dict = {"node": "User", "username": "my username", "email": "user@email.com", "orcid": "0000-0000-0000-0002"}
 
     user_node_json = json.dumps(user_node_dict)
 

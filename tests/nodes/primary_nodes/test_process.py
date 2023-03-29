@@ -20,3 +20,10 @@ def test_simple_process() -> None:
     assert my_process.type == my_process_type
     assert my_process.description == my_process_description
     assert my_process.keywords == my_process_keywords
+
+
+def test_complex_process_node() -> None:
+    """
+    create a process node with all possible arguments
+    """
+    pass

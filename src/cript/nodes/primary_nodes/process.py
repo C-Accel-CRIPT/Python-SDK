@@ -1,4 +1,4 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, replace, field
 from typing import List, Any
 
 # from cript import Ingredient, Equipment, Material, Condition, Property, Citation
@@ -22,23 +22,23 @@ class Process(PrimaryBaseNode):
         node: str = "Process"
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        ingredients: List[Any] = None
+        ingredients: List[Any] = field(default_factory=list)
         description: str = ""
-        equipments: List[Any] = None
-        products: List[Any] = None
-        waste: List[Any] = None
-        prerequisite_processes: List["Process"] = None
-        conditions: List[Any] = None
-        properties: List[Any] = None
+        equipments: List[Any] = field(default_factory=list)
+        products: List[Any] = field(default_factory=list)
+        waste: List[Any] = field(default_factory=list)
+        prerequisite_processes: List["Process"] = field(default_factory=list)
+        conditions: List[Any] = field(default_factory=list)
+        properties: List[Any] = field(default_factory=list)
         keywords: List[str] = None
-        citations: List[Any] = None
+        citations: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(
             self,
-            ingredients: List[Any],
-            type: str = "",
+            type: str,
+            ingredients: List[Any] = None,
             description: str = "",
             equipments: List[Any] = None,
             products: List[Any] = None,

@@ -52,12 +52,12 @@ class Reference(BaseNode):
         publisher: str = "",
         year: Union[int, None] = None,
         volume: Union[int, None] = None,
-        issue: int = Union[int, None],
+        issue: Union[int, None] = None,
         pages: Union[List[int], None] = None,
         doi: str = "",
         issn: str = "",
         arxiv_id: str = "",
-        pmid: int = Union[int, None],
+        pmid: Union[int, None] = None,
         website: str = "",
         **kwargs
     ):

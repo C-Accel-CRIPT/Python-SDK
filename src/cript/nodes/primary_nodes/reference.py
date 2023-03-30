@@ -18,7 +18,8 @@ class Reference(BaseNode):
         """
         all reference nodes attributes
 
-        all int types are also None type in case they are not present it should be properly shown as None instead of a placeholder number such as 0 or -1
+        all int types are also None type in case they are not present it should be properly shown as None
+        instead of a placeholder number such as 0 or -1
         """
 
         node: str = "Reference"

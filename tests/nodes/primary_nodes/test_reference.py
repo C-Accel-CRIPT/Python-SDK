@@ -6,10 +6,6 @@ from cript import Reference
 def test_create_complex_reference_node() -> None:
     """
     tests that a complex reference node with all optional parameters can be made
-
-    Returns
-    -------
-    None
     """
     pass
 

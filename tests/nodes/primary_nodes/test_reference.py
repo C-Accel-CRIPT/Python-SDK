@@ -126,15 +126,21 @@ def test_serialize_reference_to_json() -> None:
     tests that it can correctly turn the data node into its equivalent JSON
     """
     # create reference node
-    my_reference = cript.Reference(
+    actual_reference = cript.Reference(
         type="journal_article",
         title="Adding the Effect of Topological Defects to the Flory\u2013Rehner and Bray\u2013Merrill Swelling Theories",
         authors=["Nathan J. Rebello", "Haley K. Beech", "Bradley D. Olsen"],
         journal="ACS Macro Letters",
         publisher="American Chemical Society",
         year=2022,
+        volume=10,
+        issue=None,
         pages=[531, 537],
         doi="10.1021/acsmacrolett.0c00909",
+        issn="",
+        arxiv_id="",
+        pmid=None,
+        website=""
     )
 
     expected_reference_dict = {
@@ -142,25 +148,22 @@ def test_serialize_reference_to_json() -> None:
         "url": "",
         "type": "journal_article",
         "title": "Adding the Effect of Topological Defects to the Flory\u2013Rehner and Bray\u2013Merrill Swelling Theories",
-        "author": ["Nathan J. Rebello", "Haley K. Beech", "Bradley D. Olsen"],
+        "authors": ["Nathan J. Rebello", "Haley K. Beech", "Bradley D. Olsen"],
         "journal": "ACS Macro Letters",
         "publisher": "American Chemical Society",
         "year": 2022,
         "volume": 10,
+        "issue": None,
         "pages": [531, 537],
         "doi": "10.1021/acsmacrolett.0c00909",
+        "issn": "",
+        "arxiv_id": "",
+        "pmid": None,
+        "website": "",
     }
 
     # convert reference to json and then to dict for better comparison
-    my_reference = my_reference.json
-    my_reference = json.loads(my_reference)
-
-    print("\n \n")
-    print(expected_reference_dict)
-    print("\n \n")
-    print(my_reference)
-
-    assert my_reference == expected_reference_dict
+    assert json.loads(actual_reference.json) == expected_reference_dict
 
 
 # ---------- Integration tests ----------

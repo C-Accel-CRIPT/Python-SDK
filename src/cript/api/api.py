@@ -10,6 +10,8 @@ from cript.nodes.primary_nodes.project import Project
 from cript.nodes.supporting_nodes.group import Group
 from cript.nodes.supporting_nodes.user import User
 
+# Do not use this directly! That includes devs.
+# Use the `_get_global_cached_api for access.
 _global_cached_api = None
 
 
@@ -100,17 +102,41 @@ class API:
         self._host = host
         self._token = token
 
-    def __enter__(self):
+    def connect(self):
+        """
+        Connect this API globally as the current active access point.
+        It is not necessary to call this function manually if a context manager is used.
+        A context manager is preferred where possible.
+        Jupyter notebooks are a use case where this connection can be handled manually.
+        If this function is called manually, the `API.disconnect` function has to be called later.
+
+        For manual connection: nested API object are discouraged.
+        """
         # Store the last active global API (might be None)
         global _global_cached_api
         self._previous_global_cached_api = copy.copy(_global_cached_api)
         _global_cached_api = self
         return self
 
-    def __exit__(self, type, value, traceback):
+    def disconnect(self):
+        """
+        Disconnect this API from the active access point.
+        It is not necessary to call this function manually if a context manager is used.
+        A context manager is preferred where possible.
+        Jupyter notebooks are a use case where this connection can be handled manually.
+        This function has to be called manually if  the `API.connect` function has to be called before.
+
+        For manual connection: nested API object are discouraged.
+        """
         # Restore the previously active global API (might be None)
         global _global_cached_api
         _global_cached_api = self._previous_global_cached_api
+
+    def __enter__(self):
+        self.connect()
+
+    def __exit__(self, type, value, traceback):
+        self.disconnect()
 
     @property
     def host(self):

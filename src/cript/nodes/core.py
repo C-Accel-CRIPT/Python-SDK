@@ -44,7 +44,7 @@ class BaseNode(ABC):
             self._json_attrs = old_json_attrs
             raise exc
 
-    def _detect_cycle(self, handled_nodes=None):
+    def _has_cycle(self, handled_nodes=None):
         """
         Return true if the current data graph contains a cycle, False otherwise.
         """

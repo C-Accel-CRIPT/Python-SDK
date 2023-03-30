@@ -8,6 +8,7 @@ from cript.nodes.primary_nodes import (
     Inventory,
     Process,
     Project,
+    Reference
 )
 
 from cript.nodes.subobjects import (
@@ -21,7 +22,6 @@ from cript.nodes.subobjects import (
     Parameter,
     Property,
     Quantity,
-    Reference,
     SoftwareConfiguration,
 )
 

@@ -166,9 +166,8 @@ def test_serialize_reference_to_json() -> None:
 
     assert my_reference == expected_reference_dict
 
-    # ---------- Integration tests ----------
 
-
+# ---------- Integration tests ----------
 def test_save_reference_to_api() -> None:
     """
     tests if the reference node can be saved to the API without errors and status code of 200

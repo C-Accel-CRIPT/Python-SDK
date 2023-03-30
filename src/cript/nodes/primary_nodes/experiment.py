@@ -1,4 +1,4 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, replace, field
 from typing import List, Any
 
 # from cript import Process, Computation, ComputationalProcess, Data, Citation
@@ -20,12 +20,12 @@ class Experiment(PrimaryBaseNode):
         """
 
         node: str = "Experiment"
-        process: List[Any] = None
-        computation: List[Any] = None
-        computational_process: List[Any] = None
-        data: List[Any] = None
-        funding: List[str] = None
-        citation: List[Any] = None
+        process: List[Any] = field(default_factory=list)
+        computation: List[Any] = field(default_factory=list)
+        computational_process: List[Any] = field(default_factory=list)
+        data: List[Any] = field(default_factory=list)
+        funding: List[str] = field(default_factory=list)
+        citation: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 

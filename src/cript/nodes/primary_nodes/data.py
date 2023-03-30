@@ -1,4 +1,4 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, replace, field
 from typing import List, Any
 
 # from cript import File, Process, Computation, ComputationalProcess, Material, Citation
@@ -21,13 +21,13 @@ class Data(PrimaryBaseNode):
         node: str = "Data"
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        files: List[Any] = None
-        sample_preperation: Any = None
-        computations: List[Any] = None
-        computational_process: Any = None
-        materials: List[Any] = None
-        processes: List[Any] = None
-        citations: List[Any] = None
+        files: List[Any] = field(default_factory=list)
+        sample_preperation: Any = field(default_factory=list)
+        computations: List[Any] = field(default_factory=list)
+        computational_process: Any = field(default_factory=list)
+        materials: List[Any] = field(default_factory=list)
+        processes: List[Any] = field(default_factory=list)
+        citations: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 

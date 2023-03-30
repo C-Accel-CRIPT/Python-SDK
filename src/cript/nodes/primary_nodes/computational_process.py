@@ -1,4 +1,4 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, replace, field
 from typing import List, Any
 
 # from cript import Data, Ingredient, SoftwareConfiguration, Condition, Property, Citation
@@ -22,13 +22,13 @@ class ComputationalProcess(PrimaryBaseNode):
         node: str = "Computational_Process"
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        input_data: List[Any] = None
-        output_data: List[Any] = None
-        ingredients: List[Any] = None
-        software_configurations: List[Any] = None
-        conditions: List[Any] = None
-        properties: List[Any] = None
-        citations: List[Any] = None
+        input_data: List[Any] = field(default_factory=list)
+        output_data: List[Any] = field(default_factory=list)
+        ingredients: List[Any] = field(default_factory=list)
+        software_configurations: List[Any] = field(default_factory=list)
+        conditions: List[Any] = field(default_factory=list)
+        properties: List[Any] = field(default_factory=list)
+        citations: List[Any] = field(default_factory=list)
 
     def __init__(
         self,

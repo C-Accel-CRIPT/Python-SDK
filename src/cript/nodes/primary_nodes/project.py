@@ -1,4 +1,4 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, replace, field
 from typing import List, Union, Any
 
 from cript.nodes.core import BaseNode
@@ -24,9 +24,9 @@ class Project(PrimaryBaseNode):
         # project name
         name: str = ""
         group: Group = None
-        collection: List[Collection] = None
-        material: List[Material] = None
-        file: List[File] = None
+        collection: List[Collection] = field(default_factory=list)
+        material: List[Material] = field(default_factory=list)
+        file: List[File] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 

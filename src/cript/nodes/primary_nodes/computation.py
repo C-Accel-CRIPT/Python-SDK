@@ -1,4 +1,4 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, replace, field
 from typing import List, Any
 
 # from cript import Data, SoftwareConfiguration, Condition, Citation
@@ -22,10 +22,10 @@ class Computation(PrimaryBaseNode):
         node: str = "Computation"
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        input_data: List[Any] = None
-        output_data: List[Any] = None
-        software_configurations: List[Any] = None
-        conditions: List[Any] = None
+        input_data: List[Any] = field(default_factory=list)
+        output_data: List[Any] = field(default_factory=list)
+        software_configurations: List[Any] = field(default_factory=list)
+        conditions: List[Any] = field(default_factory=list)
 
         # TODO attribute is the class
         #   this needs getters and setters and to be included in the constructor

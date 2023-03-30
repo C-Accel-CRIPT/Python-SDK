@@ -1,4 +1,4 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, replace, field
 from typing import List
 
 from cript.nodes.core import BaseNode
@@ -20,7 +20,7 @@ class Inventory(PrimaryBaseNode):
         """
 
         node: str = "Inventory"
-        materials: List[Material] = None
+        materials: List[Material] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 

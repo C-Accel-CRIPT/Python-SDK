@@ -1,5 +1,5 @@
-from dataclasses import dataclass, replace, field
-from typing import List, Any
+from dataclasses import dataclass, field, replace
+from typing import Any, List
 
 # from cript import Ingredient, Equipment, Material, Condition, Property, Citation
 from cript.nodes.core import BaseNode
@@ -36,18 +36,18 @@ class Process(PrimaryBaseNode):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(
-            self,
-            type: str,
-            ingredients: List[Any] = None,
-            description: str = "",
-            equipments: List[Any] = None,
-            products: List[Any] = None,
-            waste: List[Any] = None,
-            conditions: List[Any] = None,
-            properties: List[Any] = None,
-            keywords: List[str] = None,
-            citations: List[Any] = None,
-            **kwargs
+        self,
+        type: str,
+        ingredients: List[Any] = None,
+        description: str = "",
+        equipments: List[Any] = None,
+        products: List[Any] = None,
+        waste: List[Any] = None,
+        conditions: List[Any] = None,
+        properties: List[Any] = None,
+        keywords: List[str] = None,
+        citations: List[Any] = None,
+        **kwargs
     ) -> None:
         """
         create a process node

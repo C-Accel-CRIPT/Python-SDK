@@ -1,4 +1,4 @@
-from dataclasses import dataclass, replace, field
+from dataclasses import dataclass, field, replace
 from typing import List, Union
 
 from cript.nodes.core import BaseNode

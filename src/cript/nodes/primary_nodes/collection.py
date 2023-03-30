@@ -1,5 +1,5 @@
 from dataclasses import dataclass, replace
-from typing import List, Any
+from typing import Any, List
 
 # from cript import Inventory, Experiment, Citation
 from cript.nodes.core import BaseNode

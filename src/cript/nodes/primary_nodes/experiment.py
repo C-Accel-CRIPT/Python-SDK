@@ -1,5 +1,5 @@
-from dataclasses import dataclass, replace, field
-from typing import List, Any
+from dataclasses import dataclass, field, replace
+from typing import Any, List
 
 # from cript import Process, Computation, ComputationalProcess, Data, Citation
 from cript.nodes.core import BaseNode
@@ -153,9 +153,7 @@ class Experiment(PrimaryBaseNode):
         return self._json_attrs.computational_process.copy()
 
     @computational_process.setter
-    def computational_process(
-        self, new_computational_process_list: List[Any]
-    ) -> None:
+    def computational_process(self, new_computational_process_list: List[Any]) -> None:
         """
         set the list of computational_process for this experiment
 
@@ -168,9 +166,7 @@ class Experiment(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(
-            self._json_attrs, computational_process=new_computational_process_list
-        )
+        new_attrs = replace(self._json_attrs, computational_process=new_computational_process_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

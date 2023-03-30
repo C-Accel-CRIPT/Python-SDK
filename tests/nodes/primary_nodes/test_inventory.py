@@ -1,5 +1,6 @@
-import cript
 import pytest
+
+import cript
 
 
 @pytest.fixture(scope="session")

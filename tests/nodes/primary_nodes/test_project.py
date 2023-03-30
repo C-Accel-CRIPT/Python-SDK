@@ -1,5 +1,6 @@
-import cript
 import pytest
+
+import cript
 
 
 def test_creating_project():

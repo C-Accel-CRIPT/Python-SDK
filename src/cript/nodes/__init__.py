@@ -1,21 +1,20 @@
 from cript.nodes.primary_nodes import (
     Collection,
-    ComputationalProcess,
     Computation,
+    ComputationalProcess,
     Data,
     Experiment,
-    Material,
     Inventory,
+    Material,
     Process,
     Project,
-    Reference
+    Reference,
 )
-
 from cript.nodes.subobjects import (
     Algorithm,
     Citation,
-    Condition,
     ComputationForcefield,
+    Condition,
     Equipment,
     Identifier,
     Ingredient,
@@ -24,14 +23,5 @@ from cript.nodes.subobjects import (
     Quantity,
     SoftwareConfiguration,
 )
-
-from cript.nodes.supporting_nodes import (
-    File,
-    Group,
-    User,
-)
-
-from cript.nodes.util import (
-    NodeEncoder,
-    load_nodes_from_json,
-)
+from cript.nodes.supporting_nodes import File, Group, User
+from cript.nodes.util import NodeEncoder, load_nodes_from_json

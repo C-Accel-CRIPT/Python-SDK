@@ -1,7 +1,8 @@
 import copy
 
-import cript
 import pytest
+
+import cript
 
 
 def test_simple_process() -> None:
@@ -45,19 +46,23 @@ def complex_process_node() -> None:
     ]
 
     process_product = [
-        cript.Material(name="my process product material 1",
-                       identifiers=[{"alternative_names": "my alternative process product material 1"}]),
-
-        cript.Material(name="my process product material 1",
-                       identifiers=[{"alternative_names": "my alternative process product material 1"}]),
+        cript.Material(
+            name="my process product material 1",
+            identifiers=[{"alternative_names": "my alternative process product material 1"}],
+        ),
+        cript.Material(
+            name="my process product material 1",
+            identifiers=[{"alternative_names": "my alternative process product material 1"}],
+        ),
     ]
 
     process_waste = [
-        cript.Material(name="my process waste material 1",
-                       identifiers=[{"alternative_names": "my alternative process waste material 1"}]),
-
-        cript.Material(name="my process waste material 1",
-                       identifiers=[{"alternative_names": "my alternative process waste material 1"}]),
+        cript.Material(
+            name="my process waste material 1", identifiers=[{"alternative_names": "my alternative process waste material 1"}]
+        ),
+        cript.Material(
+            name="my process waste material 1", identifiers=[{"alternative_names": "my alternative process waste material 1"}]
+        ),
     ]
 
     prerequisite_processes = [
@@ -82,9 +87,7 @@ def complex_process_node() -> None:
 
     my_reference = cript.Reference(type="journal_article", title="my title")
 
-    my_citations = [
-        cript.Citation(type="derived_from", reference=my_reference)
-    ]
+    my_citations = [cript.Citation(type="derived_from", reference=my_reference)]
 
     # create complex process
     my_complex_process = cript.Process(
@@ -97,7 +100,7 @@ def complex_process_node() -> None:
         conditions=my_conditions,
         properties=my_properties,
         keywords=my_process_keywords,
-        citations=my_citations
+        citations=my_citations,
     )
 
     # assertions
@@ -127,4 +130,3 @@ def test_serialize_process_to_json(complex_process_node) -> None:
     test serializing process node to JSON
     """
     print(complex_process_node.json)
-

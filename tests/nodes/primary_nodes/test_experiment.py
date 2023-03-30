@@ -1,5 +1,6 @@
-import cript
 import pytest
+
+import cript
 
 
 def test_create_experiment_slim() -> None:

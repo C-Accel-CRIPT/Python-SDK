@@ -1,2 +1,3 @@
-import cript
 import pytest
+
+import cript

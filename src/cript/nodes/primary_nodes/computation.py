@@ -1,5 +1,5 @@
-from dataclasses import dataclass, replace, field
-from typing import List, Any
+from dataclasses import dataclass, field, replace
+from typing import Any, List
 
 # from cript import Data, SoftwareConfiguration, Condition, Citation
 from cript.nodes.core import BaseNode
@@ -160,9 +160,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.software_configurations.copy()
 
     @software_configurations.setter
-    def software_configurations(
-        self, new_software_configurations_list: List[Any]
-    ) -> None:
+    def software_configurations(self, new_software_configurations_list: List[Any]) -> None:
         """
         set the list of software_configurations for this computation node
 
@@ -175,9 +173,7 @@ class Computation(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(
-            self._json_attrs, software_configurations=new_software_configurations_list
-        )
+        new_attrs = replace(self._json_attrs, software_configurations=new_software_configurations_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

@@ -23,7 +23,7 @@ class Reference(BaseNode):
 
         node: str = "Reference"
         url: str = ""
-        type_: str = ""
+        type: str = ""
         title: str = ""
         authors: List[str] = ""
         journal: str = ""
@@ -43,9 +43,9 @@ class Reference(BaseNode):
     # TODO fix the constructor
     def __init__(
         self,
-        url: str,
-        type_: str,
+        type: str,
         title: str,
+        url: str = "",
         authors: List[str] = None,
         journal: str = "",
         publisher: str = "",
@@ -65,15 +65,15 @@ class Reference(BaseNode):
 
         the only required attributes to create a reference node are:
             * url
-            * type_
+            * type
             * title
 
-        reference type_ must come from CRIPT controlled vocabulary
+        reference type must come from CRIPT controlled vocabulary
 
         Parameters
         ----------
         url: str
-        type_: str
+        type: str
         title: str
         authors: List[str] default=""
         journal: str default=""
@@ -95,7 +95,7 @@ class Reference(BaseNode):
         new_attrs = replace(
             self._json_attrs,
             url=url,
-            type_=type_,
+            type=type,
             title=title,
             authors=authors,
             journal=journal,
@@ -132,7 +132,7 @@ class Reference(BaseNode):
         return self._json_attrs.str
 
     @property
-    def type_(self) -> str:
+    def type(self) -> str:
         """
         get the reference type
 
@@ -143,12 +143,12 @@ class Reference(BaseNode):
         str
             reference type
         """
-        return self._json_attrs.type_
+        return self._json_attrs.type
 
-    @type_.setter
-    def type_(self, new_reference_type: str) -> None:
+    @type.setter
+    def type(self, new_reference_type: str) -> None:
         """
-        set the reference type_ attribute
+        set the reference type attribute
 
         reference type must come from the CRIPT controlled vocabulary
 
@@ -161,7 +161,7 @@ class Reference(BaseNode):
         None
         """
         # TODO validate the reference type with CRIPT controlled vocabulary
-        new_attrs = replace(self._json_attrs, type_=new_reference_type)
+        new_attrs = replace(self._json_attrs, type=new_reference_type)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import List, Any
+from typing import Any, List
 
 # from cript import Property, Process, ComputationalProcess
 from cript.nodes.core import BaseNode
@@ -14,7 +14,7 @@ class Material(PrimaryBaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(PrimaryBaseNode.JsonAttributes):
         """
         all Material attributes
         """
@@ -248,9 +248,7 @@ class Material(PrimaryBaseNode):
         None
         """
 
-        new_attrs = replace(
-            self._json_attrs, parent_materials=new_parent_materials_list
-        )
+        new_attrs = replace(self._json_attrs, parent_materials=new_parent_materials_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -265,9 +263,7 @@ class Material(PrimaryBaseNode):
         return self._json_attrs.computation_forcefield
 
     @computation_forcefield.setter
-    def computation_forcefield(
-        self, new_computation_forcefield_list: List[Any]
-    ) -> None:
+    def computation_forcefield(self, new_computation_forcefield_list: List[Any]) -> None:
         """
         sets the list of computation forcefields for this material
 
@@ -279,9 +275,7 @@ class Material(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(
-            self._json_attrs, computation_forcefield=new_computation_forcefield_list
-        )
+        new_attrs = replace(self._json_attrs, computation_forcefield=new_computation_forcefield_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

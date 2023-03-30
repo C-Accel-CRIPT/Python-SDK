@@ -20,7 +20,7 @@ class ComputationalProcess(PrimaryBaseNode):
         """
 
         node: str = "Computational_Process"
-        type_: str = ""
+        type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
         input_data: List[Any] = None
         output_data: List[Any] = None
@@ -32,7 +32,7 @@ class ComputationalProcess(PrimaryBaseNode):
 
     def __init__(
         self,
-        type_: str,
+        type: str,
         input_data: List[Any],
         ingredients: List[Any],
         output_data: List[Any] = None,
@@ -45,11 +45,11 @@ class ComputationalProcess(PrimaryBaseNode):
         """
         create a computational_process node
 
-        type_, input_data, and ingredients are required and the rest are optional
+        type, input_data, and ingredients are required and the rest are optional
 
         Parameters
         ----------
-        type_: str
+        type: str
             type of computation process from CRIPT controlled vocabulary
 
         input_data: List[Data]
@@ -78,11 +78,11 @@ class ComputationalProcess(PrimaryBaseNode):
         None
         """
         super().__init__(node="Computational_Process")
-        # TODO validate type_ from vocab
+        # TODO validate type from vocab
 
         self._json_attrs = replace(
             self._json_attrs,
-            type_=type_,
+            type=type,
             input_data=input_data,
             ingredients=ingredients,
             output_data=output_data,
@@ -97,7 +97,7 @@ class ComputationalProcess(PrimaryBaseNode):
     # -------------- Properties --------------
 
     @property
-    def type_(self) -> str:
+    def type(self) -> str:
         """
         get the computational process type
 
@@ -107,10 +107,10 @@ class ComputationalProcess(PrimaryBaseNode):
         -------
         None
         """
-        return self._json_attrs.type_
+        return self._json_attrs.type
 
-    @type_.setter
-    def type_(self, new_type: str) -> None:
+    @type.setter
+    def type(self, new_type: str) -> None:
         """
         set the computational_process type
 
@@ -127,7 +127,7 @@ class ComputationalProcess(PrimaryBaseNode):
         None
         """
         # TODO check computational_process type with CRIPT controlled vocabulary
-        new_attrs = replace(self._json_attrs, type_=new_type)
+        new_attrs = replace(self._json_attrs, type=new_type)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

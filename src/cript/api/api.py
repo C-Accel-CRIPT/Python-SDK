@@ -8,6 +8,7 @@ import requests
 
 from cript.api._valid_search_modes import _VALID_SEARCH_MODES
 from cript.api.exceptions import CRIPTAPIAccessError, CRIPTConnectionError
+from cript.api.schema import CRIPTSchema
 from cript.api.vocabulary import Vocabulary
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
@@ -32,7 +33,8 @@ def _get_global_cached_api():
 class API:
     _host: str = ""
     _token: str = ""
-    _vocabulary: dict = {}
+    _vocabulary: Vocabulary = None
+    _schema: CRIPTSchema = None
 
     def __init__(self, host: Union[str, None], token: [str, None]) -> None:
         """
@@ -108,6 +110,7 @@ class API:
         self._token = token
 
         self._load_controlled_vocabulary()
+        self._load_db_schema()
 
     def _load_controlled_vocabulary(self) -> dict:
         """
@@ -119,14 +122,39 @@ class API:
            and then sets the global variable to it
         """
         # TODO make request to API to get controlled vocabulary
-        response = requests.get(f"{self.host}/controlled-vocabulary").json()
+        response = requests.get(f"{self.host}/v1/cv").json()
 
         # convert to dict for easier use
         self._vocabulary = Vocabulary(json.loads(response))
 
     @property
-    def vocabulary(self):
+    def vocabulary(self) -> Vocabulary:
+        """
+        Access the CRIPT controlled vocabulary that is associated with this API connection.
+        This can be used to validate node JSON.
+        """
         return self._vocabulary
+
+    def _load_db_schema(self):
+        """
+        Sends a GET request to CRIPT to get the database schema and returns it.
+        The database schema can be used for validating the JSON request
+        before submitting it to CRIPT.
+
+        Makes a request to get it from CRIPT.
+        After successfully getting it from CRIPT, it sets the class variable
+        """
+        # TODO figure out the version
+        response = requests.get(f"{self.host}/api/v1/schema/").json()
+        self._schema = CRIPTSchema(response)
+
+    @property
+    def schema(self) -> CRIPTSchema:
+        """
+        Access the CRIPTSchema that is associated with this API connection.
+        This can be used to validate node JSON.
+        """
+        return self._schema
 
     def connect(self):
         """

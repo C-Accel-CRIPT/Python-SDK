@@ -1,6 +1,6 @@
 # trunk-ignore-all(ruff/F401)
 
-from cript.api import API, is_vocab_valid
+from cript.api import API, CRIPTSchema, Vocabulary
 from cript.exceptions import CRIPTException
 from cript.nodes import (
     Algorithm,

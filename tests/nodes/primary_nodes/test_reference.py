@@ -138,24 +138,27 @@ def test_serialize_reference_to_json() -> None:
     )
 
     expected_reference_dict = {
-        "node": "Citation",
-        "reference": {
-            "node": "Reference",
-            "type": "journal_article",
-            "title": "Adding the Effect of Topological Defects to the Flory\u2013Rehner and Bray\u2013Merrill Swelling Theories",
-            "author": ["Nathan J. Rebello", "Haley K. Beech", "Bradley D. Olsen"],
-            "journal": "ACS Macro Letters",
-            "publisher": "American Chemical Society",
-            "year": 2022,
-            "volume": 10,
-            "pages": [531, 537],
-            "doi": "10.1021/acsmacrolett.0c00909",
-        },
+        "node": "Reference",
+        "url": "",
+        "type": "journal_article",
+        "title": "Adding the Effect of Topological Defects to the Flory\u2013Rehner and Bray\u2013Merrill Swelling Theories",
+        "author": ["Nathan J. Rebello", "Haley K. Beech", "Bradley D. Olsen"],
+        "journal": "ACS Macro Letters",
+        "publisher": "American Chemical Society",
+        "year": 2022,
+        "volume": 10,
+        "pages": [531, 537],
+        "doi": "10.1021/acsmacrolett.0c00909",
     }
 
     # convert reference to json and then to dict for better comparison
     my_reference = my_reference.json
     my_reference = json.loads(my_reference)
+
+    print("\n \n")
+    print(expected_reference_dict)
+    print("\n \n")
+    print(my_reference)
 
     assert my_reference == expected_reference_dict
 

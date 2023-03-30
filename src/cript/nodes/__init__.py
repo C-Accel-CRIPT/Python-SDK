@@ -21,6 +21,7 @@ from cript.nodes.subobjects import (
     Parameter,
     Property,
     Quantity,
+    Reference,
     SoftwareConfiguration,
 )
 

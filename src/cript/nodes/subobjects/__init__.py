@@ -8,4 +8,5 @@ from cript.nodes.subobjects.ingredient import Ingredient
 from cript.nodes.subobjects.parameter import Parameter
 from cript.nodes.subobjects.property import Property
 from cript.nodes.subobjects.quantity import Quantity
+from cript.nodes.subobjects.reference import Reference
 from cript.nodes.subobjects.software_configuration import SoftwareConfiguration

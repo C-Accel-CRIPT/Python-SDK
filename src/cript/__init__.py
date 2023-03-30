@@ -18,6 +18,7 @@ from cript.nodes import (
     Parameter,
     Property,
     Quantity,
+    Reference,
     SoftwareConfiguration,
     File,
     Group,

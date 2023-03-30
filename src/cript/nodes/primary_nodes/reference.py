@@ -1,4 +1,4 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, replace, field
 from typing import List, Union
 
 from cript.nodes.core import BaseNode
@@ -25,13 +25,13 @@ class Reference(BaseNode):
         url: str = ""
         type: str = ""
         title: str = ""
-        authors: List[str] = ""
+        authors: List[str] = field(default_factory=list)
         journal: str = ""
         publisher: str = ""
         year: int = None
         volume: int = None
         issue: int = None
-        pages: List[int] = None
+        pages: List[int] = field(default_factory=list)
         doi: str = ""
         issn: str = ""
         arxiv_id: str = ""
@@ -129,7 +129,7 @@ class Reference(BaseNode):
         str
         """
         # TODO need to create the URl from the UUID
-        return self._json_attrs.str
+        return self._json_attrs.url
 
     @property
     def type(self) -> str:
@@ -203,19 +203,19 @@ class Reference(BaseNode):
         return self._json_attrs.authors.copy()
 
     @authors.setter
-    def authors(self, new_authors_list: List[str]) -> None:
+    def authors(self, new_authors: List[str]) -> None:
         """
         set the list of authors for the reference node
 
         Parameters
         ----------
-        new_authors_list: List[str]
+        new_authors: List[str]
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, authors=new_authors_list)
+        new_attrs = replace(self._json_attrs, authors=new_authors)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

@@ -122,10 +122,12 @@ class API:
            and then sets the global variable to it
         """
         # TODO make request to API to get controlled vocabulary
-        response = requests.get(f"{self.host}/v1/cv").json()
+        response = requests.get(f"{self.host}/api/v1/cv/").json()
+        # TODO error checking
+        response = {}
 
         # convert to dict for easier use
-        self._vocabulary = Vocabulary(json.loads(response))
+        self._vocabulary = Vocabulary(response)
 
     @property
     def vocabulary(self) -> Vocabulary:
@@ -146,6 +148,8 @@ class API:
         """
         # TODO figure out the version
         response = requests.get(f"{self.host}/api/v1/schema/").json()
+        # TODO error checking
+
         self._schema = CRIPTSchema(response)
 
     @property

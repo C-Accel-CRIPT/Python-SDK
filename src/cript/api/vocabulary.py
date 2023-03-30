@@ -1,85 +1,73 @@
-import json
+import copy
 from typing import Union
 
-import requests
-
-from cript.api.api import _get_global_cached_api
-from cript.api.exceptions import InvalidVocabulary
-
-# dictionary of the entire controlled vocabulary
-_ENTIRE_CONTROLLED_VOCABULARY: dict = {}
+from cript.api.exceptions import InvalidVocabulary, InvalidVocabularyCategory
 
 
-def _get_controlled_vocabulary() -> dict:
+# We could keep the module structe, but a class seems the better design to me.
+class Vocabulary:
     """
-    gets the entire controlled vocabulary
-    1. checks global variable to see if it is already set
-        if it is already set then it just returns that
-    2. if global variable is empty, then it makes a request to the API
-        and gets the entire controlled vocabulary
-        and then sets the global variable to it
+    Class that holds the vocab and offers methods to work with it.
+    """
 
-    Returns
-    -------
-    dict
+    def __init__(self, vocab_data: dict):
+        # Perform some test if we are supporting this version of the vocab
+
+        self._data = vocab_data
+
+    def get_vocabulary(self, vocab_category: str):
+        """
+        Returns
+        -------
+        dict
         controlled vocabulary
-    """
+        """
 
-    global _ENTIRE_CONTROLLED_VOCABULARY
+        if vocab_category not in self._data:
+            raise InvalidVocabularyCategory(vocab_category, self._data.keys())
 
-    # if cache is empty then make request and set cache
-    if len(_ENTIRE_CONTROLLED_VOCABULARY) == 0:
-        host: str = _get_global_cached_api().host
-        # TODO make request to API to get controlled vocabulary
-        response = requests.get(f"{host}/controlled-vocabulary").json()
+        # Again, return a copy because we don't want
+        # anyone being able to change the private attribute
+        return copy.deepcopy(self._data[vocab_category])
 
-        # convert to dict for easier use
-        response = json.loads(response)
+    def is_vocab_valid(
+        self, vocab_category: str, vocab_value: str
+    ) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
+        """
+        checks if the vocabulary is valid within the CRIPT controlled vocabulary.
+        Either returns True or InvalidVocabulary Exception
 
-        _ENTIRE_CONTROLLED_VOCABULARY = response
+        1. if the vocabulary is custom (starts with "+")
+            then it is automatically valid
+        2. if vocabulary is not custom, then it is checked against its category
+            if the word cannot be found in the category then it returns False
 
-    return _ENTIRE_CONTROLLED_VOCABULARY
+        Parameters
+        ----------
+        vocab_category: str
+            the category the vocabulary is in e.g. "Material keyword", "Data type", "Equipment key"
+        vocab_value: str
+            the vocabulary word e.g. "CAS", "SMILES", "BigSmiles", "+my_custom_key"
 
+        Returns
+        -------
+        a boolean of if the vocabulary is valid or not
 
-def is_vocab_valid(vocab_category: str, vocab_value: str) -> Union[bool, InvalidVocabulary]:
-    """
-    checks if the vocabulary is valid within the CRIPT controlled vocabulary.
-    Either returns True or InvalidVocabulary Exception
+        Raises
+        ------
+        InvalidVocabulary
+            If the vocabulary is invalid then the error gets raised
+        """
 
-    1. if the vocabulary is custom (starts with "+")
-        then it is automatically valid
-    2. if vocabulary is not custom, then it is checked against its category
-        if the word cannot be found in the category then it returns False
-
-    Parameters
-    ----------
-    vocab_category: str
-        the category the vocabulary is in e.g. "Material keyword", "Data type", "Equipment key"
-    vocab_value: str
-        the vocabulary word e.g. "CAS", "SMILES", "BigSmiles", "+my_custom_key"
-
-    Returns
-    -------
-    a boolean of if the vocabulary is valid or not
-
-    Raises
-    ------
-    InvalidVocabulary
-        If the vocabulary is invalid then the error gets raised
-    """
-
-    # check if vocab is custom
-    if vocab_value.startswith("+"):
-        return True
-
-    controlled_vocabulary: dict = _get_controlled_vocabulary()
-
-    try:
-        if vocab_value in controlled_vocabulary[vocab_category]:
+        # check if vocab is custom
+        # This is deactivated currently, no custom vocab allowed.
+        if vocab_value.startswith("+"):
             return True
-        else:
-            # if the vocabulary does not exist in a given category
-            raise InvalidVocabulary
-    except KeyError:
-        # either the category or vocabulary word did not exist within the dict
-        raise InvalidVocabulary
+
+        # Raise Exeption if invalid category
+        controlled_vocabulary = self.get_vocabulary(vocab_category)
+
+        if vocab_value in controlled_vocabulary:
+            return True
+        # if the vocabulary does not exist in a given category
+        raise InvalidVocabulary(vocab_value, controlled_vocabulary)

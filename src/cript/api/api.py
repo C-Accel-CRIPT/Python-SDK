@@ -1,10 +1,14 @@
 import copy
+import json
 import os
 import warnings
 from typing import List, Literal, Union
 
+import requests
+
 from cript.api._valid_search_modes import _VALID_SEARCH_MODES
 from cript.api.exceptions import CRIPTAPIAccessError, CRIPTConnectionError
+from cript.api.vocabulary import Vocabulary
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
 from cript.nodes.supporting_nodes.group import Group
@@ -28,6 +32,7 @@ def _get_global_cached_api():
 class API:
     _host: str = ""
     _token: str = ""
+    _vocabulary: dict = {}
 
     def __init__(self, host: Union[str, None], token: [str, None]) -> None:
         """
@@ -101,6 +106,27 @@ class API:
         # Only assign to class after the connection is made
         self._host = host
         self._token = token
+
+        self._load_controlled_vocabulary()
+
+    def _load_controlled_vocabulary(self) -> dict:
+        """
+        gets the entire controlled vocabulary
+        1. checks global variable to see if it is already set
+            if it is already set then it just returns that
+        2. if global variable is empty, then it makes a request to the API
+           and gets the entire controlled vocabulary
+           and then sets the global variable to it
+        """
+        # TODO make request to API to get controlled vocabulary
+        response = requests.get(f"{self.host}/controlled-vocabulary").json()
+
+        # convert to dict for easier use
+        self._vocabulary = Vocabulary(json.loads(response))
+
+    @property
+    def vocabulary(self):
+        return self._vocabulary
 
     def connect(self):
         """

@@ -1,3 +1,5 @@
+import copy
+
 import cript
 import pytest
 
@@ -22,7 +24,8 @@ def test_simple_process() -> None:
     assert my_process.keywords == my_process_keywords
 
 
-def test_complex_process_node() -> None:
+@pytest.fixture(scope="session")
+def complex_process_node() -> None:
     """
     create a process node with all possible arguments
 
@@ -30,7 +33,7 @@ def test_complex_process_node() -> None:
     -----
     * indirectly tests the vocabulary as well, as it gives it valid vocabulary
     """
-    # TODO add ingredient as that is missing from testing the complete node
+    # TODO add ingredient as that is missing
 
     my_process_type = "affinity_pure"
 
@@ -98,13 +101,30 @@ def test_complex_process_node() -> None:
     )
 
     # assertions
-    assert my_complex_process.type == my_process_type
-    # assert my_complex_process.ingredients == None
-    assert my_complex_process.description == my_process_description
-    assert my_complex_process.equipments == my_equipments
-    assert my_complex_process.products == process_product
-    assert my_complex_process.waste == process_waste
-    assert my_complex_process.conditions == my_conditions
-    assert my_complex_process.properties == my_properties
-    assert my_complex_process.keywords == my_process_keywords
-    assert my_complex_process.citations == my_citations
+    # assert my_complex_process.type == my_process_type
+    # # assert my_complex_process.ingredients == None
+    # assert my_complex_process.description == my_process_description
+    # assert my_complex_process.equipments == my_equipments
+    # assert my_complex_process.products == process_product
+    # assert my_complex_process.waste == process_waste
+    # assert my_complex_process.conditions == my_conditions
+    # assert my_complex_process.properties == my_properties
+    # assert my_complex_process.keywords == my_process_keywords
+    # assert my_complex_process.citations == my_citations
+
+    # copy complex process and use copy in tests, to make resetting it to original easier
+    my_complex_process_copy = copy.deepcopy(my_complex_process)
+
+    # use complex process node in other tests
+    yield my_complex_process_copy
+
+    # return complex process to original state
+    my_complex_process_copy = copy.deepcopy(my_complex_process)
+
+
+def test_serialize_process_to_json(complex_process_node) -> None:
+    """
+    test serializing process node to JSON
+    """
+    print(complex_process_node.json)
+

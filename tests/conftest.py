@@ -25,7 +25,7 @@ def cript_api():
 
 # ---------- Primary Nodes ----------
 # TODO alphabetize later to make looking through it easier
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_computational_process_node() -> cript.ComputationalProcess:
     """
     simple Computational Process node with only required arguments to use in other tests
@@ -40,8 +40,7 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
     input_data = cript.Data(type="afm_amp", files=[data_files])
 
     # ingredients with Material and Quantity node
-    my_material = cript.Material(name="my material",
-                                 identifiers=[{"alternative_names": "my material alternative name"}])
+    my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
 
     my_quantity = cript.Quantity(key="mass", value=1.23, unit="gram")
 
@@ -54,50 +53,40 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
         type=my_computational_process_type, input_data=[input_data], ingredients=[ingredients]
     )
 
-    computational_process_copy = copy.deepcopy(my_computational_process)
-    yield computational_process_copy
-
-    # reset node state
-    computational_process_copy = copy.deepcopy(my_computational_process)
+    return my_computational_process
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_data_node(simple_file_node) -> cript.Data:
     """
     minimal data node
     """
     my_data = cript.Data(type="afm_amp", files=[simple_file_node])
 
-    yield my_data
+    return my_data
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_process_node() -> cript.Process:
     """
     simple process node to use in other tests to keep tests clean
     """
-
     my_process = cript.Process(type="affinity_pure")
 
-    # use copy of process node to keep original state between tests
-    my_process_copy = copy.deepcopy(my_process)
-    yield my_process_copy
-
-    # reset process node
-    my_process_copy = copy.deepcopy(my_process)
+    return my_process
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_computation_node() -> cript.Computation:
     """
     simple computation node to use between tests
     """
     my_computation = cript.Computation(type="analysis")
 
-    yield my_computation
+    return my_computation
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_material_node() -> cript.Material:
     """
     simple material node to use between tests
@@ -105,61 +94,61 @@ def simple_material_node() -> cript.Material:
     identifiers = [{"alternative_names": "my material alternative name"}]
     my_material = cript.Material(name="my material", identifiers=identifiers)
 
-    yield my_material
+    return my_material
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_reference_node() -> cript.Reference:
     """
     minimal reference node
     """
     my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
 
-    yield my_reference
+    return my_reference
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_software_node() -> cript.Software:
     """
     minimal software node with only required arguments
     """
     my_software = cript.Software("my software name", version="1.2.3")
 
-    yield my_software
+    return my_software
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_software_configuration(simple_software_node) -> cript.SoftwareConfiguration:
     """
     minimal software configuration node with only required arguments
     """
     my_software_configuration = cript.SoftwareConfiguration(software=simple_software_node)
 
-    yield my_software_configuration
+    return my_software_configuration
 
 
 # ---------- Subobjects Nodes ----------
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_condition_node() -> cript.Condition:
     """
     minimal condition node
     """
     my_condition = cript.Condition(key="atm", type="min", value=1)
 
-    yield my_condition
+    return my_condition
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_equipment_node() -> cript.Equipment:
     """
     minimal condition node to reuse for tests
     """
     my_equipment = cript.Equipment(key="burner")
 
-    yield my_equipment
+    return my_equipment
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_property_node() -> cript.Property:
     """
     minimal Property node to reuse for tests
@@ -167,11 +156,11 @@ def simple_property_node() -> cript.Property:
     # TODO key and type might not be correct, check later
     my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
 
-    yield my_property
+    return my_property
 
 
 # ---------- Supporting Nodes ----------
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_file_node() -> cript.File:
     """
     simple file node with only required arguments
@@ -180,37 +169,32 @@ def simple_file_node() -> cript.File:
         source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary"
     )
 
-    # use copy of file node to keep original state between tests
-    my_file_copy = copy.deepcopy(my_file)
-
-    # use simple file node in other tests
-    yield my_file_copy
-
-    # reset file node to original state
-    my_file_copy = copy.deepcopy(my_file)
+    return my_file
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_citation_node(simple_reference_node) -> cript.Citation:
     """
     minimal citation node
     """
     my_citation = cript.Citation(type="derived_from", reference=simple_reference_node)
 
-    yield my_citation
+    return my_citation
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_quantity_node() -> cript.Quantity:
     """
     minimal quantity node
     """
     my_quantity = cript.Quantity(key="mass", value=1.23, unit="gram")
 
-    yield my_quantity
+    my_quantity_copy = copy.deepcopy(my_quantity)
+
+    return my_quantity
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_ingredient_node(simple_material_node, simple_quantity_node) -> cript.Ingredient:
     """
     minimal ingredient node
@@ -220,4 +204,4 @@ def simple_ingredient_node(simple_material_node, simple_quantity_node) -> cript.
         quantities=[simple_quantity_node],
     )
 
-    yield ingredients
+    return ingredients

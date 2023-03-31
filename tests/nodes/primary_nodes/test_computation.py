@@ -1,6 +1,21 @@
 import pytest
 
+import cript
 from cript import Computation
+
+
+def test_create_complex_computation_node() -> None:
+    """
+    test that a complex computation node with all possible arguments can be created
+    """
+    # my_computation_type = "analysis"
+    #
+    # input_data = [
+    #     cript.Data()
+    # ]
+    #
+    # my_computation_node = cript.Computation(type="analysis")
+    pass
 
 
 @pytest.fixture(scope="session")

@@ -1,7 +1,4 @@
-import copy
 import json
-
-import pytest
 
 import cript
 
@@ -20,8 +17,7 @@ def test_create_simple_reference() -> None:
     assert my_reference.title == my_reference_title
 
 
-@pytest.fixture(scope="session")
-def complex_reference() -> None:
+def test_complex_reference() -> None:
     """
     tests that a complex reference node with all optional parameters can be made
     """
@@ -60,49 +56,62 @@ def complex_reference() -> None:
         website=website,
     )
 
-    # create a copy to keep the original state
-    my_reference_copy = copy.deepcopy(my_reference)
-    yield my_reference_copy
 
-
-def test_complex_reference(complex_reference) -> None:
+def test_getters_and_setters_reference(simple_reference_node) -> None:
     """
     testing that the complex reference node is working correctly
     """
 
-    # complex reference node's attributes
+    # new attributes for the setter
     reference_type = "journal_article"
-    title = "'Living' Polymers"
-    authors = ["Dylan J. Walsh", "Bradley D. Olsen"]
-    journal = "Nature"
-    publisher = "Springer"
-    year = 2019
-    volume = 3
-    issue = 5
-    pages = [123, 456, 789]
-    doi = "10.1038/1781168a0"
-    issn = "1476-4687"
+    title = "my title"
+    authors = ["Ludwig Schneider"]
+    journal = "my journal"
+    publisher = "my publisher"
+    year = 2023
+    volume = 1
+    issue = 2
+    pages = [123, 456]
+    doi = "100.1038/1781168a0"
+    issn = "1456-4687"
     arxiv_id = "1501"
     pmid = 12345678
     website = "https://criptapp.org"
 
-    # assertions
-    assert isinstance(complex_reference, cript.Reference)
-    assert complex_reference.type == reference_type
-    assert complex_reference.title == title
-    assert complex_reference.authors == authors
-    assert complex_reference.journal == journal
-    assert complex_reference.publisher == publisher
-    assert complex_reference.publisher == publisher
-    assert complex_reference.year == year
-    assert complex_reference.volume == volume
-    assert complex_reference.issue == issue
-    assert complex_reference.pages == pages
-    assert complex_reference.doi == doi
-    assert complex_reference.issn == issn
-    assert complex_reference.arxiv_id == arxiv_id
-    assert complex_reference.pmid == pmid
-    assert complex_reference.website == website
+    # set reference attributes
+    simple_reference_node.type = reference_type
+    simple_reference_node.title = title
+    simple_reference_node.authors = authors
+    simple_reference_node.journal = journal
+    simple_reference_node.publisher = publisher
+    simple_reference_node.publisher = publisher
+    simple_reference_node.year = year
+    simple_reference_node.volume = volume
+    simple_reference_node.issue = issue
+    simple_reference_node.pages = pages
+    simple_reference_node.doi = doi
+    simple_reference_node.issn = issn
+    simple_reference_node.arxiv_id = arxiv_id
+    simple_reference_node.pmid = pmid
+    simple_reference_node.website = website
+
+    # assertions: test getter and setter
+    assert isinstance(simple_reference_node, cript.Reference)
+    assert simple_reference_node.type == reference_type
+    assert simple_reference_node.title == title
+    assert simple_reference_node.authors == authors
+    assert simple_reference_node.journal == journal
+    assert simple_reference_node.publisher == publisher
+    assert simple_reference_node.publisher == publisher
+    assert simple_reference_node.year == year
+    assert simple_reference_node.volume == volume
+    assert simple_reference_node.issue == issue
+    assert simple_reference_node.pages == pages
+    assert simple_reference_node.doi == doi
+    assert simple_reference_node.issn == issn
+    assert simple_reference_node.arxiv_id == arxiv_id
+    assert simple_reference_node.pmid == pmid
+    assert simple_reference_node.website == website
 
 
 def test_reference_vocabulary() -> None:

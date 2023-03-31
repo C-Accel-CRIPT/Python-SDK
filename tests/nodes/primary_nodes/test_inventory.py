@@ -1,32 +1,9 @@
-import pytest
+import json
 
 import cript
 
 
-@pytest.fixture(scope="session")
-def inventory_node() -> None:
-    """
-    tests that an inventory node can be successfully created without errors
-    """
-    # set up inventory node
-    material_1 = cript.Material(name="material 1", identifiers=[{"alternative_names": "material 1 alternative name"}])
-
-    material_2 = cript.Material(name="material 2", identifiers=[{"alternative_names": "material 2 alternative name"}])
-
-    my_inventory = cript.Inventory(materials_list=[material_1, material_2])
-
-    # assertions
-    # assert isinstance(my_inventory, cript.Inventory)
-    # assert my_inventory.materials == [material_1, material_2]
-
-    # use my_inventory in another test
-    yield my_inventory
-
-    # reset inventory to original state
-    my_inventory = cript.Inventory(materials_list=[material_1, material_2])
-
-
-def test_get_and_set_inventory(inventory_node) -> None:
+def test_get_and_set_inventory(simple_inventory_node) -> None:
     """
     tests that a material list for the inventory node can be gotten and set correctly
 
@@ -41,10 +18,31 @@ def test_get_and_set_inventory(inventory_node) -> None:
     material_2 = cript.Material(name="new material 2", identifiers=[{"alternative_names": "new material 2 alternative name"}])
 
     # set inventory materials
-    inventory_node.materials = [material_1, material_2]
+    simple_inventory_node.materials = [material_1, material_2]
 
     # get and check inventory materials
-    assert inventory_node.materials == [material_1, material_2]
+    assert isinstance(simple_inventory_node, cript.Inventory)
+    assert simple_inventory_node.materials == [material_1, material_2]
+
+
+def test_inventory_serialization(simple_inventory_node) -> None:
+    """
+    test that the inventory is correctly serializing into JSON
+    """
+    expected_dict = {
+        "node": "Inventory",
+        "materials": [
+            {"node": "Material", "name": "material 1", "identifiers": [{"alternative_names": "material 1 alternative name"}]},
+            {
+                "node": "Material",
+                "name": "material 2",
+                "identifiers": [{"alternative_names": "material 2 alternative name"}],
+            },
+        ],
+    }
+
+    # TODO this needs better testing
+    assert expected_dict == json.loads(simple_inventory_node.json)
 
 
 # --------------- Integration Tests ---------------
@@ -64,6 +62,13 @@ def test_save_inventory(cript_api) -> None:
     Returns
     -------
     None
+    """
+    pass
+
+
+def test_get_inventory_from_api(cript_api) -> None:
+    """
+    test getting inventory node from the API
     """
     pass
 

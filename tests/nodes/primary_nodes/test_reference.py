@@ -140,7 +140,7 @@ def test_serialize_reference_to_json() -> None:
         issn="",
         arxiv_id="",
         pmid=None,
-        website=""
+        website="",
     )
 
     expected_reference_dict = {

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any, List
 
 from cript.nodes.core import BaseNode
@@ -41,7 +41,10 @@ class User(BaseNode):
         orcid
         groups
         """
+        if groups is None:
+            groups = []
         super().__init__(node="User")
+        self._json_attrs = replace(self._json_attrs, username=username, email=email, orcid=orcid, groups=groups)
         self.validate()
 
     # ------------------ properties ------------------

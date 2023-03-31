@@ -30,6 +30,8 @@ class ComputationalProcess(PrimaryBaseNode):
         properties: List[Any] = field(default_factory=list)
         citations: List[Any] = field(default_factory=list)
 
+    _json_attrs: JsonAttributes = JsonAttributes()
+
     def __init__(
         self,
         type: str,
@@ -41,7 +43,7 @@ class ComputationalProcess(PrimaryBaseNode):
         properties: List[Any] = None,
         citations: List[Any] = None,
         **kwargs
-    ) -> None:
+    ):
         """
         create a computational_process node
 

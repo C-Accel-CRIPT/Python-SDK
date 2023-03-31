@@ -67,6 +67,12 @@ class Collection(PrimaryBaseNode):
         None
         """
         super().__init__(node="Collection")
+        if experiments is None:
+            experiments = []
+        if inventories is None:
+            inventories = []
+        if citations is None:
+            citations = []
 
         self._json_attrs = replace(
             self._json_attrs,
@@ -150,7 +156,7 @@ class Collection(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, experiment=new_experiment)
+        new_attrs = replace(self._json_attrs, experiments=new_experiment)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

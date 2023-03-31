@@ -38,7 +38,8 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
     input_data = cript.Data(type="afm_amp", files=[data_files])
 
     # ingredients with Material and Quantity node
-    my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
+    my_material = cript.Material(name="my material",
+                                 identifiers=[{"alternative_names": "my material alternative name"}])
 
     my_quantity = cript.Quantity(key="mass", value=1.23, unit="gram")
 
@@ -123,6 +124,22 @@ def simple_software_configuration(simple_software_node) -> cript.SoftwareConfigu
     my_software_configuration = cript.SoftwareConfiguration(software=simple_software_node)
 
     return my_software_configuration
+
+
+@pytest.fixture(scope="function")
+def simple_inventory_node() -> None:
+    """
+    minimal inventory node to use for other tests
+    """
+    # set up inventory node
+    material_1 = cript.Material(name="material 1", identifiers=[{"alternative_names": "material 1 alternative name"}])
+
+    material_2 = cript.Material(name="material 2", identifiers=[{"alternative_names": "material 2 alternative name"}])
+
+    my_inventory = cript.Inventory(materials_list=[material_1, material_2])
+
+    # use my_inventory in another test
+    return my_inventory
 
 
 # ---------- Subobjects Nodes ----------

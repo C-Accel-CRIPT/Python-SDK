@@ -23,10 +23,9 @@ def test_user_serialization_and_deserialization():
         "username": "my username",
         "email": "user@email.com",
         "orcid": "0000-0000-0000-0002",
-        "groups": [],
     }
 
-    user_node_json = json.dumps(user_node_dict)
+    user_node_json = json.dumps(user_node_dict, sort_keys=True)
 
     # deserialize node from JSON
     user_node = cript.load_nodes_from_json(nodes_json=user_node_json)

@@ -108,7 +108,7 @@ def test_serialize_file_to_json(file_node) -> None:
         "data_dictionary": "my data dictionary",
     }
 
-    expected_file_node_json = json.dumps(expected_file_node_json)
+    expected_file_node_json = json.dumps(expected_file_node_json, sort_keys=True)
 
     assert expected_file_node_json == file_node.json
 

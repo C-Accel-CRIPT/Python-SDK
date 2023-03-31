@@ -55,12 +55,10 @@ def complex_process_node(simple_ingredient_node) -> None:
 
     process_waste = [
         cript.Material(
-            name="my process waste material 1",
-            identifiers=[{"alternative_names": "my alternative process waste material 1"}]
+            name="my process waste material 1", identifiers=[{"alternative_names": "my alternative process waste material 1"}]
         ),
         cript.Material(
-            name="my process waste material 1",
-            identifiers=[{"alternative_names": "my alternative process waste material 1"}]
+            name="my process waste material 1", identifiers=[{"alternative_names": "my alternative process waste material 1"}]
         ),
     ]
 
@@ -113,6 +111,56 @@ def complex_process_node(simple_ingredient_node) -> None:
     assert my_complex_process.properties == my_properties
     assert my_complex_process.keywords == my_process_keywords
     assert my_complex_process.citations == my_citations
+
+
+def test_process_getters_and_setters(
+    simple_process_node,
+    simple_ingredient_node,
+    simple_equipment_node,
+    simple_material_node,
+    simple_condition_node,
+    simple_property_node,
+    simple_citation_node,
+) -> None:
+    """
+    test getters and setters and be sure they are working correctly
+
+    1. set simple_process_node attributes to something new
+    2. get all attributes and check that they have been set correctly
+
+    Notes
+    -----
+    indirectly tests setting the data type to correct vocabulary
+    """
+    new_process_type = "blow_molding"
+    new_process_description = "my new process description"
+    new_process_keywords = "annealing_sol"
+
+    # test setters
+    simple_process_node.type = new_process_type
+    simple_process_node.ingredients = [simple_ingredient_node]
+    simple_process_node.description = new_process_description
+    simple_process_node.equipments = [simple_equipment_node]
+    simple_process_node.products = [simple_process_node]
+    simple_process_node.waste = [simple_material_node]
+    simple_process_node.prerequisite_processes = [simple_process_node]
+    simple_process_node.conditions = [simple_condition_node]
+    simple_process_node.properties = [simple_property_node]
+    simple_process_node.keywords = [new_process_keywords]
+    simple_process_node.citations = [simple_citation_node]
+
+    # test getters
+    assert simple_process_node.type == new_process_type
+    assert simple_process_node.ingredients == [simple_ingredient_node]
+    assert simple_process_node.description == new_process_description
+    assert simple_process_node.equipments == [simple_equipment_node]
+    assert simple_process_node.products == [simple_process_node]
+    assert simple_process_node.waste == [simple_material_node]
+    assert simple_process_node.prerequisite_processes == [simple_process_node]
+    assert simple_process_node.conditions == [simple_condition_node]
+    assert simple_process_node.properties == [simple_property_node]
+    assert simple_process_node.keywords == [new_process_keywords]
+    assert simple_process_node.citations == [simple_citation_node]
 
 
 def test_serialize_process_to_json(simple_process_node) -> None:

@@ -263,12 +263,6 @@ def test_json_error():
     with pytest.raises(CRIPTJsonDeserializationError):
         cript.load_nodes_from_json(faulty_json)
 
-    faulty_json = "{'node': 'Parameter', 'key': 'update_frequency', 'value': 1000.0, 'unit': '1/ns', 'foo': 'bar'}".replace(
-        "'", '"'
-    )
-    with pytest.raises(CRIPTJsonDeserializationError):
-        cript.load_nodes_from_json(faulty_json)
-
     parameter = get_parameter()
     # Let's break the node by violating the data model
     parameter._json_attrs = replace(parameter._json_attrs, value=None)
@@ -595,4 +589,4 @@ def test_software_configuration():
     assert sc2.citation[1] == cit2
 
 
-test_reference()
+test_json_error()

@@ -19,6 +19,7 @@ class Experiment(PrimaryBaseNode):
         """
 
         node: str = "Experiment"
+        name: str = ""
         process: List[Any] = field(default_factory=list)
         computation: List[Any] = field(default_factory=list)
         computational_process: List[Any] = field(default_factory=list)
@@ -97,6 +98,33 @@ class Experiment(PrimaryBaseNode):
 
         # check if the code is still valid
         self.validate()
+
+    @property
+    def name(self) -> str:
+        """
+        Experiment name
+
+        Returns
+        -------
+        name: str
+        """
+        return self._json_attrs.name
+
+    @name.setter
+    def name(self, new_experiment_name: str) -> None:
+        """
+        set the experiment name
+
+        Parameters
+        ----------
+        new_experiment_name: str
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, name=new_experiment_name)
+        self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def process(self) -> List[Any]:

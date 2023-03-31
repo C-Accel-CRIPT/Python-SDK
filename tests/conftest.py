@@ -26,6 +26,7 @@ def cript_api():
 # ------------------ Simple Nodes ------------------
 # minimal nodes with only required arguments to reuse for tests and keep tests clean
 
+
 # ---------- Primary Nodes ----------
 @pytest.fixture(scope="session")
 def simple_computational_process_node() -> None:
@@ -36,15 +37,13 @@ def simple_computational_process_node() -> None:
 
     # input data
     data_files = cript.File(
-        source="https://criptapp.org", type="calibration", extension=".csv",
-        data_dictionary="my file's data dictionary"
+        source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary"
     )
 
     input_data = cript.Data(type="afm_amp", files=[data_files])
 
     # ingredients with Material and Quantity node
-    my_material = cript.Material(name="my material",
-                                 identifiers=[{"alternative_names": "my material alternative name"}])
+    my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
 
     my_quantity = cript.Quantity(key="mass", value=1.23, unit="gram")
 
@@ -105,9 +104,7 @@ def simple_material_node() -> None:
     """
     simple material node to use between tests
     """
-    identifiers = [
-        {"alternative_names": "my material alternative name"}
-    ]
+    identifiers = [{"alternative_names": "my material alternative name"}]
     my_material = cript.Material(name="my material", identifiers=identifiers)
 
     yield my_material
@@ -152,8 +149,7 @@ def simple_file_node() -> None:
     simple file node with only required arguments
     """
     my_file = cript.File(
-        source="https://criptapp.org", type="calibration", extension=".csv",
-        data_dictionary="my file's data dictionary"
+        source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary"
     )
 
     # use copy of file node to keep original state between tests

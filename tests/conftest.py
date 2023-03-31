@@ -28,8 +28,9 @@ def cript_api():
 
 
 # ---------- Primary Nodes ----------
+# TODO alphabetize later to make looking through it easier
 @pytest.fixture(scope="session")
-def simple_computational_process_node() -> None:
+def simple_computational_process_node() -> cript.ComputationalProcess:
     """
     simple Computational Process node with only required arguments to use in other tests
     """
@@ -64,7 +65,7 @@ def simple_computational_process_node() -> None:
 
 
 @pytest.fixture(scope="session")
-def simple_data_node(simple_file_node) -> None:
+def simple_data_node(simple_file_node) -> cript.Data:
     """
     minimal data node
     """
@@ -74,7 +75,7 @@ def simple_data_node(simple_file_node) -> None:
 
 
 @pytest.fixture(scope="session")
-def simple_process_node() -> None:
+def simple_process_node() -> cript.Process:
     """
     simple process node to use in other tests to keep tests clean
     """
@@ -90,7 +91,7 @@ def simple_process_node() -> None:
 
 
 @pytest.fixture(scope="session")
-def simple_computation_node() -> None:
+def simple_computation_node() -> cript.Computation:
     """
     simple computation node to use between tests
     """
@@ -100,7 +101,7 @@ def simple_computation_node() -> None:
 
 
 @pytest.fixture(scope="session")
-def simple_material_node() -> None:
+def simple_material_node() -> cript.Material:
     """
     simple material node to use between tests
     """
@@ -111,7 +112,7 @@ def simple_material_node() -> None:
 
 
 @pytest.fixture(scope="session")
-def simple_reference_node() -> None:
+def simple_reference_node() -> cript.Reference:
     """
     minimal reference node
     """
@@ -121,19 +122,28 @@ def simple_reference_node() -> None:
 
 
 @pytest.fixture(scope="session")
-def data_object() -> cript.Data:
+def simple_software_node() -> cript.Software:
     """
-    create simple data object with only required attributes
+    minimal software node with only required arguments
+    """
+    my_software = cript.Software("my software name", version="1.2.3")
 
-    Returns
-    -------
-    Data
+    yield my_software
+
+
+@pytest.fixture(scope="session")
+def simple_software_configuration(simple_software_node) -> cript.SoftwareConfiguration:
     """
+    minimal software configuration node with only required arguments
+    """
+    my_software_configuration = cript.SoftwareConfiguration(software=simple_software_node)
+
+    yield my_software_configuration
 
 
 # ---------- Subobjects Nodes ----------
 @pytest.fixture(scope="session")
-def simple_condition_node() -> None:
+def simple_condition_node() -> cript.Condition:
     """
     minimal condition node
     """
@@ -144,7 +154,7 @@ def simple_condition_node() -> None:
 
 # ---------- Supporting Nodes ----------
 @pytest.fixture(scope="session")
-def simple_file_node() -> None:
+def simple_file_node() -> cript.File:
     """
     simple file node with only required arguments
     """
@@ -163,7 +173,7 @@ def simple_file_node() -> None:
 
 
 @pytest.fixture(scope="session")
-def simple_citation_node(simple_reference_node) -> None:
+def simple_citation_node(simple_reference_node) -> cript.Citation:
     """
     minimal citation node
     """
@@ -173,7 +183,7 @@ def simple_citation_node(simple_reference_node) -> None:
 
 
 @pytest.fixture(scope="session")
-def simple_quantity_node() -> None:
+def simple_quantity_node() -> cript.Quantity:
     """
     minimal quantity node
     """
@@ -183,7 +193,7 @@ def simple_quantity_node() -> None:
 
 
 @pytest.fixture(scope="session")
-def simple_ingredient_node(simple_material_node, simple_quantity_node) -> None:
+def simple_ingredient_node(simple_material_node, simple_quantity_node) -> cript.Ingredient:
     """
     minimal ingredient node
     """

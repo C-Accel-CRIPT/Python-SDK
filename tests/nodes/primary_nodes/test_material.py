@@ -173,23 +173,11 @@ def test_serialize_material_to_json(complex_material) -> None:
                 "node": "Material",
                 "name": "my component material 1",
                 "identifiers": [{"alternative_names": "component 1 alternative name"}],
-                "components": None,
-                "properties": None,
-                "process": None,
-                "parent_materials": None,
-                "computation_forcefield": None,
-                "keywords": None,
             },
             {
                 "node": "Material",
                 "name": "my component material 2",
                 "identifiers": [{"alternative_names": "component 2 alternative name"}],
-                "components": None,
-                "properties": None,
-                "process": None,
-                "parent_materials": None,
-                "computation_forcefield": None,
-                "keywords": None,
             },
         ],
         "properties": [
@@ -199,61 +187,30 @@ def test_serialize_material_to_json(complex_material) -> None:
                 "type": "my property type",
                 "value": 1.0,
                 "unit": "gram",
-                "uncertainty": None,
-                "uncertainty_type": "",
-                "components": [],
-                "components_relative": [],
-                "structure": "",
-                "method": "",
-                "sample_preparation": None,
-                "conditions": [],
-                "data": None,
-                "computations": [],
-                "citations": [],
-                "notes": "",
             }
         ],
         "process": {
             "node": "Process",
             "type": "affinity_pure",
-            "ingredients": None,
             "description": "my simple material description",
-            "equipments": None,
-            "products": None,
-            "waste": None,
-            "prerequisite_processes": [],
-            "conditions": None,
-            "properties": None,
             "keywords": ["anionic"],
-            "citations": None,
         },
         "parent_materials": {
             "node": "Material",
             "name": "my parent material",
             "identifiers": [{"alternative_names": "parent material 1"}],
-            "components": None,
-            "properties": None,
-            "process": None,
-            "parent_materials": None,
-            "computation_forcefield": None,
-            "keywords": None,
         },
         "computation_forcefield": {
             "node": "ComputationForcefield",
             "key": "amber",
             "building_block": "atom",
-            "coarse_grained_mapping": "",
-            "implicit_solvent": "",
-            "source": "",
-            "description": "",
-            "data": None,
-            "citation": [],
         },
         "keywords": ["acetylene"],
     }
 
     # convert JSON str to dict for better comparison
-    assert json.loads(complex_material.json) == expected_dict
+    expected_json = json.dumps(expected_dict, sort_keys=True)
+    assert complex_material.json == expected_json
 
 
 # ---------- Integration Tests ----------
@@ -322,6 +279,3 @@ def test_delete_material_from_api() -> None:
     tries to get the material from API, and it is expected for the API to give an error response
     """
     pass
-
-
-test_deserialize_material_from_json()

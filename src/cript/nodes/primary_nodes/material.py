@@ -67,6 +67,19 @@ class Material(PrimaryBaseNode):
 
         super().__init__(node="Material")
 
+        if components is None:
+            components = []
+        if properties is None:
+            properties = []
+        if process is None:
+            process = []
+        if parent_materials is None:
+            parent_materials = []
+        if computation_forcefield is None:
+            computation_forcefield = []
+        if keywords is None:
+            keywords = []
+
         # validate keywords if they exist
         if keywords is not None:
             self._validate_keywords(keywords=keywords)

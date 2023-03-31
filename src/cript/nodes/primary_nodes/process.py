@@ -43,6 +43,7 @@ class Process(PrimaryBaseNode):
         equipments: List[Any] = None,
         products: List[Any] = None,
         waste: List[Any] = None,
+        prerequisite_processes: List[Any] = None,
         conditions: List[Any] = None,
         properties: List[Any] = None,
         keywords: List[str] = None,
@@ -67,6 +68,26 @@ class Process(PrimaryBaseNode):
         keywords: List[str] = None
         citations: List[Citation] = None
         """
+
+        if ingredients is None:
+            ingredients = []
+        if equipments is None:
+            equipments = []
+        if products is None:
+            products = []
+        if waste is None:
+            waste = []
+        if prerequisite_processes is None:
+            prerequisite_processes = []
+        if conditions is None:
+            conditions = []
+        if properties is None:
+            properties = []
+        if keywords is None:
+            keywords = []
+        if citations is None:
+            citations = []
+
         new_attrs = replace(
             self._json_attrs,
             ingredients=ingredients,

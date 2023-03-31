@@ -4,18 +4,33 @@ import cript
 from cript import Computation
 
 
-def test_create_complex_computation_node() -> None:
+def test_create_complex_computation_node(
+    simple_data_node, simple_software_configuration, simple_condition_node, simple_computation_node, simple_citation_node
+) -> None:
     """
     test that a complex computation node with all possible arguments can be created
     """
-    # my_computation_type = "analysis"
-    #
-    # input_data = [
-    #     cript.Data()
-    # ]
-    #
-    # my_computation_node = cript.Computation(type="analysis")
-    pass
+    my_computation_type = "analysis"
+
+    my_computation_node = cript.Computation(
+        type="analysis",
+        input_data=[simple_data_node],
+        output_data=[simple_data_node],
+        software_configurations=[simple_software_configuration],
+        conditions=[simple_condition_node],
+        prerequisite_computation=simple_computation_node,
+        citations=[simple_citation_node],
+    )
+
+    # assertions
+    assert isinstance(my_computation_node, cript.Computation)
+    assert my_computation_node.type == my_computation_type
+    assert my_computation_node.input_data == [simple_data_node]
+    assert my_computation_node.output_data == [simple_data_node]
+    assert my_computation_node.software_configurations == [simple_software_configuration]
+    assert my_computation_node.conditions == [simple_condition_node]
+    assert my_computation_node.prerequisite_computation == simple_computation_node
+    assert my_computation_node.citations == [simple_citation_node]
 
 
 @pytest.fixture(scope="session")

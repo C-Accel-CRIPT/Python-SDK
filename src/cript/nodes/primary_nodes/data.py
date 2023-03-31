@@ -127,7 +127,7 @@ class Data(PrimaryBaseNode):
         -------
         None
         """
-        return self._json_attrs.data
+        return self._json_attrs.sample_preperation
 
     @sample_preperation.setter
     def sample_preperation(self, new_sample_preperation: Any) -> None:

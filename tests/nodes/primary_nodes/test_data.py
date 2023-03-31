@@ -64,7 +64,15 @@ def test_data_type_invalid_vocabulary() -> None:
     pass
 
 
-def test_data_getters_and_setters() -> None:
+def test_data_getters_and_setters(
+    simple_data_node,
+    simple_file_node,
+    simple_process_node,
+    simple_computation_node,
+    simple_computational_process_node,
+    simple_material_node,
+    simple_citation_node,
+) -> None:
     """
     tests that all the getters and setters are working fine
 
@@ -76,7 +84,37 @@ def test_data_getters_and_setters() -> None:
     -------
     None
     """
-    pass
+    my_data_type = "afm_height"
+
+    my_new_files = [
+        simple_file_node,
+        cript.File(
+            source="https://bing.com",
+            type="computation_config",
+            extension=".pdf",
+            data_dictionary="my second file data dictionary",
+        ),
+    ]
+
+    # use setters
+    simple_data_node.type = my_data_type
+    simple_data_node.files = my_new_files
+    simple_data_node.sample_preperation = simple_process_node
+    simple_data_node.computations = [simple_computation_node]
+    simple_data_node.computational_process = simple_computational_process_node
+    simple_data_node.materials = [simple_material_node]
+    simple_data_node.processes = [simple_process_node]
+    simple_data_node.citations = [simple_citation_node]
+
+    # assertions check getters and setters
+    assert simple_data_node.type == my_data_type
+    assert simple_data_node.files == my_new_files
+    assert simple_data_node.sample_preperation == simple_process_node
+    assert simple_data_node.computations == [simple_computation_node]
+    assert simple_data_node.computational_process == simple_computational_process_node
+    assert simple_data_node.materials == [simple_material_node]
+    assert simple_data_node.processes == [simple_process_node]
+    assert simple_data_node.citations == [simple_citation_node]
 
 
 def test_serialize_data_to_json(simple_data_node) -> None:

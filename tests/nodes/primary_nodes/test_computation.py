@@ -4,8 +4,7 @@ import cript
 
 
 def test_create_complex_computation_node(
-        simple_data_node, simple_software_configuration, simple_condition_node, simple_computation_node,
-        simple_citation_node
+    simple_data_node, simple_software_configuration, simple_condition_node, simple_computation_node, simple_citation_node
 ) -> None:
     """
     test that a complex computation node with all possible arguments can be created
@@ -66,6 +65,7 @@ def test_serialize_computation_to_json(simple_computation_node) -> None:
     # TODO test this more vigorously
     expected_dict = {"citations": [], "node": "Computation", "type": "analysis"}
 
+    # comparing dicts for better test
     assert json.loads(simple_computation_node.json) == expected_dict
 
 

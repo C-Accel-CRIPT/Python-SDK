@@ -87,7 +87,7 @@ class Data(PrimaryBaseNode):
         None
         """
         # TODO validate that the data type is valid from CRIPT controlled vocabulary
-        new_attrs = replace(self._json_attrs, data=new_data_type)
+        new_attrs = replace(self._json_attrs, type=new_data_type)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

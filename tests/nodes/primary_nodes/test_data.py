@@ -3,68 +3,52 @@ import pytest
 import cript
 
 
-def test_create_simple_data_node() -> None:
+def test_create_simple_data_node(simple_file_node) -> None:
     """
     create a simple data node with only required arguments
     """
     my_data_type = "afm_amp"
 
-    my_files = [
-        cript.File(
-            source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary"
-        )
-    ]
-
-    my_data = cript.Data(type=my_data_type, files=my_files)
+    my_data = cript.Data(type=my_data_type, files=[simple_file_node])
 
     # assertions
     assert isinstance(my_data, cript.Data)
     assert my_data.type == my_data_type
-    assert my_data.files == my_files
+    assert my_data.files == [simple_file_node]
 
 
-def test_create_complex_data_node() -> None:
+def test_create_complex_data_node(
+        simple_file_node,
+        simple_process_node,
+        simple_computation_node,
+        simple_computational_process_node,
+        simple_material_node,
+        simple_citation_node,
+) -> None:
     """
     create a complex data node with all possible arguments
     """
-    my_data_type = "afm_amp"
-
-    my_files = [
-        cript.File(
-            source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary"
-        )
-    ]
-
-    sample_preperation = cript.Process(type="affinity_pure", description="my simple material description", keywords=["anionic"])
-
-    my_computations = [cript.Computation(type="analysis")]
-
-    my_computational_process = [cript.ComputationalProcess()]
-
-
-@pytest.fixture(scope="session")
-def data_object() -> cript.Data:
-    """
-    create simple data object with only required attributes
-
-    Returns
-    -------
-    Data
-    """
-    # create data
-    # my_files = [cript.File()]
-    #
-    # data_type = "afm_amp"
-    # my_data = cript.Data(type=data_type, files=my_files)
+    my_complex_data = cript.Data(
+        type="afm_amp",
+        files=[simple_file_node],
+        sample_preperation=simple_process_node,
+        computations=[simple_computation_node],
+        computational_process=[simple_computational_process_node],
+        materials=[simple_material_node],
+        processes=[simple_process_node],
+        citations=[simple_citation_node]
+    )
 
     # assertions
-    # assert isinstance(my_data, cript.Data)
-    # assert my_data.files == my_files
-
-    # use data node
-
-    # reset data node to original state
-    pass
+    assert isinstance(my_complex_data, cript.Data)
+    assert my_complex_data.type == "afm_amp"
+    assert my_complex_data.files == [simple_file_node]
+    assert my_complex_data.sample_preperation == simple_process_node
+    assert my_complex_data.computations == [simple_computation_node]
+    assert my_complex_data.computational_process == [simple_computational_process_node]
+    assert my_complex_data.materials == [simple_material_node]
+    assert my_complex_data.processes == [simple_process_node]
+    assert my_complex_data.citations == [simple_citation_node]
 
 
 def test_data_type_invalid_vocabulary() -> None:

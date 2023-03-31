@@ -84,6 +84,7 @@ def test_serialize_data_to_json(simple_data_node) -> None:
     tests that it can correctly turn the data node into its equivalent JSON
     """
 
+    # TODO Base attributes should be in here too like notes, public, model version, etc.
     expected_data_dict = {
         "node": "Data",
         "type": "afm_amp",
@@ -103,6 +104,9 @@ def test_serialize_data_to_json(simple_data_node) -> None:
         "processes": None,
         "citations": None,
     }
+
+    print("\n \n")
+    print(simple_data_node.json)
 
     assert json.loads(simple_data_node.json) == expected_data_dict
 

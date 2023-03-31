@@ -22,6 +22,7 @@ from cript.nodes import (
     Property,
     Quantity,
     Reference,
+    Software,
     SoftwareConfiguration,
     User,
     load_nodes_from_json,

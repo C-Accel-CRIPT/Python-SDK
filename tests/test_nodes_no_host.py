@@ -592,3 +592,6 @@ def test_software_configuration():
     assert len(sc2.citation) == 1
     sc2.citation += [cit2]
     assert sc2.citation[1] == cit2
+
+
+test_software()

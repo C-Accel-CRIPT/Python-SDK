@@ -21,6 +21,7 @@ from cript.nodes.subobjects import (
     Parameter,
     Property,
     Quantity,
+    Software,
     SoftwareConfiguration,
 )
 from cript.nodes.supporting_nodes import File, Group, User

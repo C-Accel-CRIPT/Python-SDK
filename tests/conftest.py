@@ -65,6 +65,16 @@ def simple_computational_process_node() -> None:
 
 
 @pytest.fixture(scope="session")
+def simple_data_node(simple_file_node) -> None:
+    """
+    minimal data node
+    """
+    my_data = cript.Data(type="afm_amp", files=[simple_file_node])
+
+    yield my_data
+
+
+@pytest.fixture(scope="session")
 def simple_process_node() -> None:
     """
     simple process node to use in other tests to keep tests clean
@@ -164,3 +174,26 @@ def simple_citation_node(simple_reference_node) -> None:
     my_citation = cript.Citation(type="derived_from", reference=simple_reference_node)
 
     yield my_citation
+
+
+@pytest.fixture(scope="session")
+def simple_quantity_node() -> None:
+    """
+    minimal quantity node
+    """
+    my_quantity = cript.Quantity(key="mass", value=1.23, unit="gram")
+
+    yield my_quantity
+
+
+@pytest.fixture(scope="session")
+def simple_ingredient_node(simple_material_node, simple_quantity_node) -> None:
+    """
+    minimal ingredient node
+    """
+    ingredients = cript.Ingredient(
+        material=simple_material_node,
+        quantities=[simple_quantity_node],
+    )
+
+    yield ingredients

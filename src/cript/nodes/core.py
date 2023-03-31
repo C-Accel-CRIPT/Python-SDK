@@ -83,7 +83,7 @@ class BaseNode(ABC):
 
         try:
             self.validate()
-            return json.dumps(self, cls=NodeEncoder)
+            return json.dumps(self, cls=NodeEncoder, sort_keys=True)
         except Exception as exc:
             raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc
 

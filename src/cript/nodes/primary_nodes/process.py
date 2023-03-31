@@ -2,7 +2,6 @@ from dataclasses import dataclass, field, replace
 from typing import Any, List
 
 # from cript import Ingredient, Equipment, Material, Condition, Property, Citation
-from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
@@ -14,7 +13,7 @@ class Process(PrimaryBaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(PrimaryBaseNode.JsonAttributes):
         """
         all Process attributes
         """
@@ -97,6 +96,7 @@ class Process(PrimaryBaseNode):
             products=products,
             waste=waste,
             conditions=conditions,
+            prerequisite_processes=prerequisite_processes,
             properties=properties,
             keywords=keywords,
             citations=citations,
@@ -304,7 +304,7 @@ class Process(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, conditions=new_prerequisite_processes_list)
+        new_attrs = replace(self._json_attrs, prerequisite_processes=new_prerequisite_processes_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

@@ -2,7 +2,6 @@ from dataclasses import dataclass, field, replace
 from typing import Any, List
 
 # from cript import Data, Ingredient, SoftwareConfiguration, Condition, Property, Citation
-from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
@@ -14,7 +13,7 @@ class ComputationalProcess(PrimaryBaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(PrimaryBaseNode.JsonAttributes):
         """
         all computational_process nodes attributes
         """

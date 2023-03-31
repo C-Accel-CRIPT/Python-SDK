@@ -1,6 +1,4 @@
-import copy
-
-import pytest
+import json
 
 import cript
 
@@ -25,8 +23,7 @@ def test_simple_process() -> None:
     assert my_process.keywords == my_process_keywords
 
 
-@pytest.fixture(scope="session")
-def complex_process_node() -> None:
+def complex_process_node(simple_ingredient_node) -> None:
     """
     create a process node with all possible arguments
 
@@ -34,7 +31,7 @@ def complex_process_node() -> None:
     -----
     * indirectly tests the vocabulary as well, as it gives it valid vocabulary
     """
-    # TODO add ingredient as that is missing
+    # TODO clean up this test and use fixtures from conftest.py
 
     my_process_type = "affinity_pure"
 
@@ -58,10 +55,12 @@ def complex_process_node() -> None:
 
     process_waste = [
         cript.Material(
-            name="my process waste material 1", identifiers=[{"alternative_names": "my alternative process waste material 1"}]
+            name="my process waste material 1",
+            identifiers=[{"alternative_names": "my alternative process waste material 1"}]
         ),
         cript.Material(
-            name="my process waste material 1", identifiers=[{"alternative_names": "my alternative process waste material 1"}]
+            name="my process waste material 1",
+            identifiers=[{"alternative_names": "my alternative process waste material 1"}]
         ),
     ]
 
@@ -92,7 +91,7 @@ def complex_process_node() -> None:
     # create complex process
     my_complex_process = cript.Process(
         type=my_process_type,
-        ingredients=None,
+        ingredients=simple_ingredient_node,
         description=my_process_description,
         equipments=my_equipments,
         products=process_product,
@@ -104,29 +103,75 @@ def complex_process_node() -> None:
     )
 
     # assertions
-    # assert my_complex_process.type == my_process_type
-    # # assert my_complex_process.ingredients == None
-    # assert my_complex_process.description == my_process_description
-    # assert my_complex_process.equipments == my_equipments
-    # assert my_complex_process.products == process_product
-    # assert my_complex_process.waste == process_waste
-    # assert my_complex_process.conditions == my_conditions
-    # assert my_complex_process.properties == my_properties
-    # assert my_complex_process.keywords == my_process_keywords
-    # assert my_complex_process.citations == my_citations
-
-    # copy complex process and use copy in tests, to make resetting it to original easier
-    my_complex_process_copy = copy.deepcopy(my_complex_process)
-
-    # use complex process node in other tests
-    yield my_complex_process_copy
-
-    # return complex process to original state
-    my_complex_process_copy = copy.deepcopy(my_complex_process)
+    assert my_complex_process.type == my_process_type
+    assert my_complex_process.ingredients == [simple_ingredient_node]
+    assert my_complex_process.description == my_process_description
+    assert my_complex_process.equipments == my_equipments
+    assert my_complex_process.products == process_product
+    assert my_complex_process.waste == process_waste
+    assert my_complex_process.conditions == my_conditions
+    assert my_complex_process.properties == my_properties
+    assert my_complex_process.keywords == my_process_keywords
+    assert my_complex_process.citations == my_citations
 
 
-def test_serialize_process_to_json(complex_process_node) -> None:
+def test_process_getters_and_setters(
+        simple_process_node,
+        simple_ingredient_node,
+        simple_equipment_node,
+        simple_material_node,
+        simple_condition_node,
+        simple_property_node,
+        simple_citation_node,
+) -> None:
+    """
+    test getters and setters and be sure they are working correctly
+
+    1. set simple_process_node attributes to something new
+    2. get all attributes and check that they have been set correctly
+
+    Notes
+    -----
+    indirectly tests setting the data type to correct vocabulary
+    """
+    new_process_type = "blow_molding"
+    new_process_description = "my new process description"
+    new_process_keywords = "annealing_sol"
+
+    # test setters
+    simple_process_node.type = new_process_type
+    simple_process_node.ingredients = [simple_ingredient_node]
+    simple_process_node.description = new_process_description
+    simple_process_node.equipments = [simple_equipment_node]
+    simple_process_node.products = [simple_process_node]
+    simple_process_node.waste = [simple_material_node]
+    simple_process_node.prerequisite_processes = [simple_process_node]
+    simple_process_node.conditions = [simple_condition_node]
+    simple_process_node.properties = [simple_property_node]
+    simple_process_node.keywords = [new_process_keywords]
+    simple_process_node.citations = [simple_citation_node]
+
+    # test getters
+    assert simple_process_node.type == new_process_type
+    assert simple_process_node.ingredients == [simple_ingredient_node]
+    assert simple_process_node.description == new_process_description
+    assert simple_process_node.equipments == [simple_equipment_node]
+    assert simple_process_node.products == [simple_process_node]
+    assert simple_process_node.waste == [simple_material_node]
+    assert simple_process_node.prerequisite_processes == [simple_process_node]
+    assert simple_process_node.conditions == [simple_condition_node]
+    assert simple_process_node.properties == [simple_property_node]
+    assert simple_process_node.keywords == [new_process_keywords]
+    assert simple_process_node.citations == [simple_citation_node]
+
+
+def test_serialize_process_to_json(simple_process_node) -> None:
     """
     test serializing process node to JSON
     """
-    print(complex_process_node.json)
+    expected_process_dict = {"keywords": [], "node": "Process", "type": "affinity_pure"}
+
+    # comparing dicts because they are more accurate
+    assert json.loads(simple_process_node.json) == expected_process_dict
+
+# TODO add integration tests

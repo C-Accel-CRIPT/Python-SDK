@@ -1,38 +1,35 @@
-import pytest
+import json
 
 import cript
-from cript import Computation
 
 
-def test_create_complex_computation_node() -> None:
+def test_create_complex_computation_node(
+    simple_data_node, simple_software_configuration, simple_condition_node, simple_computation_node, simple_citation_node
+) -> None:
     """
     test that a complex computation node with all possible arguments can be created
     """
-    # my_computation_type = "analysis"
-    #
-    # input_data = [
-    #     cript.Data()
-    # ]
-    #
-    # my_computation_node = cript.Computation(type="analysis")
-    pass
+    my_computation_type = "analysis"
 
+    my_computation_node = cript.Computation(
+        type="analysis",
+        input_data=[simple_data_node],
+        output_data=[simple_data_node],
+        software_configurations=[simple_software_configuration],
+        conditions=[simple_condition_node],
+        prerequisite_computation=simple_computation_node,
+        citations=[simple_citation_node],
+    )
 
-@pytest.fixture(scope="session")
-def computation_node() -> Computation:
-    """
-    test just to see if a Computation node can be made without any issues
-    with just the required arguments
-
-    Notes
-    -----
-    this object is later used for other test
-
-    Returns
-    -------
-    Computation
-    """
-    pass
+    # assertions
+    assert isinstance(my_computation_node, cript.Computation)
+    assert my_computation_node.type == my_computation_type
+    assert my_computation_node.input_data == [simple_data_node]
+    assert my_computation_node.output_data == [simple_data_node]
+    assert my_computation_node.software_configurations == [simple_software_configuration]
+    assert my_computation_node.conditions == [simple_condition_node]
+    assert my_computation_node.prerequisite_computation == simple_computation_node
+    assert my_computation_node.citations == [simple_citation_node]
 
 
 def test_computation_type_invalid_vocabulary() -> None:
@@ -61,16 +58,18 @@ def test_computation_getters_and_setters() -> None:
     pass
 
 
-def test_serialize_computation_to_json() -> None:
+def test_serialize_computation_to_json(simple_computation_node) -> None:
     """
     tests that it can correctly turn the computation node into its equivalent JSON
     """
-    pass
+    # TODO test this more vigorously
+    expected_dict = {"citations": [], "node": "Computation", "type": "analysis"}
+
+    # comparing dicts for better test
+    assert json.loads(simple_computation_node.json) == expected_dict
 
 
 # ---------- Integration tests ----------
-
-
 def test_save_computation_to_api() -> None:
     """
     tests if the computation node can be saved to the API without errors and status code of 200

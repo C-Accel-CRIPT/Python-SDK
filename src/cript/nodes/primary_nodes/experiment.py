@@ -14,7 +14,7 @@ class Experiment(PrimaryBaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(PrimaryBaseNode.JsonAttributes):
         """
         all Collection attributes
         """

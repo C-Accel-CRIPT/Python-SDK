@@ -14,7 +14,7 @@ class Computation(PrimaryBaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(PrimaryBaseNode.JsonAttributes):
         """
         all computation nodes attributes
         """

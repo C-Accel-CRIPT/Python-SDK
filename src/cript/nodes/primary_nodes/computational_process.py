@@ -14,7 +14,7 @@ class ComputationalProcess(PrimaryBaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(PrimaryBaseNode.JsonAttributes):
         """
         all computational_process nodes attributes
         """

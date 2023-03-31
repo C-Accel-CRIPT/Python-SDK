@@ -66,7 +66,7 @@ def test_file_type_invalid_vocabulary() -> None:
     pass
 
 
-def test_file_getters_and_setters(file_node) -> None:
+def test_file_getters_and_setters(simple_file_node) -> None:
     """
     tests that all the getters and setters are working fine
 
@@ -80,37 +80,34 @@ def test_file_getters_and_setters(file_node) -> None:
     new_file_extension = ".csv"
     new_data_dictionary = "new data dictionary"
 
-    # You need a copy, otherwise you change the fixture for everyone sharing it.
-    file_node = copy.copy(file_node)
     # ------- set properties -------
-    file_node.source = new_source
-    file_node.type = new_file_type
-    file_node.extension = new_file_extension
-    file_node.data_dictionary = new_data_dictionary
+    simple_file_node.source = new_source
+    simple_file_node.type = new_file_type
+    simple_file_node.extension = new_file_extension
+    simple_file_node.data_dictionary = new_data_dictionary
 
     # ------- assert set and get properties are the same -------
-    assert file_node.source == new_source
-    assert file_node.type == new_file_type
-    assert file_node.extension == new_file_extension
-    assert file_node.data_dictionary == new_data_dictionary
+    assert simple_file_node.source == new_source
+    assert simple_file_node.type == new_file_type
+    assert simple_file_node.extension == new_file_extension
+    assert simple_file_node.data_dictionary == new_data_dictionary
 
 
-def test_serialize_file_to_json(file_node) -> None:
+def test_serialize_file_to_json(simple_file_node) -> None:
     """
     tests that it can correctly turn the file node into its equivalent JSON
     """
 
-    expected_file_node_json = {
+    expected_file_node_dict = {
         "node": "File",
-        "source": "https://criptapp.com",
+        "source": "https://criptapp.org",
         "type": "calibration",
-        "extension": ".pdf",
-        "data_dictionary": "my data dictionary",
+        "extension": ".csv",
+        "data_dictionary": "my file's data dictionary",
     }
 
-    expected_file_node_json = json.dumps(expected_file_node_json, sort_keys=True)
-
-    assert expected_file_node_json == file_node.json
+    # compare dicts for more accurate comparison
+    assert json.loads(simple_file_node.json) == expected_file_node_dict
 
 
 # ---------- Integration tests ----------

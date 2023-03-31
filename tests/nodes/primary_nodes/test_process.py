@@ -55,12 +55,10 @@ def complex_process_node(simple_ingredient_node) -> None:
 
     process_waste = [
         cript.Material(
-            name="my process waste material 1",
-            identifiers=[{"alternative_names": "my alternative process waste material 1"}]
+            name="my process waste material 1", identifiers=[{"alternative_names": "my alternative process waste material 1"}]
         ),
         cript.Material(
-            name="my process waste material 1",
-            identifiers=[{"alternative_names": "my alternative process waste material 1"}]
+            name="my process waste material 1", identifiers=[{"alternative_names": "my alternative process waste material 1"}]
         ),
     ]
 
@@ -116,13 +114,13 @@ def complex_process_node(simple_ingredient_node) -> None:
 
 
 def test_process_getters_and_setters(
-        simple_process_node,
-        simple_ingredient_node,
-        simple_equipment_node,
-        simple_material_node,
-        simple_condition_node,
-        simple_property_node,
-        simple_citation_node,
+    simple_process_node,
+    simple_ingredient_node,
+    simple_equipment_node,
+    simple_material_node,
+    simple_condition_node,
+    simple_property_node,
+    simple_citation_node,
 ) -> None:
     """
     test getters and setters and be sure they are working correctly
@@ -173,5 +171,6 @@ def test_serialize_process_to_json(simple_process_node) -> None:
 
     # comparing dicts because they are more accurate
     assert json.loads(simple_process_node.json) == expected_process_dict
+
 
 # TODO add integration tests

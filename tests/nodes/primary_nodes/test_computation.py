@@ -43,19 +43,36 @@ def test_computation_type_invalid_vocabulary() -> None:
     pass
 
 
-def test_computation_getters_and_setters() -> None:
+def test_computation_getters_and_setters(
+    simple_computation_node, simple_data_node, simple_software_configuration, simple_condition_node, simple_citation_node
+) -> None:
     """
     tests that all the getters and setters are working fine
 
     Notes
     -----
     indirectly tests setting the data type to correct vocabulary
-
-    Returns
-    -------
-    None
     """
-    pass
+    new_type: str = "data_fit"
+    new_notes: str = "my computation node note"
+
+    # since the simple_computation_node only has type, the rest of them I can just set and test
+    simple_computation_node.type = new_type
+    simple_computation_node.input_data = [simple_data_node]
+    simple_computation_node.output_data = [simple_data_node]
+    simple_computation_node.software_configurations = [simple_software_configuration]
+    simple_computation_node.conditions = [simple_condition_node]
+    simple_computation_node.citations = [simple_citation_node]
+    simple_computation_node.notes = new_notes
+
+    # assert getter and setter are same
+    assert simple_computation_node.type == new_type
+    assert simple_computation_node.input_data == [simple_data_node]
+    assert simple_computation_node.output_data == [simple_data_node]
+    assert simple_computation_node.software_configurations == [simple_software_configuration]
+    assert simple_computation_node.conditions == [simple_condition_node]
+    assert simple_computation_node.citations == [simple_citation_node]
+    assert simple_computation_node.notes == new_notes
 
 
 def test_serialize_computation_to_json(simple_computation_node) -> None:

@@ -26,11 +26,7 @@ class Computation(PrimaryBaseNode):
         output_data: List[Any] = field(default_factory=list)
         software_configurations: List[Any] = field(default_factory=list)
         conditions: List[Any] = field(default_factory=list)
-
-        # TODO attribute is the class
-        #   this needs getters and setters and to be included in the constructor
-        # prerequisite_computation: Computation = None
-
+        prerequisite_computation: "Computation" = None
         citations: List[Any] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -42,10 +38,26 @@ class Computation(PrimaryBaseNode):
         output_data: List[Any] = None,
         software_configurations: List[Any] = None,
         conditions: List[Any] = None,
+        prerequisite_computation: "Computation" = None,
         citations: List[Any] = None,
         **kwargs
     ) -> None:
         super().__init__(node="Computation")
+
+        if input_data is None:
+            input_data = []
+
+        if output_data is None:
+            output_data = []
+
+        if software_configurations is None:
+            software_configurations = []
+
+        if conditions is None:
+            conditions = []
+
+        if citations is None:
+            citations = []
 
         self._json_attrs = replace(
             self._json_attrs,
@@ -54,6 +66,7 @@ class Computation(PrimaryBaseNode):
             output_data=output_data,
             software_configurations=software_configurations,
             conditions=conditions,
+            prerequisite_computation=prerequisite_computation,
             citations=citations,
         )
 
@@ -201,6 +214,33 @@ class Computation(PrimaryBaseNode):
         None
         """
         new_attrs = replace(self._json_attrs, conditions=new_condition_list)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    def prerequisite_computation(self) -> "Computation":
+        """
+        get computation node
+
+        Returns
+        -------
+        Computation
+        """
+        return self._json_attrs.prerequisite_computation
+
+    @prerequisite_computation.setter
+    def prerequisite_computation(self, new_prerequisite_computation: "Computation") -> None:
+        """
+        set new prerequisite_computation
+
+        Parameters
+        ----------
+        new_prerequisite_computation: "Computation"
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, prerequisite_computation=new_prerequisite_computation)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

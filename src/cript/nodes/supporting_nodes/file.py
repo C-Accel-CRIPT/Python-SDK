@@ -25,6 +25,25 @@ def _is_local_file(file_source: str) -> bool:
 
 class File(BaseNode):
     """
+    ## Definition
+
+    The File supporting nodes provides a link to  scholarly work and allows users
+    to specify in what way the work relates to that data. More specifically, users can specify that the
+    data was directly extracted from, inspired by, derived from, etc. the
+    [Data](Data)
+
+    ---
+
+    ## Attributes
+
+    | Attribute       | Type | Example                                                                                           | Description                                                                 | Required |
+    |-----------------|------|---------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|----------|
+    | source          | str  | `"path/to/my/file"` or `"https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system"` | path to the file can be URL or local path                                   | True     |
+    | type            | str  | `"logs"`                                                                                            | Pick from [CRIPT File Type](https://criptapp.org/keys/file-type/)           | True     |
+    | extension       | str  | `".csv"`                                                                                            | file extension                                                              | True     |
+    | data_dictionary | str  | `"my extra info in my data dictionary"`                                                                                            | set of information describing the contents, format, and structure of a file | False    |
+
+
     [File node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=28)
     """
 

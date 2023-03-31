@@ -61,6 +61,12 @@ plugins:
 
 nav:
   - Home: index.md
+  - Primary Nodes:
+      - Data: nodes/primary_nodes/data.md
+  - Supporting Nodes:
+      - User: nodes/supporting_nodes/user.md
+      - Group: nodes/supporting_nodes/group.md
+      - File: nodes/supporting_nodes/file.md
 
 markdown_extensions:
   - toc:

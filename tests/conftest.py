@@ -1,5 +1,3 @@
-import copy
-
 import pytest
 
 import cript
@@ -188,8 +186,6 @@ def simple_quantity_node() -> cript.Quantity:
     minimal quantity node
     """
     my_quantity = cript.Quantity(key="mass", value=1.23, unit="gram")
-
-    my_quantity_copy = copy.deepcopy(my_quantity)
 
     return my_quantity
 

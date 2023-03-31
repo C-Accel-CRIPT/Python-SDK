@@ -23,10 +23,6 @@ def cript_api():
     return cript.API(host="https://cript.org", token="123465")
 
 
-# ------------------ Simple Nodes ------------------
-# minimal nodes with only required arguments to reuse for tests and keep tests clean
-
-
 # ---------- Primary Nodes ----------
 # TODO alphabetize later to make looking through it easier
 @pytest.fixture(scope="session")
@@ -44,7 +40,8 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
     input_data = cript.Data(type="afm_amp", files=[data_files])
 
     # ingredients with Material and Quantity node
-    my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
+    my_material = cript.Material(name="my material",
+                                 identifiers=[{"alternative_names": "my material alternative name"}])
 
     my_quantity = cript.Quantity(key="mass", value=1.23, unit="gram")
 
@@ -150,6 +147,27 @@ def simple_condition_node() -> cript.Condition:
     my_condition = cript.Condition(key="atm", type="min", value=1)
 
     yield my_condition
+
+
+@pytest.fixture(scope="session")
+def simple_equipment_node() -> cript.Equipment:
+    """
+    minimal condition node to reuse for tests
+    """
+    my_equipment = cript.Equipment(key="burner")
+
+    yield my_equipment
+
+
+@pytest.fixture(scope="session")
+def simple_property_node() -> cript.Property:
+    """
+    minimal Property node to reuse for tests
+    """
+    # TODO key and type might not be correct, check later
+    my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
+
+    yield my_property
 
 
 # ---------- Supporting Nodes ----------

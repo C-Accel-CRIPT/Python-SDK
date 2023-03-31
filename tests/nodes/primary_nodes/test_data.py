@@ -20,12 +20,12 @@ def test_create_simple_data_node(simple_file_node) -> None:
 
 
 def test_create_complex_data_node(
-        simple_file_node,
-        simple_process_node,
-        simple_computation_node,
-        simple_computational_process_node,
-        simple_material_node,
-        simple_citation_node,
+    simple_file_node,
+    simple_process_node,
+    simple_computation_node,
+    simple_computational_process_node,
+    simple_material_node,
+    simple_citation_node,
 ) -> None:
     """
     create a complex data node with all possible arguments
@@ -38,7 +38,7 @@ def test_create_complex_data_node(
         computational_process=[simple_computational_process_node],
         materials=[simple_material_node],
         processes=[simple_process_node],
-        citations=[simple_citation_node]
+        citations=[simple_citation_node],
     )
 
     # assertions
@@ -93,7 +93,7 @@ def test_serialize_data_to_json(simple_data_node) -> None:
                 "source": "https://criptapp.org",
                 "type": "calibration",
                 "extension": ".csv",
-                "data_dictionary": "my file's data dictionary"
+                "data_dictionary": "my file's data dictionary",
             }
         ],
         "sample_preperation": None,
@@ -101,7 +101,7 @@ def test_serialize_data_to_json(simple_data_node) -> None:
         "computational_process": None,
         "materials": None,
         "processes": None,
-        "citations": None
+        "citations": None,
     }
 
     assert json.loads(simple_data_node.json) == expected_data_dict

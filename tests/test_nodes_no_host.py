@@ -47,6 +47,7 @@ def get_quantity_string():
 def get_reference():
     reference = cript.Reference(
         "journal_article",
+        title="Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)",
         authors=["Ludwig Schneider", "Marcus Müller"],
         journal="Computer Physics Communications",
         publisher="Elsevier",
@@ -60,9 +61,9 @@ def get_reference():
 
 
 def get_reference_string():
-    ret_str = "{'node': 'Reference', 'url': '', 'type': 'journal_article', 'title': '', 'authors':"
-    ret_str += " ['Ludwig Schneider', 'Marcus M\\u00fcller'], 'journal': 'Computer Physics Communications', "
-    ret_str += "'publisher': 'Elsevier', 'year': 2019, 'issue': null, 'pages': [463, 476], "
+    ret_str = "{'node': 'Reference', 'url': '', 'type': 'journal_article', 'title': 'Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)',"
+    ret_str += " 'authors': ['Ludwig Schneider', 'Marcus M\\u00fcller'], 'journal': 'Computer Physics Communications', "
+    ret_str += "'publisher': 'Elsevier', 'year': 2019, 'volume': null, 'issue': null, 'pages': [463, 476], "
     ret_str += "'doi': '10.1016/j.cpc.2018.08.011', 'issn': '0010-4655', 'arxiv_id': '', "
     ret_str += "'pmid': null, 'website': 'https://www.sciencedirect.com/science/article/pii/S0010465518303072'}"
     return ret_str.replace("'", '"')
@@ -594,4 +595,4 @@ def test_software_configuration():
     assert sc2.citation[1] == cit2
 
 
-test_software()
+test_reference()

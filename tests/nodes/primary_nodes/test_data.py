@@ -7,25 +7,39 @@ def test_create_simple_data_node() -> None:
     """
     create a simple data node with only required arguments
     """
-    # my_files = [
-    #     cript.File()
-    # ]
-    #
-    # my_data_type = "afm_amp"
-    # my_data = cript.Data(type=my_data_type, files=my_files)
-    #
-    # # assertions
-    # assert isinstance(my_data, cript.Data)
-    # assert my_data.type == my_data_type
-    # assert my_data.files == my_files
-    pass
+    my_data_type = "afm_amp"
+
+    my_files = [
+        cript.File(
+            source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary"
+        )
+    ]
+
+    my_data = cript.Data(type=my_data_type, files=my_files)
+
+    # assertions
+    assert isinstance(my_data, cript.Data)
+    assert my_data.type == my_data_type
+    assert my_data.files == my_files
 
 
 def test_create_complex_data_node() -> None:
     """
     create a complex data node with all possible arguments
     """
-    pass
+    my_data_type = "afm_amp"
+
+    my_files = [
+        cript.File(
+            source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary"
+        )
+    ]
+
+    sample_preperation = cript.Process(type="affinity_pure", description="my simple material description", keywords=["anionic"])
+
+    my_computations = [cript.Computation(type="analysis")]
+
+    my_computational_process = [cript.ComputationalProcess()]
 
 
 @pytest.fixture(scope="session")

@@ -69,6 +69,20 @@ class Experiment(PrimaryBaseNode):
         -------
         None
         """
+
+        if process is None:
+            process = []
+        if computation is None:
+            computation = []
+        if computational_process is None:
+            computational_process = []
+        if data is None:
+            data = []
+        if funding is None:
+            funding = []
+        if citation is None:
+            citation = []
+
         super().__init__(node="Experiment")
         self._json_attrs = replace(
             self._json_attrs,

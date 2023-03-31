@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import List, Union
+from typing import List
 
 from cript.nodes.core import BaseNode
 

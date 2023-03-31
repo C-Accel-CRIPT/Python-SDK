@@ -2,7 +2,6 @@ from dataclasses import dataclass, field, replace
 from typing import Any, List
 
 # from cript import Data, SoftwareConfiguration, Condition, Citation
-from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 

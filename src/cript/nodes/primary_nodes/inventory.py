@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
-from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 

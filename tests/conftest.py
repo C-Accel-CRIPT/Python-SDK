@@ -22,7 +22,21 @@ def cript_api():
 
 
 # ---------- Primary Nodes ----------
-# TODO alphabetize later to make looking through it easier
+
+@pytest.fixture(scope="function")
+def simple_experiment_node() -> cript.Experiment:
+    """
+    minimal experiment node to use for other tests
+
+    Returns
+    -------
+    Experiment
+    """
+
+    return cript.Experiment(name="my experiment name")
+
+
+
 @pytest.fixture(scope="function")
 def simple_computational_process_node() -> cript.ComputationalProcess:
     """

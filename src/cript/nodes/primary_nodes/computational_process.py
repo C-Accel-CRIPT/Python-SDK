@@ -167,7 +167,7 @@ class ComputationalProcess(PrimaryBaseNode):
         -------
         List[Data]
         """
-        return self._json_attrs.out_put.copy()
+        return self._json_attrs.output_data.copy()
 
     @output_data.setter
     def output_data(self, new_output_data_list: List[Any]) -> None:

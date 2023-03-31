@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 import cript
@@ -77,11 +79,32 @@ def test_data_getters_and_setters() -> None:
     pass
 
 
-def test_serialize_data_to_json() -> None:
+def test_serialize_data_to_json(simple_data_node) -> None:
     """
     tests that it can correctly turn the data node into its equivalent JSON
     """
-    pass
+
+    expected_data_dict = {
+        "node": "Data",
+        "type": "afm_amp",
+        "files": [
+            {
+                "node": "File",
+                "source": "https://criptapp.org",
+                "type": "calibration",
+                "extension": ".csv",
+                "data_dictionary": "my file's data dictionary"
+            }
+        ],
+        "sample_preperation": None,
+        "computations": None,
+        "computational_process": None,
+        "materials": None,
+        "processes": None,
+        "citations": None
+    }
+
+    assert json.loads(simple_data_node.json) == expected_data_dict
 
 
 # ---------- Integration tests ----------

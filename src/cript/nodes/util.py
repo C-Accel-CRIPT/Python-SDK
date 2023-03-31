@@ -10,7 +10,15 @@ from cript.nodes.exceptions import CRIPTJsonDeserializationError
 class NodeEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, BaseNode):
-            return asdict(obj._json_attrs)
+            default_values = asdict(obj.JsonAttributes())
+            serialize_dict = asdict(obj._json_attrs)
+            # Remove default values from serialization
+            for key in default_values:
+                if key != "node":
+                    if key in serialize_dict and serialize_dict[key] == default_values[key]:
+                        del serialize_dict[key]
+
+            return serialize_dict
         return json.JSONEncoder.default(self, obj)
 
 

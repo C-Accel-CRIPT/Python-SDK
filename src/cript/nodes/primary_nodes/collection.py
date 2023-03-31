@@ -34,7 +34,7 @@ class Collection(PrimaryBaseNode):
         name: str,
         experiments: List[Any] = None,
         inventories: List[Any] = None,
-        crip_doi: str = "",
+        cript_doi: str = "",
         citations: List[Any] = None,
         **kwargs
     ) -> None:
@@ -56,7 +56,7 @@ class Collection(PrimaryBaseNode):
         inventories: List[Inventory], default=None
             list of inventories within this collection
 
-        crip_doi: str = "", default=""
+        cript_doi: str = "", default=""
             cript doi
 
         citations: List[Citation], default=None
@@ -73,7 +73,7 @@ class Collection(PrimaryBaseNode):
             name=name,
             experiments=experiments,
             inventories=inventories,
-            crip_doi=crip_doi,
+            cript_doi=cript_doi,
             citations=citations,
         )
 

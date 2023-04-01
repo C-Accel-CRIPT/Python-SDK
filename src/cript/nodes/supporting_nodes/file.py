@@ -27,12 +27,10 @@ class File(BaseNode):
     """
     ## Definition
 
-    The File supporting nodes provides a link to  scholarly work and allows users
-    to specify in what way the work relates to that data. More specifically, users can specify that the
-    data was directly extracted from, inspired by, derived from, etc. the
-    [Data](Data)
-
-    ---
+    The [File supporting nodes](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001
+    .pdf#page=28) provides a link to  scholarly work and allows users to specify in what way the work relates to that
+    data. More specifically, users can specify that the data was directly extracted from, inspired by, derived from,
+    etc. the [Data](Data)
 
     ## Attributes
 
@@ -43,8 +41,6 @@ class File(BaseNode):
     | extension       | str  | `".csv"`                                                                                            | file extension                                                              | True     |
     | data_dictionary | str  | `"my extra info in my data dictionary"`                                                                                            | set of information describing the contents, format, and structure of a file | False    |
 
-
-    [File node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=28)
     """
 
     @dataclass(frozen=True)
@@ -166,7 +162,11 @@ class File(BaseNode):
     @property
     def extension(self) -> str:
         """
-        get the file extension
+        The file extension property explicitly states what is the file extension of the file node.
+
+        Examples
+        --------
+        `my_file_node.extension = ".csv"`
 
         Returns
         -------
@@ -195,7 +195,8 @@ class File(BaseNode):
     def data_dictionary(self) -> str:
         # TODO data dictionary needs documentation describing it and how to use it
         """
-        gets the file attribute data_dictionary
+        The `data_dictionary` property is essentially a big black box that scientists
+        can put anything that they need to describe their data.
 
         Returns
         -------

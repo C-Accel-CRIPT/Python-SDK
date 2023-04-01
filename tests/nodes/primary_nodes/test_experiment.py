@@ -47,7 +47,14 @@ def test_create_complex_experiment(
     assert my_experiment.citation == [simple_citation_node]
 
 
-def test_all_getters_and_setters_for_experiment() -> None:
+def test_all_getters_and_setters_for_experiment(
+    simple_experiment_node,
+    simple_process_node,
+    simple_computation_node,
+    simple_computational_process_node,
+    simple_data_node,
+    simple_citation_node,
+) -> None:
     """
     tests all the getters and setters for the experiment
 
@@ -56,6 +63,27 @@ def test_all_getters_and_setters_for_experiment() -> None:
     3. get all the properties for the experiment
     4. assert that what you set in the setter and the getter are equal to each other
     """
+    experiment_name = "my new experiment name"
+    experiment_funders = ["MIT", "European Research Council (ERC)", "Japan Society for the Promotion of Science (JSPS)"]
+
+    # set experiment properties
+    simple_experiment_node.name = experiment_name
+    simple_experiment_node.process = [simple_process_node]
+    simple_experiment_node.computation = [simple_computation_node]
+    simple_experiment_node.computational_process = [simple_computational_process_node]
+    simple_experiment_node.data = [simple_data_node]
+    simple_experiment_node.funding = experiment_funders
+    simple_experiment_node.citation = [simple_citation_node]
+
+    # assert getters and setters are equal
+    assert isinstance(simple_experiment_node, cript.Experiment)
+    assert simple_experiment_node.name == experiment_name
+    assert simple_experiment_node.process == [simple_process_node]
+    assert simple_experiment_node.computation == [simple_computation_node]
+    assert simple_experiment_node.computational_process == [simple_computational_process_node]
+    assert simple_experiment_node.data == [simple_data_node]
+    assert simple_experiment_node.funding == experiment_funders
+    assert simple_experiment_node.citation == [simple_citation_node]
 
 
 def test_experiment_json() -> None:

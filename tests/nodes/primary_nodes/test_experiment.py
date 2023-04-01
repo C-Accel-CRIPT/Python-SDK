@@ -97,17 +97,6 @@ def test_experiment_json() -> None:
     pass
 
 
-def convert_json_to_experiment() -> None:
-    """
-    test that a JSON can be successfully converted to an experiment
-
-    1. create an experiment json with all possible attributes
-    2. convert the json into an experiment node
-    3. assert that the experiment node that is produced is equal to the experiment node you expected
-    """
-    pass
-
-
 # -------- Integration Tests --------
 def test_save_experiment() -> None:
     """
@@ -122,6 +111,17 @@ def test_save_experiment() -> None:
     3. get the node from the API
     4. convert the node to the experiment class
     5. assert that the experiment node from API and local are equal to each other
+    """
+    pass
+
+
+def test_get_experiment_from_api() -> None:
+    """
+    tests that experiments can be gotten correctly from the API
+
+    Notes
+    -----
+    indirectly tests that the experiment was saved correctly to the API from the previous test
     """
     pass
 

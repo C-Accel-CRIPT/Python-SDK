@@ -26,10 +26,11 @@ class Project(PrimaryBaseNode):
         # TODO is group needed?
         # group: Group = None
         collections: List[Collection] = field(default_factory=list)
+        materials: List[Material] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, collections: List[Collection], **kwargs):
+    def __init__(self, name: str, collections: List[Collection], materials: List[Material] = None, **kwargs):
         """
         Create a Project node with Project name and Group
 
@@ -46,7 +47,11 @@ class Project(PrimaryBaseNode):
         None
         """
         super().__init__(node="Project")
-        self._json_attrs = replace(self._json_attrs, name=name, collections=collections)
+
+        if materials is None:
+            materials = []
+
+        self._json_attrs = replace(self._json_attrs, name=name, collections=collections, materials=materials)
         self.validate()
 
     # ------------------ Properties ------------------
@@ -82,73 +87,34 @@ class Project(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     # GROUP
-    @property
-    def group(self) -> Group:
-        """
-        group property getter method
-
-        Returns
-        -------
-        group: Group
-            Group that owns the project
-        """
-        return self._json_attrs.group
-
-    @group.setter
-    def group(self, new_group: Group):
-        """
-        Sets the group the project belongs to
-
-        Parameters
-        ----------
-        new_group: Group
-            new Group object
-
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, group=new_group)
-        self._update_json_attrs_if_valid(new_attrs)
-
-    # TODO consider switching any to BaseNode
-    def _set_node_or_list(self, field_name: str, new_node: Union[Any, List[Any]]):
-        """
-        This method sets a field that is a list of node or a single node for this project.
-        The user can pass in either a node (such as collection, material, or file )
-        to be appended to the list of collections
-        or the user can pass in a list of collections to replace the old list of collections.
-        This method works by checking if the argument is a list or a single node and
-        then behaves accordingly.
-
-        Parameters
-        ----------
-        field_name: str
-            field name within the dataclass JsonAttributes
-
-        new_node: Union[BaseNode, List[BaseNode]
-            new node to append to node list
-            or new list of nodes to replace the current list
-
-        Returns
-        -------
-        None
-        """
-        if isinstance(new_node, list):
-            # replace the old list with the new list
-            # TODO see if you can write **{field_name: new_node} in a better way
-            new_attrs = replace(self._json_attrs, **{field_name: new_node})
-            # TODO this needs a more DRY way of handling this
-            self._update_json_attrs_if_valid(new_attrs)
-
-        # if appending a single node to the list
-        # get the old list, append the node, and replace the field
-        else:
-            # TODO see if you can write this better
-            new_list: List[BaseNode] = getattr(self._json_attrs, field_name)
-            new_list.append(new_node)
-            new_attrs = replace(self._json_attrs, **{field_name: new_list})
-            self._update_json_attrs_if_valid(new_attrs)
+    # @property
+    # def group(self) -> Group:
+    #     """
+    #     group property getter method
+    #
+    #     Returns
+    #     -------
+    #     group: Group
+    #         Group that owns the project
+    #     """
+    #     return self._json_attrs.group
+    #
+    # @group.setter
+    # def group(self, new_group: Group):
+    #     """
+    #     Sets the group the project belongs to
+    #
+    #     Parameters
+    #     ----------
+    #     new_group: Group
+    #         new Group object
+    #
+    #     Returns
+    #     -------
+    #     None
+    #     """
+    #     new_attrs = replace(self._json_attrs, group=new_group)
+    #     self._update_json_attrs_if_valid(new_attrs)
 
     # Collection
     @property
@@ -163,8 +129,6 @@ class Project(PrimaryBaseNode):
         """
         return self._json_attrs.collections
 
-    # TODO collection, material, and file (all lists) have the same logic,
-    #   make a single function to take care of it
     # Collection
     @collections.setter
     def collections(self, new_collection: List[Collection]) -> None:
@@ -179,7 +143,7 @@ class Project(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, collection=new_collection)
+        new_attrs = replace(self._json_attrs, collections=new_collection)
         self._update_json_attrs_if_valid(new_attrs)
 
     # Material
@@ -209,33 +173,4 @@ class Project(PrimaryBaseNode):
         None
         """
         new_attrs = replace(self._json_attrs, material=new_materials)
-        self._update_json_attrs_if_valid(new_attrs)
-
-    # File
-    @property
-    def file(self) -> List[File]:
-        """
-        file property getter method.
-
-        Returns
-        -------
-        File: Lis[File]
-            list of files that belongs in this project
-        """
-        return self._json_attrs.file
-
-    @file.setter
-    def file(self, new_file_list: List[File]):
-        """
-         Set the list of files for this project
-
-        Parameters
-        ----------
-        new_file_list: File or List[File]
-
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, file=new_file_list)
         self._update_json_attrs_if_valid(new_attrs)

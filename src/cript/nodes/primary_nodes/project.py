@@ -1,12 +1,9 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List, Union
+from typing import List
 
-from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
-from cript.nodes.supporting_nodes.file import File
-from cript.nodes.supporting_nodes.group import Group
 
 
 class Project(PrimaryBaseNode):
@@ -157,7 +154,7 @@ class Project(PrimaryBaseNode):
         Material: List[Material]
             List of materials that belongs to this project
         """
-        return self._json_attrs.material
+        return self._json_attrs.materials
 
     @material.setter
     def material(self, new_materials: List[Material]) -> None:
@@ -172,5 +169,5 @@ class Project(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, material=new_materials)
+        new_attrs = replace(self._json_attrs, materials=new_materials)
         self._update_json_attrs_if_valid(new_attrs)

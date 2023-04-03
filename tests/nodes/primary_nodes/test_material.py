@@ -4,8 +4,6 @@ import pytest
 
 import cript
 
-# TODO use fixtures from conftest.py
-
 
 def test_create_simple_material() -> None:
     """
@@ -22,7 +20,8 @@ def test_create_simple_material() -> None:
     assert my_material.name == material_name
 
 
-@pytest.fixture(scope="session")
+# TODO replace this fixture with complex_material_node fixture from conftest.py that was later created
+@pytest.fixture(scope="function")
 def complex_material() -> None:
     """
     complex material fixture to use for other tests
@@ -58,19 +57,6 @@ def complex_material() -> None:
         keywords=my_material_keywords,
     )
 
-    # use complex material for other tests
-    yield my_complex_material
-
-    # reset the material to its original state
-    my_complex_material.name = "my complex material"
-    my_complex_material.identifiers = my_identifier
-    my_complex_material.components = my_components
-    my_complex_material.properties = my_properties
-    my_complex_material.process = my_process
-    my_complex_material.parent_materials = parent_material
-    my_complex_material.computation_forcefield = my_computation_forcefield
-    my_complex_material.keywords = my_material_keywords
-
     # check that the material attributes match the expected values
     # assert my_complex_material.name == "my complex material"
     # assert my_complex_material.identifiers == my_identifier
@@ -80,6 +66,8 @@ def complex_material() -> None:
     # assert my_complex_material.parent_materials == parent_material
     # assert my_complex_material.computation_forcefield == my_computation_forcefield
     # assert my_complex_material.keywords == my_material_keywords
+
+    return my_complex_material
 
 
 @pytest.fixture(scope="session")
@@ -210,9 +198,8 @@ def test_serialize_material_to_json(complex_material) -> None:
         "keywords": ["acetylene"],
     }
 
-    # convert JSON str to dict for better comparison
-    expected_json = json.dumps(expected_dict, sort_keys=True)
-    assert complex_material.json == expected_json
+    # compare dicts because that is more accurate
+    assert json.loads(complex_material.json) == expected_dict
 
 
 # ---------- Integration Tests ----------

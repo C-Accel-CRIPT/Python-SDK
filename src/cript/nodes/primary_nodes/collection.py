@@ -67,10 +67,13 @@ class Collection(PrimaryBaseNode):
         None
         """
         super().__init__(node="Collection")
+
         if experiments is None:
             experiments = []
+
         if inventories is None:
             inventories = []
+
         if citations is None:
             citations = []
 

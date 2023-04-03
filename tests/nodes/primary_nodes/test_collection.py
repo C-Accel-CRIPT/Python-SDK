@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 import cript
@@ -32,12 +34,13 @@ def test_create_complex_collection(simple_experiment_node, simple_inventory_node
     my_collection_name = "my complex collection name"
     my_cript_doi = "10.1038/1781168a0"
 
-    my_collection = cript.Collection(name=my_collection_name,
-                                     experiments=[simple_experiment_node],
-                                     inventories=[simple_inventory_node],
-                                     cript_doi=my_cript_doi,
-                                     citations=[simple_citation_node]
-                                     )
+    my_collection = cript.Collection(
+        name=my_collection_name,
+        experiments=[simple_experiment_node],
+        inventories=[simple_inventory_node],
+        cript_doi=my_cript_doi,
+        citations=[simple_citation_node],
+    )
 
     # assertions
     assert isinstance(my_collection, cript.Collection)
@@ -76,3 +79,57 @@ def test_collection_getters_and_setters(simple_experiment_node, simple_inventory
     assert my_collection.inventories == [simple_inventory_node]
     assert my_collection.cript_doi == new_cript_doi
     assert my_collection.citations == [simple_citation_node]
+
+
+def test_serialize_collection_to_json(complex_collection_node) -> None:
+    """
+    test that Collection node can be correctly serialized to JSON
+
+    1. create a complex Collection node with all optional arguments
+    2. convert Collection to JSON and back to dict
+    2. compare expected_collection dict and Collection dict, and they should be the same
+
+    Notes
+    -----
+    * Compare dicts instead of JSON string because dict comparison is more accurate
+    """
+
+    expected_collection_dict = {
+        "citations": [
+            {
+                "node": "Citation",
+                "reference": {
+                    "authors": None,
+                    "node": "Reference",
+                    "pages": None,
+                    "title": "'Living' Polymers",
+                    "type": "journal_article",
+                },
+                "type": "derived_from",
+            }
+        ],
+        "cript_doi": "10.1038/1781168a0",
+        "experiments": [{"name": "my experiment name", "node": "Experiment"}],
+        "inventories": [
+            {
+                "materials": [
+                    {
+                        "identifiers": [{"alternative_names": "material 1 alternative name"}],
+                        "name": "material 1",
+                        "node": "Material",
+                    },
+                    {
+                        "identifiers": [{"alternative_names": "material 2 alternative name"}],
+                        "name": "material 2",
+                        "node": "Material",
+                    },
+                ],
+                "node": "Inventory",
+            }
+        ],
+        "name": "my complex collection name",
+        "node": "Collection",
+    }
+
+    # assert
+    assert json.loads(complex_collection_node.json) == expected_collection_dict

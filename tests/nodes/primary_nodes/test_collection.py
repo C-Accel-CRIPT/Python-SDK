@@ -133,3 +133,40 @@ def test_serialize_collection_to_json(complex_collection_node) -> None:
 
     # assert
     assert json.loads(complex_collection_node.json) == expected_collection_dict
+
+
+# ---------- Integration tests ----------
+def test_save_collection_to_api() -> None:
+    """
+    tests if the Collection node can be saved to the API without errors and status code of 200
+    """
+    pass
+
+
+def test_get_collection_from_api() -> None:
+    """
+    gets the Collection node from the api that was saved prior
+    """
+    pass
+
+
+def test_serialize_json_to_collection() -> None:
+    """
+    tests that a JSON of a Collection node can from API can be correctly converted to Collection python object
+    """
+    pass
+
+
+def test_update_data_in_api() -> None:
+    """
+    tests that the Collection node can be correctly updated within the API
+    """
+    pass
+
+
+def test_delete_data_from_api() -> None:
+    """
+    tests that the Collection node can be deleted correctly from the API
+    tries to get the Collection from API, and it is expected for the API to give an error response
+    """
+    pass

@@ -25,6 +25,26 @@ def cript_api():
 
 
 @pytest.fixture(scope="function")
+def simple_collection_node(simple_experiment_node) -> cript.Collection:
+    """
+    create a simple collection node for other tests to be able to easily and cleanly reuse
+
+    Notes
+    -----
+    * [Collection](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=8)
+    has no required attributes.
+    * The Python SDK only requires Collections to have `name`
+        * Since it doesn't make sense to have an empty Collection I added an Experiment to the Collection as well
+    """
+    my_collection_name = "my collection name"
+
+    my_collection = cript.Collection(name=my_collection_name, experiments=[simple_experiment_node])
+
+    return my_collection
+
+
+
+@pytest.fixture(scope="function")
 def simple_experiment_node() -> cript.Experiment:
     """
     minimal experiment node to use for other tests
@@ -52,7 +72,8 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
     input_data = cript.Data(type="afm_amp", files=[data_files])
 
     # ingredients with Material and Quantity node
-    my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
+    my_material = cript.Material(name="my material",
+                                 identifiers=[{"alternative_names": "my material alternative name"}])
 
     my_quantity = cript.Quantity(key="mass", value=1.23, unit="gram")
 

@@ -40,6 +40,7 @@ class Inventory(PrimaryBaseNode):
         super().__init__(node="Inventory")
         self._json_attrs = replace(self._json_attrs, materials=materials_list)
 
+    # ------------------ Properties ------------------
     @property
     def materials(self) -> List[Material]:
         """

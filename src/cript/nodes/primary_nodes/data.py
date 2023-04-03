@@ -58,6 +58,7 @@ class Data(PrimaryBaseNode):
 
         self.validate()
 
+    # ------------------ Properties ------------------
     @property
     def type(self) -> str:
         """

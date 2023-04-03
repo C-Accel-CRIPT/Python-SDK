@@ -115,6 +115,7 @@ class Reference(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
         self.validate()
 
+    # ------------------ Properties ------------------
     @property
     def url(self) -> str:
         """

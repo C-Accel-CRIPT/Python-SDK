@@ -23,14 +23,13 @@ class Project(PrimaryBaseNode):
         node: str = "Project"
         # project name
         name: str = ""
-        group: Group = None
-        collection: List[Collection] = field(default_factory=list)
-        material: List[Material] = field(default_factory=list)
-        file: List[File] = field(default_factory=list)
+        # TODO is group needed?
+        # group: Group = None
+        collections: List[Collection] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, group: Group, **kwargs):
+    def __init__(self, name: str, collections: List[Collection], **kwargs):
         """
         Create a Project node with Project name and Group
 
@@ -38,31 +37,17 @@ class Project(PrimaryBaseNode):
         ----------
         name: str
             project name
-        group: Group
-            Group that owns the Project
+
+        Collections: List[Collection]
+            list of Collections that belongs to this Project
 
         Returns
         -------
         None
         """
         super().__init__(node="Project")
-        self._json_attrs = replace(self._json_attrs, name=name, group=group)
+        self._json_attrs = replace(self._json_attrs, name=name, collections=collections)
         self.validate()
-        pass
-
-    def validate(self) -> None:
-        """
-        validates project node
-
-        Returns
-        -------
-        None
-
-        Raises
-        ------
-        CRIPTNodeSchemaError
-        """
-        pass
 
     # ------------------ Properties ------------------
 
@@ -167,7 +152,7 @@ class Project(PrimaryBaseNode):
 
     # Collection
     @property
-    def collection(self) -> List[Collection]:
+    def collections(self) -> List[Collection]:
         """
         Collection property getter method
 
@@ -181,8 +166,8 @@ class Project(PrimaryBaseNode):
     # TODO collection, material, and file (all lists) have the same logic,
     #   make a single function to take care of it
     # Collection
-    @collection.setter
-    def collection(self, new_collection: List[Collection]) -> None:
+    @collections.setter
+    def collections(self, new_collection: List[Collection]) -> None:
         """
         set list of collections for the project node
 

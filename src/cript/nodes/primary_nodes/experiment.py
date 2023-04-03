@@ -97,6 +97,7 @@ class Experiment(PrimaryBaseNode):
         # check if the code is still valid
         self.validate()
 
+    # ------------------ Properties ------------------
     @property
     def name(self) -> str:
         """

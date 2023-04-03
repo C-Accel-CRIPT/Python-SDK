@@ -71,7 +71,7 @@ class Computation(PrimaryBaseNode):
 
         self.validate()
 
-    # --------- Properties ---------
+    # ------------------ Properties ------------------
 
     @property
     def type(self) -> str:

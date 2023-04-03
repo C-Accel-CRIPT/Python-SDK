@@ -36,6 +36,19 @@ def cript_api():
 
 
 @pytest.fixture(scope="function")
+def simple_project_node(simple_collection_node) -> cript.Project:
+    """
+    create a minimal Project node with only required arguments for other tests to use
+
+    Returns
+    -------
+    cript.Project
+    """
+
+    return cript.Project(name="my Project name", collections=[simple_collection_node])
+
+
+@pytest.fixture(scope="function")
 def simple_collection_node(simple_experiment_node) -> cript.Collection:
     """
     create a simple collection node for other tests to be able to easily and cleanly reuse

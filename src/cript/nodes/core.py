@@ -60,7 +60,7 @@ class BaseNode(ABC):
         for field in self._json_attrs.__dataclass_fields__:
             value = getattr(self._json_attrs, field)
             if isinstance(value, BaseNode):
-                cycle = value._detect_cycle(handled_nodes)
+                cycle = value._has_cycle(handled_nodes)
                 if cycle is True:
                     cycle_detected = True
                     return cycle_detected
@@ -75,7 +75,7 @@ class BaseNode(ABC):
         Exception with more error information.
         """
 
-        if self._detect_cycle():
+        if self._has_cycle():
             raise CRIPTNodeCycleError(str(self))
 
     @classmethod

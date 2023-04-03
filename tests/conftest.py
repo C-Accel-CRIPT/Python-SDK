@@ -1,3 +1,14 @@
+"""
+This conftest file contains simple nodes (nodes with minimal required arguments)
+and complex node (nodes that have all possible arguments), to use for testing.
+
+Since nodes often depend on other nodes copying and pasting nodes is not ideal,
+and keeping all nodes in one file makes it easier/cleaner to create tests.
+
+The fixtures are all functional fixtures that stay consistent between all tests.
+"""
+
+
 import pytest
 
 import cript

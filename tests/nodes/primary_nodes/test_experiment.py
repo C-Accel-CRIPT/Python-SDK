@@ -1,10 +1,11 @@
-import pytest
+import json
 
 import cript
 
 
 def test_create_simple_experiment(
-    simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, simple_citation_node
+        simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node,
+        simple_citation_node
 ) -> None:
     """
     test just to see if a minimal experiment can be made without any issues
@@ -18,7 +19,8 @@ def test_create_simple_experiment(
 
 
 def test_create_complex_experiment(
-    simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, simple_citation_node
+        simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node,
+        simple_citation_node
 ) -> None:
     """
     test to see if Collection can be made with all the possible options filled
@@ -48,12 +50,12 @@ def test_create_complex_experiment(
 
 
 def test_all_getters_and_setters_for_experiment(
-    simple_experiment_node,
-    simple_process_node,
-    simple_computation_node,
-    simple_computational_process_node,
-    simple_data_node,
-    simple_citation_node,
+        simple_experiment_node,
+        simple_process_node,
+        simple_computation_node,
+        simple_computational_process_node,
+        simple_data_node,
+        simple_citation_node,
 ) -> None:
     """
     tests all the getters and setters for the experiment
@@ -86,15 +88,157 @@ def test_all_getters_and_setters_for_experiment(
     assert simple_experiment_node.citation == [simple_citation_node]
 
 
-def test_experiment_json() -> None:
+def test_experiment_json(simple_process_node, simple_computation_node, simple_computational_process_node,
+                         simple_data_node, simple_citation_node) -> None:
     """
     tests that the experiment JSON is functioning correctly
 
     1. create an experiment with all possible attributes
     2. convert the experiment into a JSON
     3. assert that the JSON is that it produces is equal to what you expected
+
+    Notes
+    -----
+    indirectly tests that the notes attribute also works within the experiment node.
+    All nodes inherit from the base node, so if the base node attribute is working in this test
+    there is a good chance that it will work correctly for all other nodes that inherit from it as well
     """
-    pass
+    experiment_name = "my experiment name"
+    experiment_funders = ["National Science Foundation", "IRIS", "NIST"]
+
+    my_experiment = cript.Experiment(
+        name=experiment_name,
+        process=[simple_process_node],
+        computation=[simple_computation_node],
+        computational_process=[simple_computational_process_node],
+        data=[simple_data_node],
+        funding=experiment_funders,
+        citation=[simple_citation_node],
+    )
+
+    # adding notes to test base node attributes
+    my_experiment.notes = "these are all of my notes for this experiment"
+
+    # TODO this might not be a big deal, but `Computation` node always has a citations as an empty list,
+    #  do we want to have it as null/None or just not include it at all? Are we consistent?
+    expected_experiment_dict = {
+        "citation": [
+            {
+                "node": "Citation",
+                "reference": {
+                    "authors": None,
+                    "node": "Reference",
+                    "pages": None,
+                    "title": "'Living' Polymers",
+                    "type": "journal_article"
+                },
+                "type": "derived_from"
+            }
+        ],
+        "computation": [
+            {
+                "citations": [
+
+                ],
+                "node": "Computation",
+                "type": "analysis"
+            }
+        ],
+        "computational_process": [
+            {
+                "citations": None,
+                "conditions": None,
+                "ingredients": [
+                    {
+                        "material": {
+                            "identifiers": [
+                                {
+                                    "alternative_names": "my material alternative name"
+                                }
+                            ],
+                            "name": "my material",
+                            "node": "Material"
+                        },
+                        "node": "Ingredient",
+                        "quantities": [
+                            {
+                                "key": "mass",
+                                "node": "Quantity",
+                                "unit": "gram",
+                                "value": 1.23
+                            }
+                        ]
+                    }
+                ],
+                "input_data": [
+                    {
+                        "citations": None,
+                        "computational_process": None,
+                        "computations": None,
+                        "files": [
+                            {
+                                "data_dictionary": "my file's data dictionary",
+                                "extension": ".csv",
+                                "node": "File",
+                                "source": "https://criptapp.org",
+                                "type": "calibration"
+                            }
+                        ],
+                        "materials": None,
+                        "node": "Data",
+                        "processes": None,
+                        "sample_preperation": None,
+                        "type": "afm_amp"
+                    }
+                ],
+                "node": "Computational_Process",
+                "output_data": None,
+                "properties": None,
+                "software_configurations": None,
+                "type": "cross_linking"
+            }
+        ],
+        "data": [
+            {
+                "citations": None,
+                "computational_process": None,
+                "computations": None,
+                "files": [
+                    {
+                        "data_dictionary": "my file's data dictionary",
+                        "extension": ".csv",
+                        "node": "File",
+                        "source": "https://criptapp.org",
+                        "type": "calibration"
+                    }
+                ],
+                "materials": None,
+                "node": "Data",
+                "processes": None,
+                "sample_preperation": None,
+                "type": "afm_amp"
+            }
+        ],
+        "funding": [
+            "National Science Foundation",
+            "IRIS",
+            "NIST"
+        ],
+        "name": "my experiment name",
+        "node": "Experiment",
+        "notes": "these are all of my notes for this experiment",
+        "process": [
+            {
+                "keywords": [
+
+                ],
+                "node": "Process",
+                "type": "affinity_pure"
+            }
+        ]
+    }
+
+    assert json.loads(my_experiment.json) == expected_experiment_dict
 
 
 # -------- Integration Tests --------

@@ -23,6 +23,7 @@ def cript_api():
 
 # ---------- Primary Nodes ----------
 
+
 @pytest.fixture(scope="function")
 def simple_experiment_node() -> cript.Experiment:
     """
@@ -34,7 +35,6 @@ def simple_experiment_node() -> cript.Experiment:
     """
 
     return cript.Experiment(name="my experiment name")
-
 
 
 @pytest.fixture(scope="function")
@@ -52,8 +52,7 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
     input_data = cript.Data(type="afm_amp", files=[data_files])
 
     # ingredients with Material and Quantity node
-    my_material = cript.Material(name="my material",
-                                 identifiers=[{"alternative_names": "my material alternative name"}])
+    my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
 
     my_quantity = cript.Quantity(key="mass", value=1.23, unit="gram")
 

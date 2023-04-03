@@ -43,6 +43,24 @@ def simple_collection_node(simple_experiment_node) -> cript.Collection:
     return my_collection
 
 
+@pytest.fixture(scope="function")
+def complex_collection_node(simple_experiment_node, simple_inventory_node, simple_citation_node) -> cript.Collection:
+    """
+    Collection node with all optional arguments
+    """
+    my_collection_name = "my complex collection name"
+    my_cript_doi = "10.1038/1781168a0"
+
+    my_collection = cript.Collection(
+        name=my_collection_name,
+        experiments=[simple_experiment_node],
+        inventories=[simple_inventory_node],
+        cript_doi=my_cript_doi,
+        citations=[simple_citation_node],
+    )
+
+    return my_collection
+
 
 @pytest.fixture(scope="function")
 def simple_experiment_node() -> cript.Experiment:

@@ -161,7 +161,7 @@ class Project(PrimaryBaseNode):
         Collection: List[Collection]
             the list of collections within this project
         """
-        return self._json_attrs.collection
+        return self._json_attrs.collections
 
     # TODO collection, material, and file (all lists) have the same logic,
     #   make a single function to take care of it

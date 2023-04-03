@@ -1,14 +1,18 @@
-import pytest
-
 import cript
 
 
-def test_creating_project():
+def test_create_simple_project(simple_collection_node) -> None:
     """
-    create a project node and then save the project node
-    test if a project node can be properly created
+    test that a project node with only required arguments can be created
     """
-    pass
+    my_project_name = "my Project name"
+
+    my_project = cript.Project(name=my_project_name, collections=[simple_collection_node])
+
+    # assertions
+    assert isinstance(my_project, cript.Project)
+    assert my_project.name == my_project_name
+    assert my_project.collections == [simple_collection_node]
 
 
 def test_project_to_json():

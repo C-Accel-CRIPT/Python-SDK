@@ -8,7 +8,6 @@ and keeping all nodes in one file makes it easier/cleaner to create tests.
 The fixtures are all functional fixtures that stay consistent between all tests.
 """
 
-
 import pytest
 
 import cript
@@ -33,8 +32,6 @@ def cript_api():
 
 
 # ---------- Primary Nodes ----------
-
-
 @pytest.fixture(scope="function")
 def simple_project_node(simple_collection_node) -> cript.Project:
     """
@@ -46,6 +43,18 @@ def simple_project_node(simple_collection_node) -> cript.Project:
     """
 
     return cript.Project(name="my Project name", collections=[simple_collection_node])
+
+
+@pytest.fixture(scope="function")
+def complex_project_node(complex_collection_node, complex_material_node) -> cript.Project:
+    """
+    a complex Project node that includes all possible optional arguments that are themselves complex as well
+    """
+    project_name = "my project name"
+
+    complex_project = cript.Project(name=project_name, collections=[complex_collection_node], materials=[complex_material_node])
+
+    return complex_project
 
 
 @pytest.fixture(scope="function")
@@ -172,6 +181,36 @@ def simple_material_node() -> cript.Material:
 
 
 @pytest.fixture(scope="function")
+def complex_material_node(simple_property_node, simple_process_node, simple_computation_forcefield) -> cript.Material:
+    """
+    complex Material node with all possible attributes filled
+    """
+    my_identifier = [{"alternative_names": "my material alternative name"}]
+
+    my_components = [
+        cript.Material(name="my component material 1", identifiers=[{"alternative_names": "component 1 alternative name"}]),
+        cript.Material(name="my component material 2", identifiers=[{"alternative_names": "component 2 alternative name"}]),
+    ]
+
+    parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
+
+    my_material_keywords = ["acetylene"]
+
+    my_complex_material = cript.Material(
+        name="my complex material",
+        identifiers=my_identifier,
+        components=my_components,
+        properties=simple_property_node,
+        process=simple_process_node,
+        parent_materials=parent_material,
+        computation_forcefield=simple_computation_forcefield,
+        keywords=my_material_keywords,
+    )
+
+    return my_complex_material
+
+
+@pytest.fixture(scope="function")
 def simple_reference_node() -> cript.Reference:
     """
     minimal reference node
@@ -293,3 +332,11 @@ def simple_ingredient_node(simple_material_node, simple_quantity_node) -> cript.
     )
 
     return ingredients
+
+
+@pytest.fixture(scope="function")
+def simple_computation_forcefield() -> cript.ComputationForcefield:
+    """
+    create a minimal computation_forcefield to use for other tests
+    """
+    return cript.ComputationForcefield(key="amber", building_block="atom")

@@ -242,5 +242,5 @@ class Collection(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, ciations=new_citations)
+        new_attrs = replace(self._json_attrs, citations=new_citations)
         self._update_json_attrs_if_valid(new_attrs)

@@ -56,6 +56,23 @@ def test_complex_reference() -> None:
         website=website,
     )
 
+    # assertions
+    assert isinstance(my_reference, cript.Reference)
+    assert my_reference.type == reference_type
+    assert my_reference.title == title
+    assert my_reference.authors == authors
+    assert my_reference.journal == journal
+    assert my_reference.publisher == publisher
+    assert my_reference.year == year
+    assert my_reference.volume == volume
+    assert my_reference.issue == issue
+    assert my_reference.pages == pages
+    assert my_reference.doi == doi
+    assert my_reference.issn == issn
+    assert my_reference.arxiv_id == arxiv_id
+    assert my_reference.pmid == pmid
+    assert my_reference.website == website
+
 
 def test_getters_and_setters_reference(simple_reference_node) -> None:
     """

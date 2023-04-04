@@ -79,7 +79,29 @@ class ComputationalProcess(PrimaryBaseNode):
         None
         """
         super().__init__(node="Computational_Process")
+
         # TODO validate type from vocab
+
+        if input_data is None:
+            input_data = []
+
+        if ingredients is None:
+            ingredients = []
+
+        if output_data is None:
+            output_data = []
+
+        if software_configurations is None:
+            software_configurations = []
+
+        if conditions is None:
+            conditions = []
+
+        if properties is None:
+            properties = []
+
+        if citations is None:
+            citations = []
 
         self._json_attrs = replace(
             self._json_attrs,

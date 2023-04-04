@@ -6,8 +6,8 @@ repo_name: C-Accel-CRIPT/Python-SDK
 theme:
   name: material
   # below is the favicon image and documentation logo
-  logo: assets/images/CRIPT_full_logo_colored_transparent.png
-  favicon: assets/images/favicon.ico
+  logo: ./images/CRIPT_full_logo_colored_transparent.png
+  favicon: ./images/favicon.ico
   icon:
     admonition:
       alert: octicons/alert-16

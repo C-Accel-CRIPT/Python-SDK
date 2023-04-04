@@ -118,8 +118,6 @@ def test_experiment_json(
     # adding notes to test base node attributes
     my_experiment.notes = "these are all of my notes for this experiment"
 
-    # TODO this might not be a big deal, but `Computation` node always has a citations as an empty list,
-    #  do we want to have it as null/None or just not include it at all? Are we consistent?
     expected_experiment_dict = {
         "citation": [
             {
@@ -137,8 +135,6 @@ def test_experiment_json(
         "computation": [{"citations": [], "node": "Computation", "type": "analysis"}],
         "computational_process": [
             {
-                "citations": None,
-                "conditions": None,
                 "ingredients": [
                     {
                         "material": {
@@ -152,9 +148,6 @@ def test_experiment_json(
                 ],
                 "input_data": [
                     {
-                        "citations": None,
-                        "computational_process": None,
-                        "computations": None,
                         "files": [
                             {
                                 "data_dictionary": "my file's data dictionary",
@@ -164,25 +157,16 @@ def test_experiment_json(
                                 "type": "calibration",
                             }
                         ],
-                        "materials": None,
                         "node": "Data",
-                        "processes": None,
-                        "sample_preperation": None,
                         "type": "afm_amp",
                     }
                 ],
                 "node": "Computational_Process",
-                "output_data": None,
-                "properties": None,
-                "software_configurations": None,
                 "type": "cross_linking",
             }
         ],
         "data": [
             {
-                "citations": None,
-                "computational_process": None,
-                "computations": None,
                 "files": [
                     {
                         "data_dictionary": "my file's data dictionary",
@@ -192,10 +176,7 @@ def test_experiment_json(
                         "type": "calibration",
                     }
                 ],
-                "materials": None,
                 "node": "Data",
-                "processes": None,
-                "sample_preperation": None,
                 "type": "afm_amp",
             }
         ],

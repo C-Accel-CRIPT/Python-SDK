@@ -44,6 +44,27 @@ class Data(PrimaryBaseNode):
     ):
         super().__init__(node="Data")
 
+        if files is None:
+            files = []
+
+        if sample_preperation is None:
+            sample_preperation = []
+
+        if computations is None:
+            computations = []
+
+        if computational_process is None:
+            computational_process = []
+
+        if materials is None:
+            materials = []
+
+        if processes is None:
+            processes = []
+
+        if citations is None:
+            citations = []
+
         self._json_attrs = replace(
             self._json_attrs,
             type=type,

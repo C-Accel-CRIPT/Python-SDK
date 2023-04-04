@@ -118,3 +118,40 @@ def test_serialize_project_to_json(complex_project_node) -> None:
 
     # comparing dicts instead of JSON strings because dict comparison is more accurate
     assert json.loads(complex_project_node.json) == expected_dict
+
+
+# ---------- Integration tests ----------
+def test_save_project_to_api() -> None:
+    """
+    tests if the project node can be saved to the API without errors and status code of 200
+    """
+    pass
+
+
+def test_get_project_from_api() -> None:
+    """
+    gets the project node from the api that was saved prior
+    """
+    pass
+
+
+def test_serialize_json_to_project() -> None:
+    """
+    tests that a JSON of a project node from API can be correctly converted to python object
+    """
+    pass
+
+
+def test_update_project_in_api() -> None:
+    """
+    tests that the project node can be correctly updated within the API
+    """
+    pass
+
+
+def test_delete_project_from_api() -> None:
+    """
+    integration test: tests that the project node can be deleted correctly from the API
+    tries to get the project from API, and it is expected for the API to give an error response
+    """
+    pass

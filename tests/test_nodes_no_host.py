@@ -45,9 +45,12 @@ def get_quantity_string():
 
 
 def get_reference():
+    title = "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
+    title += "SOft coarse grained Monte-Carlo Acceleration (SOMA)"
+
     reference = cript.Reference(
         "journal_article",
-        title="Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)",
+        title=title,
         authors=["Ludwig Schneider", "Marcus Müller"],
         journal="Computer Physics Communications",
         publisher="Elsevier",
@@ -61,11 +64,14 @@ def get_reference():
 
 
 def get_reference_string():
-    ret_str = "{'node': 'Reference', 'type': 'journal_article', 'title': 'Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)',"
-    ret_str += " 'authors': ['Ludwig Schneider', 'Marcus M\\u00fcller'], 'journal': 'Computer Physics Communications', "
+    ret_str = "{'node': 'Reference', 'type': 'journal_article', "
+    ret_str += "'title': 'Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
+    ret_str += "SOft coarse grained Monte-Carlo Acceleration (SOMA)', "
+    ret_str += "'authors': ['Ludwig Schneider', 'Marcus M\\u00fcller'], 'journal': 'Computer Physics Communications', "
     ret_str += "'publisher': 'Elsevier', 'year': 2019, 'pages': [463, 476], "
     ret_str += "'doi': '10.1016/j.cpc.2018.08.011', 'issn': '0010-4655', "
     ret_str += "'website': 'https://www.sciencedirect.com/science/article/pii/S0010465518303072'}"
+
     return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 

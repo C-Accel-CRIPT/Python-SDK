@@ -134,6 +134,7 @@ def test_serialize_reference_to_json() -> None:
     """
     tests that it can correctly turn the data node into its equivalent JSON
     """
+    # TODO update this later to use fixture
     # create reference node
     actual_reference = cript.Reference(
         type="journal_article",

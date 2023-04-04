@@ -119,66 +119,66 @@ def test_experiment_json(
     my_experiment.notes = "these are all of my notes for this experiment"
 
     expected_experiment_dict = {
-        "citation": [
-            {
-                "node": "Citation",
-                "reference": {"node": "Reference", "title": "'Living' Polymers", "type": "journal_article"},
-                "type": "derived_from",
-            }
-        ],
-        "computation": [{"citations": [], "node": "Computation", "type": "analysis"}],
+        "node": "Experiment",
+        "name": "my experiment name",
+        "notes": "these are all of my notes for this experiment",
+        "process": [{"node": "Process", "type": "affinity_pure", "keywords": []}],
+        "computation": [{"node": "Computation", "type": "analysis", "citations": []}],
         "computational_process": [
             {
-                "ingredients": [
-                    {
-                        "material": {
-                            "identifiers": [{"alternative_names": "my material alternative name"}],
-                            "name": "my material",
-                            "node": "Material",
-                        },
-                        "node": "Ingredient",
-                        "quantities": [{"key": "mass", "node": "Quantity", "unit": "gram", "value": 1.23}],
-                    }
-                ],
+                "node": "Computational_Process",
+                "type": "cross_linking",
                 "input_data": [
                     {
+                        "node": "Data",
+                        "type": "afm_amp",
                         "files": [
                             {
-                                "data_dictionary": "my file's data dictionary",
-                                "extension": ".csv",
                                 "node": "File",
                                 "source": "https://criptapp.org",
                                 "type": "calibration",
+                                "extension": ".csv",
+                                "data_dictionary": "my file's data dictionary",
                             }
                         ],
-                        "node": "Data",
-                        "type": "afm_amp",
                     }
                 ],
-                "node": "Computational_Process",
-                "type": "cross_linking",
+                "ingredients": [
+                    {
+                        "node": "Ingredient",
+                        "material": {
+                            "node": "Material",
+                            "name": "my material",
+                            "identifiers": [{"alternative_names": "my material alternative name"}],
+                        },
+                        "quantities": [{"node": "Quantity", "key": "mass", "value": 1.23, "unit": "gram"}],
+                    }
+                ],
             }
         ],
         "data": [
             {
+                "node": "Data",
+                "type": "afm_amp",
                 "files": [
                     {
-                        "data_dictionary": "my file's data dictionary",
-                        "extension": ".csv",
                         "node": "File",
                         "source": "https://criptapp.org",
                         "type": "calibration",
+                        "extension": ".csv",
+                        "data_dictionary": "my file's data dictionary",
                     }
                 ],
-                "node": "Data",
-                "type": "afm_amp",
             }
         ],
         "funding": ["National Science Foundation", "IRIS", "NIST"],
-        "name": "my experiment name",
-        "node": "Experiment",
-        "notes": "these are all of my notes for this experiment",
-        "process": [{"keywords": [], "node": "Process", "type": "affinity_pure"}],
+        "citation": [
+            {
+                "node": "Citation",
+                "type": "derived_from",
+                "reference": {"node": "Reference", "type": "journal_article", "title": "'Living' Polymers"},
+            }
+        ],
     }
 
     assert json.loads(my_experiment.json) == expected_experiment_dict

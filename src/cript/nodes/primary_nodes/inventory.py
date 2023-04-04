@@ -37,6 +37,9 @@ class Inventory(PrimaryBaseNode):
         None
         """
 
+        if materials_list is None:
+            materials_list = []
+
         super().__init__(node="Inventory")
         self._json_attrs = replace(self._json_attrs, materials=materials_list)
 

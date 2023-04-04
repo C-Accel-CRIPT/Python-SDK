@@ -46,22 +46,12 @@ def test_serialize_project_to_json(complex_project_node) -> None:
     tests that a Project node can be correctly converted to a JSON
     """
     expected_dict: dict = {
-        "node": "Project",
-        "name": "my project name",
         "collections": [
             {
-                "name": "my complex collection name",
-                "node": "Collection",
                 "citations": [
                     {
                         "node": "Citation",
-                        "reference": {
-                            "authors": None,
-                            "node": "Reference",
-                            "pages": None,
-                            "title": "'Living' Polymers",
-                            "type": "journal_article",
-                        },
+                        "reference": {"node": "Reference", "title": "'Living' Polymers", "type": "journal_article"},
                         "type": "derived_from",
                     }
                 ],
@@ -69,7 +59,6 @@ def test_serialize_project_to_json(complex_project_node) -> None:
                 "experiments": [{"name": "my experiment name", "node": "Experiment"}],
                 "inventories": [
                     {
-                        "node": "Inventory",
                         "materials": [
                             {
                                 "identifiers": [{"alternative_names": "material 1 alternative name"}],
@@ -82,14 +71,15 @@ def test_serialize_project_to_json(complex_project_node) -> None:
                                 "node": "Material",
                             },
                         ],
+                        "node": "Inventory",
                     }
                 ],
+                "name": "my complex collection name",
+                "node": "Collection",
             }
         ],
         "materials": [
             {
-                "node": "Material",
-                "name": "my complex material",
                 "components": [
                     {
                         "identifiers": [{"alternative_names": "component 1 alternative name"}],
@@ -105,6 +95,8 @@ def test_serialize_project_to_json(complex_project_node) -> None:
                 "computation_forcefield": {"building_block": "atom", "key": "amber", "node": "ComputationForcefield"},
                 "identifiers": [{"alternative_names": "my material alternative name"}],
                 "keywords": ["acetylene"],
+                "name": "my complex material",
+                "node": "Material",
                 "parent_materials": {
                     "identifiers": [{"alternative_names": "parent material 1"}],
                     "name": "my parent material",
@@ -114,6 +106,8 @@ def test_serialize_project_to_json(complex_project_node) -> None:
                 "properties": {"key": "modulus_shear", "node": "Property", "type": "min", "unit": "gram", "value": 1.23},
             }
         ],
+        "name": "my project name",
+        "node": "Project",
     }
 
     # comparing dicts instead of JSON strings because dict comparison is more accurate

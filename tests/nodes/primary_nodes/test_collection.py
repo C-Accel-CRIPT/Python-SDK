@@ -98,13 +98,7 @@ def test_serialize_collection_to_json(complex_collection_node) -> None:
         "citations": [
             {
                 "node": "Citation",
-                "reference": {
-                    "authors": None,
-                    "node": "Reference",
-                    "pages": None,
-                    "title": "'Living' Polymers",
-                    "type": "journal_article",
-                },
+                "reference": {"node": "Reference", "title": "'Living' Polymers", "type": "journal_article"},
                 "type": "derived_from",
             }
         ],

@@ -122,13 +122,7 @@ def test_experiment_json(
         "citation": [
             {
                 "node": "Citation",
-                "reference": {
-                    "authors": None,
-                    "node": "Reference",
-                    "pages": None,
-                    "title": "'Living' Polymers",
-                    "type": "journal_article",
-                },
+                "reference": {"node": "Reference", "title": "'Living' Polymers", "type": "journal_article"},
                 "type": "derived_from",
             }
         ],

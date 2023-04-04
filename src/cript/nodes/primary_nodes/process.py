@@ -95,7 +95,6 @@ class Process(PrimaryBaseNode):
         if citations is None:
             citations = []
 
-
         new_attrs = replace(
             self._json_attrs,
             ingredients=ingredients,

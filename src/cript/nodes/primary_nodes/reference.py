@@ -6,9 +6,7 @@ from cript.nodes.core import BaseNode
 
 class Reference(BaseNode):
     """
-    Reference node
-
-    [Reference](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=15)
+    [Reference node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=15)
 
     Reference does not inherit from the PrimaryBaseNode unlike other primary nodes
     """
@@ -91,6 +89,12 @@ class Reference(BaseNode):
 
         there is currently no checks for conditional required fields for doi and issn
         """
+        if authors is None:
+            authors = []
+
+        if pages is None:
+            pages = []
+
         super().__init__(node="Reference")
 
         new_attrs = replace(

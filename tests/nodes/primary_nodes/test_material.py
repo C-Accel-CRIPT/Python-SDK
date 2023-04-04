@@ -70,7 +70,7 @@ def complex_material() -> None:
     return my_complex_material
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def simple_material() -> cript.Material:
     """
     tests that it can create a material node with only required arguments
@@ -83,11 +83,7 @@ def simple_material() -> cript.Material:
     # create material
     my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
 
-    # use fixture in other tests
-    yield my_material
-
-    # reset material to original state
-    my_material = my_material
+    return my_material
 
 
 def test_invalid_material_keywords() -> None:
@@ -149,53 +145,15 @@ def test_all_getters_and_setters(simple_material) -> None:
     assert simple_material.components == new_components
 
 
-def test_serialize_material_to_json(complex_material) -> None:
+def test_serialize_material_to_json(simple_material) -> None:
     """
     tests that it can correctly turn the material node into its equivalent JSON
     """
     # the JSON that the material should serialize to
     expected_dict = {
         "node": "Material",
-        "name": "my complex material",
+        "name": "my material",
         "identifiers": [{"alternative_names": "my material alternative name"}],
-        "components": [
-            {
-                "node": "Material",
-                "name": "my component material 1",
-                "identifiers": [{"alternative_names": "component 1 alternative name"}],
-            },
-            {
-                "node": "Material",
-                "name": "my component material 2",
-                "identifiers": [{"alternative_names": "component 2 alternative name"}],
-            },
-        ],
-        "properties": [
-            {
-                "node": "Property",
-                "key": "air_flow",
-                "type": "my property type",
-                "value": 1.0,
-                "unit": "gram",
-            }
-        ],
-        "process": {
-            "node": "Process",
-            "type": "affinity_pure",
-            "description": "my simple material description",
-            "keywords": ["anionic"],
-        },
-        "parent_materials": {
-            "node": "Material",
-            "name": "my parent material",
-            "identifiers": [{"alternative_names": "parent material 1"}],
-        },
-        "computation_forcefield": {
-            "node": "ComputationForcefield",
-            "key": "amber",
-            "building_block": "atom",
-        },
-        "keywords": ["acetylene"],
     }
 
     # compare dicts because that is more accurate

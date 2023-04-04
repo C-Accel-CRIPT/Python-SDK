@@ -1,3 +1,5 @@
+import json
+
 import cript
 
 
@@ -39,25 +41,80 @@ def test_project_getters_and_setters(
     assert simple_project_node.materials == [simple_material_node]
 
 
-def test_project_to_json():
+def test_serialize_project_to_json(complex_project_node) -> None:
     """
-    test a project node can be correctly converted to JSON form
+    tests that a Project node can be correctly converted to a JSON
     """
-    pass
+    expected_dict: dict = {
+        "node": "Project",
+        "name": "my project name",
+        "collections": [
+            {
+                "name": "my complex collection name",
+                "node": "Collection",
+                "citations": [
+                    {
+                        "node": "Citation",
+                        "reference": {
+                            "authors": None,
+                            "node": "Reference",
+                            "pages": None,
+                            "title": "'Living' Polymers",
+                            "type": "journal_article",
+                        },
+                        "type": "derived_from",
+                    }
+                ],
+                "cript_doi": "10.1038/1781168a0",
+                "experiments": [{"name": "my experiment name", "node": "Experiment"}],
+                "inventories": [
+                    {
+                        "node": "Inventory",
+                        "materials": [
+                            {
+                                "identifiers": [{"alternative_names": "material 1 alternative name"}],
+                                "name": "material 1",
+                                "node": "Material",
+                            },
+                            {
+                                "identifiers": [{"alternative_names": "material 2 alternative name"}],
+                                "name": "material 2",
+                                "node": "Material",
+                            },
+                        ],
+                    }
+                ],
+            }
+        ],
+        "materials": [
+            {
+                "node": "Material",
+                "name": "my complex material",
+                "components": [
+                    {
+                        "identifiers": [{"alternative_names": "component 1 alternative name"}],
+                        "name": "my component material 1",
+                        "node": "Material",
+                    },
+                    {
+                        "identifiers": [{"alternative_names": "component 2 alternative name"}],
+                        "name": "my component material 2",
+                        "node": "Material",
+                    },
+                ],
+                "computation_forcefield": {"building_block": "atom", "key": "amber", "node": "ComputationForcefield"},
+                "identifiers": [{"alternative_names": "my material alternative name"}],
+                "keywords": ["acetylene"],
+                "parent_materials": {
+                    "identifiers": [{"alternative_names": "parent material 1"}],
+                    "name": "my parent material",
+                    "node": "Material",
+                },
+                "process": {"keywords": [], "node": "Process", "type": "affinity_pure"},
+                "properties": {"key": "modulus_shear", "node": "Property", "type": "min", "unit": "gram", "value": 1.23},
+            }
+        ],
+    }
 
-
-def test_project_from_json():
-    """
-    tests a project node from be created from JSON
-    """
-    pass
-
-
-def test_getters_and_setters():
-    """
-    tests that all getters and setters are working correctly
-    1. gets the attributes from the project node
-    2. sets all the attributes
-    3. gets all the attributes again to be sure they have been set correctly
-    """
-    pass
+    # comparing dicts instead of JSON strings because dict comparison is more accurate
+    assert json.loads(complex_project_node.json) == expected_dict

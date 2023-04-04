@@ -157,7 +157,7 @@ def test_serialize_material_to_json(simple_material) -> None:
     }
 
     # compare dicts because that is more accurate
-    assert json.loads(complex_material.json) == expected_dict
+    assert json.loads(simple_material.json) == expected_dict
 
 
 # ---------- Integration Tests ----------

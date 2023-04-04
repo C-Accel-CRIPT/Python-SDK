@@ -62,7 +62,18 @@ plugins:
 nav:
   - Home: index.md
   - Primary Nodes:
+      - Collection: nodes/primary_nodes/collection.md
+      - Computation: nodes/primary_nodes/computation.md
+      - Computational Process: nodes/primary_nodes/computational_process.md
       - Data: nodes/primary_nodes/data.md
+      - Experiment: nodes/primary_nodes/experiment.md
+      - Inventory: nodes/primary_nodes/inventory.md
+      - Material: nodes/primary_nodes/material.md
+      - Project: nodes/primary_nodes/project.md
+      - Process: nodes/primary_nodes/process.md
+      - Reference: nodes/primary_nodes/reference.md
+      - Software: nodes/primary_nodes/software.md
+      - User: nodes/primary_nodes/user.md
   - Sub-objects:
       - Algorithm: nodes/subobjects/algorithm.md
       - Citation: nodes/subobjects/citation.md

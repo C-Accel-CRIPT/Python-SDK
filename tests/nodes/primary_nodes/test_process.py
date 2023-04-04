@@ -23,7 +23,7 @@ def test_simple_process() -> None:
     assert my_process.keywords == my_process_keywords
 
 
-def complex_process_node(simple_ingredient_node) -> None:
+def test_complex_process_node(simple_ingredient_node) -> None:
     """
     create a process node with all possible arguments
 
@@ -89,11 +89,12 @@ def complex_process_node(simple_ingredient_node) -> None:
     # create complex process
     my_complex_process = cript.Process(
         type=my_process_type,
-        ingredients=simple_ingredient_node,
+        ingredients=[simple_ingredient_node],
         description=my_process_description,
         equipments=my_equipments,
         products=process_product,
         waste=process_waste,
+        prerequisite_processes=[prerequisite_processes],
         conditions=my_conditions,
         properties=my_properties,
         keywords=my_process_keywords,
@@ -107,6 +108,7 @@ def complex_process_node(simple_ingredient_node) -> None:
     assert my_complex_process.equipments == my_equipments
     assert my_complex_process.products == process_product
     assert my_complex_process.waste == process_waste
+    assert my_complex_process.prerequisite_processes == [prerequisite_processes]
     assert my_complex_process.conditions == my_conditions
     assert my_complex_process.properties == my_properties
     assert my_complex_process.keywords == my_process_keywords

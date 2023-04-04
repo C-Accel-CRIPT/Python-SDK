@@ -4,7 +4,7 @@ import cript
 
 
 @pytest.fixture(scope="session")
-def cript_api() -> cript.API:
+def cript_api():
     """
     Create an API instance for the rest of the tests to use.
 

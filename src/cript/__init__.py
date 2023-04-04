@@ -1,7 +1,5 @@
 # trunk-ignore-all(ruff/F401)
-
-from cript.api import API, is_vocab_valid
-from cript.exceptions import CRIPTException
+from cript.api import API
 from cript.nodes import (
     Algorithm,
     Citation,
@@ -18,6 +16,7 @@ from cript.nodes import (
     Identifier,
     Ingredient,
     Inventory,
+    Material,
     NodeEncoder,
     Parameter,
     Process,

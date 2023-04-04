@@ -1,5 +1,5 @@
 from abc import ABC
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from cript.nodes.core import BaseNode
 from cript.nodes.supporting_nodes.user import User
@@ -94,3 +94,11 @@ class PrimaryBaseNode(BaseNode, ABC):
     @property
     def notes(self):
         return self._json_attrs.notes
+
+    @notes.setter
+    def notes(self, new_notes: str) -> None:
+        """
+        allow every node that inherits base attributes to set its notes
+        """
+        new_attrs = replace(self._json_attrs, notes=new_notes)
+        self._update_json_attrs_if_valid(new_attrs)

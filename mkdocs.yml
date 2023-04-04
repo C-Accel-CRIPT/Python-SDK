@@ -63,6 +63,18 @@ nav:
   - Home: index.md
   - Primary Nodes:
       - Data: nodes/primary_nodes/data.md
+  - Sub-objects:
+      - Algorithm: nodes/subobjects/algorithm.md
+      - Citation: nodes/subobjects/citation.md
+      - Computational Forcefield: nodes/subobjects/computational_forcefield.md
+      - Condition: nodes/subobjects/condition.md
+      - Equipment: nodes/subobjects/equipment.md
+      - Identifier: nodes/subobjects/identifier.md
+      - Ingredient: nodes/subobjects/ingredient.md
+      - Parameter: nodes/subobjects/parameter.md
+      - Property: nodes/subobjects/property.md
+      - Quantity: nodes/subobjects/quantity.md
+      - Software Configuration: nodes/subobjects/software_configuration.md
   - Supporting Nodes:
       - User: nodes/supporting_nodes/user.md
       - Group: nodes/supporting_nodes/group.md

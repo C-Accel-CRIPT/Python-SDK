@@ -68,14 +68,19 @@ class Material(PrimaryBaseNode):
 
         if components is None:
             components = []
+
         if properties is None:
             properties = []
+
         if process is None:
             process = []
+
         if parent_materials is None:
             parent_materials = []
+
         if computation_forcefield is None:
             computation_forcefield = []
+
         if keywords is None:
             keywords = []
 

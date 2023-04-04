@@ -1,3 +1,5 @@
+import json
+
 import cript
 
 
@@ -53,6 +55,44 @@ def test_create_complex_computational_process(
     assert my_computational_process.conditions == [simple_condition_node]
     assert my_computational_process.properties == [simple_property_node]
     assert my_computational_process.citations == [simple_citation_node]
+
+
+def test_serialize_computational_process_to_json(simple_computational_process_node) -> None:
+    """
+    tests that a computational process node can be correctly serialized to JSON
+    """
+    expected_dict: dict = {
+        "node": "Computational_Process",
+        "type": "cross_linking",
+        "input_data": [
+            {
+                "node": "Data",
+                "type": "afm_amp",
+                "files": [
+                    {
+                        "node": "File",
+                        "source": "https://criptapp.org",
+                        "type": "calibration",
+                        "extension": ".csv",
+                        "data_dictionary": "my file's data dictionary",
+                    }
+                ],
+            }
+        ],
+        "ingredients": [
+            {
+                "node": "Ingredient",
+                "material": {
+                    "node": "Material",
+                    "name": "my material",
+                    "identifiers": [{"alternative_names": "my material alternative name"}],
+                },
+                "quantities": [{"node": "Quantity", "key": "mass", "value": 1.23, "unit": "gram"}],
+            }
+        ],
+    }
+
+    assert json.loads(simple_computational_process_node.json) == expected_dict
 
 
 # ---------- Integration tests ----------

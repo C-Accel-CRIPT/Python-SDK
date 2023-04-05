@@ -7,7 +7,12 @@ from cript.nodes.core import BaseNode
 
 class User(BaseNode):
     """
-    [User node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=27)
+    The [User node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=27)
+    represents any researcher or individual who interacts with the CRIPT platform.
+    It serves two main purposes:
+    1. It plays a core role in permissions (access control)
+    1. It provides a traceable link to the individual who has contributed or edited data within the database
+
 
     | attribute  | type        | example                    | description                                | required | vocab |
     |------------|-------------|----------------------------|--------------------------------------------|----------|-------|

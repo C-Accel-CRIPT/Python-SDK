@@ -6,11 +6,29 @@ from cript.nodes.core import BaseNode
 
 class Group(BaseNode):
     """
-    [Group Node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=27)
+    ## Definition
 
-    Notes
-    ----
-    * Group node cannot be created or edited via the Python SDK
+    The [group node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=27)
+    represents a grouping of users collaborating on a common project.
+    It serves as the main permission control node and has ownership of data.
+    Groups are the owners of data as most research groups have changing membership,
+    and the data is typically owned by the organization and not the individuals
+
+    | attribute  | type       | example                    | description                                                | required | vocab |
+    |------------|------------|----------------------------|------------------------------------------------------------|----------|-------|
+    | url        | str        |                            | unique ID of the node                                      | True     |       |
+    | name       | str        | CRIPT development team     | descriptive label                                          | True     |       |
+    | notes      | str        |                            | miscellaneous information, or custom<br><br>data structure |          |       |
+    | admins     | List[User] |                            | group administrators                                       | True     |       |
+    | users      | List[User] |                            | group members                                              | True     |       |
+    | updated_by | User       |                            | user that last updated the node                            | True     |       |
+    | created_by | User       |                            | user that originally created the node                      | True     |       |
+    | updated_at | datetime   | 2023-03-06 18:45:23.450248 | last date the node was modified (UTC time)                 | True     |       |
+    | created_at | datetime   | 2023-03-06 18:45:23.450248 | date it was created (UTC time)                             | True     |       |
+
+    Warning:
+        * A Group node is a **read-only** node that can only be deserialized from API JSON response to Python node.
+        * The Group node cannot be instantiated and within the Python SDK
     """
 
     @dataclass(frozen=True)

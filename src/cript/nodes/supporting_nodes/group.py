@@ -30,6 +30,7 @@ class Group(BaseNode):
         * A Group cannot be created or modified using the Python SDK.
         * A Group node is a **read-only** node that can only be deserialized from API JSON response to Python node.
         * The Group node cannot be instantiated and within the Python SDK.
+        * Attempting to edit the Group node will result in an `Attribute Error`
 
     ## JSON
     ```json

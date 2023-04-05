@@ -57,7 +57,7 @@ plugins:
           options:
             show_bases: true
             show_source: true
-            docstring_style: google
+            docstring_style: numpy
 
 nav:
   - Home: index.md

@@ -27,8 +27,9 @@ class Group(BaseNode):
     | created_at | datetime   | 2023-03-06 18:45:23.450248 | date it was created (UTC time)                             | True     |       |
 
     Warning:
+        * A Group cannot be created or modified using the Python SDK.
         * A Group node is a **read-only** node that can only be deserialized from API JSON response to Python node.
-        * The Group node cannot be instantiated and within the Python SDK
+        * The Group node cannot be instantiated and within the Python SDK.
 
     ## JSON
     ```json

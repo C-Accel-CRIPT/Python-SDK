@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field, replace
 from typing import Any, List
 
+import cript
 from cript.nodes.core import BaseNode
 
 
@@ -33,6 +34,7 @@ class User(BaseNode):
         * A User cannot be created or modified using the Python SDK.
         * A User node is a **read-only** node that can only be deserialized from API JSON response to Python node.
         * The User node cannot be instantiated and within the Python SDK.
+        * Attempting to edit the user node will result in an `Attribute Error`
 
     """
 
@@ -56,12 +58,12 @@ class User(BaseNode):
         Json from CRIPT API to be converted to a node
         optionally the group can be None if the user doesn't have a group
 
-        Parameters
-        ----------
-        username
-        email
-        orcid
-        groups
+        Args:
+            username (str): user username
+            email (str): user email
+            orcid (str): user ORCID
+            groups: (List[Group): groups that this user belongs to
+
         """
         if groups is None:
             groups = []
@@ -76,9 +78,10 @@ class User(BaseNode):
         """
         username of the User node
 
-        Returns
-        -------
-        str
+        Raises:
+            AttributeError
+
+        Returns:
             username of the User node
         """
         return self._json_attrs.username
@@ -86,11 +89,12 @@ class User(BaseNode):
     @property
     def email(self) -> str:
         """
-        email of the user node
+        user's email
 
-        Returns
-        -------
-        str
+        Raises:
+            AttributeError
+
+        Returns:
             User node email
         """
         return self._json_attrs.email
@@ -98,23 +102,25 @@ class User(BaseNode):
     @property
     def orcid(self) -> str:
         """
-        users ORCID
+        users [ORCID](https://orcid.org/)
 
-        Returns
-        -------
-        str
-            users ORCID
+        Raises:
+            AttributeError
+
+        Returns:
+            user's ORCID
         """
         return self._json_attrs.orcid
 
     @property
-    def groups(self):
+    def groups(self) -> List[Any]:
         """
         gets the list of group nodes that the user belongs in
 
-        Returns
-        -------
-        List[Any]
+        Raises:
+            AttributeError
+
+        Returns:
             List of Group nodes that the user belongs in
         """
         return self._json_attrs.groups

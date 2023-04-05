@@ -90,8 +90,8 @@ nav:
       - User: nodes/supporting_nodes/user.md
       - Group: nodes/supporting_nodes/group.md
       - File: nodes/supporting_nodes/file.md
-  - FAQ: faq.md
   - Exceptions: exceptions.md
+  - FAQ: faq.md
 
 markdown_extensions:
   - toc:

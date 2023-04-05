@@ -29,6 +29,31 @@ class Group(BaseNode):
     Warning:
         * A Group node is a **read-only** node that can only be deserialized from API JSON response to Python node.
         * The Group node cannot be instantiated and within the Python SDK
+
+    ## JSON
+    ```json
+    {
+      "node": "Group",
+      "name": "my group name",
+      "notes": "my group notes",
+      "admins": [
+        {
+          "node": "User",
+          "username": "my admin username",
+          "email": "admin_email@email.com",
+          "orcid": "0000-0000-0000-0001"
+        }
+      ],
+      "users": [
+        {
+          "node": "User",
+          "username": "my username",
+          "email": "user@email.com",
+          "orcid": "0000-0000-0000-0002"
+        }
+      ]
+    }
+    ```
     """
 
     @dataclass(frozen=True)

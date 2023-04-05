@@ -5,15 +5,13 @@ from cript.nodes.core import BaseNode
 
 def _is_local_file(file_source: str) -> bool:
     """
-    determines if the file the user is uploading is a local file or a link
+    Determines if the file the user is uploading is a local file or a link.
 
-    Parameters
-    ----------
-    file_source: str
+    Args:
+        file_source (str): The source of the file.
 
-    Returns
-    -------
-    bool
+    Returns:
+        bool: True if the file is local, False if it's a link.
     """
 
     # checking "http" so it works with both "https://" and "http://"
@@ -27,19 +25,19 @@ class File(BaseNode):
     """
     ## Definition
 
-    The [File supporting nodes](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001
+    The [File node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001
     .pdf#page=28) provides a link to  scholarly work and allows users to specify in what way the work relates to that
     data. More specifically, users can specify that the data was directly extracted from, inspired by, derived from,
-    etc. the [Data](Data)
+    etc. the [Data](../../primary_nodes/data).
 
     ## Attributes
 
-    | Attribute       | Type | Example                                                                                           | Description                                                                 | Required |
-    |-----------------|------|---------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|----------|
-    | source          | str  | `"path/to/my/file"` or `"https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system"` | path to the file can be URL or local path                                   | True     |
-    | type            | str  | `"logs"`                                                                                            | Pick from [CRIPT File Type](https://criptapp.org/keys/file-type/)           | True     |
-    | extension       | str  | `".csv"`                                                                                            | file extension                                                              | True     |
-    | data_dictionary | str  | `"my extra info in my data dictionary"`                                                                                            | set of information describing the contents, format, and structure of a file | False    |
+    | Attribute       | Type | Example                                                                                               | Description                                                                 | Required |
+    |-----------------|------|-------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|----------|
+    | source          | str  | `"path/to/my/file"` or `"https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system"` | source to the file can be URL or local path                                 | True     |
+    | type            | str  | `"logs"`                                                                                              | Pick from [CRIPT File Types](https://criptapp.org/keys/file-type/)          | True     |
+    | extension       | str  | `".csv"`                                                                                              | file extension                                                              | False    |
+    | data_dictionary | str  | `"my extra info in my data dictionary"`                                                               | set of information describing the contents, format, and structure of a file | False    |
 
     """
 
@@ -49,6 +47,7 @@ class File(BaseNode):
         all file attributes
         """
 
+        node: str = "File"
         source: str = ""
         type: str = ""
         extension: str = ""
@@ -80,13 +79,23 @@ class File(BaseNode):
     @property
     def source(self) -> str:
         """
-        gets the source for the file node
+        Returns the file source path.
 
-        Returns
-        -------
-        str
-            file source
+        The source path can either be a path to a local file on disk or a URL path to a file on the web.
 
+        Example:
+            URL File Path
+            ```python
+            url_source = "https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf"
+            my_file.source = url_source
+            ```
+            Local File Path
+            ```python
+            my_file.source = "/home/user/project/my_file.csv"
+            ```
+                
+        Returns:
+            A string representing the file source.
         """
         return self._json_attrs.source
 
@@ -105,13 +114,16 @@ class File(BaseNode):
             3. gets back a URL from where in the cloud the file is found
             4. sets that as the source
 
-        Parameters
-        ----------
-        new_source: str
+        Args:
+            new_source (str)
 
-        Returns
-        -------
-        None
+        Example:
+            ```python
+                my_file.source = "https://pubs.acs.org/doi/10.1021/acscentsci.3c00011"
+            ```
+
+        Returns:
+            None
         """
 
         if _is_local_file(new_source):
@@ -128,31 +140,36 @@ class File(BaseNode):
     @property
     def type(self) -> str:
         """
-        get file type
+        The File type must come from [CRIPT controlled vocabulary]()
 
-        file type must come from CRIPT controlled vocabulary
+        
+        Example:
+            ```python
+                my_file.type = "calibration"
+            ```
 
-        Returns
-        -------
-        str
-            file type
+        Returns:
+            file type: str
         """
         return self._json_attrs.type
 
     @type.setter
-    def type(self, new_type) -> None:
+    def type(self, new_type: str) -> None:
         """
         sets the file type
 
         file type must come from CRIPT controlled vocabulary
 
-        Parameters
-        ----------
-        new_type
+        Args:
+            new_type: str
 
-        Returns
-        -------
-        None
+        Example:
+            ```python
+            my_file.type = "computation_config"
+            ```
+
+        Returns:
+            None
         """
         # TODO check vocabulary is valid
         # is_vocab_valid("file type", self._json_attrs.type)
@@ -164,14 +181,13 @@ class File(BaseNode):
         """
         The file extension property explicitly states what is the file extension of the file node.
 
-        Examples
-        --------
-        `my_file_node.extension = ".csv"`
+        Example:
+            ```python
+            my_file_node.extension = ".csv"`
+            ```
 
-        Returns
-        -------
-        str
-            file extension
+        Returns:
+            file extension (str)
         """
         return self._json_attrs.extension
 
@@ -180,13 +196,16 @@ class File(BaseNode):
         """
         sets the new file extension
 
-        Parameters
-        ----------
-        new_extension
+        Args:
+            new_extension (str): new file extension to overwrite the current file extension
 
-        Returns
-        -------
-        None
+        Example:
+            ```python
+            my_file.extension = ".pdf"
+            ```
+
+        Returns:
+            None
         """
         new_attrs = replace(self._json_attrs, extension=new_extension)
         self._update_json_attrs_if_valid(new_attrs)
@@ -195,28 +214,29 @@ class File(BaseNode):
     def data_dictionary(self) -> str:
         # TODO data dictionary needs documentation describing it and how to use it
         """
-        The `data_dictionary` property is essentially a big black box that scientists
-        can put anything that they need to describe their data.
+        Returns the data dictionary, which can contain any additional information
+        that the scientist needs to describe their file.
+        
+        Example:
+            ```python
+            my_file.data_dictionary = "This is something that describes my file node."
+            ```
 
-        Returns
-        -------
-        str
-            data_dictionary
+        Returns:
+            The data dictionary as a string.
         """
         return self._json_attrs.data_dictionary
 
     @data_dictionary.setter
     def data_dictionary(self, new_data_dictionary: str) -> None:
         """
-        sets the data dictionary
+        Sets the data dictionary for the file node.
 
-        Parameters
-        ----------
-        new_data_dictionary
+        Args:
+            new_data_dictionary (str): The new data dictionary to be set.
 
-        Returns
-        -------
-        None
+        Returns:
+            None
         """
         new_attrs = replace(self._json_attrs, data_dictionary=new_data_dictionary)
         self._update_json_attrs_if_valid(new_attrs)

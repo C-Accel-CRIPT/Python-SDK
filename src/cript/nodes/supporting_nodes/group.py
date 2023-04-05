@@ -30,20 +30,12 @@ class Group(BaseNode):
 
     def __init__(self, name: str, admins: List[Any], users: List[Any] = None, **kwargs):
         """
-        constructor for a Group node
+        Constructor for a Group node.
 
-        Parameters
-        ----------
-        name: str
-            group name
-        admins: Any
-            administrator of this group
-        users: List[Any]
-            list of users that are in this Group
-
-        Returns
-        -------
-        None
+        :param name: Group name
+        :param admins:  List of administrators for this group
+        :param users:  List of users in this group
+        :return: None
         """
         super().__init__(node="Group")
         self._json_attrs = replace(self._json_attrs, name=name, admins=admins, users=users)
@@ -55,12 +47,9 @@ class Group(BaseNode):
     @property
     def name(self) -> str:
         """
-        name property getter method
+        Gets the name of the group.
 
-        Returns
-        -------
-        name: str
-            group name
+        :return: The name of the group
         """
         return self._json_attrs.name
 
@@ -70,10 +59,7 @@ class Group(BaseNode):
         """
         name property getter method
 
-        Returns
-        -------
-        admins: List[Any]
-            an admin or list of admins
+        :return: list of admins for the Group
         """
         return self._json_attrs.admins
 
@@ -82,10 +68,7 @@ class Group(BaseNode):
         """
         users that belong to this group
 
-        Returns
-        -------
-        List[Any]
-            list of users that belong to this group
+        :return: list of users that belong to this group
         """
         return self._json_attrs.users
 
@@ -94,9 +77,6 @@ class Group(BaseNode):
         """
         groups notes
 
-        Returns
-        -------
-        str
-            groups notes
+        :return: groups notes
         """
         return self._json_attrs.notes

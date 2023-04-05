@@ -69,22 +69,29 @@ class File(BaseNode):
     def __init__(self, source: str, type: str, extension: str = "", data_dictionary: str = "", **kwargs):
         """
 
-        Args:
-            source (str): link or path to local file
-            type (str): Pick a file type from CRIPT controlled vocabulary [File types]()
-            extension (str): file extension
-            data_dictionary (str): extra information describing the file
-            **kwargs (dict): for internal use. Any extra data needed to create this file node from API JSON
+        Parameters
+        ----------
+        source: str
+            link or path to local file
+        type: str 
+            Pick a file type from CRIPT controlled vocabulary [File types]()
+        extension:str
+            file extension
+        data_dictionary:str
+            extra information describing the file
+        **kwargs:dict
+            for internal use. Any extra data needed to create this file node from API JSON
 
-        Example:
-            ```python
-            my_file = cript.File(
-                source="https://criptapp.org",
-                type="calibration",
-                extension=".csv",
-                data_dictionary="my file's data dictionary"
-            )
-            ```
+        Example
+        --------
+        ```python
+        my_file = cript.File(
+            source="https://criptapp.org",
+            type="calibration",
+            extension=".csv",
+            data_dictionary="my file's data dictionary"
+        )
+        ```
         """
 
         super().__init__(node="File")
@@ -113,19 +120,21 @@ class File(BaseNode):
         The File node source can be set to be either a path to a local file on disk
         or a URL path to a file on the web.
 
-        Example:
-            URL File Path
-            ```python
-            url_source = "https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf"
+        Example
+        --------
+        URL File Source
+        ```python
+        url_source = "https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf"
+        my_file.source = url_source
+        ```
+        Local File Path
+        ```python
+        my_file.source = "/home/user/project/my_file.csv"
+        ```
 
-            my_file.source = url_source
-            ```
-            Local File Path
-            ```python
-            my_file.source = "/home/user/project/my_file.csv"
-            ```
-
-        Returns:
+        Returns
+        -------
+        source: str
             A string representing the file source.
         """
         return self._json_attrs.source
@@ -145,16 +154,19 @@ class File(BaseNode):
             3. gets back a URL from where in the cloud the file is found
             4. sets that as the source
 
-        Args:
-            new_source (str)
+        Parameters
+        ----------
+        new_source: str
 
-        Example:
-            ```python
-            my_file.source = "https://pubs.acs.org/doi/10.1021/acscentsci.3c00011"
-            ```
+        Example
+        -------
+        ```python
+        my_file.source = "https://pubs.acs.org/doi/10.1021/acscentsci.3c00011"
+        ```
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
 
         if _is_local_file(new_source):
@@ -173,33 +185,38 @@ class File(BaseNode):
         """
         The [File type]() must come from [CRIPT controlled vocabulary]()
 
-        Example:
-            ```python
-            my_file.type = "calibration"
-            ```
+        Example
+        -------
+        ```python
+        my_file.type = "calibration"
+        ```
 
-        Returns:
-            file type
+        Returns
+        -------
+        file type: str
         """
         return self._json_attrs.type
 
     @type.setter
     def type(self, new_type: str) -> None:
         """
-        sets the file type
+        set the file type
 
         file type must come from CRIPT controlled vocabulary
 
-        Args:
-            new_type: str
+        Parameters
+        -----------
+        new_type: str
 
-        Example:
-            ```python
-            my_file.type = "computation_config"
-            ```
+        Example
+        -------
+        ```python
+        my_file.type = "computation_config"
+        ```
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         # TODO check vocabulary is valid
         # is_vocab_valid("file type", self._json_attrs.type)
@@ -211,13 +228,15 @@ class File(BaseNode):
         """
         The file extension property explicitly states what is the file extension of the file node.
 
-        Example:
-            ```python
-            my_file_node.extension = ".csv"`
-            ```
+        Example
+        -------
+        ```python
+        my_file_node.extension = ".csv"`
+        ```
 
-        Returns:
-            extension: file extension
+        Returns
+        -------
+        extension: file extension
         """
         return self._json_attrs.extension
 
@@ -226,15 +245,19 @@ class File(BaseNode):
         """
         sets the new file extension
 
-        Args:
-            new_extension (str): new file extension to overwrite the current file extension
+        Parameters
+        ----------
+        new_extension: str
+            new file extension to overwrite the current file extension
 
-        Example:
-            ```python
-            my_file.extension = ".pdf"
-            ```
+        Example
+        -------
+        ```python
+        my_file.extension = ".pdf"
+        ```
 
-        Returns:
+        Returns
+        -------
             None
         """
         new_attrs = replace(self._json_attrs, extension=new_extension)
@@ -265,11 +288,14 @@ class File(BaseNode):
         """
         Sets the data dictionary for the file node.
 
-        Args:
-            new_data_dictionary (str): The new data dictionary to be set.
+        Parameters
+        ----------
+        new_data_dictionary: str
+            The new data dictionary to be set.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         new_attrs = replace(self._json_attrs, data_dictionary=new_data_dictionary)
         self._update_json_attrs_if_valid(new_attrs)

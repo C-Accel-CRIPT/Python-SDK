@@ -35,14 +35,17 @@ class Paginator:
         """
         flips to a specific page of data that has been requested
 
-        Args:
-            new_page_number (int): specific page of data that the user wants to go to
+        Parameters
+        ----------
+        new_page_number (int): specific page of data that the user wants to go to
 
-        Example:
-            requests.get("criptapp.org/api?page=2)
-            requests.get(f"{self.query}?page={self.current_page_number - 1}")
+        Examples
+        --------
+        requests.get("criptapp.org/api?page=2)
+        requests.get(f"{self.query}?page={self.current_page_number - 1}")
 
-        Raises:
-            InvalidPageRequest, in case the user tries to get a negative page or a page that doesn't exist
+        Raises
+        --------
+        InvalidPageRequest, in case the user tries to get a negative page or a page that doesn't exist
         """
         pass

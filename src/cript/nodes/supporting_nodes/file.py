@@ -67,6 +67,26 @@ class File(BaseNode):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(self, source: str, type: str, extension: str = "", data_dictionary: str = "", **kwargs):
+        """
+
+        Args:
+            source (str): link or path to local file
+            type (str): Pick a file type from CRIPT controlled vocabulary [File types]()
+            extension (str): file extension
+            data_dictionary (str): extra information describing the file
+            **kwargs (dict): for internal use. Any extra data needed to create this file node from API JSON
+
+        Example:
+            ```python
+            my_file = cript.File(
+                source="https://criptapp.org",
+                type="calibration",
+                extension=".csv",
+                data_dictionary="my file's data dictionary"
+            )
+            ```
+        """
+
         super().__init__(node="File")
 
         # TODO check if vocabulary is valid or not
@@ -90,21 +110,21 @@ class File(BaseNode):
     @property
     def source(self) -> str:
         """
-        Returns the file source path.
-
-        The source path can either be a path to a local file on disk or a URL path to a file on the web.
+        The File node source can be set to be either a path to a local file on disk
+        or a URL path to a file on the web.
 
         Example:
             URL File Path
             ```python
             url_source = "https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf"
+
             my_file.source = url_source
             ```
             Local File Path
             ```python
             my_file.source = "/home/user/project/my_file.csv"
             ```
-                
+
         Returns:
             A string representing the file source.
         """
@@ -130,7 +150,7 @@ class File(BaseNode):
 
         Example:
             ```python
-                my_file.source = "https://pubs.acs.org/doi/10.1021/acscentsci.3c00011"
+            my_file.source = "https://pubs.acs.org/doi/10.1021/acscentsci.3c00011"
             ```
 
         Returns:
@@ -151,16 +171,15 @@ class File(BaseNode):
     @property
     def type(self) -> str:
         """
-        The File type must come from [CRIPT controlled vocabulary]()
+        The [File type]() must come from [CRIPT controlled vocabulary]()
 
-        
         Example:
             ```python
-                my_file.type = "calibration"
+            my_file.type = "calibration"
             ```
 
         Returns:
-            file type: str
+            file type
         """
         return self._json_attrs.type
 
@@ -198,7 +217,7 @@ class File(BaseNode):
             ```
 
         Returns:
-            file extension (str)
+            extension: file extension
         """
         return self._json_attrs.extension
 
@@ -225,16 +244,19 @@ class File(BaseNode):
     def data_dictionary(self) -> str:
         # TODO data dictionary needs documentation describing it and how to use it
         """
-        Returns the data dictionary, which can contain any additional information
+        The data dictionary contains additional information
         that the scientist needs to describe their file.
-        
+
+        Notes:
+            It is advised for this field to be written in JSON format
+
         Example:
             ```python
-            my_file.data_dictionary = "This is something that describes my file node."
+            my_file.data_dictionary = "{'notes': 'This is something that describes my file node.'}"
             ```
 
         Returns:
-            The data dictionary as a string.
+            The data dictionary as a string
         """
         return self._json_attrs.data_dictionary
 

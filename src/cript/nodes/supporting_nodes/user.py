@@ -8,10 +8,32 @@ class User(BaseNode):
     """
     [User node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=27)
 
-    Notes
-    -----
-    * A user cannot be created or modified using the SDK.
-    This object is for read-only purposes only.
+    | attribute  | type        | example                    | description                                | required | vocab |
+    |------------|-------------|----------------------------|--------------------------------------------|----------|-------|
+    | url        | str         |                            | unique ID of the node                      | True     |       |
+    | username   | str         | "john_doe"                 | User’s name                                | True     |       |
+    | email      | str         | "user@cript.com"           | email of the user                          | True     |       |
+    | orcid      | str         | "0000-0000-0000-0000"      | ORCID ID of the user                       | True     |       |
+    | groups     | list[Group] |                            | groups you belong to                       |          |       |
+    | updated_at | datetime*   | 2023-03-06 18:45:23.450248 | last date the node was modified (UTC time) | True     |       |
+    | created_at | datetime*   | 2023-03-06 18:45:23.450248 | date it was created (UTC time)             | True     |       |
+
+
+    ## JSON
+    ```json
+    {
+        "node": "User",
+        "username": "my username",
+        "email": "user@email.com",
+        "orcid": "0000-0000-0000-0001",
+    }
+    ```
+
+    Warning:
+        * A User cannot be created or modified using the Python SDK.
+        * A User node is a **read-only** node that can only be deserialized from API JSON response to Python node.
+        * The User node cannot be instantiated and within the Python SDK.
+
     """
 
     @dataclass(frozen=True)

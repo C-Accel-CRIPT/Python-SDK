@@ -15,7 +15,7 @@ class User(BaseNode):
     | username   | str         | "john_doe"                 | User’s name                                | True     |       |
     | email      | str         | "user@cript.com"           | email of the user                          | True     |       |
     | orcid      | str         | "0000-0000-0000-0000"      | ORCID ID of the user                       | True     |       |
-    | groups     | list[Group] |                            | groups you belong to                       |          |       |
+    | groups     | List[Group] |                            | groups you belong to                       |          |       |
     | updated_at | datetime*   | 2023-03-06 18:45:23.450248 | last date the node was modified (UTC time) | True     |       |
     | created_at | datetime*   | 2023-03-06 18:45:23.450248 | date it was created (UTC time)             | True     |       |
 

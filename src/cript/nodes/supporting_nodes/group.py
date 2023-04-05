@@ -77,10 +77,14 @@ class Group(BaseNode):
         """
         Group node
 
-        Args:
-            name (str): Group name
-            admins (List[User]): List of administrators for this group
-            users (List[User]):  List of users in this group
+        Parameters
+        ----------
+        name: str
+            Group name
+        admins: List[User]
+            List of administrators for this group
+        users: List[User])
+            List of users in this group
         """
         super().__init__(node="Group")
         self._json_attrs = replace(self._json_attrs, name=name, admins=admins, users=users)
@@ -93,8 +97,10 @@ class Group(BaseNode):
         """
         Name of the group
 
-         Returns:
-             The name of the group
+        Returns
+        -------
+         group name: str
+            name of the group node
         """
         return self._json_attrs.name
 
@@ -103,7 +109,9 @@ class Group(BaseNode):
         """
         list of admins (user nodes) for this group
 
-        Returns:
+        Returns
+        -------
+        admin list: List[Any]
             list of admins (user nodes) for the Group
         """
         return self._json_attrs.admins
@@ -113,8 +121,10 @@ class Group(BaseNode):
         """
         users that belong to this group
 
-        Returns:
-             list of users that belong to this group
+        Returns
+        -------
+         users list: List[Any]
+            list of users that belong to this group
         """
         return self._json_attrs.users
 
@@ -123,7 +133,9 @@ class Group(BaseNode):
         """
         groups notes
 
-        Returns:
+        Returns
+        -------
+        group notes: str
             Notes attached to this group node
         """
         return self._json_attrs.notes

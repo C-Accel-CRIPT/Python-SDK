@@ -7,8 +7,41 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 class Data(PrimaryBaseNode):
     """
-    Data node
-    [Data node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=13)
+    ## Definition
+
+    A  [Data node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=13)
+     node contains the meta-data to describe raw data that is beyond a single value, i.e. *n*-dimensional data.
+     Each `Data` node must be linked to a single `Experiment` node.
+
+    ## Sub-Objects
+    * <a href="../../subobjects/citation" target="_blank">Citation</a>
+
+    ## Attributes
+
+    | Attribute             | Type                                                | Example                  | Description                                                                             | Required |
+    |-----------------------|-----------------------------------------------------|--------------------------|-----------------------------------------------------------------------------------------|----------|
+    | experiment            | [Experiment](experiment.md)                         |                          | Experiment the data belongs to                                                          | True     |
+    | name                  | str                                                 | "my_data_name"           | Name of the data node                                                                   | True     |
+    | type                  | str                                                 | "nmr_h1"                 | Pick from [CRIPT data type controlled vocabulary](https://criptapp.org/keys/data-type/) | True     |
+    | files                 | list[[File](../supporting_nodes/file.md)]           | [file_1, file_2, file_3] | List of file nodes                                                                      | False    |
+    | sample_preperation    | [Process](process.md)                               |                          |                                                                                         | False    |
+    | computations          | list[[Computation](computation.md)]                 |                          | data produced from this Computation method                                              | False    |
+    | computational_process | [Computational Process](./computational_process.md) |                          | data was produced from this computation process                                         | False    |
+    | materials             | list[[Material](./material.md)]                     |                          | materials with attributes associated with the data node                                 | False    |
+    | process               | list[[Process](./process.md)]                       |                          | processes with attributes associated with the data node                                 | False    |
+    | citations             | [Citation](../subobjects/citation.md)               |                          | reference to a book, paper, or scholarly work                                           | False    |
+
+
+    ## JSON
+    ```json
+    "data": [
+        {
+        "node": "Data",
+        "name": "WPI unheated film FTIR",
+        "type": "null"
+        }
+    ]
+    ```
     """
 
     @dataclass(frozen=True)

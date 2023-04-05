@@ -39,6 +39,17 @@ class File(BaseNode):
     | extension       | str  | `".csv"`                                                                                              | file extension                                                              | False    |
     | data_dictionary | str  | `"my extra info in my data dictionary"`                                                               | set of information describing the contents, format, and structure of a file | False    |
 
+    ## JSON
+    ``` json
+    {
+        "node": "File",
+        "source": "https://criptapp.org",
+        "type": "calibration",
+        "extension": ".csv",
+        "data_dictionary": "my file's data dictionary",
+    }
+    ```
+
     """
 
     @dataclass(frozen=True)

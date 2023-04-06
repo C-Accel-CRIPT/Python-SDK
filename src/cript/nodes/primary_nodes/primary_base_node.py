@@ -29,8 +29,12 @@ class PrimaryBaseNode(BaseNode, ABC):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, node: str):
+    def __init__(self, node: str, name: str, notes: str):
+        # initialize Base class with node
         super().__init__(node)
+
+        # replace name and notes within PrimaryBase
+        self._json_attrs = replace(self._json_attrs, name=name, notes=notes)
 
     def __str__(self) -> str:
         """

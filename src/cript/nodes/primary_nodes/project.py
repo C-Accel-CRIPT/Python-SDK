@@ -26,8 +26,8 @@ class Project(PrimaryBaseNode):
     def __init__(
         self,
         name: str,
-        collections: List[cript.Collection],
         group: cript.Group,
+        collections: List[cript.Collection] = None,
         materials: List[cript.Material] = None,
         notes: str = "",
         **kwargs
@@ -48,6 +48,9 @@ class Project(PrimaryBaseNode):
         None
         """
         super().__init__(node="Project", name=name, notes=notes)
+
+        if collections is None:
+            collections = []
 
         if materials is None:
             materials = []

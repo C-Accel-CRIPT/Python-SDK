@@ -95,6 +95,22 @@ class PrimaryBaseNode(BaseNode, ABC):
     def name(self):
         return self._json_attrs.name
 
+    @name.setter
+    def name(self, new_name: str) -> None:
+        """
+        set the PrimaryBaseNode name
+
+        Parameters
+        ----------
+        new_name: str
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, name=new_name)
+        self._update_json_attrs_if_valid(new_attrs)
+
     @property
     def notes(self):
         return self._json_attrs.notes

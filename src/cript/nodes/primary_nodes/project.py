@@ -1,8 +1,7 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
-from cript.nodes.primary_nodes.collection import Collection
-from cript.nodes.primary_nodes.material import Material
+import cript
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
@@ -18,13 +17,21 @@ class Project(PrimaryBaseNode):
         """
 
         # TODO is group needed?
-        # group: Group = None
-        collections: List[Collection] = field(default_factory=list)
-        materials: List[Material] = field(default_factory=list)
+        group: cript.Group = None
+        collections: List[cript.Collection] = field(default_factory=list)
+        materials: List[cript.Material] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, collections: List[Collection], materials: List[Material] = None, notes: str = "", **kwargs):
+    def __init__(
+        self,
+        name: str,
+        collections: List[cript.Collection],
+        group: cript.Group,
+        materials: List[cript.Material] = None,
+        notes: str = "",
+        **kwargs
+    ):
         """
         Create a Project node with Project name and Group
 
@@ -51,38 +58,38 @@ class Project(PrimaryBaseNode):
     # ------------------ Properties ------------------
 
     # GROUP
-    # @property
-    # def group(self) -> Group:
-    #     """
-    #     group property getter method
-    #
-    #     Returns
-    #     -------
-    #     group: Group
-    #         Group that owns the project
-    #     """
-    #     return self._json_attrs.group
-    #
-    # @group.setter
-    # def group(self, new_group: Group):
-    #     """
-    #     Sets the group the project belongs to
-    #
-    #     Parameters
-    #     ----------
-    #     new_group: Group
-    #         new Group object
-    #
-    #     Returns
-    #     -------
-    #     None
-    #     """
-    #     new_attrs = replace(self._json_attrs, group=new_group)
-    #     self._update_json_attrs_if_valid(new_attrs)
+    @property
+    def group(self) -> cript.Group:
+        """
+        group property getter method
+
+        Returns
+        -------
+        group: cript.Group
+            Group that owns the project
+        """
+        return self._json_attrs.group
+
+    @group.setter
+    def group(self, new_group: cript.Group):
+        """
+        Sets the group the project belongs to
+
+        Parameters
+        ----------
+        new_group: cript.Group
+            new Group object
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, group=new_group)
+        self._update_json_attrs_if_valid(new_attrs)
 
     # Collection
     @property
-    def collections(self) -> List[Collection]:
+    def collections(self) -> List[cript.Collection]:
         """
         Collection property getter method
 
@@ -95,7 +102,7 @@ class Project(PrimaryBaseNode):
 
     # Collection
     @collections.setter
-    def collections(self, new_collection: List[Collection]) -> None:
+    def collections(self, new_collection: List[cript.Collection]) -> None:
         """
         set list of collections for the project node
 
@@ -112,7 +119,7 @@ class Project(PrimaryBaseNode):
 
     # Material
     @property
-    def material(self) -> List[Material]:
+    def material(self) -> List[cript.Material]:
         """
         Material property getter method. Gets the list of materials within the project
 
@@ -124,7 +131,7 @@ class Project(PrimaryBaseNode):
         return self._json_attrs.materials
 
     @material.setter
-    def material(self, new_materials: List[Material]) -> None:
+    def material(self, new_materials: List[cript.Material]) -> None:
         """
         set the list of materials for this project
 

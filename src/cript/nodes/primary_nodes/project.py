@@ -28,7 +28,7 @@ class Project(PrimaryBaseNode):
     def __init__(
         self,
         name: str,
-        group: Group,
+        # group: Group,
         collections: List[Collection] = None,
         materials: List[Material] = None,
         notes: str = "",

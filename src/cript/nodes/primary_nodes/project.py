@@ -1,8 +1,10 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
-import cript
+from cript.nodes.primary_nodes.collection import Collection
+from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.supporting_nodes.group import Group
 
 
 class Project(PrimaryBaseNode):
@@ -17,18 +19,18 @@ class Project(PrimaryBaseNode):
         """
 
         # TODO is group needed?
-        group: cript.Group = None
-        collections: List[cript.Collection] = field(default_factory=list)
-        materials: List[cript.Material] = field(default_factory=list)
+        group: Group = None
+        collections: List[Collection] = field(default_factory=list)
+        materials: List[Material] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(
         self,
         name: str,
-        group: cript.Group,
-        collections: List[cript.Collection] = None,
-        materials: List[cript.Material] = None,
+        group: Group,
+        collections: List[Collection] = None,
+        materials: List[Material] = None,
         notes: str = "",
         **kwargs
     ):
@@ -62,7 +64,7 @@ class Project(PrimaryBaseNode):
 
     # GROUP
     @property
-    def group(self) -> cript.Group:
+    def group(self) -> Group:
         """
         group property getter method
 
@@ -74,13 +76,13 @@ class Project(PrimaryBaseNode):
         return self._json_attrs.group
 
     @group.setter
-    def group(self, new_group: cript.Group):
+    def group(self, new_group: Group):
         """
         Sets the group the project belongs to
 
         Parameters
         ----------
-        new_group: cript.Group
+        new_group: Group
             new Group object
 
         Returns
@@ -92,7 +94,7 @@ class Project(PrimaryBaseNode):
 
     # Collection
     @property
-    def collections(self) -> List[cript.Collection]:
+    def collections(self) -> List[Collection]:
         """
         Collection property getter method
 
@@ -105,7 +107,7 @@ class Project(PrimaryBaseNode):
 
     # Collection
     @collections.setter
-    def collections(self, new_collection: List[cript.Collection]) -> None:
+    def collections(self, new_collection: List[Collection]) -> None:
         """
         set list of collections for the project node
 
@@ -122,7 +124,7 @@ class Project(PrimaryBaseNode):
 
     # Material
     @property
-    def material(self) -> List[cript.Material]:
+    def material(self) -> List[Material]:
         """
         Material property getter method. Gets the list of materials within the project
 
@@ -134,7 +136,7 @@ class Project(PrimaryBaseNode):
         return self._json_attrs.materials
 
     @material.setter
-    def material(self, new_materials: List[cript.Material]) -> None:
+    def material(self, new_materials: List[Material]) -> None:
         """
         set the list of materials for this project
 

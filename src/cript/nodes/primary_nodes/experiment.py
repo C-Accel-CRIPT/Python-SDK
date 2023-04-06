@@ -94,7 +94,7 @@ class Experiment(PrimaryBaseNode):
             data=data,
             funding=funding,
             citation=citation,
-            notes=notes
+            notes=notes,
         )
 
         # check if the code is still valid

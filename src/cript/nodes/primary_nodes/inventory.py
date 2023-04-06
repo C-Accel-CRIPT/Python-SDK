@@ -15,6 +15,7 @@ class Inventory(PrimaryBaseNode):
         """
         all Inventory attributes
         """
+
         materials: List[Material] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -37,7 +38,7 @@ class Inventory(PrimaryBaseNode):
             materials_list = []
 
         super().__init__(node="Inventory", name=name, notes=notes)
-        
+
         self._json_attrs = replace(self._json_attrs, materials=materials_list)
 
     # ------------------ Properties ------------------

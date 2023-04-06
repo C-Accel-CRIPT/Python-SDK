@@ -12,6 +12,7 @@ def test_create_complex_computation_node(
     my_computation_type = "analysis"
 
     my_computation_node = cript.Computation(
+        name="my complex computation node name",
         type="analysis",
         input_data=[simple_data_node],
         output_data=[simple_data_node],
@@ -80,7 +81,7 @@ def test_serialize_computation_to_json(simple_computation_node) -> None:
     tests that it can correctly turn the computation node into its equivalent JSON
     """
     # TODO test this more vigorously
-    expected_dict = {"node": "Computation", "type": "analysis", "citations": []}
+    expected_dict = {"node": "Computation", "name":"my computation name", "type": "analysis", "citations": []}
 
     # comparing dicts for better test
     assert json.loads(simple_computation_node.json) == expected_dict

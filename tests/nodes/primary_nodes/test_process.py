@@ -14,7 +14,7 @@ def test_simple_process() -> None:
     my_process_keywords = ["anionic"]
 
     # create process node
-    my_process = cript.Process(type=my_process_type, description=my_process_description, keywords=my_process_keywords)
+    my_process = cript.Process(name="my process name", type=my_process_type, description=my_process_description, keywords=my_process_keywords)
 
     # assertions
     assert isinstance(my_process, cript.Process)
@@ -63,8 +63,8 @@ def test_complex_process_node(simple_ingredient_node) -> None:
     ]
 
     prerequisite_processes = [
-        cript.Process(type="blow_molding"),
-        cript.Process(type="centrifugation"),
+        cript.Process(name="prerequisite processes 1", type="blow_molding"),
+        cript.Process(name="prerequisite processes 2", type="centrifugation"),
     ]
 
     my_conditions = [
@@ -88,6 +88,7 @@ def test_complex_process_node(simple_ingredient_node) -> None:
 
     # create complex process
     my_complex_process = cript.Process(
+        name="my complex process node name",
         type=my_process_type,
         ingredients=[simple_ingredient_node],
         description=my_process_description,
@@ -169,7 +170,7 @@ def test_serialize_process_to_json(simple_process_node) -> None:
     """
     test serializing process node to JSON
     """
-    expected_process_dict = {"keywords": [], "node": "Process", "type": "affinity_pure"}
+    expected_process_dict = {"node": "Process", "name": "my process name", "keywords": [], "type": "affinity_pure"}
 
     # comparing dicts because they are more accurate
     assert json.loads(simple_process_node.json) == expected_process_dict

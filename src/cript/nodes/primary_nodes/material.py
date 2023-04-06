@@ -38,7 +38,7 @@ class Material(PrimaryBaseNode):
     * [Property](../../subobjects/property)
     * [Computational_forcefield](../../subobjects/computational_forcefield)
 
-    Examples
+    Example
     -------
      water, brine (water + NaCl), polystyrene, polyethylene glycol hydrogels, vulcanized polyisoprene, mcherry (protein), and mica
 

@@ -51,6 +51,8 @@ class ComputationalProcess(PrimaryBaseNode):
 
         Parameters
         ----------
+        name: str
+            computational process name
         type: str
             type of computation process from CRIPT controlled vocabulary
 
@@ -74,6 +76,9 @@ class ComputationalProcess(PrimaryBaseNode):
 
         citations: List[Citation] default=None
             list of citations for this computational process node
+
+        notes: str default=""
+            optional notes for the computational process node
 
         Returns
         -------

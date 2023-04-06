@@ -9,6 +9,7 @@ def test_create_simple_computational_process(simple_data_node, simple_ingredient
     """
 
     my_computational_process = cript.ComputationalProcess(
+        name="my computational process node name",
         type="cross_linking", input_data=[simple_data_node], ingredients=[simple_ingredient_node]
     )
 
@@ -32,9 +33,11 @@ def test_create_complex_computational_process(
     create a complex computational process with all possible arguments
     """
 
+    computational_process_name = "my computational process name"
     computational_process_type = "cross_linking"
 
     my_computational_process = cript.ComputationalProcess(
+        name=computational_process_name,
         type=computational_process_type,
         input_data=[simple_data_node],
         ingredients=[simple_ingredient_node],
@@ -47,6 +50,7 @@ def test_create_complex_computational_process(
 
     # assertions
     assert isinstance(my_computational_process, cript.ComputationalProcess)
+    assert my_computational_process.name == computational_process_name
     assert my_computational_process.type == computational_process_type
     assert my_computational_process.input_data == [simple_data_node]
     assert my_computational_process.ingredients == [simple_ingredient_node]
@@ -63,10 +67,12 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
     """
     expected_dict: dict = {
         "node": "Computational_Process",
+        "name": "my computational process name",
         "type": "cross_linking",
         "input_data": [
             {
                 "node": "Data",
+                "name": "my data name",
                 "type": "afm_amp",
                 "files": [
                     {

@@ -1,14 +1,19 @@
 import copy
+import json
 import os
 import warnings
 from typing import List, Literal, Union
 
 import requests
+from jsonschema import validate as json_validate
 
 from cript.api._valid_search_modes import _VALID_SEARCH_MODES
-from cript.api.exceptions import CRIPTAPIAccessError, CRIPTConnectionError
-from cript.api.schema import CRIPTSchema
-from cript.api.vocabulary import Vocabulary
+from cript.api.exceptions import (
+    CRIPTAPIAccessError,
+    CRIPTConnectionError,
+    InvalidVocabulary,
+    InvalidVocabularyCategory,
+)
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
 from cript.nodes.supporting_nodes.group import Group
@@ -26,14 +31,14 @@ def _get_global_cached_api():
     """
     if _global_cached_api is None:
         raise CRIPTAPIAccessError
-    return copy.copy(_global_cached_api)
+    return _global_cached_api
 
 
 class API:
     _host: str = ""
     _token: str = ""
-    _vocabulary: Vocabulary = None
-    _schema: CRIPTSchema = None
+    _vocabulary: dict = None
+    _schema: dict = None
 
     def __init__(self, host: Union[str, None], token: [str, None]) -> None:
         """
@@ -125,16 +130,65 @@ class API:
         # TODO error checking
         response = {}
 
-        # convert to dict for easier use
-        self._vocabulary = Vocabulary(response)
+        # TODO Perform some test if we are supporting this version of the vocab
+        self._vocabulary = dict(response)
 
-    @property
-    def vocabulary(self) -> Vocabulary:
+    def get_vocabulary(self, vocab_category: str) -> Union[dict, InvalidVocabularyCategory]:
         """
-        Access the CRIPT controlled vocabulary that is associated with this API connection.
-        This can be used to validate node JSON.
+        Returns
+        -------
+        dict
+        controlled vocabulary
         """
-        return self._vocabulary
+
+        if vocab_category not in self._vocabulary:
+            raise InvalidVocabularyCategory(vocab_category, self._vocabulary.keys())
+
+        # Again, return a copy because we don't want
+        # anyone being able to change the private attribute
+        return copy.deepcopy(self._vocabulary[vocab_category])
+
+    def is_vocab_valid(
+        self, vocab_category: str, vocab_value: str
+    ) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
+        """
+        checks if the vocabulary is valid within the CRIPT controlled vocabulary.
+        Either returns True or InvalidVocabulary Exception
+
+        1. if the vocabulary is custom (starts with "+")
+            then it is automatically valid
+        2. if vocabulary is not custom, then it is checked against its category
+            if the word cannot be found in the category then it returns False
+
+        Parameters
+        ----------
+        vocab_category: str
+            the category the vocabulary is in e.g. "Material keyword", "Data type", "Equipment key"
+        vocab_value: str
+            the vocabulary word e.g. "CAS", "SMILES", "BigSmiles", "+my_custom_key"
+
+        Returns
+        -------
+        a boolean of if the vocabulary is valid or not
+
+        Raises
+        ------
+        InvalidVocabulary
+            If the vocabulary is invalid then the error gets raised
+        """
+
+        # check if vocab is custom
+        # This is deactivated currently, no custom vocab allowed.
+        if vocab_value.startswith("+"):
+            return True
+
+        # Raise Exeption if invalid category
+        controlled_vocabulary = self.get_vocabulary(vocab_category)
+
+        if vocab_value in controlled_vocabulary:
+            return True
+        # if the vocabulary does not exist in a given category
+        raise InvalidVocabulary(vocab_value, controlled_vocabulary)
 
     def _load_db_schema(self):
         """
@@ -148,16 +202,41 @@ class API:
         # TODO figure out the version
         response = requests.get(f"{self.host}/api/v1/schema/").json()
         # TODO error checking
+        # TODO check that we support that version
+        self._schema = response
 
-        self._schema = CRIPTSchema(response)
+    def is_node_valid(self, node_json: str) -> bool:
+        """
+        checks a node JSON schema against the db schema to return if it is valid or not.
+        This function does not take into consideration vocabulary validation.
+        For vocabulary validation please check `is_vocab_valid`
+
+        Parameters
+        ----------
+        node:
+            a node in JSON form
+
+        Returns
+        -------
+        bool
+            whether the node JSON is valid or not
+        """
+
+        # TODO currently validate says every syntactically valid JSON is valid
+        # TODO do we want invalid schema to raise an exception?
+        node_dict = json.loads(node_json)
+        if json_validate(node_dict, self._schema):
+            return True
+        else:
+            return False
 
     @property
-    def schema(self) -> CRIPTSchema:
+    def schema(self):
         """
         Access the CRIPTSchema that is associated with this API connection.
         This can be used to validate node JSON.
         """
-        return self._schema
+        return copy.copy(self._schema)
 
     def connect(self):
         """

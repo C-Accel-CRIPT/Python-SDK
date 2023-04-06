@@ -17,9 +17,6 @@ class Project(PrimaryBaseNode):
         all Project attributes
         """
 
-        node: str = "Project"
-        # project name
-        name: str = ""
         # TODO is group needed?
         # group: Group = None
         collections: List[Collection] = field(default_factory=list)
@@ -27,7 +24,7 @@ class Project(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, collections: List[Collection], materials: List[Material] = None, **kwargs):
+    def __init__(self, name: str, collections: List[Collection], materials: List[Material] = None, notes: str = "", **kwargs):
         """
         Create a Project node with Project name and Group
 
@@ -43,7 +40,7 @@ class Project(PrimaryBaseNode):
         -------
         None
         """
-        super().__init__(node="Project")
+        super().__init__(node="Project", name=name, notes=notes)
 
         if materials is None:
             materials = []
@@ -52,36 +49,6 @@ class Project(PrimaryBaseNode):
         self.validate()
 
     # ------------------ Properties ------------------
-
-    # Project Name
-    @property
-    def name(self) -> str:
-        """
-        name property getter method
-
-        Returns
-        -------
-        name: str
-            project name
-        """
-        return self._json_attrs.name
-
-    @name.setter
-    def name(self, new_name: str):
-        """
-        Setter for the project name
-
-        Parameters
-        ----------
-        new_name: str
-            new project name
-
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, name=new_name)
-        self._update_json_attrs_if_valid(new_attrs)
 
     # GROUP
     # @property

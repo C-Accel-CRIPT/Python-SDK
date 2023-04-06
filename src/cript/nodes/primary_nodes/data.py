@@ -32,6 +32,7 @@ class Data(PrimaryBaseNode):
 
     def __init__(
         self,
+        name: str,
         type: str,
         files: List[Any],
         sample_preperation: Any = None,
@@ -40,9 +41,10 @@ class Data(PrimaryBaseNode):
         materials: List[Any] = None,
         processes: List[Any] = None,
         citations: List[Any] = None,
+        notes: str = "",
         **kwargs
     ):
-        super().__init__(node="Data")
+        super().__init__(node="Data", name=name, notes=notes)
 
         if files is None:
             files = []

@@ -120,7 +120,7 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
         source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary"
     )
 
-    input_data = cript.Data(type="afm_amp", files=[data_files])
+    input_data = cript.Data(name="my data name", type="afm_amp", files=[data_files])
 
     # ingredients with Material and Quantity node
     my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
@@ -133,6 +133,7 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
     )
 
     my_computational_process = cript.ComputationalProcess(
+        name="my computational process name",
         type=my_computational_process_type, input_data=[input_data], ingredients=[ingredients]
     )
 
@@ -144,7 +145,7 @@ def simple_data_node(simple_file_node) -> cript.Data:
     """
     minimal data node
     """
-    my_data = cript.Data(type="afm_amp", files=[simple_file_node])
+    my_data = cript.Data(name="my data name", type="afm_amp", files=[simple_file_node])
 
     return my_data
 
@@ -154,7 +155,7 @@ def simple_process_node() -> cript.Process:
     """
     simple process node to use in other tests to keep tests clean
     """
-    my_process = cript.Process(type="affinity_pure")
+    my_process = cript.Process(name="my process name", type="affinity_pure")
 
     return my_process
 
@@ -164,7 +165,7 @@ def simple_computation_node() -> cript.Computation:
     """
     simple computation node to use between tests
     """
-    my_computation = cript.Computation(type="analysis")
+    my_computation = cript.Computation(name="my computation name", type="analysis")
 
     return my_computation
 

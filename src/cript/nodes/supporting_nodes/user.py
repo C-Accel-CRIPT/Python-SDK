@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field, replace
 from typing import Any, List
 
-import cript
 from cript.nodes.core import BaseNode
 
 
@@ -35,11 +34,12 @@ class User(BaseNode):
     }
     ```
 
-    Warning:
-        * A User cannot be created or modified using the Python SDK.
-        * A User node is a **read-only** node that can only be deserialized from API JSON response to Python node.
-        * The User node cannot be instantiated and within the Python SDK.
-        * Attempting to edit the user node will result in an `Attribute Error`
+    Warnings
+    -------
+    * A User cannot be created or modified using the Python SDK.
+    * A User node is a **read-only** node that can only be deserialized from API JSON response to Python node.
+    * The User node cannot be instantiated and within the Python SDK.
+    * Attempting to edit the user node will result in an `Attribute Error`
 
     """
 
@@ -63,11 +63,16 @@ class User(BaseNode):
         Json from CRIPT API to be converted to a node
         optionally the group can be None if the user doesn't have a group
 
-        Args:
-            username (str): user username
-            email (str): user email
-            orcid (str): user ORCID
-            groups: (List[Group): groups that this user belongs to
+        Parameters
+        ----------
+        username: str
+            user username
+        email: str
+            user email
+        orcid: str
+            user ORCID
+        groups: List[Group
+            groups that this user belongs to
 
         """
         if groups is None:
@@ -83,10 +88,13 @@ class User(BaseNode):
         """
         username of the User node
 
-        Raises:
-            AttributeError
+        Raises
+        ------
+        AttributeError
 
-        Returns:
+        Returns
+        -------
+        username: str
             username of the User node
         """
         return self._json_attrs.username
@@ -96,10 +104,13 @@ class User(BaseNode):
         """
         user's email
 
-        Raises:
-            AttributeError
+        Raises
+        ------
+        AttributeError
 
-        Returns:
+        Returns
+        -------
+        user email: str
             User node email
         """
         return self._json_attrs.email
@@ -109,10 +120,13 @@ class User(BaseNode):
         """
         users [ORCID](https://orcid.org/)
 
-        Raises:
-            AttributeError
+        Raises
+        ------
+        AttributeError
 
-        Returns:
+        Returns
+        -------
+        ORCID: str
             user's ORCID
         """
         return self._json_attrs.orcid
@@ -122,10 +136,13 @@ class User(BaseNode):
         """
         gets the list of group nodes that the user belongs in
 
-        Raises:
-            AttributeError
+        Raises
+        ------
+        AttributeError
 
-        Returns:
+        Returns
+        -------
+        user's groups: List[Any]
             List of Group nodes that the user belongs in
         """
         return self._json_attrs.groups

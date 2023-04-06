@@ -31,6 +31,7 @@ def test_inventory_serialization(simple_inventory_node) -> None:
     """
     expected_dict = {
         "node": "Inventory",
+        "name": "my inventory name",
         "materials": [
             {"node": "Material", "name": "material 1", "identifiers": [{"alternative_names": "material 1 alternative name"}]},
             {

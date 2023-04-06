@@ -250,7 +250,7 @@ def simple_inventory_node() -> None:
 
     material_2 = cript.Material(name="material 2", identifiers=[{"alternative_names": "material 2 alternative name"}])
 
-    my_inventory = cript.Inventory(materials_list=[material_1, material_2])
+    my_inventory = cript.Inventory(name="my inventory name", materials_list=[material_1, material_2])
 
     # use my_inventory in another test
     return my_inventory

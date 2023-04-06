@@ -18,7 +18,6 @@ class ComputationalProcess(PrimaryBaseNode):
         all computational_process nodes attributes
         """
 
-        node: str = "Computational_Process"
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
         input_data: List[Any] = field(default_factory=list)
@@ -33,6 +32,7 @@ class ComputationalProcess(PrimaryBaseNode):
 
     def __init__(
         self,
+        name: str,
         type: str,
         input_data: List[Any],
         ingredients: List[Any],
@@ -41,6 +41,7 @@ class ComputationalProcess(PrimaryBaseNode):
         conditions: List[Any] = None,
         properties: List[Any] = None,
         citations: List[Any] = None,
+        notes: str = "",
         **kwargs
     ):
         """
@@ -78,7 +79,7 @@ class ComputationalProcess(PrimaryBaseNode):
         -------
         None
         """
-        super().__init__(node="Computational_Process")
+        super().__init__(node="Computational_Process", name=name, notes=notes)
 
         # TODO validate type from vocab
 

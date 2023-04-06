@@ -7,9 +7,45 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 class Material(PrimaryBaseNode):
     """
-    Material node
+    ## Definition
+    A [Material node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=10)
+    is nested inside a [Project](../project).
+    A [Material node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=10)
+    is just the materials used within an project/experiment.
 
-    [Material](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=10)
+    ## Attributes
+    | attribute                             | type             | example                                                                         | description                                                         | required | vocab |
+    |---------------------------------------|------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------|----------|-------|
+    | type                                  | str              | mix                                                                             | type of process                                                     | True     | True  |
+    | ingredients                           | List[Ingredient] |                                                                                 | ingredients                                                         |          |       |
+    | description                           | str              | To oven-dried 20 mL glass vial, 5 mL of styrene and 10 ml of toluene was added. | explanation of the process                                          |          |       |
+    | equipment                             | List[Equipment]  |                                                                                 | equipment used in the process                                       |          |       |
+    | products                              | List[Material]   |                                                                                 | desired material produced from the process                          |          |       |
+    | waste                                 | List[Material]   |                                                                                 | material sent to waste                                              |          |       |
+    | prerequisite_ processes               | List[Process]    |                                                                                 | processes that must be completed prior to the start of this process |          |       |
+    | conditions                            | List[Condition]  |                                                                                 | global process conditions                                           |          |       |
+    | properties                            | List[Property]   |                                                                                 | process properties                                                  |          |       |
+    | keywords                              | List[str]        |                                                                                 | words that classify the process                                     |          | True  |
+    | citations                             | List[Citation]   |                                                                                 | reference to a book, paper, or scholarly work                       |          |       |
+
+
+    ## Navigating to Material
+    Materials can be easily found on the [CRIPT](https://criptapp.org) home screen in the
+    under the navigation within the [Materials link](https://criptapp.org/material/)
+
+    ## Available Sub-Objects for Material
+    * [Identifier](../../subobjects/identifier)
+    * [Property](../../subobjects/property)
+    * [Computational_forcefield](../../subobjects/computational_forcefield)
+
+    Examples
+    -------
+     water, brine (water + NaCl), polystyrene, polyethylene glycol hydrogels, vulcanized polyisoprene, mcherry (protein), and mica
+
+
+    Warnings
+    -------
+    Material names Must be unique within a [Project](../project)
     """
 
     @dataclass(frozen=True)

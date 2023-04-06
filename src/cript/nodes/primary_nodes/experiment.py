@@ -84,7 +84,8 @@ class Experiment(PrimaryBaseNode):
         if citation is None:
             citation = []
 
-        super().__init__(node="Experiment")
+        super().__init__(node="Experiment", name=name, notes=notes)
+
         self._json_attrs = replace(
             self._json_attrs,
             name=name,

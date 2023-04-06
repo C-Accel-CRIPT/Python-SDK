@@ -102,33 +102,6 @@ class Experiment(PrimaryBaseNode):
 
     # ------------------ Properties ------------------
     @property
-    def name(self) -> str:
-        """
-        Experiment name
-
-        Returns
-        -------
-        name: str
-        """
-        return self._json_attrs.name
-
-    @name.setter
-    def name(self, new_experiment_name: str) -> None:
-        """
-        set the experiment name
-
-        Parameters
-        ----------
-        new_experiment_name: str
-
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, name=new_experiment_name)
-        self._update_json_attrs_if_valid(new_attrs)
-
-    @property
     def process(self) -> List[Any]:
         """
         get the list of process for this experiment

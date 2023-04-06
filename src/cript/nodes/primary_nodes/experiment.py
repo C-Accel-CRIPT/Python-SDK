@@ -16,8 +16,6 @@ class Experiment(PrimaryBaseNode):
         all Collection attributes
         """
 
-        node: str = "Experiment"
-        name: str = ""
         process: List[Any] = field(default_factory=list)
         computation: List[Any] = field(default_factory=list)
         computational_process: List[Any] = field(default_factory=list)
@@ -36,6 +34,7 @@ class Experiment(PrimaryBaseNode):
         data: List[Any] = None,
         funding: List[str] = None,
         citation: List[Any] = None,
+        notes: str = "",
         **kwargs
     ):
         """
@@ -63,6 +62,9 @@ class Experiment(PrimaryBaseNode):
 
         citation: List[Citation]
             list of Citation nodes for this experiment
+
+        notes: str default=""
+            notes for the experiment node
 
         Returns
         -------
@@ -92,6 +94,7 @@ class Experiment(PrimaryBaseNode):
             data=data,
             funding=funding,
             citation=citation,
+            notes=notes
         )
 
         # check if the code is still valid

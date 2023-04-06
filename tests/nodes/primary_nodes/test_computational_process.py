@@ -10,7 +10,9 @@ def test_create_simple_computational_process(simple_data_node, simple_ingredient
 
     my_computational_process = cript.ComputationalProcess(
         name="my computational process node name",
-        type="cross_linking", input_data=[simple_data_node], ingredients=[simple_ingredient_node]
+        type="cross_linking",
+        input_data=[simple_data_node],
+        ingredients=[simple_ingredient_node],
     )
 
     # assertions

@@ -112,7 +112,11 @@ def test_all_getters_and_setters(simple_material) -> None:
 
     new_properties = [cript.Property(key="air_flow", type="modulus_shear", unit="gram", value=1.00)]
 
-    new_process = [cript.Process(name="my process name 1", type="affinity_pure", description="my simple material description", keywords=["anionic"])]
+    new_process = [
+        cript.Process(
+            name="my process name 1", type="affinity_pure", description="my simple material description", keywords=["anionic"]
+        )
+    ]
 
     new_parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
 

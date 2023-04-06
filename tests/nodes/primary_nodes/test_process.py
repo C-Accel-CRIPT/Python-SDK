@@ -14,7 +14,9 @@ def test_simple_process() -> None:
     my_process_keywords = ["anionic"]
 
     # create process node
-    my_process = cript.Process(name="my process name", type=my_process_type, description=my_process_description, keywords=my_process_keywords)
+    my_process = cript.Process(
+        name="my process name", type=my_process_type, description=my_process_description, keywords=my_process_keywords
+    )
 
     # assertions
     assert isinstance(my_process, cript.Process)

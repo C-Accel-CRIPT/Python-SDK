@@ -42,7 +42,6 @@ class Computation(PrimaryBaseNode):
         notes: str = "",
         **kwargs
     ) -> None:
-
         super().__init__(node="Computation", name=name, notes=notes)
 
         if input_data is None:

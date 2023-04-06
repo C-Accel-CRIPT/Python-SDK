@@ -20,7 +20,7 @@ class Inventory(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, materials_list: List[Material], notes: str, **kwargs) -> None:
+    def __init__(self, name: str, materials_list: List[Material], notes: str = "", **kwargs) -> None:
         """
         create an inventory node
 

@@ -18,7 +18,6 @@ class Computation(PrimaryBaseNode):
         all computation nodes attributes
         """
 
-        node: str = "Computation"
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
         input_data: List[Any] = field(default_factory=list)
@@ -32,6 +31,7 @@ class Computation(PrimaryBaseNode):
 
     def __init__(
         self,
+        name: str,
         type: str,
         input_data: List[Any] = None,
         output_data: List[Any] = None,
@@ -39,9 +39,11 @@ class Computation(PrimaryBaseNode):
         conditions: List[Any] = None,
         prerequisite_computation: "Computation" = None,
         citations: List[Any] = None,
+        notes: str = "",
         **kwargs
     ) -> None:
-        super().__init__(node="Computation")
+
+        super().__init__(node="Computation", name=name, notes=notes)
 
         if input_data is None:
             input_data = []

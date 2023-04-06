@@ -112,6 +112,11 @@ class Material(PrimaryBaseNode):
         computation_forcefield: List[ComputationalProcess], default=None
         keywords: List[str], default=None
 
+        Examples
+        --------
+        identifiers = [{"alternative_names": "my material alternative name"}]
+        my_material = cript.Material(name="my material", identifiers=identifiers)
+
         Returns
         -------
         None
@@ -157,12 +162,12 @@ class Material(PrimaryBaseNode):
     @property
     def name(self) -> str:
         """
-        get material name
+        material name
 
         Returns
         -------
-        str
-            material name
+        material name: str
+
         """
         return self._json_attrs.name
 
@@ -176,6 +181,10 @@ class Material(PrimaryBaseNode):
         new_name: str
             new material name to overwrite the current
 
+        Examples
+        --------
+        my_material.name = "new material name"
+
         Returns
         -------
         None
@@ -186,7 +195,7 @@ class Material(PrimaryBaseNode):
     @property
     def identifiers(self) -> List[dict[str, str]]:
         """
-        get the identifiers for this material
+        The identifiers for this material
 
         Returns
         -------
@@ -200,12 +209,17 @@ class Material(PrimaryBaseNode):
         set the list of identifiers for this material
 
         the identifier keys must come from the
-        material identifiers keywords within the CRIPT controlled vocabulary
+        material identifiers keywords within the
+        [CRIPT material identifiers controlled vocabulary]()
 
         Parameters
         ----------
         new_identifiers_list: List[dict[str, str]]
             new list of identifier nodes to overwrite the current
+
+        Examples
+        --------
+        my_material.identifier = [{"alternative_name" : "my new alternative name"}]
 
         Returns
         -------

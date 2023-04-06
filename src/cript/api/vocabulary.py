@@ -1,7 +1,6 @@
 from typing import Union
 
-from api import API, _get_global_cached_api
-
+from cript.api.api import API, _get_global_cached_api
 from cript.api.exceptions import InvalidVocabulary, InvalidVocabularyCategory
 
 

@@ -32,7 +32,7 @@ def cript_api():
 
 
 # ---------- Primary Nodes ----------
-# TODO all complex nodes need notes attributes
+# TODO all complex nodes and getters need notes attributes
 @pytest.fixture(scope="function")
 def simple_project_node(simple_collection_node) -> cript.Project:
     """

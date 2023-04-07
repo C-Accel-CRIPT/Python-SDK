@@ -154,6 +154,33 @@ def simple_data_node(simple_file_node) -> cript.Data:
     return my_data
 
 
+@pytest.fixture(scope="fucntion")
+def test_create_complex_data_node(
+    simple_file_node,
+    simple_process_node,
+    simple_computation_node,
+    simple_computational_process_node,
+    simple_material_node,
+    simple_citation_node,
+) -> None:
+    """
+    create a complex data node with all possible arguments for all tests to use when needed
+    """
+    my_complex_data = cript.Data(
+        name="my complex data node name",
+        type="afm_amp",
+        files=[simple_file_node],
+        sample_preperation=simple_process_node,
+        computations=[simple_computation_node],
+        computational_process=[simple_computational_process_node],
+        materials=[simple_material_node],
+        processes=[simple_process_node],
+        citations=[simple_citation_node],
+    )
+
+    return my_complex_data
+
+
 @pytest.fixture(scope="function")
 def simple_process_node() -> cript.Process:
     """

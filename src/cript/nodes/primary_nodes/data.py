@@ -33,39 +33,42 @@ class Data(PrimaryBaseNode):
     | citations             | [Citation](../subobjects/citation.md)               |                            | reference to a book, paper, or scholarly work                                           | False    |
 
 
-    Examples
+    Example
     --------
-    ```python
-    # create list of files needed for this data node
-    my_files_list = [
-        # create file node
-            # source could be either a web URL or local file path
-        my_file = cript.File(
-        source="https://criptapp.org",
-        type="calibration",
-        extension=".csv",
-        data_dictionary="my file's data dictionary"
+    ??? Example "Minimal Data node example"
+        Create a data node with only required arguments
+        ```python
+        my_files_list = [
+            # create file node
+            cript.File(
+                source="https://criptapp.org",
+                type="calibration",
+                extension=".csv",
+                data_dictionary="my file's data dictionary"
+            )
+        ]
+
+        # create data node
+        my_data = cript.Data(name="my data name", type="afm_amp", files=[simple_file_node])
+        ```
+
+
+    ??? Example "Maximal Data nod examplee"
+        Create a data node with all possible arguments
+        ```python
+            my_complex_data = cript.Data(
+            name="my complex data node name",
+            type="afm_amp",
+            files=my_files_list,
+            sample_preperation=simple_process_node,
+            computations=[simple_computation_node],
+            computational_process=[simple_computational_process_node],
+            materials=[simple_material_node],
+            processes=[simple_process_node],
+            citations=[simple_citation_node],
+            notes="my data node notes",
         )
-    ]
-
-    # create a process node
-    my_process = cript.Process(name="my process name", type="affinity_pure")
-
-
-
-
-        my_complex_data = cript.Data(
-        name="my complex data node name",
-        type="afm_amp",
-        files=my_files_list,
-        sample_preperation=simple_process_node,
-        computations=[simple_computation_node],
-        computational_process=[simple_computational_process_node],
-        materials=[simple_material_node],
-        processes=[simple_process_node],
-        citations=[simple_citation_node],
-    )
-    ```
+        ```
 
     ## JSON
     ```json

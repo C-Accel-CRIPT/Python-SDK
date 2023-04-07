@@ -52,7 +52,8 @@ def complex_project_node(complex_collection_node, complex_material_node) -> crip
     """
     project_name = "my project name"
 
-    complex_project = cript.Project(name=project_name, collections=[complex_collection_node], materials=[complex_material_node])
+    complex_project = cript.Project(name=project_name, collections=[complex_collection_node],
+                                    materials=[complex_material_node])
 
     return complex_project
 
@@ -124,7 +125,8 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
     input_data = cript.Data(name="my data name", type="afm_amp", files=[data_files])
 
     # ingredients with Material and Quantity node
-    my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
+    my_material = cript.Material(name="my material",
+                                 identifiers=[{"alternative_names": "my material alternative name"}])
 
     my_quantity = cript.Quantity(key="mass", value=1.23, unit="gram")
 
@@ -190,11 +192,14 @@ def complex_material_node(simple_property_node, simple_process_node, simple_comp
     my_identifier = [{"alternative_names": "my material alternative name"}]
 
     my_components = [
-        cript.Material(name="my component material 1", identifiers=[{"alternative_names": "component 1 alternative name"}]),
-        cript.Material(name="my component material 2", identifiers=[{"alternative_names": "component 2 alternative name"}]),
+        cript.Material(name="my component material 1",
+                       identifiers=[{"alternative_names": "component 1 alternative name"}]),
+        cript.Material(name="my component material 2",
+                       identifiers=[{"alternative_names": "component 2 alternative name"}]),
     ]
 
-    parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
+    parent_material = cript.Material(name="my parent material",
+                                     identifiers=[{"alternative_names": "parent material 1"}])
 
     my_material_keywords = ["acetylene"]
 
@@ -220,6 +225,29 @@ def simple_reference_node() -> cript.Reference:
     my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
 
     return my_reference
+
+
+@pytest.fixture(scope="function")
+def complex_reference_node() -> cript.Reference:
+    """
+    complex reference node with all possible reference node arguments to use for other tests
+    """
+    return cript.Reference(
+        type="journal_article",
+        title="Adding the Effect of Topological Defects to the Flory\u2013Rehner and Bray\u2013Merrill Swelling Theories",
+        authors=["Nathan J. Rebello", "Haley K. Beech", "Bradley D. Olsen"],
+        journal="ACS Macro Letters",
+        publisher="American Chemical Society",
+        year=2022,
+        volume=10,
+        issue=None,
+        pages=[531, 537],
+        doi="10.1021/acsmacrolett.0c00909",
+        issn="",
+        arxiv_id="",
+        pmid=None,
+        website="",
+    )
 
 
 @pytest.fixture(scope="function")

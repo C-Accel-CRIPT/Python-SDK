@@ -122,15 +122,17 @@ def test_experiment_json(
         "node": "Experiment",
         "name": "my experiment name",
         "notes": "these are all of my notes for this experiment",
-        "process": [{"node": "Process", "type": "affinity_pure", "keywords": []}],
-        "computation": [{"node": "Computation", "type": "analysis", "citations": []}],
+        "process": [{"node": "Process", "name": "my process name", "type": "affinity_pure", "keywords": []}],
+        "computation": [{"node": "Computation", "name": "my computation name", "type": "analysis", "citations": []}],
         "computational_process": [
             {
                 "node": "Computational_Process",
+                "name": "my computational process name",
                 "type": "cross_linking",
                 "input_data": [
                     {
                         "node": "Data",
+                        "name": "my data name",
                         "type": "afm_amp",
                         "files": [
                             {
@@ -159,6 +161,7 @@ def test_experiment_json(
         "data": [
             {
                 "node": "Data",
+                "name": "my data name",
                 "type": "afm_amp",
                 "files": [
                     {
@@ -181,6 +184,13 @@ def test_experiment_json(
         ],
     }
 
+    print("\n\n")
+    print("----------------------------------------------------")
+    print(my_experiment.json)
+    print("----------------------------------------------------")
+    print(expected_experiment_dict)
+
+    assert len(json.loads(my_experiment.json)) == len(expected_experiment_dict)
     assert json.loads(my_experiment.json) == expected_experiment_dict
 
 

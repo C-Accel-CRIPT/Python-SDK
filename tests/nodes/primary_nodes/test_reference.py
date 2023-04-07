@@ -147,29 +147,10 @@ def test_reference_conditional_attributes() -> None:
     pass
 
 
-def test_serialize_reference_to_json() -> None:
+def test_serialize_reference_to_json(complex_reference_node) -> None:
     """
     tests that it can correctly turn the data node into its equivalent JSON
     """
-    # TODO update this later to use fixture
-    # create reference node
-    actual_reference = cript.Reference(
-        type="journal_article",
-        title="Adding the Effect of Topological Defects to the Flory\u2013Rehner and Bray\u2013Merrill Swelling Theories",
-        authors=["Nathan J. Rebello", "Haley K. Beech", "Bradley D. Olsen"],
-        journal="ACS Macro Letters",
-        publisher="American Chemical Society",
-        year=2022,
-        volume=10,
-        issue=None,
-        pages=[531, 537],
-        doi="10.1021/acsmacrolett.0c00909",
-        issn="",
-        arxiv_id="",
-        pmid=None,
-        website="",
-    )
-
     expected_reference_dict = {
         "node": "Reference",
         "type": "journal_article",
@@ -184,7 +165,7 @@ def test_serialize_reference_to_json() -> None:
     }
 
     # convert reference to json and then to dict for better comparison
-    assert json.loads(actual_reference.json) == expected_reference_dict
+    assert json.loads(complex_reference_node.json) == expected_reference_dict
 
 
 # ---------- Integration tests ----------

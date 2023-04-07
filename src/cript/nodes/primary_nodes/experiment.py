@@ -16,8 +16,6 @@ class Experiment(PrimaryBaseNode):
         all Collection attributes
         """
 
-        node: str = "Experiment"
-        name: str = ""
         process: List[Any] = field(default_factory=list)
         computation: List[Any] = field(default_factory=list)
         computational_process: List[Any] = field(default_factory=list)
@@ -36,6 +34,7 @@ class Experiment(PrimaryBaseNode):
         data: List[Any] = None,
         funding: List[str] = None,
         citation: List[Any] = None,
+        notes: str = "",
         **kwargs
     ):
         """
@@ -64,6 +63,9 @@ class Experiment(PrimaryBaseNode):
         citation: List[Citation]
             list of Citation nodes for this experiment
 
+        notes: str default=""
+            notes for the experiment node
+
         Returns
         -------
         None
@@ -82,7 +84,8 @@ class Experiment(PrimaryBaseNode):
         if citation is None:
             citation = []
 
-        super().__init__(node="Experiment")
+        super().__init__(node="Experiment", name=name, notes=notes)
+
         self._json_attrs = replace(
             self._json_attrs,
             name=name,
@@ -92,39 +95,13 @@ class Experiment(PrimaryBaseNode):
             data=data,
             funding=funding,
             citation=citation,
+            notes=notes,
         )
 
         # check if the code is still valid
         self.validate()
 
     # ------------------ Properties ------------------
-    @property
-    def name(self) -> str:
-        """
-        Experiment name
-
-        Returns
-        -------
-        name: str
-        """
-        return self._json_attrs.name
-
-    @name.setter
-    def name(self, new_experiment_name: str) -> None:
-        """
-        set the experiment name
-
-        Parameters
-        ----------
-        new_experiment_name: str
-
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, name=new_experiment_name)
-        self._update_json_attrs_if_valid(new_attrs)
-
     @property
     def process(self) -> List[Any]:
         """

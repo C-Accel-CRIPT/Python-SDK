@@ -1,7 +1,5 @@
 import json
 
-import pytest
-
 import cript
 
 
@@ -20,72 +18,6 @@ def test_create_simple_material() -> None:
     assert my_material.name == material_name
 
 
-# TODO replace this fixture with complex_material_node fixture from conftest.py that was later created
-@pytest.fixture(scope="function")
-def complex_material() -> None:
-    """
-    complex material fixture to use for other tests
-    """
-
-    my_identifier = [{"alternative_names": "my material alternative name"}]
-
-    my_components = [
-        cript.Material(name="my component material 1", identifiers=[{"alternative_names": "component 1 alternative name"}]),
-        cript.Material(name="my component material 2", identifiers=[{"alternative_names": "component 2 alternative name"}]),
-    ]
-
-    # TODO fill in a real property type later
-    my_properties = [cript.Property(key="air_flow", type="my property type", unit="gram", value=1.00)]
-
-    my_process = cript.Process(type="affinity_pure", description="my simple material description", keywords=["anionic"])
-
-    parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
-
-    my_computation_forcefield = cript.ComputationForcefield(key="amber", building_block="atom")
-
-    my_material_keywords = ["acetylene"]
-
-    # construct the full material node
-    my_complex_material = cript.Material(
-        name="my complex material",
-        identifiers=my_identifier,
-        components=my_components,
-        properties=my_properties,
-        process=my_process,
-        parent_materials=parent_material,
-        computation_forcefield=my_computation_forcefield,
-        keywords=my_material_keywords,
-    )
-
-    # check that the material attributes match the expected values
-    # assert my_complex_material.name == "my complex material"
-    # assert my_complex_material.identifiers == my_identifier
-    # assert my_complex_material.components == my_components
-    # assert my_complex_material.properties == my_properties
-    # assert my_complex_material.process == my_process
-    # assert my_complex_material.parent_materials == parent_material
-    # assert my_complex_material.computation_forcefield == my_computation_forcefield
-    # assert my_complex_material.keywords == my_material_keywords
-
-    return my_complex_material
-
-
-@pytest.fixture(scope="function")
-def simple_material() -> cript.Material:
-    """
-    tests that it can create a material node with only required arguments
-
-    Returns
-    -------
-    Material
-    """
-
-    # create material
-    my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
-
-    return my_material
-
-
 def test_invalid_material_keywords() -> None:
     """
     tries to create a material with invalid keywords and expects to get an Exception
@@ -94,7 +26,7 @@ def test_invalid_material_keywords() -> None:
     pass
 
 
-def test_all_getters_and_setters(simple_material) -> None:
+def test_all_getters_and_setters(simple_material_node) -> None:
     """
     tests the getters and setters for the simple material object
 
@@ -112,7 +44,11 @@ def test_all_getters_and_setters(simple_material) -> None:
 
     new_properties = [cript.Property(key="air_flow", type="modulus_shear", unit="gram", value=1.00)]
 
-    new_process = [cript.Process(type="affinity_pure", description="my simple material description", keywords=["anionic"])]
+    new_process = [
+        cript.Process(
+            name="my process name 1", type="affinity_pure", description="my simple material description", keywords=["anionic"]
+        )
+    ]
 
     new_parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
 
@@ -125,27 +61,27 @@ def test_all_getters_and_setters(simple_material) -> None:
     ]
 
     # set all attributes for Material node
-    simple_material.name = new_name
-    simple_material.identifiers = new_identifiers
-    simple_material.properties = new_properties
-    simple_material.process = new_process
-    simple_material.parent_materials = new_parent_material
-    simple_material.computation_forcefield = new_computation_forcefield
-    simple_material.keywords = new_material_keywords
-    simple_material.components = new_components
+    simple_material_node.name = new_name
+    simple_material_node.identifiers = new_identifiers
+    simple_material_node.properties = new_properties
+    simple_material_node.process = new_process
+    simple_material_node.parent_materials = new_parent_material
+    simple_material_node.computation_forcefield = new_computation_forcefield
+    simple_material_node.keywords = new_material_keywords
+    simple_material_node.components = new_components
 
     # get all attributes and assert that they are equal to the setter
-    assert simple_material.name == new_name
-    assert simple_material.identifiers == new_identifiers
-    assert simple_material.properties == new_properties
-    assert simple_material.process == new_process
-    assert simple_material.parent_materials == new_parent_material
-    assert simple_material.computation_forcefield == new_computation_forcefield
-    assert simple_material.keywords == new_material_keywords
-    assert simple_material.components == new_components
+    assert simple_material_node.name == new_name
+    assert simple_material_node.identifiers == new_identifiers
+    assert simple_material_node.properties == new_properties
+    assert simple_material_node.process == new_process
+    assert simple_material_node.parent_materials == new_parent_material
+    assert simple_material_node.computation_forcefield == new_computation_forcefield
+    assert simple_material_node.keywords == new_material_keywords
+    assert simple_material_node.components == new_components
 
 
-def test_serialize_material_to_json(simple_material) -> None:
+def test_serialize_material_to_json(simple_material_node) -> None:
     """
     tests that it can correctly turn the material node into its equivalent JSON
     """
@@ -157,7 +93,7 @@ def test_serialize_material_to_json(simple_material) -> None:
     }
 
     # compare dicts because that is more accurate
-    assert json.loads(simple_material.json) == expected_dict
+    assert json.loads(simple_material_node.json) == expected_dict
 
 
 # ---------- Integration Tests ----------

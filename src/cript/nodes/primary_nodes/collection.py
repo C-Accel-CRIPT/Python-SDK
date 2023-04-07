@@ -2,25 +2,20 @@ from dataclasses import dataclass, replace
 from typing import Any, List
 
 # from cript import Inventory, Experiment, Citation
-from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
 class Collection(PrimaryBaseNode):
     """
-    Collection class
-
     [Collection node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=8)
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(PrimaryBaseNode.JsonAttributes):
         """
         all Collection attributes
         """
 
-        node: str = "Collection"
-        name: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
         experiments: List[Any] = None
         inventories: List[Any] = None
@@ -36,6 +31,7 @@ class Collection(PrimaryBaseNode):
         inventories: List[Any] = None,
         cript_doi: str = "",
         citations: List[Any] = None,
+        notes: str = "",
         **kwargs
     ) -> None:
         """
@@ -66,7 +62,7 @@ class Collection(PrimaryBaseNode):
         -------
         None
         """
-        super().__init__(node="Collection")
+        super().__init__(node="Collection", name=name, notes=notes)
 
         if experiments is None:
             experiments = []
@@ -103,35 +99,6 @@ class Collection(PrimaryBaseNode):
         pass
 
     # ------------------ Properties ------------------
-
-    @property
-    def name(self) -> str:
-        """
-        get the name of the collection
-
-        Returns
-        -------
-        str
-            collection name
-        """
-        return self._json_attrs.name
-
-    @name.setter
-    def name(self, new_name: str) -> None:
-        """
-        sets the collection name to new name
-
-        Parameters
-        ----------
-        new_name: str
-            new name for the collection
-
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, name=new_name)
-        self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def experiments(self) -> List[Any]:

@@ -14,7 +14,9 @@ def test_simple_process() -> None:
     my_process_keywords = ["anionic"]
 
     # create process node
-    my_process = cript.Process(type=my_process_type, description=my_process_description, keywords=my_process_keywords)
+    my_process = cript.Process(
+        name="my process name", type=my_process_type, description=my_process_description, keywords=my_process_keywords
+    )
 
     # assertions
     assert isinstance(my_process, cript.Process)
@@ -23,7 +25,9 @@ def test_simple_process() -> None:
     assert my_process.keywords == my_process_keywords
 
 
-def test_complex_process_node(simple_ingredient_node) -> None:
+def test_complex_process_node(
+    simple_ingredient_node, simple_equipment_node, simple_citation_node, simple_property_node, simple_condition_node
+) -> None:
     """
     create a process node with all possible arguments
 
@@ -33,14 +37,9 @@ def test_complex_process_node(simple_ingredient_node) -> None:
     """
     # TODO clean up this test and use fixtures from conftest.py
 
+    my_process_name = "my complex process node name"
     my_process_type = "affinity_pure"
-
     my_process_description = "my simple material description"
-
-    my_equipments = [
-        cript.Equipment(key="burner"),
-        cript.Equipment(key="canula"),
-    ]
 
     process_product = [
         cript.Material(
@@ -63,18 +62,8 @@ def test_complex_process_node(simple_ingredient_node) -> None:
     ]
 
     prerequisite_processes = [
-        cript.Process(type="blow_molding"),
-        cript.Process(type="centrifugation"),
-    ]
-
-    my_conditions = [
-        cript.Condition(key="atm", type="min", value=1),
-        cript.Condition(key="boundary_type", type="max", value=2),
-    ]
-
-    my_properties = [
-        cript.Property(key="arrhenius_activation", type="min", value=3, unit="gram"),
-        cript.Property(key="arrhenius_activation", type="max", value=4, unit="gram"),
+        cript.Process(name="prerequisite processes 1", type="blow_molding"),
+        cript.Process(name="prerequisite processes 2", type="centrifugation"),
     ]
 
     my_process_keywords = [
@@ -82,37 +71,34 @@ def test_complex_process_node(simple_ingredient_node) -> None:
         "annealing_sol",
     ]
 
-    my_reference = cript.Reference(type="journal_article", title="my title")
-
-    my_citations = [cript.Citation(type="derived_from", reference=my_reference)]
-
     # create complex process
     my_complex_process = cript.Process(
+        name=my_process_name,
         type=my_process_type,
         ingredients=[simple_ingredient_node],
         description=my_process_description,
-        equipments=my_equipments,
+        equipments=[simple_equipment_node],
         products=process_product,
         waste=process_waste,
         prerequisite_processes=[prerequisite_processes],
-        conditions=my_conditions,
-        properties=my_properties,
+        conditions=[simple_condition_node],
+        properties=[simple_property_node],
         keywords=my_process_keywords,
-        citations=my_citations,
+        citations=[simple_citation_node],
     )
 
     # assertions
     assert my_complex_process.type == my_process_type
     assert my_complex_process.ingredients == [simple_ingredient_node]
     assert my_complex_process.description == my_process_description
-    assert my_complex_process.equipments == my_equipments
+    assert my_complex_process.equipments == [simple_equipment_node]
     assert my_complex_process.products == process_product
     assert my_complex_process.waste == process_waste
     assert my_complex_process.prerequisite_processes == [prerequisite_processes]
-    assert my_complex_process.conditions == my_conditions
-    assert my_complex_process.properties == my_properties
+    assert my_complex_process.conditions == [simple_condition_node]
+    assert my_complex_process.properties == [simple_property_node]
     assert my_complex_process.keywords == my_process_keywords
-    assert my_complex_process.citations == my_citations
+    assert my_complex_process.citations == [simple_citation_node]
 
 
 def test_process_getters_and_setters(
@@ -169,7 +155,7 @@ def test_serialize_process_to_json(simple_process_node) -> None:
     """
     test serializing process node to JSON
     """
-    expected_process_dict = {"keywords": [], "node": "Process", "type": "affinity_pure"}
+    expected_process_dict = {"node": "Process", "name": "my process name", "keywords": [], "type": "affinity_pure"}
 
     # comparing dicts because they are more accurate
     assert json.loads(simple_process_node.json) == expected_process_dict

@@ -16,7 +16,6 @@ class Process(PrimaryBaseNode):
         all Process attributes
         """
 
-        node: str = "Process"
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
         ingredients: List[Any] = field(default_factory=list)
@@ -34,6 +33,7 @@ class Process(PrimaryBaseNode):
 
     def __init__(
         self,
+        name: str,
         type: str,
         ingredients: List[Any] = None,
         description: str = "",
@@ -45,6 +45,7 @@ class Process(PrimaryBaseNode):
         properties: List[Any] = None,
         keywords: List[str] = None,
         citations: List[Any] = None,
+        notes: str = "",
         **kwargs
     ) -> None:
         """
@@ -92,6 +93,8 @@ class Process(PrimaryBaseNode):
 
         if citations is None:
             citations = []
+
+        super().__init__(node="Process", name=name, notes=notes)
 
         new_attrs = replace(
             self._json_attrs,

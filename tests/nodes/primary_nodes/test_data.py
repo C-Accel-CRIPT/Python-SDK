@@ -9,7 +9,7 @@ def test_create_simple_data_node(simple_file_node) -> None:
     """
     my_data_type = "afm_amp"
 
-    my_data = cript.Data(type=my_data_type, files=[simple_file_node])
+    my_data = cript.Data(name="my data name", type=my_data_type, files=[simple_file_node])
 
     # assertions
     assert isinstance(my_data, cript.Data)
@@ -29,6 +29,7 @@ def test_create_complex_data_node(
     create a complex data node with all possible arguments
     """
     my_complex_data = cript.Data(
+        name="my complex data node name",
         type="afm_amp",
         files=[simple_file_node],
         sample_preperation=simple_process_node,
@@ -122,6 +123,9 @@ def test_serialize_data_to_json(simple_data_node) -> None:
 
     # TODO should Base attributes should be in here too like notes, public, model version, etc?
     expected_data_dict = {
+        "node": "Data",
+        "type": "afm_amp",
+        "name": "my data name",
         "files": [
             {
                 "data_dictionary": "my file's data dictionary",
@@ -131,8 +135,6 @@ def test_serialize_data_to_json(simple_data_node) -> None:
                 "type": "calibration",
             }
         ],
-        "node": "Data",
-        "type": "afm_amp",
     }
 
     assert json.loads(simple_data_node.json) == expected_data_dict

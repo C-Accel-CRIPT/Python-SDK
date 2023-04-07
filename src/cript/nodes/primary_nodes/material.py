@@ -72,8 +72,6 @@ class Material(PrimaryBaseNode):
         all Material attributes
         """
 
-        node: str = "Material"
-        name: str = ""
         # identifier sub-object for the material
         identifiers: List[dict[str, str]] = field(default_factory=dict)
         # TODO add proper typing in future, using Any for now to avoid circular import error
@@ -105,17 +103,13 @@ class Material(PrimaryBaseNode):
         ----------
         name: str
         identifiers: List[dict[str, str]]
+
         components: List["Material"], default=None
         properties: List[Property], default=None
         process: List[Process], default=None
         parent_materials: List["Material"], default=None
         computation_forcefield: List[ComputationalProcess], default=None
         keywords: List[str], default=None
-
-        Examples
-        --------
-        identifiers = [{"alternative_names": "my material alternative name"}]
-        my_material = cript.Material(name="my material", identifiers=identifiers)
 
         Returns
         -------
@@ -162,12 +156,12 @@ class Material(PrimaryBaseNode):
     @property
     def name(self) -> str:
         """
-        material name
+        get material name
 
         Returns
         -------
-        material name: str
-
+        str
+            material name
         """
         return self._json_attrs.name
 
@@ -179,11 +173,6 @@ class Material(PrimaryBaseNode):
         Parameters
         ----------
         new_name: str
-            new material name to overwrite the current
-
-        Examples
-        --------
-        my_material.name = "new material name"
 
         Returns
         -------
@@ -195,7 +184,7 @@ class Material(PrimaryBaseNode):
     @property
     def identifiers(self) -> List[dict[str, str]]:
         """
-        The identifiers for this material
+        get the identifiers for this material
 
         Returns
         -------
@@ -209,17 +198,11 @@ class Material(PrimaryBaseNode):
         set the list of identifiers for this material
 
         the identifier keys must come from the
-        material identifiers keywords within the
-        [CRIPT material identifiers controlled vocabulary]()
+        material identifiers keywords within the CRIPT controlled vocabulary
 
         Parameters
         ----------
         new_identifiers_list: List[dict[str, str]]
-            new list of identifier nodes to overwrite the current
-
-        Examples
-        --------
-        my_material.identifier = [{"alternative_name" : "my new alternative name"}]
 
         Returns
         -------
@@ -247,7 +230,6 @@ class Material(PrimaryBaseNode):
         Parameters
         ----------
         new_components_list: List["Material"]
-            new list of material nodes as components of this material
 
         Returns
         -------
@@ -275,7 +257,6 @@ class Material(PrimaryBaseNode):
         Parameters
         ----------
         new_properties_list: List[Property]
-            new list of property to overwrite the current list of properties
 
         Returns
         -------
@@ -292,7 +273,6 @@ class Material(PrimaryBaseNode):
         Returns
         -------
         List[Process]
-            list of process for this material node
         """
         return self._json_attrs.process
 
@@ -320,7 +300,6 @@ class Material(PrimaryBaseNode):
         Returns
         -------
         List["Material"]
-            List of parent materials
         """
         return self._json_attrs.parent_materials
 
@@ -332,7 +311,6 @@ class Material(PrimaryBaseNode):
         Parameters
         ----------
         new_parent_materials_list: List["Material"]
-            new list of parent materials to overwrite the current list of parent materials
 
         Returns
         -------

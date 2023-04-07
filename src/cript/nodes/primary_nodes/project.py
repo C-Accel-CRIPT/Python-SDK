@@ -4,6 +4,7 @@ from typing import List
 from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.supporting_nodes.group import Group
 
 
 class Project(PrimaryBaseNode):
@@ -17,17 +18,22 @@ class Project(PrimaryBaseNode):
         all Project attributes
         """
 
-        node: str = "Project"
-        # project name
-        name: str = ""
         # TODO is group needed?
-        # group: Group = None
+        group: Group = None
         collections: List[Collection] = field(default_factory=list)
         materials: List[Material] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, collections: List[Collection], materials: List[Material] = None, **kwargs):
+    def __init__(
+        self,
+        name: str,
+        # group: Group,
+        collections: List[Collection] = None,
+        materials: List[Material] = None,
+        notes: str = "",
+        **kwargs
+    ):
         """
         Create a Project node with Project name and Group
 
@@ -43,7 +49,10 @@ class Project(PrimaryBaseNode):
         -------
         None
         """
-        super().__init__(node="Project")
+        super().__init__(node="Project", name=name, notes=notes)
+
+        if collections is None:
+            collections = []
 
         if materials is None:
             materials = []
@@ -53,65 +62,35 @@ class Project(PrimaryBaseNode):
 
     # ------------------ Properties ------------------
 
-    # Project Name
+    # GROUP
     @property
-    def name(self) -> str:
+    def group(self) -> Group:
         """
-        name property getter method
+        group property getter method
 
         Returns
         -------
-        name: str
-            project name
+        group: cript.Group
+            Group that owns the project
         """
-        return self._json_attrs.name
+        return self._json_attrs.group
 
-    @name.setter
-    def name(self, new_name: str):
+    @group.setter
+    def group(self, new_group: Group):
         """
-        Setter for the project name
+        Sets the group the project belongs to
 
         Parameters
         ----------
-        new_name: str
-            new project name
+        new_group: Group
+            new Group object
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, name=new_name)
+        new_attrs = replace(self._json_attrs, group=new_group)
         self._update_json_attrs_if_valid(new_attrs)
-
-    # GROUP
-    # @property
-    # def group(self) -> Group:
-    #     """
-    #     group property getter method
-    #
-    #     Returns
-    #     -------
-    #     group: Group
-    #         Group that owns the project
-    #     """
-    #     return self._json_attrs.group
-    #
-    # @group.setter
-    # def group(self, new_group: Group):
-    #     """
-    #     Sets the group the project belongs to
-    #
-    #     Parameters
-    #     ----------
-    #     new_group: Group
-    #         new Group object
-    #
-    #     Returns
-    #     -------
-    #     None
-    #     """
-    #     new_attrs = replace(self._json_attrs, group=new_group)
-    #     self._update_json_attrs_if_valid(new_attrs)
 
     # Collection
     @property

@@ -50,7 +50,6 @@ class Data(PrimaryBaseNode):
         all Data attributes
         """
 
-        node: str = "Data"
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
         files: List[Any] = field(default_factory=list)
@@ -65,6 +64,7 @@ class Data(PrimaryBaseNode):
 
     def __init__(
         self,
+        name: str,
         type: str,
         files: List[Any],
         sample_preperation: Any = None,
@@ -73,9 +73,10 @@ class Data(PrimaryBaseNode):
         materials: List[Any] = None,
         processes: List[Any] = None,
         citations: List[Any] = None,
+        notes: str = "",
         **kwargs
     ):
-        super().__init__(node="Data")
+        super().__init__(node="Data", name=name, notes=notes)
 
         if files is None:
             files = []

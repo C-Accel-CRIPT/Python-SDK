@@ -16,12 +16,11 @@ class Inventory(PrimaryBaseNode):
         all Inventory attributes
         """
 
-        node: str = "Inventory"
         materials: List[Material] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, materials_list: List[Material], **kwargs) -> None:
+    def __init__(self, name: str, materials_list: List[Material], notes: str = "", **kwargs) -> None:
         """
         create an inventory node
 
@@ -38,7 +37,8 @@ class Inventory(PrimaryBaseNode):
         if materials_list is None:
             materials_list = []
 
-        super().__init__(node="Inventory")
+        super().__init__(node="Inventory", name=name, notes=notes)
+
         self._json_attrs = replace(self._json_attrs, materials=materials_list)
 
     # ------------------ Properties ------------------

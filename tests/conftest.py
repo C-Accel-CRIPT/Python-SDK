@@ -32,6 +32,7 @@ def cript_api():
 
 
 # ---------- Primary Nodes ----------
+# TODO all complex nodes and getters need notes attributes
 @pytest.fixture(scope="function")
 def simple_project_node(simple_collection_node) -> cript.Project:
     """
@@ -116,11 +117,12 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
     my_computational_process_type = "cross_linking"
 
     # input data
+    # TODO should be using simple_data_node fixture
     data_files = cript.File(
         source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary"
     )
 
-    input_data = cript.Data(type="afm_amp", files=[data_files])
+    input_data = cript.Data(name="my data name", type="afm_amp", files=[data_files])
 
     # ingredients with Material and Quantity node
     my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
@@ -133,7 +135,10 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
     )
 
     my_computational_process = cript.ComputationalProcess(
-        type=my_computational_process_type, input_data=[input_data], ingredients=[ingredients]
+        name="my computational process name",
+        type=my_computational_process_type,
+        input_data=[input_data],
+        ingredients=[ingredients],
     )
 
     return my_computational_process
@@ -144,7 +149,7 @@ def simple_data_node(simple_file_node) -> cript.Data:
     """
     minimal data node
     """
-    my_data = cript.Data(type="afm_amp", files=[simple_file_node])
+    my_data = cript.Data(name="my data name", type="afm_amp", files=[simple_file_node])
 
     return my_data
 
@@ -154,7 +159,7 @@ def simple_process_node() -> cript.Process:
     """
     simple process node to use in other tests to keep tests clean
     """
-    my_process = cript.Process(type="affinity_pure")
+    my_process = cript.Process(name="my process name", type="affinity_pure")
 
     return my_process
 
@@ -164,7 +169,7 @@ def simple_computation_node() -> cript.Computation:
     """
     simple computation node to use between tests
     """
-    my_computation = cript.Computation(type="analysis")
+    my_computation = cript.Computation(name="my computation name", type="analysis")
 
     return my_computation
 
@@ -221,6 +226,29 @@ def simple_reference_node() -> cript.Reference:
 
 
 @pytest.fixture(scope="function")
+def complex_reference_node() -> cript.Reference:
+    """
+    complex reference node with all possible reference node arguments to use for other tests
+    """
+    return cript.Reference(
+        type="journal_article",
+        title="Adding the Effect of Topological Defects to the Flory\u2013Rehner and Bray\u2013Merrill Swelling Theories",
+        authors=["Nathan J. Rebello", "Haley K. Beech", "Bradley D. Olsen"],
+        journal="ACS Macro Letters",
+        publisher="American Chemical Society",
+        year=2022,
+        volume=10,
+        issue=None,
+        pages=[531, 537],
+        doi="10.1021/acsmacrolett.0c00909",
+        issn="",
+        arxiv_id="",
+        pmid=None,
+        website="",
+    )
+
+
+@pytest.fixture(scope="function")
 def simple_software_node() -> cript.Software:
     """
     minimal software node with only required arguments
@@ -250,7 +278,7 @@ def simple_inventory_node() -> None:
 
     material_2 = cript.Material(name="material 2", identifiers=[{"alternative_names": "material 2 alternative name"}])
 
-    my_inventory = cript.Inventory(materials_list=[material_1, material_2])
+    my_inventory = cript.Inventory(name="my inventory name", materials_list=[material_1, material_2])
 
     # use my_inventory in another test
     return my_inventory

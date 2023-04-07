@@ -29,8 +29,12 @@ class PrimaryBaseNode(BaseNode, ABC):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, node: str):
+    def __init__(self, node: str, name: str, notes: str):
+        # initialize Base class with node
         super().__init__(node)
+
+        # replace name and notes within PrimaryBase
+        self._json_attrs = replace(self._json_attrs, name=name, notes=notes)
 
     def __str__(self) -> str:
         """
@@ -90,6 +94,22 @@ class PrimaryBaseNode(BaseNode, ABC):
     @property
     def name(self):
         return self._json_attrs.name
+
+    @name.setter
+    def name(self, new_name: str) -> None:
+        """
+        set the PrimaryBaseNode name
+
+        Parameters
+        ----------
+        new_name: str
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, name=new_name)
+        self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def notes(self):

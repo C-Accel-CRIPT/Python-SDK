@@ -270,16 +270,20 @@ class File(BaseNode):
         The data dictionary contains additional information
         that the scientist needs to describe their file.
 
-        Notes:
-            It is advised for this field to be written in JSON format
+        Notes
+        ------
+        It is advised for this field to be written in JSON format
 
-        Example:
-            ```python
-            my_file.data_dictionary = "{'notes': 'This is something that describes my file node.'}"
-            ```
+        Examples
+        -------
+        ```python
+        my_file.data_dictionary = "{'notes': 'This is something that describes my file node.'}"
+        ```
 
-        Returns:
-            The data dictionary as a string
+        Returns
+        -------
+        str
+            the file data dictionary attribute
         """
         return self._json_attrs.data_dictionary
 

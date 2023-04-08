@@ -89,7 +89,7 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: [src]
+          paths: ["src", "docs"]
           options:
             show_bases: true
             show_source: true

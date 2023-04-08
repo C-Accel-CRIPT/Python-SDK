@@ -28,7 +28,7 @@ def cript_api():
     cript.API
         api object used to interact with CRIPT
     """
-    return cript.API(host="https://cript.org", token="123465")
+    pass
 
 
 # ---------- Primary Nodes ----------

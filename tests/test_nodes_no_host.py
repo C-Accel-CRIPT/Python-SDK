@@ -212,6 +212,7 @@ def test_software():
     s2.source = "https://github.com/SSAGESLabs/PySAGES"
     assert s2.source == "https://github.com/SSAGESLabs/PySAGES"
 
+
 def test_json_error():
     faulty_json = "{'node': 'Parameter', 'foo': 'bar'}".replace("'", '"')
     with pytest.raises(CRIPTJsonDeserializationError):
@@ -226,6 +227,7 @@ def test_json_error():
     parameter._json_attrs = None
     with pytest.raises(CRIPTJsonSerializationError):
         parameter.json
+
 
 def get_property():
     p = cript.Property(

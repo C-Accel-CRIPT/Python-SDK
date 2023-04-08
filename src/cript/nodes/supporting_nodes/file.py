@@ -82,7 +82,7 @@ class File(BaseNode):
         **kwargs:dict
             for internal use. Any extra data needed to create this file node from API JSON
 
-        Example
+        Examples
         --------
         ```python
         my_file = cript.File(
@@ -236,7 +236,8 @@ class File(BaseNode):
 
         Returns
         -------
-        extension: file extension
+        extension: str
+            file extension
         """
         return self._json_attrs.extension
 
@@ -282,7 +283,7 @@ class File(BaseNode):
 
         Returns
         -------
-        str
+        data_dictionary: str
             the file data dictionary attribute
         """
         return self._json_attrs.data_dictionary

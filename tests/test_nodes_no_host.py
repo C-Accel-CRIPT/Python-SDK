@@ -5,7 +5,9 @@ from dataclasses import replace
 import pytest
 
 import cript
-from cript.nodes.exceptions import CRIPTNodeSchemaError, CRIPTJsonDeserializationError, CRIPTJsonSerializationError
+from cript.nodes.exceptions import (CRIPTJsonDeserializationError,
+                                    CRIPTJsonSerializationError,
+                                    CRIPTNodeSchemaError)
 
 
 def get_parameter():
@@ -120,8 +122,7 @@ def test_algorithm():
     assert a_str == get_algorithm_string()
     a.parameter += [get_parameter()]
     a_str = get_algorithm_string()
-    a_str2 = json.dumps(json.loads(a_str.replace("}", f', "parameter": [{get_parameter_string()}]' + "}")),
-                        sort_keys=True)
+    a_str2 = json.dumps(json.loads(a_str.replace("}", f', "parameter": [{get_parameter_string()}]' + "}")), sort_keys=True)
     assert a_str2 == a.json
 
     a2 = cript.load_nodes_from_json(a_str2)

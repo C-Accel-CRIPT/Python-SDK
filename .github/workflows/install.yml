@@ -29,5 +29,6 @@ jobs:
       - name: Check installation
         run: |
           python3 -m pip install pytest
+          python3 -m pip install -r requirements.txt
           python3 -c "import cript"
           python3 -m pytest

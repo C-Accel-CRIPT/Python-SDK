@@ -1,3 +1,5 @@
+from typing import List
+
 from cript.exceptions import CRIPTException
 
 
@@ -33,15 +35,28 @@ class InvalidVocabulary(CRIPTException):
     Raised when the CRIPT controlled vocabulary is invalid
     """
 
-    # TODO add a the correct URL here
-    vocab_URL: str = "https://cript.org/controlled-vocabulary"
-
-    def __init__(self):
-        pass
+    def __init__(self, vocab: str, possible_vocab: List[str]):
+        self.vocab
+        self.possible_vocab
 
     def __str__(self) -> str:
-        ret_str = "The vocabulary entered does not exist within the CRIPT controlled vocabulary."
-        ret_str += f" Please pick a valid CRIPT vocabulary from {self.vocab_URL}"
+        ret_str = f"The vocabulary '{self.vocab}' entered does not exist within the CRIPT controlled vocabulary."
+        ret_str += f" Please pick a valid CRIPT vocabulary from {self.possible_vocab}"
+        return ret_str
+
+
+class InvalidVocabularyCategory(CRIPTException):
+    """
+    Raised when the CRIPT controlled vocabulary category is unknow
+    """
+
+    def __init__(self, vocab_category: str, valid_vocab_category: List[str]):
+        self.vocab_category = vocab_category
+        self.valid_vocab_category = valid_vocab_category
+
+    def __str__(self) -> str:
+        ret_str = f"The vocabulary category '{self.vocab_category}' does not exist within the CRIPT controlled vocabulary."
+        ret_str += f" Please pick a valid CRIPT vocabulary category from {self.valid_vocab_category}."
         return ret_str
 
 

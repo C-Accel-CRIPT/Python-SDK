@@ -1,6 +1,5 @@
 import pytest
 
-
 # from cript.api.schema_validation import _get_db_schema
 # from cript.api.vocabulary import _get_controlled_vocabulary
 

@@ -154,8 +154,8 @@ def simple_data_node(simple_file_node) -> cript.Data:
     return my_data
 
 
-@pytest.fixture(scope="fucntion")
-def test_create_complex_data_node(
+@pytest.fixture(scope="function")
+def complex_data_node(
     simple_file_node,
     simple_process_node,
     simple_computation_node,

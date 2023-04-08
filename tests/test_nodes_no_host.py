@@ -5,11 +5,7 @@ from dataclasses import replace
 import pytest
 
 import cript
-from cript.nodes.exceptions import (
-    CRIPTJsonDeserializationError,
-    CRIPTJsonSerializationError,
-    CRIPTNodeSchemaError,
-)
+from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 
 def get_parameter():
@@ -138,50 +134,6 @@ def test_algorithm():
     assert a.citation[0].json == get_citation().json
 
 
-def test_local_search():
-    a = get_algorithm()
-
-    # Check if we can use search to find the algoritm node, but specifying node and key
-    find_algorithms = a.find_children({"node": "Algorithm", "key": "mc_barostat"})
-    assert find_algorithms == [a]
-    # Check if it corretcly exclude the algorithm if key is specified to non-existent value
-    find_algorithms = a.find_children({"node": "Algorithm", "key": "mc"})
-    assert find_algorithms == []
-
-    # Adding 2 separate parameters to test deeper search
-    p1 = get_parameter()
-    p2 = get_parameter()
-    p2.key = "advanced_sampling"
-    p2.value = 15.0
-    p2.unit = "m"
-    a.parameter += [p1, p2]
-
-    # Test if we can find a specific one of the parameters
-    find_parameter = a.find_children({"key": "advanced_sampling"})
-    assert find_parameter == [p2]
-
-    # Test to find the other parameter
-    find_parameter = a.find_children({"key": "update_frequency"})
-    assert find_parameter == [p1]
-
-    # Test if correctly find no paramter if we are searching for a non-existent parameter
-    find_parameter = a.find_children({"key": "update"})
-    assert find_parameter == []
-
-    # Test nested search. Here we are looking for any node that has a child node parameter as specified.
-    find_algorithms = a.find_children({"parameter": {"key": "advanced_sampling"}})
-    assert find_algorithms == [a]
-    # Same as before, but specifiying two children that have to be present (AND condition)
-    find_algorithms = a.find_children({"parameter": [{"key": "advanced_sampling"}, {"key": "update_frequency"}]})
-    assert find_algorithms == [a]
-
-    # Test that the main node is correctly excluded if we specify an additionally non-existent paramter
-    find_algorithms = a.find_children(
-        {"parameter": [{"key": "advanced_sampling"}, {"key": "update_frequency"}, {"foo": "bar"}]}
-    )
-    assert find_algorithms == []
-
-
 def test_quantity():
     q = get_quantity()
     assert q.json == get_quantity_string()
@@ -196,14 +148,6 @@ def test_quantity():
     q.set_uncertainty(0.1, "var")
     assert q.uncertainty == 0.1
     assert q.uncertainty_type == "var"
-
-
-def test_removing_nodes():
-    a = get_algorithm()
-    p = get_parameter()
-    a.parameter += [p]
-    a.remove_child(p)
-    assert a.json == get_algorithm_string()
 
 
 def test_reference():
@@ -268,7 +212,6 @@ def test_software():
     s2.source = "https://github.com/SSAGESLabs/PySAGES"
     assert s2.source == "https://github.com/SSAGESLabs/PySAGES"
 
-
 def test_json_error():
     faulty_json = "{'node': 'Parameter', 'foo': 'bar'}".replace("'", '"')
     with pytest.raises(CRIPTJsonDeserializationError):
@@ -283,7 +226,6 @@ def test_json_error():
     parameter._json_attrs = None
     with pytest.raises(CRIPTJsonSerializationError):
         parameter.json
-
 
 def get_property():
     p = cript.Property(

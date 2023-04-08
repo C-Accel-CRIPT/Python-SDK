@@ -1,15 +1,26 @@
 import copy
+import json
 import os
 import warnings
 from typing import List, Literal, Union
 
+import requests
+from jsonschema import validate as json_validate
+
 from cript.api._valid_search_modes import _VALID_SEARCH_MODES
-from cript.api.exceptions import CRIPTAPIAccessError, CRIPTConnectionError
+from cript.api.exceptions import (
+    CRIPTAPIAccessError,
+    CRIPTConnectionError,
+    InvalidVocabulary,
+    InvalidVocabularyCategory,
+)
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
 from cript.nodes.supporting_nodes.group import Group
 from cript.nodes.supporting_nodes.user import User
 
+# Do not use this directly! That includes devs.
+# Use the `_get_global_cached_api for access.
 _global_cached_api = None
 
 
@@ -20,12 +31,14 @@ def _get_global_cached_api():
     """
     if _global_cached_api is None:
         raise CRIPTAPIAccessError
-    return copy.copy(_global_cached_api)
+    return _global_cached_api
 
 
 class API:
     _host: str = ""
     _token: str = ""
+    _vocabulary: dict = None
+    _schema: dict = None
 
     def __init__(self, host: Union[str, None], token: [str, None]) -> None:
         """
@@ -100,17 +113,166 @@ class API:
         self._host = host
         self._token = token
 
-    def __enter__(self):
+        self._load_controlled_vocabulary()
+        self._load_db_schema()
+
+    def _load_controlled_vocabulary(self) -> dict:
+        """
+        gets the entire controlled vocabulary
+        1. checks global variable to see if it is already set
+            if it is already set then it just returns that
+        2. if global variable is empty, then it makes a request to the API
+           and gets the entire controlled vocabulary
+           and then sets the global variable to it
+        """
+        # TODO make request to API to get controlled vocabulary
+        response = requests.get(f"{self.host}/api/v1/cv/").json()
+        # TODO error checking
+        response = {}
+
+        # TODO Perform some test if we are supporting this version of the vocab
+        self._vocabulary = dict(response)
+
+    def get_vocabulary(self, vocab_category: str) -> Union[dict, InvalidVocabularyCategory]:
+        """
+        Returns
+        -------
+        dict
+        controlled vocabulary
+        """
+
+        if vocab_category not in self._vocabulary:
+            raise InvalidVocabularyCategory(vocab_category, self._vocabulary.keys())
+
+        # Again, return a copy because we don't want
+        # anyone being able to change the private attribute
+        return copy.deepcopy(self._vocabulary[vocab_category])
+
+    def is_vocab_valid(
+        self, vocab_category: str, vocab_value: str
+    ) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
+        """
+        checks if the vocabulary is valid within the CRIPT controlled vocabulary.
+        Either returns True or InvalidVocabulary Exception
+
+        1. if the vocabulary is custom (starts with "+")
+            then it is automatically valid
+        2. if vocabulary is not custom, then it is checked against its category
+            if the word cannot be found in the category then it returns False
+
+        Parameters
+        ----------
+        vocab_category: str
+            the category the vocabulary is in e.g. "Material keyword", "Data type", "Equipment key"
+        vocab_value: str
+            the vocabulary word e.g. "CAS", "SMILES", "BigSmiles", "+my_custom_key"
+
+        Returns
+        -------
+        a boolean of if the vocabulary is valid or not
+
+        Raises
+        ------
+        InvalidVocabulary
+            If the vocabulary is invalid then the error gets raised
+        """
+
+        # check if vocab is custom
+        # This is deactivated currently, no custom vocab allowed.
+        if vocab_value.startswith("+"):
+            return True
+
+        # Raise Exeption if invalid category
+        controlled_vocabulary = self.get_vocabulary(vocab_category)
+
+        if vocab_value in controlled_vocabulary:
+            return True
+        # if the vocabulary does not exist in a given category
+        raise InvalidVocabulary(vocab_value, controlled_vocabulary)
+
+    def _load_db_schema(self):
+        """
+        Sends a GET request to CRIPT to get the database schema and returns it.
+        The database schema can be used for validating the JSON request
+        before submitting it to CRIPT.
+
+        Makes a request to get it from CRIPT.
+        After successfully getting it from CRIPT, it sets the class variable
+        """
+        # TODO figure out the version
+        response = requests.get(f"{self.host}/api/v1/schema/").json()
+        # TODO error checking
+        # TODO check that we support that version
+        self._schema = response
+
+    def is_node_valid(self, node_json: str) -> bool:
+        """
+        checks a node JSON schema against the db schema to return if it is valid or not.
+        This function does not take into consideration vocabulary validation.
+        For vocabulary validation please check `is_vocab_valid`
+
+        Parameters
+        ----------
+        node:
+            a node in JSON form
+
+        Returns
+        -------
+        bool
+            whether the node JSON is valid or not
+        """
+
+        # TODO currently validate says every syntactically valid JSON is valid
+        # TODO do we want invalid schema to raise an exception?
+        node_dict = json.loads(node_json)
+        if json_validate(node_dict, self._schema):
+            return True
+        else:
+            return False
+
+    @property
+    def schema(self):
+        """
+        Access the CRIPTSchema that is associated with this API connection.
+        This can be used to validate node JSON.
+        """
+        return copy.copy(self._schema)
+
+    def connect(self):
+        """
+        Connect this API globally as the current active access point.
+        It is not necessary to call this function manually if a context manager is used.
+        A context manager is preferred where possible.
+        Jupyter notebooks are a use case where this connection can be handled manually.
+        If this function is called manually, the `API.disconnect` function has to be called later.
+
+        For manual connection: nested API object are discouraged.
+        """
         # Store the last active global API (might be None)
         global _global_cached_api
         self._previous_global_cached_api = copy.copy(_global_cached_api)
         _global_cached_api = self
         return self
 
-    def __exit__(self, type, value, traceback):
+    def disconnect(self):
+        """
+        Disconnect this API from the active access point.
+        It is not necessary to call this function manually if a context manager is used.
+        A context manager is preferred where possible.
+        Jupyter notebooks are a use case where this connection can be handled manually.
+        This function has to be called manually if  the `API.connect` function has to be called before.
+
+        For manual connection: nested API object are discouraged.
+        """
         # Restore the previously active global API (might be None)
         global _global_cached_api
         _global_cached_api = self._previous_global_cached_api
+
+    def __enter__(self):
+        self.connect()
+
+    def __exit__(self, type, value, traceback):
+        self.disconnect()
 
     @property
     def host(self):

@@ -11,11 +11,9 @@ def cript_api():
     Returns:
         API: The created API instance.
     """
-    host: str = "http://development.api.criptapp.org/"
-    token: str = "123456" * 9
 
     assert cript.api.api._global_cached_api is None
-    with cript.API(host, token) as api:
+    with cript.API("http://development.api.mycriptapp.org/", "123456789") as api:
         yield api
     assert cript.api.api._global_cached_api is None
 

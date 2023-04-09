@@ -5,9 +5,7 @@ from dataclasses import replace
 import pytest
 
 import cript
-from cript.nodes.exceptions import (CRIPTJsonDeserializationError,
-                                    CRIPTJsonSerializationError,
-                                    CRIPTNodeSchemaError)
+from cript.nodes.exceptions import CRIPTJsonDeserializationError, CRIPTJsonSerializationError, CRIPTNodeSchemaError
 
 
 def get_parameter():

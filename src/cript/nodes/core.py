@@ -4,8 +4,7 @@ from abc import ABC
 from dataclasses import asdict, dataclass, replace
 from typing import List
 
-from cript.nodes.exceptions import (CRIPTJsonSerializationError,
-                                    CRIPTNodeCycleError)
+from cript.nodes.exceptions import CRIPTJsonSerializationError, CRIPTNodeCycleError
 
 
 class BaseNode(ABC):

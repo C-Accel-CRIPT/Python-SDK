@@ -8,7 +8,12 @@ import requests
 from jsonschema import validate as json_validate
 
 from cript.api._valid_search_modes import _VALID_SEARCH_MODES
-from cript.api.exceptions import CRIPTAPIAccessError, CRIPTConnectionError, InvalidVocabulary, InvalidVocabularyCategory
+from cript.api.exceptions import (
+    CRIPTAPIAccessError,
+    CRIPTConnectionError,
+    InvalidVocabulary,
+    InvalidVocabularyCategory,
+)
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
 from cript.nodes.supporting_nodes.group import Group

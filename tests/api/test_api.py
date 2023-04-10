@@ -3,6 +3,7 @@ from pprint import pprint
 import pytest
 
 import cript
+from cript.api.exceptions import InvalidVocabularyCategory, InvalidVocabulary
 
 
 # TODO use the cript_api from conftest.py
@@ -68,8 +69,35 @@ def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:
 def test_is_vocab_valid(cript_api: cript.API) -> None:
     """
     tests if the method for vocabulary is validating and invalidating correctly
+
+    * test with custom key to check it automatically gives valid
+    * test with a few vocabulary_category and vocabulary_words
+        * valid category and valid vocabulary word
+    * test that invalid category throws the correct error
+        * invalid category and valid vocabulary word
+    * test that invalid vocabulary word throws the correct error
+        * valid category and invalid vocabulary word
+    tests invalid category and invalid vocabulary word
     """
-    pass
+    # custom vocab
+    assert cript_api.is_vocab_valid(vocab_category="algorithm_key", vocab_word="+my_custom_key") is True
+
+    # valid vocab category and valid word
+    assert cript_api.is_vocab_valid(vocab_category="file_type", vocab_word="calibration") is True
+    assert cript_api.is_vocab_valid(vocab_category="quantity_key", vocab_word="mass") is True
+    assert cript_api.is_vocab_valid(vocab_category="uncertainty_type", vocab_word="fwhm") is True
+
+    # # invalid vocab category but valid word
+    with pytest.raises(InvalidVocabularyCategory):
+        cript_api.is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="calibration")
+
+    # valid vocab category but invalid vocab word
+    with pytest.raises(InvalidVocabulary):
+        cript_api.is_vocab_valid(vocab_category="file_type", vocab_word="some_invalid_word")
+
+    # invalid vocab category and invalid vocab word
+    with pytest.raises(InvalidVocabularyCategory):
+        cript_api.is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="some_invalid_word")
 
 
 def test_api_save_material(cript_api: cript.API) -> None:

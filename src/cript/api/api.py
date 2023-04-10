@@ -40,6 +40,36 @@ class API:
     _vocabulary: dict = {}
     _schema: dict = {}
 
+    # TODO consider getting all the controlled vocabulary from an API endpoint instead of having it statically
+    all_controlled_vocab_categories = [
+        "algorithm_key",
+        "algorithm_type",
+        "building_block",
+        "citation_type",
+        "computation_type",
+        "computational_forcefield_key",
+        "computational_process_property_key",
+        "computational_process_type",
+        "condition_key",
+        "data_license",
+        "data_type",
+        "equipment_key",
+        "file_type",
+        "ingredient_keyword",
+        "material_identifier_key",
+        "material_keyword",
+        "material_property_key",
+        "parameter_key",
+        "process_keyword",
+        "process_property_key",
+        "process_type",
+        "property_method",
+        "quantity_key",
+        "reference_type",
+        "set_type",
+        "uncertainty_type",
+    ]
+
     def __init__(self, host: Union[str, None], token: [str, None]):
         """
         Initialize object with host and token.
@@ -160,6 +190,7 @@ class API:
         global _global_cached_api
         _global_cached_api = self._previous_global_cached_api
 
+    # TODO this needs a better name because the current name is unintuitive if you are just getting vocab
     def _get_and_set_vocab(self) -> dict:
         """
         gets the entire controlled vocabulary to be used with validating nodes
@@ -188,41 +219,11 @@ class API:
         if bool(self._vocabulary):
             return self._vocabulary
 
-        # TODO get all controlled vocabulary from an API endpoint instead of having it statically
-        # vocabulary cache is empty and need to get the entire controlled vocabulary
-        # all the controlled vocabulary categories
-        all_categories_of_controlled_vocab = [
-            "algorithm_key",
-            "algorithm_type",
-            "building_block",
-            "citation_type",
-            "computation_type",
-            "computational_forcefield_key",
-            "computational_process_property_key",
-            "computational_process_type",
-            "condition_key",
-            "data_license",
-            "data_type",
-            "equipment_key",
-            "file_type",
-            "ingredient_keyword",
-            "material_identifier_key",
-            "material_keyword",
-            "material_property_key",
-            "parameter_key",
-            "process_keyword",
-            "process_property_key",
-            "process_type",
-            "property_method",
-            "quantity_key",
-            "reference_type",
-            "set_type",
-            "uncertainty_type",
-        ]
-
+        # TODO this needs to be converted to a dict of dicts instead of dict of lists
+        #  because it would be faster to find needed vocab word within the vocab category
         # loop through all vocabulary categories and make a request to each vocabulary category
         # and put them all inside of self._vocab with the keys being the vocab category name
-        for category in all_categories_of_controlled_vocab:
+        for category in self.all_controlled_vocab_categories:
             response = requests.get(f"{self.host}/api/v1/cv/{category}").json()["data"]
             self._vocabulary[category] = response
 
@@ -241,9 +242,7 @@ class API:
         # return a copy because we don't want anyone being able to accidentally change the private attribute
         return copy.deepcopy(self._vocabulary)
 
-    def is_vocab_valid(
-        self, vocab_category: str, vocab_value: str
-    ) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
+    def is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
         """
         checks if the vocabulary is valid within the CRIPT controlled vocabulary.
         Either returns True or InvalidVocabulary Exception
@@ -257,7 +256,7 @@ class API:
         ----------
         vocab_category: str
             the category the vocabulary is in e.g. "Material keyword", "Data type", "Equipment key"
-        vocab_value: str
+        vocab_word: str
             the vocabulary word e.g. "CAS", "SMILES", "BigSmiles", "+my_custom_key"
 
         Returns
@@ -272,16 +271,30 @@ class API:
 
         # check if vocab is custom
         # This is deactivated currently, no custom vocab allowed.
-        if vocab_value.startswith("+"):
+        if vocab_word.startswith("+"):
             return True
 
-        # Raise Exeption if invalid category
-        controlled_vocabulary = self.get_vocabulary(vocab_category)
+        # TODO do we need to raise an InvalidVocabularyCategory here, or can we just give a KeyError?
+        try:
+            # get the entire vocabulary
+            controlled_vocabulary = self._get_and_set_vocab()
+            # get just the category needed
+            controlled_vocabulary = controlled_vocabulary[vocab_category]
+        except KeyError:
+            # vocabulary category does not exist within CRIPT Controlled Vocabulary
+            raise InvalidVocabularyCategory(
+                vocab_category=vocab_category, valid_vocab_category=self.all_controlled_vocab_categories
+            )
 
-        if vocab_value in controlled_vocabulary:
-            return True
-        # if the vocabulary does not exist in a given category
-        raise InvalidVocabulary(vocab_value, controlled_vocabulary)
+        # TODO this can be faster with a dict of dicts that can do o(1) look up
+        #  looping through an unsorted list is an O(n) look up which is slow
+        # loop through the list
+        for vocab_dict in controlled_vocabulary:
+            # check the name exists within the dict
+            if vocab_dict.get("name") == vocab_word:
+                return True
+
+        raise InvalidVocabulary(vocab=vocab_word, possible_vocab=list(controlled_vocabulary))
 
     def _load_db_schema(self):
         """

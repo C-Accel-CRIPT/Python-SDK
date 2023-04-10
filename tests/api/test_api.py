@@ -3,6 +3,7 @@ import pytest
 import cript
 
 
+# TODO use the cript_api from conftest.py
 @pytest.fixture(scope="session")
 def cript_api() -> cript.API:
     """
@@ -23,17 +24,30 @@ def test_api_context(cript_api):
     assert cript.api.api._get_global_cached_api() is not None
 
 
+def test_get_db_schema_from_api(cript_api):
+    """
+    tests that the Python SDK can successfully get the db schema from API
+    """
+    pass
+
+
+def test_get_controlled_vocabulary_from_api(cript_api):
+    """
+    checks if it can successfully get the controlled vocabulary list from CRIPT API
+    """
+    pass
+
+
 def test_api_save_material(cript_api):
     """
     Tests if API object can successfully save a node
+    """
+    pass
 
-    Parameters
-    ----------
-    cript_api
 
-    Returns
-    -------
-    None
+def test_api_search_material_by_uuid(cript_api):
+    """
+    tests if the api can get a node via its UUID
     """
     pass
 
@@ -43,14 +57,13 @@ def test_api_search_material_by_url(cript_api):
     Tests if the api can get the node it saved previously from the backend.
     Tests search function directly, and indirectly tests if the material
     that was already saved is actually saved and can be gotten
+    """
+    pass
 
-    Parameters
-    ----------
-    cript_api
 
-    Returns
-    -------
-    None
+def test_api_material_exact_search(cript_api):
+    """
+    test if a material can be successfully gotten via its name
     """
     pass
 
@@ -59,14 +72,6 @@ def test_api_update_material(cript_api):
     """
     Tests if the API can get a material and then update it and save it in the database,
     and after save it gets the material again and checks if the update was done successfully.
-
-    Parameters
-    ----------
-    cript_api
-
-    Returns
-    -------
-    None
     """
     pass
 
@@ -75,13 +80,5 @@ def test_api_delete_material(cript_api):
     """
     Tests if API can successfully delete a material.
     After deleting it from the backend, it tries to get it, and it should not be able to
-
-    Parameters
-    ----------
-    cript_api
-
-    Returns
-    -------
-    None
     """
     pass

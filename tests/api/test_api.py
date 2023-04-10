@@ -57,6 +57,7 @@ def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:
     checks if it can successfully get the controlled vocabulary list from CRIPT API
     """
     vocab = cript_api._get_and_set_vocab()
+    pprint(vocab)
 
 
 def test_api_save_material(cript_api: cript.API) -> None:

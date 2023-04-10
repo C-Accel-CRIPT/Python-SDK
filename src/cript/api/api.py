@@ -171,7 +171,12 @@ class API:
            and then sets the global variable to it
         """
 
+        # check cache if vocabulary already exists
+        if self._vocabulary is not None:
+            return self._vocabulary
+
         # TODO get all controlled vocabulary from an API endpoint instead of having it statically
+        # vocabulary cache is empty and need to get the entire controlled vocabulary
         # all the controlled vocabulary categories
         all_categories_of_controlled_vocab = [
             "algorithm_key",

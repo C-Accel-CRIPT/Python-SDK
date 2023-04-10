@@ -16,19 +16,16 @@ import cript
 @pytest.fixture(scope="session")
 def cript_api():
     """
-    creates a CRIPT API object, used for integration tests for all nodes
+    Create an API instance for the rest of the tests to use.
 
-    * saving
-    * getting
-    * updating
-    * deleting
-
-    Returns
-    -------
-    cript.API
-        api object used to interact with CRIPT
+    Returns:
+        API: The created API instance.
     """
-    pass
+
+    assert cript.api.api._global_cached_api is None
+    with cript.API("http://development.api.mycriptapp.org/", "123456789") as api:
+        yield api
+    assert cript.api.api._global_cached_api is None
 
 
 # ---------- Primary Nodes ----------

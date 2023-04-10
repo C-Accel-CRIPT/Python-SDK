@@ -1,21 +1,4 @@
-import pytest
-
 import cript
-
-
-@pytest.fixture(scope="session")
-def cript_api():
-    """
-    Create an API instance for the rest of the tests to use.
-
-    Returns:
-        API: The created API instance.
-    """
-
-    assert cript.api.api._global_cached_api is None
-    with cript.API("http://development.api.mycriptapp.org/", "123456789") as api:
-        yield api
-    assert cript.api.api._global_cached_api is None
 
 
 def test_api_context(cript_api):

@@ -151,7 +151,7 @@ class API:
         self._host = host
         self._token = token
 
-        self._get_and_set_vocab()
+        self.get_vocab()
         self._load_db_schema()
 
     def __enter__(self):
@@ -191,7 +191,7 @@ class API:
         _global_cached_api = self._previous_global_cached_api
 
     # TODO this needs a better name because the current name is unintuitive if you are just getting vocab
-    def _get_and_set_vocab(self) -> dict:
+    def get_vocab(self) -> dict:
         """
         gets the entire controlled vocabulary to be used with validating nodes
         with attributes from controlled vocabulary
@@ -217,7 +217,7 @@ class API:
 
         # check cache if vocabulary dict is already populated
         if bool(self._vocabulary):
-            return self._vocabulary
+            return copy.deepcopy(self._vocabulary)
 
         # TODO this needs to be converted to a dict of dicts instead of dict of lists
         #  because it would be faster to find needed vocab word within the vocab category
@@ -227,19 +227,6 @@ class API:
             response = requests.get(f"{self.host}/api/v1/cv/{category}").json()["data"]
             self._vocabulary[category] = response
 
-        return self._vocabulary
-
-    def get_vocabulary(self) -> dict:
-        """
-        get the entire controlled vocabulary for the user to use
-
-        Returns
-        -------
-        dict
-        controlled vocabulary
-        """
-
-        # return a copy because we don't want anyone being able to accidentally change the private attribute
         return copy.deepcopy(self._vocabulary)
 
     def is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
@@ -277,7 +264,7 @@ class API:
         # TODO do we need to raise an InvalidVocabularyCategory here, or can we just give a KeyError?
         try:
             # get the entire vocabulary
-            controlled_vocabulary = self._get_and_set_vocab()
+            controlled_vocabulary = self.get_vocab()
             # get just the category needed
             controlled_vocabulary = controlled_vocabulary[vocab_category]
         except KeyError:

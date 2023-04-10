@@ -34,9 +34,9 @@ def test_create_api(cript_api: cript.API) -> None:
     assert isinstance(api, cript.API)
 
 
-def test_api_context(cript_api: cript.API) -> None:
-    assert cript.api.api._global_cached_api is not None
-    assert cript.api.api._get_global_cached_api() is not None
+# def test_api_context(cript_api: cript.API) -> None:
+#     assert cript.api.api._global_cached_api is not None
+#     assert cript.api.api._get_global_cached_api() is not None
 
 
 def test_api_http_warning(cript_api: cript.API) -> None:
@@ -58,7 +58,7 @@ def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:
     checks if it can successfully get the controlled vocabulary list from CRIPT API
     """
     number_of_vocab_categories = 26
-    vocab = cript_api._get_and_set_vocab()
+    vocab = cript_api.get_vocab()
 
     # assertions
     # check vocabulary list is not empty

@@ -66,6 +66,12 @@ class API:
             If `None` is specified, the token is inferred from the environment variable `CRIPT_TOKEN`.
 
 
+        Notes
+        -----
+        * if `host=None` and `token=None`
+            then the Python SDK will grab the host from the users environment variable of `"CRIPT_HOST"`
+            and `"CRIPT_TOKEN"`
+
         Warns
         -----
         UserWarning
@@ -81,6 +87,7 @@ class API:
         None
         """
 
+        # if host and token is none then it will grab host and token from user's environment variables
         if host is None:
             host = os.environ.get("CRIPT_HOST")
             if host is None:
@@ -95,6 +102,7 @@ class API:
                     "API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n"
                     "Set the environment variable (preferred) or specify the token explictly at the creation of API."
                 )
+
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
 
@@ -115,6 +123,12 @@ class API:
 
         self._load_controlled_vocabulary()
         self._load_db_schema()
+
+    def __enter__(self):
+        self.connect()
+
+    def __exit__(self, type, value, traceback):
+        self.disconnect()
 
     def _load_controlled_vocabulary(self) -> dict:
         """
@@ -267,12 +281,6 @@ class API:
         # Restore the previously active global API (might be None)
         global _global_cached_api
         _global_cached_api = self._previous_global_cached_api
-
-    def __enter__(self):
-        self.connect()
-
-    def __exit__(self, type, value, traceback):
-        self.disconnect()
 
     @property
     def host(self):

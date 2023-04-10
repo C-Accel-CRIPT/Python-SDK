@@ -4,7 +4,11 @@ import pytest
 from test_nodes_no_host import get_algorithm, get_algorithm_string, get_parameter
 
 import cript
-from cript.nodes.exceptions import CRIPTJsonDeserializationError, CRIPTJsonSerializationError, CRIPTNodeCycleError
+from cript.nodes.exceptions import (
+    CRIPTJsonDeserializationError,
+    CRIPTJsonSerializationError,
+    CRIPTNodeCycleError,
+)
 
 
 def test_removing_nodes():

@@ -56,8 +56,20 @@ def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:
     """
     checks if it can successfully get the controlled vocabulary list from CRIPT API
     """
+    number_of_vocab_categories = 26
     vocab = cript_api._get_and_set_vocab()
-    pprint(vocab)
+
+    # assertions
+    # check vocabulary list is not empty
+    assert bool(vocab) is True
+    assert len(vocab) == number_of_vocab_categories
+
+
+def test_get_vocabulary_category(cript_api: cript.API) -> None:
+    """
+    test that a category can be correctly gotten from the API client
+    """
+    pass
 
 
 def test_api_save_material(cript_api: cript.API) -> None:

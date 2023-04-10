@@ -38,9 +38,9 @@ class API:
     _host: str = ""
     _token: str = ""
     _vocabulary: dict = {}
-    _schema: dict = None
+    _schema: dict = {}
 
-    def __init__(self, host: Union[str, None], token: [str, None]) -> None:
+    def __init__(self, host: Union[str, None], token: [str, None]):
         """
         Initialize object with host and token.
         It is necessary to use a `with` context manager with the API like so:
@@ -171,8 +171,8 @@ class API:
            and then sets the global variable to it
         """
 
-        # check cache if vocabulary already exists
-        if self._vocabulary is not None:
+        # check cache if vocabulary dict is already populated
+        if bool(self._vocabulary):
             return self._vocabulary
 
         # TODO get all controlled vocabulary from an API endpoint instead of having it statically
@@ -217,7 +217,7 @@ class API:
 
     def get_vocabulary(self, vocab_category: str) -> dict:
         """
-        get the entire controlled vocabulary for the user to see and use
+        get the entire controlled vocabulary for the user to use
 
         Returns
         -------
@@ -225,12 +225,8 @@ class API:
         controlled vocabulary
         """
 
-        if vocab_category not in self._vocabulary:
-            raise InvalidVocabularyCategory(vocab_category, self._vocabulary.keys())
-
-        # Again, return a copy because we don't want
-        # anyone being able to change the private attribute
-        return copy.deepcopy(self._vocabulary[vocab_category])
+        # return a copy because we don't want anyone being able to accidentally change the private attribute
+        return self._vocabulary[vocab_category]
 
     def is_vocab_valid(
         self, vocab_category: str, vocab_value: str

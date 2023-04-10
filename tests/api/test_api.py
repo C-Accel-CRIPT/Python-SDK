@@ -95,8 +95,22 @@ def test_api_delete_material(cript_api: cript.API) -> None:
     pass
 
 
-def test_get_user_node_from_api(cript_api: cript.API) -> None:
+def test_get_my_user_node_from_api(cript_api: cript.API) -> None:
     """
     tests that the Python SDK can successfully get the user node associated with the API Token
+    """
+    pass
+
+
+def test_get_my_group_node_from_api(cript_api: cript.API) -> None:
+    """
+    tests that group node that is associated with their API Token can be gotten correctly
+    """
+    pass
+
+
+def test_get_my_projects_from_api(cript_api: cript.API) -> None:
+    """
+    get a page of project nodes that is associated with the API token
     """
     pass

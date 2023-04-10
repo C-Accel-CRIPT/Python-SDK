@@ -37,7 +37,7 @@ def _get_global_cached_api():
 class API:
     _host: str = ""
     _token: str = ""
-    _vocabulary: dict = None
+    _vocabulary: dict = {}
     _schema: dict = None
 
     def __init__(self, host: Union[str, None], token: [str, None]) -> None:
@@ -121,7 +121,7 @@ class API:
         self._host = host
         self._token = token
 
-        self._load_controlled_vocabulary()
+        self._get_and_set_vocab()
         self._load_db_schema()
 
     def __enter__(self):
@@ -160,7 +160,7 @@ class API:
         global _global_cached_api
         _global_cached_api = self._previous_global_cached_api
 
-    def _load_controlled_vocabulary(self) -> dict:
+    def _get_and_set_vocab(self) -> dict:
         """
         gets the entire controlled vocabulary to be used with validating nodes
         with attributes from controlled vocabulary
@@ -170,16 +170,50 @@ class API:
            and gets the entire controlled vocabulary
            and then sets the global variable to it
         """
-        # TODO make request to API to get controlled vocabulary
-        response = requests.get(f"{self.host}/api/v1/cv/").json()
-        # TODO error checking
-        response = {}
 
-        # TODO Perform some test if we are supporting this version of the vocab
-        self._vocabulary = dict(response)
+        # TODO get all controlled vocabulary from an API endpoint instead of having it statically
+        # all the controlled vocabulary categories
+        all_categories_of_controlled_vocab = [
+            "algorithm_key",
+            "algorithm_type",
+            "building_block",
+            "citation_type",
+            "computation_type",
+            "computational_forcefield_key",
+            "computational_process_property_key",
+            "computational_process_type",
+            "condition_key",
+            "data_license",
+            "data_type",
+            "equipment_key",
+            "file_type",
+            "ingredient_keyword",
+            "material_identifier_key",
+            "material_keyword",
+            "material_property_key",
+            "parameter_key",
+            "process_keyword",
+            "process_property_key",
+            "process_type",
+            "property_method",
+            "quantity_key",
+            "reference_type",
+            "set_type",
+            "uncertainty_type",
+        ]
 
-    def get_vocabulary(self, vocab_category: str) -> Union[dict, InvalidVocabularyCategory]:
+        # loop through all vocabulary categories and make a request to each vocabulary category
+        # and put them all inside of self._vocab with the keys being the vocab category name
+        for category in all_categories_of_controlled_vocab:
+            response = requests.get(f"{self.host}/api/v1/cv/{category}").json()["data"]
+            self._vocabulary[category] = response
+
+        return self._vocabulary
+
+    def get_vocabulary(self, vocab_category: str) -> dict:
         """
+        get the entire controlled vocabulary for the user to see and use
+
         Returns
         -------
         dict

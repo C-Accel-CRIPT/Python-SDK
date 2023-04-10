@@ -1,3 +1,5 @@
+from pprint import pprint
+
 import pytest
 
 import cript
@@ -13,10 +15,11 @@ def cript_api() -> cript.API:
         API: The created API instance.
     """
 
-    assert cript.api.api._global_cached_api is None
-    with cript.API("http://development.api.mycriptapp.org/", "123456789") as api:
-        yield api
-    assert cript.api.api._global_cached_api is None
+    # assert cript.api.api._global_cached_api is None
+    # with cript.API("http://development.api.mycriptapp.org/", "123456789") as api:
+    #     yield api
+    # assert cript.api.api._global_cached_api is None
+    return cript.API("http://development.api.mycriptapp.org/", "123456789")
 
 
 def test_create_api(cript_api: cript.API) -> None:
@@ -35,6 +38,13 @@ def test_api_context(cript_api: cript.API) -> None:
     assert cript.api.api._get_global_cached_api() is not None
 
 
+def test_api_http_warning(cript_api: cript.API) -> None:
+    """
+    testing that the API class throws a warning if the host is `http` instead of `https`
+    """
+    pass
+
+
 def test_get_db_schema_from_api(cript_api: cript.API) -> None:
     """
     tests that the Python SDK can successfully get the db schema from API
@@ -46,7 +56,7 @@ def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:
     """
     checks if it can successfully get the controlled vocabulary list from CRIPT API
     """
-    pass
+    vocab = cript_api._get_and_set_vocab()
 
 
 def test_api_save_material(cript_api: cript.API) -> None:

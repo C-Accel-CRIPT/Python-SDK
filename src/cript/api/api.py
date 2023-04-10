@@ -169,6 +169,19 @@ class API:
         2. if global variable is empty, then it makes a request to the API
            and gets the entire controlled vocabulary
            and then sets the global variable to it
+
+           Examples
+           --------
+           The vocabulary looks like this
+           ```json
+           {'algorithm_key':
+                [
+                    {
+                    'description': "Velocity-Verlet integration algorithm. Parameters: 'integration_timestep'.",
+                    'name': 'velocity_verlet'
+                    },
+            }
+           ```
         """
 
         # check cache if vocabulary dict is already populated

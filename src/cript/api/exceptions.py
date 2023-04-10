@@ -34,10 +34,12 @@ class InvalidVocabulary(CRIPTException):
     """
     Raised when the CRIPT controlled vocabulary is invalid
     """
+    vocab: str = ""
+    possible_vocab: List[str] = []
 
     def __init__(self, vocab: str, possible_vocab: List[str]):
-        self.vocab
-        self.possible_vocab
+        self.vocab = vocab
+        self.possible_vocab = possible_vocab
 
     def __str__(self) -> str:
         ret_str = f"The vocabulary '{self.vocab}' entered does not exist within the CRIPT controlled vocabulary."
@@ -47,7 +49,8 @@ class InvalidVocabulary(CRIPTException):
 
 class InvalidVocabularyCategory(CRIPTException):
     """
-    Raised when the CRIPT controlled vocabulary category is unknow
+    Raised when the CRIPT controlled vocabulary category is unknown
+    and gives the user a list of all valid vocabulary categories
     """
 
     def __init__(self, vocab_category: str, valid_vocab_category: List[str]):

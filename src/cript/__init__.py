@@ -1,4 +1,5 @@
 # trunk-ignore-all(ruff/F401)
+
 from cript.api import API
 from cript.nodes import (
     Algorithm,

@@ -16,19 +16,16 @@ import cript
 @pytest.fixture(scope="session")
 def cript_api():
     """
-    creates a CRIPT API object, used for integration tests for all nodes
+    Create an API instance for the rest of the tests to use.
 
-    * saving
-    * getting
-    * updating
-    * deleting
-
-    Returns
-    -------
-    cript.API
-        api object used to interact with CRIPT
+    Returns:
+        API: The created API instance.
     """
-    return cript.API(host="https://cript.org", token="123465")
+
+    assert cript.api.api._global_cached_api is None
+    with cript.API("http://development.api.mycriptapp.org/", "123456789") as api:
+        yield api
+    assert cript.api.api._global_cached_api is None
 
 
 # ---------- Primary Nodes ----------
@@ -152,6 +149,33 @@ def simple_data_node(simple_file_node) -> cript.Data:
     my_data = cript.Data(name="my data name", type="afm_amp", files=[simple_file_node])
 
     return my_data
+
+
+@pytest.fixture(scope="function")
+def complex_data_node(
+    simple_file_node,
+    simple_process_node,
+    simple_computation_node,
+    simple_computational_process_node,
+    simple_material_node,
+    simple_citation_node,
+) -> None:
+    """
+    create a complex data node with all possible arguments for all tests to use when needed
+    """
+    my_complex_data = cript.Data(
+        name="my complex data node name",
+        type="afm_amp",
+        files=[simple_file_node],
+        sample_preperation=simple_process_node,
+        computations=[simple_computation_node],
+        computational_process=[simple_computational_process_node],
+        materials=[simple_material_node],
+        processes=[simple_process_node],
+        citations=[simple_citation_node],
+    )
+
+    return my_complex_data
 
 
 @pytest.fixture(scope="function")

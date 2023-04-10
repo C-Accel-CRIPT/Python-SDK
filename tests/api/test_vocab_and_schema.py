@@ -1,7 +1,5 @@
 import pytest
 
-import cript
-
 # from cript.api.schema_validation import _get_db_schema
 # from cript.api.vocabulary import _get_controlled_vocabulary
 
@@ -14,10 +12,7 @@ def cript_api():
     Returns:
         API: The created API instance.
     """
-    host: str = "http://development.api.criptapp.org"
-    token: str = "123456"
-
-    return cript.API(host, token)
+    pass
 
 
 def test_get_db_schema(cript_api):

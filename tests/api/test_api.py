@@ -65,13 +65,6 @@ def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:
     assert len(vocab) == number_of_vocab_categories
 
 
-def test_get_vocabulary_category(cript_api: cript.API) -> None:
-    """
-    test that a category can be correctly gotten from the API client
-    """
-    pass
-
-
 def test_api_save_material(cript_api: cript.API) -> None:
     """
     Tests if API object can successfully save a node

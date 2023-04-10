@@ -215,7 +215,7 @@ class API:
 
         return self._vocabulary
 
-    def get_vocabulary(self, vocab_category: str) -> dict:
+    def get_vocabulary(self) -> dict:
         """
         get the entire controlled vocabulary for the user to use
 
@@ -226,7 +226,7 @@ class API:
         """
 
         # return a copy because we don't want anyone being able to accidentally change the private attribute
-        return self._vocabulary[vocab_category]
+        return copy.deepcopy(self._vocabulary)
 
     def is_vocab_valid(
         self, vocab_category: str, vocab_value: str

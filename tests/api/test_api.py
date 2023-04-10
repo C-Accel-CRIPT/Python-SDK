@@ -19,6 +19,17 @@ def cript_api() -> cript.API:
     assert cript.api.api._global_cached_api is None
 
 
+def test_create_api(cript_api: cript.API) -> None:
+    """
+    tests that an API object can be successfully created with host and token
+    """
+    api = cript.API("http://development.api.mycriptapp.org/", "123456789")
+
+    # assertions
+    assert api is not None
+    assert isinstance(api, cript.API)
+
+
 def test_api_context(cript_api: cript.API) -> None:
     assert cript.api.api._global_cached_api is not None
     assert cript.api.api._get_global_cached_api() is not None
@@ -80,5 +91,12 @@ def test_api_delete_material(cript_api: cript.API) -> None:
     """
     Tests if API can successfully delete a material.
     After deleting it from the backend, it tries to get it, and it should not be able to
+    """
+    pass
+
+
+def test_get_user_node_from_api(cript_api: cript.API) -> None:
+    """
+    tests that the Python SDK can successfully get the user node associated with the API Token
     """
     pass

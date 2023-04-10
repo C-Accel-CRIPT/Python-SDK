@@ -130,6 +130,36 @@ class API:
     def __exit__(self, type, value, traceback):
         self.disconnect()
 
+    def connect(self):
+        """
+        Connect this API globally as the current active access point.
+        It is not necessary to call this function manually if a context manager is used.
+        A context manager is preferred where possible.
+        Jupyter notebooks are a use case where this connection can be handled manually.
+        If this function is called manually, the `API.disconnect` function has to be called later.
+
+        For manual connection: nested API object are discouraged.
+        """
+        # Store the last active global API (might be None)
+        global _global_cached_api
+        self._previous_global_cached_api = copy.copy(_global_cached_api)
+        _global_cached_api = self
+        return self
+
+    def disconnect(self):
+        """
+        Disconnect this API from the active access point.
+        It is not necessary to call this function manually if a context manager is used.
+        A context manager is preferred where possible.
+        Jupyter notebooks are a use case where this connection can be handled manually.
+        This function has to be called manually if  the `API.connect` function has to be called before.
+
+        For manual connection: nested API object are discouraged.
+        """
+        # Restore the previously active global API (might be None)
+        global _global_cached_api
+        _global_cached_api = self._previous_global_cached_api
+
     def _load_controlled_vocabulary(self) -> dict:
         """
         gets the entire controlled vocabulary
@@ -251,36 +281,6 @@ class API:
         This can be used to validate node JSON.
         """
         return copy.copy(self._schema)
-
-    def connect(self):
-        """
-        Connect this API globally as the current active access point.
-        It is not necessary to call this function manually if a context manager is used.
-        A context manager is preferred where possible.
-        Jupyter notebooks are a use case where this connection can be handled manually.
-        If this function is called manually, the `API.disconnect` function has to be called later.
-
-        For manual connection: nested API object are discouraged.
-        """
-        # Store the last active global API (might be None)
-        global _global_cached_api
-        self._previous_global_cached_api = copy.copy(_global_cached_api)
-        _global_cached_api = self
-        return self
-
-    def disconnect(self):
-        """
-        Disconnect this API from the active access point.
-        It is not necessary to call this function manually if a context manager is used.
-        A context manager is preferred where possible.
-        Jupyter notebooks are a use case where this connection can be handled manually.
-        This function has to be called manually if  the `API.connect` function has to be called before.
-
-        For manual connection: nested API object are discouraged.
-        """
-        # Restore the previously active global API (might be None)
-        global _global_cached_api
-        _global_cached_api = self._previous_global_cached_api
 
     @property
     def host(self):

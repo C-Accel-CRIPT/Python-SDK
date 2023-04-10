@@ -162,7 +162,8 @@ class API:
 
     def _load_controlled_vocabulary(self) -> dict:
         """
-        gets the entire controlled vocabulary
+        gets the entire controlled vocabulary to be used with validating nodes
+        with attributes from controlled vocabulary
         1. checks global variable to see if it is already set
             if it is already set then it just returns that
         2. if global variable is empty, then it makes a request to the API

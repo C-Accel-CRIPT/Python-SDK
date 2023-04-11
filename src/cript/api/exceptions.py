@@ -34,6 +34,7 @@ class InvalidVocabulary(CRIPTException):
     """
     Raised when the CRIPT controlled vocabulary is invalid
     """
+
     vocab: str = ""
     possible_vocab: List[str] = []
 

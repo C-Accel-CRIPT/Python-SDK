@@ -62,6 +62,46 @@ def test_get_db_schema_from_api(cript_api: cript.API) -> None:
     assert len(db_schema) == total_fields_in_db_schema
 
 
+def test_is_node_schema_valid(cript_api: cript.API) -> None:
+    """
+    test that a CRIPT node can be correctly validated and invalidated with the db schema
+
+    * test a couple of nodes to be sure db schema validation is working fine
+        * material node
+        * file node
+    * test db schema validation with an invalid node, and it should be invalid
+    """
+    # ------ valid node schema ------
+
+    # valid material node
+    valid_material_dict = {
+        "node": "Material",
+        "name": "my material",
+        "identifiers": [{"alternative_names": "my material alternative name"}],
+    }
+
+    # convert dict to JSON string because method expects JSON string
+    cript_api.is_node_schema_valid(json.dumps(valid_material_dict))
+
+    # valid file node
+    valid_file_dict = {
+        "node": "File",
+        "source": "https://criptapp.org",
+        "type": "calibration",
+        "extension": ".csv",
+        "data_dictionary": "my file's data dictionary",
+    }
+
+    # convert dict to JSON string because method expects JSON string
+    cript_api.is_node_schema_valid(json.dumps(valid_file_dict))
+
+    # ------ invalid node schema------
+    invalid_schema = {"invalid key": "invalid value"}
+
+    # with pytest.raises(CRIPTNodeSchemaError):
+    #     cript_api.is_node_schema_valid(json.dumps(invalid_schema))
+
+
 def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:
     """
     checks if it can successfully get the controlled vocabulary list from CRIPT API
@@ -107,48 +147,6 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
     # invalid vocab category and invalid vocab word
     with pytest.raises(InvalidVocabularyCategory):
         cript_api.is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="some_invalid_word")
-
-
-def test_is_node_schema_valid(cript_api: cript.API) -> None:
-    """
-    test that a CRIPT node can be correctly validated and invalidated with the db schema
-
-    * test a couple of nodes to be sure db schema validation is working fine
-        * material node
-        * file node
-    * test db schema validation with an invalid node, and it should be invalid
-    """
-    # ------ valid node schema ------
-
-    # valid material node
-    valid_material_dict = {
-        "node": "Material",
-        "name": "my material",
-        "identifiers": [{"alternative_names": "my material alternative name"}],
-    }
-
-    # convert dict to JSON string because method expects JSON string
-    cript_api.is_node_schema_valid(json.dumps(valid_material_dict))
-
-    # valid file node
-    valid_file_dict = {
-        "node": "File",
-        "source": "https://criptapp.org",
-        "type": "calibration",
-        "extension": ".csv",
-        "data_dictionary": "my file's data dictionary",
-    }
-
-    # convert dict to JSON string because method expects JSON string
-    cript_api.is_node_schema_valid(json.dumps(valid_file_dict))
-
-    # ------ invalid node schema------
-    invalid_schema = {
-        "invalid key": "invalid value"
-    }
-
-    # with pytest.raises(CRIPTNodeSchemaError):
-    #     cript_api.is_node_schema_valid(json.dumps(invalid_schema))
 
 
 def test_api_save_material(cript_api: cript.API) -> None:

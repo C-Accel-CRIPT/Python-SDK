@@ -99,6 +99,30 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
         cript_api.is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="some_invalid_word")
 
 
+def test_get_db_schema_from_api(cript_api: cript.API) -> None:
+    """
+    tests that the Python SDK can successfully get the db schema from API
+    """
+    db_schema = cript_api._get_db_schema()
+
+    assert bool(db_schema)
+    assert isinstance(db_schema, dict)
+
+    total_fields_in_db_schema = 69
+    assert len(db_schema) == total_fields_in_db_schema
+
+
+def test_is_node_schema_valid(cript_api: cript.API) -> None:
+    """
+    test that a CRIPT node can be correctly validated and invalidated with the db schema
+    """
+    # valid node schema
+
+    # invalid node schema
+    # with pytest.raises(CRIPTNodeSchemaError):
+    pass
+
+
 def test_api_save_material(cript_api: cript.API) -> None:
     """
     Tests if API object can successfully save a node

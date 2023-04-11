@@ -14,6 +14,7 @@ from cript.api.exceptions import (
     InvalidVocabulary,
     InvalidVocabularyCategory,
 )
+from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
 from cript.nodes.supporting_nodes.group import Group
@@ -307,7 +308,8 @@ class API:
             self._db_schema = response["data"]["$defs"]
             return self._db_schema
 
-    def is_node_schema_valid(self, node_json: str) -> bool:
+    # TODO should this throw an error if invalid?
+    def is_node_schema_valid(self, node_json: str) -> Union[bool, CRIPTNodeSchemaError]:
         """
         checks a node JSON schema against the db schema to return if it is valid or not.
         This function does not take into consideration vocabulary validation.
@@ -327,10 +329,11 @@ class API:
         # TODO currently validate says every syntactically valid JSON is valid
         # TODO do we want invalid schema to raise an exception?
         node_dict = json.loads(node_json)
+
         if json_validate(node_dict, self._db_schema):
             return True
         else:
-            return False
+            raise CRIPTNodeSchemaError
 
     @property
     def schema(self):

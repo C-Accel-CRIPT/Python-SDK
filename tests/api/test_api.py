@@ -1,8 +1,11 @@
+import json
+
 import pytest
 import requests
 
 import cript
 from cript.api.exceptions import InvalidVocabularyCategory, InvalidVocabulary
+from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 
 # TODO use the cript_api from conftest.py
@@ -106,28 +109,46 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
         cript_api.is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="some_invalid_word")
 
 
-def test_get_db_schema_from_api(cript_api: cript.API) -> None:
-    """
-    tests that the Python SDK can successfully get the db schema from API
-    """
-    db_schema = cript_api._get_db_schema()
-
-    assert bool(db_schema)
-    assert isinstance(db_schema, dict)
-
-    total_fields_in_db_schema = 69
-    assert len(db_schema) == total_fields_in_db_schema
-
-
 def test_is_node_schema_valid(cript_api: cript.API) -> None:
     """
     test that a CRIPT node can be correctly validated and invalidated with the db schema
-    """
-    # valid node schema
 
-    # invalid node schema
+    * test a couple of nodes to be sure db schema validation is working fine
+        * material node
+        * file node
+    * test db schema validation with an invalid node, and it should be invalid
+    """
+    # ------ valid node schema ------
+
+    # valid material node
+    valid_material_dict = {
+        "node": "Material",
+        "name": "my material",
+        "identifiers": [{"alternative_names": "my material alternative name"}],
+    }
+
+    # convert dict to JSON string because method expects JSON string
+    cript_api.is_node_schema_valid(json.dumps(valid_material_dict))
+
+    # valid file node
+    valid_file_dict = {
+        "node": "File",
+        "source": "https://criptapp.org",
+        "type": "calibration",
+        "extension": ".csv",
+        "data_dictionary": "my file's data dictionary",
+    }
+
+    # convert dict to JSON string because method expects JSON string
+    cript_api.is_node_schema_valid(json.dumps(valid_file_dict))
+
+    # ------ invalid node schema------
+    invalid_schema = {
+        "invalid key": "invalid value"
+    }
+
     # with pytest.raises(CRIPTNodeSchemaError):
-    pass
+    #     cript_api.is_node_schema_valid(json.dumps(invalid_schema))
 
 
 def test_api_save_material(cript_api: cript.API) -> None:

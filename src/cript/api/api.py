@@ -42,7 +42,6 @@ class API:
     _vocabulary: dict = {}
     _db_schema: dict = {}
 
-
     def __init__(self, host: Union[str, None], token: [str, None]):
         """
         Initialize object with host and token.

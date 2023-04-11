@@ -39,18 +39,17 @@ def test_create_api(cript_api: cript.API) -> None:
 #     assert cript.api.api._get_global_cached_api() is not None
 
 
-def test_api_http_warning(cript_api: cript.API) -> None:
-    """
-    testing that the API class throws a warning if the host is `http` instead of `https`
-    """
-    pass
-
-
 def test_get_db_schema_from_api(cript_api: cript.API) -> None:
     """
     tests that the Python SDK can successfully get the db schema from API
     """
-    pass
+    db_schema = cript_api._get_db_schema()
+
+    assert bool(db_schema)
+    assert isinstance(db_schema, dict)
+
+    total_fields_in_db_schema = 69
+    assert len(db_schema) == total_fields_in_db_schema
 
 
 def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:

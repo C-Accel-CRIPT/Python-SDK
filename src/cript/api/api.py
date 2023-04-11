@@ -38,7 +38,7 @@ class API:
     _host: str = ""
     _token: str = ""
     _vocabulary: dict = {}
-    _schema: dict = {}
+    _db_schema: dict = {}
 
     # TODO consider getting all the controlled vocabulary from an API endpoint instead of having it statically
     all_controlled_vocab_categories = [
@@ -152,7 +152,7 @@ class API:
         self._token = token
 
         self.get_vocab()
-        self._load_db_schema()
+        self._get_db_schema()
 
     def __enter__(self):
         self.connect()
@@ -283,22 +283,31 @@ class API:
 
         raise InvalidVocabulary(vocab=vocab_word, possible_vocab=list(controlled_vocabulary))
 
-    def _load_db_schema(self):
+    def _get_db_schema(self) -> dict:
         """
         Sends a GET request to CRIPT to get the database schema and returns it.
         The database schema can be used for validating the JSON request
         before submitting it to CRIPT.
 
-        Makes a request to get it from CRIPT.
-        After successfully getting it from CRIPT, it sets the class variable
+        1. checks if the db schema is already set
+            * if already exists then it skips fetching it from the API and just returns what it already has
+        2. if db schema has not been set yet, then it fetches it from the API
+            * after getting it from the API it saves it in the `_schema` class variable,
+            so it can be easily and efficiently gotten next time
         """
-        # TODO figure out the version
-        response = requests.get(f"{self.host}/api/v1/schema/").json()
-        # TODO error checking
-        # TODO check that we support that version
-        self._schema = response
 
-    def is_node_valid(self, node_json: str) -> bool:
+        # check if db schema is already saved
+        if bool(self._db_schema):
+            return self._db_schema
+
+        # fetch db_schema from API
+        else:
+            response = requests.get(f"{self.host}/api/v1/schema/").json()
+
+            self._db_schema = response["data"]["$defs"]
+            return self._db_schema
+
+    def is_node_schema_valid(self, node_json: str) -> bool:
         """
         checks a node JSON schema against the db schema to return if it is valid or not.
         This function does not take into consideration vocabulary validation.
@@ -318,7 +327,7 @@ class API:
         # TODO currently validate says every syntactically valid JSON is valid
         # TODO do we want invalid schema to raise an exception?
         node_dict = json.loads(node_json)
-        if json_validate(node_dict, self._schema):
+        if json_validate(node_dict, self._db_schema):
             return True
         else:
             return False
@@ -329,7 +338,7 @@ class API:
         Access the CRIPTSchema that is associated with this API connection.
         This can be used to validate node JSON.
         """
-        return copy.copy(self._schema)
+        return copy.copy(self._db_schema)
 
     @property
     def host(self):

@@ -66,7 +66,7 @@ class InvalidVocabularyCategory(CRIPTException):
 
 class CRIPTAPIAccessError(CRIPTException):
     """
-    Exception to be raise when the cached API object is requested, but no cached API exists yet.
+    Exception to be raised when the cached API object is requested, but no cached API exists yet.
     """
 
     def __init__(self):
@@ -81,3 +81,33 @@ class CRIPTAPIAccessError(CRIPTException):
         ret_str += "\t# code that use the API object explicitly (`api.save(..)`) or implicitly (`cript.Experiment(...)`)."
         ret_str += "See documentation of cript.API for more details."
         return ret_str
+
+
+class CRIPTAPISaveError(CRIPTException):
+    """
+    CRIPTAPISaveError is raised when the API responds with a status that is not 200
+    The API response along with status code is shown to the user
+
+    Parameters
+    ----------
+    api_host_domain: str
+        cript API host domain such as "https://criptapp.org"
+    api_response: str
+        message that the API returned
+
+    Returns
+    -------
+    Error Message: str
+        Error message telling the user what was the issue and giving them helpful clues as how to fix the error
+    """
+    api_host_domain: str = ""
+    api_response: str = ""
+
+    def __init__(self, api_host_domain: str, api_response: str):
+        self.api_host_domain = api_host_domain
+        self.api_response = api_response
+
+    def __str__(self) -> str:
+        error_message = f"Encountered an error when saving to host: '{self.api_host_domain}'. API responded with '{self.api_response}'"
+
+        return error_message

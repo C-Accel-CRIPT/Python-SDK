@@ -162,6 +162,22 @@ class API:
         global _global_cached_api
         _global_cached_api = self._previous_global_cached_api
 
+    @property
+    def schema(self):
+        """
+        Access the CRIPTSchema that is associated with this API connection.
+        This can be used to validate node JSON.
+        """
+        return copy.copy(self._db_schema)
+
+    @property
+    def host(self):
+        """
+        Read only access to the currently connected host.
+        If the connection to a new host is desired, create a new API object.
+        """
+        return self._host
+
     # TODO this needs a better name because the current name is unintuitive if you are just getting vocab
     def get_vocab(self) -> dict:
         """
@@ -303,22 +319,6 @@ class API:
             return True
         else:
             raise CRIPTNodeSchemaError
-
-    @property
-    def schema(self):
-        """
-        Access the CRIPTSchema that is associated with this API connection.
-        This can be used to validate node JSON.
-        """
-        return copy.copy(self._db_schema)
-
-    @property
-    def host(self):
-        """
-        Read only access to the currently connected host.
-        If the connection to a new host is desired, create a new API object.
-        """
-        return self._host
 
     def save(self, node: PrimaryBaseNode) -> None:
         """

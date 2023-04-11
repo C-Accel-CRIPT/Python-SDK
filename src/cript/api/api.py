@@ -241,9 +241,7 @@ class API:
             controlled_vocabulary = controlled_vocabulary[vocab_category]
         except KeyError:
             # vocabulary category does not exist within CRIPT Controlled Vocabulary
-            raise InvalidVocabularyCategory(
-                vocab_category=vocab_category, valid_vocab_category=all_controlled_vocab_categories
-            )
+            raise InvalidVocabularyCategory(vocab_category=vocab_category, valid_vocab_category=all_controlled_vocab_categories)
 
         # TODO this can be faster with a dict of dicts that can do o(1) look up
         #  looping through an unsorted list is an O(n) look up which is slow

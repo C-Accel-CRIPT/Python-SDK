@@ -19,6 +19,7 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
 from cript.nodes.supporting_nodes.group import Group
 from cript.nodes.supporting_nodes.user import User
+from cript.api.vocabulary_categories import all_controlled_vocab_categories
 
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.
@@ -41,35 +42,6 @@ class API:
     _vocabulary: dict = {}
     _db_schema: dict = {}
 
-    # TODO consider getting all the controlled vocabulary from an API endpoint instead of having it statically
-    all_controlled_vocab_categories = [
-        "algorithm_key",
-        "algorithm_type",
-        "building_block",
-        "citation_type",
-        "computation_type",
-        "computational_forcefield_key",
-        "computational_process_property_key",
-        "computational_process_type",
-        "condition_key",
-        "data_license",
-        "data_type",
-        "equipment_key",
-        "file_type",
-        "ingredient_keyword",
-        "material_identifier_key",
-        "material_keyword",
-        "material_property_key",
-        "parameter_key",
-        "process_keyword",
-        "process_property_key",
-        "process_type",
-        "property_method",
-        "quantity_key",
-        "reference_type",
-        "set_type",
-        "uncertainty_type",
-    ]
 
     def __init__(self, host: Union[str, None], token: [str, None]):
         """
@@ -224,7 +196,7 @@ class API:
         #  because it would be faster to find needed vocab word within the vocab category
         # loop through all vocabulary categories and make a request to each vocabulary category
         # and put them all inside of self._vocab with the keys being the vocab category name
-        for category in self.all_controlled_vocab_categories:
+        for category in all_controlled_vocab_categories:
             response = requests.get(f"{self.host}/api/v1/cv/{category}").json()["data"]
             self._vocabulary[category] = response
 
@@ -271,7 +243,7 @@ class API:
         except KeyError:
             # vocabulary category does not exist within CRIPT Controlled Vocabulary
             raise InvalidVocabularyCategory(
-                vocab_category=vocab_category, valid_vocab_category=self.all_controlled_vocab_categories
+                vocab_category=vocab_category, valid_vocab_category=all_controlled_vocab_categories
             )
 
         # TODO this can be faster with a dict of dicts that can do o(1) look up

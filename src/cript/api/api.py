@@ -42,6 +42,7 @@ class API:
     _db_schema: dict = {}
 
     # TODO consider getting all the controlled vocabulary from an API endpoint instead of having it statically
+    # TODO put this in another file
     all_controlled_vocab_categories = [
         "algorithm_key",
         "algorithm_type",

@@ -1,6 +1,5 @@
-from pprint import pprint
-
 import pytest
+import requests
 
 import cript
 from cript.api.exceptions import InvalidVocabularyCategory, InvalidVocabulary
@@ -23,7 +22,7 @@ def cript_api() -> cript.API:
     return cript.API("http://development.api.mycriptapp.org/", "123456789")
 
 
-def test_create_api(cript_api: cript.API) -> None:
+def test_create_api() -> None:
     """
     tests that an API object can be successfully created with host and token
     """
@@ -32,6 +31,14 @@ def test_create_api(cript_api: cript.API) -> None:
     # assertions
     assert api is not None
     assert isinstance(api, cript.API)
+
+
+def test_api_with_invalid_host() -> None:
+    """
+    test that attempting to create an api client with invalid host appropriately throws a `CRIPTConnectionError`
+    """
+    with pytest.raises((requests.ConnectionError, cript.api.exceptions.CRIPTConnectionError)):
+        api = cript.API("https://some_invalid_host", "123456789")
 
 
 # def test_api_context(cript_api: cript.API) -> None:

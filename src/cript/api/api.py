@@ -315,10 +315,10 @@ class API:
         # TODO do we want invalid schema to raise an exception?
         node_dict = json.loads(node_json)
 
-        if json_validate(node_dict, self._db_schema):
+        if json_validate(instance=node_dict, schema=self._db_schema):
             return True
         else:
-            raise CRIPTNodeSchemaError
+            return False
 
     def save(self, node: PrimaryBaseNode) -> None:
         """

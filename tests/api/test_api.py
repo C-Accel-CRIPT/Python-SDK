@@ -71,17 +71,22 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
         * file node
     * test db schema validation with an invalid node, and it should be invalid
     """
-    # ------ valid node schema ------
 
+    # ------ invalid node schema------
+    invalid_schema = {"invalid key": "invalid value"}
+
+    with pytest.raises(CRIPTNodeSchemaError):
+        cript_api.is_node_schema_valid(json.dumps(invalid_schema))
+
+    # ------ valid node schema ------
     # valid material node
     valid_material_dict = {
         "node": "Material",
-        "name": "my material",
-        "identifiers": [{"alternative_names": "my material alternative name"}],
+        "name": "Deuterated PEG azide"
     }
 
     # convert dict to JSON string because method expects JSON string
-    cript_api.is_node_schema_valid(json.dumps(valid_material_dict))
+    assert cript_api.is_node_schema_valid(json.dumps(valid_material_dict)) is True
 
     # valid file node
     valid_file_dict = {
@@ -93,13 +98,7 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     }
 
     # convert dict to JSON string because method expects JSON string
-    cript_api.is_node_schema_valid(json.dumps(valid_file_dict))
-
-    # ------ invalid node schema------
-    invalid_schema = {"invalid key": "invalid value"}
-
-    # with pytest.raises(CRIPTNodeSchemaError):
-    #     cript_api.is_node_schema_valid(json.dumps(invalid_schema))
+    assert cript_api.is_node_schema_valid(json.dumps(valid_file_dict)) is True
 
 
 def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:

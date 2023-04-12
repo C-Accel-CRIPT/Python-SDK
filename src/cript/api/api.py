@@ -12,7 +12,7 @@ from cript.api.exceptions import (
     CRIPTAPIAccessError,
     CRIPTConnectionError,
     InvalidVocabulary,
-    InvalidVocabularyCategory,
+    InvalidVocabularyCategory, CRIPTAPISaveError,
 )
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
@@ -334,12 +334,11 @@ class API:
         -------
         None
         """
-        # TODO create a giant JSON from the primary node given and send that to
-        #   the backend with a POST request
-        #   the user will just hit save and the program needs to figure out
-        #   the saving of new or updating
-        #   save is POST request and update would be PATCH request
-        pass
+
+        raise CRIPTAPISaveError(
+            api_host_domain=self._host,
+            api_message=json.dumps({"code": 400, "data": None, "error": "Missing Authorization header"})
+        )
 
     def delete(self, node: PrimaryBaseNode, ask_confirmation: bool = True) -> None:
         """ "

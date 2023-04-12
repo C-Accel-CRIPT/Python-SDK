@@ -340,44 +340,45 @@ class API:
             api_message=json.dumps({"code": 400, "data": None, "error": "Missing Authorization header"})
         )
 
-    def delete(self, node: PrimaryBaseNode, ask_confirmation: bool = True) -> None:
-        """ "
-        Deletes the given node.
-
-        Parameters
-        ----------
-        node : PrimaryBaseNode
-            The node to delete.
-        ask_confirmation : bool, optional, default=True
-            If True, the function will delete the node without prompting the user
-            for confirmation (default is False).
-
-        Returns
-        -------
-        NoneType
-            None
-
-        Notes
-        -----
-        By default, this function prompts the user with "are you sure you want to
-        delete this node?" before proceeding with the deletion. If the `ask_confirmation`
-        parameter is set to False, the prompt will be suppressed and the node will be
-        deleted without confirmation.
-        """
-        # ask for confirmation before deleting the node
-        if ask_confirmation:
-            # get the user input and convert it to lowercase
-            confirm: str = input(f"are you sure you want to delete {node}? (y/n): ").lower()
-
-            # if confirmation is anything other than yes then cancel the delete
-            if confirm not in ["y", "yes"]:
-                print(f"Deletion cancelled for node: {node}")
-                return
-
-        # if no_input is True or it got passed the confirmation then send a http request to delete the node
-        print(f"deleting {node}")
-        # TODO http request to delete the node in JSON form
-        pass
+    # TODO delete method will come later when the API supports it
+    # def delete(self, node: PrimaryBaseNode, ask_confirmation: bool = True) -> None:
+    #     """ "
+    #     Deletes the given node.
+    #
+    #     Parameters
+    #     ----------
+    #     node : PrimaryBaseNode
+    #         The node to delete.
+    #     ask_confirmation : bool, optional, default=True
+    #         If True, the function will delete the node without prompting the user
+    #         for confirmation (default is False).
+    #
+    #     Returns
+    #     -------
+    #     NoneType
+    #         None
+    #
+    #     Notes
+    #     -----
+    #     By default, this function prompts the user with "are you sure you want to
+    #     delete this node?" before proceeding with the deletion. If the `ask_confirmation`
+    #     parameter is set to False, the prompt will be suppressed and the node will be
+    #     deleted without confirmation.
+    #     """
+    #     # ask for confirmation before deleting the node
+    #     if ask_confirmation:
+    #         # get the user input and convert it to lowercase
+    #         confirm: str = input(f"are you sure you want to delete {node}? (y/n): ").lower()
+    #
+    #         # if confirmation is anything other than yes then cancel the delete
+    #         if confirm not in ["y", "yes"]:
+    #             print(f"Deletion cancelled for node: {node}")
+    #             return
+    #
+    #     # if no_input is True or it got passed the confirmation then send a http request to delete the node
+    #     print(f"deleting {node}")
+    #     # TODO http request to delete the node in JSON form
+    #     pass
 
     def get_my_user(self) -> User:
         """

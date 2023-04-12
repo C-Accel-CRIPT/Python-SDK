@@ -76,6 +76,9 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     invalid_schema = {"invalid key": "invalid value"}
 
     with pytest.raises(CRIPTNodeSchemaError):
+        # using json.dumps to get the JSON string and the `is_node_schema_valid` method will convert it back to dict
+        # this is because node.json() gives a JSON string, `is_node_schema_valid` must convert it to dict
+        # to check against db_schema
         cript_api.is_node_schema_valid(json.dumps(invalid_schema))
 
     # ------ valid node schema ------

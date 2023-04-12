@@ -100,6 +100,7 @@ class CRIPTAPISaveError(CRIPTException):
     Error Message: str
         Error message telling the user what was the issue and giving them helpful clues as how to fix the error
     """
+
     api_host_domain: str = ""
     api_response: str = ""
 
@@ -108,6 +109,8 @@ class CRIPTAPISaveError(CRIPTException):
         self.api_response = api_response
 
     def __str__(self) -> str:
-        error_message = f"Encountered an error when saving to host: '{self.api_host_domain}'. API responded with '{self.api_response}'"
+        error_message = (
+            f"Encountered an error when saving to host: '{self.api_host_domain}'. API responded with '{self.api_response}'"
+        )
 
         return error_message

@@ -12,7 +12,8 @@ from cript.api.exceptions import (
     CRIPTAPIAccessError,
     CRIPTConnectionError,
     InvalidVocabulary,
-    InvalidVocabularyCategory, CRIPTAPISaveError,
+    InvalidVocabularyCategory,
+    CRIPTAPISaveError,
 )
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
@@ -115,7 +116,7 @@ class API:
         # check that api can connect to CRIPT with host and token
         try:
             # TODO send an http request to check connection with host and token
-            pass
+            token = f"Bearer {token}"
         except Exception as exc:
             raise CRIPTConnectionError(host, token) from exc
 
@@ -334,11 +335,13 @@ class API:
         -------
         None
         """
+        headers = {"Authorization": self._token, "Content-Type": "application/json"}
 
-        raise CRIPTAPISaveError(
-            api_host_domain=self._host,
-            api_message=json.dumps({"code": 400, "data": None, "error": "Missing Authorization header"})
-        )
+        response = requests.post(self._host, headers=headers).json()
+
+        # if htt response is not 200 then show the API error to the user
+        if response.status_code != 200:
+            raise CRIPTAPISaveError(api_host_domain=self._host, api_response=response["error"])
 
     # TODO delete method will come later when the API supports it
     # def delete(self, node: PrimaryBaseNode, ask_confirmation: bool = True) -> None:

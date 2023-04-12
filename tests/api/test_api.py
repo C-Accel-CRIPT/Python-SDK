@@ -83,10 +83,7 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
 
     # ------ valid node schema ------
     # valid material node
-    valid_material_dict = {
-        "node": "Material",
-        "name": "Deuterated PEG azide"
-    }
+    valid_material_dict = {"node": "Material", "name": "Deuterated PEG azide"}
 
     # convert dict to JSON string because method expects JSON string
     assert cript_api.is_node_schema_valid(json.dumps(valid_material_dict)) is True

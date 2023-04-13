@@ -476,4 +476,7 @@ class API:
         # requesting a page of some primary node
         if search_mode == _VALID_SEARCH_MODES[""]:
             api_endpoints: str = f"{self._host}/"
-            request = requests.get(url=self._host, headers=self._http_headers, )
+            request = requests.get(
+                url=self._host,
+                headers=self._http_headers,
+            )

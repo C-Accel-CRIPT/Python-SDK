@@ -4,7 +4,7 @@ import pytest
 import requests
 
 import cript
-from cript.api.exceptions import InvalidVocabularyCategory, InvalidVocabulary
+from cript.api.exceptions import InvalidVocabularyCategory, InvalidVocabulary, InvalidSearchModeError
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 
@@ -22,7 +22,9 @@ def cript_api() -> cript.API:
     # with cript.API("http://development.api.mycriptapp.org/", "123456789") as api:
     #     yield api
     # assert cript.api.api._global_cached_api is None
-    return cript.API("http://development.api.mycriptapp.org/", "123456789")
+    token: str = open("../../.env").read()
+
+    return cript.API(host="http://development.api.mycriptapp.org/", token=token)
 
 
 def test_create_api() -> None:
@@ -42,6 +44,13 @@ def test_api_with_invalid_host() -> None:
     """
     with pytest.raises((requests.ConnectionError, cript.api.exceptions.CRIPTConnectionError)):
         api = cript.API("https://some_invalid_host", "123456789")
+
+
+def test_prepare_host(cript_api: cript.API) -> None:
+    """
+    tests API _prepare_host function
+    """
+    pass
 
 
 # def test_api_context(cript_api: cript.API) -> None:
@@ -155,27 +164,16 @@ def test_api_save_material(cript_api: cript.API) -> None:
     pass
 
 
-def test_api_search_material_by_uuid(cript_api: cript.API) -> None:
+def test_api_search(cript_api: cript.API) -> None:
     """
-    tests if the api can get a node via its UUID
-    """
-    pass
+    tests the api.search() method
 
+    * test that an "invalid search mode" give an InvalidSearchModeError
+    """
+    # TODO consider making all of these search queries into separate tests
 
-def test_api_search_material_by_url(cript_api: cript.API) -> None:
-    """
-    Tests if the api can get the node it saved previously from the backend.
-    Tests search function directly, and indirectly tests if the material
-    that was already saved is actually saved and can be gotten
-    """
-    pass
-
-
-def test_api_material_exact_search(cript_api: cript.API) -> None:
-    """
-    test if a material can be successfully gotten via its name
-    """
-    pass
+    with pytest.raises(InvalidSearchModeError):
+        cript_api.search(node_type=cript.Material, search_mode="invalid search mode", value_to_search="123456")
 
 
 def test_api_update_material(cript_api: cript.API) -> None:

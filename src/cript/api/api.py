@@ -468,15 +468,19 @@ class API:
         List[BaseNode]
             List of nodes that matched the search.
         """
-        # TODO send search query and get the result back
+        # TODO consider making each search into its own function to keep code clean
 
         if search_mode not in _VALID_SEARCH_MODES:
             raise InvalidSearchModeError(invalid_search_mode=search_mode)
 
         # requesting a page of some primary node
-        if search_mode == _VALID_SEARCH_MODES[""]:
-            api_endpoints: str = f"{self._host}/"
-            request = requests.get(
+        if search_mode == _VALID_SEARCH_MODES[0]:
+            page_number = 1
+            api_endpoints: str = f"{self._host}/{node_type.node}/?page={page_number}"
+
+            response = requests.get(
                 url=self._host,
                 headers=self._http_headers,
-            )
+            ).json()
+
+            return response

@@ -117,6 +117,9 @@ class CRIPTAPISaveError(CRIPTException):
 
 
 class InvalidSearchModeError(CRIPTException):
+    """
+    Exception for when the user tries to search the API with an invalid search mode that is not supported
+    """
 
     invalid_search_mode: str = ""
 
@@ -134,7 +137,9 @@ class InvalidSearchModeError(CRIPTException):
         """
         from cript.api._valid_search_modes import _VALID_SEARCH_MODES
 
-        error_message = f"'{self.invalid_search_mode}' is an invalid search mode. " \
-                        f"The valid search modes include: {str(_VALID_SEARCH_MODES)}"
+        error_message = (
+            f"'{self.invalid_search_mode}' is an invalid search mode. "
+            f"The valid search modes include: {str(_VALID_SEARCH_MODES)}"
+        )
 
         return error_message

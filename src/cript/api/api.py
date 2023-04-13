@@ -38,6 +38,36 @@ def _get_global_cached_api():
     return _global_cached_api
 
 
+def _prepare_host(host: str) -> str:
+    """
+    prepares the host and gets it ready to be used within the api client
+
+    1. removes any trailing spaces from the left or right side
+    1. removes "/" from the end so that it is always uniform
+    1. adds "/api", so all queries are sent directly to the API
+
+    Parameters
+    ----------
+    host: str
+        api host
+
+    Returns
+    -------
+    host: str
+    """
+    # strip any empty spaces on left or right
+    host = host.strip()
+
+    # strip ending slash to make host always uniform
+    host = host.rstrip("/")
+
+    # if host is using unsafe "http://" then give a warning
+    if host.startswith("http://"):
+        warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
+
+    return host
+
+
 class API:
     _host: str = ""
     _token: str = ""
@@ -108,7 +138,7 @@ class API:
                     "Set the environment variable (preferred) or specify the token explictly at the creation of API."
                 )
 
-        host = self._prepare_host(host=host)
+        host = _prepare_host(host=host)
 
         # assign headers
         self._http_headers = {"Authorization": self._token, "Content-Type": "application/json"}
@@ -170,35 +200,6 @@ class API:
         This can be used to validate node JSON.
         """
         return copy.copy(self._db_schema)
-
-    def _prepare_host(self, host: str) -> str:
-        """
-        prepares the host and gets it ready to be used within the api client
-
-        1. removes any trailing spaces from the left or right side
-        1. removes "/" from the end so that it is always uniform
-        1. adds "/api", so all queries are sent directly to the API
-
-        Parameters
-        ----------
-        host: str
-            api host
-
-        Returns
-        -------
-        host: str
-        """
-        # strip any empty spaces on left or right
-        host = host.strip()
-
-        # strip ending slash to make host always uniform
-        host = host.rstrip("/")
-
-        # if host is using unsafe "http://" then give a warning
-        if host.startswith("http://"):
-            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
-
-        return host
 
     @property
     def host(self):

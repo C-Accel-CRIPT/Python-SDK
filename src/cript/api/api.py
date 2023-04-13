@@ -106,8 +106,12 @@ class API:
                     "Set the environment variable (preferred) or specify the token explictly at the creation of API."
                 )
 
+        # strip any empty spaces on left or right
+        host = host.strip()
+
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
+
 
         # if host is using unsafe "http://" then give a warning
         if host.startswith("http://"):

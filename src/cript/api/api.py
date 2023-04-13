@@ -14,6 +14,7 @@ from cript.api.exceptions import (
     InvalidVocabulary,
     InvalidVocabularyCategory,
     CRIPTAPISaveError,
+    InvalidSearchModeError,
 )
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
@@ -42,6 +43,7 @@ class API:
     _token: str = ""
     _vocabulary: dict = {}
     _db_schema: dict = {}
+    _http_headers: dict = {}
 
     def __init__(self, host: Union[str, None], token: [str, None]):
         """
@@ -106,16 +108,10 @@ class API:
                     "Set the environment variable (preferred) or specify the token explictly at the creation of API."
                 )
 
-        # strip any empty spaces on left or right
-        host = host.strip()
+        host = self._prepare_host(host=host)
 
-        # strip ending slash to make host always uniform
-        host = host.rstrip("/")
-
-
-        # if host is using unsafe "http://" then give a warning
-        if host.startswith("http://"):
-            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
+        # assign headers
+        self._http_headers = {"Authorization": self._token, "Content-Type": "application/json"}
 
         # check that api can connect to CRIPT with host and token
         try:
@@ -174,6 +170,35 @@ class API:
         This can be used to validate node JSON.
         """
         return copy.copy(self._db_schema)
+
+    def _prepare_host(self, host: str) -> str:
+        """
+        prepares the host and gets it ready to be used within the api client
+
+        1. removes any trailing spaces from the left or right side
+        1. removes "/" from the end so that it is always uniform
+        1. adds "/api", so all queries are sent directly to the API
+
+        Parameters
+        ----------
+        host: str
+            api host
+
+        Returns
+        -------
+        host: str
+        """
+        # strip any empty spaces on left or right
+        host = host.strip()
+
+        # strip ending slash to make host always uniform
+        host = host.rstrip("/")
+
+        # if host is using unsafe "http://" then give a warning
+        if host.startswith("http://"):
+            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
+
+        return host
 
     @property
     def host(self):
@@ -339,9 +364,7 @@ class API:
         -------
         None
         """
-        headers = {"Authorization": self._token, "Content-Type": "application/json"}
-
-        response = requests.post(self._host, headers=headers).json()
+        response = requests.post(self._host, headers=self._http_headers).json()
 
         # if htt response is not 200 then show the API error to the user
         if response.status_code != 200:
@@ -423,6 +446,8 @@ class API:
         """
         This is the method used to perform a search on the CRIPT platform.
 
+        First checks that the search mode user is asking for is supported, and if not throw an InvalidSearchModeError
+
         Parameters
         ----------
         node_type : PrimaryBaseNode
@@ -432,10 +457,22 @@ class API:
         value_to_search : str
             What you are searching for.
 
+        Raises
+        -----
+        InvalidSearchModeError
+            If the user tries to use a search mode that does not exist
+
         Returns
         -------
         List[BaseNode]
             List of nodes that matched the search.
         """
         # TODO send search query and get the result back
-        pass
+
+        if search_mode not in _VALID_SEARCH_MODES:
+            raise InvalidSearchModeError(invalid_search_mode=search_mode)
+
+        # requesting a page of some primary node
+        if search_mode == _VALID_SEARCH_MODES[""]:
+            api_endpoints: str = f"{self._host}/"
+            request = requests.get(url=self._host, headers=self._http_headers, )

@@ -16,10 +16,10 @@ class Project(PrimaryBaseNode):
     [Materials](../materials).
 
 
-    | attribute   | type             | example | description                            | required |
-    |-------------|------------------|---------|----------------------------------------|----------|
-    | collections | list[Collection] |         | collections that relate to the project |   False  |
-    | materials   | list[Materials]  |         | materials owned by the project         |   False  |
+    | attribute   | type             | example | description                            |
+    |-------------|------------------|---------|----------------------------------------|
+    | collections | list[Collection] |         | collections that relate to the project |
+    | materials   | list[Materials]  |         | materials owned by the project         |
 
     <!-- TODO consider adding JSON section -->
     """

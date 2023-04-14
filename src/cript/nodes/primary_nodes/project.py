@@ -15,10 +15,10 @@ class Project(PrimaryBaseNode):
     [Materials](../materials).
 
 
-    | attribute   | type             | example | description                            | required | vocab |
-    |-------------|------------------|---------|----------------------------------------|----------|-------|
-    | collections | list[Collection] |         | collections that relate to the project |          |       |
-    | materials   | list[Materials]  |         | materials owned by the project         |          |       |
+    | attribute   | type             | example | description                            | required |
+    |-------------|------------------|---------|----------------------------------------|----------|
+    | collections | list[Collection] |         | collections that relate to the project |   False  |
+    | materials   | list[Materials]  |         | materials owned by the project         |   False  |
 
     <!-- TODO consider adding JSON section -->
     """
@@ -53,13 +53,17 @@ class Project(PrimaryBaseNode):
         ----------
         name: str
             project name
-
-        Collections: List[Collection]
+        collections: List[Collection]
             list of Collections that belongs to this Project
+        materials: List[Material]
+            list of materials that belongs to this project
+        notes: str
+            notes for this project
 
         Returns
         -------
         None
+            Create a Project node
         """
         super().__init__(node="Project", name=name, notes=notes)
 

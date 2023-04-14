@@ -7,7 +7,22 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 class Collection(PrimaryBaseNode):
     """
+    ## Definition
+
+    A
     [Collection node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=8)
+    is nested inside a [Project](../project) node.
+    A Collection node can be thought as a folder/bucket that can hold either an Experiment or Inventory node.
+
+    | attribute   | type             | example             | description                                                                    |
+    |-------------|------------------|---------------------|--------------------------------------------------------------------------------|
+    | experiments | list[Experiment] |                     | experiments that relate to the collection                                      |
+    | inventories | list[Inventory]  |                     | inventory owned by the collection                                              |
+    | cript_doi   | str              | `10.1038/1781168a0` | DOI: digital object identifier for a published collection; CRIPT generated DOI |
+    | citations   | list[Citation]   |                     | reference to a book, paper, or scholarly work                                  |
+
+
+    <!-- TODO consider adding JSON of a collection -->
     """
 
     @dataclass(frozen=True)
@@ -190,6 +205,14 @@ class Collection(PrimaryBaseNode):
     def citations(self) -> List[Any]:
         """
         List of Citations within this Collection
+
+        Examples
+        --------
+        ```python
+        my_citation = cript.Citation(type="derived_from", reference=simple_reference_node)
+
+        my_collections.citations = my_citations
+        ```
 
         Returns
         -------

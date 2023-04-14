@@ -176,12 +176,12 @@ class Collection(PrimaryBaseNode):
     @property
     def cript_doi(self) -> str:
         """
-        gets the CRIPT DOI
+        The CRIPT DOI for this collection
 
         Returns
         -------
         cript_doi: str
-            the CRIPT DOI
+            the CRIPT DOI e.g. `10.1038/1781168a0`
         """
         return self._json_attrs.cript_doi
 

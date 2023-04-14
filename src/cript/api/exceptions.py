@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any
 
 from cript.exceptions import CRIPTException
 from cript.api.valid_search_modes import SearchModes
@@ -124,7 +124,7 @@ class InvalidSearchModeError(CRIPTException):
 
     invalid_search_mode: str = ""
 
-    def __init__(self, invalid_search_mode: SearchModes):
+    def __init__(self, invalid_search_mode: Any):
         self.invalid_search_mode = invalid_search_mode
 
     # TODO this method is not being used currently, if it never gets used, remove it

@@ -126,6 +126,21 @@ class InvalidSearchModeError(CRIPTException):
     def __init__(self, invalid_search_mode: str):
         self.invalid_search_mode = invalid_search_mode
 
+    def _get_valid_search_modes(self) -> List[str]:
+        """
+        gets the valid search modes available in the CRIPT API
+
+        This method can be easily converted to a function if needed
+
+        Returns
+        -------
+        list of valid search modes: List[str]
+        """
+        from cript.api.valid_search_modes import SearchModes
+
+        # list of valid search mode values "", "uuid", "contains_name", etc.
+        return [mode.value for mode in SearchModes]
+
     def __str__(self) -> str:
         """
         tells the user the search mode they picked for the api client to get a node from the API is invalid
@@ -135,11 +150,10 @@ class InvalidSearchModeError(CRIPTException):
         -------
         error message: str
         """
-        from cript.api._valid_search_modes import _VALID_SEARCH_MODES
 
         error_message = (
             f"'{self.invalid_search_mode}' is an invalid search mode. "
-            f"The valid search modes include: {str(_VALID_SEARCH_MODES)}"
+            f"The valid search modes include: {str(self._get_valid_search_modes())}"
         )
 
         return error_message

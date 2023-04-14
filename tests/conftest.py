@@ -343,7 +343,7 @@ def simple_property_node() -> cript.Property:
 @pytest.fixture(scope="session")
 def simple_algorithm_subobject() -> cript.Algorithm:
     """
-    minimal subobject made with only required arguments
+    minimal algorithm subobject made with only required arguments
     """
     algorithm = cript.Algorithm("mc_barostat", "barostat")
     return algorithm

@@ -495,6 +495,7 @@ class API:
             api_endpoint: str = f"{self._host}/search/{node_type.node}/?q={value_to_search}"
 
         elif search_mode == SearchModes.EXACT_NAME:
+            # URL encode query
             value_to_search = quote(value_to_search)
             api_endpoint: str = f"{self._host}/search/{node_type.node}/?q={value_to_search}"
 

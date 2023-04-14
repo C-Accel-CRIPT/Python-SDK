@@ -50,7 +50,9 @@ def test_prepare_host(cript_api: cript.API) -> None:
     """
     tests API _prepare_host function
     """
-    pass
+    host = " http://myhost.com "
+    host = cript.api.api._prepare_host(host)
+    assert host == "http://myhost.com"
 
 
 # def test_api_context(cript_api: cript.API) -> None:
@@ -175,7 +177,7 @@ def test_api_search(cript_api: cript.API) -> None:
     # with pytest.raises(InvalidSearchModeError):
     #     cript_api.search(node_type=cript.Material, search_mode="invalid search mode", value_to_search="123456")
 
-    cript_api.search(node_type="Material", search_mode="uuid", value_to_search="123456")
+    cript_api.search(node_type=cript.Material, search_mode="uuid", value_to_search="123456")
 
 
 def test_api_update_material(cript_api: cript.API) -> None:

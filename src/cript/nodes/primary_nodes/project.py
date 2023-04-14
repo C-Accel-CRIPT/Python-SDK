@@ -10,7 +10,8 @@ from cript.nodes.supporting_nodes.group import Group
 class Project(PrimaryBaseNode):
     """
     ## Definition
-    A Project is the highest level node that is Not nested inside any other node.
+    A [Project](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=7)
+    is the highest level node that is Not nested inside any other node.
     A Project can be thought of as a folder that can contain [Collections](../collection) and
     [Materials](../materials).
 

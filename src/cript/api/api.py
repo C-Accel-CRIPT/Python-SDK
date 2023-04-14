@@ -249,8 +249,7 @@ class API:
 
         return copy.deepcopy(self._vocabulary)
 
-    def is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[
-        bool, InvalidVocabulary, InvalidVocabularyCategory]:
+    def is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
         """
         checks if the vocabulary is valid within the CRIPT controlled vocabulary.
         Either returns True or InvalidVocabulary Exception
@@ -290,8 +289,7 @@ class API:
             controlled_vocabulary = controlled_vocabulary[vocab_category]
         except KeyError:
             # vocabulary category does not exist within CRIPT Controlled Vocabulary
-            raise InvalidVocabularyCategory(vocab_category=vocab_category,
-                                            valid_vocab_category=all_controlled_vocab_categories)
+            raise InvalidVocabularyCategory(vocab_category=vocab_category, valid_vocab_category=all_controlled_vocab_categories)
 
         # TODO this can be faster with a dict of dicts that can do o(1) look up
         #  looping through an unsorted list is an O(n) look up which is slow
@@ -442,10 +440,10 @@ class API:
         pass
 
     def search(
-            self,
-            node_type: PrimaryBaseNode,
-            search_mode: SearchModes,
-            value_to_search: str,
+        self,
+        node_type: PrimaryBaseNode,
+        search_mode: SearchModes,
+        value_to_search: str,
     ):
         """
         This is the method used to perform a search on the CRIPT platform.
@@ -500,8 +498,6 @@ class API:
             value_to_search = quote(value_to_search)
             api_endpoint: str = f"{self._host}/search/{node_type.node}/?q={value_to_search}"
 
-        # if none of the search_modes were able to capture and create an api_endpoint variable
-        # then an InvalidSearchModeError is raised
         try:
             response = requests.get(
                 url=api_endpoint,
@@ -509,5 +505,8 @@ class API:
             ).json()
 
             return response
+
+        # if none of the search_modes were able to capture and create an api_endpoint variable
+        # then an InvalidSearchModeError is raised
         except NameError:
             raise InvalidSearchModeError

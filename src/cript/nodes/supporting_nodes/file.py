@@ -28,7 +28,9 @@ class File(BaseNode):
     The [File node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001
     .pdf#page=28) provides a link to  scholarly work and allows users to specify in what way the work relates to that
     data. More specifically, users can specify that the data was directly extracted from, inspired by, derived from,
-    etc. the [Data](../../primary_nodes/data).
+    etc.
+
+    The file node is held in the [Data node](../../primary_nodes/data).
 
     ## Attributes
 
@@ -68,6 +70,7 @@ class File(BaseNode):
 
     def __init__(self, source: str, type: str, extension: str = "", data_dictionary: str = "", **kwargs):
         """
+        create a File node
 
         Parameters
         ----------
@@ -80,18 +83,29 @@ class File(BaseNode):
         data_dictionary:str
             extra information describing the file
         **kwargs:dict
-            for internal use. Any extra data needed to create this file node from API JSON
+            for internal use. Any extra data needed to create this file node
+            when deserializing the JSON response from the API
 
         Examples
         --------
-        ```python
-        my_file = cript.File(
-            source="https://criptapp.org",
-            type="calibration",
-            extension=".csv",
-            data_dictionary="my file's data dictionary"
-        )
-        ```
+        ??? Example "Minimal File Node"
+            ```python
+            my_file = cript.File(
+                source="https://criptapp.org",
+                type="calibration",
+            )
+            ```
+
+        ??? Example "Maximal File Node"
+            ```python
+            my_file = cript.File(
+                source="https://criptapp.org",
+                type="calibration",
+                extension=".csv",
+                data_dictionary="my file's data dictionary"
+                notes="my notes for this file"
+            )
+            ```
         """
 
         super().__init__(node="File")
@@ -194,6 +208,7 @@ class File(BaseNode):
         Returns
         -------
         file type: str
+            file type must come from [CRIPT controlled vocabulary]()
         """
         return self._json_attrs.type
 

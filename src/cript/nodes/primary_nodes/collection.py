@@ -166,6 +166,25 @@ class Collection(PrimaryBaseNode):
         new_inventory: List[Inventory]
             new list of inventories for the collection to overwrite the current list
 
+        Examples
+        --------
+        ```python
+        material_1 = cript.Material(
+            name="material 1",
+            identifiers=[{"alternative_names": "material 1 alternative name"}],
+        )
+        material_2 = cript.Material(
+            name="material 2",
+            identifiers=[{"alternative_names": "material 2 alternative name"}],
+        )
+
+        my_inventory = cript.Inventory(
+            name="my inventory name", materials_list=[material_1, material_2]
+        )
+
+        my_collection.inventories = [my_inventory] # you can add a list of inventories within the collection
+        ```
+
         Returns
         -------
         None
@@ -177,6 +196,10 @@ class Collection(PrimaryBaseNode):
     def cript_doi(self) -> str:
         """
         The CRIPT DOI for this collection
+
+        ```python
+        my_collection.cript_doi = "10.1038/1781168a0"
+        ```
 
         Returns
         -------

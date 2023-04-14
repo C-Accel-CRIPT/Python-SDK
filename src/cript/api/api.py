@@ -7,7 +7,7 @@ from typing import List, Literal, Union
 import requests
 from jsonschema import validate as json_validate
 
-from cript.api._valid_search_modes import _VALID_SEARCH_MODES
+from cript.api._valid_search_modes import _VALID_SEARCH_MODES, SearchModes
 from cript.api.exceptions import (
     CRIPTAPIAccessError,
     CRIPTConnectionError,

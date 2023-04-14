@@ -340,6 +340,15 @@ def simple_property_node() -> cript.Property:
     return my_property
 
 
+@pytest.fixture(scope="session")
+def simple_algorithm_subobject() -> cript.Algorithm:
+    """
+    minimal subobject made with only required arguments
+    """
+    algorithm = cript.Algorithm("mc_barostat", "barostat")
+    return algorithm
+
+
 # ---------- Supporting Nodes ----------
 @pytest.fixture(scope="function")
 def simple_file_node() -> cript.File:

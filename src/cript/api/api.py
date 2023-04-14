@@ -509,4 +509,4 @@ class API:
         # if none of the search_modes were able to capture and create an api_endpoint variable
         # then an InvalidSearchModeError is raised
         except NameError:
-            raise InvalidSearchModeError
+            raise InvalidSearchModeError(invalid_search_mode=search_mode)

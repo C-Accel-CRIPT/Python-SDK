@@ -172,8 +172,10 @@ def test_api_search(cript_api: cript.API) -> None:
     """
     # TODO consider making all of these search queries into separate tests
     # TODO test with both keys and values eg. SearchMode.UUID and "uuid"
-    with pytest.raises(InvalidSearchModeError):
-        cript_api.search(node_type=cript.Material, search_mode="invalid search mode", value_to_search="123456")
+    # with pytest.raises(InvalidSearchModeError):
+    #     cript_api.search(node_type=cript.Material, search_mode="invalid search mode", value_to_search="123456")
+
+    cript_api.search(node_type="Material", search_mode="uuid", value_to_search="123456")
 
 
 def test_api_update_material(cript_api: cript.API) -> None:

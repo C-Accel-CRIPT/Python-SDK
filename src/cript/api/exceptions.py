@@ -1,6 +1,7 @@
 from typing import List
 
 from cript.exceptions import CRIPTException
+from cript.api.valid_search_modes import SearchModes
 
 
 class CRIPTConnectionError(CRIPTException):
@@ -123,9 +124,10 @@ class InvalidSearchModeError(CRIPTException):
 
     invalid_search_mode: str = ""
 
-    def __init__(self, invalid_search_mode: str):
+    def __init__(self, invalid_search_mode: SearchModes):
         self.invalid_search_mode = invalid_search_mode
 
+    # TODO this method is not being used currently, if it never gets used, remove it
     def _get_valid_search_modes(self) -> List[str]:
         """
         gets the valid search modes available in the CRIPT API
@@ -136,7 +138,6 @@ class InvalidSearchModeError(CRIPTException):
         -------
         list of valid search modes: List[str]
         """
-        from cript.api.valid_search_modes import SearchModes
 
         # list of valid search mode values "", "uuid", "contains_name", etc.
         # return [mode.value for mode in SearchModes]
@@ -154,9 +155,10 @@ class InvalidSearchModeError(CRIPTException):
         error message: str
         """
 
+        # TODO This error message needs more documentation because it is not as intuitive
         error_message = (
             f"'{self.invalid_search_mode}' is an invalid search mode. "
-            f"The valid search modes include: {str(self._get_valid_search_modes())}"
+            f"The valid search modes come from cript.api.SearchModes"
         )
 
         return error_message

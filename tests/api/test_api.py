@@ -171,7 +171,7 @@ def test_api_search(cript_api: cript.API) -> None:
     * test that an "invalid search mode" give an InvalidSearchModeError
     """
     # TODO consider making all of these search queries into separate tests
-
+    # TODO test with both keys and values eg. SearchMode.UUID and "uuid"
     with pytest.raises(InvalidSearchModeError):
         cript_api.search(node_type=cript.Material, search_mode="invalid search mode", value_to_search="123456")
 

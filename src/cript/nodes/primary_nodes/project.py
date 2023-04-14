@@ -149,7 +149,16 @@ class Project(PrimaryBaseNode):
     @property
     def material(self) -> List[Material]:
         """
-        Material property getter method. Gets the list of materials within the project
+        List of Materials that belong to this Project.
+
+        Examples
+        --------
+        ```python
+        identifiers = [{"alternative_names": "my material alternative name"}]
+        my_material = cript.Material(name="my material", identifiers=identifiers)
+
+        my_project.material = [my_material]
+        ```
 
         Returns
         -------

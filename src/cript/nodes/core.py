@@ -4,7 +4,7 @@ from abc import ABC
 from dataclasses import asdict, dataclass, replace
 from typing import List
 
-from cript.nodes.exceptions import CRIPTJsonSerializationError
+from cript.nodes.exceptions import CRIPTJsonSerializationError, CRIPTNodeCycleError
 
 
 class BaseNode(ABC):
@@ -36,12 +36,35 @@ class BaseNode(ABC):
         return str(asdict(self._json_attrs))
 
     def _update_json_attrs_if_valid(self, new_json_attr: JsonAttributes):
-        tmp_obj = copy.copy(self)
-        tmp_obj._json_attrs = new_json_attr
-        # Throws invalid exception before object is modified.
-        tmp_obj.validate()
-        # After validation we can assign the attributes to actual object
+        old_json_attrs = copy.copy(self._json_attrs)
         self._json_attrs = new_json_attr
+        try:
+            self.validate()
+        except Exception as exc:
+            self._json_attrs = old_json_attrs
+            raise exc
+
+    def _has_cycle(self, handled_nodes=None):
+        """
+        Return true if the current data graph contains a cycle, False otherwise.
+        """
+        if handled_nodes is None:
+            handled_nodes = []
+
+        if self in handled_nodes:
+            return True
+        handled_nodes.append(self)
+
+        # Iterate over all fields and call the cycle detection recursively
+        cycle_detected = False
+        for field in self._json_attrs.__dataclass_fields__:
+            value = getattr(self._json_attrs, field)
+            if isinstance(value, BaseNode):
+                cycle = value._has_cycle(handled_nodes)
+                if cycle is True:
+                    cycle_detected = True
+                    return cycle_detected
+        return cycle_detected
 
     def validate(self) -> None:
         """
@@ -52,7 +75,8 @@ class BaseNode(ABC):
         Exception with more error information.
         """
 
-        pass
+        if self._has_cycle():
+            raise CRIPTNodeCycleError(str(self))
 
     @classmethod
     def _from_json(cls, json: dict):
@@ -62,7 +86,14 @@ class BaseNode(ABC):
         # All attributes from the backend are passed over, but some like created_by are ignored
         node = cls(**json)
         # Now we push the full json attributes into the class if it is valid
-        attrs = cls.JsonAttributes(**json)
+
+        valid_keyword_dict = {}
+        reference_nodes = asdict(node._json_attrs)
+        for key in reference_nodes:
+            if key in json:
+                valid_keyword_dict[key] = json[key]
+
+        attrs = cls.JsonAttributes(**valid_keyword_dict)
         node._update_json_attrs_if_valid(attrs)
         return node
 
@@ -76,7 +107,7 @@ class BaseNode(ABC):
 
         try:
             self.validate()
-            return json.dumps(self, cls=NodeEncoder)
+            return json.dumps(self, cls=NodeEncoder, sort_keys=True)
         except Exception as exc:
             raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc
 

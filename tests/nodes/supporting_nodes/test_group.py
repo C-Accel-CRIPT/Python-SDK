@@ -27,12 +27,9 @@ def test_group_serialization_and_deserialization():
                 "username": "my admin username",
                 "email": "admin_email@email.com",
                 "orcid": "0000-0000-0000-0001",
-                "groups": [],
             }
         ],
-        "users": [
-            {"node": "User", "username": "my username", "email": "user@email.com", "orcid": "0000-0000-0000-0002", "groups": []}
-        ],
+        "users": [{"node": "User", "username": "my username", "email": "user@email.com", "orcid": "0000-0000-0000-0002"}],
     }
 
     # convert dict to JSON
@@ -74,16 +71,13 @@ def group_node() -> cript.Group:
                 "username": "my admin username",
                 "email": "admin_email@email.com",
                 "orcid": "0000-0000-0000-0001",
-                "groups": [],
             }
         ],
-        "users": [
-            {"node": "User", "username": "my username", "email": "user@email.com", "orcid": "0000-0000-0000-0002", "groups": []}
-        ],
+        "users": [{"node": "User", "username": "my username", "email": "user@email.com", "orcid": "0000-0000-0000-0002"}],
     }
 
     # convert Group dict to JSON
-    group_json = json.dumps(group_dict)
+    group_json = json.dumps(group_dict, sort_keys=True)
 
     # convert JSON to Group node
     group_node = cript.load_nodes_from_json(nodes_json=group_json)

@@ -4,32 +4,6 @@ from typing import Any, List
 import requests
 
 
-def _get_url_without_page_parameter(api_endpoint):
-    """
-    prepares the api_end_point by stripping page number from it `?page=999999`
-    using regex to strip any number after `/\?page=\d+/?$`
-    which matches `/?page=ANY NUMBER`
-
-    Examples
-    -------
-    From
-    ```
-    http://development.api.mycriptapp.org/api/v1/material/?page=1/
-    ```
-
-    To
-    ```
-    http://development.api.mycriptapp.org/api/v1/material
-    ```
-
-    Returns
-    -------
-    new api endpoint: str
-    """
-    stripped_api_endpoint = re.sub(r'/\?page=\d+/?$', '', api_endpoint)
-    return stripped_api_endpoint
-
-
 class Paginator:
     """
     Paginator to flip through different pages of data that the API returns
@@ -37,12 +11,14 @@ class Paginator:
 
     api_endpoint: str = ""
     _token: str = ""
+
     current_page_number: int = None
     current_page_results: List[dict]
+
     page_of_data: List[Any] = None
 
-    def __init__(self, api_endpoint: str, _token: str, current_page_number: int):
-        self.api_endpoint = _get_url_without_page_parameter(api_endpoint)
+    def __init__(self, api_endpoint: str, current_page_number: int, _token: str,):
+        self.api_endpoint = api_endpoint
         self._token = f"Bearer {_token}"
         self.current_page_number = current_page_number
 

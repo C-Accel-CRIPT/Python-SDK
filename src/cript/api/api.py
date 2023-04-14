@@ -2,12 +2,13 @@ import copy
 import json
 import os
 import warnings
-from typing import List, Literal, Union
+from typing import List, Union
 
 import requests
 from jsonschema import validate as json_validate
+from urllib.parse import quote
 
-from cript.api._valid_search_modes import _VALID_SEARCH_MODES, SearchModes
+from cript.api.valid_search_modes import SearchModes
 from cript.api.exceptions import (
     CRIPTAPIAccessError,
     CRIPTConnectionError,
@@ -16,12 +17,12 @@ from cript.api.exceptions import (
     CRIPTAPISaveError,
     InvalidSearchModeError,
 )
+from cript.api.vocabulary_categories import all_controlled_vocab_categories
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
 from cript.nodes.supporting_nodes.group import Group
 from cript.nodes.supporting_nodes.user import User
-from cript.api.vocabulary_categories import all_controlled_vocab_categories
 
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.
@@ -248,7 +249,8 @@ class API:
 
         return copy.deepcopy(self._vocabulary)
 
-    def is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
+    def is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[
+        bool, InvalidVocabulary, InvalidVocabularyCategory]:
         """
         checks if the vocabulary is valid within the CRIPT controlled vocabulary.
         Either returns True or InvalidVocabulary Exception
@@ -288,7 +290,8 @@ class API:
             controlled_vocabulary = controlled_vocabulary[vocab_category]
         except KeyError:
             # vocabulary category does not exist within CRIPT Controlled Vocabulary
-            raise InvalidVocabularyCategory(vocab_category=vocab_category, valid_vocab_category=all_controlled_vocab_categories)
+            raise InvalidVocabularyCategory(vocab_category=vocab_category,
+                                            valid_vocab_category=all_controlled_vocab_categories)
 
         # TODO this can be faster with a dict of dicts that can do o(1) look up
         #  looping through an unsorted list is an O(n) look up which is slow
@@ -439,48 +442,72 @@ class API:
         pass
 
     def search(
-        self,
-        node_type: PrimaryBaseNode,
-        search_mode: Literal[_VALID_SEARCH_MODES],
-        value_to_search: str,
+            self,
+            node_type: PrimaryBaseNode,
+            search_mode: SearchModes,
+            value_to_search: str,
     ):
         """
         This is the method used to perform a search on the CRIPT platform.
 
-        First checks that the search mode user is asking for is supported, and if not throw an InvalidSearchModeError
+        since we are using Enum here we don't even need to check if the search mode is valid
+        because if the search mode is invalid then it would throw an AttributeError
+
+        checks which mode the search is asking for, creates the api_endpoint URL for it
+        and at the end it sends the request to the API and returns the API response to the user
 
         Parameters
         ----------
         node_type : PrimaryBaseNode
             Type of node that you are searching for.
-        search_mode : str
+        search_mode : SearchModes
             Type of search you want to do. You can search by name, UUID, URL, etc.
-        value_to_search : str
-            What you are searching for.
+        value_to_search : Union[str, None]
+            What you are searching for can be either a value, and if you are only searching for
+            a node type, then this value can be empty
 
         Raises
-        -----
+        -------
         InvalidSearchModeError
-            If the user tries to use a search mode that does not exist
+            In case none of the search modes were fulfilled
 
         Returns
         -------
         List[BaseNode]
             List of nodes that matched the search.
         """
-        # TODO consider making each search into its own function to keep code clean
-
-        if search_mode not in _VALID_SEARCH_MODES:
-            raise InvalidSearchModeError(invalid_search_mode=search_mode)
 
         # requesting a page of some primary node
-        if search_mode == _VALID_SEARCH_MODES[0]:
+        if search_mode == SearchModes.NODE_TYPE:
             page_number = 1
             api_endpoints: str = f"{self._host}/{node_type.node}/?page={page_number}"
 
+        # requesting a node by UUID
+        elif search_mode == SearchModes.UUID:
+            api_endpoint: str = f"{self._host}/{node_type.node}/{value_to_search}"
+
+        # skipping this for now because don't understand what its needed or does exactly, but still done
+        # find a node by its UUID and return only all of its children, excluding the parent
+        # elif search_mode == SearchModes.UUID_CHILDREN:
+        #     api_endpoint: str = f"{self._host}/{node_type.node}/{value_to_search}/"
+
+        elif search_mode == SearchModes.CONTAINS_NAME:
+            # URL encode value to search
+            value_to_search = quote(value_to_search)
+            api_endpoint: str = f"{self._host}/search/{node_type.node}/?q={value_to_search}"
+
+        elif search_mode == SearchModes.EXACT_NAME:
+            value_to_search = quote(value_to_search)
+            api_endpoint: str = f"{self._host}/search/{node_type.node}/?q={value_to_search}"
+
+        # if none of the search_modes were able to capture and create an api_endpoint variable
+        # then an InvalidSearchModeError is raised
+        try:
             response = requests.get(
-                url=self._host,
+                url=api_endpoint,
                 headers=self._http_headers,
             ).json()
 
             return response
+        except NameError:
+            raise InvalidSearchModeError

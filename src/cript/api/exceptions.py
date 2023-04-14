@@ -139,7 +139,10 @@ class InvalidSearchModeError(CRIPTException):
         from cript.api.valid_search_modes import SearchModes
 
         # list of valid search mode values "", "uuid", "contains_name", etc.
-        return [mode.value for mode in SearchModes]
+        # return [mode.value for mode in SearchModes]
+
+        # outputs: ['NODE_TYPE', 'UUID', 'CONTAINS_NAME', 'EXACT_NAME', 'UUID_CHILDREN']
+        return list(SearchModes.__members__.keys())
 
     def __str__(self) -> str:
         """

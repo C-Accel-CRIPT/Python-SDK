@@ -1,13 +1,11 @@
 import pytest
 
-import cript
-
 # from cript.api.schema_validation import _get_db_schema
 # from cript.api.vocabulary import _get_controlled_vocabulary
 
 
 @pytest.fixture(scope="session")
-def cript_api() -> cript.API:
+def cript_api():
     """
     Create an API instance for the rest of the tests to use.
 

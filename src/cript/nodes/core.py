@@ -86,7 +86,14 @@ class BaseNode(ABC):
         # All attributes from the backend are passed over, but some like created_by are ignored
         node = cls(**json)
         # Now we push the full json attributes into the class if it is valid
-        attrs = cls.JsonAttributes(**json)
+
+        valid_keyword_dict = {}
+        reference_nodes = asdict(node._json_attrs)
+        for key in reference_nodes:
+            if key in json:
+                valid_keyword_dict[key] = json[key]
+
+        attrs = cls.JsonAttributes(**valid_keyword_dict)
         node._update_json_attrs_if_valid(attrs)
         return node
 
@@ -100,7 +107,7 @@ class BaseNode(ABC):
 
         try:
             self.validate()
-            return json.dumps(self, cls=NodeEncoder)
+            return json.dumps(self, cls=NodeEncoder, sort_keys=True)
         except Exception as exc:
             raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc
 

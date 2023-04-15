@@ -1,5 +1,5 @@
 from abc import ABC
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from cript.nodes.core import BaseNode
 from cript.nodes.supporting_nodes.user import User
@@ -29,8 +29,12 @@ class PrimaryBaseNode(BaseNode, ABC):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, node: str):
+    def __init__(self, node: str, name: str, notes: str):
+        # initialize Base class with node
         super().__init__(node)
+
+        # replace name and notes within PrimaryBase
+        self._json_attrs = replace(self._json_attrs, name=name, notes=notes)
 
     def __str__(self) -> str:
         """
@@ -91,6 +95,30 @@ class PrimaryBaseNode(BaseNode, ABC):
     def name(self):
         return self._json_attrs.name
 
+    @name.setter
+    def name(self, new_name: str) -> None:
+        """
+        set the PrimaryBaseNode name
+
+        Parameters
+        ----------
+        new_name: str
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, name=new_name)
+        self._update_json_attrs_if_valid(new_attrs)
+
     @property
     def notes(self):
         return self._json_attrs.notes
+
+    @notes.setter
+    def notes(self, new_notes: str) -> None:
+        """
+        allow every node that inherits base attributes to set its notes
+        """
+        new_attrs = replace(self._json_attrs, notes=new_notes)
+        self._update_json_attrs_if_valid(new_attrs)

@@ -142,6 +142,12 @@ class Experiment(PrimaryBaseNode):
         """
         List of process for experiment
 
+        ```python
+        my_process = cript.Process(name="my process name", type="affinity_pure")
+
+        my_experiment.process = [my_process]
+        ```
+
         Returns
         -------
         List[Process]

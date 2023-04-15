@@ -326,11 +326,20 @@ class Experiment(PrimaryBaseNode):
     @property
     def citation(self) -> List[Any]:
         """
-        get the list of citations for this experiment
+        List of [citations](../citation) for this experiment
+
+        Examples
+        --------
+        ```python
+        my_citation = cript.Citation(type="derived_from", reference=simple_reference_node)
+
+        my_experiment.citations = [my_citation]
+        ```
 
         Returns
         -------
         List[Citation]
+            list of citations of scholarly work that was used in this experiment
         """
         return self._json_attrs.citation.copy()
 

@@ -140,11 +140,12 @@ class Experiment(PrimaryBaseNode):
     @property
     def process(self) -> List[Any]:
         """
-        get the list of process for this experiment
+        List of process for experiment
 
         Returns
         -------
         List[Process]
+            List of process that were performed in this experiment
         """
         return self._json_attrs.process.copy()
 

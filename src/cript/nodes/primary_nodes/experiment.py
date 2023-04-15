@@ -7,7 +7,31 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 class Experiment(PrimaryBaseNode):
     """
+    ## Definition
+    An
     [Experiment node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=9)
+    is nested inside a [Collection](../collection) node.
+
+    An [Experiment node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=9)
+    can be thought as a folder/bucket that can hold:
+
+    * [Process](../process)
+    * [Computations](../computation)
+    * [Computational_Process](../computational_process)
+    * [Data](../data)
+    * [Funding](../funding)
+    * [Citations](../citation)
+
+    ---
+
+    Warnings
+    --------
+    !!! warning "Experiment names"
+        Experiment names **MUST** be unique within a [Collection](../collection)
+
+    ---
+
+    <!-- TODO consider adding a JSON of an experiment node -->
     """
 
     @dataclass(frozen=True)
@@ -26,16 +50,16 @@ class Experiment(PrimaryBaseNode):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(
-        self,
-        name: str,
-        process: List[Any] = None,
-        computation: List[Any] = None,
-        computational_process: List[Any] = None,
-        data: List[Any] = None,
-        funding: List[str] = None,
-        citation: List[Any] = None,
-        notes: str = "",
-        **kwargs
+            self,
+            name: str,
+            process: List[Any] = None,
+            computation: List[Any] = None,
+            computational_process: List[Any] = None,
+            data: List[Any] = None,
+            funding: List[str] = None,
+            citation: List[Any] = None,
+            notes: str = "",
+            **kwargs
     ):
         """
         create an Experiment node

@@ -231,11 +231,20 @@ class Experiment(PrimaryBaseNode):
     @property
     def data(self) -> List[Any]:
         """
-        get the list of data for this experiment
+        List of [data nodes](../data) for this experiment
+
+        Examples
+        --------
+        ```python
+        my_data = cript.Data(name="my data name", type="afm_amp", files=[simple_file_node])
+
+        my_experiment.data = my_data
+        ```
 
         Returns
         -------
         List[Data]
+            list of [data nodes](../data) that belong to this experiment
         """
         return self._json_attrs.data.copy()
 

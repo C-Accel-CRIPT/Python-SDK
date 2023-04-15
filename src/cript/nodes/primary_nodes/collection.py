@@ -69,7 +69,7 @@ class Collection(PrimaryBaseNode):
         Returns
         -------
         None
-            Simply instantiates a Collection node
+            Instantiates a Collection node
         """
         super().__init__(node="Collection", name=name, notes=notes)
 

@@ -68,27 +68,37 @@ class Experiment(PrimaryBaseNode):
         ----------
         name: str
             name of Experiment
-
         process: List[Process]
             list of Process nodes for this Experiment
-
         computation: List[Computation]
             list of computation nodes for this Experiment
-
         computational_process: List[ComputationalProcess]
             list of computational_process nodes for this Experiment
-
         data: List[Data]
             list of data nodes for this experiment
-
         funding: List[str]
             list of the funders names for this Experiment
-
         citation: List[Citation]
             list of Citation nodes for this experiment
-
         notes: str default=""
             notes for the experiment node
+
+
+        Examples
+        --------
+        ```python
+        # create an experiment node with all possible arguments
+        my_experiment: cript.Experiment = cript.Experiment(
+            name="my experiment name",
+            process=[simple_process_node],
+            computation=[simple_computation_node],
+            computational_process=[simple_computational_process_node],
+            data=[simple_data_node],
+            funding=["National Science Foundation", "IRIS", "NIST"],
+            citation=[simple_citation_node],
+            notes="my experiment notes"
+        )
+        ```
 
         Returns
         -------

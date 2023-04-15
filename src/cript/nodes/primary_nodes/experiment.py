@@ -212,11 +212,25 @@ class Experiment(PrimaryBaseNode):
     @property
     def computational_process(self) -> List[Any]:
         """
-        get the list of computational_process for this experiment
+        List of [computational_process](../computational_process) for this experiment
+
+        Examples
+        --------
+        ```python
+        my_computational_process = cript.ComputationalProcess(
+            name="my computational process name",
+            type=my_computational_process_type,
+            input_data=[input_data],
+            ingredients=[ingredients],
+        )
+
+        my_experiment.computational_process = [my_computational_process]
+        ```
 
         Returns
         -------
         List[ComputationalProcess]
+            computational process that were performed in this experiment
         """
         return self._json_attrs.computational_process.copy()
 

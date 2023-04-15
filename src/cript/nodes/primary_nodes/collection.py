@@ -118,12 +118,18 @@ class Collection(PrimaryBaseNode):
     @property
     def experiments(self) -> List[Any]:
         """
-        get a list of all Experiments in this Collection
+        List of all [Experiments](../experiment) within this Collection
+
+        Examples
+        --------
+        ```python
+        my_collection.experiments = [my_first_experiment]
+        ```
 
         Returns
         -------
         List[Experiment]
-            list of all Experiments within this Collection
+            list of all [Experiments](../experiment) within this Collection
         """
         return self._json_attrs.experiments.copy()
 
@@ -171,7 +177,7 @@ class Collection(PrimaryBaseNode):
 
         Returns
         -------
-        List[Inventory]
+        inventories: List[Inventory]
             list of inventories in this collection
         """
         return self._json_attrs.inventories.copy()
@@ -240,7 +246,7 @@ class Collection(PrimaryBaseNode):
 
         Returns
         -------
-        List[Citation]:
+        citations: List[Citation]:
             list of Citations within this Collection
         """
         return self._json_attrs.citations.copy()

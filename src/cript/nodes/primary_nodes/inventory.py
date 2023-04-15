@@ -7,7 +7,22 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 class Inventory(PrimaryBaseNode):
     """
-    Inventory Node
+    ## Definition
+    An
+    [Inventory Node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=9)
+    is a list of material nodes.
+    An example of an inventory can be a grouping of materials that were extracted from literature
+    and curated into a group for machine learning, or it can be a subset of chemicals that are used for a
+    certain type of synthesis.
+
+    ## Attributes
+
+    | Attribute  | Type                            | Example             | Description                               |
+    |------------|---------------------------------|---------------------|-------------------------------------------|
+    | materials  | list[[Material](./material.md)] | "my_inventory_name" | materials that you like to group together |
+
+
+
     """
 
     @dataclass(frozen=True)

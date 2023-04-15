@@ -50,32 +50,26 @@ class Collection(PrimaryBaseNode):
         **kwargs
     ) -> None:
         """
-        create a collection with a name
-        add list of experiments, inventories, citations, and cript_doi if available
-
-        update the _json_attributes
-        call validate to be sure the node is still valid
+        create a Collection with a name
+        add list of experiments, inventories, citations, cript_doi, and notes if available.
 
         Parameters
         ----------
         name: str
             name of the Collection you want to make
-
         experiments: List[Experiment], default=None
             list of experiments within the Collection
-
         inventories: List[Inventory], default=None
             list of inventories within this collection
-
         cript_doi: str = "", default=""
             cript doi
-
         citations: List[Citation], default=None
             List of citations for this collection
 
         Returns
         -------
         None
+            Simply instantiates a Collection node
         """
         super().__init__(node="Collection", name=name, notes=notes)
 

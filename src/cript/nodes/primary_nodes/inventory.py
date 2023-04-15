@@ -66,6 +66,7 @@ class Inventory(PrimaryBaseNode):
         Returns
         -------
         None
+            instantiate an inventory node
         """
 
         if materials_list is None:

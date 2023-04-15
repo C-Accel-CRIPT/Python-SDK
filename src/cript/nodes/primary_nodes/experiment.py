@@ -253,11 +253,18 @@ class Experiment(PrimaryBaseNode):
     @property
     def funding(self) -> List[str]:
         """
-        return a list of strings of all the funders for this experiment
+        List of strings of all the funders for this experiment
+
+        Examples
+        --------
+        ```python
+        my_experiment.funding = ["National Science Foundation", "IRIS", "NIST"]
+        ```
 
         Returns
         -------
         List[str]
+            List of funders for this experiment
         """
         return self._json_attrs.funding.copy()
 

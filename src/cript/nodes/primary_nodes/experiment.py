@@ -103,6 +103,7 @@ class Experiment(PrimaryBaseNode):
         Returns
         -------
         None
+            Instantiate an Experiment node
         """
 
         if process is None:

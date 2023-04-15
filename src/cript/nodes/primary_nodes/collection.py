@@ -93,20 +93,6 @@ class Collection(PrimaryBaseNode):
 
         self.validate()
 
-    def validate(self) -> None:
-        """
-        validates project node
-
-        Returns
-        -------
-        None
-
-        Raises
-        ------
-        CRIPTNodeSchemaError
-        """
-        pass
-
     # ------------------ Properties ------------------
 
     @property

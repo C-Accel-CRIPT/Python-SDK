@@ -175,11 +175,20 @@ class Experiment(PrimaryBaseNode):
     @property
     def computation(self) -> List[Any]:
         """
-        get a list of the computations in this experiment
+        List of the [computations](../computation) in this experiment
+
+        Examples
+        --------
+        ```python
+        my_computation = cript.Computation(name="my computation name", type="analysis")
+
+        simple_experiment_node.computation = [simple_computation_node]
+        ```
 
         Returns
         -------
         List[Computation]
+            List of [computations](../computation) for this experiment
         """
         return self._json_attrs.computation.copy()
 

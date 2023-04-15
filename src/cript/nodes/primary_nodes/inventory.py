@@ -19,7 +19,7 @@ class Inventory(PrimaryBaseNode):
 
     | Attribute  | Type                            | Example             | Description                               |
     |------------|---------------------------------|---------------------|-------------------------------------------|
-    | materials  | list[[Material](./material.md)] | "my_inventory_name" | materials that you like to group together |
+    | materials  | list[[Material](./material.md)] |                     | materials that you like to group together |
 
 
 
@@ -37,7 +37,26 @@ class Inventory(PrimaryBaseNode):
 
     def __init__(self, name: str, materials_list: List[Material], notes: str = "", **kwargs) -> None:
         """
-        create an inventory node
+        Instantiate an inventory node
+
+        Examples
+        --------
+        ```python
+        material_1 = cript.Material(
+            name="material 1",
+            identifiers=[{"alternative_names": "material 1 alternative name"}],
+        )
+
+        material_2 = cript.Material(
+            name="material 2",
+            identifiers=[{"alternative_names": "material 2 alternative name"}],
+        )
+
+        # instantiate inventory node
+        my_inventory = cript.Inventory(
+            name="my inventory name", materials_list=[material_1, material_2]
+        )
+        ```
 
         Parameters
         ----------

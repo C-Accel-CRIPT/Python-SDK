@@ -147,7 +147,27 @@ class Collection(PrimaryBaseNode):
     @property
     def inventories(self) -> List[Any]:
         """
-        gets a list of the inventories within this Collection
+        List of [inventories](../inventory) that belongs to this collection
+
+        Examples
+        --------
+        ```python
+        material_1 = cript.Material(
+            name="material 1",
+            identifiers=[{"alternative_names": "material 1 alternative name"}],
+        )
+
+        material_2 = cript.Material(
+            name="material 2",
+            identifiers=[{"alternative_names": "material 2 alternative name"}],
+        )
+
+        my_inventory = cript.Inventory(
+            name="my inventory name", materials_list=[material_1, material_2]
+        )
+
+        my_collection.inventories = [my_inventory]
+        ```
 
         Returns
         -------
@@ -165,25 +185,6 @@ class Collection(PrimaryBaseNode):
         ----------
         new_inventory: List[Inventory]
             new list of inventories for the collection to overwrite the current list
-
-        Examples
-        --------
-        ```python
-        material_1 = cript.Material(
-            name="material 1",
-            identifiers=[{"alternative_names": "material 1 alternative name"}],
-        )
-        material_2 = cript.Material(
-            name="material 2",
-            identifiers=[{"alternative_names": "material 2 alternative name"}],
-        )
-
-        my_inventory = cript.Inventory(
-            name="my inventory name", materials_list=[material_1, material_2]
-        )
-
-        my_collection.inventories = [my_inventory] # you can add a list of inventories within the collection
-        ```
 
         Returns
         -------

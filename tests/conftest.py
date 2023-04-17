@@ -7,6 +7,7 @@ and keeping all nodes in one file makes it easier/cleaner to create tests.
 
 The fixtures are all functional fixtures that stay consistent between all tests.
 """
+from typing import List
 
 import pytest
 
@@ -107,6 +108,34 @@ def simple_experiment_node() -> cript.Experiment:
 
 
 @pytest.fixture(scope="function")
+def complex_experiment_node(
+    simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, simple_citation_node
+) -> cript.Experiment:
+    """
+    maximal experiment node with all optional arguments to use for other tests
+
+    Returns
+    -------
+    Experiment
+    """
+    experiment_name = "my experiment name"
+    experiment_funders = ["National Science Foundation", "IRIS", "NIST"]
+
+    my_experiment: cript.Experiment = cript.Experiment(
+        name=experiment_name,
+        process=[simple_process_node],
+        computation=[simple_computation_node],
+        computational_process=[simple_computational_process_node],
+        data=[simple_data_node],
+        funding=experiment_funders,
+        citation=[simple_citation_node],
+        notes="my experiment notes",
+    )
+
+    return my_experiment
+
+
+@pytest.fixture(scope="function")
 def simple_computational_process_node() -> cript.ComputationalProcess:
     """
     simple Computational Process node with only required arguments to use in other tests
@@ -186,6 +215,67 @@ def simple_process_node() -> cript.Process:
     my_process = cript.Process(name="my process name", type="affinity_pure")
 
     return my_process
+
+
+@pytest.fixture(scope="function")
+def complex_process_node(
+    simple_ingredient_node, simple_equipment_node, simple_citation_node, simple_property_node, simple_condition_node
+) -> cript.Process:
+    """
+    maximal process node with all possible arguments
+    """
+
+    my_process_name: str = "my complex process node name"
+    my_process_type: str = "affinity_pure"
+    my_process_description: str = "my simple material description"
+
+    process_product = [
+        cript.Material(
+            name="my process product material 1",
+            identifiers=[{"alternative_names": "my alternative process product material 1"}],
+        ),
+        cript.Material(
+            name="my process product material 1",
+            identifiers=[{"alternative_names": "my alternative process product material 1"}],
+        ),
+    ]
+
+    process_waste = [
+        cript.Material(
+            name="my process waste material 1", identifiers=[{"alternative_names": "my alternative process waste material 1"}]
+        ),
+        cript.Material(
+            name="my process waste material 1", identifiers=[{"alternative_names": "my alternative process waste material 1"}]
+        ),
+    ]
+
+    prerequisite_processes = [
+        cript.Process(name="prerequisite processes 1", type="blow_molding"),
+        cript.Process(name="prerequisite processes 2", type="centrifugation"),
+    ]
+
+    my_process_keywords: List[str] = [
+        "anionic",
+        "annealing_sol",
+    ]
+
+    # create complex process
+    my_complex_process = cript.Process(
+        name=my_process_name,
+        type=my_process_type,
+        ingredients=[simple_ingredient_node],
+        description=my_process_description,
+        equipments=[simple_equipment_node],
+        products=process_product,
+        waste=process_waste,
+        prerequisite_processes=[prerequisite_processes],
+        conditions=[simple_condition_node],
+        properties=[simple_property_node],
+        keywords=my_process_keywords,
+        citations=[simple_citation_node],
+    )
+
+    return my_complex_process
 
 
 @pytest.fixture(scope="function")

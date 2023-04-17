@@ -101,8 +101,8 @@ def get_software_string():
 def test_parameter():
     p = get_parameter()
     p_str = p.json
-    print(p_str)
-    print(get_parameter_string())
+    # print(p_str)
+    # print(get_parameter_string())
     assert p_str == get_parameter_string()
     p = cript.load_nodes_from_json(p_str)
     assert p_str == get_parameter_string()
@@ -192,8 +192,8 @@ def test_reference():
 
 def test_citation():
     c = get_citation()
-    print(c.json)
-    print(get_citation_string())
+    # print(c.json)
+    # print(get_citation_string())
     assert c.json == get_citation_string()
     c.type = "replicated"
     assert c.type == "replicated"
@@ -271,8 +271,8 @@ def get_property_string():
 
 def test_property():
     p = get_property()
-    print(p.json)
-    print(get_property_string())
+    # print(p.json)
+    # print(get_property_string())
     assert p.json == get_property_string()
     p2 = cript.load_nodes_from_json(p.json)
     assert p2.json == p.json
@@ -399,7 +399,7 @@ def get_ingredient_string():
 def test_ingredient():
     i = get_ingredient()
     assert i.json == get_ingredient_string()
-    print(i.json)
+    # print(i.json)
     i2 = cript.load_nodes_from_json(i.json)
     assert i.json == i2.json
 

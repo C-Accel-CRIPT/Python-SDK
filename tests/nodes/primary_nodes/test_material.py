@@ -132,9 +132,8 @@ def test_deserialize_material_from_json() -> None:
     }
 
     material_string = json.dumps(api_material)
-    print(material_string)
+
     my_material = cript.load_nodes_from_json(nodes_json=material_string)
-    print(type(my_material))
 
     # assertions
     assert isinstance(my_material, cript.Material)

@@ -184,12 +184,6 @@ def test_experiment_json(
         ],
     }
 
-    print("\n\n")
-    print("----------------------------------------------------")
-    print(my_experiment.json)
-    print("----------------------------------------------------")
-    print(expected_experiment_dict)
-
     assert len(json.loads(my_experiment.json)) == len(expected_experiment_dict)
     assert json.loads(my_experiment.json) == expected_experiment_dict
 

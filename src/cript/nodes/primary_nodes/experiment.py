@@ -12,7 +12,22 @@ class Experiment(PrimaryBaseNode):
     [Experiment node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=9)
     is nested inside a [Collection](../collection) node.
 
-    An [Experiment node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=9)
+    ## Attributes
+
+    | attribute                | type                         | example          | description                                               | required |
+    |--------------------------|------------------------------|------------------|-----------------------------------------------------------|----------|
+    | collection               | Collection                   |                  | collection associated with the experiment                 | True     |
+    | processes                | list[Process]                |                  | process nodes associated with this experiment             |          |
+    | computations             | list[Computation]            |                  | computation method nodes associated with this experiment  |          |
+    | computational_ processes | list[Computational  Process] |                  | computation process nodes associated with this experiment |          |
+    | data                     | list[Data]                   |                  | data nodes associated with this experiment                |          |
+    | funding                  | list[str]                    | ['OIA- 2134795'] | funding source for experiment                             |          |
+    | citations                | list[Citation]               |                  | reference to a book, paper, or scholarly work             |          |
+
+
+    ## Subobjects
+    An
+    [Experiment node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=9)
     can be thought as a folder/bucket that can hold:
 
     * [Process](../process)
@@ -22,7 +37,6 @@ class Experiment(PrimaryBaseNode):
     * [Funding](../funding)
     * [Citations](../citation)
 
-    ---
 
     Warnings
     --------
@@ -87,16 +101,7 @@ class Experiment(PrimaryBaseNode):
         --------
         ```python
         # create an experiment node with all possible arguments
-        my_experiment: cript.Experiment = cript.Experiment(
-            name="my experiment name",
-            process=[simple_process_node],
-            computation=[simple_computation_node],
-            computational_process=[simple_computational_process_node],
-            data=[simple_data_node],
-            funding=["National Science Foundation", "IRIS", "NIST"],
-            citation=[simple_citation_node],
-            notes="my experiment notes"
-        )
+        my_experiment = cript.Experiment(name="my experiment name")
         ```
 
         Returns
@@ -142,6 +147,7 @@ class Experiment(PrimaryBaseNode):
         List of process for experiment
 
         ```python
+        # create a simple process node
         my_process = cript.Process(name="my process name", type="affinity_pure")
 
         my_experiment.process = [my_process]
@@ -179,8 +185,10 @@ class Experiment(PrimaryBaseNode):
         Examples
         --------
         ```python
+        # create computation node
         my_computation = cript.Computation(name="my computation name", type="analysis")
 
+        # add computation node to experiment node
         simple_experiment_node.computation = [simple_computation_node]
         ```
 
@@ -218,11 +226,12 @@ class Experiment(PrimaryBaseNode):
         ```python
         my_computational_process = cript.ComputationalProcess(
             name="my computational process name",
-            type=my_computational_process_type,
-            input_data=[input_data],
-            ingredients=[ingredients],
+            type="cross_linking",       # must come from CRIPT Controlled Vocabulary
+            input_data=[input_data],    # input data is another data node
+            ingredients=[ingredients],  # output data is another data node
         )
 
+        # add computational_process node to experiment node
         my_experiment.computational_process = [my_computational_process]
         ```
 
@@ -258,7 +267,16 @@ class Experiment(PrimaryBaseNode):
         Examples
         --------
         ```python
-        my_data = cript.Data(name="my data name", type="afm_amp", files=[simple_file_node])
+        # create a simple file node
+        my_file = cript.File(
+            source="https://criptapp.org",
+            type="calibration",
+            extension=".csv",
+            data_dictionary="my file's data dictionary",
+        )
+
+        # create a simple data node
+        my_data = cript.Data(name="my data name", type="afm_amp", files=[my_file])
 
         my_experiment.data = my_data
         ```
@@ -330,8 +348,10 @@ class Experiment(PrimaryBaseNode):
         Examples
         --------
         ```python
+        # create citation node
         my_citation = cript.Citation(type="derived_from", reference=simple_reference_node)
 
+        # add citation to experiment
         my_experiment.citations = [my_citation]
         ```
 

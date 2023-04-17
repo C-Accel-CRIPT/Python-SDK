@@ -170,7 +170,6 @@ class Process(PrimaryBaseNode):
         my_process.type = "affinity_pure"
         ```
 
-
         Returns
         -------
         str

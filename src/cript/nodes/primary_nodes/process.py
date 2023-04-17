@@ -174,7 +174,7 @@ class Process(PrimaryBaseNode):
         Returns
         -------
         str
-            [Process type](https://criptapp.org/keys/process-type/)
+            Select a [Process type](https://criptapp.org/keys/process-type/) from CRIPT controlled vocabulary
         """
         return self._json_attrs.type
 
@@ -532,6 +532,7 @@ class Process(PrimaryBaseNode):
         Returns
         -------
         List[Citation]
+            list of citations for this process node
         """
         return self._json_attrs.citations.copy()
 

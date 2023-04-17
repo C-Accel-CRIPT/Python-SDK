@@ -16,10 +16,10 @@ class Project(PrimaryBaseNode):
     [Materials](../materials).
 
 
-    | attribute   | type             | example | description                            |
-    |-------------|------------------|---------|----------------------------------------|
-    | collections | list[Collection] |         | collections that relate to the project |
-    | materials   | list[Materials]  |         | materials owned by the project         |
+    | attribute   | type             | description                            |
+    |-------------|------------------|----------------------------------------|
+    | collections | List[Collection] | collections that relate to the project |
+    | materials   | List[Materials]  | materials owned by the project         |
 
     <!-- TODO consider adding JSON section -->
     """
@@ -64,7 +64,7 @@ class Project(PrimaryBaseNode):
         Returns
         -------
         None
-            Create a Project node
+            instantiate a Project node
         """
         super().__init__(node="Project", name=name, notes=notes)
 

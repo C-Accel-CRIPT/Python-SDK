@@ -50,16 +50,16 @@ class Experiment(PrimaryBaseNode):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(
-            self,
-            name: str,
-            process: List[Any] = None,
-            computation: List[Any] = None,
-            computational_process: List[Any] = None,
-            data: List[Any] = None,
-            funding: List[str] = None,
-            citation: List[Any] = None,
-            notes: str = "",
-            **kwargs
+        self,
+        name: str,
+        process: List[Any] = None,
+        computation: List[Any] = None,
+        computational_process: List[Any] = None,
+        data: List[Any] = None,
+        funding: List[str] = None,
+        citation: List[Any] = None,
+        notes: str = "",
+        **kwargs
     ):
         """
         create an Experiment node
@@ -82,7 +82,6 @@ class Experiment(PrimaryBaseNode):
             list of Citation nodes for this experiment
         notes: str default=""
             notes for the experiment node
-
 
         Examples
         --------

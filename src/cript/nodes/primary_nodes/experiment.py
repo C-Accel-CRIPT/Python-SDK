@@ -17,12 +17,12 @@ class Experiment(PrimaryBaseNode):
     | attribute                | type                         | example          | description                                               | required |
     |--------------------------|------------------------------|------------------|-----------------------------------------------------------|----------|
     | collection               | Collection                   |                  | collection associated with the experiment                 | True     |
-    | processes                | list[Process]                |                  | process nodes associated with this experiment             |          |
-    | computations             | list[Computation]            |                  | computation method nodes associated with this experiment  |          |
-    | computational_ processes | list[Computational  Process] |                  | computation process nodes associated with this experiment |          |
-    | data                     | list[Data]                   |                  | data nodes associated with this experiment                |          |
-    | funding                  | list[str]                    | ['OIA- 2134795'] | funding source for experiment                             |          |
-    | citations                | list[Citation]               |                  | reference to a book, paper, or scholarly work             |          |
+    | processes                | List[Process]                |                  | process nodes associated with this experiment             | False     |
+    | computations             | List[Computation]            |                  | computation method nodes associated with this experiment  | False     |
+    | computational_ processes | List[Computational  Process] |                  | computation process nodes associated with this experiment | False     |
+    | data                     | List[Data]                   |                  | data nodes associated with this experiment                | False     |
+    | funding                  | List[str]                    | ['OIA- 2134795'] | funding source for experiment                             | False     |
+    | citations                | List[Citation]               |                  | reference to a book, paper, or scholarly work             | False     |
 
 
     ## Subobjects

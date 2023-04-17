@@ -7,7 +7,33 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 class Process(PrimaryBaseNode):
     """
-    Process Node
+    ## Definition
+    The process node contains a list of ingredients, quantities, and procedure information for an experimental material
+    transformation (chemical and physical).
+
+    ## Attributes
+
+    | attribute               | type             | example                                                                         | description                                                         | required | vocab |
+    |-------------------------|------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------|----------|-------|
+    | type                    | str              | mix                                                                             | type of process                                                     | True     | True  |
+    | ingredients             | list[Ingredient] |                                                                                 | ingredients                                                         |          |       |
+    | description             | str              | To oven-dried 20 mL glass vial, 5 mL of styrene and 10 ml of toluene was added. | explanation of the process                                          |          |       |
+    | equipment               | list[Equipment]  |                                                                                 | equipment used in the process                                       |          |       |
+    | products                | list[Material]   |                                                                                 | desired material produced from the process                          |          |       |
+    | waste                   | list[Material]   |                                                                                 | material sent to waste                                              |          |       |
+    | prerequisite_ processes | list[Process]    |                                                                                 | processes that must be completed prior to the start of this process |          |       |
+    | conditions              | list[Condition]  |                                                                                 | global process conditions                                           |          |       |
+    | properties              | list[Property]   |                                                                                 | process properties                                                  |          |       |
+    | keywords                | list[str]        |                                                                                 | words that classify the process                                     |          | True  |
+    | citations               | list[Citation]   |                                                                                 | reference to a book, paper, or scholarly work                       |          |       |
+
+    ## Available Subobjects
+    * [Ingredient](../../subobjects/ingredient)
+    * [Equipments](../../subobjects/equipment)
+    * [Property](../../subobjects/property)
+    * [Condition](../../subobjects/condition)
+    * [Citation](../../subobjects/citation)
+
     """
 
     @dataclass(frozen=True)
@@ -51,20 +77,39 @@ class Process(PrimaryBaseNode):
         """
         create a process node
 
-        the only required argument is ingredient
-        the rest of the arguments are optional. They can either be set now or later
+        ```python
+        my_process = cript.Process(name="my process name", type="affinity_pure")
+        ```
+
         Parameters
         ----------
         ingredients: List[Ingredient]
+            [ingredients](../../subobjects/ingredient) used in this process
         type: str = ""
+            Process type must come from
+            [CRIPT Controlled vocabulary process type](https://criptapp.org/keys/process-type/)
         description: str = ""
+            description of this process
         equipments: List[Equipment] = None
+            list of [equipments](../../subobjects/equipment) used in this process
         products: List[Material] = None
+            products that this process created
         waste: List[Material] = None
+            waste that this process created
         conditions: List[Condition] = None
+            list of [conditions](../../subobjects/condition) that this process was created under
         properties: List[Property] = None
+            list of [properties](../../subobjects/property) for this process
         keywords: List[str] = None
+            list of keywords for this process must come from
+            [CRIPT process keywords controlled keywords](https://criptapp.org/keys/process-keyword/)
         citations: List[Citation] = None
+            list of [citations](../../subobjects/citation)
+
+        Returns
+        -------
+        None
+            instantiate a process node
         """
 
         if ingredients is None:
@@ -117,14 +162,19 @@ class Process(PrimaryBaseNode):
     @property
     def type(self) -> str:
         """
-        Get the type of the process
+        Process type must come from the [CRIPT controlled vocabulary](https://criptapp.org/keys/process-type/)
 
-        Process type comes from CRIPT controlled vocabulary
+        Examples
+        --------
+        ```python
+        my_process.type = "affinity_pure"
+        ```
+
 
         Returns
         -------
         str
-            type of the process (CRIPT controlled vocabulary)
+            [Process type](https://criptapp.org/keys/process-type/)
         """
         return self._json_attrs.type
 
@@ -148,7 +198,18 @@ class Process(PrimaryBaseNode):
     @property
     def ingredients(self) -> List[Any]:
         """
-        get a list of ingredients for this process
+        List of [ingredients](../../subobjects/ingredients) for this process
+
+        Examples
+        ---------
+        ```python
+        my_ingredients = cript.Ingredient(
+            material=simple_material_node,
+            quantities=[simple_quantity_node],
+        )
+
+        my_process.ingredients = [my_ingredients]
+        ```
 
         Returns
         -------
@@ -179,11 +240,18 @@ class Process(PrimaryBaseNode):
     @property
     def description(self) -> str:
         """
-        get the description of this process
+        description of this process
+
+        Examples
+        --------
+        ```python
+        my_process.description = "To oven-dried 20 mL glass vial, 5 mL of styrene and 10 ml of toluene was added"
+        ```
 
         Returns
         -------
-        None
+        str
+            description of this process
         """
         return self._json_attrs.description
 
@@ -207,11 +275,12 @@ class Process(PrimaryBaseNode):
     @property
     def equipments(self) -> List[Any]:
         """
-        get the equipments for this process
+        List of [equipments](../../subobjects/equipments) used for this process
 
         Returns
         -------
-        None
+        List[Equipment]
+            list of equipments used for this process
         """
         return self._json_attrs.equipments.copy()
 
@@ -235,12 +304,12 @@ class Process(PrimaryBaseNode):
     @property
     def products(self) -> List[Any]:
         """
-        get the list of products for this process
+        List of products (material nodes) for this process
 
         Returns
         -------
         List[Material]
-            get a list of process products (Material nodes)
+            List of process products (Material nodes)
         """
         return self._json_attrs.products.copy()
 
@@ -264,11 +333,18 @@ class Process(PrimaryBaseNode):
     @property
     def waste(self) -> List[Any]:
         """
-        get the list of waste that resulted from this process
+        List of waste that resulted from this process
+
+        Examples
+        --------
+        ```python
+        my_process.waste = my_waste_material
+        ```
 
         Returns
         -------
-        None
+        List[Material]
+            list of waste materials that resulted from this product
         """
         return self._json_attrs.waste.copy()
 
@@ -292,11 +368,24 @@ class Process(PrimaryBaseNode):
     @property
     def prerequisite_processes(self) -> List["Process"]:
         """
-        get the prerequisite process node
+        list of prerequisite process nodes
+
+        Examples
+        --------
+        ```python
+
+        my_prerequisite_processes = [
+            cript.Process(name="prerequisite processes 1", type="blow_molding"),
+            cript.Process(name="prerequisite processes 2", type="centrifugation"),
+        ]
+
+        my_process.prerequisite_processes = my_prerequisite_processes
+        ```
 
         Returns
         -------
         List[Process]
+            list of process that had to happen before this process
         """
         return self._json_attrs.prerequisite_processes
 
@@ -319,11 +408,21 @@ class Process(PrimaryBaseNode):
     @property
     def conditions(self) -> List[Any]:
         """
-        get a list of conditions present for this process
+        List of conditions present for this process
+
+        Examples
+        -------
+        ```python
+        # create condition node
+        my_condition = cript.Condition(key="atm", type="min", value=1)
+
+        my_process.conditions = [my_condition]
+        ```
 
         Returns
         -------
-        None
+        List[Condition]
+            list of conditions for this process node
         """
         return self._json_attrs.conditions.copy()
 
@@ -346,11 +445,21 @@ class Process(PrimaryBaseNode):
     @property
     def properties(self) -> List[Any]:
         """
-        get the list of Property nodes for this process
+        List of [Property nodes](../../subobjects/property) for this process
+
+        Examples
+        --------
+        ```python
+        # create property node
+         my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
+
+         my_process.properties = [my_property]
+        ```
 
         Returns
         -------
-        None
+        List[Property]
+            list of properties for this process
         """
         return self._json_attrs.properties.copy()
 
@@ -374,11 +483,14 @@ class Process(PrimaryBaseNode):
     @property
     def keywords(self) -> List[str]:
         """
-        get a list of keywords for this process
+        List of keywords for this process
+
+        [Process keywords](https://criptapp.org/keys/process-keyword/) must come from CRIPT controlled vocabulary
 
         Returns
         -------
         List[str]
+            list of keywords for this process nod
         """
         return self._json_attrs.keywords.copy()
 
@@ -403,7 +515,19 @@ class Process(PrimaryBaseNode):
     @property
     def citations(self) -> List[Any]:
         """
-        get the list of citations for this process
+        List of citations for this process
+
+        Examples
+        --------
+        ```python
+        # crate reference node for this citation
+        my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+
+        # create citation node
+        my_citation = cript.Citation(type="derived_from", reference=my_reference)
+
+        my_process.citations = [my_citation]
+        ```
 
         Returns
         -------

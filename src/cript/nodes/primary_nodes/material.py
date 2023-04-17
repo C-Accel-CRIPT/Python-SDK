@@ -90,6 +90,7 @@ class Material(PrimaryBaseNode):
         parent_materials: List["Material"] = None,
         computation_forcefield: List[Any] = None,
         keywords: List[str] = None,
+        notes: str = "",
         **kwargs
     ):
         """

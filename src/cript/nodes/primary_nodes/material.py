@@ -14,20 +14,15 @@ class Material(PrimaryBaseNode):
     is just the materials used within an project/experiment.
 
     ## Attributes
-    | attribute                             | type             | example                                                                         | description                                                         | required | vocab |
-    |---------------------------------------|------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------|----------|-------|
-    | type                                  | str              | mix                                                                             | type of process                                                     | True     | True  |
-    | ingredients                           | List[Ingredient] |                                                                                 | ingredients                                                         |          |       |
-    | description                           | str              | To oven-dried 20 mL glass vial, 5 mL of styrene and 10 ml of toluene was added. | explanation of the process                                          |          |       |
-    | equipment                             | List[Equipment]  |                                                                                 | equipment used in the process                                       |          |       |
-    | products                              | List[Material]   |                                                                                 | desired material produced from the process                          |          |       |
-    | waste                                 | List[Material]   |                                                                                 | material sent to waste                                              |          |       |
-    | prerequisite_ processes               | List[Process]    |                                                                                 | processes that must be completed prior to the start of this process |          |       |
-    | conditions                            | List[Condition]  |                                                                                 | global process conditions                                           |          |       |
-    | properties                            | List[Property]   |                                                                                 | process properties                                                  |          |       |
-    | keywords                              | List[str]        |                                                                                 | words that classify the process                                     |          | True  |
-    | citations                             | List[Citation]   |                                                                                 | reference to a book, paper, or scholarly work                       |          |       |
-
+    | attribute               | type                                                | example                                           | description                                  | required | vocab |
+    |-------------------------|-----------------------------------------------------|---------------------------------------------------|----------------------------------------------|----------|-------|
+    | identifiers             | list[Identifier]                                    |                                                   | material identifiers                         | True     |       |
+    | components              | list[[Material](./)]                                |                                                   | list of components that make up the mixture  |          |       |
+    | properties              | list[[Property](../subobjects/property)]            |                                                   | material properties                          |          |       |
+    | process                 | [Process](../process)                               |                                                   | process node that made this material         |          |       |
+    | parent_material         | [Material](./)                                      |                                                   | material node that this node was copied from |          |       |
+    | computation_ forcefield | [Computation  Forcefield](../computational_process) |                                                   | computation forcefield                       | Cond*    |       |
+    | keywords                | list[str]                                           | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material             |          | True  |
 
     ## Navigating to Material
     Materials can be easily found on the [CRIPT](https://criptapp.org) home screen in the

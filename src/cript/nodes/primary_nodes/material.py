@@ -112,11 +112,13 @@ class Material(PrimaryBaseNode):
             Instantiate a material node
         """
 
+        super().__init__(node="Material", name=name, notes=notes)
 
         if components is None:
             components = []
 
         if properties is None:
+            properties = []
 
         if process is None:
             process = []
@@ -480,5 +482,3 @@ class Material(PrimaryBaseNode):
                 # TODO validate keys here
                 # is_vocab_valid("material_identifiers", value)
                 pass
-
-        super().__init__(node="Material", name=name, notes=notes)

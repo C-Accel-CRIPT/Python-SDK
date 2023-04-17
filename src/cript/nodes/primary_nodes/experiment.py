@@ -14,15 +14,15 @@ class Experiment(PrimaryBaseNode):
 
     ## Attributes
 
-    | attribute                | type                         | example          | description                                               | required |
-    |--------------------------|------------------------------|------------------|-----------------------------------------------------------|----------|
-    | collection               | Collection                   |                  | collection associated with the experiment                 | True     |
-    | processes                | List[Process]                |                  | process nodes associated with this experiment             | False     |
-    | computations             | List[Computation]            |                  | computation method nodes associated with this experiment  | False     |
-    | computational_ processes | List[Computational  Process] |                  | computation process nodes associated with this experiment | False     |
-    | data                     | List[Data]                   |                  | data nodes associated with this experiment                | False     |
-    | funding                  | List[str]                    | ['OIA- 2134795'] | funding source for experiment                             | False     |
-    | citations                | List[Citation]               |                  | reference to a book, paper, or scholarly work             | False     |
+    | attribute                | type                         | description                                               | required |
+    |--------------------------|------------------------------|-----------------------------------------------------------|----------|
+    | collection               | Collection                   | collection associated with the experiment                 | True     |
+    | processes                | List[Process]                | process nodes associated with this experiment             | False     |
+    | computations             | List[Computation]            | computation method nodes associated with this experiment  | False     |
+    | computational_ processes | List[Computational  Process] | computation process nodes associated with this experiment | False     |
+    | data                     | List[Data]                   | data nodes associated with this experiment                | False     |
+    | funding                  | List[str]                    | funding source for experiment                             | False     |
+    | citations                | List[Citation]               | reference to a book, paper, or scholarly work             | False     |
 
 
     ## Subobjects

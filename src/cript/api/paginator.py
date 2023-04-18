@@ -16,7 +16,12 @@ class Paginator:
 
     page_of_data: List[Any] = None
 
-    def __init__(self, api_endpoint: str, current_page_number: int, _token: str,):
+    def __init__(
+        self,
+        api_endpoint: str,
+        current_page_number: int,
+        _token: str,
+    ):
         self.api_endpoint = api_endpoint
         self._token = f"Bearer {_token}"
         self.current_page_number = current_page_number

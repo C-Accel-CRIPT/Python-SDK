@@ -17,9 +17,7 @@ def test_create_simple_project(simple_collection_node) -> None:
     assert my_project.collections == [simple_collection_node]
 
 
-def test_project_getters_and_setters(
-    simple_project_node, simple_collection_node, complex_collection_node, simple_material_node
-) -> None:
+def test_project_getters_and_setters(simple_project_node, simple_collection_node, complex_collection_node, simple_material_node) -> None:
     """
     tests that a Project node getters and setters are working as expected
 
@@ -46,13 +44,13 @@ def test_serialize_project_to_json(simple_project_node) -> None:
     tests that a Project node can be correctly converted to a JSON
     """
     expected_dict: dict = {
-        "node": "Project",
+        "node": ["Project"],
         "name": "my Project name",
         "collections": [
             {
-                "node": "Collection",
+                "node": ["Collection"],
                 "name": "my collection name",
-                "experiments": [{"node": "Experiment", "name": "my experiment name"}],
+                "experiments": [{"node": ["Experiment"], "name": "my experiment name"}],
                 "inventories": [],
                 "citations": [],
             }

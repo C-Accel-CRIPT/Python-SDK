@@ -14,9 +14,7 @@ def test_simple_process() -> None:
     my_process_keywords = ["anionic"]
 
     # create process node
-    my_process = cript.Process(
-        name="my process name", type=my_process_type, description=my_process_description, keywords=my_process_keywords
-    )
+    my_process = cript.Process(name="my process name", type=my_process_type, description=my_process_description, keywords=my_process_keywords)
 
     # assertions
     assert isinstance(my_process, cript.Process)
@@ -25,9 +23,7 @@ def test_simple_process() -> None:
     assert my_process.keywords == my_process_keywords
 
 
-def test_complex_process_node(
-    simple_ingredient_node, simple_equipment_node, simple_citation_node, simple_property_node, simple_condition_node
-) -> None:
+def test_complex_process_node(simple_ingredient_node, simple_equipment_node, simple_citation_node, simple_property_node, simple_condition_node) -> None:
     """
     create a process node with all possible arguments
 
@@ -53,12 +49,8 @@ def test_complex_process_node(
     ]
 
     process_waste = [
-        cript.Material(
-            name="my process waste material 1", identifiers=[{"alternative_names": "my alternative process waste material 1"}]
-        ),
-        cript.Material(
-            name="my process waste material 1", identifiers=[{"alternative_names": "my alternative process waste material 1"}]
-        ),
+        cript.Material(name="my process waste material 1", identifiers=[{"alternative_names": "my alternative process waste material 1"}]),
+        cript.Material(name="my process waste material 1", identifiers=[{"alternative_names": "my alternative process waste material 1"}]),
     ]
 
     prerequisite_processes = [
@@ -155,7 +147,7 @@ def test_serialize_process_to_json(simple_process_node) -> None:
     """
     test serializing process node to JSON
     """
-    expected_process_dict = {"node": "Process", "name": "my process name", "keywords": [], "type": "affinity_pure"}
+    expected_process_dict = {"node": ["Process"], "name": "my process name", "keywords": [], "type": "affinity_pure"}
 
     # comparing dicts because they are more accurate
     assert json.loads(simple_process_node.json) == expected_process_dict

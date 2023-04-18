@@ -1,4 +1,5 @@
 import copy
+import dataclasses
 import json
 from abc import ABC
 from dataclasses import asdict, dataclass, replace
@@ -17,7 +18,7 @@ class BaseNode(ABC):
 
     @dataclass(frozen=True)
     class JsonAttributes:
-        node: str = [""]
+        node: str = dataclasses.field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 

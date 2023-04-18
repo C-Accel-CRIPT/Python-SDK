@@ -59,7 +59,7 @@ class CRIPTJsonNodeError(CRIPTJsonDeserializationError):
         self.node_list = node_list
 
     def __str__(self):
-        ret_str = f"Invalid JSON contains `node` attribute {node_list} but this is not a list with a single element."
+        ret_str = f"Invalid JSON contains `node` attribute {self.node_list} but this is not a list with a single element."
         ret_str += " Expected is a single element list with the node name as a single string element."
         return ret_str
 

@@ -18,18 +18,18 @@ def test_group_serialization_and_deserialization():
     * compares that the two JSONs are the same
     """
     group_node_dict = {
-        "node": "Group",
+        "node": ["Group"],
         "name": "my group name",
         "notes": "my group notes",
         "admins": [
             {
-                "node": "User",
+                "node": ["User"],
                 "username": "my admin username",
                 "email": "admin_email@email.com",
                 "orcid": "0000-0000-0000-0001",
             }
         ],
-        "users": [{"node": "User", "username": "my username", "email": "user@email.com", "orcid": "0000-0000-0000-0002"}],
+        "users": [{"node": ["User"], "username": "my username", "email": "user@email.com", "orcid": "0000-0000-0000-0002"}],
     }
 
     # convert dict to JSON
@@ -62,18 +62,18 @@ def group_node() -> cript.Group:
 
     # create group node
     group_dict = {
-        "node": "Group",
+        "node": ["Group"],
         "name": "my group name",
         "notes": "my group notes",
         "admins": [
             {
-                "node": "User",
+                "node": ["User"],
                 "username": "my admin username",
                 "email": "admin_email@email.com",
                 "orcid": "0000-0000-0000-0001",
             }
         ],
-        "users": [{"node": "User", "username": "my username", "email": "user@email.com", "orcid": "0000-0000-0000-0002"}],
+        "users": [{"node": ["User"], "username": "my username", "email": "user@email.com", "orcid": "0000-0000-0000-0002"}],
     }
 
     # convert Group dict to JSON

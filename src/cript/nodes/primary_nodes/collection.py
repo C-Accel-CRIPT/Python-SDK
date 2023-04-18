@@ -7,7 +7,24 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 class Collection(PrimaryBaseNode):
     """
+    ## Definition
+
+    A
     [Collection node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=8)
+    is nested inside a [Project](../project) node.
+
+    A Collection node can be thought as a folder/bucket that can hold [Experiments](../experiment)
+    or [Inventories](../inventory) node.
+
+    | attribute   | type             | example             | description                                                                    |
+    |-------------|------------------|---------------------|--------------------------------------------------------------------------------|
+    | experiments | list[Experiment] |                     | experiments that relate to the collection                                      |
+    | inventories | list[Inventory]  |                     | inventory owned by the collection                                              |
+    | cript_doi   | str              | `10.1038/1781168a0` | DOI: digital object identifier for a published collection; CRIPT generated DOI |
+    | citations   | list[Citation]   |                     | reference to a book, paper, or scholarly work                                  |
+
+
+    <!-- TODO consider adding JSON of a collection -->
     """
 
     @dataclass(frozen=True)
@@ -24,43 +41,28 @@ class Collection(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(
-        self,
-        name: str,
-        experiments: List[Any] = None,
-        inventories: List[Any] = None,
-        cript_doi: str = "",
-        citations: List[Any] = None,
-        notes: str = "",
-        **kwargs
-    ) -> None:
+    def __init__(self, name: str, experiments: List[Any] = None, inventories: List[Any] = None, cript_doi: str = "", citations: List[Any] = None, notes: str = "", **kwargs) -> None:
         """
-        create a collection with a name
-        add list of experiments, inventories, citations, and cript_doi if available
-
-        update the _json_attributes
-        call validate to be sure the node is still valid
+        create a Collection with a name
+        add list of experiments, inventories, citations, cript_doi, and notes if available.
 
         Parameters
         ----------
         name: str
             name of the Collection you want to make
-
         experiments: List[Experiment], default=None
             list of experiments within the Collection
-
         inventories: List[Inventory], default=None
             list of inventories within this collection
-
         cript_doi: str = "", default=""
             cript doi
-
         citations: List[Citation], default=None
             List of citations for this collection
 
         Returns
         -------
         None
+            Instantiates a Collection node
         """
         super().__init__(node="Collection", name=name, notes=notes)
 
@@ -84,31 +86,23 @@ class Collection(PrimaryBaseNode):
 
         self.validate()
 
-    def validate(self) -> None:
-        """
-        validates project node
-
-        Returns
-        -------
-        None
-
-        Raises
-        ------
-        CRIPTNodeSchemaError
-        """
-        pass
-
     # ------------------ Properties ------------------
 
     @property
     def experiments(self) -> List[Any]:
         """
-        get a list of all Experiments in this Collection
+        List of all [Experiments](../experiment) within this Collection
+
+        Examples
+        --------
+        ```python
+        my_collection.experiments = [my_first_experiment]
+        ```
 
         Returns
         -------
         List[Experiment]
-            list of all Experiments within this Collection
+            list of all [Experiments](../experiment) within this Collection
         """
         return self._json_attrs.experiments.copy()
 
@@ -132,11 +126,31 @@ class Collection(PrimaryBaseNode):
     @property
     def inventories(self) -> List[Any]:
         """
-        gets a list of the inventories within this Collection
+        List of [inventories](../inventory) that belongs to this collection
+
+        Examples
+        --------
+        ```python
+        material_1 = cript.Material(
+            name="material 1",
+            identifiers=[{"alternative_names": "material 1 alternative name"}],
+        )
+
+        material_2 = cript.Material(
+            name="material 2",
+            identifiers=[{"alternative_names": "material 2 alternative name"}],
+        )
+
+        my_inventory = cript.Inventory(
+            name="my inventory name", materials_list=[material_1, material_2]
+        )
+
+        my_collection.inventories = [my_inventory]
+        ```
 
         Returns
         -------
-        List[Inventory]
+        inventories: List[Inventory]
             list of inventories in this collection
         """
         return self._json_attrs.inventories.copy()
@@ -161,12 +175,16 @@ class Collection(PrimaryBaseNode):
     @property
     def cript_doi(self) -> str:
         """
-        gets the CRIPT DOI
+        The CRIPT DOI for this collection
+
+        ```python
+        my_collection.cript_doi = "10.1038/1781168a0"
+        ```
 
         Returns
         -------
         cript_doi: str
-            the CRIPT DOI
+            the CRIPT DOI e.g. `10.1038/1781168a0`
         """
         return self._json_attrs.cript_doi
 
@@ -191,9 +209,17 @@ class Collection(PrimaryBaseNode):
         """
         List of Citations within this Collection
 
+        Examples
+        --------
+        ```python
+        my_citation = cript.Citation(type="derived_from", reference=simple_reference_node)
+
+        my_collections.citations = my_citations
+        ```
+
         Returns
         -------
-        List[Citation]:
+        citations: List[Citation]:
             list of Citations within this Collection
         """
         return self._json_attrs.citations.copy()

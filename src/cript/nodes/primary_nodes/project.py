@@ -9,7 +9,19 @@ from cript.nodes.supporting_nodes.group import Group
 
 class Project(PrimaryBaseNode):
     """
-    Project node
+    ## Definition
+    A [Project](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=7)
+    is the highest level node that is Not nested inside any other node.
+    A Project can be thought of as a folder that can contain [Collections](../collection) and
+    [Materials](../materials).
+
+
+    | attribute   | type             | description                            |
+    |-------------|------------------|----------------------------------------|
+    | collections | List[Collection] | collections that relate to the project |
+    | materials   | List[Materials]  | materials owned by the project         |
+
+    <!-- TODO consider adding JSON section -->
     """
 
     @dataclass(frozen=True)
@@ -41,13 +53,17 @@ class Project(PrimaryBaseNode):
         ----------
         name: str
             project name
-
-        Collections: List[Collection]
+        collections: List[Collection]
             list of Collections that belongs to this Project
+        materials: List[Material]
+            list of materials that belongs to this project
+        notes: str
+            notes for this project
 
         Returns
         -------
         None
+            instantiate a Project node
         """
         super().__init__(node="Project", name=name, notes=notes)
 
@@ -96,7 +112,18 @@ class Project(PrimaryBaseNode):
     @property
     def collections(self) -> List[Collection]:
         """
-        Collection property getter method
+        Collection is a Project node's property that can be set during creation in the constructor
+        or later by setting the project's property
+
+        Examples
+        --------
+        ```python
+        my_new_collection = cript.Collection(
+            name="my collection name", experiments=[my_experiment_node]
+        )
+
+        my_project.collections = my_new_collection
+        ```
 
         Returns
         -------
@@ -124,9 +151,18 @@ class Project(PrimaryBaseNode):
 
     # Material
     @property
-    def material(self) -> List[Material]:
+    def materials(self) -> List[Material]:
         """
-        Material property getter method. Gets the list of materials within the project
+        List of Materials that belong to this Project.
+
+        Examples
+        --------
+        ```python
+        identifiers = [{"alternative_names": "my material alternative name"}]
+        my_material = cript.Material(name="my material", identifiers=identifiers)
+
+        my_project.material = [my_material]
+        ```
 
         Returns
         -------
@@ -135,8 +171,8 @@ class Project(PrimaryBaseNode):
         """
         return self._json_attrs.materials
 
-    @material.setter
-    def material(self, new_materials: List[Material]) -> None:
+    @materials.setter
+    def materials(self, new_materials: List[Material]) -> None:
         """
         set the list of materials for this project
 

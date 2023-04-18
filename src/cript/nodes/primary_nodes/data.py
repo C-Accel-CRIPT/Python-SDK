@@ -7,8 +7,59 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 class Data(PrimaryBaseNode):
     """
-    Data node
-    [Data node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=13)
+    ## Definition
+    A  [Data node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=13)
+     node contains the meta-data to describe raw data that is beyond a single value, (i.e. n-dimensional data).
+     Each `Data` node must be linked to a single `Experiment` node.
+
+    ## Sub-Objects
+    * [Citation](../../subobjects/citation)
+
+    ## Attributes
+    | Attribute             | Type                                                | Example                    | Description                                                                             | Required |
+    |-----------------------|-----------------------------------------------------|----------------------------|-----------------------------------------------------------------------------------------|----------|
+    | experiment            | [Experiment](experiment.md)                         |                            | Experiment the data belongs to                                                          | True     |
+    | name                  | str                                                 | `"my_data_name"`           | Name of the data node                                                                   | True     |
+    | type                  | str                                                 | `"nmr_h1"`                 | Pick from [CRIPT data type controlled vocabulary](https://criptapp.org/keys/data-type/) | True     |
+    | files                 | List[[File](../supporting_nodes/file.md)]           | `[file_1, file_2, file_3]` | list of file nodes                                                                      | False    |
+    | sample_preperation    | [Process](process.md)                               |                            |                                                                                         | False    |
+    | computations          | List[[Computation](computation.md)]                 |                            | data produced from this Computation method                                              | False    |
+    | computational_process | [Computational Process](./computational_process.md) |                            | data was produced from this computation process                                         | False    |
+    | materials             | List[[Material](./material.md)]                     |                            | materials with attributes associated with the data node                                 | False    |
+    | process               | List[[Process](./process.md)]                       |                            | processes with attributes associated with the data node                                 | False    |
+    | citations             | [Citation](../subobjects/citation.md)               |                            | reference to a book, paper, or scholarly work                                           | False    |
+
+    Example
+    --------
+    ```python
+    # list of file nodes
+    my_files_list = [
+        # create file node
+        cript.File(
+            source="https://criptapp.org",
+            type="calibration",
+            extension=".csv",
+            data_dictionary="my file's data dictionary"
+        )
+    ]
+
+    # create data node with required arguments
+    my_data = cript.Data(name="my data name", type="afm_amp", files=[simple_file_node])
+    ```
+
+    ## Available Subobjects
+    * [citations](../../subobjects/citation)
+
+    ## JSON
+    ```json
+    "data": [
+        {
+        "node": "Data",
+        "name": "WPI unheated film FTIR",
+        "type": "null"
+        }
+    ]
+    ```
     """
 
     @dataclass(frozen=True)
@@ -84,20 +135,26 @@ class Data(PrimaryBaseNode):
     @property
     def type(self) -> str:
         """
-        get the type of data node
+        Type of data node. The data type must come from [CRIPT data type vocabulary]()
 
-        this attribute must come from the CRIPT controlled vocabulary
+        Example
+        -------
+        ```python
+        data.type = "afm_height"
+        ```
 
         Returns
         -------
-        None
+        data type: str
+            data type for the data node must come from CRIPT controlled vocabulary
         """
         return self._json_attrs.type
 
     @type.setter
     def type(self, new_data_type: str) -> None:
         """
-        set the data type
+        set the data type.
+        The data type must come from [CRIPT data type vocabulary]()
 
         Parameters
         ----------
@@ -117,9 +174,27 @@ class Data(PrimaryBaseNode):
         """
         get the list of files for this data node
 
+        Examples
+        --------
+        ```python
+        create a list of file nodes
+        my_new_files = [
+            # file with link source
+            cript.File(
+                source="https://pubs.acs.org/doi/10.1021/acscentsci.3c00011",
+                type="computation_config",
+                extension=".pdf",
+                data_dictionary="my second file data dictionary",
+            ),
+        ]
+
+        data_node.files = my_new_files
+        ```
+
         Returns
         -------
         List[File]
+            list of files for this data node
         """
         return self._json_attrs.files.copy()
 
@@ -143,11 +218,12 @@ class Data(PrimaryBaseNode):
     @property
     def sample_preperation(self) -> Any:
         """
-        get the sample preperation for this data node
+        The sample preperation for this data node
 
         Returns
         -------
-        None
+        sample_preperation: Process
+            sample preparation for this data node
         """
         return self._json_attrs.sample_preperation
 
@@ -171,11 +247,12 @@ class Data(PrimaryBaseNode):
     @property
     def computations(self) -> List[Any]:
         """
-        get a list of computation nodes
+        list of computation nodes for this material node
 
         Returns
         -------
         None
+            list of computation nodes
         """
         return self._json_attrs.computations.copy()
 
@@ -199,11 +276,12 @@ class Data(PrimaryBaseNode):
     @property
     def computational_process(self) -> Any:
         """
-        get the computational_process for this data node
+        The computational_process for this data node
 
         Returns
         -------
-        None
+        ComputationalProcess
+            computational process node for this data node
         """
         return self._json_attrs.computational_process
 
@@ -226,11 +304,12 @@ class Data(PrimaryBaseNode):
     @property
     def materials(self) -> List[Any]:
         """
-        gets a list of materials for this node
+        List of materials for this node
 
         Returns
         -------
         List[Material]
+            list of materials
         """
         return self._json_attrs.materials.copy()
 
@@ -253,11 +332,18 @@ class Data(PrimaryBaseNode):
     @property
     def processes(self) -> List[Any]:
         """
-        get a list of processes for this data node
+        list of [Processes nodes](./process.md) for this data node
+
+        Notes
+        -----
+        Please note that while the process attribute of the data node is currently set to `Any`
+        the software still expects a Process node in the data's process attribute
+        > It is currently set to `Any` to avoid the circular import error
 
         Returns
         -------
-        None
+        List[Process]
+            list of process for the data node
         """
         return self._json_attrs.processes.copy()
 
@@ -281,11 +367,25 @@ class Data(PrimaryBaseNode):
     @property
     def citations(self) -> List[Any]:
         """
-        get a list of citations for this data node
+        List of [citations](../supporting_nodes/citations.md) within the data node
+
+        Example
+        -------
+        ```python
+        # create a reference node
+        my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+
+        # create a citation list to house all the reference nodes
+        my_citation = cript.Citation(type="derived_from", reference=my_reference)
+
+        # add citations to data node
+        my_data.citations = my_citations
+        ```
 
         Returns
         -------
         List[Citation]
+            list of citations for this data node
         """
         return self._json_attrs.citations.copy()
 

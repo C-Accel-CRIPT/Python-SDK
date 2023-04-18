@@ -6,12 +6,41 @@ from cript.nodes.core import BaseNode
 
 class User(BaseNode):
     """
-    [User node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=27)
+    The [User node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=27)
+    represents any researcher or individual who interacts with the CRIPT platform.
+    It serves two main purposes:
+    1. It plays a core role in permissions (access control)
+    1. It provides a traceable link to the individual who has contributed or edited data within the database
 
-    Notes
-    -----
-    * A user cannot be created or modified using the SDK.
-    This object is for read-only purposes only.
+
+    | attribute  | type        | example                    | description                                | required | vocab |
+    |------------|-------------|----------------------------|--------------------------------------------|----------|-------|
+    | url        | str         |                            | unique ID of the node                      | True     |       |
+    | username   | str         | "john_doe"                 | User’s name                                | True     |       |
+    | email      | str         | "user@cript.com"           | email of the user                          | True     |       |
+    | orcid      | str         | "0000-0000-0000-0000"      | ORCID ID of the user                       | True     |       |
+    | groups     | List[Group] |                            | groups you belong to                       |          |       |
+    | updated_at | datetime*   | 2023-03-06 18:45:23.450248 | last date the node was modified (UTC time) | True     |       |
+    | created_at | datetime*   | 2023-03-06 18:45:23.450248 | date it was created (UTC time)             | True     |       |
+
+
+    ## JSON
+    ```json
+    {
+        "node": "User",
+        "username": "my username",
+        "email": "user@email.com",
+        "orcid": "0000-0000-0000-0001",
+    }
+    ```
+
+    Warnings
+    -------
+    * A User cannot be created or modified using the Python SDK.
+    * A User node is a **read-only** node that can only be deserialized from API JSON response to Python node.
+    * The User node cannot be instantiated and within the Python SDK.
+    * Attempting to edit the user node will result in an `Attribute Error`
+
     """
 
     @dataclass(frozen=True)
@@ -36,10 +65,15 @@ class User(BaseNode):
 
         Parameters
         ----------
-        username
-        email
-        orcid
-        groups
+        username: str
+            user username
+        email: str
+            user email
+        orcid: str
+            user ORCID
+        groups: List[Group
+            groups that this user belongs to
+
         """
         if groups is None:
             groups = []
@@ -54,9 +88,13 @@ class User(BaseNode):
         """
         username of the User node
 
+        Raises
+        ------
+        AttributeError
+
         Returns
         -------
-        str
+        username: str
             username of the User node
         """
         return self._json_attrs.username
@@ -64,11 +102,15 @@ class User(BaseNode):
     @property
     def email(self) -> str:
         """
-        email of the user node
+        user's email
+
+        Raises
+        ------
+        AttributeError
 
         Returns
         -------
-        str
+        user email: str
             User node email
         """
         return self._json_attrs.email
@@ -76,23 +118,31 @@ class User(BaseNode):
     @property
     def orcid(self) -> str:
         """
-        users ORCID
+        users [ORCID](https://orcid.org/)
+
+        Raises
+        ------
+        AttributeError
 
         Returns
         -------
-        str
-            users ORCID
+        ORCID: str
+            user's ORCID
         """
         return self._json_attrs.orcid
 
     @property
-    def groups(self):
+    def groups(self) -> List[Any]:
         """
         gets the list of group nodes that the user belongs in
 
+        Raises
+        ------
+        AttributeError
+
         Returns
         -------
-        List[Any]
+        user's groups: List[Any]
             List of Group nodes that the user belongs in
         """
         return self._json_attrs.groups

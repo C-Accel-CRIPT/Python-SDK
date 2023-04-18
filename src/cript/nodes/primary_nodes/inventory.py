@@ -7,7 +7,22 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 class Inventory(PrimaryBaseNode):
     """
-    Inventory Node
+    ## Definition
+    An
+    [Inventory Node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=9)
+    is a list of material nodes.
+    An example of an inventory can be a grouping of materials that were extracted from literature
+    and curated into a group for machine learning, or it can be a subset of chemicals that are used for a
+    certain type of synthesis.
+
+    ## Attributes
+
+    | Attribute  | Type                            | Example             | Description                               |
+    |------------|---------------------------------|---------------------|-------------------------------------------|
+    | materials  | list[[Material](./material.md)] |                     | materials that you like to group together |
+
+
+
     """
 
     @dataclass(frozen=True)
@@ -22,7 +37,26 @@ class Inventory(PrimaryBaseNode):
 
     def __init__(self, name: str, materials_list: List[Material], notes: str = "", **kwargs) -> None:
         """
-        create an inventory node
+        Instantiate an inventory node
+
+        Examples
+        --------
+        ```python
+        material_1 = cript.Material(
+            name="material 1",
+            identifiers=[{"alternative_names": "material 1 alternative name"}],
+        )
+
+        material_2 = cript.Material(
+            name="material 2",
+            identifiers=[{"alternative_names": "material 2 alternative name"}],
+        )
+
+        # instantiate inventory node
+        my_inventory = cript.Inventory(
+            name="my inventory name", materials_list=[material_1, material_2]
+        )
+        ```
 
         Parameters
         ----------
@@ -32,6 +66,7 @@ class Inventory(PrimaryBaseNode):
         Returns
         -------
         None
+            instantiate an inventory node
         """
 
         if materials_list is None:
@@ -45,7 +80,18 @@ class Inventory(PrimaryBaseNode):
     @property
     def materials(self) -> List[Material]:
         """
-        get the list of materials in this inventory
+        List of [materials](../material) in this inventory
+
+        Examples
+        --------
+        ```python
+        material_3 = cript.Material(
+            name="new material 3",
+            identifiers=[{"alternative_names": "new material 3 alternative name"}],
+        )
+
+        my_inventory.materials = [my_material_3]
+        ```
 
         Returns
         -------

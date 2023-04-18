@@ -6,9 +6,42 @@ from cript.nodes.core import BaseNode
 
 class Reference(BaseNode):
     """
+    ## Definition
+
+    The
     [Reference node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=15)
 
-    Reference does not inherit from the PrimaryBaseNode unlike other primary nodes
+    contains the metadata for a literature publication, book, or anything external to CRIPT.
+    The reference node does NOT contain the base attributes.
+
+    The reference node is always used inside the citation
+    sub-object to enable users to specify the context of the reference.
+
+    ## Attributes
+    | attribute | type      | example                                    | description                                   | required      | vocab |
+    |-----------|-----------|--------------------------------------------|-----------------------------------------------|---------------|-------|
+    | url       | str       |                                            | CRIPT’s unique ID of the node assigned by API | True          |       |
+    | type      | str       | journal_article                            | type of literature                            | True          | True  |
+    | title     | str       | 'Living' Polymers                          | title of publication                          | True          |       |
+    | authors   | list[str] | Michael Szwarc                             | list of authors                               |               |       |
+    | journal   | str       | Nature                                     | journal of the publication                    |               |       |
+    | publisher | str       | Springer                                   | publisher of publication                      |               |       |
+    | year      | int       | 1956                                       | year of publication                           |               |       |
+    | volume    | int       | 178                                        | volume of publication                         |               |       |
+    | issue     | int       | 0                                          | issue of publication                          |               |       |
+    | pages     | list[int] | [1168, 1169]                               | page range of publication                     |               |       |
+    | doi       | str       | 10.1038/1781168a0                          | DOI: digital object identifier                | Conditionally |       |
+    | issn      | str       | 1476-4687                                  | ISSN: international standard serial number    | Conditionally |       |
+    | arxiv_id  | str       | 1501                                       | arXiv identifier                              |               |       |
+    | pmid      | int       | ########                                   | PMID: PubMed ID                               |               |       |
+    | website   | str       | https://www.nature.com/artic les/1781168a0 | website where the publication can be accessed |               |       |
+
+
+    ## Available Subobjects
+    * None
+
+    !!! warning "Reference will always be public"
+        Reference node is meant to always be public and static to allow globally link data to the reference
     """
 
     @dataclass(frozen=True)
@@ -39,7 +72,6 @@ class Reference(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    # TODO fix the constructor
     def __init__(
         self,
         type: str,
@@ -62,32 +94,53 @@ class Reference(BaseNode):
         """
         create a reference node
 
-        the only required attributes to create a reference node are:
-            * url
-            * type
-            * title
-
         reference type must come from CRIPT controlled vocabulary
 
         Parameters
         ----------
         url: str
+            unique URL assigned by API
         type: str
+            type of literature.
+            The reference type must come from CRIPT controlled vocabulary
         title: str
+            title of publication
         authors: List[str] default=""
+            list of authors
         journal: str default=""
+            journal of publication
         publisher: str default=""
+            publisher of publication
         year: int default=None
+            year of publication
         volume: int default=None
+            volume of publication
         issue: int default=None
+            issue of publication
         pages: List[int] default=None
+            page range of publication
         doi: str default=""
+            DOI: digital object identifier
         issn: str default=""
+            ISSN: international standard serial number
         arxiv_id: str default=""
+            arXiv identifier
         pmid: int default=None
+            PMID: PubMed ID
         website: str default=""
+            website where the publication can be accessed
 
-        there is currently no checks for conditional required fields for doi and issn
+
+        Examples
+        --------
+        ```python
+        my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        ```
+
+        Returns
+        -------
+        None
+            Instantiate a reference node
         """
         if authors is None:
             authors = []
@@ -123,7 +176,7 @@ class Reference(BaseNode):
     @property
     def url(self) -> str:
         """
-        get the url attribute for the reference node
+        Url attribute for the reference node to be assigned by the CRIPT API
 
         Notes
         -----
@@ -133,6 +186,7 @@ class Reference(BaseNode):
         Returns
         -------
         str
+            reference node url
         """
         # TODO need to create the URl from the UUID
         return self._json_attrs.url
@@ -140,9 +194,13 @@ class Reference(BaseNode):
     @property
     def type(self) -> str:
         """
-        get the reference type
+        type of reference. The reference type must come from the CRIPT controlled vocabulary
 
-        the reference type must come from the CRIPT controlled vocabulary
+        Examples
+        --------
+        ```python
+        my_reference.type = "journal_article"
+        ```
 
         Returns
         -------
@@ -173,11 +231,18 @@ class Reference(BaseNode):
     @property
     def title(self) -> str:
         """
-        get the reference title
+        title of publication
+
+        Examples
+        --------
+        ```python
+        my_reference.title = "my new title"
+        ```
 
         Returns
         -------
         str
+            title of publication
         """
         return self._json_attrs.title
 
@@ -200,11 +265,18 @@ class Reference(BaseNode):
     @property
     def authors(self) -> List[str]:
         """
-        get the list of authors for this reference node
+        List of authors for this reference node
+
+        Examples
+        --------
+        ```python
+        my_reference.authors = ["Bradley D. Olsen", "Dylan Walsh"]
+        ```
 
         Returns
         -------
         List[str]
+            list of authors
         """
         return self._json_attrs.authors.copy()
 
@@ -227,11 +299,18 @@ class Reference(BaseNode):
     @property
     def journal(self) -> str:
         """
-        get the journal for this reference node
+        journal of publication
+
+        Examples
+        --------
+        ```python
+        my_reference.journal = "my new journal"
+        ```
 
         Returns
         -------
         str
+            journal of publication
         """
         return self._json_attrs.journal
 
@@ -254,11 +333,18 @@ class Reference(BaseNode):
     @property
     def publisher(self) -> str:
         """
-        get the publisher for this reference node
+        publisher for this reference node
+
+        Examples
+        --------
+        ```python
+        my_reference.publisher = "my new publisher"
+        ```
 
         Returns
         -------
         str
+            publisher of this publication
         """
         return self._json_attrs.publisher
 
@@ -281,7 +367,13 @@ class Reference(BaseNode):
     @property
     def year(self) -> int:
         """
-        get the year for the scholarly work
+        year for the scholarly work
+
+        Examples
+        --------
+        ```python
+        my_reference.year = 2023
+        ```
 
         Returns
         -------
@@ -298,6 +390,7 @@ class Reference(BaseNode):
         ----------
         new_year: int
 
+
         Returns
         -------
         None
@@ -308,11 +401,18 @@ class Reference(BaseNode):
     @property
     def volume(self) -> int:
         """
-        get the volume of the scholarly work from the reference node
+        Volume of the scholarly work from the reference node
+
+        Examples
+        --------
+        ```python
+        my_reference.volume = 1
+        ```
 
         Returns
         -------
-        None
+        int
+            volume number of the publishing
         """
         return self._json_attrs.volume
 
@@ -335,7 +435,13 @@ class Reference(BaseNode):
     @property
     def issue(self) -> int:
         """
-        get the issue of the scholarly work from the reference node
+        issue of the scholarly work for the reference node
+
+        Examples
+        --------
+        ```python
+        my_reference.issue = 2
+        ```
 
         Returns
         -------
@@ -362,7 +468,13 @@ class Reference(BaseNode):
     @property
     def pages(self) -> List[int]:
         """
-        gets the pages of the scholarly work from this reference node
+        pages of the scholarly work used in the reference node
+
+        Examples
+        --------
+        ```python
+        my_reference.pages = [123, 456]
+        ```
 
         Returns
         -------
@@ -391,9 +503,16 @@ class Reference(BaseNode):
         """
         get the digital object identifier (DOI) for this reference node
 
+        Examples
+        --------
+        ```python
+        my_reference.doi = "100.1038/1781168a0"
+        ```
+
         Returns
         -------
-        None
+        str
+           digital object identifier (DOI) for this reference node
         """
         return self._json_attrs.doi
 
@@ -406,6 +525,12 @@ class Reference(BaseNode):
         ----------
         new_doi: str
 
+        Examples
+        --------
+        ```python
+        my_reference.doi = "100.1038/1781168a0"
+        ```
+
         Returns
         -------
         None
@@ -416,11 +541,17 @@ class Reference(BaseNode):
     @property
     def issn(self) -> str:
         """
-        get the international standard serial number (ISSN) for this reference node
+        The international standard serial number (ISSN) for this reference node
+
+        Examples
+        ```python
+        my_reference.issn = "1456-4687"
+        ```
 
         Returns
         -------
         str
+            ISSN for this reference node
         """
         return self._json_attrs.issn
 
@@ -443,11 +574,18 @@ class Reference(BaseNode):
     @property
     def arxiv_id(self) -> str:
         """
-        get the arXiv identifier for the scholarly work for this reference node
+        The arXiv identifier for the scholarly work for this reference node
+
+        Examples
+        --------
+        ```python
+        my_reference.arxiv_id = "1501"
+        ```
 
         Returns
         -------
         str
+            arXiv identifier for the scholarly work for this publishing
         """
         return self._json_attrs.arxiv_id
 
@@ -470,11 +608,18 @@ class Reference(BaseNode):
     @property
     def pmid(self) -> int:
         """
-        get the PubMed ID (PMID) for this reference node
+        The PubMed ID (PMID) for this reference node
+
+        Examples
+        --------
+        ```python
+        my_reference.pmid = 12345678
+        ```
 
         Returns
         -------
         int
+            the PubMedID of this publishing
         """
         return self._json_attrs.pmid
 
@@ -498,11 +643,18 @@ class Reference(BaseNode):
     @property
     def website(self) -> str:
         """
-        get the website URL for the scholarly work
+        The website URL for the scholarly work
+
+        Examples
+        --------
+        ```python
+        my_reference.website = "https://criptapp.org"
+        ```
 
         Returns
         -------
         str
+            the website URL of this publishing
         """
         return self._json_attrs.website
 

@@ -7,9 +7,59 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 class Material(PrimaryBaseNode):
     """
-    Material node
+    ## Definition
+    A [Material node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=10)
+    is nested inside a [Project](../project).
+    A [Material node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=10)
+    is just the materials used within an project/experiment.
 
-    [Material](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=10)
+    ## Attributes
+    | attribute               | type                                                | example                                           | description                                  | required    | vocab |
+    |-------------------------|-----------------------------------------------------|---------------------------------------------------|----------------------------------------------|-------------|-------|
+    | identifiers             | list[Identifier]                                    |                                                   | material identifiers                         | True        |       |
+    | components              | list[[Material](./)]                                |                                                   | list of components that make up the mixture  |             |       |
+    | properties              | list[[Property](../subobjects/property)]            |                                                   | material properties                          |             |       |
+    | process                 | [Process](../process)                               |                                                   | process node that made this material         |             |       |
+    | parent_material         | [Material](./)                                      |                                                   | material node that this node was copied from |             |       |
+    | computation_ forcefield | [Computation  Forcefield](../computational_process) |                                                   | computation forcefield                       | Conditional |       |
+    | keywords                | list[str]                                           | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material             |             | True  |
+
+    ## Navigating to Material
+    Materials can be easily found on the [CRIPT](https://criptapp.org) home screen in the
+    under the navigation within the [Materials link](https://criptapp.org/material/)
+
+    ## Available Sub-Objects for Material
+    * [Identifier](../../subobjects/identifier)
+    * [Property](../../subobjects/property)
+    * [Computational_forcefield](../../subobjects/computational_forcefield)
+
+    Example
+    -------
+     water, brine (water + NaCl), polystyrene, polyethylene glycol hydrogels, vulcanized polyisoprene, mcherry (protein), and mica
+
+
+    Warnings
+    -------
+    !!! warning "Material names"
+        Material names Must be unique within a [Project](../project)
+
+    ```json
+    {
+        "name": "my unique material",
+        "component_count": 0,
+        "computational_forcefield_count": 0,
+        "created_at": "2023-03-14T00:45:02.196297Z",
+        "identifier_count": 0,
+        "identifiers": [],
+        "model_version": "1.0.0",
+        "node": "Material",
+        "notes": "",
+        "property_count": 0,
+        "uid": "0x24a08",
+        "updated_at": "2023-03-14T00:45:02.196276Z",
+        "uuid": "403fa02c-9a84-4f9e-903c-35e535151b08",
+    }
+    ```
     """
 
     @dataclass(frozen=True)
@@ -50,7 +100,6 @@ class Material(PrimaryBaseNode):
         ----------
         name: str
         identifiers: List[dict[str, str]]
-
         components: List["Material"], default=None
         properties: List[Property], default=None
         process: List[Process], default=None
@@ -61,6 +110,7 @@ class Material(PrimaryBaseNode):
         Returns
         -------
         None
+            Instantiate a material node
         """
 
         super().__init__(node="Material", name=name, notes=notes)
@@ -89,6 +139,7 @@ class Material(PrimaryBaseNode):
 
         self._json_attrs = replace(
             self._json_attrs,
+            name=name,
             identifiers=identifiers,
             components=components,
             properties=properties,
@@ -99,15 +150,52 @@ class Material(PrimaryBaseNode):
         )
 
     # ------------ Properties ------------
+    @property
+    def name(self) -> str:
+        """
+        material name
+
+        Examples
+        ```python
+        my_material.name = "my new material"
+        ```
+
+        Returns
+        -------
+        str
+            material name
+        """
+        return self._json_attrs.name
+
+    @name.setter
+    def name(self, new_name: str) -> None:
+        """
+        set the name of the material
+
+        Parameters
+        ----------
+        new_name: str
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, name=new_name)
+        self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def identifiers(self) -> List[dict[str, str]]:
         """
         get the identifiers for this material
 
+        ```python
+        my_material.identifier = {"alternative_names": "my material alternative name"}
+        ```
+
         Returns
         -------
         List[dict[str, str]]
+            list of dictionary that has identifiers for this material
         """
         return self._json_attrs.identifiers.copy()
 
@@ -133,11 +221,32 @@ class Material(PrimaryBaseNode):
     @property
     def components(self) -> List["Material"]:
         """
-        get the list of components  (material nodes) that make up this material
+        list of components ([material nodes](./)) that make up this material
+
+        Examples
+        --------
+        ```python
+        # material component
+        my_components = [
+            cript.Material(
+                name="my component material 1",
+                identifiers=[{"alternative_names": "component 1 alternative name"}],
+            ),
+            cript.Material(
+                name="my component material 2",
+                identifiers=[{"alternative_names": "component 2 alternative name"}],
+            ),
+        ]
+
+
+        identifiers = [{"alternative_names": "my material alternative name"}]
+        my_material = cript.Material(name="my material", components=my_components, identifiers=identifiers)
+        ```
 
         Returns
         -------
-        None
+        List[Material]
+            list of components that make up this material
         """
         return self._json_attrs.components
 
@@ -160,11 +269,19 @@ class Material(PrimaryBaseNode):
     @property
     def properties(self) -> List[Any]:
         """
-        get the list of material properties
+        list of material [properties](../../subobjects/property)
+
+        ```python
+        # property subobject
+        my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
+
+        my_material.properties = my_property
+        ```
 
         Returns
         -------
         List[Property]
+            list of properties that define this material
         """
         return self._json_attrs.properties
 
@@ -187,11 +304,19 @@ class Material(PrimaryBaseNode):
     @property
     def process(self) -> List[Any]:
         """
-        get the list of process for this material
+        List of [process](../process) for this material
+
+        ```python
+        # process node
+        my_process = cript.Process(name="my process name", type="affinity_pure")
+
+        my_material.process = my_process
+        ```
 
         Returns
         -------
         List[Process]
+            list of [Processes](../process) that created this material
         """
         return self._json_attrs.process
 
@@ -214,18 +339,19 @@ class Material(PrimaryBaseNode):
     @property
     def parent_materials(self) -> List["Material"]:
         """
-        get the list of parent materials
+        List of parent materials
 
         Returns
         -------
         List["Material"]
+            list of parent materials
         """
         return self._json_attrs.parent_materials
 
     @parent_materials.setter
     def parent_materials(self, new_parent_materials_list: List["Material"]) -> None:
         """
-        set the parent materials for this material
+        set the [parent materials](./) for this material
 
         Parameters
         ----------
@@ -242,11 +368,12 @@ class Material(PrimaryBaseNode):
     @property
     def computation_forcefield(self) -> List[Any]:
         """
-        get the computation_forcefield for this material node
+        list of [computational_forcefield](../../subobjects/computational_forcefield) for this material node
 
         Returns
         -------
-        None
+        List[ComputationForcefield]
+            list of computational_forcefield that created this material
         """
         return self._json_attrs.computation_forcefield
 
@@ -269,13 +396,26 @@ class Material(PrimaryBaseNode):
     @property
     def keywords(self) -> List[str]:
         """
-        get the list of keywords for this material
+        List of keywords for this material
 
-        the material keywords must come from the CRIPT controlled vocabulary
+        the material keywords must come from the
+        [CRIPT controlled vocabulary](https://criptapp.org/keys/material-keyword/)
+
+        ```python
+        identifiers = [{"alternative_names": "my material alternative name"}]
+
+        # keywords
+        material_keywords = ["acetylene", "acrylate", "alternating"]
+
+        my_material = cript.Material(
+            name="my material", keywords=material_keywords, identifiers=identifiers
+        )
+        ```
 
         Returns
         -------
-        None
+        List[str]
+            list of material keywords
         """
         return self._json_attrs.keywords
 

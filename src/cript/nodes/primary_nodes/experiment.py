@@ -7,7 +7,45 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 class Experiment(PrimaryBaseNode):
     """
+    ## Definition
+    An
     [Experiment node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=9)
+    is nested inside a [Collection](../collection) node.
+
+    ## Attributes
+
+    | attribute                | type                         | description                                               | required |
+    |--------------------------|------------------------------|-----------------------------------------------------------|----------|
+    | collection               | Collection                   | collection associated with the experiment                 | True     |
+    | processes                | List[Process]                | process nodes associated with this experiment             | False     |
+    | computations             | List[Computation]            | computation method nodes associated with this experiment  | False     |
+    | computational_ processes | List[Computational  Process] | computation process nodes associated with this experiment | False     |
+    | data                     | List[Data]                   | data nodes associated with this experiment                | False     |
+    | funding                  | List[str]                    | funding source for experiment                             | False     |
+    | citations                | List[Citation]               | reference to a book, paper, or scholarly work             | False     |
+
+
+    ## Subobjects
+    An
+    [Experiment node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=9)
+    can be thought as a folder/bucket that can hold:
+
+    * [Process](../process)
+    * [Computations](../computation)
+    * [Computational_Process](../computational_process)
+    * [Data](../data)
+    * [Funding](../funding)
+    * [Citations](../citation)
+
+
+    Warnings
+    --------
+    !!! warning "Experiment names"
+        Experiment names **MUST** be unique within a [Collection](../collection)
+
+    ---
+
+    <!-- TODO consider adding a JSON of an experiment node -->
     """
 
     @dataclass(frozen=True)
@@ -25,18 +63,7 @@ class Experiment(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(
-        self,
-        name: str,
-        process: List[Any] = None,
-        computation: List[Any] = None,
-        computational_process: List[Any] = None,
-        data: List[Any] = None,
-        funding: List[str] = None,
-        citation: List[Any] = None,
-        notes: str = "",
-        **kwargs
-    ):
+    def __init__(self, name: str, process: List[Any] = None, computation: List[Any] = None, computational_process: List[Any] = None, data: List[Any] = None, funding: List[str] = None, citation: List[Any] = None, notes: str = "", **kwargs):
         """
         create an Experiment node
 
@@ -44,31 +71,32 @@ class Experiment(PrimaryBaseNode):
         ----------
         name: str
             name of Experiment
-
         process: List[Process]
             list of Process nodes for this Experiment
-
         computation: List[Computation]
             list of computation nodes for this Experiment
-
         computational_process: List[ComputationalProcess]
             list of computational_process nodes for this Experiment
-
         data: List[Data]
             list of data nodes for this experiment
-
         funding: List[str]
             list of the funders names for this Experiment
-
         citation: List[Citation]
             list of Citation nodes for this experiment
-
         notes: str default=""
             notes for the experiment node
+
+        Examples
+        --------
+        ```python
+        # create an experiment node with all possible arguments
+        my_experiment = cript.Experiment(name="my experiment name")
+        ```
 
         Returns
         -------
         None
+            Instantiate an Experiment node
         """
 
         if process is None:
@@ -105,11 +133,19 @@ class Experiment(PrimaryBaseNode):
     @property
     def process(self) -> List[Any]:
         """
-        get the list of process for this experiment
+        List of process for experiment
+
+        ```python
+        # create a simple process node
+        my_process = cript.Process(name="my process name", type="affinity_pure")
+
+        my_experiment.process = [my_process]
+        ```
 
         Returns
         -------
         List[Process]
+            List of process that were performed in this experiment
         """
         return self._json_attrs.process.copy()
 
@@ -133,11 +169,22 @@ class Experiment(PrimaryBaseNode):
     @property
     def computation(self) -> List[Any]:
         """
-        get a list of the computations in this experiment
+        List of the [computations](../computation) in this experiment
+
+        Examples
+        --------
+        ```python
+        # create computation node
+        my_computation = cript.Computation(name="my computation name", type="analysis")
+
+        # add computation node to experiment node
+        simple_experiment_node.computation = [simple_computation_node]
+        ```
 
         Returns
         -------
         List[Computation]
+            List of [computations](../computation) for this experiment
         """
         return self._json_attrs.computation.copy()
 
@@ -161,11 +208,26 @@ class Experiment(PrimaryBaseNode):
     @property
     def computational_process(self) -> List[Any]:
         """
-        get the list of computational_process for this experiment
+        List of [computational_process](../computational_process) for this experiment
+
+        Examples
+        --------
+        ```python
+        my_computational_process = cript.ComputationalProcess(
+            name="my computational process name",
+            type="cross_linking",       # must come from CRIPT Controlled Vocabulary
+            input_data=[input_data],    # input data is another data node
+            ingredients=[ingredients],  # output data is another data node
+        )
+
+        # add computational_process node to experiment node
+        my_experiment.computational_process = [my_computational_process]
+        ```
 
         Returns
         -------
         List[ComputationalProcess]
+            computational process that were performed in this experiment
         """
         return self._json_attrs.computational_process.copy()
 
@@ -189,11 +251,29 @@ class Experiment(PrimaryBaseNode):
     @property
     def data(self) -> List[Any]:
         """
-        get the list of data for this experiment
+        List of [data nodes](../data) for this experiment
+
+        Examples
+        --------
+        ```python
+        # create a simple file node
+        my_file = cript.File(
+            source="https://criptapp.org",
+            type="calibration",
+            extension=".csv",
+            data_dictionary="my file's data dictionary",
+        )
+
+        # create a simple data node
+        my_data = cript.Data(name="my data name", type="afm_amp", files=[my_file])
+
+        my_experiment.data = my_data
+        ```
 
         Returns
         -------
         List[Data]
+            list of [data nodes](../data) that belong to this experiment
         """
         return self._json_attrs.data.copy()
 
@@ -217,11 +297,18 @@ class Experiment(PrimaryBaseNode):
     @property
     def funding(self) -> List[str]:
         """
-        return a list of strings of all the funders for this experiment
+        List of strings of all the funders for this experiment
+
+        Examples
+        --------
+        ```python
+        my_experiment.funding = ["National Science Foundation", "IRIS", "NIST"]
+        ```
 
         Returns
         -------
         List[str]
+            List of funders for this experiment
         """
         return self._json_attrs.funding.copy()
 
@@ -245,11 +332,22 @@ class Experiment(PrimaryBaseNode):
     @property
     def citation(self) -> List[Any]:
         """
-        get the list of citations for this experiment
+        List of [citations](../citation) for this experiment
+
+        Examples
+        --------
+        ```python
+        # create citation node
+        my_citation = cript.Citation(type="derived_from", reference=simple_reference_node)
+
+        # add citation to experiment
+        my_experiment.citations = [my_citation]
+        ```
 
         Returns
         -------
         List[Citation]
+            list of citations of scholarly work that was used in this experiment
         """
         return self._json_attrs.citation.copy()
 

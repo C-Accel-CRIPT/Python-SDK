@@ -24,7 +24,6 @@ class Project(PrimaryBaseNode):
     <!-- TODO consider adding JSON section -->
     """
 
-
     @dataclass(frozen=True)
     class JsonAttributes(PrimaryBaseNode.JsonAttributes):
         """

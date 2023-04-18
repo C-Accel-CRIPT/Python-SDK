@@ -387,24 +387,24 @@ class Computation(PrimaryBaseNode):
     @property
     def citations(self) -> List[Any]:
         """
-       List of citations
+        List of citations
 
-        Examples
-        --------
-        ```python
-        # create a reference node for the citation
-        my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+         Examples
+         --------
+         ```python
+         # create a reference node for the citation
+         my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
 
-        # create a reference
-        my_citation = cript.Citation(type="derived_from", reference=my_reference)
+         # create a reference
+         my_citation = cript.Citation(type="derived_from", reference=my_reference)
 
-        my_computation.citations = [my_citation]
-        ```
+         my_computation.citations = [my_citation]
+         ```
 
-        Returns
-        -------
-        List[Citation]
-            list of citations for this computation node
+         Returns
+         -------
+         List[Citation]
+             list of citations for this computation node
         """
         return self._json_attrs.citations.copy()
 

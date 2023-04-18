@@ -76,7 +76,7 @@ class File(BaseNode):
         ----------
         source: str
             link or path to local file
-        type: str 
+        type: str
             Pick a file type from CRIPT controlled vocabulary [File types]()
         extension:str
             file extension

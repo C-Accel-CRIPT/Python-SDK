@@ -116,9 +116,7 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
     # input data
 
     # TODO should be using simple_data_node fixture
-    data_files = cript.File(
-        source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary"
-    )
+    data_files = cript.File(source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary")
 
     input_data = cript.Data(name="my data name", type="afm_amp", files=[data_files])
 
@@ -347,9 +345,7 @@ def simple_file_node() -> cript.File:
     """
     simple file node with only required arguments
     """
-    my_file = cript.File(
-        source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary"
-    )
+    my_file = cript.File(source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary")
 
     return my_file
 

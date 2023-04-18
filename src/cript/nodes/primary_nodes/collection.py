@@ -41,16 +41,7 @@ class Collection(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(
-        self,
-        name: str,
-        experiments: List[Any] = None,
-        inventories: List[Any] = None,
-        cript_doi: str = "",
-        citations: List[Any] = None,
-        notes: str = "",
-        **kwargs
-    ) -> None:
+    def __init__(self, name: str, experiments: List[Any] = None, inventories: List[Any] = None, cript_doi: str = "", citations: List[Any] = None, notes: str = "", **kwargs) -> None:
         """
         create a Collection with a name
         add list of experiments, inventories, citations, cript_doi, and notes if available.

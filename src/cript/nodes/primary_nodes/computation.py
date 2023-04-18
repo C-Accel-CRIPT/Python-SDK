@@ -7,8 +7,21 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 class Computation(PrimaryBaseNode):
     """
-    [Computation Node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=14)
+    The
+    [Computation node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=14)
+    describes the transformation of data or the creation of a computational data
+    set.
 
+    **Common computations for simulations** are energy minimization, annealing, quenching, or
+    NPT/NVT (isothermal-isobaric/canonical ensemble) simulations.
+
+    **Common computations for experimental** data include fitting a reaction model to kinetic data
+    to determine rate constants, a plateau modulus from a time-temperature-superposition, or calculating radius of
+    gyration with the Debye function from small angle scattering data.
+
+
+
+    ## Attributes
     | attribute                | type                          | example                               | description                                   | required | vocab |
     |--------------------------|-------------------------------|---------------------------------------|-----------------------------------------------|----------|-------|
     | type                     | str                           | general molecular dynamics simulation | category of computation                       | True     | True  |

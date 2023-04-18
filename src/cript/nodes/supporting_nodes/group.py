@@ -48,7 +48,7 @@ class Group(BaseNode):
       ],
       "users": [
         {
-          "node": "User",
+          "node": ["User"],
           "username": "my username",
           "email": "user@email.com",
           "orcid": "0000-0000-0000-0002"
@@ -64,7 +64,6 @@ class Group(BaseNode):
         all Group attributes
         """
 
-        node: str = "Group"
         name: str = ""
         # TODO add type hints later, currently avoiding circular import
         admins: List[Any] = field(default_factory=list)

@@ -13,7 +13,6 @@ class Ingredient(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
-        node: str = "Ingredient"
         material: Union[Material, None] = None
         quantities: List[Quantity] = field(default_factory=list)
         keyword: str = ""

@@ -14,7 +14,6 @@ class Equipment(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
-        node: str = "Equipment"
         key: str = ""
         description: str = ""
         conditions: List[Condition] = field(default_factory=list)
@@ -23,15 +22,7 @@ class Equipment(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(
-        self,
-        key: str,
-        description: str = "",
-        conditions: Union[List[Condition], None] = None,
-        files: Union[List[File], None] = None,
-        citations: Union[List[Citation], None] = None,
-        **kwargs
-    ):
+    def __init__(self, key: str, description: str = "", conditions: Union[List[Condition], None] = None, files: Union[List[File], None] = None, citations: Union[List[Citation], None] = None, **kwargs):
         if conditions is None:
             conditions = []
         if files is None:
@@ -39,9 +30,7 @@ class Equipment(BaseNode):
         if citations is None:
             citations = []
         super().__init__("Equipment")
-        self._json_attrs = replace(
-            self._json_attrs, key=key, description=description, conditions=conditions, files=files, citations=citations
-        )
+        self._json_attrs = replace(self._json_attrs, key=key, description=description, conditions=conditions, files=files, citations=citations)
         self.validate()
 
     @property

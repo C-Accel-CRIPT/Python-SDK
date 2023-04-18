@@ -1,4 +1,3 @@
-import re
 from typing import Any, List
 
 import requests
@@ -22,7 +21,7 @@ class Paginator:
         self._token = f"Bearer {_token}"
         self.current_page_number = current_page_number
 
-    def next(self):
+    def next_page(self):
         """
         flip to the next page of data.
         This works by adding one to the current page number to get the next page number.
@@ -30,7 +29,7 @@ class Paginator:
         """
         self.current_page_number += 1
 
-    def previous(self):
+    def previous_page(self):
         """
         flip to the next page of data.
         This works by subtracting one to the current page number to get the previous page number.

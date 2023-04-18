@@ -17,7 +17,6 @@ nav:
       - Process: nodes/primary_nodes/process.md
       - Reference: nodes/primary_nodes/reference.md
       - Software: nodes/primary_nodes/software.md
-      - User: nodes/primary_nodes/user.md
   - Sub-objects:
       - Algorithm: nodes/subobjects/algorithm.md
       - Citation: nodes/subobjects/citation.md

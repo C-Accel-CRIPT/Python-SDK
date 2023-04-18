@@ -32,6 +32,14 @@ class ComputationalProcess(PrimaryBaseNode):
     | citations                | list[Citation]                |                                       | reference to a book, paper, or scholarly work   |          |       |
     | notes                    | str                           |                                       | additional description of the step              |          |       |
 
+
+    ## Available Subobjects
+    * [ingredient](../../subobjects/ingredient)
+    * [software_configuration](../../subobjects/software_configuration)
+    * [property](../../subobjects/property)
+    * [condition](../../subobjects/condition)
+    * [citation](../../subobjects/citation)
+
     """
 
     @dataclass(frozen=True)
@@ -329,6 +337,7 @@ class ComputationalProcess(PrimaryBaseNode):
         Returns
         -------
         List[Ingredient]
+            list of ingredients for this computational process
         """
         return self._json_attrs.ingredients.copy()
 
@@ -480,6 +489,7 @@ class ComputationalProcess(PrimaryBaseNode):
         Returns
         -------
         List[Citation]
+            list of citations for this computational process
         """
         return self._json_attrs.citations.copy()
 

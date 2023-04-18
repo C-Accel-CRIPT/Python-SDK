@@ -114,6 +114,7 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
     my_computational_process_type = "cross_linking"
 
     # input data
+
     # TODO should be using simple_data_node fixture
     data_files = cript.File(
         source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary"

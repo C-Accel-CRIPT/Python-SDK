@@ -180,6 +180,7 @@ def test_api_search(cript_api: cript.API) -> None:
     * test that an "invalid search mode" give an InvalidSearchModeError
     * tests it without value_to_search
     * tests it with bad input for value_to_search so that it gives errors
+    * test the error handling
     """
     # TODO consider making all of these search queries into separate tests
     # TODO test with both keys and values eg. SearchMode.UUID and "uuid"
@@ -199,6 +200,10 @@ def test_api_search(cript_api: cript.API) -> None:
 def test_api_search_exact(cript_api: cript.API) -> None:
     """
     tests cript.API.search_exact method
+    * test with UUID
+    * test with exact name
+    * test invalid input
+    * test the error handling
     """
     uuid = "683c8787-3dd9-4d9d-b431-bf89aab0a5ba"
     results = cript_api.search_exact(

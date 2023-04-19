@@ -145,9 +145,7 @@ class API:
                     "Set the environment variable (preferred) or specify the token explictly at the creation of API."
                 )
 
-        host = _prepare_host(host=host)
-
-        self._host = host
+        self._host = _prepare_host(host=host)
         self._token = token
 
         # assign headers

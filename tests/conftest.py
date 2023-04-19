@@ -410,7 +410,7 @@ def simple_algorithm_node() -> cript.Algorithm:
 
 
 @pytest.fixture(scope="function")
-def get_algorithm_dict() -> dict:
+def simple_algorithm_dict() -> dict:
     ret_dict = {"node": "Algorithm", "key": "mc_barostat", "type": "barostat"}
     return ret_dict
 

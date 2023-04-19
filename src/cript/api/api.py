@@ -8,6 +8,7 @@ import requests
 from jsonschema import validate as json_validate
 from urllib.parse import quote
 
+import cript
 from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes
 from cript.api.exceptions import (
@@ -371,24 +372,25 @@ class API:
         else:
             return False
 
-    def save(self, node) -> None:
+    def save(self, project: cript.Project) -> None:
         """
         This method takes a project node, serializes the class into JSON
         and then sends the JSON to be saved to the API.
         It takes Project node because everything is connected to the Project node,
-        and it is to know if it needs to be an update or POST request
+        and it can be used to send either a POST or PATCH request to API
 
         Parameters
         ----------
-        node: Project
+        project: Project
             the Project Node that the user wants to save
 
         Returns
         -------
         None
         """
-
-        response = requests.post(url=f"{self._host}/material", headers=self._http_headers, data=node).json()
+        # TODO work on this later to allow for PATCH as well
+        response = requests.post(url=f"{self._host}/material", headers=self._http_headers, data=project.json)
+        response = response.json()
 
         # if htt response is not 200 then show the API error to the user
         if response["code"] != 200:

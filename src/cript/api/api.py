@@ -15,7 +15,8 @@ from cript.api.exceptions import (
     InvalidVocabulary,
     InvalidVocabularyCategory,
     CRIPTAPISaveError,
-    InvalidSearchModeError, InvalidHostError,
+    InvalidSearchModeError,
+    InvalidHostError,
 )
 from cript.api.vocabulary_categories import all_controlled_vocab_categories
 from cript.nodes.exceptions import CRIPTNodeSchemaError
@@ -61,6 +62,8 @@ def _prepare_host(host: str) -> str:
 
     # strip ending slash to make host always uniform
     host = host.rstrip("/")
+
+    host = f"{host}/api/v1"
 
     # if host is using unsafe "http://" then give a warning
     if host.startswith("http://"):
@@ -144,19 +147,14 @@ class API:
 
         host = _prepare_host(host=host)
 
+        self._host = host
+        self._token = token
+
         # assign headers
         self._http_headers = {"Authorization": self._token, "Content-Type": "application/json"}
 
         # check that api can connect to CRIPT with host and token
-        try:
-            # TODO send an http request to check connection with host and token
-            token = f"Bearer {token}"
-        except Exception as exc:
-            raise CRIPTConnectionError(host, token) from exc
-
-        # Only assign to class after the connection is made
-        self._host = host
-        self._token = token
+        self.check_initial_host_connection()
 
         self.get_vocab()
         self._get_db_schema()
@@ -213,6 +211,24 @@ class API:
         """
         return self._host
 
+    def check_initial_host_connection(self) -> None:
+        """
+        tries to create a connection with host and if the host does not respond or is invalid it raises an error
+
+        Raises
+        -------
+        CRIPTConnectionError
+            raised when the host does not give the expected response
+
+        Returns
+        -------
+        None
+        """
+        try:
+            pass
+        except Exception as exc:
+            raise CRIPTConnectionError(self.host, self._token) from exc
+
     # TODO this needs a better name because the current name is unintuitive if you are just getting vocab
     def get_vocab(self) -> dict:
         """
@@ -247,7 +263,7 @@ class API:
         # loop through all vocabulary categories and make a request to each vocabulary category
         # and put them all inside of self._vocab with the keys being the vocab category name
         for category in all_controlled_vocab_categories:
-            response = requests.get(f"{self.host}/api/v1/cv/{category}").json()["data"]
+            response = requests.get(f"{self.host}/cv/{category}").json()["data"]
             self._vocabulary[category] = response
 
         return copy.deepcopy(self._vocabulary)
@@ -323,7 +339,7 @@ class API:
 
         # fetch db_schema from API
         else:
-            response = requests.get(f"{self.host}/api/v1/schema/").json()
+            response = requests.get(f"{self.host}/schema/").json()
 
             self._db_schema = response["data"]["$defs"]
             return self._db_schema
@@ -355,7 +371,7 @@ class API:
         else:
             return False
 
-    def save(self, node: Project) -> None:
+    def save(self, node) -> None:
         """
         This method takes a project node, serializes the class into JSON
         and then sends the JSON to be saved to the API.
@@ -371,10 +387,15 @@ class API:
         -------
         None
         """
-        response = requests.post(self._host, headers=self._http_headers).json()
+
+        print(self._http_headers)
+
+        response = requests.post(url=f"{self._host}/material", headers=self._http_headers, json=node).json()
+
+        print(response)
 
         # if htt response is not 200 then show the API error to the user
-        if response.status_code != 200:
+        if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, api_response=response["error"])
 
     # TODO delete method will come later when the API supports it

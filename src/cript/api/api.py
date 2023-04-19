@@ -3,14 +3,11 @@ import json
 import os
 import warnings
 from typing import List, Union
+from urllib.parse import quote
 
 import requests
 from jsonschema import validate as json_validate
-from urllib.parse import quote
 
-import cript
-from cript.api.paginator import Paginator
-from cript.api.valid_search_modes import SearchModes
 from cript.api.exceptions import (
     CRIPTAPIAccessError,
     CRIPTConnectionError,
@@ -20,6 +17,8 @@ from cript.api.exceptions import (
     InvalidSearchModeError,
     InvalidHostError,
 )
+from cript.api.paginator import Paginator
+from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import all_controlled_vocab_categories
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
@@ -372,7 +371,7 @@ class API:
         else:
             return False
 
-    def save(self, project: cript.Project) -> None:
+    def save(self, project: Project) -> None:
         """
         This method takes a project node, serializes the class into JSON
         and then sends the JSON to be saved to the API.
@@ -463,9 +462,10 @@ class API:
         # TODO send http request to backend to get all of the users Projects
         pass
 
+    # TODO reset to work with real nodes
     def search(
         self,
-        node_type: PrimaryBaseNode,
+        node_type: str,
         search_mode: SearchModes,
         value_to_search: Union[None, str],
     ):
@@ -495,20 +495,20 @@ class API:
 
         Returns
         -------
-        List[BaseNode]
-            List of nodes that matched the search.
+        Paginator
+            paginator object for the user to use to continue searching and flipping through pages
         """
 
         # requesting a page of some primary node
         if search_mode == SearchModes.NODE_TYPE:
             page_number = 0
-            api_endpoints: str = f"{self._host}/{node_type.node}"
+            api_endpoints: str = f"{self._host}/{node_type}"
 
             paginator = Paginator(
                 http_headers=self._http_headers, api_endpoint=api_endpoints, current_page_number=page_number, query=None
             )
 
-            print(paginator.current_page_results)
+            return paginator
 
         # requesting a node by UUID
         elif search_mode == SearchModes.UUID:
@@ -529,15 +529,7 @@ class API:
             value_to_search = quote(value_to_search)
             api_endpoint: str = f"{self._host}/search/{node_type.node}/?q={value_to_search}"
 
-        try:
-            response = requests.get(
-                url=api_endpoint,
-                headers=self._http_headers,
-            ).json()
-
-            return response
-
-        # if none of the search_modes were able to capture and create an api_endpoint variable
-        # then an InvalidSearchModeError is raised
-        except NameError:
+        else:
+            # if none of the search_modes were able to capture and create an api_endpoint variable
+            # then an InvalidSearchModeError is raised
             raise InvalidSearchModeError(invalid_search_mode=search_mode)

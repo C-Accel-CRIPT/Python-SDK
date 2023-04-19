@@ -17,7 +17,7 @@ class Paginator:
     # and that is not added to the URL
     # by default the page_number and query are `None` and they can get filled in
     query: Union[str, None]
-    current_page_number: [int, None]
+    _current_page_number: [int, None]
 
     current_page_results: List[dict]
 
@@ -28,7 +28,33 @@ class Paginator:
         current_page_number: [int, None] = None,
         query: [str, None] = None,
     ):
+        """
+        create a paginator
+
+        1. set all the variables coming into constructor
+        1. then prepare any variable as needed e.g. strip extra spaces or url encode query
+
+        Parameters
+        ----------
+        http_headers: dict
+            get already created http headers from API and just use them in paginator
+        api_endpoint: str
+            api endpoint to send the search requests to
+            it already contains what node the user is looking for
+        current_page_number: int
+            page number to start from. Keep track of current page for user to flip back and forth between pages of data
+        query: str
+            the value the user is searching for
+
+        Returns
+        -------
+        None
+            instantiate a paginator
+        """
         self._http_headers = http_headers
+        self.api_endpoint = api_endpoint
+        self.query = query
+        self._current_page_number = current_page_number
 
         # check if it is a string and not None to avoid AttributeError
         if api_endpoint is not None:
@@ -40,9 +66,7 @@ class Paginator:
             # URL encode query
             self.query = quote(query)
 
-        # this is put last because once the page number is set it also fetches request from the API as well
-        # so at the end of initialization page number is set and query is fetched from API
-        self.current_page_number = current_page_number
+        self.fetch_page_from_api()
 
     def next_page(self):
         """
@@ -70,7 +94,7 @@ class Paginator:
         -------
         current page number: int
         """
-        return self.current_page_number
+        return self._current_page_number
 
     @current_page_number.setter
     def current_page_number(self, new_page_number: int) -> None:
@@ -103,7 +127,7 @@ class Paginator:
             raise Exception(error_message)
 
         else:
-            self.current_page_number = new_page_number
+            self._current_page_number = new_page_number
             # when new page number is set, it is then fetched from the API
             self.fetch_page_from_api()
 
@@ -133,7 +157,7 @@ class Paginator:
             headers=self._http_headers,
         ).json()
 
-        self.current_page_results = response["data"]["results"]
+        self.current_page_results = response["data"]["result"]
 
         # TODO give error if HTTP response if anything other than 200
         if response["code"] != 200:

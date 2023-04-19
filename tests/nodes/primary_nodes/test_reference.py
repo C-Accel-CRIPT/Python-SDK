@@ -1,5 +1,7 @@
 import json
 
+from util import strip_uid_from_dict
+
 import cript
 
 
@@ -166,6 +168,7 @@ def test_serialize_reference_to_json(complex_reference_node) -> None:
 
     # convert reference to json and then to dict for better comparison
     reference_dict = json.loads(complex_reference_node.json)
+    reference_dict = strip_uid_from_dict(reference_dict)
     assert reference_dict == expected_reference_dict
 
 

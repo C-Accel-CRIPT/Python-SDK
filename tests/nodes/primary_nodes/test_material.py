@@ -1,5 +1,7 @@
 import json
 
+from util import strip_uid_from_dict
+
 import cript
 
 
@@ -44,11 +46,7 @@ def test_all_getters_and_setters(simple_material_node) -> None:
 
     new_properties = [cript.Property(key="air_flow", type="modulus_shear", unit="gram", value=1.00)]
 
-    new_process = [
-        cript.Process(
-            name="my process name 1", type="affinity_pure", description="my simple material description", keywords=["anionic"]
-        )
-    ]
+    new_process = [cript.Process(name="my process name 1", type="affinity_pure", description="my simple material description", keywords=["anionic"])]
 
     new_parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
 
@@ -93,7 +91,9 @@ def test_serialize_material_to_json(simple_material_node) -> None:
     }
 
     # compare dicts because that is more accurate
-    assert json.loads(simple_material_node.json) == expected_dict
+    ref_dict = json.loads(simple_material_node.json)
+    ref_dict = strip_uid_from_dict(ref_dict)
+    assert ref_dict == expected_dict
 
 
 # ---------- Integration Tests ----------

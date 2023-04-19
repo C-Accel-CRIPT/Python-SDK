@@ -8,7 +8,10 @@ and keeping all nodes in one file makes it easier/cleaner to create tests.
 The fixtures are all functional fixtures that stay consistent between all tests.
 """
 
+import json
+
 import pytest
+from util import strip_uid_from_dict
 
 import cript
 
@@ -239,16 +242,6 @@ def complex_material_node(simple_property_node, simple_process_node, simple_comp
 
 
 @pytest.fixture(scope="function")
-def simple_reference_node() -> cript.Reference:
-    """
-    minimal reference node
-    """
-    my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
-
-    return my_reference
-
-
-@pytest.fixture(scope="function")
 def complex_reference_node() -> cript.Reference:
     """
     complex reference node with all possible reference node arguments to use for other tests
@@ -269,16 +262,6 @@ def complex_reference_node() -> cript.Reference:
         pmid=None,
         website="",
     )
-
-
-@pytest.fixture(scope="function")
-def simple_software_node() -> cript.Software:
-    """
-    minimal software node with only required arguments
-    """
-    my_software = cript.Software("my software name", version="1.2.3")
-
-    return my_software
 
 
 @pytest.fixture(scope="function")
@@ -326,17 +309,6 @@ def simple_equipment_node() -> cript.Equipment:
     my_equipment = cript.Equipment(key="burner")
 
     return my_equipment
-
-
-@pytest.fixture(scope="function")
-def simple_property_node() -> cript.Property:
-    """
-    minimal Property node to reuse for tests
-    """
-    # TODO key and type might not be correct, check later
-    my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
-
-    return my_property
 
 
 # ---------- Supporting Nodes ----------
@@ -441,7 +413,7 @@ def simple_reference_dict() -> dict:
         "node": "Reference",
         "type": "journal_article",
         "title": "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)",
-        "authors": ["Ludwig Schneider", "Marcus M\\u00fcller"],
+        "authors": ["Ludwig Schneider", "Marcus Müller"],
         "journal": "Computer Physics Communications",
         "publisher": "Elsevier",
         "year": 2019,
@@ -466,19 +438,19 @@ def simple_citation_dict(simple_reference_dict) -> dict:
 
 
 @pytest.fixture(scope="function")
-def simple_quantity() -> cript.Quantity:
+def simple_quantity_node() -> cript.Quantity:
     quantity = cript.Quantity("mass", 11.2, "kg", 0.2, "std")
     return quantity
 
 
 @pytest.fixture(scope="function")
-def simple_quantity_dic() -> dict:
+def simple_quantity_dict() -> dict:
     ret_dict = {"node": "Quantity", "key": "mass", "value": 11.2, "unit": "kg", "uncertainty": 0.2, "uncertainty_type": "std"}
     return ret_dict
 
 
 @pytest.fixture(scope="function")
-def simple_software() -> cript.Software:
+def simple_software_node() -> cript.Software:
     software = cript.Software("SOMA", "0.7.0", "https://gitlab.com/InnocentBug/SOMA")
     return software
 
@@ -498,13 +470,10 @@ def simple_property_node(simple_material_node, simple_condition_node, simple_cit
         "GPa",
         0.1,
         "std",
-        [simple_material_node],
-        [simple_material_node],
         structure="structure",
         method="method",
         sample_preparation=[simple_process_node],
         conditions=[simple_condition_node],
-        data=simple_data_node,
         computations=[simple_computation_node],
         citations=[simple_citation_node],
         notes="notes",
@@ -523,17 +492,14 @@ def simple_property_dict(simple_material_node, simple_condition_dict, simple_cit
         "uncertainty": 0.1,
         "uncertainty_type": "std",
         "structure": "structure",
-        "components": [json.loads(simple_material_node.json)],
-        "components_relative": [json.loads(simple_material_node.json)],
-        "data": json.loads(simple_data_node.json),
-        "sample_preparation": [json.loads(simple_process_node)],
+        "sample_preparation": [json.loads(simple_process_node.json)],
         "method": "method",
         "conditions": [simple_condition_dict],
         "citations": [simple_citation_dict],
         "computations": [json.loads(simple_computation_node.json)],
         "notes": "notes",
     }
-    return ret_dict
+    return strip_uid_from_dict(ret_dict)
 
 
 @pytest.fixture(scope="function")
@@ -581,7 +547,7 @@ def simple_ingredient_node(simple_material_node, simple_quantity_node) -> cript.
 
 @pytest.fixture(scope="function")
 def simple_ingredient_dict(simple_material_node, simple_quantity_dict) -> dict:
-    ret_dict = {"node": "Ingredient", "material": json.loads(simple_material_node), "quantities": [simple_quantity_dict], "keyword": "catalyst"}
+    ret_dict = {"node": "Ingredient", "material": json.loads(simple_material_node.json), "quantities": [simple_quantity_dict], "keyword": "catalyst"}
     return ret_dict
 
 

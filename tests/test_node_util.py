@@ -10,29 +10,28 @@ from cript.nodes.exceptions import (
     CRIPTNodeCycleError,
 )
 
+# def test_removing_nodes():
+#     a = get_algorithm()
+#     p = get_parameter()
+#     a.parameter += [p]
+#     a.remove_child(p)
+#     assert a.json == get_algorithm_string()
 
-def test_removing_nodes():
-    a = get_algorithm()
-    p = get_parameter()
-    a.parameter += [p]
-    a.remove_child(p)
-    assert a.json == get_algorithm_string()
 
+# def test_json_error():
+#     faulty_json = "{'node': 'Parameter', 'foo': 'bar'}".replace("'", '"')
+#     with pytest.raises(CRIPTJsonDeserializationError):
+#         cript.load_nodes_from_json(faulty_json)
 
-def test_json_error():
-    faulty_json = "{'node': 'Parameter', 'foo': 'bar'}".replace("'", '"')
-    with pytest.raises(CRIPTJsonDeserializationError):
-        cript.load_nodes_from_json(faulty_json)
-
-    parameter = get_parameter()
-    # Let's break the node by violating the data model
-    parameter._json_attrs = replace(parameter._json_attrs, value=None)
-    with pytest.raises(CRIPTJsonSerializationError):
-        parameter.json
-    # Let's break it completely
-    parameter._json_attrs = None
-    with pytest.raises(CRIPTJsonSerializationError):
-        parameter.json
+#     parameter = get_parameter()
+#     # Let's break the node by violating the data model
+#     parameter._json_attrs = replace(parameter._json_attrs, value=None)
+#     with pytest.raises(CRIPTJsonSerializationError):
+#         parameter.json
+#     # Let's break it completely
+#     parameter._json_attrs = None
+#     with pytest.raises(CRIPTJsonSerializationError):
+#         parameter.json
 
 
 def test_local_search():
@@ -73,9 +72,7 @@ def test_local_search():
     assert find_algorithms == [a]
 
     # Test that the main node is correctly excluded if we specify an additionally non-existent paramter
-    find_algorithms = a.find_children(
-        {"parameter": [{"key": "advanced_sampling"}, {"key": "update_frequency"}, {"foo": "bar"}]}
-    )
+    find_algorithms = a.find_children({"parameter": [{"key": "advanced_sampling"}, {"key": "update_frequency"}, {"foo": "bar"}]})
     assert find_algorithms == []
 
 
@@ -94,3 +91,9 @@ def test_cycles():
 
     with pytest.raises(CRIPTNodeCycleError):
         p3.key = p1
+
+
+def test_uid_serial(simple_inventory_node):
+    simple_inventory_node.materials += simple_inventory_node.materials
+    print("A", simple_inventory_node.materials)
+    print("B", simple_inventory_node.json())

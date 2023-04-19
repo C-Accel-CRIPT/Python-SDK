@@ -3,6 +3,7 @@ from dataclasses import dataclass, replace
 
 from cript.nodes.core import BaseNode
 from cript.nodes.supporting_nodes.user import User
+from cript.nodes.util import get_new_uid
 
 
 class PrimaryBaseNode(BaseNode, ABC):
@@ -33,8 +34,9 @@ class PrimaryBaseNode(BaseNode, ABC):
         # initialize Base class with node
         super().__init__(node)
 
+        uid = get_new_uid()
         # replace name and notes within PrimaryBase
-        self._json_attrs = replace(self._json_attrs, name=name, notes=notes)
+        self._json_attrs = replace(self._json_attrs, name=name, notes=notes, uid=uid)
 
     def __str__(self) -> str:
         """

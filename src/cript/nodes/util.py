@@ -1,5 +1,6 @@
 import inspect
 import json
+import uuid
 from dataclasses import asdict
 
 import cript.nodes
@@ -8,8 +9,22 @@ from cript.nodes.exceptions import CRIPTJsonDeserializationError
 
 
 class NodeEncoder(json.JSONEncoder):
+    def __init__(self, handled_ids=None):
+        super().__init__()
+        self.handled_ids = handled_ids
+        if self.handled_ids is None:
+            self.handled_ids = set()
+
     def default(self, obj):
         if isinstance(obj, BaseNode):
+            try:
+                uid = obj.uid
+            except AttributeError:
+                pass
+            else:
+                self.handled_ids.add(uid)
+                if uid in self.handled_ids:
+                    return uid
             default_values = asdict(obj.JsonAttributes())
             serialize_dict = asdict(obj._json_attrs)
             # Remove default values from serialization
@@ -45,3 +60,7 @@ def load_nodes_from_json(nodes_json: str):
     User facing function, that return a node and all its children from a json input.
     """
     return json.loads(nodes_json, object_hook=_node_json_hook)
+
+
+def get_new_uid():
+    return "_" + str(uuid.uuid4())

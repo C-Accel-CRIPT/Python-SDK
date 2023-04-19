@@ -97,17 +97,17 @@ class BaseNode(ABC):
         node._update_json_attrs_if_valid(attrs)
         return node
 
-    @property
-    def json(self):
+    def json(self, handled_ids=None):
         """
         User facing access to get the JSON of a node.
         """
         # Delayed import to avoid circular imports
         from cript.nodes.util import NodeEncoder
 
+        my_encoder = NodeEncoder(handled_ids)
         try:
             self.validate()
-            return json.dumps(self, cls=NodeEncoder, sort_keys=True)
+            return json.dumps(self, cls=my_encoder, sort_keys=True)
         except Exception as exc:
             raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc
 

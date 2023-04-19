@@ -105,3 +105,4 @@ def test_uid_serial(simple_inventory_node):
     assert isinstance(json_dict["materials"][3], str)
     assert json_dict["materials"][3].startswith("_")
     assert len(json_dict["materials"][3]) == len(get_new_uid())
+    print(json_dict)

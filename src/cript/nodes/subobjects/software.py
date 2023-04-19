@@ -1,6 +1,7 @@
 from dataclasses import dataclass, replace
 
 from cript.nodes.core import BaseNode
+from cript.nodes.util import get_new_uid
 
 
 class Software(BaseNode):
@@ -12,6 +13,7 @@ class Software(BaseNode):
     class JsonAttributes(BaseNode.JsonAttributes):
         node: str = "Software"
         url: str = ""
+        uid: str = ""
         name: str = ""
         version: str = ""
         source: str = ""
@@ -20,7 +22,8 @@ class Software(BaseNode):
 
     def __init__(self, name: str, version: str, source: str = "", **kwargs):
         super().__init__(node="Software")
-        self._json_attrs = replace(self._json_attrs, name=name, version=version, source=source)
+        uid = get_new_uid()
+        self._json_attrs = replace(self._json_attrs, name=name, version=version, source=source, uid=uid)
         self.validate()
 
     @property

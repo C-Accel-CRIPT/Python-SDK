@@ -352,15 +352,17 @@ class API:
         else:
             return False
 
-    def save(self, node: PrimaryBaseNode) -> None:
+    def save(self, node: Project) -> None:
         """
-        This method takes a primary node, serializes the class into JSON
-        and then sends the JSON to be saved to the API
+        This method takes a project node, serializes the class into JSON
+        and then sends the JSON to be saved to the API.
+        It takes Project node because everything is connected to the Project node,
+        and it is to know if it needs to be an update or POST request
 
         Parameters
         ----------
-        node: primary node
-            the Primary Node that the user wants to save
+        node: Project
+            the Project Node that the user wants to save
 
         Returns
         -------

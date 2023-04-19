@@ -497,9 +497,6 @@ class API:
             List of nodes that matched the search.
         """
 
-        # TODO can later allow for search mode to be string or enum var
-        #  like search_mode == SearchMode.UUID or search_mode == SearchMode.UUID.value()
-
         # requesting a page of some primary node
         if search_mode == SearchModes.NODE_TYPE:
             page_number = 0

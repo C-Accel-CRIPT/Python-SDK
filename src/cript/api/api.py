@@ -18,7 +18,7 @@ from cript.api.exceptions import (
     InvalidHostError,
 )
 from cript.api.paginator import Paginator
-from cript.api.valid_search_modes import SearchModes
+from cript.api.valid_search_modes import SearchModes, ExactSearchModes
 from cript.api.vocabulary_categories import all_controlled_vocab_categories
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
@@ -388,7 +388,7 @@ class API:
         None
         """
         # TODO work on this later to allow for PATCH as well
-        response = requests.post(url=f"{self._host}/material", headers=self._http_headers, data=project.json)
+        response = requests.post(url=f"{self._host}/{project.node}", headers=self._http_headers, data=project.json)
         response = response.json()
 
         # if htt response is not 200 then show the API error to the user
@@ -462,13 +462,49 @@ class API:
         # TODO send http request to backend to get all of the users Projects
         pass
 
-    # TODO reset to work with real nodes
+    def _fetch_node_from_api(self, api_endpoint: str):
+        """
+
+        Parameters
+        ----------
+        api_endpoint: str
+            the api endpoint to send the get request to get the single node
+
+        Returns
+        -------
+
+        """
+        response = requests.get(
+            url=api_endpoint,
+            headers=self._http_headers,
+        ).json()
+
+        # return API response
+        return response["data"]
+
+    # TODO reset after testing to use correct node_typ and not hard code
+    def search_exact(
+        self,
+        node_type: str,
+        exact_search_mode: ExactSearchModes,
+        value_to_search: str,
+    ) -> str:
+        if exact_search_mode == ExactSearchModes.UUID:
+            api_endpoint: str = f"{self._host}/{node_type}/{value_to_search}"
+
+        elif exact_search_mode == ExactSearchModes.EXACT_NAME:
+            api_endpoint: str = f"{self._host}/search/{node_type}/?q={value_to_search}"
+
+        # TODO error handling if none of the API endpoints got hit NameError
+        return self._fetch_node_from_api(api_endpoint=api_endpoint)
+
+    # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(
         self,
         node_type: str,
         search_mode: SearchModes,
         value_to_search: Union[None, str],
-    ):
+    ) -> Paginator:
         """
         This is the method used to perform a search on the CRIPT platform.
 
@@ -501,35 +537,17 @@ class API:
 
         # requesting a page of some primary node
         if search_mode == SearchModes.NODE_TYPE:
-            page_number = 0
-            api_endpoints: str = f"{self._host}/{node_type}"
-
-            paginator = Paginator(
-                http_headers=self._http_headers, api_endpoint=api_endpoints, current_page_number=page_number, query=None
-            )
-
-            return paginator
-
-        # requesting a node by UUID
-        elif search_mode == SearchModes.UUID:
-            api_endpoint: str = f"{self._host}/{node_type.node}/{value_to_search}"
-
-        # skipping this for now because don't understand what its needed or does exactly, but still done
-        # find a node by its UUID and return only all of its children, excluding the parent
-        # elif search_mode == SearchModes.UUID_CHILDREN:
-        #     api_endpoint: str = f"{self._host}/{node_type.node}/{value_to_search}/"
+            api_endpoint: str = f"{self._host}/{node_type}"
 
         elif search_mode == SearchModes.CONTAINS_NAME:
-            # URL encode value to search
-            value_to_search = quote(value_to_search)
-            api_endpoint: str = f"{self._host}/search/{node_type.node}/?q={value_to_search}"
+            api_endpoint: str = f"{self._host}/search/{node_type}"
 
-        elif search_mode == SearchModes.EXACT_NAME:
-            # URL encode query
-            value_to_search = quote(value_to_search)
-            api_endpoint: str = f"{self._host}/search/{node_type.node}/?q={value_to_search}"
+        # TODO error handling if none of the API endpoints got hit
+        return Paginator(
+            http_headers=self._http_headers, api_endpoint=api_endpoint, current_page_number=0, query=value_to_search
+        )
 
-        else:
-            # if none of the search_modes were able to capture and create an api_endpoint variable
-            # then an InvalidSearchModeError is raised
-            raise InvalidSearchModeError(invalid_search_mode=search_mode)
+        # except NameError
+        # if none of the search_modes were able to capture and create an api_endpoint variable
+        # then an InvalidSearchModeError is raised
+        # raise InvalidSearchModeError(invalid_search_mode=search_mode)

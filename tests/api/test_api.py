@@ -178,13 +178,43 @@ def test_api_search(cript_api: cript.API) -> None:
     tests the api.search() method
 
     * test that an "invalid search mode" give an InvalidSearchModeError
+    * tests it without value_to_search
+    * tests it with bad input for value_to_search so that it gives errors
     """
     # TODO consider making all of these search queries into separate tests
     # TODO test with both keys and values eg. SearchMode.UUID and "uuid"
     # with pytest.raises(InvalidSearchModeError):
     #     cript_api.search(node_type=cript.Material, search_mode="invalid search mode", value_to_search="123456")
 
-    cript_api.search(node_type=cript.Material, search_mode="uuid", value_to_search="123456")
+    paginator = cript_api.search(node_type="material", search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
+
+    # name = "polystyrene"
+    # paginator = cript_api.search(node_type="material", search_mode=cript.SearchModes.CONTAINS_NAME,
+    #                              value_to_search=name)
+
+    print(paginator.current_page_results)
+    pass
+
+
+def test_api_search_exact(cript_api: cript.API) -> None:
+    """
+    tests cript.API.search_exact method
+    """
+    uuid = "683c8787-3dd9-4d9d-b431-bf89aab0a5ba"
+    results = cript_api.search_exact(
+        node_type="material",
+        exact_search_mode=cript.ExactSearchModes.UUID,
+        value_to_search=uuid,
+    )
+
+    exact_name = "polystyrene"
+    results = cript_api.search_exact(
+        node_type="material",
+        exact_search_mode=cript.ExactSearchModes.EXACT_NAME,
+        value_to_search=exact_name,
+    )
+
+    print(results)
 
 
 def test_api_update_material(cript_api: cript.API) -> None:

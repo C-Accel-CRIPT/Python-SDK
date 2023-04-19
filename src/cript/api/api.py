@@ -149,7 +149,8 @@ class API:
         self._token = token
 
         # assign headers
-        self._http_headers = {"Authorization": self._token, "Content-Type": "application/json"}
+        # TODO might need to add Bearer to it or check for it
+        self._http_headers = {"Authorization": f"{self._token}", "Content-Type": "application/json"}
 
         # check that api can connect to CRIPT with host and token
         self.check_initial_host_connection()

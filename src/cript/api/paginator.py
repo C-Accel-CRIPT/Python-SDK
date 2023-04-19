@@ -9,7 +9,7 @@ class Paginator:
     Paginator to flip through different pages of data that the API returns
     """
 
-    _token: str = ""
+    _http_headers: dict
 
     api_endpoint: str
 
@@ -23,12 +23,12 @@ class Paginator:
 
     def __init__(
         self,
-        _token: str,
+        http_headers: dict,
         api_endpoint: str,
         current_page_number: [int, None] = None,
         query: [str, None] = None,
     ):
-        self._token = _token
+        self._http_headers = http_headers
 
         # check if it is a string and not None to avoid AttributeError
         if api_endpoint is not None:
@@ -118,7 +118,6 @@ class Paginator:
         -------
         current page results: List[dict]
         """
-        http_headers = {"Authorization": f"Bearer {self._token}", "Content-Type": "application/json"}
 
         # temporary variable to not overwrite api_endpoint
         temp_api_endpoint: str = self.api_endpoint
@@ -131,7 +130,7 @@ class Paginator:
 
         response = requests.get(
             url=temp_api_endpoint,
-            headers=http_headers,
+            headers=self._http_headers,
         ).json()
 
         self.current_page_results = response["data"]["results"]

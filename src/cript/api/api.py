@@ -505,8 +505,9 @@ class API:
             page_number = 0
             api_endpoints: str = f"{self._host}/{node_type.node}"
 
-            # TODO give paginator only http headers and let them use that instead of token
-            paginator = Paginator(_token=self._token, api_endpoint=api_endpoints, current_page_number=page_number, query=None)
+            paginator = Paginator(
+                http_headers=self._http_headers, api_endpoint=api_endpoints, current_page_number=page_number, query=None
+            )
 
             print(paginator.current_page_results)
 

@@ -1,6 +1,9 @@
-from typing import Any, List
+from typing import List, Union
+from urllib.parse import quote
 
 import requests
+
+from cript.api.exceptions import InvalidPageRequest
 
 
 class Paginator:
@@ -8,22 +11,38 @@ class Paginator:
     Paginator to flip through different pages of data that the API returns
     """
 
-    api_endpoint: str = ""
     _token: str = ""
 
-    current_page_number: int = None
-    current_page_results: List[dict]
+    api_endpoint: str
 
-    page_of_data: List[Any] = None
+    # if query or page number are None, then it means that api_endpoint does not allow for whatever that is None
+    # and that is not added to the URL
+    query: Union[str, None]
+    current_page_number: [int, None]
+
+    current_page_results: List[dict]
 
     def __init__(
         self,
-        api_endpoint: str,
-        current_page_number: int,
         _token: str,
+        api_endpoint: str,
+        current_page_number: [int, None],
+        query: [int, None],
     ):
-        self.api_endpoint = api_endpoint
-        self._token = f"Bearer {_token}"
+        self._token = _token
+
+        # check if it is a string and not None to avoid AttributeError
+        if api_endpoint is not None:
+            # strip the ending slash "/" to make URL uniform and any trailing spaces from either side
+            self.api_endpoint = api_endpoint.rstrip("/").strip()
+
+        # check if it is a string and not None to avoid AttributeError
+        if query is not None:
+            # URL encode query
+            self.query = quote(query)
+
+        # this is put last because once the page number is set it also fetches request from the API as well
+        # so at the end of initialization page number is set and query is fetched from API
         self.current_page_number = current_page_number
 
     def next_page(self):
@@ -74,19 +93,52 @@ class Paginator:
         --------
         InvalidPageRequest, in case the user tries to get a negative page or a page that doesn't exist
         """
-        self.current_page_number = new_page_number
-        self.fetch_page_from_api()
+        if new_page_number < 0:
+            error_message: str = (
+                f"Paginator current page number is invalid because it is negative: "
+                f"{self.current_page_number} please set paginator.current_page_number "
+                f"to a positive page number"
+            )
 
-    def fetch_page_from_api(self):
-        api_endpoint: str = f"{self.api_endpoint}/?page={self.current_page_number}"
+            # TODO replace with custom error
+            raise Exception(error_message)
 
-        http_headers = {"Authorization": self._token, "Content-Type": "application/json"}
+        else:
+            self.current_page_number = new_page_number
+            # when new page number is set, it is then fetched from the API
+            self.fetch_page_from_api()
+
+    def fetch_page_from_api(self) -> List[dict]:
+        """
+
+        Raises
+        ------
+        InvalidPageRequest
+
+        Returns
+        -------
+        current page results: List[dict]
+        """
+        http_headers = {"Authorization": f"Bearer {self._token}", "Content-Type": "application/json"}
+
+        # temporary variable to not overwrite api_endpoint
+        temp_api_endpoint: str = self.api_endpoint
+
+        if self.query is not None:
+            temp_api_endpoint += f"/?q={self.query}"
+
+        if self.current_page_number is not None:
+            temp_api_endpoint += f"/?page={self.current_page_number}"
 
         response = requests.get(
-            url=api_endpoint,
+            url=temp_api_endpoint,
             headers=http_headers,
         ).json()
 
         self.current_page_results = response["data"]["results"]
+
+        # TODO give error if HTTP response if anything other than 200
+        if response["code"] != 200:
+            raise Exception(f"API responded with: {response['error']}")
 
         return self.current_page_results

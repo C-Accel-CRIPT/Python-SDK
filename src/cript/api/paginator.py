@@ -25,8 +25,8 @@ class Paginator:
         self,
         http_headers: dict,
         api_endpoint: str,
-        current_page_number: [int, None] = None,
         query: [str, None] = None,
+        current_page_number: [int, None] = None,
     ):
         """
         create a paginator
@@ -151,6 +151,8 @@ class Paginator:
 
         if self.current_page_number is not None:
             temp_api_endpoint += f"/?page={self.current_page_number}"
+
+        print(temp_api_endpoint)
 
         response = requests.get(
             url=temp_api_endpoint,

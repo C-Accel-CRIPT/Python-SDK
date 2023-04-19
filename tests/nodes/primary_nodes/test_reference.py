@@ -165,7 +165,8 @@ def test_serialize_reference_to_json(complex_reference_node) -> None:
     }
 
     # convert reference to json and then to dict for better comparison
-    assert json.loads(complex_reference_node.json) == expected_reference_dict
+    reference_dict = json.loads(complex_reference_node.json)
+    assert reference_dict == expected_reference_dict
 
 
 # ---------- Integration tests ----------

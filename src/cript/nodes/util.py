@@ -9,11 +9,7 @@ from cript.nodes.exceptions import CRIPTJsonDeserializationError
 
 
 class NodeEncoder(json.JSONEncoder):
-    def __init__(self, handled_ids=None):
-        super().__init__()
-        self.handled_ids = handled_ids
-        if self.handled_ids is None:
-            self.handled_ids = set()
+    handled_ids = set()
 
     def default(self, obj):
         if isinstance(obj, BaseNode):
@@ -22,9 +18,9 @@ class NodeEncoder(json.JSONEncoder):
             except AttributeError:
                 pass
             else:
-                self.handled_ids.add(uid)
-                if uid in self.handled_ids:
+                if uid in NodeEncoder.handled_ids:
                     return uid
+                NodeEncoder.handled_ids.add(uid)
             default_values = asdict(obj.JsonAttributes())
             serialize_dict = asdict(obj._json_attrs)
             # Remove default values from serialization

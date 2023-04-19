@@ -97,19 +97,35 @@ class BaseNode(ABC):
         node._update_json_attrs_if_valid(attrs)
         return node
 
-    def json(self, handled_ids=None):
+    @property
+    def json(self):
+        """
+        Property to obtain a simple json string.
+        Calls `get_json` with default arguments.
+        """
+        return self.get_json()
+
+    def get_json(self, handled_ids: set = None, **kwargs):
         """
         User facing access to get the JSON of a node.
+        Opposed to the also available property json this functions allows further control.
         """
+        # Default is sorted keys
+        kwargs["sort_keys"] = kwargs.get("sort_keys", True)
+
         # Delayed import to avoid circular imports
         from cript.nodes.util import NodeEncoder
 
-        my_encoder = NodeEncoder(handled_ids)
+        previous_handled_nodes = NodeEncoder.handled_ids
+        if handled_ids is not None:
+            NodeEncoder.handled_ids = handled_ids
         try:
             self.validate()
-            return json.dumps(self, cls=my_encoder, sort_keys=True)
+            return json.dumps(self, cls=NodeEncoder, **kwargs)
         except Exception as exc:
             raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc
+        finally:
+            NodeEncoder.handled_ids = previous_handled_nodes
 
     def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes=None) -> List:
         """

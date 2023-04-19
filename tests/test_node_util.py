@@ -1,3 +1,4 @@
+import json
 from dataclasses import replace
 
 import pytest
@@ -9,6 +10,7 @@ from cript.nodes.exceptions import (
     CRIPTJsonSerializationError,
     CRIPTNodeCycleError,
 )
+from cript.nodes.util import get_new_uid
 
 # def test_removing_nodes():
 #     a = get_algorithm()
@@ -95,5 +97,11 @@ def test_cycles():
 
 def test_uid_serial(simple_inventory_node):
     simple_inventory_node.materials += simple_inventory_node.materials
-    print("A", simple_inventory_node.materials)
-    print("B", simple_inventory_node.json())
+    json_dict = json.loads(simple_inventory_node.get_json())
+    assert len(json_dict["materials"]) == 4
+    assert isinstance(json_dict["materials"][2], str)
+    assert json_dict["materials"][2].startswith("_")
+    assert len(json_dict["materials"][2]) == len(get_new_uid())
+    assert isinstance(json_dict["materials"][3], str)
+    assert json_dict["materials"][3].startswith("_")
+    assert len(json_dict["materials"][3]) == len(get_new_uid())

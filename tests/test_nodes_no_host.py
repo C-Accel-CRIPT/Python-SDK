@@ -12,132 +12,6 @@ from cript.nodes.exceptions import (
 )
 
 
-def get_parameter():
-    parameter = cript.Parameter("update_frequency", 1000.0, "1/ns")
-    return parameter
-
-
-def get_parameter_string():
-    ret_str = "{'node': 'Parameter', 'key': 'update_frequency',"
-    ret_str += " 'value': 1000.0, 'unit': '1/ns'}"
-    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
-
-
-def get_algorithm():
-    algorithm = cript.Algorithm("mc_barostat", "barostat")
-    return algorithm
-
-
-def get_algorithm_string():
-    ret_str = "{'node': 'Algorithm', 'key': 'mc_barostat', 'type': 'barostat'}"
-    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
-
-
-def get_quantity():
-    quantity = cript.Quantity("mass", 11.2, "kg", 0.2, "std")
-    return quantity
-
-
-def get_quantity_string():
-    ret_str = "{'node': 'Quantity', 'key': 'mass', 'value': 11.2, "
-    ret_str += "'unit': 'kg', 'uncertainty': 0.2, 'uncertainty_type': 'std'}"
-    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
-
-
-def get_reference():
-    title = "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
-    title += "SOft coarse grained Monte-Carlo Acceleration (SOMA)"
-
-    reference = cript.Reference(
-        "journal_article",
-        title=title,
-        authors=["Ludwig Schneider", "Marcus Müller"],
-        journal="Computer Physics Communications",
-        publisher="Elsevier",
-        year=2019,
-        pages=[463, 476],
-        doi="10.1016/j.cpc.2018.08.011",
-        issn="0010-4655",
-        website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
-    )
-    return reference
-
-
-def get_reference_string():
-    ret_str = "{'node': 'Reference', 'type': 'journal_article', "
-    ret_str += "'title': 'Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
-    ret_str += "SOft coarse grained Monte-Carlo Acceleration (SOMA)', "
-    ret_str += "'authors': ['Ludwig Schneider', 'Marcus M\\u00fcller'], 'journal': 'Computer Physics Communications', "
-    ret_str += "'publisher': 'Elsevier', 'year': 2019, 'pages': [463, 476], "
-    ret_str += "'doi': '10.1016/j.cpc.2018.08.011', 'issn': '0010-4655', "
-    ret_str += "'website': 'https://www.sciencedirect.com/science/article/pii/S0010465518303072'}"
-
-    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
-
-
-def get_citation():
-    citation = cript.Citation("reference", get_reference())
-    return citation
-
-
-def get_citation_string():
-    ret_str = "{'node': 'Citation', "
-    ret_str += f"'reference': {get_reference_string()}, "
-    ret_str += "'type': 'reference'}"
-    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
-
-
-def get_software():
-    software = cript.Software("SOMA", "0.7.0", "https://gitlab.com/InnocentBug/SOMA")
-    return software
-
-
-def get_software_string():
-    ret_str = "{'node': 'Software', 'name': 'SOMA',"
-    ret_str += " 'version': '0.7.0', 'source': 'https://gitlab.com/InnocentBug/SOMA'}"
-    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
-
-
-def test_parameter():
-    p = get_parameter()
-    p_str = p.json
-    print(p_str)
-    print(get_parameter_string())
-    assert p_str == get_parameter_string()
-    p = cript.load_nodes_from_json(p_str)
-    assert p_str == get_parameter_string()
-
-    p.key = "advanced_sampling"
-    assert p.key == "advanced_sampling"
-    p.value = 15.0
-    assert p.value == 15.0
-    with pytest.raises(CRIPTNodeSchemaError):
-        p.value = None
-    assert p.value == 15.0
-    p.unit = "m"
-    assert p.unit == "m"
-
-
-def test_algorithm():
-    a = get_algorithm()
-    a_str = a.json
-    assert a_str == get_algorithm_string()
-    a.parameter += [get_parameter()]
-    a_str = get_algorithm_string()
-    a_str2 = json.dumps(json.loads(a_str.replace("}", f', "parameter": [{get_parameter_string()}]' + "}")), sort_keys=True)
-    assert a_str2 == a.json
-
-    a2 = cript.load_nodes_from_json(a_str2)
-    assert a_str2 == a2.json
-
-    a.key = "berendsen"
-    assert a.key == "berendsen"
-    a.type = "integration"
-    assert a.type == "integration"
-    a.citation += [get_citation()]
-    assert a.citation[0].json == get_citation().json
-
-
 def test_quantity():
     q = get_quantity()
     assert q.json == get_quantity_string()
@@ -233,42 +107,6 @@ def test_json_error():
         parameter.json
 
 
-def get_property():
-    p = cript.Property(
-        "modulus_shear",
-        "value",
-        5.0,
-        "GPa",
-        0.1,
-        "std",
-        # TODO components
-        [],
-        # TODO components_relative
-        [],
-        structure="structure",
-        method="method",
-        # TODO sample_preparation
-        sample_preparation=None,
-        conditions=[get_condition()],
-        # TODO data
-        data=None,
-        # TODO computations
-        computations=[],
-        citations=[get_citation()],
-        notes="notes",
-    )
-    return p
-
-
-def get_property_string():
-    ret_str = "{'node': 'Property', 'key': 'modulus_shear', 'type': 'value', 'value': 5.0,"
-    ret_str += " 'unit': 'GPa', 'uncertainty': 0.1, 'uncertainty_type': 'std', "
-    ret_str += "'structure': 'structure', "
-    ret_str += f"'method': 'method', 'conditions': [{get_condition_string()}],"
-    ret_str += f" 'citations': [{get_citation_string()}], 'notes': 'notes'" + "}"
-    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
-
-
 def test_property():
     p = get_property()
     print(p.json)
@@ -323,31 +161,6 @@ def test_property():
     assert p2.notes == "notes2"
 
 
-def get_condition():
-    c = cript.Condition(
-        "temp",
-        "value",
-        22,
-        "C",
-        "room temperature of lab",
-        uncertainty=5,
-        uncertainty_type="var",
-        set_id=0,
-        measurement_id=2,
-        material=[],
-        data=None,
-    )  # TODO data, material
-    return c
-
-
-def get_condition_string():
-    ret_str = "{'node': 'Condition', 'key': 'temp', 'type': 'value', "
-    ret_str += "'descriptor': 'room temperature of lab', 'value': 22, 'unit': 'C',"
-    ret_str += " 'uncertainty': 5, 'uncertainty_type': 'var', "
-    ret_str += "'set_id': 0, 'measurement_id': 2}"
-    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
-
-
 def test_condition():
     c = get_condition()
     assert c.json == get_condition_string()
@@ -383,19 +196,6 @@ def test_condition():
     assert c2.data is False
 
 
-def get_ingredient():
-    # TODO replace material
-    i = cript.Ingredient(True, [get_quantity()], "catalyst")
-    return i
-
-
-def get_ingredient_string():
-    ret_str = "{'node': 'Ingredient', 'material': true, "
-    ret_str += f"'quantities': [{get_quantity_string()}],"
-    ret_str += " 'keyword': 'catalyst'}"
-    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
-
-
 def test_ingredient():
     i = get_ingredient()
     assert i.json == get_ingredient_string()
@@ -410,25 +210,6 @@ def test_ingredient():
 
     i2.keyword = "monomer"
     assert i2.keyword == "monomer"
-
-
-def get_equipment():
-    e = cript.Equipment(
-        "hot plate",
-        "fancy hot plate",
-        conditions=[get_condition()],
-        # TODO FILE
-        files=[],
-        citations=[get_citation()],
-    )
-    return e
-
-
-def get_equipment_string():
-    ret_str = "{'node': 'Equipment', 'key': 'hot plate', 'description': 'fancy hot plate', "
-    ret_str += f"'conditions': [{get_condition_string()}], "
-    ret_str += f"'citations': [{get_citation_string()}]" + "}"
-    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def test_equipment():
@@ -455,30 +236,6 @@ def test_equipment():
     assert len(e2.citations) == 1
     e2.citations += [cit2]
     assert e2.citations[1] == cit2
-
-
-def get_computation_forcefield():
-    cf = cript.ComputationForcefield(
-        "OPLS",
-        "atom",
-        "atom -> atom",
-        "no implicit solvent",
-        "local LigParGen installation",
-        "this is a test forcefield",
-        # TODO Data
-        None,
-        [get_citation()],
-    )
-    return cf
-
-
-def get_computation_forcefield_string():
-    ret_str = "{'node': 'ComputationForcefield', 'key': 'OPLS', "
-    ret_str += "'building_block': 'atom', 'coarse_grained_mapping': 'atom -> atom', "
-    ret_str += "'implicit_solvent': 'no implicit solvent', 'source': 'local LigParGen installation',"
-    ret_str += " 'description': 'this is a test forcefield', "
-    ret_str += f"'citation': [{get_citation_string()}]" + "}"
-    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def test_computation_forcefield():
@@ -509,20 +266,6 @@ def test_computation_forcefield():
     citation2 = get_citation()
     cf2.citation += [citation2]
     assert cf2.citation[1] == citation2
-
-
-def get_software_configuration():
-    sc = cript.SoftwareConfiguration(get_software(), [get_algorithm()], "my_notes", [get_citation()])
-    return sc
-
-
-def get_software_configuration_string():
-    ret_str = "{'node': 'SoftwareConfiguration',"
-    ret_str += f" 'software': {get_software_string()}, "
-    ret_str += f"'algorithms': [{get_algorithm_string()}], "
-    ret_str += "'notes': 'my_notes', "
-    ret_str += f"'citation': [{get_citation_string()}]" + "}"
-    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def test_software_configuration():

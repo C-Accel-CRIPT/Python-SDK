@@ -3,8 +3,6 @@ from urllib.parse import quote
 
 import requests
 
-from cript.api.exceptions import InvalidPageRequest
-
 
 class Paginator:
     """
@@ -17,6 +15,7 @@ class Paginator:
 
     # if query or page number are None, then it means that api_endpoint does not allow for whatever that is None
     # and that is not added to the URL
+    # by default the page_number and query are `None` and they can get filled in
     query: Union[str, None]
     current_page_number: [int, None]
 
@@ -26,8 +25,8 @@ class Paginator:
         self,
         _token: str,
         api_endpoint: str,
-        current_page_number: [int, None],
-        query: [int, None],
+        current_page_number: [int, None] = None,
+        query: [str, None] = None,
     ):
         self._token = _token
 

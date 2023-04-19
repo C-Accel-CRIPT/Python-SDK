@@ -8,6 +8,7 @@ import requests
 from jsonschema import validate as json_validate
 from urllib.parse import quote
 
+from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes
 from cript.api.exceptions import (
     CRIPTAPIAccessError,
@@ -464,7 +465,7 @@ class API:
         self,
         node_type: PrimaryBaseNode,
         search_mode: SearchModes,
-        value_to_search: str,
+        value_to_search: Union[None, str],
     ):
         """
         This is the method used to perform a search on the CRIPT platform.
@@ -472,8 +473,8 @@ class API:
         since we are using Enum here we don't even need to check if the search mode is valid
         because if the search mode is invalid then it would throw an AttributeError
 
-        checks which mode the search is asking for, creates the api_endpoint URL for it
-        and at the end it sends the request to the API and returns the API response to the user
+        checks which mode the search is asking for, takes all the needed arguments and puts it within a paginator
+        object and returns the paginator to the user that contains all the needed data
 
         Parameters
         ----------
@@ -483,7 +484,7 @@ class API:
             Type of search you want to do. You can search by name, UUID, URL, etc.
         value_to_search : Union[str, None]
             What you are searching for can be either a value, and if you are only searching for
-            a node type, then this value can be empty
+            a node type, then this value can be empty or None
 
         Raises
         -------
@@ -496,10 +497,18 @@ class API:
             List of nodes that matched the search.
         """
 
+        # TODO can later allow for search mode to be string or enum var
+        #  like search_mode == SearchMode.UUID or search_mode == SearchMode.UUID.value()
+
         # requesting a page of some primary node
         if search_mode == SearchModes.NODE_TYPE:
-            page_number = 1
-            api_endpoints: str = f"{self._host}/{node_type.node}/?page={page_number}"
+            page_number = 0
+            api_endpoints: str = f"{self._host}/{node_type.node}"
+
+            # TODO give paginator only http headers and let them use that instead of token
+            paginator = Paginator(_token=self._token, api_endpoint=api_endpoints, current_page_number=page_number, query=None)
+
+            print(paginator.current_page_results)
 
         # requesting a node by UUID
         elif search_mode == SearchModes.UUID:

@@ -152,8 +152,6 @@ class Paginator:
         if self.current_page_number is not None:
             temp_api_endpoint += f"/?page={self.current_page_number}"
 
-        print(temp_api_endpoint)
-
         response = requests.get(
             url=temp_api_endpoint,
             headers=self._http_headers,

@@ -586,7 +586,7 @@ def simple_computation_forcefield_node(simple_data_node, simple_citation_node) -
         "local LigParGen installation",
         "this is a test forcefield",
         simple_data_node,
-        simple_citation_node,
+        [simple_citation_node],
     )
     return cf
 

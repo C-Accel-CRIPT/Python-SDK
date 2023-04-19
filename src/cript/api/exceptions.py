@@ -162,3 +162,28 @@ class InvalidSearchModeError(CRIPTException):
         )
 
         return error_message
+
+
+class InvalidHostError(CRIPTException):
+    """
+    Exception is raised when the host given to the API is invalid
+
+    Error message is given to it to be displayed to the user
+    """
+
+    error_message: str
+
+    def __init__(self, error_message: str):
+        self.error_message = error_message
+
+    def __str__(self) -> str:
+        """
+        tells the user the search mode they picked for the api client to get a node from the API is invalid
+        and lists all the valid search modes they can pick from
+
+        Returns
+        -------
+        error message: str
+        """
+
+        return self.error_message

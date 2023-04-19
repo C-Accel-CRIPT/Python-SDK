@@ -40,10 +40,15 @@ def test_create_api() -> None:
 
 def test_api_with_invalid_host() -> None:
     """
-    test that attempting to create an api client with invalid host appropriately throws a `CRIPTConnectionError`
+    this mostly tests the _prepare_host() function to be sure it is working as expected
+    * attempting to create an api client with invalid host appropriately throws a `CRIPTConnectionError`
+    * giving a host that does not start with http such as "criptapp.org" should throw an InvalidHostError
     """
     with pytest.raises((requests.ConnectionError, cript.api.exceptions.CRIPTConnectionError)):
         api = cript.API("https://some_invalid_host", "123456789")
+
+    with pytest.raises( cript.api.exceptions.InvalidHostError):
+        api = cript.API("no_http_host.org", "123456789")
 
 
 def test_prepare_host(cript_api: cript.API) -> None:

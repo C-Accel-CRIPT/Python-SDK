@@ -15,7 +15,7 @@ from cript.api.exceptions import (
     InvalidVocabulary,
     InvalidVocabularyCategory,
     CRIPTAPISaveError,
-    InvalidSearchModeError,
+    InvalidSearchModeError, InvalidHostError,
 )
 from cript.api.vocabulary_categories import all_controlled_vocab_categories
 from cript.nodes.exceptions import CRIPTNodeSchemaError
@@ -65,6 +65,9 @@ def _prepare_host(host: str) -> str:
     # if host is using unsafe "http://" then give a warning
     if host.startswith("http://"):
         warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
+
+    if not host.startswith("http"):
+        raise InvalidHostError("The host must start with http or https")
 
     return host
 

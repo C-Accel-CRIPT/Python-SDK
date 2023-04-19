@@ -102,17 +102,17 @@ class CRIPTAPISaveError(CRIPTException):
         Error message telling the user what was the issue and giving them helpful clues as how to fix the error
     """
 
-    api_host_domain: str = ""
-    api_response: str = ""
+    api_host_domain: str
+    http_code: str
+    api_response: str
 
-    def __init__(self, api_host_domain: str, api_response: str):
+    def __init__(self, api_host_domain: str, http_code: str, api_response: str):
         self.api_host_domain = api_host_domain
+        self.http_code = http_code
         self.api_response = api_response
 
     def __str__(self) -> str:
-        error_message = (
-            f"Encountered an error when saving to host: '{self.api_host_domain}'. API responded with '{self.api_response}'"
-        )
+        error_message = f"API responded with 'http:{self.http_code} {self.api_response}'"
 
         return error_message
 

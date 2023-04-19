@@ -1,5 +1,7 @@
 import json
 
+from util import strip_uid_from_dict
+
 import cript
 
 
@@ -100,7 +102,9 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
         ],
     }
 
-    assert json.loads(simple_computational_process_node.json) == expected_dict
+    ref_dict = json.loads(simple_computational_process_node.json)
+    ref_dict = strip_uid_from_dict(ref_dict)
+    assert ref_dict == expected_dict
 
 
 # ---------- Integration tests ----------

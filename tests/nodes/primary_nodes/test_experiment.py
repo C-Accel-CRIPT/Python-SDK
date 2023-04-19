@@ -1,11 +1,11 @@
 import json
 
+from util import strip_uid_from_dict
+
 import cript
 
 
-def test_create_simple_experiment(
-    simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, simple_citation_node
-) -> None:
+def test_create_simple_experiment(simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, simple_citation_node) -> None:
     """
     test just to see if a minimal experiment can be made without any issues
     """
@@ -17,9 +17,7 @@ def test_create_simple_experiment(
     assert isinstance(my_experiment, cript.Experiment)
 
 
-def test_create_complex_experiment(
-    simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, simple_citation_node
-) -> None:
+def test_create_complex_experiment(simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, simple_citation_node) -> None:
     """
     test to see if Collection can be made with all the possible options filled
     """
@@ -86,9 +84,7 @@ def test_all_getters_and_setters_for_experiment(
     assert simple_experiment_node.citation == [simple_citation_node]
 
 
-def test_experiment_json(
-    simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, simple_citation_node
-) -> None:
+def test_experiment_json(simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, simple_citation_node) -> None:
     """
     tests that the experiment JSON is functioning correctly
 
@@ -190,8 +186,11 @@ def test_experiment_json(
     print("----------------------------------------------------")
     print(expected_experiment_dict)
 
-    assert len(json.loads(my_experiment.json)) == len(expected_experiment_dict)
-    assert json.loads(my_experiment.json) == expected_experiment_dict
+    ref_dict = json.loads(my_experiment.json)
+    ref_dict = strip_uid_from_dict(ref_dict)
+
+    assert len(ref_dict) == len(expected_experiment_dict)
+    assert ref_dict == expected_experiment_dict
 
 
 # -------- Integration Tests --------

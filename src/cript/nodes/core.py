@@ -2,7 +2,7 @@ import copy
 import json
 from abc import ABC
 from dataclasses import asdict, dataclass, replace
-from typing import List
+from typing import List, NamedTuple
 
 from cript.nodes.exceptions import CRIPTJsonSerializationError, CRIPTNodeCycleError
 
@@ -103,25 +103,33 @@ class BaseNode(ABC):
         Property to obtain a simple json string.
         Calls `get_json` with default arguments.
         """
-        return self.get_json()
+        return self.get_json().json
 
     def get_json(self, handled_ids: set = None, **kwargs):
         """
         User facing access to get the JSON of a node.
         Opposed to the also available property json this functions allows further control.
+
+        Returns named tuple with json and handled ids as result.
         """
+
+        @dataclass(frozen=True)
+        class ReturnTuple:
+            json: str
+            handled_ids: set
+
         # Default is sorted keys
         kwargs["sort_keys"] = kwargs.get("sort_keys", True)
 
         # Delayed import to avoid circular imports
         from cript.nodes.util import NodeEncoder
 
-        previous_handled_nodes = NodeEncoder.handled_ids
+        previous_handled_nodes = copy.deepcopy(NodeEncoder.handled_ids)
         if handled_ids is not None:
             NodeEncoder.handled_ids = handled_ids
         try:
             self.validate()
-            return json.dumps(self, cls=NodeEncoder, **kwargs)
+            return ReturnTuple(json.dumps(self, cls=NodeEncoder, **kwargs), NodeEncoder.handled_ids)
         except Exception as exc:
             raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc
         finally:

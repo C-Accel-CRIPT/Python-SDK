@@ -1,5 +1,7 @@
 import json
 
+from util import strip_uid_from_dict
+
 import cript
 
 
@@ -100,7 +102,9 @@ def test_serialize_collection_to_json(simple_collection_node) -> None:
     }
 
     # assert
-    assert json.loads(simple_collection_node.json) == expected_collection_dict
+    ref_dict = json.loads(simple_collection_node.json)
+    ref_dict = strip_uid_from_dict(ref_dict)
+    assert ref_dict == expected_collection_dict
 
 
 # ---------- Integration tests ----------

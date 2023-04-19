@@ -387,15 +387,11 @@ class API:
         None
         """
 
-        print(self._http_headers)
-
-        response = requests.post(url=f"{self._host}/material", headers=self._http_headers, json=node).json()
-
-        print(response)
+        response = requests.post(url=f"{self._host}/material", headers=self._http_headers, data=node).json()
 
         # if htt response is not 200 then show the API error to the user
         if response["code"] != 200:
-            raise CRIPTAPISaveError(api_host_domain=self._host, api_response=response["error"])
+            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
 
     # TODO delete method will come later when the API supports it
     # def delete(self, node: PrimaryBaseNode, ask_confirmation: bool = True) -> None:

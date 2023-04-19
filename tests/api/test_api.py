@@ -47,7 +47,7 @@ def test_api_with_invalid_host() -> None:
     with pytest.raises((requests.ConnectionError, cript.api.exceptions.CRIPTConnectionError)):
         api = cript.API("https://some_invalid_host", "123456789")
 
-    with pytest.raises( cript.api.exceptions.InvalidHostError):
+    with pytest.raises(cript.api.exceptions.InvalidHostError):
         api = cript.API("no_http_host.org", "123456789")
 
 
@@ -168,7 +168,9 @@ def test_api_save_material(cript_api: cript.API) -> None:
     """
     Tests if API object can successfully save a node
     """
-    pass
+    material_dict = {"node": ["Material"], "name": "my material 3", "bigsmiles": "123456"}
+
+    cript_api.save(json.dumps(material_dict))
 
 
 def test_api_search(cript_api: cript.API) -> None:

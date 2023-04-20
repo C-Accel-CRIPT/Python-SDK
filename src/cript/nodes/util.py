@@ -59,4 +59,4 @@ def load_nodes_from_json(nodes_json: str):
 
 
 def get_new_uid():
-    return "_" + str(uuid.uuid4())
+    return "_:" + str(uuid.uuid4())

@@ -33,7 +33,6 @@ def test_setter_getter(simple_computation_forcefield_node, simple_citation_node)
     cf2.data = False
     assert cf2.data is False
 
-    print(cf2.citation)
     assert len(cf2.citation) == 1
     citation2 = simple_citation_node
     cf2.citation += [citation2]

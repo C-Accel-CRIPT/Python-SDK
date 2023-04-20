@@ -10,7 +10,7 @@ def test_computation_forcefield(simple_computation_forcefield_node, simple_compu
     cf_dict = strip_uid_from_dict(json.loads(cf.json))
     assert cf_dict == strip_uid_from_dict(simple_computation_forcefield_dict)
     cf2 = cript.load_nodes_from_json(cf.json)
-    assert cf.json == cf2.json
+    assert strip_uid_from_dict(json.loads(cf.json)) == strip_uid_from_dict(json.loads(cf2.json))
 
 
 def test_setter_getter(simple_computation_forcefield_node, simple_citation_node):

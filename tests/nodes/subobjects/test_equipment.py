@@ -10,7 +10,7 @@ def test_json(simple_equipment_node, simple_equipment_dict):
     e_dict = strip_uid_from_dict(json.loads(e.json))
     assert strip_uid_from_dict(e_dict) == strip_uid_from_dict(simple_equipment_dict)
     e2 = cript.load_nodes_from_json(e.json)
-    assert e.json == e2.json
+    assert strip_uid_from_dict(json.loads(e.json)) == strip_uid_from_dict(json.loads(e2.json))
 
 
 def test_settter_getter(simple_equipment_node, simple_condition_node, simple_file_node, simple_citation_node):

@@ -12,7 +12,7 @@ def test_setter_getter(simple_algorithm_node, simple_citation_node):
     a.type = "integration"
     assert a.type == "integration"
     a.citation += [simple_citation_node]
-    assert a.citation[0].json == simple_citation_node.json
+    assert strip_uid_from_dict(json.loads(a.citation[0].json)) == strip_uid_from_dict(json.loads(simple_citation_node.json))
 
 
 def test_json(simple_algorithm_node, simple_algorithm_dict, simple_citation_node):

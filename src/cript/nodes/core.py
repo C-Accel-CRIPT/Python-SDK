@@ -5,7 +5,7 @@ from abc import ABC
 from dataclasses import asdict, dataclass, replace
 from typing import List
 
-from cript.nodes.exceptions import CRIPTJsonSerializationError, CRIPTNodeCycleError
+from cript.nodes.exceptions import CRIPTJsonSerializationError
 
 
 def get_new_uid():
@@ -75,8 +75,6 @@ class BaseNode(ABC):
         # All attributes from the backend are passed over, but some like created_by are ignored
         node = cls(**json)
         # Now we push the full json attributes into the class if it is valid
-        print("A", node.json)
-
         valid_keyword_dict = asdict(node._json_attrs)
         reference_nodes = copy.deepcopy(valid_keyword_dict)
         for key in reference_nodes:
@@ -85,8 +83,6 @@ class BaseNode(ABC):
 
         attrs = cls.JsonAttributes(**valid_keyword_dict)
         node._update_json_attrs_if_valid(attrs)
-        print("B", node.json)
-
         return node
 
     @property
@@ -96,6 +92,19 @@ class BaseNode(ABC):
         Calls `get_json` with default arguments.
         """
         return self.get_json().json
+
+    def __deepcopy__(self, memo):
+        new_attrs = replace(copy.deepcopy(self._json_attrs, memo), uid=get_new_uid())
+        # TODO URL handling
+
+        # Ideally I would call `asdict`, but that is not allowed inside a deepcopy chain.
+        # Making a manual transform into a dictionary here.
+        arguments = {}
+        for field in new_attrs.__dataclass_fields__:
+            arguments[field] = getattr(self._json_attrs, field)
+        node = self.__class__(**arguments)
+        node._update_json_attrs_if_valid(new_attrs)
+        return node
 
     def get_json(self, handled_ids: set = None, **kwargs):
         """

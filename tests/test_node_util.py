@@ -6,7 +6,7 @@ import pytest
 from util import strip_uid_from_dict
 
 from cript.nodes.core import get_new_uid
-from cript.nodes.exceptions import CRIPTJsonSerializationError, CRIPTNodeCycleError
+from cript.nodes.exceptions import CRIPTJsonSerializationError
 
 
 def test_removing_nodes(simple_algorithm_node, simple_parameter_node, simple_algorithm_dict):
@@ -69,6 +69,23 @@ def test_local_search(simple_algorithm_node, simple_parameter_node):
     # Test that the main node is correctly excluded if we specify an additionally non-existent paramter
     find_algorithms = a.find_children({"parameter": [{"key": "advanced_sampling"}, {"key": "update_frequency"}, {"foo": "bar"}]})
     assert find_algorithms == []
+
+
+def test_cycles(simple_parameter_node):
+    # We create a wrong cycle with parameters here.
+    # TODO replace this with nodes that actually can form a cycle
+    p1 = copy.deepcopy(simple_parameter_node)
+    p1.unit = "1"
+    p2 = copy.deepcopy(simple_parameter_node)
+    p2.unit = "2"
+    p3 = copy.deepcopy(simple_parameter_node)
+    p3.unit = "3"
+
+    p1.key = p2
+    p2.key = p3
+    p3.key = p1
+
+    p1.get_json()
 
 
 def test_uid_serial(simple_inventory_node):

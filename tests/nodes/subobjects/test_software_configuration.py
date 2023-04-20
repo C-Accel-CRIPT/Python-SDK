@@ -11,7 +11,7 @@ def test_json(simple_software_configuration_node, simple_software_configuration_
     sc_dict = strip_uid_from_dict(json.loads(sc.json))
     assert sc_dict == simple_software_configuration_dict
     sc2 = cript.load_nodes_from_json(sc.json)
-    assert sc2.json == sc.json
+    assert strip_uid_from_dict(json.loads(sc2.json)) == strip_uid_from_dict(json.loads(sc.json))
 
 
 def test_setter_getter(simple_software_configuration_node, simple_algorithm_node, simple_citation_node):

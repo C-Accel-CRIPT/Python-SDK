@@ -10,7 +10,7 @@ def test_json(simple_property_node, simple_property_dict):
     p_dict = strip_uid_from_dict(json.loads(p.json))
     assert p_dict == simple_property_dict
     p2 = cript.load_nodes_from_json(p.json)
-    assert p2.json == p.json
+    assert strip_uid_from_dict(json.loads(p2.json)) == strip_uid_from_dict(json.loads(p.json))
 
 
 def test_setter_getter(simple_property_node, simple_material_node, simple_process_node, simple_condition_node, simple_data_node, simple_computation_node, simple_citation_node):

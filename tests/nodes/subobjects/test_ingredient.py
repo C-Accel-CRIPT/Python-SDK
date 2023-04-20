@@ -10,7 +10,7 @@ def test_json(simple_ingredient_node, simple_ingredient_dict):
     i_dict = json.loads(i.json)
     assert strip_uid_from_dict(i_dict) == strip_uid_from_dict(simple_ingredient_dict)
     i2 = cript.load_nodes_from_json(i.json)
-    assert i.json == i2.json
+    assert strip_uid_from_dict(json.loads(i.json)) == strip_uid_from_dict(json.loads(i2.json))
 
 
 def test_getter_setter(simple_ingredient_node, simple_quantity_node, simple_material_node):

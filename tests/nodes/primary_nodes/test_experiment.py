@@ -115,24 +115,24 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
     my_experiment.notes = "these are all of my notes for this experiment"
 
     expected_experiment_dict = {
-        "node": "Experiment",
+        "node": ["Experiment"],
         "name": "my experiment name",
         "notes": "these are all of my notes for this experiment",
-        "process": [{"node": "Process", "name": "my process name", "type": "affinity_pure", "keywords": []}],
-        "computation": [{"node": "Computation", "name": "my computation name", "type": "analysis", "citations": []}],
+        "process": [{"node": ["Process"], "name": "my process name", "type": "affinity_pure", "keywords": []}],
+        "computation": [{"node": ["Computation"], "name": "my computation name", "type": "analysis", "citations": []}],
         "computational_process": [
             {
-                "node": "Computational_Process",
+                "node": ["Computational_Process"],
                 "name": "my computational process name",
                 "type": "cross_linking",
                 "input_data": [
                     {
-                        "node": "Data",
+                        "node": ["Data"],
                         "name": "my data name",
                         "type": "afm_amp",
                         "files": [
                             {
-                                "node": "File",
+                                "node": ["File"],
                                 "source": "https://criptapp.org",
                                 "type": "calibration",
                                 "extension": ".csv",
@@ -143,25 +143,25 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
                 ],
                 "ingredients": [
                     {
-                        "node": "Ingredient",
+                        "node": ["Ingredient"],
                         "material": {
-                            "node": "Material",
+                            "node": ["Material"],
                             "name": "my material",
                             "identifiers": [{"alternative_names": "my material alternative name"}],
                         },
-                        "quantities": [{"node": "Quantity", "key": "mass", "value": 1.23, "unit": "gram"}],
+                        "quantities": [{"node": ["Quantity"], "key": "mass", "value": 1.23, "unit": "gram"}],
                     }
                 ],
             }
         ],
         "data": [
             {
-                "node": "Data",
+                "node": ["Data"],
                 "name": "my data name",
                 "type": "afm_amp",
                 "files": [
                     {
-                        "node": "File",
+                        "node": ["File"],
                         "source": "https://criptapp.org",
                         "type": "calibration",
                         "extension": ".csv",

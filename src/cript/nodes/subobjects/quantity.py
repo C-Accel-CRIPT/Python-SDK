@@ -12,7 +12,6 @@ class Quantity(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
-        node: str = "Quantity"
         key: str = ""
         value: Union[Number, None] = None
         unit: str = ""
@@ -21,13 +20,9 @@ class Quantity(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(
-        self, key: str, value: Number, unit: str, uncertainty: Union[Number, None] = None, uncertainty_type: str = "", **kwargs
-    ):
+    def __init__(self, key: str, value: Number, unit: str, uncertainty: Union[Number, None] = None, uncertainty_type: str = "", **kwargs):
         super().__init__(node="Quantity")
-        self._json_attrs = replace(
-            self._json_attrs, key=key, value=value, unit=unit, uncertainty=uncertainty, uncertainty_type=uncertainty_type
-        )
+        self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit, uncertainty=uncertainty, uncertainty_type=uncertainty_type)
         self.validate()
 
     @property

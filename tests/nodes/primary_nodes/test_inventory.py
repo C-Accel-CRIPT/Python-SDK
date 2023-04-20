@@ -32,12 +32,12 @@ def test_inventory_serialization(simple_inventory_node) -> None:
     test that the inventory is correctly serializing into JSON
     """
     expected_dict = {
-        "node": "Inventory",
+        "node": ["Inventory"],
         "name": "my inventory name",
         "materials": [
-            {"node": "Material", "name": "material 1", "identifiers": [{"alternative_names": "material 1 alternative name"}]},
+            {"node": ["Material"], "name": "material 1", "identifiers": [{"alternative_names": "material 1 alternative name"}]},
             {
-                "node": "Material",
+                "node": ["Material"],
                 "name": "material 2",
                 "identifiers": [{"alternative_names": "material 2 alternative name"}],
             },

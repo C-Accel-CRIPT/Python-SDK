@@ -60,7 +60,6 @@ class File(BaseNode):
         all file attributes
         """
 
-        node: str = "File"
         source: str = ""
         type: str = ""
         extension: str = ""

@@ -70,17 +70,17 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
     tests that a computational process node can be correctly serialized to JSON
     """
     expected_dict: dict = {
-        "node": "Computational_Process",
+        "node": ["Computational_Process"],
         "name": "my computational process name",
         "type": "cross_linking",
         "input_data": [
             {
-                "node": "Data",
+                "node": ["Data"],
                 "name": "my data name",
                 "type": "afm_amp",
                 "files": [
                     {
-                        "node": "File",
+                        "node": ["File"],
                         "source": "https://criptapp.org",
                         "type": "calibration",
                         "extension": ".csv",
@@ -91,13 +91,13 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
         ],
         "ingredients": [
             {
-                "node": "Ingredient",
+                "node": ["Ingredient"],
                 "material": {
-                    "node": "Material",
+                    "node": ["Material"],
                     "name": "my material",
                     "identifiers": [{"alternative_names": "my material alternative name"}],
                 },
-                "quantities": [{"node": "Quantity", "key": "mass", "value": 1.23, "unit": "gram"}],
+                "quantities": [{"node": ["Quantity"], "key": "mass", "value": 1.23, "unit": "gram"}],
             }
         ],
     }

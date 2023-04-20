@@ -46,13 +46,13 @@ def test_serialize_project_to_json(simple_project_node) -> None:
     tests that a Project node can be correctly converted to a JSON
     """
     expected_dict: dict = {
-        "node": "Project",
+        "node": ["Project"],
         "name": "my Project name",
         "collections": [
             {
-                "node": "Collection",
+                "node": ["Collection"],
                 "name": "my collection name",
-                "experiments": [{"node": "Experiment", "name": "my experiment name"}],
+                "experiments": [{"node": ["Experiment"], "name": "my experiment name"}],
                 "inventories": [],
                 "citations": [],
             }

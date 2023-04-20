@@ -85,7 +85,7 @@ def test_serialize_material_to_json(simple_material_node) -> None:
     """
     # the JSON that the material should serialize to
     expected_dict = {
-        "node": "Material",
+        "node": ["Material"],
         "name": "my material",
         "identifiers": [{"alternative_names": "my material alternative name"}],
     }
@@ -123,7 +123,7 @@ def test_deserialize_material_from_json() -> None:
         "identifier_count": 0,
         "identifiers": [],
         "model_version": "1.0.0",
-        "node": "Material",
+        "node": ["Material"],
         "notes": "",
         "property_count": 0,
         "uid": "0x24a08",

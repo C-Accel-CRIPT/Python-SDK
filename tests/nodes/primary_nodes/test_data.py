@@ -125,14 +125,14 @@ def test_serialize_data_to_json(simple_data_node) -> None:
 
     # TODO should Base attributes should be in here too like notes, public, model version, etc?
     expected_data_dict = {
-        "node": "Data",
+        "node": ["Data"],
         "type": "afm_amp",
         "name": "my data name",
         "files": [
             {
                 "data_dictionary": "my file's data dictionary",
                 "extension": ".csv",
-                "node": "File",
+                "node": ["File"],
                 "source": "https://criptapp.org",
                 "type": "calibration",
             }

@@ -95,7 +95,7 @@ def test_serialize_file_to_json(simple_file_node) -> None:
     """
 
     expected_file_node_dict = {
-        "node": "File",
+        "node": ["File"],
         "source": "https://criptapp.org",
         "type": "calibration",
         "extension": ".csv",

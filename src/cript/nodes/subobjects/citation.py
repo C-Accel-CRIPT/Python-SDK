@@ -12,7 +12,6 @@ class Citation(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
-        node: str = "Citation"
         type: str = ""
         reference: Union[Reference, None] = None
 

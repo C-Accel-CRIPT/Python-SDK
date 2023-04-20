@@ -30,6 +30,20 @@ class CRIPTJsonDeserializationError(CRIPTException):
         return f"JSON deserialization failed for node type {self.node_type} with JSON str: {self.json_str}"
 
 
+class CRIPTJsonNodeError(CRIPTJsonDeserializationError):
+    """
+    Exception that is raised if a `node` attribute is present, but not a single itemed list.
+    """
+
+    def __init__(self, node_list):
+        self.node_list = node_list
+
+    def __str__(self):
+        ret_str = f"Invalid JSON contains `node` attribute {self.node_list} but this is not a list with a single element."
+        ret_str += " Expected is a single element list with the node name as a single string element."
+        return ret_str
+
+
 class CRIPTJsonSerializationError(CRIPTException):
     """
     Exception to throw if deserialization of nodes fails.

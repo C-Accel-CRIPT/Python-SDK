@@ -14,7 +14,6 @@ class SoftwareConfiguration(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
-        node: str = "SoftwareConfiguration"
         software: Union[Software, None] = None
         algorithms: List[Algorithm] = field(default_factory=list)
         notes: str = ""
@@ -22,14 +21,7 @@ class SoftwareConfiguration(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(
-        self,
-        software: Software,
-        algorithms: Union[List[Algorithm], None] = None,
-        notes: str = "",
-        citation: Union[List[Citation], None] = None,
-        **kwargs
-    ):
+    def __init__(self, software: Software, algorithms: Union[List[Algorithm], None] = None, notes: str = "", citation: Union[List[Citation], None] = None, **kwargs):
         if algorithms is None:
             algorithms = []
         if citation is None:

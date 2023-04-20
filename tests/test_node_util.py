@@ -6,7 +6,7 @@ import pytest
 from util import strip_uid_from_dict
 
 from cript.nodes.core import get_new_uid
-from cript.nodes.exceptions import CRIPTJsonSerializationError
+from cript.nodes.exceptions import CRIPTJsonSerializationError, CRIPTJsonNodeError
 
 
 def test_removing_nodes(simple_algorithm_node, simple_parameter_node, simple_algorithm_dict):
@@ -99,3 +99,19 @@ def test_uid_serial(simple_inventory_node):
     assert json_dict["materials"][3]["uid"].startswith("_:")
     assert len(json_dict["materials"][3]["uid"]) == len(get_new_uid())
     assert json_dict["materials"][3]["uid"] != json_dict["materials"][2]["uid"]
+
+
+def test_invalid_json_load():
+    def raise_node_dict(node_dict):
+        node_str = json.dumps(node_dict)
+        with pytest.raises(CRIPTJsonNodeError):
+            cript.load_nodes_from_json(node_str)
+
+    node_dict = {"node": "Computation"}
+    raise_node_dict(node_dict)
+    node_dict = {"node": []}
+    raise_node_dict(node_dict)
+    node_dict = {"node": ["asdf", "asdf"]}
+    raise_node_dict(node_dict)
+    node_dict = {"node": [None]}
+    raise_node_dict(node_dict)

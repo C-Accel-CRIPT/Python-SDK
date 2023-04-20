@@ -53,7 +53,6 @@ class Reference(BaseNode):
         instead of a placeholder number such as 0 or -1
         """
 
-        node: str = "Reference"
         url: str = ""
         uid: str = ""
         type: str = ""

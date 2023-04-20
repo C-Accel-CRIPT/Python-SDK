@@ -2,11 +2,10 @@ import copy
 import json
 import os
 import warnings
-from typing import List, Union
-from urllib.parse import quote
+from typing import Union
 
+import jsonschema
 import requests
-from jsonschema import validate as json_validate
 
 from cript.api.exceptions import (
     CRIPTAPIAccessError,
@@ -14,17 +13,15 @@ from cript.api.exceptions import (
     InvalidVocabulary,
     InvalidVocabularyCategory,
     CRIPTAPISaveError,
-    InvalidSearchModeError,
     InvalidHostError,
 )
 from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes, ExactSearchModes
 from cript.api.vocabulary_categories import all_controlled_vocab_categories
+from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
-from cript.nodes.supporting_nodes.group import Group
-from cript.nodes.supporting_nodes.user import User
 
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.
@@ -339,13 +336,14 @@ class API:
 
         # fetch db_schema from API
         else:
-            response = requests.get(f"{self.host}/schema/").json()
+            # fetch db schema, get the JSON body of it, and get the data of that JSON
+            response = requests.get(f"{self.host}/schema/").json()["data"]
 
-            self._db_schema = response["data"]["$defs"]
+            self._db_schema = response
             return self._db_schema
 
-    # TODO should this throw an error if invalid?
-    def is_node_schema_valid(self, node_json: str) -> Union[bool, CRIPTNodeSchemaError]:
+    # TODO this should later work with both POST and PATCH. Currently, just works for POST
+    def is_node_schema_valid(self, node: BaseNode) -> Union[bool, CRIPTNodeSchemaError]:
         """
         checks a node JSON schema against the db schema to return if it is valid or not.
         This function does not take into consideration vocabulary validation.
@@ -356,20 +354,30 @@ class API:
         node:
             a node in JSON form
 
+        Raises
+        ------
+        CRIPTNodeSchemaError
+            in case a node is invalid
+
         Returns
         -------
         bool
             whether the node JSON is valid or not
         """
 
-        # TODO currently validate says every syntactically valid JSON is valid
-        # TODO do we want invalid schema to raise an exception?
-        node_dict = json.loads(node_json)
+        db_schema = self._get_db_schema()
 
-        if json_validate(instance=node_dict, schema=self._db_schema):
-            return True
-        else:
-            return False
+        # TODO get the correct node type
+        # set which node you are using schema validation for
+        db_schema["$ref"] = f"#/$defs/{node.node}Post"
+
+        try:
+            jsonschema.validate(instance=json.loads(node.json), schema=db_schema)
+        except jsonschema.exceptions.ValidationError as error:
+            raise CRIPTNodeSchemaError(error_message=str(error))
+
+        # if validation goes through without any problems return True
+        return True
 
     def save(self, project: Project) -> None:
         """

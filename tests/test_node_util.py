@@ -71,23 +71,6 @@ def test_local_search(simple_algorithm_node, simple_parameter_node):
     assert find_algorithms == []
 
 
-def test_cycles(simple_parameter_node):
-    # We create a wrong cycle with parameters here.
-    # TODO replace this with nodes that actually can form a cycle
-    p1 = copy.deepcopy(simple_parameter_node)
-    p1.unit = "1"
-    p2 = copy.deepcopy(simple_parameter_node)
-    p2.unit = "2"
-    p3 = copy.deepcopy(simple_parameter_node)
-    p3.unit = "3"
-
-    p1.key = p2
-    p2.key = p3
-
-    with pytest.raises(CRIPTNodeCycleError):
-        p3.key = p1
-
-
 def test_uid_serial(simple_inventory_node):
     simple_inventory_node.materials += simple_inventory_node.materials
     json_dict = json.loads(simple_inventory_node.get_json().json)

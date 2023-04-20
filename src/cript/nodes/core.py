@@ -56,28 +56,6 @@ class BaseNode(ABC):
             self._json_attrs = old_json_attrs
             raise exc
 
-    def _has_cycle(self, handled_nodes=None):
-        """
-        Return true if the current data graph contains a cycle, False otherwise.
-        """
-        if handled_nodes is None:
-            handled_nodes = []
-
-        if self in handled_nodes:
-            return True
-        handled_nodes.append(self)
-
-        # Iterate over all fields and call the cycle detection recursively
-        cycle_detected = False
-        for field in self._json_attrs.__dataclass_fields__:
-            value = getattr(self._json_attrs, field)
-            if isinstance(value, BaseNode):
-                cycle = value._has_cycle(handled_nodes)
-                if cycle is True:
-                    cycle_detected = True
-                    return cycle_detected
-        return cycle_detected
-
     def validate(self) -> None:
         """
         Validate this node (and all its children) against the schema provided by the data bank.
@@ -87,8 +65,7 @@ class BaseNode(ABC):
         Exception with more error information.
         """
 
-        if self._has_cycle():
-            raise CRIPTNodeCycleError(str(self))
+        pass
 
     @classmethod
     def _from_json(cls, json: dict):

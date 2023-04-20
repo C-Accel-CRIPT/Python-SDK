@@ -44,11 +44,7 @@ def test_all_getters_and_setters(simple_material_node) -> None:
 
     new_properties = [cript.Property(key="air_flow", type="modulus_shear", unit="gram", value=1.00)]
 
-    new_process = [
-        cript.Process(
-            name="my process name 1", type="affinity_pure", description="my simple material description", keywords=["anionic"]
-        )
-    ]
+    new_process = [cript.Process(name="my process name 1", type="affinity_pure", description="my simple material description", keywords=["anionic"])]
 
     new_parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
 
@@ -87,7 +83,7 @@ def test_serialize_material_to_json(simple_material_node) -> None:
     """
     # the JSON that the material should serialize to
     expected_dict = {
-        "node": "Material",
+        "node": ["Material"],
         "name": "my material",
         "identifiers": [{"alternative_names": "my material alternative name"}],
     }
@@ -123,7 +119,7 @@ def test_deserialize_material_from_json() -> None:
         "identifier_count": 0,
         "identifiers": [],
         "model_version": "1.0.0",
-        "node": "Material",
+        "node": ["Material"],
         "notes": "",
         "property_count": 0,
         "uid": "0x24a08",

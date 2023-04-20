@@ -92,9 +92,9 @@ def test_serialize_collection_to_json(simple_collection_node) -> None:
     """
 
     expected_collection_dict = {
-        "node": "Collection",
+        "node": ["Collection"],
         "name": "my collection name",
-        "experiments": [{"node": "Experiment", "name": "my experiment name"}],
+        "experiments": [{"node": ["Experiment"], "name": "my experiment name"}],
         "inventories": [],
         "citations": [],
     }

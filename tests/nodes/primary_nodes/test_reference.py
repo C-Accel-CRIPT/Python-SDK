@@ -152,7 +152,7 @@ def test_serialize_reference_to_json(complex_reference_node) -> None:
     tests that it can correctly turn the data node into its equivalent JSON
     """
     expected_reference_dict = {
-        "node": "Reference",
+        "node": ["Reference"],
         "type": "journal_article",
         "title": "Adding the Effect of Topological Defects to the Flory\u2013Rehner and Bray\u2013Merrill Swelling Theories",
         "authors": ["Nathan J. Rebello", "Haley K. Beech", "Bradley D. Olsen"],

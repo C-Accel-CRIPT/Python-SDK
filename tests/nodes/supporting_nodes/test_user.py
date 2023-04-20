@@ -19,7 +19,7 @@ def test_user_serialization_and_deserialization():
     """
 
     user_node_dict = {
-        "node": "User",
+        "node": ["User"],
         "username": "my username",
         "email": "user@email.com",
         "orcid": "0000-0000-0000-0002",

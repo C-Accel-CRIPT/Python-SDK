@@ -13,7 +13,6 @@ class ComputationForcefield(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
-        node: str = "ComputationForcefield"
         key: str = ""
         building_block: str = ""
         coarse_grained_mapping: str = ""
@@ -25,18 +24,7 @@ class ComputationForcefield(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(
-        self,
-        key: str,
-        building_block: str,
-        coarse_grained_mapping: str = "",
-        implicit_solvent: str = "",
-        source: str = "",
-        description: str = "",
-        data: Union[Data, None] = None,
-        citation: Union[List[Citation], None] = None,
-        **kwargs
-    ):
+    def __init__(self, key: str, building_block: str, coarse_grained_mapping: str = "", implicit_solvent: str = "", source: str = "", description: str = "", data: Union[Data, None] = None, citation: Union[List[Citation], None] = None, **kwargs):
         if citation is None:
             citation = []
         super().__init__("ComputationForcefield")

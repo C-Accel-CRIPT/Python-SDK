@@ -3,9 +3,7 @@ import json
 import cript
 
 
-def test_create_complex_computation_node(
-    simple_data_node, simple_software_configuration, simple_condition_node, simple_computation_node, simple_citation_node
-) -> None:
+def test_create_complex_computation_node(simple_data_node, simple_software_configuration, simple_condition_node, simple_computation_node, simple_citation_node) -> None:
     """
     test that a complex computation node with all possible arguments can be created
     """
@@ -44,9 +42,7 @@ def test_computation_type_invalid_vocabulary() -> None:
     pass
 
 
-def test_computation_getters_and_setters(
-    simple_computation_node, simple_data_node, simple_software_configuration, simple_condition_node, simple_citation_node
-) -> None:
+def test_computation_getters_and_setters(simple_computation_node, simple_data_node, simple_software_configuration, simple_condition_node, simple_citation_node) -> None:
     """
     tests that all the getters and setters are working fine
 
@@ -81,7 +77,7 @@ def test_serialize_computation_to_json(simple_computation_node) -> None:
     tests that it can correctly turn the computation node into its equivalent JSON
     """
     # TODO test this more vigorously
-    expected_dict = {"node": "Computation", "name": "my computation name", "type": "analysis", "citations": []}
+    expected_dict = {"node": ["Computation"], "name": "my computation name", "type": "analysis", "citations": []}
 
     # comparing dicts for better test
     assert json.loads(simple_computation_node.json) == expected_dict

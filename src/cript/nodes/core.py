@@ -1,4 +1,5 @@
 import copy
+import dataclasses
 import json
 from abc import ABC
 from dataclasses import asdict, dataclass, replace
@@ -17,12 +18,12 @@ class BaseNode(ABC):
 
     @dataclass(frozen=True)
     class JsonAttributes:
-        node: str = ""
+        node: str = dataclasses.field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, node):
-        self._json_attrs = replace(self._json_attrs, node=node)
+    def __init__(self, node: str):
+        self._json_attrs = replace(self._json_attrs, node=[node])
 
     def __str__(self) -> str:
         """
@@ -124,13 +125,13 @@ class BaseNode(ABC):
            If an attribute is a list, it it is suffiecient if the specified attributes are in the list,
            if others are present too, that does not exclude the child.
 
-           Example: search_attr = `{"node": "Parameter"}` finds all "Parameter" nodes.
-                    search_attr = `{"node": "Algorithm", "parameter": {"name" : "update_frequency"}}`
+           Example: search_attr = `{"node": ["Parameter"]}` finds all "Parameter" nodes.
+                    search_attr = `{"node": ["Algorithm"], "parameter": {"name" : "update_frequency"}}`
                                            finds all "Algorithm" nodes, that have a parameter "update_frequency".
                                            Since parameter is a list an alternative notation is
-                                           ``{"node": "Algorithm", "parameter": [{"name" : "update_frequency"}]}`
+                                           ``{"node": ["Algorithm"], "parameter": [{"name" : "update_frequency"}]}`
                                            and Algorithms are not excluded they have more paramters.
-                    search_attr = `{"node": "Algorithm", "parameter": [{"name" : "update_frequency"},
+                    search_attr = `{"node": ["Algorithm"], "parameter": [{"name" : "update_frequency"},
                                            {"name" : "cutoff_distance"}]}`
                                            finds all algoritms that have a parameter "update_frequency" and "cutoff_distance".
 

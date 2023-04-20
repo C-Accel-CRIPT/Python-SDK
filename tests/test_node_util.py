@@ -1,3 +1,4 @@
+import json
 from dataclasses import replace
 
 import pytest
@@ -6,6 +7,7 @@ from test_nodes_no_host import get_algorithm, get_algorithm_string, get_paramete
 import cript
 from cript.nodes.exceptions import (
     CRIPTJsonDeserializationError,
+    CRIPTJsonNodeError,
     CRIPTJsonSerializationError,
     CRIPTNodeCycleError,
 )
@@ -73,9 +75,7 @@ def test_local_search():
     assert find_algorithms == [a]
 
     # Test that the main node is correctly excluded if we specify an additionally non-existent paramter
-    find_algorithms = a.find_children(
-        {"parameter": [{"key": "advanced_sampling"}, {"key": "update_frequency"}, {"foo": "bar"}]}
-    )
+    find_algorithms = a.find_children({"parameter": [{"key": "advanced_sampling"}, {"key": "update_frequency"}, {"foo": "bar"}]})
     assert find_algorithms == []
 
 
@@ -94,3 +94,19 @@ def test_cycles():
 
     with pytest.raises(CRIPTNodeCycleError):
         p3.key = p1
+
+
+def test_invalid_json_load():
+    def raise_node_dict(node_dict):
+        node_str = json.dumps(node_dict)
+        with pytest.raises(CRIPTJsonNodeError):
+            cript.load_nodes_from_json(node_str)
+
+    node_dict = {"node": "Computation"}
+    raise_node_dict(node_dict)
+    node_dict = {"node": []}
+    raise_node_dict(node_dict)
+    node_dict = {"node": ["asdf", "asdf"]}
+    raise_node_dict(node_dict)
+    node_dict = {"node": [None]}
+    raise_node_dict(node_dict)

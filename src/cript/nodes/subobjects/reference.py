@@ -11,7 +11,6 @@ class Reference(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
-        node: str = "Reference"
         url: str = ""
         type: str = ""
         title: str = ""

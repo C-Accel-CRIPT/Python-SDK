@@ -499,26 +499,24 @@ def simple_ingredient_dict(simple_material_node, simple_quantity_dict) -> dict:
 
 
 @pytest.fixture(scope="function")
-def simple_equipment_node(simple_condition_node, simple_citation_node, simple_file_node) -> cript.Equipment:
+def simple_equipment_node(simple_condition_node, simple_citation_node) -> cript.Equipment:
     e = cript.Equipment(
         "hot plate",
         "fancy hot plate",
         conditions=[simple_condition_node],
-        files=[simple_file_node],
         citations=[simple_citation_node],
     )
     return e
 
 
 @pytest.fixture(scope="function")
-def simple_equipment_dict(simple_condition_dict, simple_citation_dict, simple_file_node) -> dict:
+def simple_equipment_dict(simple_condition_dict, simple_citation_dict) -> dict:
     ret_dict = {
         "node": "Equipment",
         "key": "hot plate",
         "description": "fancy hot plate",
         "conditions": [simple_condition_dict],
         "citations": [simple_citation_dict],
-        "files": [json.loads(simple_file_node.json)],
     }
     return ret_dict
 

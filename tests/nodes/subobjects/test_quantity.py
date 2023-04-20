@@ -1,12 +1,14 @@
 import json
 
+from util import strip_uid_from_dict
+
 import cript
 
 
 def test_json(simple_quantity_node, simple_quantity_dict):
     q = simple_quantity_node
     q_dict = json.loads(q.json)
-    assert q_dict == simple_quantity_dict
+    assert strip_uid_from_dict(q_dict) == simple_quantity_dict
     q2 = cript.load_nodes_from_json(q.json)
     assert q2.json == q.json
 

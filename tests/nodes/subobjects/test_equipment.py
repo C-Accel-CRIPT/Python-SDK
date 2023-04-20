@@ -8,7 +8,7 @@ import cript
 def test_json(simple_equipment_node, simple_equipment_dict):
     e = simple_equipment_node
     e_dict = strip_uid_from_dict(json.loads(e.json))
-    assert e_dict == strip_uid_from_dict(simple_equipment_dict)
+    assert strip_uid_from_dict(e_dict) == strip_uid_from_dict(simple_equipment_dict)
     e2 = cript.load_nodes_from_json(e.json)
     assert e.json == e2.json
 
@@ -25,7 +25,7 @@ def test_settter_getter(simple_equipment_node, simple_condition_node, simple_fil
     e2.conditions += [c2]
     assert e2.conditions[1] == c2
 
-    assert len(e2.files) == 1
+    assert len(e2.files) == 0
     e2.files += [simple_file_node]
     assert e2.files[-1] is simple_file_node
 

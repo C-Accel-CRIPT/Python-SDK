@@ -1,10 +1,15 @@
 import copy
 import json
+import uuid
 from abc import ABC
 from dataclasses import asdict, dataclass, replace
 from typing import List
 
 from cript.nodes.exceptions import CRIPTJsonSerializationError, CRIPTNodeCycleError
+
+
+def get_new_uid():
+    return "_:" + str(uuid.uuid4())
 
 
 class BaseNode(ABC):
@@ -18,11 +23,14 @@ class BaseNode(ABC):
     @dataclass(frozen=True)
     class JsonAttributes:
         node: str = ""
+        uid: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(self, node):
         self._json_attrs = replace(self._json_attrs, node=node)
+        uid = get_new_uid()
+        self._json_attrs = replace(self._json_attrs, uid=uid)
 
     def __str__(self) -> str:
         """
@@ -34,6 +42,10 @@ class BaseNode(ABC):
             A string representation of the node.
         """
         return str(asdict(self._json_attrs))
+
+    @property
+    def uid(self):
+        return self._json_attrs.uid
 
     def _update_json_attrs_if_valid(self, new_json_attr: JsonAttributes):
         old_json_attrs = copy.copy(self._json_attrs)
@@ -86,15 +98,18 @@ class BaseNode(ABC):
         # All attributes from the backend are passed over, but some like created_by are ignored
         node = cls(**json)
         # Now we push the full json attributes into the class if it is valid
+        print("A", node.json)
 
-        valid_keyword_dict = {}
-        reference_nodes = asdict(node._json_attrs)
+        valid_keyword_dict = asdict(node._json_attrs)
+        reference_nodes = copy.deepcopy(valid_keyword_dict)
         for key in reference_nodes:
             if key in json:
                 valid_keyword_dict[key] = json[key]
 
         attrs = cls.JsonAttributes(**valid_keyword_dict)
         node._update_json_attrs_if_valid(attrs)
+        print("B", node.json)
+
         return node
 
     @property

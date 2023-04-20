@@ -1,8 +1,7 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
-from cript.nodes.core import BaseNode
-from cript.nodes.util import get_new_uid
+from cript.nodes.core import BaseNode, get_new_uid
 
 
 class Reference(BaseNode):

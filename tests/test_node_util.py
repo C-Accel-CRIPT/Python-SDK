@@ -3,18 +3,19 @@ import json
 from dataclasses import replace
 
 import pytest
+from util import strip_uid_from_dict
 
+from cript.nodes.core import get_new_uid
 from cript.nodes.exceptions import CRIPTJsonSerializationError, CRIPTNodeCycleError
-from cript.nodes.util import get_new_uid
 
 
 def test_removing_nodes(simple_algorithm_node, simple_parameter_node, simple_algorithm_dict):
     a = simple_algorithm_node
     p = simple_parameter_node
     a.parameter += [p]
-    assert json.loads(a.json) != simple_algorithm_dict
+    assert strip_uid_from_dict(json.loads(a.json)) != simple_algorithm_dict
     a.remove_child(p)
-    assert json.loads(a.json) == simple_algorithm_dict
+    assert strip_uid_from_dict(json.loads(a.json)) == simple_algorithm_dict
 
 
 def test_json_error(simple_parameter_node):
@@ -91,10 +92,10 @@ def test_uid_serial(simple_inventory_node):
     simple_inventory_node.materials += simple_inventory_node.materials
     json_dict = json.loads(simple_inventory_node.get_json().json)
     assert len(json_dict["materials"]) == 4
-    assert isinstance(json_dict["materials"][2], str)
-    assert json_dict["materials"][2].startswith("_")
-    assert len(json_dict["materials"][2]) == len(get_new_uid())
-    assert isinstance(json_dict["materials"][3], str)
-    assert json_dict["materials"][3].startswith("_")
-    assert len(json_dict["materials"][3]) == len(get_new_uid())
-    assert json_dict["materials"][3] != json_dict["materials"][2]
+    assert isinstance(json_dict["materials"][2]["uid"], str)
+    assert json_dict["materials"][2]["uid"].startswith("_:")
+    assert len(json_dict["materials"][2]["uid"]) == len(get_new_uid())
+    assert isinstance(json_dict["materials"][3]["uid"], str)
+    assert json_dict["materials"][3]["uid"].startswith("_:")
+    assert len(json_dict["materials"][3]["uid"]) == len(get_new_uid())
+    assert json_dict["materials"][3]["uid"] != json_dict["materials"][2]["uid"]

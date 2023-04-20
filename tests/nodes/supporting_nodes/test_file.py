@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from util import strip_uid_from_dict
 
 import cript
 
@@ -41,17 +42,13 @@ def file_node() -> cript.File:
     """
 
     # create a File node with all fields
-    my_file = cript.File(
-        source="https://criptapp.com", type="calibration", extension=".pdf", data_dictionary="my data dictionary"
-    )
+    my_file = cript.File(source="https://criptapp.com", type="calibration", extension=".pdf", data_dictionary="my data dictionary")
     # use the file node for tests
     yield my_file
 
     # clean up file node after each test, so the file test is always uniform
     # set the file node to original state
-    my_file = cript.File(
-        source="https://criptapp.com", type="calibration", extension=".pdf", data_dictionary="my data dictionary "
-    )
+    my_file = cript.File(source="https://criptapp.com", type="calibration", extension=".pdf", data_dictionary="my data dictionary ")
 
 
 def test_file_type_invalid_vocabulary() -> None:
@@ -106,7 +103,7 @@ def test_serialize_file_to_json(simple_file_node) -> None:
     }
 
     # compare dicts for more accurate comparison
-    assert json.loads(simple_file_node.json) == expected_file_node_dict
+    assert strip_uid_from_dict(json.loads(simple_file_node.json)) == expected_file_node_dict
 
 
 # ---------- Integration tests ----------

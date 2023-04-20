@@ -1,5 +1,7 @@
 import json
 
+from util import strip_uid_from_dict
+
 import cript
 
 
@@ -16,6 +18,6 @@ def test_setter_getter(simple_algorithm_node, simple_citation_node):
 def test_json(simple_algorithm_node, simple_algorithm_dict, simple_citation_node):
     a = simple_algorithm_node
     a_dict = json.loads(a.json)
-    assert a_dict == simple_algorithm_dict
+    assert strip_uid_from_dict(a_dict) == simple_algorithm_dict
     a2 = cript.load_nodes_from_json(a.json)
-    assert json.loads(a2.json) == a_dict
+    assert strip_uid_from_dict(json.loads(a2.json)) == strip_uid_from_dict(a_dict)

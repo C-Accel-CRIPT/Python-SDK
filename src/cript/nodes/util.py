@@ -1,6 +1,5 @@
 import inspect
 import json
-import uuid
 from dataclasses import asdict
 
 import cript.nodes
@@ -19,7 +18,7 @@ class NodeEncoder(json.JSONEncoder):
                 pass
             else:
                 if uid in NodeEncoder.handled_ids:
-                    return uid
+                    return {"node": obj._json_attrs.node, "uid": uid}
                 NodeEncoder.handled_ids.add(uid)
             default_values = asdict(obj.JsonAttributes())
             serialize_dict = asdict(obj._json_attrs)
@@ -56,7 +55,3 @@ def load_nodes_from_json(nodes_json: str):
     User facing function, that return a node and all its children from a json input.
     """
     return json.loads(nodes_json, object_hook=_node_json_hook)
-
-
-def get_new_uid():
-    return "_:" + str(uuid.uuid4())

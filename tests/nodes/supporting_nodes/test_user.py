@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from util import strip_uid_from_dict
 
 import cript
 
@@ -25,11 +26,10 @@ def test_user_serialization_and_deserialization():
         "orcid": "0000-0000-0000-0002",
     }
     user_node = cript.User(username="my username", email="user@email.com", orcid="0000-0000-0000-0002")
-    user_node_json = json.dumps(user_node_dict, sort_keys=True)
-    assert user_node.json == user_node_json
+    assert user_node_dict == strip_uid_from_dict(json.loads(user_node.json))
 
     # deserialize node from JSON
-    user_node = cript.load_nodes_from_json(nodes_json=user_node_json)
+    user_node = cript.load_nodes_from_json(nodes_json=user_node.json)
 
     # checks that the user node has been created correctly by checking the properties
     assert user_node.username == user_node_dict["username"]
@@ -38,7 +38,7 @@ def test_user_serialization_and_deserialization():
 
     # check serialize node to JSON is working correctly
     # convert dicts for better comparison
-    assert json.loads(user_node.json) == user_node_dict
+    assert strip_uid_from_dict(json.loads(user_node.json)) == user_node_dict
 
 
 @pytest.fixture(scope="session")

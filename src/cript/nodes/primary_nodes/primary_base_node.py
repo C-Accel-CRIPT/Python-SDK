@@ -3,7 +3,6 @@ from dataclasses import dataclass, replace
 
 from cript.nodes.core import BaseNode
 from cript.nodes.supporting_nodes.user import User
-from cript.nodes.util import get_new_uid
 
 
 class PrimaryBaseNode(BaseNode, ABC):
@@ -18,8 +17,6 @@ class PrimaryBaseNode(BaseNode, ABC):
         All shared attributes between all Primary nodes and set to their default values
         """
 
-        url: str = ""
-        uid: str = ""
         locked: bool = False
         model_version: str = ""
         updated_by: User = None
@@ -34,9 +31,8 @@ class PrimaryBaseNode(BaseNode, ABC):
         # initialize Base class with node
         super().__init__(node)
 
-        uid = get_new_uid()
         # replace name and notes within PrimaryBase
-        self._json_attrs = replace(self._json_attrs, name=name, notes=notes, uid=uid)
+        self._json_attrs = replace(self._json_attrs, name=name, notes=notes)
 
     def __str__(self) -> str:
         """
@@ -48,7 +44,6 @@ class PrimaryBaseNode(BaseNode, ABC):
         --------
         {
         'url': '',
-        'uid': '',
         'locked': False,
         'model_version': '',
         'updated_by': None,
@@ -68,10 +63,6 @@ class PrimaryBaseNode(BaseNode, ABC):
     @property
     def url(self):
         return self._json_attrs.url
-
-    @property
-    def uid(self):
-        return self._json_attrs.uid
 
     @property
     def locked(self):

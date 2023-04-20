@@ -3,10 +3,6 @@ import json
 import cript
 
 
-def test_create_parameter(simple_parameter_node):
-    p = simple_parameter_node
-
-
 def test_parameter_setter_getter(simple_parameter_node):
     p = simple_parameter_node
     p.key = "advanced_sampling"

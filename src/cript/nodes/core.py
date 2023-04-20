@@ -2,7 +2,7 @@ import copy
 import json
 from abc import ABC
 from dataclasses import asdict, dataclass, replace
-from typing import List, NamedTuple
+from typing import List
 
 from cript.nodes.exceptions import CRIPTJsonSerializationError, CRIPTNodeCycleError
 

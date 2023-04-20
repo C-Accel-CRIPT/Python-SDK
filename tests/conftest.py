@@ -290,27 +290,6 @@ def simple_inventory_node() -> None:
     return my_inventory
 
 
-# ---------- Subobjects Nodes ----------
-@pytest.fixture(scope="function")
-def simple_condition_node() -> cript.Condition:
-    """
-    minimal condition node
-    """
-    my_condition = cript.Condition(key="atm", type="min", value=1)
-
-    return my_condition
-
-
-@pytest.fixture(scope="function")
-def simple_equipment_node() -> cript.Equipment:
-    """
-    minimal condition node to reuse for tests
-    """
-    my_equipment = cript.Equipment(key="burner")
-
-    return my_equipment
-
-
 # ---------- Supporting Nodes ----------
 @pytest.fixture(scope="function")
 def simple_file_node() -> cript.File:
@@ -322,39 +301,7 @@ def simple_file_node() -> cript.File:
     return my_file
 
 
-@pytest.fixture(scope="function")
-def simple_citation_node(simple_reference_node) -> cript.Citation:
-    """
-    minimal citation node
-    """
-    my_citation = cript.Citation(type="derived_from", reference=simple_reference_node)
-
-    return my_citation
-
-
-@pytest.fixture(scope="function")
-def simple_quantity_node() -> cript.Quantity:
-    """
-    minimal quantity node
-    """
-    my_quantity = cript.Quantity(key="mass", value=1.23, unit="gram")
-
-    return my_quantity
-
-
-@pytest.fixture(scope="function")
-def simple_ingredient_node(simple_material_node, simple_quantity_node) -> cript.Ingredient:
-    """
-    minimal ingredient node
-    """
-    ingredients = cript.Ingredient(
-        material=simple_material_node,
-        quantities=[simple_quantity_node],
-    )
-
-    return ingredients
-
-
+# ---------- Subobjects Nodes ----------
 @pytest.fixture(scope="function")
 def simple_computation_forcefield() -> cript.ComputationForcefield:
     """

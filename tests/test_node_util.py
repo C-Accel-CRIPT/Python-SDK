@@ -4,12 +4,7 @@ from dataclasses import replace
 
 import pytest
 
-import cript
-from cript.nodes.exceptions import (
-    CRIPTJsonDeserializationError,
-    CRIPTJsonSerializationError,
-    CRIPTNodeCycleError,
-)
+from cript.nodes.exceptions import CRIPTJsonSerializationError, CRIPTNodeCycleError
 from cript.nodes.util import get_new_uid
 
 

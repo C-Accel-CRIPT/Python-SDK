@@ -5,8 +5,9 @@ from dataclasses import replace
 import pytest
 from util import strip_uid_from_dict
 
+import cript
 from cript.nodes.core import get_new_uid
-from cript.nodes.exceptions import CRIPTJsonSerializationError, CRIPTJsonNodeError
+from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTJsonSerializationError
 
 
 def test_removing_nodes(simple_algorithm_node, simple_parameter_node, simple_algorithm_dict):

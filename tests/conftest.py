@@ -318,7 +318,7 @@ def simple_parameter_node() -> cript.Parameter:
 
 @pytest.fixture(scope="function")
 def simple_parameter_dict() -> dict:
-    ret_dict = {"node": "Parameter", "key": "update_frequency", "value": 1000.0, "unit": "1/ns"}
+    ret_dict = {"node": ["Parameter"], "key": "update_frequency", "value": 1000.0, "unit": "1/ns"}
     return ret_dict
 
 
@@ -330,7 +330,7 @@ def simple_algorithm_node() -> cript.Algorithm:
 
 @pytest.fixture(scope="function")
 def simple_algorithm_dict() -> dict:
-    ret_dict = {"node": "Algorithm", "key": "mc_barostat", "type": "barostat"}
+    ret_dict = {"node": ["Algorithm"], "key": "mc_barostat", "type": "barostat"}
     return ret_dict
 
 
@@ -357,7 +357,7 @@ def simple_reference_node() -> cript.Reference:
 @pytest.fixture(scope="function")
 def simple_reference_dict() -> dict:
     ret_dict = {
-        "node": "Reference",
+        "node": ["Reference"],
         "type": "journal_article",
         "title": "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)",
         "authors": ["Ludwig Schneider", "Marcus Müller"],
@@ -380,7 +380,7 @@ def simple_citation_node(simple_reference_node) -> cript.Citation:
 
 @pytest.fixture(scope="function")
 def simple_citation_dict(simple_reference_dict) -> dict:
-    ret_dict = {"node": "Citation", "reference": simple_reference_dict, "type": "reference"}
+    ret_dict = {"node": ["Citation"], "reference": simple_reference_dict, "type": "reference"}
     return ret_dict
 
 
@@ -392,7 +392,7 @@ def simple_quantity_node() -> cript.Quantity:
 
 @pytest.fixture(scope="function")
 def simple_quantity_dict() -> dict:
-    ret_dict = {"node": "Quantity", "key": "mass", "value": 11.2, "unit": "kg", "uncertainty": 0.2, "uncertainty_type": "std"}
+    ret_dict = {"node": ["Quantity"], "key": "mass", "value": 11.2, "unit": "kg", "uncertainty": 0.2, "uncertainty_type": "std"}
     return ret_dict
 
 
@@ -404,7 +404,7 @@ def simple_software_node() -> cript.Software:
 
 @pytest.fixture(scope="function")
 def simple_software_dict() -> dict:
-    ret_dict = {"node": "Software", "name": "SOMA", "version": "0.7.0", "source": "https://gitlab.com/InnocentBug/SOMA"}
+    ret_dict = {"node": ["Software"], "name": "SOMA", "version": "0.7.0", "source": "https://gitlab.com/InnocentBug/SOMA"}
     return ret_dict
 
 
@@ -431,7 +431,7 @@ def simple_property_node(simple_material_node, simple_condition_node, simple_cit
 @pytest.fixture(scope="function")
 def simple_property_dict(simple_material_node, simple_condition_dict, simple_citation_dict, simple_data_node, simple_process_node, simple_computation_node) -> dict:
     ret_dict = {
-        "node": "Property",
+        "node": ["Property"],
         "key": "modulus_shear",
         "type": "value",
         "value": 5.0,
@@ -470,7 +470,7 @@ def simple_condition_node(simple_material_node, simple_data_node) -> cript.Condi
 @pytest.fixture(scope="function")
 def simple_condition_dict(simple_material_node, simple_data_node) -> dict:
     ret_dict = {
-        "node": "Condition",
+        "node": ["Condition"],
         "key": "temp",
         "type": "value",
         "descriptor": "room temperature of lab",
@@ -494,7 +494,7 @@ def simple_ingredient_node(simple_material_node, simple_quantity_node) -> cript.
 
 @pytest.fixture(scope="function")
 def simple_ingredient_dict(simple_material_node, simple_quantity_dict) -> dict:
-    ret_dict = {"node": "Ingredient", "material": json.loads(simple_material_node.json), "quantities": [simple_quantity_dict], "keyword": "catalyst"}
+    ret_dict = {"node": ["Ingredient"], "material": json.loads(simple_material_node.json), "quantities": [simple_quantity_dict], "keyword": "catalyst"}
     return ret_dict
 
 
@@ -512,7 +512,7 @@ def simple_equipment_node(simple_condition_node, simple_citation_node) -> cript.
 @pytest.fixture(scope="function")
 def simple_equipment_dict(simple_condition_dict, simple_citation_dict) -> dict:
     ret_dict = {
-        "node": "Equipment",
+        "node": ["Equipment"],
         "key": "hot plate",
         "description": "fancy hot plate",
         "conditions": [simple_condition_dict],
@@ -539,7 +539,7 @@ def simple_computation_forcefield_node(simple_data_node, simple_citation_node) -
 @pytest.fixture(scope="function")
 def simple_computation_forcefield_dict(simple_data_node, simple_citation_dict) -> dict:
     ret_dict = {
-        "node": "ComputationForcefield",
+        "node": ["ComputationForcefield"],
         "key": "OPLS",
         "building_block": "atom",
         "coarse_grained_mapping": "atom -> atom",
@@ -561,7 +561,7 @@ def simple_software_configuration_node(simple_software_node, simple_algorithm_no
 @pytest.fixture(scope="function")
 def simple_software_configuration_dict(simple_software_dict, simple_algorithm_dict, simple_citation_dict) -> dict:
     ret_dict = {
-        "node": "SoftwareConfiguration",
+        "node": ["SoftwareConfiguration"],
         "software": simple_software_dict,
         "algorithms": [simple_algorithm_dict],
         "notes": "my_notes",

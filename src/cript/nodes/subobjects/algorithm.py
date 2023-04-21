@@ -11,7 +11,6 @@ class Algorithm(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
-        node: str = "Algorithm"
         key: str = ""
         type: str = ""
 
@@ -20,9 +19,7 @@ class Algorithm(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(
-        self, key: str, type: str, parameter: List[Parameter] = None, citation: List[Citation] = None, **kwargs  # ignored
-    ):
+    def __init__(self, key: str, type: str, parameter: List[Parameter] = None, citation: List[Citation] = None, **kwargs):  # ignored
         if parameter is None:
             parameter = []
         if citation is None:

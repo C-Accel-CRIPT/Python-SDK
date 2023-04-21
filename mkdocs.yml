@@ -3,11 +3,46 @@ site_name: CRIPT Python SDK
 repo_url: https://github.com/C-Accel-CRIPT/Python-SDK
 repo_name: C-Accel-CRIPT/Python-SDK
 
+nav:
+  - Home: index.md
+  - Primary Nodes:
+      - Collection: nodes/primary_nodes/collection.md
+      - Computation: nodes/primary_nodes/computation.md
+      - Computational Process: nodes/primary_nodes/computational_process.md
+      - Data: nodes/primary_nodes/data.md
+      - Experiment: nodes/primary_nodes/experiment.md
+      - Inventory: nodes/primary_nodes/inventory.md
+      - Material: nodes/primary_nodes/material.md
+      - Project: nodes/primary_nodes/project.md
+      - Process: nodes/primary_nodes/process.md
+      - Reference: nodes/primary_nodes/reference.md
+      - Software: nodes/primary_nodes/software.md
+  - Sub-objects:
+      - Algorithm: nodes/subobjects/algorithm.md
+      - Citation: nodes/subobjects/citation.md
+      - Computational Forcefield: nodes/subobjects/computational_forcefield.md
+      - Condition: nodes/subobjects/condition.md
+      - Equipment: nodes/subobjects/equipment.md
+      - Identifier: nodes/subobjects/identifier.md
+      - Ingredient: nodes/subobjects/ingredient.md
+      - Parameter: nodes/subobjects/parameter.md
+      - Property: nodes/subobjects/property.md
+      - Quantity: nodes/subobjects/quantity.md
+      - Software Configuration: nodes/subobjects/software_configuration.md
+  - Supporting Nodes:
+      - User: nodes/supporting_nodes/user.md
+      - Group: nodes/supporting_nodes/group.md
+      - File: nodes/supporting_nodes/file.md
+  - Exceptions: exceptions.md
+  - FAQ: faq.md
+#    TODO add developer documentations
+#  - Developers Documentation:
+
 theme:
   name: material
   # below is the favicon image and documentation logo
-  logo: assets/images/CRIPT_full_logo_colored_transparent.png
-  favicon: assets/images/favicon.ico
+  logo: ./images/CRIPT_full_logo_colored_transparent.png
+  favicon: ./images/favicon.ico
   icon:
     admonition:
       alert: octicons/alert-16
@@ -53,14 +88,13 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: [src]
+          paths: [src, docs]
           options:
             show_bases: true
             show_source: true
-            docstring_style: google
-
-nav:
-  - Home: index.md
+            docstring_style: numpy
+      watch:
+        - src/
 
 markdown_extensions:
   - toc:

@@ -6,8 +6,10 @@ from cript.nodes.primary_nodes import (
     Data,
     Experiment,
     Inventory,
+    Material,
     Process,
     Project,
+    Reference,
 )
 from cript.nodes.subobjects import (
     Algorithm,
@@ -20,7 +22,6 @@ from cript.nodes.subobjects import (
     Parameter,
     Property,
     Quantity,
-    Reference,
     Software,
     SoftwareConfiguration,
 )

@@ -1,9 +1,15 @@
 import copy
+import json
+from dataclasses import replace
 
 import pytest
 
 import cript
-from cript.nodes.exceptions import CRIPTNodeSchemaError
+from cript.nodes.exceptions import (
+    CRIPTJsonDeserializationError,
+    CRIPTJsonSerializationError,
+    CRIPTNodeSchemaError,
+)
 
 
 def get_parameter():
@@ -12,9 +18,9 @@ def get_parameter():
 
 
 def get_parameter_string():
-    ret_str = "{'node': 'Parameter', 'key': 'update_frequency',"
+    ret_str = "{'node': ['Parameter'], 'key': 'update_frequency',"
     ret_str += " 'value': 1000.0, 'unit': '1/ns'}"
-    return ret_str.replace("'", '"')
+    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def get_algorithm():
@@ -23,9 +29,8 @@ def get_algorithm():
 
 
 def get_algorithm_string():
-    ret_str = "{'node': 'Algorithm', 'key': 'mc_barostat', 'type': 'barostat',"
-    ret_str += " 'parameter': [], 'citation': []}"
-    return ret_str.replace("'", '"')
+    ret_str = "{'node': ['Algorithm'], 'key': 'mc_barostat', 'type': 'barostat'}"
+    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def get_quantity():
@@ -34,14 +39,18 @@ def get_quantity():
 
 
 def get_quantity_string():
-    ret_str = "{'node': 'Quantity', 'key': 'mass', 'value': 11.2, "
+    ret_str = "{'node': ['Quantity'], 'key': 'mass', 'value': 11.2, "
     ret_str += "'unit': 'kg', 'uncertainty': 0.2, 'uncertainty_type': 'std'}"
-    return ret_str.replace("'", '"')
+    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def get_reference():
+    title = "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
+    title += "SOft coarse grained Monte-Carlo Acceleration (SOMA)"
+
     reference = cript.Reference(
         "journal_article",
+        title=title,
         authors=["Ludwig Schneider", "Marcus Müller"],
         journal="Computer Physics Communications",
         publisher="Elsevier",
@@ -55,12 +64,15 @@ def get_reference():
 
 
 def get_reference_string():
-    ret_str = "{'node': 'Reference', 'url': '', 'type': 'journal_article', 'title': '', 'authors':"
-    ret_str += " ['Ludwig Schneider', 'Marcus M\\u00fcller'], 'journal': 'Computer Physics Communications', "
-    ret_str += "'publisher': 'Elsevier', 'year': 2019, 'issue': null, 'pages': [463, 476], "
-    ret_str += "'doi': '10.1016/j.cpc.2018.08.011', 'issn': '0010-4655', 'arxiv_id': '', "
-    ret_str += "'pmid': null, 'website': 'https://www.sciencedirect.com/science/article/pii/S0010465518303072'}"
-    return ret_str.replace("'", '"')
+    ret_str = "{'node': ['Reference'], 'type': 'journal_article', "
+    ret_str += "'title': 'Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
+    ret_str += "SOft coarse grained Monte-Carlo Acceleration (SOMA)', "
+    ret_str += "'authors': ['Ludwig Schneider', 'Marcus M\\u00fcller'], 'journal': 'Computer Physics Communications', "
+    ret_str += "'publisher': 'Elsevier', 'year': 2019, 'pages': [463, 476], "
+    ret_str += "'doi': '10.1016/j.cpc.2018.08.011', 'issn': '0010-4655', "
+    ret_str += "'website': 'https://www.sciencedirect.com/science/article/pii/S0010465518303072'}"
+
+    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def get_citation():
@@ -69,9 +81,10 @@ def get_citation():
 
 
 def get_citation_string():
-    return "{'node': 'Citation', 'type': 'reference', 'reference':}".replace(
-        "'reference':", f"'reference': {get_reference_string()}"
-    ).replace("'", '"')
+    ret_str = "{'node': ['Citation'], "
+    ret_str += f"'reference': {get_reference_string()}, "
+    ret_str += "'type': 'reference'}"
+    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def get_software():
@@ -80,14 +93,16 @@ def get_software():
 
 
 def get_software_string():
-    ret_str = "{'node': 'Software', 'url': '', 'name': 'SOMA',"
+    ret_str = "{'node': ['Software'], 'name': 'SOMA',"
     ret_str += " 'version': '0.7.0', 'source': 'https://gitlab.com/InnocentBug/SOMA'}"
-    return ret_str.replace("'", '"')
+    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def test_parameter():
     p = get_parameter()
     p_str = p.json
+    print(p_str)
+    print(get_parameter_string())
     assert p_str == get_parameter_string()
     p = cript.load_nodes_from_json(p_str)
     assert p_str == get_parameter_string()
@@ -109,7 +124,7 @@ def test_algorithm():
     assert a_str == get_algorithm_string()
     a.parameter += [get_parameter()]
     a_str = get_algorithm_string()
-    a_str2 = a_str.replace('parameter": []', f'parameter": [{get_parameter_string()}]')
+    a_str2 = json.dumps(json.loads(a_str.replace("}", f', "parameter": [{get_parameter_string()}]' + "}")), sort_keys=True)
     assert a_str2 == a.json
 
     a2 = cript.load_nodes_from_json(a_str2)
@@ -177,6 +192,8 @@ def test_reference():
 
 def test_citation():
     c = get_citation()
+    print(c.json)
+    print(get_citation_string())
     assert c.json == get_citation_string()
     c.type = "replicated"
     assert c.type == "replicated"
@@ -200,6 +217,22 @@ def test_software():
     assert s2.source == "https://github.com/SSAGESLabs/PySAGES"
 
 
+def test_json_error():
+    faulty_json = "{'node': ['Parameter'], 'foo': 'bar'}".replace("'", '"')
+    with pytest.raises(CRIPTJsonDeserializationError):
+        cript.load_nodes_from_json(faulty_json)
+
+    parameter = get_parameter()
+    # Let's break the node by violating the data model
+    parameter._json_attrs = replace(parameter._json_attrs, value=None)
+    with pytest.raises(CRIPTJsonSerializationError):
+        parameter.json
+    # Let's break it completely
+    parameter._json_attrs = None
+    with pytest.raises(CRIPTJsonSerializationError):
+        parameter.json
+
+
 def get_property():
     p = cript.Property(
         "modulus_shear",
@@ -209,9 +242,9 @@ def get_property():
         0.1,
         "std",
         # TODO components
-        [None],
+        [],
         # TODO components_relative
-        [None],
+        [],
         structure="structure",
         method="method",
         # TODO sample_preparation
@@ -220,7 +253,7 @@ def get_property():
         # TODO data
         data=None,
         # TODO computations
-        computations=[None],
+        computations=[],
         citations=[get_citation()],
         notes="notes",
     )
@@ -228,16 +261,18 @@ def get_property():
 
 
 def get_property_string():
-    ret_str = "{'node': 'Property', 'key': 'modulus_shear', 'type': 'value', 'value': 5.0,"
+    ret_str = "{'node': ['Property'], 'key': 'modulus_shear', 'type': 'value', 'value': 5.0,"
     ret_str += " 'unit': 'GPa', 'uncertainty': 0.1, 'uncertainty_type': 'std', "
-    ret_str += "'components': [null], 'components_relative': [null], 'structure': 'structure', "
-    ret_str += f"'method': 'method', 'sample_preparation': null, 'conditions': [{get_condition_string()}], 'data': null,"
-    ret_str += f" 'computations': [null], 'citations': [{get_citation_string()}], 'notes': 'notes'" + "}"
-    return ret_str.replace("'", '"')
+    ret_str += "'structure': 'structure', "
+    ret_str += f"'method': 'method', 'conditions': [{get_condition_string()}],"
+    ret_str += f" 'citations': [{get_citation_string()}], 'notes': 'notes'" + "}"
+    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def test_property():
     p = get_property()
+    print(p.json)
+    print(get_property_string())
     assert p.json == get_property_string()
     p2 = cript.load_nodes_from_json(p.json)
     assert p2.json == p.json
@@ -299,18 +334,18 @@ def get_condition():
         uncertainty_type="var",
         set_id=0,
         measurement_id=2,
-        material=[None],
+        material=[],
         data=None,
     )  # TODO data, material
     return c
 
 
 def get_condition_string():
-    ret_str = "{'node': 'Condition', 'key': 'temp', 'type': 'value', "
+    ret_str = "{'node': ['Condition'], 'key': 'temp', 'type': 'value', "
     ret_str += "'descriptor': 'room temperature of lab', 'value': 22, 'unit': 'C',"
-    ret_str += " 'uncertainty': 5, 'uncertainty_type': 'var', 'material': [null], "
-    ret_str += "'set_id': 0, 'measurement_id': 2, 'data': null}"
-    return ret_str.replace("'", '"')
+    ret_str += " 'uncertainty': 5, 'uncertainty_type': 'var', "
+    ret_str += "'set_id': 0, 'measurement_id': 2}"
+    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def test_condition():
@@ -337,8 +372,7 @@ def test_condition():
 
     # TODO Material
     c2.material += [True]
-    assert c2.material[0] is None
-    assert c2.material[1] is True
+    assert c2.material[0] is True
     c2.set_id = None
     assert c2.set_id is None
     c2.measurement_id = None
@@ -351,20 +385,21 @@ def test_condition():
 
 def get_ingredient():
     # TODO replace material
-    i = cript.Ingredient(None, [get_quantity()], "catalyst")
+    i = cript.Ingredient(True, [get_quantity()], "catalyst")
     return i
 
 
 def get_ingredient_string():
-    ret_str = "{'node': 'Ingredient', 'material': null, "
+    ret_str = "{'node': ['Ingredient'], 'material': true, "
     ret_str += f"'quantities': [{get_quantity_string()}],"
     ret_str += " 'keyword': 'catalyst'}"
-    return ret_str.replace("'", '"')
+    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def test_ingredient():
     i = get_ingredient()
     assert i.json == get_ingredient_string()
+    print(i.json)
     i2 = cript.load_nodes_from_json(i.json)
     assert i.json == i2.json
 
@@ -383,17 +418,17 @@ def get_equipment():
         "fancy hot plate",
         conditions=[get_condition()],
         # TODO FILE
-        files=[None],
+        files=[],
         citations=[get_citation()],
     )
     return e
 
 
 def get_equipment_string():
-    ret_str = "{'node': 'Equipment', 'key': 'hot plate', 'description': 'fancy hot plate', "
-    ret_str += f"'conditions': [{get_condition_string()}], 'files': [null], "
+    ret_str = "{'node': ['Equipment'], 'key': 'hot plate', 'description': 'fancy hot plate', "
+    ret_str += f"'conditions': [{get_condition_string()}], "
     ret_str += f"'citations': [{get_citation_string()}]" + "}"
-    return ret_str.replace("'", '"')
+    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def test_equipment():
@@ -412,9 +447,9 @@ def test_equipment():
     e2.conditions += [c2]
     assert e2.conditions[1] == c2
 
-    assert len(e2.files) == 1
+    assert len(e2.files) == 0
     e2.files += [False]
-    assert e2.files[1] is False
+    assert e2.files[0] is False
 
     cit2 = get_citation()
     assert len(e2.citations) == 1
@@ -438,12 +473,12 @@ def get_computation_forcefield():
 
 
 def get_computation_forcefield_string():
-    ret_str = "{'node': 'ComputationForcefield', 'key': 'OPLS', "
+    ret_str = "{'node': ['ComputationForcefield'], 'key': 'OPLS', "
     ret_str += "'building_block': 'atom', 'coarse_grained_mapping': 'atom -> atom', "
     ret_str += "'implicit_solvent': 'no implicit solvent', 'source': 'local LigParGen installation',"
-    ret_str += " 'description': 'this is a test forcefield', 'data': null, "
+    ret_str += " 'description': 'this is a test forcefield', "
     ret_str += f"'citation': [{get_citation_string()}]" + "}"
-    return ret_str.replace("'", '"')
+    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def test_computation_forcefield():
@@ -482,12 +517,12 @@ def get_software_configuration():
 
 
 def get_software_configuration_string():
-    ret_str = "{'node': 'SoftwareConfiguration',"
+    ret_str = "{'node': ['SoftwareConfiguration'],"
     ret_str += f" 'software': {get_software_string()}, "
     ret_str += f"'algorithms': [{get_algorithm_string()}], "
     ret_str += "'notes': 'my_notes', "
     ret_str += f"'citation': [{get_citation_string()}]" + "}"
-    return ret_str.replace("'", '"')
+    return json.dumps(json.loads(ret_str.replace("'", '"')), sort_keys=True)
 
 
 def test_software_configuration():

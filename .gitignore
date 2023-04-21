@@ -40,4 +40,8 @@ share/python-wheels/
 
 # pytest cache
 .pytest_cache
+
+# ignore coverage.py files and directories
+.coverage
 /.coverage
+htmlcov/

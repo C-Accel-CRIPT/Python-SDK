@@ -94,7 +94,7 @@ class BaseNode(ABC):
         # Making a manual transform into a dictionary here.
         arguments = {}
         for field in self.JsonAttributes().__dataclass_fields__:
-            arguments[field] = getattr(self._json_attrs, field)
+            arguments[field] = copy.deepcopy(getattr(self._json_attrs, field), memo)
         # TODO URL handling
 
         arguments["uid"] = get_new_uid()

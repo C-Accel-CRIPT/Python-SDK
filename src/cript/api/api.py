@@ -131,17 +131,11 @@ class API:
         if host is None:
             host = os.environ.get("CRIPT_HOST")
             if host is None:
-                raise RuntimeError(
-                    "API initilized with `host=None` but environment variable `CRIPT_HOST` not found.\n"
-                    "Set the environment variable (preferred) or specify the host explictly at the creation of API."
-                )
+                raise RuntimeError("API initilized with `host=None` but environment variable `CRIPT_HOST` not found.\n" "Set the environment variable (preferred) or specify the host explictly at the creation of API.")
         if token is None:
             token = os.environ.get("CRIPT_TOKEN")
             if token is None:
-                raise RuntimeError(
-                    "API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n"
-                    "Set the environment variable (preferred) or specify the token explictly at the creation of API."
-                )
+                raise RuntimeError("API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n" "Set the environment variable (preferred) or specify the token explictly at the creation of API.")
 
         self._host = _prepare_host(host=host)
         self._token = token
@@ -484,9 +478,7 @@ class API:
             api_endpoint: str = f"{self._host}/search/{node_type}"
 
         # TODO error handling if none of the API endpoints got hit
-        return Paginator(
-            http_headers=self._http_headers, api_endpoint=api_endpoint, current_page_number=0, query=value_to_search
-        )
+        return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, current_page_number=0, query=value_to_search)
 
         # except NameError
         # if none of the search_modes were able to capture and create an api_endpoint variable

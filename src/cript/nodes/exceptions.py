@@ -5,6 +5,7 @@ class CRIPTNodeSchemaError(CRIPTException):
     """
     Exception that is raised when a DB schema validation fails for a node.
     """
+
     error_message: str
 
     def __init__(self, error_message: str):

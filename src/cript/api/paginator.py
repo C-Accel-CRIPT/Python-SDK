@@ -117,11 +117,7 @@ class Paginator:
         InvalidPageRequest, in case the user tries to get a negative page or a page that doesn't exist
         """
         if new_page_number < 0:
-            error_message: str = (
-                f"Paginator current page number is invalid because it is negative: "
-                f"{self.current_page_number} please set paginator.current_page_number "
-                f"to a positive page number"
-            )
+            error_message: str = f"Paginator current page number is invalid because it is negative: " f"{self.current_page_number} please set paginator.current_page_number " f"to a positive page number"
 
             # TODO replace with custom error
             raise Exception(error_message)

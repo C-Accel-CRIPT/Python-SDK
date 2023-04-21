@@ -11,9 +11,7 @@ def get_vocabulary(vocab_category: str, api: Union[API, None] = None):
     return api.get_vocabulary(vocab_category)
 
 
-def is_vocab_valid(
-    vocab_category: str, vocab_value: str, api: Union[API, None] = None
-) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
+def is_vocab_valid(vocab_category: str, vocab_value: str, api: Union[API, None] = None) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
     if api is None:
         api = _get_global_cached_api()
 

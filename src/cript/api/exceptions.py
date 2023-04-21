@@ -156,10 +156,7 @@ class InvalidSearchModeError(CRIPTException):
         """
 
         # TODO This error message needs more documentation because it is not as intuitive
-        error_message = (
-            f"'{self.invalid_search_mode}' is an invalid search mode. "
-            f"The valid search modes come from cript.api.SearchModes"
-        )
+        error_message = f"'{self.invalid_search_mode}' is an invalid search mode. " f"The valid search modes come from cript.api.SearchModes"
 
         return error_message
 

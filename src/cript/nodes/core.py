@@ -79,7 +79,11 @@ class BaseNode(ABC):
                 arguments[field] = json_dict[field]
 
         # The call to the constructor might ignore fields that are usually not writable.
-        node = cls(**arguments)
+        try:
+            node = cls(**arguments)
+        except Exception as exc:
+            print(cls, arguments)
+            raise exc
         attrs = cls.JsonAttributes(**arguments)
         # Handle UID manually. Conserve newly assigned uid if uid is default (empty)
         if attrs.uid == cls.JsonAttributes().uid:

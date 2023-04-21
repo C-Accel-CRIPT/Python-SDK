@@ -76,7 +76,7 @@ def test_complex_reference() -> None:
     assert my_reference.website == website
 
 
-def test_getters_and_setters_reference(simple_reference_node) -> None:
+def test_getters_and_setters_reference(complex_reference_node) -> None:
     """
     testing that the complex reference node is working correctly
     """
@@ -98,39 +98,39 @@ def test_getters_and_setters_reference(simple_reference_node) -> None:
     website = "https://criptapp.org"
 
     # set reference attributes
-    simple_reference_node.type = reference_type
-    simple_reference_node.title = title
-    simple_reference_node.authors = authors
-    simple_reference_node.journal = journal
-    simple_reference_node.publisher = publisher
-    simple_reference_node.publisher = publisher
-    simple_reference_node.year = year
-    simple_reference_node.volume = volume
-    simple_reference_node.issue = issue
-    simple_reference_node.pages = pages
-    simple_reference_node.doi = doi
-    simple_reference_node.issn = issn
-    simple_reference_node.arxiv_id = arxiv_id
-    simple_reference_node.pmid = pmid
-    simple_reference_node.website = website
+    complex_reference_node.type = reference_type
+    complex_reference_node.title = title
+    complex_reference_node.authors = authors
+    complex_reference_node.journal = journal
+    complex_reference_node.publisher = publisher
+    complex_reference_node.publisher = publisher
+    complex_reference_node.year = year
+    complex_reference_node.volume = volume
+    complex_reference_node.issue = issue
+    complex_reference_node.pages = pages
+    complex_reference_node.doi = doi
+    complex_reference_node.issn = issn
+    complex_reference_node.arxiv_id = arxiv_id
+    complex_reference_node.pmid = pmid
+    complex_reference_node.website = website
 
     # assertions: test getter and setter
-    assert isinstance(simple_reference_node, cript.Reference)
-    assert simple_reference_node.type == reference_type
-    assert simple_reference_node.title == title
-    assert simple_reference_node.authors == authors
-    assert simple_reference_node.journal == journal
-    assert simple_reference_node.publisher == publisher
-    assert simple_reference_node.publisher == publisher
-    assert simple_reference_node.year == year
-    assert simple_reference_node.volume == volume
-    assert simple_reference_node.issue == issue
-    assert simple_reference_node.pages == pages
-    assert simple_reference_node.doi == doi
-    assert simple_reference_node.issn == issn
-    assert simple_reference_node.arxiv_id == arxiv_id
-    assert simple_reference_node.pmid == pmid
-    assert simple_reference_node.website == website
+    assert isinstance(complex_reference_node, cript.Reference)
+    assert complex_reference_node.type == reference_type
+    assert complex_reference_node.title == title
+    assert complex_reference_node.authors == authors
+    assert complex_reference_node.journal == journal
+    assert complex_reference_node.publisher == publisher
+    assert complex_reference_node.publisher == publisher
+    assert complex_reference_node.year == year
+    assert complex_reference_node.volume == volume
+    assert complex_reference_node.issue == issue
+    assert complex_reference_node.pages == pages
+    assert complex_reference_node.doi == doi
+    assert complex_reference_node.issn == issn
+    assert complex_reference_node.arxiv_id == arxiv_id
+    assert complex_reference_node.pmid == pmid
+    assert complex_reference_node.website == website
 
 
 def test_reference_vocabulary() -> None:
@@ -149,27 +149,16 @@ def test_reference_conditional_attributes() -> None:
     pass
 
 
-def test_serialize_reference_to_json(complex_reference_node) -> None:
+def test_serialize_reference_to_json(complex_reference_node, complex_reference_dict) -> None:
     """
     tests that it can correctly turn the data node into its equivalent JSON
     """
-    expected_reference_dict = {
-        "node": ["Reference"],
-        "type": "journal_article",
-        "title": "Adding the Effect of Topological Defects to the Flory\u2013Rehner and Bray\u2013Merrill Swelling Theories",
-        "authors": ["Nathan J. Rebello", "Haley K. Beech", "Bradley D. Olsen"],
-        "journal": "ACS Macro Letters",
-        "publisher": "American Chemical Society",
-        "year": 2022,
-        "volume": 10,
-        "pages": [531, 537],
-        "doi": "10.1021/acsmacrolett.0c00909",
-    }
 
     # convert reference to json and then to dict for better comparison
     reference_dict = json.loads(complex_reference_node.json)
     reference_dict = strip_uid_from_dict(reference_dict)
-    assert reference_dict == expected_reference_dict
+
+    assert reference_dict == complex_reference_dict
 
 
 # ---------- Integration tests ----------

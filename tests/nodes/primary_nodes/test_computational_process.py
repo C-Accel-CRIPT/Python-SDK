@@ -5,7 +5,7 @@ from util import strip_uid_from_dict
 import cript
 
 
-def test_create_simple_computational_process(simple_data_node, simple_ingredient_node) -> None:
+def test_create_simple_computational_process(simple_data_node, complex_ingredient_node) -> None:
     """
     create a simple computational_process node with required arguments
     """
@@ -14,24 +14,24 @@ def test_create_simple_computational_process(simple_data_node, simple_ingredient
         name="my computational process node name",
         type="cross_linking",
         input_data=[simple_data_node],
-        ingredients=[simple_ingredient_node],
+        ingredients=[complex_ingredient_node],
     )
 
     # assertions
     assert isinstance(my_computational_process, cript.ComputationalProcess)
     assert my_computational_process.type == "cross_linking"
     assert my_computational_process.input_data == [simple_data_node]
-    assert my_computational_process.ingredients == [simple_ingredient_node]
+    assert my_computational_process.ingredients == [complex_ingredient_node]
 
 
 def test_create_complex_computational_process(
     simple_data_node,
     simple_material_node,
-    simple_ingredient_node,
-    simple_software_configuration,
-    simple_condition_node,
+    complex_ingredient_node,
+    complex_software_configuration_node,
+    complex_condition_node,
     simple_property_node,
-    simple_citation_node,
+    complex_citation_node,
 ) -> None:
     """
     create a complex computational process with all possible arguments
@@ -44,12 +44,12 @@ def test_create_complex_computational_process(
         name=computational_process_name,
         type=computational_process_type,
         input_data=[simple_data_node],
-        ingredients=[simple_ingredient_node],
+        ingredients=[complex_ingredient_node],
         output_data=[simple_data_node],
-        software_configurations=[simple_software_configuration],
-        conditions=[simple_condition_node],
+        software_configurations=[complex_software_configuration_node],
+        conditions=[complex_condition_node],
         properties=[simple_property_node],
-        citations=[simple_citation_node],
+        citations=[complex_citation_node],
     )
 
     # assertions
@@ -57,12 +57,12 @@ def test_create_complex_computational_process(
     assert my_computational_process.name == computational_process_name
     assert my_computational_process.type == computational_process_type
     assert my_computational_process.input_data == [simple_data_node]
-    assert my_computational_process.ingredients == [simple_ingredient_node]
+    assert my_computational_process.ingredients == [complex_ingredient_node]
     assert my_computational_process.output_data == [simple_data_node]
-    assert my_computational_process.software_configurations == [simple_software_configuration]
-    assert my_computational_process.conditions == [simple_condition_node]
+    assert my_computational_process.software_configurations == [complex_software_configuration_node]
+    assert my_computational_process.conditions == [complex_condition_node]
     assert my_computational_process.properties == [simple_property_node]
-    assert my_computational_process.citations == [simple_citation_node]
+    assert my_computational_process.citations == [complex_citation_node]
 
 
 def test_serialize_computational_process_to_json(simple_computational_process_node) -> None:

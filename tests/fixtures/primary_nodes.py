@@ -1,3 +1,5 @@
+import copy
+
 import pytest
 
 import cript
@@ -48,7 +50,7 @@ def simple_collection_node(simple_experiment_node) -> cript.Collection:
 
 
 @pytest.fixture(scope="function")
-def complex_collection_node(simple_experiment_node, simple_inventory_node, simple_citation_node) -> cript.Collection:
+def complex_collection_node(simple_experiment_node, simple_inventory_node, complex_citation_node) -> cript.Collection:
     """
     Collection node with all optional arguments
     """
@@ -60,7 +62,7 @@ def complex_collection_node(simple_experiment_node, simple_inventory_node, simpl
         experiments=[simple_experiment_node],
         inventories=[simple_inventory_node],
         cript_doi=my_cript_doi,
-        citations=[simple_citation_node],
+        citations=[complex_citation_node],
     )
 
     return my_collection
@@ -114,23 +116,23 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
 
 
 @pytest.fixture(scope="function")
-def simple_data_node(simple_file_node) -> cript.Data:
+def simple_data_node(complex_file_node) -> cript.Data:
     """
     minimal data node
     """
-    my_data = cript.Data(name="my data name", type="afm_amp", files=[simple_file_node])
+    my_data = cript.Data(name="my data name", type="afm_amp", files=[complex_file_node])
 
     return my_data
 
 
 @pytest.fixture(scope="function")
 def complex_data_node(
-    simple_file_node,
+    complex_file_node,
     simple_process_node,
     simple_computation_node,
     simple_computational_process_node,
     simple_material_node,
-    simple_citation_node,
+    complex_citation_node,
 ) -> None:
     """
     create a complex data node with all possible arguments for all tests to use when needed
@@ -138,13 +140,13 @@ def complex_data_node(
     my_complex_data = cript.Data(
         name="my complex data node name",
         type="afm_amp",
-        files=[simple_file_node],
-        sample_preperation=simple_process_node,
+        files=[copy.deepcopy(complex_file_node)],
+        sample_preperation=copy.deepcopy(simple_process_node),
         computations=[simple_computation_node],
         computational_process=[simple_computational_process_node],
         materials=[simple_material_node],
-        processes=[simple_process_node],
-        citations=[simple_citation_node],
+        processes=[copy.deepcopy(simple_process_node)],
+        citations=[copy.deepcopy(complex_citation_node)],
     )
 
     return my_complex_data
@@ -157,7 +159,7 @@ def simple_process_node() -> cript.Process:
     """
     my_process = cript.Process(name="my process name", type="affinity_pure")
 
-    return my_process
+    return copy.deepcopy(my_process)
 
 
 @pytest.fixture(scope="function")
@@ -178,11 +180,11 @@ def simple_material_node() -> cript.Material:
     identifiers = [{"alternative_names": "my material alternative name"}]
     my_material = cript.Material(name="my material", identifiers=identifiers)
 
-    return my_material
+    return copy.deepcopy(my_material)
 
 
 @pytest.fixture(scope="function")
-def complex_material_node(simple_property_node, simple_process_node, simple_computation_forcefield) -> cript.Material:
+def complex_material_node(simple_property_node, simple_process_node, complex_computation_forcefield) -> cript.Material:
     """
     complex Material node with all possible attributes filled
     """
@@ -202,13 +204,13 @@ def complex_material_node(simple_property_node, simple_process_node, simple_comp
         identifiers=my_identifier,
         components=my_components,
         properties=simple_property_node,
-        process=simple_process_node,
+        process=copy.deepcopy(simple_process_node),
         parent_materials=parent_material,
-        computation_forcefield=simple_computation_forcefield,
+        computation_forcefield=complex_computation_forcefield,
         keywords=my_material_keywords,
     )
 
-    return my_complex_material
+    return copy.deepcopy(my_complex_material)
 
 
 @pytest.fixture(scope="function")

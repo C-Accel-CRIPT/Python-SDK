@@ -5,16 +5,16 @@ from util import strip_uid_from_dict
 import cript
 
 
-def test_json(simple_quantity_node, simple_quantity_dict):
-    q = simple_quantity_node
+def test_json(complex_quantity_node, complex_quantity_dict):
+    q = complex_quantity_node
     q_dict = json.loads(q.json)
-    assert strip_uid_from_dict(q_dict) == simple_quantity_dict
+    assert strip_uid_from_dict(q_dict) == complex_quantity_dict
     q2 = cript.load_nodes_from_json(q.json)
     assert q2.json == q.json
 
 
-def test_getter_setter(simple_quantity_node):
-    q = simple_quantity_node
+def test_getter_setter(complex_quantity_node):
+    q = complex_quantity_node
     q.key = "volume"
     assert q.key == "volume"
     q.value = 0.5

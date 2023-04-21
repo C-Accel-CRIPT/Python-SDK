@@ -25,7 +25,7 @@ def test_simple_process() -> None:
     assert my_process.keywords == my_process_keywords
 
 
-def test_complex_process_node(simple_ingredient_node, simple_equipment_node, simple_citation_node, simple_property_node, simple_condition_node) -> None:
+def test_complex_process_node(complex_ingredient_node, complex_equipment_node, complex_citation_node, simple_property_node, complex_condition_node) -> None:
     """
     create a process node with all possible arguments
 
@@ -69,40 +69,40 @@ def test_complex_process_node(simple_ingredient_node, simple_equipment_node, sim
     my_complex_process = cript.Process(
         name=my_process_name,
         type=my_process_type,
-        ingredients=[simple_ingredient_node],
+        ingredients=[complex_ingredient_node],
         description=my_process_description,
-        equipments=[simple_equipment_node],
+        equipments=[complex_equipment_node],
         products=process_product,
         waste=process_waste,
         prerequisite_processes=[prerequisite_processes],
-        conditions=[simple_condition_node],
+        conditions=[complex_condition_node],
         properties=[simple_property_node],
         keywords=my_process_keywords,
-        citations=[simple_citation_node],
+        citations=[complex_citation_node],
     )
 
     # assertions
     assert my_complex_process.type == my_process_type
-    assert my_complex_process.ingredients == [simple_ingredient_node]
+    assert my_complex_process.ingredients == [complex_ingredient_node]
     assert my_complex_process.description == my_process_description
-    assert my_complex_process.equipments == [simple_equipment_node]
+    assert my_complex_process.equipments == [complex_equipment_node]
     assert my_complex_process.products == process_product
     assert my_complex_process.waste == process_waste
     assert my_complex_process.prerequisite_processes == [prerequisite_processes]
-    assert my_complex_process.conditions == [simple_condition_node]
+    assert my_complex_process.conditions == [complex_condition_node]
     assert my_complex_process.properties == [simple_property_node]
     assert my_complex_process.keywords == my_process_keywords
-    assert my_complex_process.citations == [simple_citation_node]
+    assert my_complex_process.citations == [complex_citation_node]
 
 
 def test_process_getters_and_setters(
     simple_process_node,
-    simple_ingredient_node,
-    simple_equipment_node,
+    complex_ingredient_node,
+    complex_equipment_node,
     simple_material_node,
-    simple_condition_node,
+    complex_condition_node,
     simple_property_node,
-    simple_citation_node,
+    complex_citation_node,
 ) -> None:
     """
     test getters and setters and be sure they are working correctly
@@ -120,29 +120,29 @@ def test_process_getters_and_setters(
 
     # test setters
     simple_process_node.type = new_process_type
-    simple_process_node.ingredients = [simple_ingredient_node]
+    simple_process_node.ingredients = [complex_ingredient_node]
     simple_process_node.description = new_process_description
-    simple_process_node.equipments = [simple_equipment_node]
+    simple_process_node.equipments = [complex_equipment_node]
     simple_process_node.products = [simple_process_node]
     simple_process_node.waste = [simple_material_node]
     simple_process_node.prerequisite_processes = [simple_process_node]
-    simple_process_node.conditions = [simple_condition_node]
+    simple_process_node.conditions = [complex_condition_node]
     simple_process_node.properties = [simple_property_node]
     simple_process_node.keywords = [new_process_keywords]
-    simple_process_node.citations = [simple_citation_node]
+    simple_process_node.citations = [complex_citation_node]
 
     # test getters
     assert simple_process_node.type == new_process_type
-    assert simple_process_node.ingredients == [simple_ingredient_node]
+    assert simple_process_node.ingredients == [complex_ingredient_node]
     assert simple_process_node.description == new_process_description
-    assert simple_process_node.equipments == [simple_equipment_node]
+    assert simple_process_node.equipments == [complex_equipment_node]
     assert simple_process_node.products == [simple_process_node]
     assert simple_process_node.waste == [simple_material_node]
     assert simple_process_node.prerequisite_processes == [simple_process_node]
-    assert simple_process_node.conditions == [simple_condition_node]
+    assert simple_process_node.conditions == [complex_condition_node]
     assert simple_process_node.properties == [simple_property_node]
     assert simple_process_node.keywords == [new_process_keywords]
-    assert simple_process_node.citations == [simple_citation_node]
+    assert simple_process_node.citations == [complex_citation_node]
 
 
 def test_serialize_process_to_json(simple_process_node) -> None:

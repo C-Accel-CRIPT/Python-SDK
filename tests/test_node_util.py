@@ -10,17 +10,17 @@ from cript.nodes.core import get_new_uid
 from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTJsonSerializationError
 
 
-def test_removing_nodes(simple_algorithm_node, simple_parameter_node, simple_algorithm_dict):
-    a = simple_algorithm_node
-    p = simple_parameter_node
+def test_removing_nodes(complex_algorithm_node, complex_parameter_node, complex_algorithm_dict):
+    a = complex_algorithm_node
+    p = complex_parameter_node
     a.parameter += [p]
-    assert strip_uid_from_dict(json.loads(a.json)) != simple_algorithm_dict
+    assert strip_uid_from_dict(json.loads(a.json)) != complex_algorithm_dict
     a.remove_child(p)
-    assert strip_uid_from_dict(json.loads(a.json)) == simple_algorithm_dict
+    assert strip_uid_from_dict(json.loads(a.json)) == complex_algorithm_dict
 
 
-def test_json_error(simple_parameter_node):
-    parameter = simple_parameter_node
+def test_json_error(complex_parameter_node):
+    parameter = complex_parameter_node
     # Let's break the node by violating the data model
     parameter._json_attrs = replace(parameter._json_attrs, value=None)
     with pytest.raises(CRIPTJsonSerializationError):
@@ -31,8 +31,8 @@ def test_json_error(simple_parameter_node):
         parameter.json
 
 
-def test_local_search(simple_algorithm_node, simple_parameter_node):
-    a = simple_algorithm_node
+def test_local_search(complex_algorithm_node, complex_parameter_node):
+    a = complex_algorithm_node
     # Check if we can use search to find the algoritm node, but specifying node and key
     find_algorithms = a.find_children({"node": "Algorithm", "key": "mc_barostat"})
     assert find_algorithms == [a]
@@ -41,8 +41,8 @@ def test_local_search(simple_algorithm_node, simple_parameter_node):
     assert find_algorithms == []
 
     # Adding 2 separate parameters to test deeper search
-    p1 = simple_parameter_node
-    p2 = copy.deepcopy(simple_parameter_node)
+    p1 = complex_parameter_node
+    p2 = copy.deepcopy(complex_parameter_node)
     p2.key = "advanced_sampling"
     p2.value = 15.0
     p2.unit = "m"
@@ -72,10 +72,10 @@ def test_local_search(simple_algorithm_node, simple_parameter_node):
     assert find_algorithms == []
 
 
-def test_cycles(simple_data_node, simple_computation_node):
+def test_cycles(complex_data_node, simple_computation_node):
     # We create a wrong cycle with parameters here.
     # TODO replace this with nodes that actually can form a cycle
-    d = copy.deepcopy(simple_data_node)
+    d = copy.deepcopy(complex_data_node)
     c = copy.deepcopy(simple_computation_node)
     d.computations += [c]
     # Using input and output data guarantees a cycle here.

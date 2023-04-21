@@ -36,7 +36,6 @@ def test_group_serialization_and_deserialization():
     # convert dict to JSON
     # convert Json to Group node
     actual_group_node = cript.load_nodes_from_json(nodes_json=json.dumps(group_node_dict))
-    print(actual_group_node.get_json(indent=2).json)
 
     # convert Group back to JSON
     actual_group_node = actual_group_node.json

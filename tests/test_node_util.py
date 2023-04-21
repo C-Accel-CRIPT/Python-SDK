@@ -84,9 +84,10 @@ def test_cycles(simple_parameter_node):
 
     p1.key = p2
     p2.key = p3
+    print(p2.get_json(indent=2).json)
     p3.key = p1
 
-    p1.get_json()
+    print(p1.get_json(indent=2).json)
 
 
 def test_uid_serial(simple_inventory_node):

@@ -21,13 +21,12 @@ class NodeEncoder(json.JSONEncoder):
                     return {"node": obj._json_attrs.node, "uid": uid}
                 NodeEncoder.handled_ids.add(uid)
             default_values = asdict(obj.JsonAttributes())
-            serialize_dict = asdict(obj._json_attrs)
+            serialize_dict = {}
             # Remove default values from serialization
             for key in default_values:
-                if key != "node":
-                    if key in serialize_dict and serialize_dict[key] == default_values[key]:
-                        del serialize_dict[key]
-
+                if key in obj._json_attrs.__dataclass_fields__:
+                    if getattr(obj._json_attrs, key) != default_values[key]:
+                        serialize_dict[key] = getattr(obj._json_attrs, key)
             return serialize_dict
         return json.JSONEncoder.default(self, obj)
 

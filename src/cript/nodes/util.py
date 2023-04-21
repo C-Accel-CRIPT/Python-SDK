@@ -27,6 +27,7 @@ class NodeEncoder(json.JSONEncoder):
                 if key in obj._json_attrs.__dataclass_fields__:
                     if getattr(obj._json_attrs, key) != default_values[key]:
                         serialize_dict[key] = getattr(obj._json_attrs, key)
+            serialize_dict["node"] = obj._json_attrs.node
             return serialize_dict
         return json.JSONEncoder.default(self, obj)
 
@@ -36,16 +37,19 @@ def _node_json_hook(node_str: str):
     Internal function, used as a hook for json deserialization.
     """
     node_dict = dict(node_str)
+    try:
+        node_list = node_dict["node"]
+    except KeyError:  # Not a node, just a regular dictionary
+        return node_dict
+
+    if isinstance(node_list, list) and len(node_list) == 1 and isinstance(node_list[0], str):
+        node_str = node_list[0]
+    else:
+        raise CRIPTJsonNodeError(node_list, node_str)
 
     # Iterate over all nodes in cript to find the correct one here
     for key, pyclass in inspect.getmembers(cript.nodes, inspect.isclass):
         if BaseNode in inspect.getmro(pyclass):
-            node_list = node_dict.get("node")
-            if isinstance(node_list, list) and len(node_list) == 1 and isinstance(node_list[0], str):
-                node_str = node_list[0]
-            else:
-                raise CRIPTJsonNodeError(node_list)
-
             if key == node_str:
                 try:
                     return pyclass._from_json(node_dict)

@@ -9,8 +9,9 @@ def test_json(simple_condition_node, simple_condition_dict):
     c = simple_condition_node
     c_dict = json.loads(c.json)
     assert strip_uid_from_dict(c_dict) == strip_uid_from_dict(simple_condition_dict)
+    print(c.get_json(indent=2).json)
     c2 = cript.load_nodes_from_json(c.json)
-    assert strip_uid_from_dict(json.loads(c2.json)) == strip_uid_from_dict(json.loads(c.json))
+    assert json.loads(c2.json) == json.loads(c.json)
 
 
 def test_setter_getters(simple_condition_node, simple_material_node, simple_data_node):

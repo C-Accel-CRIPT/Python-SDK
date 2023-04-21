@@ -35,12 +35,14 @@ class CRIPTJsonNodeError(CRIPTJsonDeserializationError):
     Exception that is raised if a `node` attribute is present, but not a single itemed list.
     """
 
-    def __init__(self, node_list):
+    def __init__(self, node_list, json_str):
         self.node_list = node_list
+        self.json_str = json_str
 
     def __str__(self):
         ret_str = f"Invalid JSON contains `node` attribute {self.node_list} but this is not a list with a single element."
         ret_str += " Expected is a single element list with the node name as a single string element."
+        ret_str += f" Full json string was {self.json_str}."
         return ret_str
 
 

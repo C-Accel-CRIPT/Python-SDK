@@ -40,3 +40,4 @@ share/python-wheels/
 
 # pytest cache
 .pytest_cache
+/.coverage

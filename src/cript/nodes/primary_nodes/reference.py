@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
-from cript.nodes.core import BaseNode, get_new_uid
+from cript.nodes.core import BaseNode
 
 
 class Reference(BaseNode):
@@ -54,7 +54,6 @@ class Reference(BaseNode):
         """
 
         url: str = ""
-        uid: str = ""
         type: str = ""
         title: str = ""
         authors: List[str] = field(default_factory=list)
@@ -150,7 +149,6 @@ class Reference(BaseNode):
 
         super().__init__(node="Reference")
 
-        uid = get_new_uid()
         new_attrs = replace(
             self._json_attrs,
             url=url,
@@ -168,7 +166,6 @@ class Reference(BaseNode):
             arxiv_id=arxiv_id,
             pmid=pmid,
             website=website,
-            uid=uid,
         )
 
         self._update_json_attrs_if_valid(new_attrs)

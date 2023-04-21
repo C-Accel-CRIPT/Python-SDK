@@ -29,9 +29,8 @@ class BaseNode(ABC):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(self, node):
-        self._json_attrs = replace(self._json_attrs, node=[node])
         uid = get_new_uid()
-        self._json_attrs = replace(self._json_attrs, uid=uid)
+        self._json_attrs = replace(self._json_attrs, node=[node], uid=uid)
 
     def __str__(self) -> str:
         """
@@ -69,19 +68,23 @@ class BaseNode(ABC):
         pass
 
     @classmethod
-    def _from_json(cls, json: dict):
+    def _from_json(cls, json_dict: dict):
         # Child nodes can inherit and overwrite this.
         # They should call super()._from_json first, and modified the returned object after if necessary
         # We create manually a dict that contains all elements from the send dict.
         # That eliminates additional fields and doesn't require asdict.
         arguments = {}
         for field in cls.JsonAttributes().__dataclass_fields__:
-            if field in json:
-                arguments[field] = json[field]
+            if field in json_dict:
+                arguments[field] = json_dict[field]
 
         # The call to the constructor might ignore fields that are usually not writable.
         node = cls(**arguments)
         attrs = cls.JsonAttributes(**arguments)
+        # Handle UID manually. Conserve newly assigned uid if uid is default (empty)
+        if attrs.uid == cls.JsonAttributes().uid:
+            attrs = replace(attrs, uid=node.uid)
+
         # But here we force even usually unwritable fields to be set.
         node._update_json_attrs_if_valid(attrs)
         return node

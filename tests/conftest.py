@@ -17,7 +17,6 @@ from fixtures.primary_nodes import (
     complex_data_node,
     complex_material_node,
     complex_project_node,
-    complex_reference_node,
     simple_collection_node,
     simple_computation_node,
     simple_computational_process_node,

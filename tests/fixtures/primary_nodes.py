@@ -214,29 +214,6 @@ def complex_material_node(simple_property_node, simple_process_node, complex_com
 
 
 @pytest.fixture(scope="function")
-def complex_reference_node() -> cript.Reference:
-    """
-    complex reference node with all possible reference node arguments to use for other tests
-    """
-    return cript.Reference(
-        type="journal_article",
-        title="Adding the Effect of Topological Defects to the Flory\u2013Rehner and Bray\u2013Merrill Swelling Theories",
-        authors=["Nathan J. Rebello", "Haley K. Beech", "Bradley D. Olsen"],
-        journal="ACS Macro Letters",
-        publisher="American Chemical Society",
-        year=2022,
-        volume=10,
-        issue=None,
-        pages=[531, 537],
-        doi="10.1021/acsmacrolett.0c00909",
-        issn="",
-        arxiv_id="",
-        pmid=None,
-        website="",
-    )
-
-
-@pytest.fixture(scope="function")
 def simple_software_configuration(simple_software_node) -> cript.SoftwareConfiguration:
     """
     minimal software configuration node with only required arguments

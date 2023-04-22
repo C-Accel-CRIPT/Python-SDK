@@ -25,4 +25,4 @@ class ExactSearchModes(Enum):
     """
 
     UUID = "uuid"
-    EXACT_NAME = "exact_name"
+    NAME = "exact_name"

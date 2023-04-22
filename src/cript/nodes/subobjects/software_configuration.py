@@ -14,6 +14,7 @@ class SoftwareConfiguration(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
+        node: str = "SoftwareConfiguration"
         software: Union[Software, None] = None
         algorithms: List[Algorithm] = field(default_factory=list)
         notes: str = ""

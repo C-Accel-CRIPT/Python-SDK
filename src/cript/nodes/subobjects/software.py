@@ -10,6 +10,7 @@ class Software(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
+        node: str = "Software"
         url: str = ""
         name: str = ""
         version: str = ""

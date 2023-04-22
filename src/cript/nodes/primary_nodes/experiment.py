@@ -54,6 +54,7 @@ class Experiment(PrimaryBaseNode):
         all Collection attributes
         """
 
+        node: str = "Experiment"
         process: List[Any] = field(default_factory=list)
         computation: List[Any] = field(default_factory=list)
         computational_process: List[Any] = field(default_factory=list)

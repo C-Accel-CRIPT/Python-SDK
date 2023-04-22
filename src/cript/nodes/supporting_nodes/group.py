@@ -64,6 +64,7 @@ class Group(BaseNode):
         all Group attributes
         """
 
+        node: str = "Group"
         name: str = ""
         # TODO add type hints later, currently avoiding circular import
         admins: List[Any] = field(default_factory=list)

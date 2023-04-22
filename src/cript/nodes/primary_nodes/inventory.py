@@ -31,6 +31,7 @@ class Inventory(PrimaryBaseNode):
         all Inventory attributes
         """
 
+        node: str = "Inventory"
         materials: List[Material] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()

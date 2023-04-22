@@ -14,6 +14,7 @@ class Condition(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
+        node: str = "Condition"
         key: str = ""
         type: str = ""
         descriptor: str = ""

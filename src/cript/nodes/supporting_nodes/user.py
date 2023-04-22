@@ -49,6 +49,7 @@ class User(BaseNode):
         all User attributes
         """
 
+        node: str = "User"
         username: str = ""
         email: str = ""
         orcid: str = ""

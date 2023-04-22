@@ -18,6 +18,7 @@ class Property(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
+        node: str = "Property"
         key: str = ""
         type: str = ""
         value: Union[Number, None] = None

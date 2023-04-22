@@ -149,7 +149,6 @@ class API:
         # check that api can connect to CRIPT with host and token
         self.check_initial_host_connection()
 
-        self.get_vocab()
         self._get_db_schema()
 
     def __enter__(self):

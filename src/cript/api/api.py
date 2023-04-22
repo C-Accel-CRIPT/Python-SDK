@@ -13,7 +13,7 @@ from cript.api.exceptions import (
     InvalidVocabulary,
     InvalidVocabularyCategory,
     CRIPTAPISaveError,
-    InvalidHostError,
+    InvalidHostError, InvalidSearchModeError,
 )
 from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes, ExactSearchModes
@@ -131,11 +131,13 @@ class API:
         if host is None:
             host = os.environ.get("CRIPT_HOST")
             if host is None:
-                raise RuntimeError("API initilized with `host=None` but environment variable `CRIPT_HOST` not found.\n" "Set the environment variable (preferred) or specify the host explictly at the creation of API.")
+                raise RuntimeError(
+                    "API initilized with `host=None` but environment variable `CRIPT_HOST` not found.\n" "Set the environment variable (preferred) or specify the host explictly at the creation of API.")
         if token is None:
             token = os.environ.get("CRIPT_TOKEN")
             if token is None:
-                raise RuntimeError("API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n" "Set the environment variable (preferred) or specify the token explictly at the creation of API.")
+                raise RuntimeError(
+                    "API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n" "Set the environment variable (preferred) or specify the token explictly at the creation of API.")
 
         self._host = _prepare_host(host=host)
         self._token = token
@@ -259,7 +261,8 @@ class API:
 
         return copy.deepcopy(self._vocabulary)
 
-    def is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
+    def is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[
+        bool, InvalidVocabulary, InvalidVocabularyCategory]:
         """
         checks if the vocabulary is valid within the CRIPT controlled vocabulary.
         Either returns True or InvalidVocabulary Exception
@@ -299,7 +302,8 @@ class API:
             controlled_vocabulary = controlled_vocabulary[vocab_category]
         except KeyError:
             # vocabulary category does not exist within CRIPT Controlled Vocabulary
-            raise InvalidVocabularyCategory(vocab_category=vocab_category, valid_vocab_category=all_controlled_vocab_categories)
+            raise InvalidVocabularyCategory(vocab_category=vocab_category,
+                                            valid_vocab_category=all_controlled_vocab_categories)
 
         # TODO this can be faster with a dict of dicts that can do o(1) look up
         #  looping through an unsorted list is an O(n) look up which is slow
@@ -390,55 +394,68 @@ class API:
         None
         """
         # TODO work on this later to allow for PATCH as well
-        response = requests.post(url=f"{self._host}/{project.node}", headers=self._http_headers, data=project.json)
+        response = requests.post(url=f"{self._host}/{project.node_type.lower()}",
+                                 headers=self._http_headers,
+                                 data=project.json
+                                 )
+
         response = response.json()
 
         # if htt response is not 200 then show the API error to the user
         if response["code"] != 200:
-            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
-
-    def _fetch_node_from_api(self, api_endpoint: str):
-        """
-
-        Parameters
-        ----------
-        api_endpoint: str
-            the api endpoint to send the get request to get the single node
-
-        Returns
-        -------
-
-        """
-        response = requests.get(
-            url=api_endpoint,
-            headers=self._http_headers,
-        ).json()
-
-        # return API response
-        return response["data"]
+            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"],
+                                    api_response=response["error"])
 
     # TODO reset after testing to use correct node_typ and not hard code
     def search_exact(
-        self,
-        node_type: str,
-        exact_search_mode: ExactSearchModes,
-        value_to_search: str,
-    ) -> str:
+            self,
+            node_type: str,
+            exact_search_mode: ExactSearchModes,
+            value_to_search: str,
+    ) -> dict:
+        """
+        Parameters
+        ----------
+        node_type:
+            type of node you want to search for
+        exact_search_mode: ExactSearchModes
+            type of exact search you want to do. Pick from ExactSearchModes enums
+        value_to_search: str
+            value you want to search for
+
+        Raises
+        -------
+        InvalidSearchModeError
+            In case none of the search modes were fulfilled
+
+        Returns
+        -------
+        dict
+            returns the JSON of a node from the API
+        """
         if exact_search_mode == ExactSearchModes.UUID:
             api_endpoint: str = f"{self._host}/{node_type}/{value_to_search}"
 
         elif exact_search_mode == ExactSearchModes.EXACT_NAME:
             api_endpoint: str = f"{self._host}/search/{node_type}/?q={value_to_search}"
 
+        try:
+            response = requests.get(
+                url=api_endpoint,
+                headers=self._http_headers,
+            ).json()
+        except NameError:
+            InvalidSearchModeError(invalid_search_mode=search_mode)
+
         # TODO error handling if none of the API endpoints got hit NameError
-        return self._fetch_node_from_api(api_endpoint=api_endpoint)
+        return response["data"]
 
     # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(
-        self,
-        node_type: str,
-        search_mode: SearchModes,
-        value_to_search: Union[None, str],
+            self,
+            node_type: str,
+            search_mode: SearchModes,
+            value_to_search: Union[None, str],
     ) -> Paginator:
         """
         This is the method used to perform a search on the CRIPT platform.
@@ -478,7 +495,8 @@ class API:
             api_endpoint: str = f"{self._host}/search/{node_type}"
 
         # TODO error handling if none of the API endpoints got hit
-        return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, current_page_number=0, query=value_to_search)
+        return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, current_page_number=0,
+                         query=value_to_search)
 
         # except NameError
         # if none of the search_modes were able to capture and create an api_endpoint variable

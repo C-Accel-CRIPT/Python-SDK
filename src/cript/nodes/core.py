@@ -99,6 +99,23 @@ class BaseNode(ABC):
         return node
 
     @property
+    def node_type(self):
+        """
+        get the type of node
+
+        Examples
+        --------
+        * "Project"
+        * "Collection"
+
+        Returns
+        -------
+        str
+            type of node this is
+        """
+        return self._json_attrs.node[0]
+
+    @property
     def json(self):
         """
         User facing access to get the JSON of a node.

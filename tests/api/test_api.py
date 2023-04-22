@@ -164,29 +164,21 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
         cript_api.is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="some_invalid_word")
 
 
-def test_api_save_material(cript_api: cript.API) -> None:
+def test_api_save_material(cript_api: cript.API, simple_project_node, simple_material_node) -> None:
     """
     Tests if API object can successfully save a node
     """
-    material_dict = {"node": ["Material"], "name": "my material 3", "bigsmiles": "123456"}
-
-    cript_api.save(json.dumps(material_dict))
+    cript_api.save(simple_project_node)
 
 
 def test_api_search(cript_api: cript.API) -> None:
     """
     tests the api.search() method
 
-    * test that an "invalid search mode" give an InvalidSearchModeError
-    * tests it without value_to_search
-    * tests it with bad input for value_to_search so that it gives errors
-    * test the error handling
+    Notes
+    -----
+    later this test should be expanded to test things that it should expect an error for as well.
     """
-    # TODO consider making all of these search queries into separate tests
-    # TODO test with both keys and values eg. SearchMode.UUID and "uuid"
-    # with pytest.raises(InvalidSearchModeError):
-    #     cript_api.search(node_type=cript.Material, search_mode="invalid search mode", value_to_search="123456")
-
     paginator = cript_api.search(node_type="material", search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
 
     # name = "polystyrene"

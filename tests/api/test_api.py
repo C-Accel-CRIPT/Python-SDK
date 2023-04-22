@@ -195,14 +195,10 @@ def test_api_search(cript_api: cript.API) -> None:
     assert len(materials_paginator.current_page_results) > 5
 
     # ----------------- SearchModes.CONTAINS_NAME -----------------
-    contains_name_paginator = cript_api.search(node_type="material", search_mode=cript.SearchModes.CONTAINS_NAME,
-                                 value_to_search="poly")
+    contains_name_paginator = cript_api.search(node_type="material", search_mode=cript.SearchModes.CONTAINS_NAME, value_to_search="poly")
 
     assert isinstance(contains_name_paginator, Paginator)
     assert len(contains_name_paginator.current_page_results) > 5
-
-
-
 
 
 def test_api_search_exact(cript_api: cript.API) -> None:

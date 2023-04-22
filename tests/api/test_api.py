@@ -189,13 +189,13 @@ def test_api_search(cript_api: cript.API) -> None:
     """
 
     # ----------------- SearchModes.NODE_TYPE -----------------
-    materials_paginator = cript_api.search(node_type="material", search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
+    materials_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
 
     assert isinstance(materials_paginator, Paginator)
     assert len(materials_paginator.current_page_results) > 5
 
     # ----------------- SearchModes.CONTAINS_NAME -----------------
-    contains_name_paginator = cript_api.search(node_type="material", search_mode=cript.SearchModes.CONTAINS_NAME, value_to_search="poly")
+    contains_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.CONTAINS_NAME, value_to_search="poly")
 
     assert isinstance(contains_name_paginator, Paginator)
     assert len(contains_name_paginator.current_page_results) > 5

@@ -67,7 +67,7 @@ class Material(PrimaryBaseNode):
         """
         all Material attributes
         """
-
+        node: str = "material"
         # identifier sub-object for the material
         identifiers: List[dict[str, str]] = field(default_factory=dict)
         # TODO add proper typing in future, using Any for now to avoid circular import error

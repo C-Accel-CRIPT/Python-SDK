@@ -442,7 +442,7 @@ class API:
     # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(
         self,
-        node_type: str,
+        node_type: BaseNode,
         search_mode: SearchModes,
         value_to_search: Union[None, str],
     ) -> Paginator:
@@ -475,6 +475,9 @@ class API:
         Paginator
             paginator object for the user to use to continue searching and flipping through pages
         """
+
+        # get node typ from class
+        node_type = node_type._json_attrs.node.lower()
 
         # requesting a page of some primary node
         if search_mode == SearchModes.NODE_TYPE:

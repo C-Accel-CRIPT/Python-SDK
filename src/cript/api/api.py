@@ -438,15 +438,12 @@ class API:
         elif exact_search_mode == ExactSearchModes.EXACT_NAME:
             api_endpoint: str = f"{self._host}/search/{node_type}/?q={value_to_search}"
 
-        try:
-            response = requests.get(
-                url=api_endpoint,
-                headers=self._http_headers,
-            ).json()
-        except NameError:
-            InvalidSearchModeError(invalid_search_mode=search_mode)
-
         # TODO error handling if none of the API endpoints got hit NameError
+        response = requests.get(
+            url=api_endpoint,
+            headers=self._http_headers,
+        ).json()
+
         return response["data"]
 
     # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
@@ -494,13 +491,9 @@ class API:
             api_endpoint: str = f"{self._host}/search/{node_type}"
 
         # TODO error handling if none of the API endpoints got hit
-        return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, current_page_number=0,
+        return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, current_page_number=None,
                          query=value_to_search)
 
-        # except NameError
-        # if none of the search_modes were able to capture and create an api_endpoint variable
-        # then an InvalidSearchModeError is raised
-        # raise InvalidSearchModeError(invalid_search_mode=search_mode)
 
     # TODO delete method will come later when the API supports it
     # def delete(self, node: PrimaryBaseNode, ask_confirmation: bool = True) -> None:

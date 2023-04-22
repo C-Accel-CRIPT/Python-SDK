@@ -6,6 +6,7 @@ import requests
 import cript
 from cript.api.exceptions import InvalidVocabularyCategory, InvalidVocabulary, InvalidSearchModeError
 from cript.nodes.exceptions import CRIPTNodeSchemaError
+from cript.api.paginator import Paginator
 
 
 # TODO use the cript_api from conftest.py
@@ -175,18 +176,33 @@ def test_api_search(cript_api: cript.API) -> None:
     """
     tests the api.search() method
 
+    * search by node type
+    * search by contains name
+    * search by UUID children
+
     Notes
     -----
-    later this test should be expanded to test things that it should expect an error for as well.
+    * later this test should be expanded to test things that it should expect an error for as well.
+    * test checks if there are at least 5 things in the paginator
+        *  each page should have a max of 10 results and there should be close to 5k materials in db,
+        * more than enough to at least have 5 in the paginator
     """
-    paginator = cript_api.search(node_type="material", search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
 
-    # name = "polystyrene"
-    # paginator = cript_api.search(node_type="material", search_mode=cript.SearchModes.CONTAINS_NAME,
-    #                              value_to_search=name)
+    # ----------------- SearchModes.NODE_TYPE -----------------
+    materials_paginator = cript_api.search(node_type="material", search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
 
-    print(paginator.current_page_results)
-    pass
+    assert isinstance(materials_paginator, Paginator)
+    assert len(materials_paginator.current_page_results) > 5
+
+    # ----------------- SearchModes.CONTAINS_NAME -----------------
+    contains_name_paginator = cript_api.search(node_type="material", search_mode=cript.SearchModes.CONTAINS_NAME,
+                                 value_to_search="poly")
+
+    assert isinstance(contains_name_paginator, Paginator)
+    assert len(contains_name_paginator.current_page_results) > 5
+
+
+
 
 
 def test_api_search_exact(cript_api: cript.API) -> None:

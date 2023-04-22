@@ -67,6 +67,7 @@ class Material(PrimaryBaseNode):
         """
         all Material attributes
         """
+
         node: str = "material"
         # identifier sub-object for the material
         identifiers: List[dict[str, str]] = field(default_factory=dict)

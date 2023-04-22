@@ -401,10 +401,10 @@ class API:
     # TODO reset after testing to use correct node_typ and not hard code
     def search_exact(
         self,
-        node_type: str,
+        node_type: BaseNode,
         exact_search_mode: ExactSearchModes,
         value_to_search: str,
-    ) -> dict:
+    ) -> Union[dict, list]:
         """
         Parameters
         ----------
@@ -425,11 +425,14 @@ class API:
         dict
             returns the JSON of a node from the API
         """
+
+        node_type = node_type._json_attrs.node.lower()
+
         if exact_search_mode == ExactSearchModes.UUID:
             api_endpoint: str = f"{self._host}/{node_type}/{value_to_search}"
 
-        elif exact_search_mode == ExactSearchModes.EXACT_NAME:
-            api_endpoint: str = f"{self._host}/search/{node_type}/?q={value_to_search}"
+        elif exact_search_mode == ExactSearchModes.NAME:
+            api_endpoint: str = f"{self._host}/search/exact/{node_type}/?q={value_to_search}"
 
         # TODO error handling if none of the API endpoints got hit NameError
         response = requests.get(
@@ -437,7 +440,14 @@ class API:
             headers=self._http_headers,
         ).json()
 
-        return response["data"]
+        # give me the one JSON data or the list if API gives list of JSON
+        if isinstance(response["data"], list):
+            if len(response["data"]) == 1:
+                return response["data"][0]
+            else:
+                return response["data"]
+        else:
+            return response["data"]
 
     # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(

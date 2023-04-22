@@ -209,21 +209,30 @@ def test_api_search_exact(cript_api: cript.API) -> None:
     * test invalid input
     * test the error handling
     """
-    uuid = "683c8787-3dd9-4d9d-b431-bf89aab0a5ba"
+
+    # ----------------- ExactSearchModes.UUID -----------------
+    uuid = "fcc6ed9d-22a8-4c21-bcc6-25a88a06c5ad"
     results = cript_api.search_exact(
-        node_type="material",
+        node_type=cript.Material,
         exact_search_mode=cript.ExactSearchModes.UUID,
         value_to_search=uuid,
     )
 
-    exact_name = "polystyrene"
+    assert isinstance(results, dict)
+    assert results["name"] == "Sodium polystyrene sulfonate"
+
+    # ----------------- ExactSearchModes.EXACT_NAME -----------------
+    exact_name = "Sodium polystyrene sulfonate"
     results = cript_api.search_exact(
-        node_type="material",
-        exact_search_mode=cript.ExactSearchModes.EXACT_NAME,
+        node_type=cript.Material,
+        exact_search_mode=cript.ExactSearchModes.NAME,
         value_to_search=exact_name,
     )
 
-    print(results)
+    print(results["result"])
+    # TODO the API answers are not uniform
+    # assert isinstance(results, list)
+    assert results["result"][0]["name"] == "Sodium polystyrene sulfonate"
 
 
 def test_api_update_material(cript_api: cript.API) -> None:

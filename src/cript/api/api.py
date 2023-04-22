@@ -482,12 +482,14 @@ class API:
         # requesting a page of some primary node
         if search_mode == SearchModes.NODE_TYPE:
             api_endpoint: str = f"{self._host}/{node_type}"
+            page_number = 0
 
         elif search_mode == SearchModes.CONTAINS_NAME:
             api_endpoint: str = f"{self._host}/search/{node_type}"
+            page_number = None
 
         # TODO error handling if none of the API endpoints got hit
-        return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, current_page_number=None, query=value_to_search)
+        return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, current_page_number=page_number, query=value_to_search)
 
     # TODO delete method will come later when the API supports it
     # def delete(self, node: PrimaryBaseNode, ask_confirmation: bool = True) -> None:

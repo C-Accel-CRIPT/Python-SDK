@@ -362,7 +362,7 @@ class API:
 
         # TODO get the correct node type
         # set which node you are using schema validation for
-        db_schema["$ref"] = f"#/$defs/{node.node}Post"
+        db_schema["$ref"] = f"#/$defs/{node.node_type}Post"
 
         try:
             jsonschema.validate(instance=json.loads(node.json), schema=db_schema)

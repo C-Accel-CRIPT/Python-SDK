@@ -17,5 +17,3 @@ class SearchModes(Enum):
     CONTAINS_NAME = "contains_name"
     UUID = "uuid"
     # UUID_CHILDREN = "uuid_children"
-
-

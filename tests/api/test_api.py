@@ -56,9 +56,10 @@ def test_prepare_host(cript_api: cript.API) -> None:
     """
     tests API _prepare_host function
     """
-    host = " http://myhost.com "
-    host = cript.api.api._prepare_host(host)
-    assert host == "http://myhost.com"
+    host = " http://myhost.com/ "
+    prepared_host = cript.api.api._prepare_host(host)
+
+    assert prepared_host == "http://myhost.com/api/v1"
 
 
 # def test_api_context(cript_api: cript.API) -> None:
@@ -76,7 +77,7 @@ def test_get_db_schema_from_api(cript_api: cript.API) -> None:
     assert isinstance(db_schema, dict)
 
     total_fields_in_db_schema = 69
-    assert len(db_schema) == total_fields_in_db_schema
+    assert len(db_schema["$defs"]) == total_fields_in_db_schema
 
 
 def test_is_node_schema_valid(cript_api: cript.API) -> None:

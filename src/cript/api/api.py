@@ -336,16 +336,26 @@ class API:
             return self._db_schema
 
     # TODO this should later work with both POST and PATCH. Currently, just works for POST
-    def is_node_schema_valid(self, node: dict, node_type: str) -> Union[bool, CRIPTNodeSchemaError]:
+    def is_node_schema_valid(self, node_json: str) -> Union[bool, CRIPTNodeSchemaError]:
         """
         checks a node JSON schema against the db schema to return if it is valid or not.
-        This function does not take into consideration vocabulary validation.
-        For vocabulary validation please check `is_vocab_valid`
+
+        1. get db schema
+        1. convert node_json str to dict
+        1. take out the node type from the dict
+            1. "node": ["material"]
+        1. use the node type from dict to tell the db schema which node schema to validate against
+            1. Manipulates the string to be title case to work with db schema
 
         Parameters
         ----------
-        node:
-            a node in JSON form
+        node_json: str
+            a node in JSON form string
+
+        Notes
+        -----
+        This function does not take into consideration vocabulary validation.
+            For vocabulary validation please check `is_vocab_valid`
 
         Raises
         ------
@@ -360,11 +370,14 @@ class API:
 
         db_schema = self._get_db_schema()
 
+        node_dict = json.loads(node_json)
+        node_type = node_dict["node"][0].title()    # get node type from "node": ["material"]
+
         # set which node you are using schema validation for
-        db_schema["$ref"] = f"#/$defs/{node_type.title()}Post"
+        db_schema["$ref"] = f"#/$defs/{node_type}Post"
 
         try:
-            jsonschema.validate(instance=node, schema=db_schema)
+            jsonschema.validate(instance=node_dict, schema=db_schema)
         except jsonschema.exceptions.ValidationError as error:
             raise CRIPTNodeSchemaError(error_message=str(error))
 

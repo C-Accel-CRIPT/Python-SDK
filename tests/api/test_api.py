@@ -87,15 +87,20 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
         * material node
         * file node
     * test db schema validation with an invalid node, and it should be invalid
+
+    Notes
+    -----
+    * does not test if serialization/deserialization works correctly,
+    just tests if the node schema can work correctly if serialization was correct
     """
 
     # ------ invalid node schema------
-    invalid_schema = {"invalid key": "invalid value"}
+    invalid_schema = {"invalid key": "invalid value", "node": ["Material"]}
 
     with pytest.raises(CRIPTNodeSchemaError):
-        cript_api.is_node_schema_valid(invalid_schema, "material")
+        cript_api.is_node_schema_valid(node_json=json.dumps(invalid_schema))
 
-    # ------ valid node schema ------
+    # ------ valid material schema ------
     # valid material node
     valid_material_dict = {
         "node": [
@@ -106,9 +111,9 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     }
 
     # convert dict to JSON string because method expects JSON string
-    assert cript_api.is_node_schema_valid(node=valid_material_dict, node_type="material") is True
+    assert cript_api.is_node_schema_valid(node_json=json.dumps(valid_material_dict)) is True
 
-    # valid file node
+    # ------ valid file schema ------
     valid_file_dict = {
         "node": ["File"],
         "source": "https://criptapp.org",
@@ -118,7 +123,7 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     }
 
     # convert dict to JSON string because method expects JSON string
-    assert cript_api.is_node_schema_valid(valid_file_dict, node_type="File") is True
+    assert cript_api.is_node_schema_valid(node_json=json.dumps(valid_file_dict)) is True
 
 
 def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:

@@ -371,7 +371,10 @@ class API:
         db_schema = self._get_db_schema()
 
         node_dict = json.loads(node_json)
-        node_type = node_dict["node"][0].title()    # get node type from "node": ["material"]
+        try:
+            node_type = node_dict["node"][0].title()  # get node type from "node": ["material"]
+        except KeyError:
+            raise CRIPTNodeSchemaError(error_message=f"'node': ['material'] not present in serialization of {node_json}")
 
         # set which node you are using schema validation for
         db_schema["$ref"] = f"#/$defs/{node_type}Post"

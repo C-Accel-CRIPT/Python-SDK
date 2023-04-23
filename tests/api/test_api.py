@@ -93,21 +93,24 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     invalid_schema = {"invalid key": "invalid value"}
 
     with pytest.raises(CRIPTNodeSchemaError):
-        # using json.dumps to get the JSON string and the `is_node_schema_valid` method will convert it back to dict
-        # this is because node.json() gives a JSON string, `is_node_schema_valid` must convert it to dict
-        # to check against db_schema
-        cript_api.is_node_schema_valid(json.dumps(invalid_schema))
+        cript_api.is_node_schema_valid(invalid_schema, "material")
 
     # ------ valid node schema ------
     # valid material node
-    valid_material_dict = {"node": "Material", "name": "Deuterated PEG azide"}
+    valid_material_dict = {
+        "node": [
+            "Material"
+        ],
+        "name": "0.053 volume fraction CM gel",
+        "uid": "_:0.053 volume fraction CM gel"
+    }
 
     # convert dict to JSON string because method expects JSON string
-    assert cript_api.is_node_schema_valid(json.dumps(valid_material_dict)) is True
+    assert cript_api.is_node_schema_valid(node=valid_material_dict, node_type="material") is True
 
     # valid file node
     valid_file_dict = {
-        "node": "File",
+        "node": ["File"],
         "source": "https://criptapp.org",
         "type": "calibration",
         "extension": ".csv",
@@ -115,7 +118,7 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     }
 
     # convert dict to JSON string because method expects JSON string
-    assert cript_api.is_node_schema_valid(json.dumps(valid_file_dict)) is True
+    assert cript_api.is_node_schema_valid(valid_file_dict, node_type="File") is True
 
 
 def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:
@@ -185,7 +188,8 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
         * more than enough to at least have 5 in the paginator
     """
 
-    materials_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
+    materials_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE,
+                                           value_to_search=None)
 
     # test search results
     assert isinstance(materials_paginator, Paginator)
@@ -208,7 +212,8 @@ def test_api_search_contains_name(cript_api: cript.API) -> None:
     tests that it can correctly search with contains name mode
     searches for a material that contains the name "poly"
     """
-    contains_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.CONTAINS_NAME, value_to_search="poly")
+    contains_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.CONTAINS_NAME,
+                                               value_to_search="poly")
 
     assert isinstance(contains_name_paginator, Paginator)
     assert len(contains_name_paginator.current_page_results) > 5
@@ -220,7 +225,8 @@ def test_api_search_exact_name(cript_api: cript.API) -> None:
     tests search method with exact name search
     searches for material "Sodium polystyrene sulfonate"
     """
-    exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME, value_to_search="Sodium polystyrene sulfonate")
+    exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME,
+                                            value_to_search="Sodium polystyrene sulfonate")
 
     assert isinstance(exact_name_paginator, Paginator)
     assert len(exact_name_paginator.current_page_results) == 1
@@ -234,7 +240,8 @@ def test_api_search_uuid(cript_api: cript.API) -> None:
     """
     uuid_to_search = "fcc6ed9d-22a8-4c21-bcc6-25a88a06c5ad"
 
-    uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=uuid_to_search)
+    uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID,
+                                      value_to_search=uuid_to_search)
 
     assert isinstance(uuid_paginator, Paginator)
     assert len(uuid_paginator.current_page_results) == 1

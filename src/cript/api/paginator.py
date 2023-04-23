@@ -129,10 +129,15 @@ class Paginator:
 
     def fetch_page_from_api(self) -> List[dict]:
         """
+        1. builds the URL from the query and page number
+        1. makes the request to the API
+        1. API responds with a JSON that has data or JSON that has data and result
+            1. parses it and correctly sets the current_page_results property
 
         Raises
         ------
-        InvalidPageRequest
+        InvalidSearchRequest
+            In case the API responds with an error
 
         Returns
         -------
@@ -143,19 +148,25 @@ class Paginator:
         temp_api_endpoint: str = self.api_endpoint
 
         if self.query is not None:
-            temp_api_endpoint += f"/?q={self.query}"
+            temp_api_endpoint = f"{temp_api_endpoint}/?q={self.query}"
 
-        if self.current_page_number is not None:
-            temp_api_endpoint += f"/?page={self.current_page_number}"
+        elif self.query is None:
+            temp_api_endpoint = f"{temp_api_endpoint}/?q="
+
+        temp_api_endpoint = f"{temp_api_endpoint}&page={self.current_page_number}"
 
         response = requests.get(
             url=temp_api_endpoint,
             headers=self._http_headers,
         ).json()
 
-        self.current_page_results = response["data"]["result"]
+        # handling both cases in case there is result inside of data or just data
+        if "result" in response["data"]:
+            self.current_page_results = response["data"]["result"]
+        else:
+            self.current_page_results = response["data"]
 
-        # TODO give error if HTTP response if anything other than 200
+        # TODO give a CRIPT error if HTTP response is anything other than 200
         if response["code"] != 200:
             raise Exception(f"API responded with: {response['error']}")
 

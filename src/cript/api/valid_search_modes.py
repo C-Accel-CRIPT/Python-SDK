@@ -13,16 +13,9 @@ class SearchModes(Enum):
     """
 
     NODE_TYPE = ""
+    EXACT_NAME = "exact_name"
     CONTAINS_NAME = "contains_name"
-    UUID_CHILDREN = "uuid_children"
-
-
-class ExactSearchModes(Enum):
-    """
-    Search modes to be used with cript.API.search_exact
-    KEYS are in uppercase because that is convention
-    values are in lowercase because that is easier to type and remember
-    """
-
     UUID = "uuid"
-    NAME = "exact_name"
+    # UUID_CHILDREN = "uuid_children"
+
+

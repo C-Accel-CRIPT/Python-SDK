@@ -14,10 +14,9 @@ from cript.api.exceptions import (
     InvalidVocabularyCategory,
     CRIPTAPISaveError,
     InvalidHostError,
-    InvalidSearchModeError,
 )
 from cript.api.paginator import Paginator
-from cript.api.valid_search_modes import SearchModes, ExactSearchModes
+from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import all_controlled_vocab_categories
 from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import CRIPTNodeSchemaError
@@ -398,57 +397,6 @@ class API:
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
 
-    # TODO reset after testing to use correct node_typ and not hard code
-    def search_exact(
-        self,
-        node_type: BaseNode,
-        exact_search_mode: ExactSearchModes,
-        value_to_search: str,
-    ) -> Union[dict, list]:
-        """
-        Parameters
-        ----------
-        node_type:
-            type of node you want to search for
-        exact_search_mode: ExactSearchModes
-            type of exact search you want to do. Pick from ExactSearchModes enums
-        value_to_search: str
-            value you want to search for
-
-        Raises
-        -------
-        InvalidSearchModeError
-            In case none of the search modes were fulfilled
-
-        Returns
-        -------
-        dict
-            returns the JSON of a node from the API
-        """
-
-        node_type = node_type._json_attrs.node.lower()
-
-        if exact_search_mode == ExactSearchModes.UUID:
-            api_endpoint: str = f"{self._host}/{node_type}/{value_to_search}"
-
-        elif exact_search_mode == ExactSearchModes.NAME:
-            api_endpoint: str = f"{self._host}/search/exact/{node_type}/?q={value_to_search}"
-
-        # TODO error handling if none of the API endpoints got hit NameError
-        response = requests.get(
-            url=api_endpoint,
-            headers=self._http_headers,
-        ).json()
-
-        # give me the one JSON data or the list if API gives list of JSON
-        if isinstance(response["data"], list):
-            if len(response["data"]) == 1:
-                return response["data"][0]
-            else:
-                return response["data"]
-        else:
-            return response["data"]
-
     # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(
         self,
@@ -489,17 +437,26 @@ class API:
         # get node typ from class
         node_type = node_type._json_attrs.node.lower()
 
+        # always putting a page parameter of 0 for all search URLs
+        page_number = 0
+
         # requesting a page of some primary node
         if search_mode == SearchModes.NODE_TYPE:
             api_endpoint: str = f"{self._host}/{node_type}"
-            page_number = 0
 
         elif search_mode == SearchModes.CONTAINS_NAME:
             api_endpoint: str = f"{self._host}/search/{node_type}"
-            page_number = None
+
+        elif search_mode == SearchModes.EXACT_NAME:
+            api_endpoint: str = f"{self._host}/search/exact/{node_type}"
+
+        elif search_mode == SearchModes.UUID:
+            api_endpoint: str = f"{self._host}/{node_type}/{value_to_search}"
+            # putting the value_to_search in the URL instead of a query
+            value_to_search = None
 
         # TODO error handling if none of the API endpoints got hit
-        return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, current_page_number=page_number, query=value_to_search)
+        return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, query=value_to_search, current_page_number=page_number)
 
     # TODO delete method will come later when the API supports it
     # def delete(self, node: PrimaryBaseNode, ask_confirmation: bool = True) -> None:

@@ -172,67 +172,74 @@ def test_api_save_project(cript_api: cript.API, simple_project_node, simple_mate
     cript_api.save(simple_project_node)
 
 
-def test_api_search(cript_api: cript.API) -> None:
+def test_api_search_node_type(cript_api: cript.API) -> None:
     """
-    tests the api.search() method
-
-    * search by node type
-    * search by contains name
-    * search by UUID children
+    tests the api.search() method with just a node type material search
 
     Notes
     -----
+    * also tests that it can go to the next page and previous page
     * later this test should be expanded to test things that it should expect an error for as well.
     * test checks if there are at least 5 things in the paginator
         *  each page should have a max of 10 results and there should be close to 5k materials in db,
         * more than enough to at least have 5 in the paginator
     """
 
-    # ----------------- SearchModes.NODE_TYPE -----------------
     materials_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
 
+    # test search results
     assert isinstance(materials_paginator, Paginator)
     assert len(materials_paginator.current_page_results) > 5
+    assert materials_paginator.current_page_results[0]["name"] == "(2-Chlorophenyl) 2,4-dichlorobenzoate"
 
-    # ----------------- SearchModes.CONTAINS_NAME -----------------
+    # tests that it can correctly go to the next page
+    materials_paginator.next_page()
+    assert len(materials_paginator.current_page_results) > 5
+    assert materials_paginator.current_page_results[0]["name"] == "2,4-Dichloro-N-(1-methylbutyl)benzamide"
+
+    # tests that it can correctly go to the previous page
+    materials_paginator.previous_page()
+    assert len(materials_paginator.current_page_results) > 5
+    assert materials_paginator.current_page_results[0]["name"] == "(2-Chlorophenyl) 2,4-dichlorobenzoate"
+
+
+def test_api_search_contains_name(cript_api: cript.API) -> None:
+    """
+    tests that it can correctly search with contains name mode
+    searches for a material that contains the name "poly"
+    """
     contains_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.CONTAINS_NAME, value_to_search="poly")
 
     assert isinstance(contains_name_paginator, Paginator)
     assert len(contains_name_paginator.current_page_results) > 5
+    assert contains_name_paginator.current_page_results[0]["name"] == "Pilocarpine polyacrylate"
 
 
-def test_api_search_exact(cript_api: cript.API) -> None:
+def test_api_search_exact_name(cript_api: cript.API) -> None:
     """
-    tests cript.API.search_exact method
-    * test with UUID
-    * test with exact name
-    * test invalid input
-    * test the error handling
+    tests search method with exact name search
+    searches for material "Sodium polystyrene sulfonate"
     """
+    exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME, value_to_search="Sodium polystyrene sulfonate")
 
-    # ----------------- ExactSearchModes.UUID -----------------
-    uuid = "fcc6ed9d-22a8-4c21-bcc6-25a88a06c5ad"
-    results = cript_api.search_exact(
-        node_type=cript.Material,
-        exact_search_mode=cript.ExactSearchModes.UUID,
-        value_to_search=uuid,
-    )
+    assert isinstance(exact_name_paginator, Paginator)
+    assert len(exact_name_paginator.current_page_results) == 1
+    assert exact_name_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
 
-    assert isinstance(results, dict)
-    assert results["name"] == "Sodium polystyrene sulfonate"
 
-    # ----------------- ExactSearchModes.EXACT_NAME -----------------
-    exact_name = "Sodium polystyrene sulfonate"
-    results = cript_api.search_exact(
-        node_type=cript.Material,
-        exact_search_mode=cript.ExactSearchModes.NAME,
-        value_to_search=exact_name,
-    )
+def test_api_search_uuid(cript_api: cript.API) -> None:
+    """
+    tests search with UUID
+    searches for Sodium polystyrene sulfonate material that has a UUID of "fcc6ed9d-22a8-4c21-bcc6-25a88a06c5ad"
+    """
+    uuid_to_search = "fcc6ed9d-22a8-4c21-bcc6-25a88a06c5ad"
 
-    print(results["result"])
-    # TODO the API answers are not uniform
-    # assert isinstance(results, list)
-    assert results["result"][0]["name"] == "Sodium polystyrene sulfonate"
+    uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=uuid_to_search)
+
+    assert isinstance(uuid_paginator, Paginator)
+    assert len(uuid_paginator.current_page_results) == 1
+    assert uuid_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
+    assert uuid_paginator.current_page_results[0]["uuid"] == uuid_to_search
 
 
 def test_api_update_material(cript_api: cript.API) -> None:

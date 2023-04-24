@@ -30,7 +30,6 @@ class Project(PrimaryBaseNode):
         all Project attributes
         """
 
-        node: str = "Project"
         # TODO is group needed?
         group: Group = None
         collections: List[Collection] = field(default_factory=list)

@@ -10,7 +10,6 @@ class Parameter(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
-        node: str = "Parameter"
         key: str = ""
         value: Union[int, float, str] = ""
         # We explictly allow None for unit here (instead of empty str),

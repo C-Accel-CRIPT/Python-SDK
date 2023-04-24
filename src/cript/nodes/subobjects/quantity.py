@@ -12,7 +12,6 @@ class Quantity(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
-        node: str = "Quantity"
         key: str = ""
         value: Union[Number, None] = None
         unit: str = ""

@@ -50,7 +50,6 @@ class ComputationalProcess(PrimaryBaseNode):
         all computational_process nodes attributes
         """
 
-        node: str = "ComputationalProcess"
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
         input_data: List[Any] = field(default_factory=list)

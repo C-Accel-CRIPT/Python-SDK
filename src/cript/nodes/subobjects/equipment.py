@@ -14,7 +14,6 @@ class Equipment(BaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
-        node: str = "Equipment"
         key: str = ""
         description: str = ""
         conditions: List[Condition] = field(default_factory=list)

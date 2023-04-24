@@ -9,11 +9,11 @@ import requests
 
 from cript.api.exceptions import (
     CRIPTAPIAccessError,
+    CRIPTAPISaveError,
     CRIPTConnectionError,
+    InvalidHostError,
     InvalidVocabulary,
     InvalidVocabularyCategory,
-    CRIPTAPISaveError,
-    InvalidHostError,
 )
 from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes

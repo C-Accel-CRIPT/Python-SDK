@@ -84,17 +84,11 @@ class API:
         if host is None:
             host = os.environ.get("CRIPT_HOST")
             if host is None:
-                raise RuntimeError(
-                    "API initilized with `host=None` but environment variable `CRIPT_HOST` not found.\n"
-                    "Set the environment variable (preferred) or specify the host explictly at the creation of API."
-                )
+                raise RuntimeError("API initilized with `host=None` but environment variable `CRIPT_HOST` not found.\n" "Set the environment variable (preferred) or specify the host explictly at the creation of API.")
         if token is None:
             token = os.environ.get("CRIPT_TOKEN")
             if token is None:
-                raise RuntimeError(
-                    "API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n"
-                    "Set the environment variable (preferred) or specify the token explictly at the creation of API."
-                )
+                raise RuntimeError("API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n" "Set the environment variable (preferred) or specify the token explictly at the creation of API.")
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
 
@@ -148,9 +142,7 @@ class API:
         # anyone being able to change the private attribute
         return copy.deepcopy(self._vocabulary[vocab_category])
 
-    def is_vocab_valid(
-        self, vocab_category: str, vocab_value: str
-    ) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
+    def is_vocab_valid(self, vocab_category: str, vocab_value: str) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
         """
         checks if the vocabulary is valid within the CRIPT controlled vocabulary.
         Either returns True or InvalidVocabulary Exception

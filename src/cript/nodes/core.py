@@ -8,6 +8,16 @@ from typing import List
 from cript.nodes.exceptions import CRIPTJsonSerializationError, CRIPTNodeCycleError
 
 
+class classproperty(object):
+    def __init__(self, f):
+        self.f = f
+
+    def __get__(self, obj, owner):
+        if obj is None:
+            return self.f(owner)
+        return self.f(obj)
+
+
 class BaseNode(ABC):
     """
     This abstract class is the base of all CRIPT nodes.
@@ -22,8 +32,15 @@ class BaseNode(ABC):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @classproperty
+    def node_type(self):
+        name = type(self).__name__
+        if name == "ABCMeta":
+            name = self.__name__
+        return name
+
     def __init__(self):
-        self._json_attrs = replace(self._json_attrs, node=[type(self).__name__])
+        self._json_attrs = replace(self._json_attrs, node=[self.node_type])
 
     def __str__(self) -> str:
         """

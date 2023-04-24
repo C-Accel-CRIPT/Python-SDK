@@ -4,10 +4,7 @@ import pytest
 import requests
 
 import cript
-from cript.api.exceptions import (
-    InvalidVocabulary,
-    InvalidVocabularyCategory,
-)
+from cript.api.exceptions import InvalidVocabulary, InvalidVocabularyCategory
 from cript.api.paginator import Paginator
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 

@@ -256,8 +256,6 @@ class API:
             response = requests.get(f"{self.host}/cv/{category}").json()["data"]
             self._vocabulary[category] = response
 
-        return copy.deepcopy(self._vocabulary)
-
     def is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
         """
         checks if the vocabulary is valid within the CRIPT controlled vocabulary.

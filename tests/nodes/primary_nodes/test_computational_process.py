@@ -68,7 +68,7 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
     tests that a computational process node can be correctly serialized to JSON
     """
     expected_dict: dict = {
-        "node": ["Computational_Process"],
+        "node": ["ComputationalProcess"],
         "name": "my computational process name",
         "type": "cross_linking",
         "input_data": [

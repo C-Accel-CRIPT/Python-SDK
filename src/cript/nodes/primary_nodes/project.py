@@ -65,7 +65,7 @@ class Project(PrimaryBaseNode):
         None
             instantiate a Project node
         """
-        super().__init__(node="Project", name=name, notes=notes)
+        super().__init__(name=name, notes=notes)
 
         if collections is None:
             collections = []

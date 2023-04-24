@@ -94,7 +94,7 @@ class Data(PrimaryBaseNode):
         notes: str = "",
         **kwargs
     ):
-        super().__init__(node="Data", name=name, notes=notes)
+        super().__init__(name=name, notes=notes)
 
         if files is None:
             files = []

@@ -27,7 +27,7 @@ class ComputationForcefield(BaseNode):
     def __init__(self, key: str, building_block: str, coarse_grained_mapping: str = "", implicit_solvent: str = "", source: str = "", description: str = "", data: Union[Data, None] = None, citation: Union[List[Citation], None] = None, **kwargs):
         if citation is None:
             citation = []
-        super().__init__("ComputationForcefield")
+        super().__init__()
 
         self._json_attrs = replace(
             self._json_attrs,

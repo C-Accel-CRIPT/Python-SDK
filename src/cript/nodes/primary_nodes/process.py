@@ -139,7 +139,7 @@ class Process(PrimaryBaseNode):
         if citations is None:
             citations = []
 
-        super().__init__(node="Process", name=name, notes=notes)
+        super().__init__(name=name, notes=notes)
 
         new_attrs = replace(
             self._json_attrs,

@@ -18,7 +18,7 @@ class Software(BaseNode):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(self, name: str, version: str, source: str = "", **kwargs):
-        super().__init__(node="Software")
+        super().__init__()
         self._json_attrs = replace(self._json_attrs, name=name, version=version, source=source)
         self.validate()
 

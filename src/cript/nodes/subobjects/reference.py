@@ -49,7 +49,7 @@ class Reference(BaseNode):
             authors = []
         if pages is None:
             pages = []
-        super().__init__("Reference")
+        super().__init__()
         self._json_attrs = replace(
             self._json_attrs,
             type=type,

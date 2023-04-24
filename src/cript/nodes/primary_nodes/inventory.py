@@ -71,7 +71,7 @@ class Inventory(PrimaryBaseNode):
         if materials_list is None:
             materials_list = []
 
-        super().__init__(node="Inventory", name=name, notes=notes)
+        super().__init__(name=name, notes=notes)
 
         self._json_attrs = replace(self._json_attrs, materials=materials_list)
 

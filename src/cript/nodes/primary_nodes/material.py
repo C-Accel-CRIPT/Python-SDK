@@ -113,7 +113,7 @@ class Material(PrimaryBaseNode):
             Instantiate a material node
         """
 
-        super().__init__(node="Material", name=name, notes=notes)
+        super().__init__(name=name, notes=notes)
 
         if components is None:
             components = []

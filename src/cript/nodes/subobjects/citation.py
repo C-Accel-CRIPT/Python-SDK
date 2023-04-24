@@ -18,7 +18,7 @@ class Citation(BaseNode):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(self, type: str, reference: Reference, **kwargs):
-        super().__init__(node="Citation")
+        super().__init__()
         self._json_attrs = replace(self._json_attrs, type=type, reference=reference)
         self.validate()
 

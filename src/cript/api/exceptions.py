@@ -1,7 +1,7 @@
-from typing import List, Any
+from typing import Any, List
 
-from cript.exceptions import CRIPTException
 from cript.api.valid_search_modes import SearchModes
+from cript.exceptions import CRIPTException
 
 
 class CRIPTConnectionError(CRIPTException):

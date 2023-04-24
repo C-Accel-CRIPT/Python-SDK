@@ -4,9 +4,13 @@ import pytest
 import requests
 
 import cript
-from cript.api.exceptions import InvalidVocabularyCategory, InvalidVocabulary, InvalidSearchModeError
-from cript.nodes.exceptions import CRIPTNodeSchemaError
+from cript.api.exceptions import (
+    InvalidSearchModeError,
+    InvalidVocabulary,
+    InvalidVocabularyCategory,
+)
 from cript.api.paginator import Paginator
+from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 
 # TODO use the cript_api from conftest.py

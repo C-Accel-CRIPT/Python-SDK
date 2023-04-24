@@ -59,11 +59,11 @@ class Experiment(PrimaryBaseNode):
         computational_process: List[Any] = field(default_factory=list)
         data: List[Any] = field(default_factory=list)
         funding: List[str] = field(default_factory=list)
-        citation: List[Any] = field(default_factory=list)
+        citations: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, process: List[Any] = None, computation: List[Any] = None, computational_process: List[Any] = None, data: List[Any] = None, funding: List[str] = None, citation: List[Any] = None, notes: str = "", **kwargs):
+    def __init__(self, name: str, process: List[Any] = None, computation: List[Any] = None, computational_process: List[Any] = None, data: List[Any] = None, funding: List[str] = None, citations: List[Any] = None, notes: str = "", **kwargs):
         """
         create an Experiment node
 
@@ -109,8 +109,8 @@ class Experiment(PrimaryBaseNode):
             data = []
         if funding is None:
             funding = []
-        if citation is None:
-            citation = []
+        if citations is None:
+            citations = []
 
         super().__init__(name=name, notes=notes)
 
@@ -122,7 +122,7 @@ class Experiment(PrimaryBaseNode):
             computational_process=computational_process,
             data=data,
             funding=funding,
-            citation=citation,
+            citations=citations,
             notes=notes,
         )
 
@@ -330,7 +330,7 @@ class Experiment(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def citation(self) -> List[Any]:
+    def citations(self) -> List[Any]:
         """
         List of [citations](../citation) for this experiment
 
@@ -349,21 +349,21 @@ class Experiment(PrimaryBaseNode):
         List[Citation]
             list of citations of scholarly work that was used in this experiment
         """
-        return self._json_attrs.citation.copy()
+        return self._json_attrs.citations.copy()
 
-    @citation.setter
-    def citation(self, new_citation_list: List[Any]) -> None:
+    @citations.setter
+    def citations(self, new_citations_list: List[Any]) -> None:
         """
         set the list of citations for this experiment
 
         Parameters
         ----------
-        new_citation_list: List[Citation]
+        new_citations_list: List[Citation]
             replace the list of citations for this experiment with a new list of citations
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, citation=new_citation_list)
+        new_attrs = replace(self._json_attrs, citations=new_citations_list)
         self._update_json_attrs_if_valid(new_attrs)

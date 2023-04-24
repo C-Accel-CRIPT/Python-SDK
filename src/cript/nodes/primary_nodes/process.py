@@ -41,7 +41,7 @@ class Process(PrimaryBaseNode):
         """
         all Process attributes
         """
-"
+
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
         ingredients: List[Any] = field(default_factory=list)

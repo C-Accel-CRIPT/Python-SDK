@@ -75,6 +75,10 @@ class BaseNode(ABC):
         -------
         Exception with more error information.
         """
+        from cript.api.api import _get_global_cached_api
+
+        current_api = _get_global_cached_api()
+        current_api.is_node_schema_valid(self.json)
 
         if self._has_cycle():
             raise CRIPTNodeCycleError(str(self))
@@ -124,7 +128,6 @@ class BaseNode(ABC):
         from cript.nodes.util import NodeEncoder
 
         try:
-            self.validate()
             return json.dumps(self, cls=NodeEncoder, sort_keys=True)
         except Exception as exc:
             raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc

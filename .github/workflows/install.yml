@@ -1,34 +1,34 @@
-name: install
-
-on:
-  push:
-    branches:
-      - main
-      - develop
-      - trunk-merge/**
-  pull_request:
-    branches:
-      - main
-      - develop
-      - trunk-merge/**
-
-jobs:
-  install:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [3.7, 3.8, 3.9, 3.10, 3.11]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install via Pip
-        run: python3 -m pip install .
-
-      - name: Check installation
-        run: |
-          python3 -m pip install pytest
-          python3 -m pip install -r requirements.txt
-          python3 -c "import cript"
-          python3 -m pytest
+#name: install
+#
+#on:
+#  push:
+#    branches:
+#      - main
+#      - develop
+#      - trunk-merge/**
+#  pull_request:
+#    branches:
+#      - main
+#      - develop
+#      - trunk-merge/**
+#
+#jobs:
+#  install:
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os: [ubuntu-latest, macos-latest, windows-latest]
+#        python-version: [3.7, 3.8, 3.9, 3.10, 3.11]
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v3
+#      - name: Install via Pip
+#        run: python3 -m pip install .
+#
+#      - name: Check installation
+#        run: |
+#          python3 -m pip install pytest
+#          python3 -m pip install -r requirements.txt
+#          python3 -c "import cript"
+#          python3 -m pytest

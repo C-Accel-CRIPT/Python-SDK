@@ -20,7 +20,6 @@ from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import all_controlled_vocab_categories
 from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import CRIPTNodeSchemaError
-from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
 
 # Do not use this directly! That includes devs.

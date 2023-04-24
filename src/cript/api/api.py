@@ -245,8 +245,9 @@ class API:
         """
 
         # check cache if vocabulary dict is already populated
+        # TODO needs to be changed to MappingTypeProxy
         if bool(self._vocabulary):
-            return copy.deepcopy(self._vocabulary)
+            return self._vocabulary
 
         # TODO this needs to be converted to a dict of dicts instead of dict of lists
         #  because it would be faster to find needed vocab word within the vocab category
@@ -255,6 +256,8 @@ class API:
         for category in all_controlled_vocab_categories:
             response = requests.get(f"{self.host}/cv/{category}").json()["data"]
             self._vocabulary[category] = response
+
+        return self._vocabulary
 
     def is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
         """
@@ -448,7 +451,7 @@ class API:
         """
 
         # get node typ from class
-        node_type = node_type._json_attrs.node.lower()
+        node_type = node_type.node_type.lower()
 
         # always putting a page parameter of 0 for all search URLs
         page_number = 0

@@ -68,7 +68,7 @@ class Property(BaseNode):
         if citations is None:
             citations = []
 
-        super().__init__("Property")
+        super().__init__()
         self._json_attrs = replace(
             self._json_attrs,
             key=key,

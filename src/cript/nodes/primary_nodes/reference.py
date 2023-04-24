@@ -147,7 +147,7 @@ class Reference(BaseNode):
         if pages is None:
             pages = []
 
-        super().__init__(node="Reference")
+        super().__init__()
 
         new_attrs = replace(
             self._json_attrs,

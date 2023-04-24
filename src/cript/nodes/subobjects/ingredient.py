@@ -20,7 +20,7 @@ class Ingredient(BaseNode):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(self, material: Material, quantities: List[Quantity], keyword: str = "", **kwargs):
-        super().__init__(node="Ingredient")
+        super().__init__()
         self._json_attrs = replace(self._json_attrs, material=material, quantities=quantities, keyword=keyword)
         self.validate()
 

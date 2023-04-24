@@ -120,7 +120,7 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
         "computation": [{"node": ["Computation"], "name": "my computation name", "type": "analysis", "citations": []}],
         "computational_process": [
             {
-                "node": ["Computational_Process"],
+                "node": ["ComputationalProcess"],
                 "name": "my computational process name",
                 "type": "cross_linking",
                 "input_data": [

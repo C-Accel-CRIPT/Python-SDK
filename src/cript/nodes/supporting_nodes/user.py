@@ -76,7 +76,7 @@ class User(BaseNode):
         """
         if groups is None:
             groups = []
-        super().__init__(node="User")
+        super().__init__()
         self._json_attrs = replace(self._json_attrs, username=username, email=email, orcid=orcid, groups=groups)
         self.validate()
 

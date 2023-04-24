@@ -22,8 +22,8 @@ class BaseNode(ABC):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, node: str):
-        self._json_attrs = replace(self._json_attrs, node=[node])
+    def __init__(self):
+        self._json_attrs = replace(self._json_attrs, node=[type(self).__name__])
 
     def __str__(self) -> str:
         """

@@ -144,7 +144,7 @@ class API:
         self._http_headers = {"Authorization": f"{self._token}", "Content-Type": "application/json"}
 
         # check that api can connect to CRIPT with host and token
-        self.check_initial_host_connection()
+        self._check_initial_host_connection()
 
         self._get_db_schema()
 
@@ -200,7 +200,7 @@ class API:
         """
         return self._host
 
-    def check_initial_host_connection(self) -> None:
+    def _check_initial_host_connection(self) -> None:
         """
         tries to create a connection with host and if the host does not respond or is invalid it raises an error
 

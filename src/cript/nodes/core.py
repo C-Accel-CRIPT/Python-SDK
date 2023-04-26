@@ -95,7 +95,7 @@ class BaseNode(ABC):
         from cript.api.api import _get_global_cached_api
 
         current_api = _get_global_cached_api()
-        current_api.is_node_schema_valid(self.json)
+        current_api._is_node_schema_valid(self.json)
 
         if self._has_cycle():
             raise CRIPTNodeCycleError(str(self))

@@ -15,4 +15,4 @@ def is_vocab_valid(vocab_category: str, vocab_value: str, api: Union[API, None] 
     if api is None:
         api = _get_global_cached_api()
 
-    return api.is_vocab_valid(vocab_category, vocab_value)
+    return api._is_vocab_valid(vocab_category, vocab_value)

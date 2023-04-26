@@ -99,14 +99,14 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     invalid_schema = {"invalid key": "invalid value", "node": ["Material"]}
 
     with pytest.raises(CRIPTNodeSchemaError):
-        cript_api.is_node_schema_valid(node_json=json.dumps(invalid_schema))
+        cript_api._is_node_schema_valid(node_json=json.dumps(invalid_schema))
 
     # ------ valid material schema ------
     # valid material node
     valid_material_dict = {"node": ["Material"], "name": "0.053 volume fraction CM gel", "uid": "_:0.053 volume fraction CM gel"}
 
     # convert dict to JSON string because method expects JSON string
-    assert cript_api.is_node_schema_valid(node_json=json.dumps(valid_material_dict)) is True
+    assert cript_api._is_node_schema_valid(node_json=json.dumps(valid_material_dict)) is True
 
     # ------ valid file schema ------
     valid_file_dict = {
@@ -118,7 +118,7 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     }
 
     # convert dict to JSON string because method expects JSON string
-    assert cript_api.is_node_schema_valid(node_json=json.dumps(valid_file_dict)) is True
+    assert cript_api._is_node_schema_valid(node_json=json.dumps(valid_file_dict)) is True
 
 
 def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:
@@ -148,24 +148,24 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
     tests invalid category and invalid vocabulary word
     """
     # custom vocab
-    assert cript_api.is_vocab_valid(vocab_category="algorithm_key", vocab_word="+my_custom_key") is True
+    assert cript_api._is_vocab_valid(vocab_category="algorithm_key", vocab_word="+my_custom_key") is True
 
     # valid vocab category and valid word
-    assert cript_api.is_vocab_valid(vocab_category="file_type", vocab_word="calibration") is True
-    assert cript_api.is_vocab_valid(vocab_category="quantity_key", vocab_word="mass") is True
-    assert cript_api.is_vocab_valid(vocab_category="uncertainty_type", vocab_word="fwhm") is True
+    assert cript_api._is_vocab_valid(vocab_category="file_type", vocab_word="calibration") is True
+    assert cript_api._is_vocab_valid(vocab_category="quantity_key", vocab_word="mass") is True
+    assert cript_api._is_vocab_valid(vocab_category="uncertainty_type", vocab_word="fwhm") is True
 
     # # invalid vocab category but valid word
     with pytest.raises(InvalidVocabularyCategory):
-        cript_api.is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="calibration")
+        cript_api._is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="calibration")
 
     # valid vocab category but invalid vocab word
     with pytest.raises(InvalidVocabulary):
-        cript_api.is_vocab_valid(vocab_category="file_type", vocab_word="some_invalid_word")
+        cript_api._is_vocab_valid(vocab_category="file_type", vocab_word="some_invalid_word")
 
     # invalid vocab category and invalid vocab word
     with pytest.raises(InvalidVocabularyCategory):
-        cript_api.is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="some_invalid_word")
+        cript_api._is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="some_invalid_word")
 
 
 def test_api_save_project(cript_api: cript.API, simple_project_node) -> None:

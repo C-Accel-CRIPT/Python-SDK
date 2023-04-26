@@ -6,7 +6,17 @@ import requests
 
 class Paginator:
     """
-    Paginator to flip through different pages of data that the API returns
+    Paginator is used to flip through different pages of data that the API returns when searching
+
+    When conducting any kind of search the API returns pages of data and each page contains 10 results.
+    This is equivalent to conducting a Google search when Google returns a limited number of links on the first page
+    and all other results are on the next pages.
+
+    Using the Paginator object, the user can simply and easily flip through the pages of data the API provides.
+
+    !!! Warning "Do not create paginator objects"
+        Please note that you are not required or advised to create a paginator object, and instead the
+        Python SDK API object will create a paginator for you, return it, and let you simply use it
     """
 
     _http_headers: dict
@@ -71,28 +81,44 @@ class Paginator:
     def next_page(self):
         """
         flip to the next page of data.
-        This works by adding one to the current page number to get the next page number.
-        Then call set_page() method with the next page number
+
+        Examples
+        --------
+        ```python
+        my_paginator.next_page()
+        ```
         """
         self.current_page_number += 1
 
     def previous_page(self):
         """
         flip to the next page of data.
-        This works by subtracting one to the current page number to get the previous page number.
-        Then call set_page() method with the previous page number
+
+        Examples
+        --------
+        ```python
+        my_paginator.previous_page()
+        ```
         """
         self.current_page_number -= 1
 
     @property
     def current_page_number(self) -> int:
         """
-        get the current page number for the query.
-        The setting the page will take you to that specific page of results
+        get the current page number that you are on.
+
+        Setting the page will take you to that specific page of results
+
+        Examples
+        --------
+        ```python
+        my_paginator.current_page = 10
+        ```
 
         Returns
         -------
         current page number: int
+            the current page number of the data
         """
         return self._current_page_number
 
@@ -142,6 +168,7 @@ class Paginator:
         Returns
         -------
         current page results: List[dict]
+            makes a request to the API and gets a page of data
         """
 
         # temporary variable to not overwrite api_endpoint

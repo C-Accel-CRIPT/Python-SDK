@@ -444,9 +444,15 @@ class API:
         """
         This method is used to perform search on the CRIPT platform.
 
+        Examples
+        --------
         ```python
         # search by node type
-        materials_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
+        materials_paginator = cript_api.search(
+            node_type=cript.Material,
+            search_mode=cript.SearchModes.NODE_TYPE,
+            value_to_search=None,
+        )
         ```
 
 

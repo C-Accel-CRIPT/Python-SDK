@@ -455,7 +455,6 @@ class API:
         )
         ```
 
-
         Parameters
         ----------
         node_type : PrimaryBaseNode

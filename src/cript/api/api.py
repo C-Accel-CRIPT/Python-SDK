@@ -73,6 +73,10 @@ def _prepare_host(host: str) -> str:
 
 
 class API:
+    """
+    ## Definition
+    API Client class to communicate with the CRIPT API
+    """
     _host: str = ""
     _token: str = ""
     _vocabulary: dict = {}
@@ -82,22 +86,24 @@ class API:
     def __init__(self, host: Union[str, None], token: [str, None]):
         """
         Initialize object with host and token.
-        It is necessary to use a `with` context manager with the API like so:
-        ```
+        It is necessary to use a `with` context manager for the API
+
+        Examples
+        --------
+        ```Python
         with cript.API('https://criptapp.org', 'secret_token') as api:
            # node creation, api.save(), etc.
         ```
 
+        Notes
+        -----
+
         Parameters
         ----------
         host : str, None
-            CRIPT host to connect to such as "https://criptapp.org"
-            if host ends with a "/" such as "https://criptapp.org/"
-            then it strips it to always be uniform.
-            This host address is the same that use to login to cript website.
-
+            CRIPT host for the Python SDK to connect to such as `https://criptapp.org`
+            This host address is the same address used to login to cript website.
             If `None` is specified, the host is inferred from the environment variable `CRIPT_HOST`.
-
         token : str, None
             CRIPT API Token used to connect to CRIPT
             You can find your personal token on the cript website at User > Security Settings.
@@ -114,16 +120,17 @@ class API:
         Warns
         -----
         UserWarning
-            If `host` is using "http".
+            If `host` is using "http" it gives the user a warning that HTTP is insecure and the user shuold use HTTPS
 
         Raises
         ------
-        ConnectionError
-            If it cannot connect to CRIPT with the provided host and token
+        CRIPTConnectionError
+            If it cannot connect to CRIPT with the provided host and token a CRIPTConnectionError is thrown.
 
         Returns
         -------
         None
+            Instantiate a new CRIPT API object
         """
 
         # if host and token is none then it will grab host and token from user's environment variables
@@ -187,16 +194,25 @@ class API:
     @property
     def schema(self):
         """
-        Access the CRIPTSchema that is associated with this API connection.
-        This can be used to validate node JSON.
+        Access the CRIPT Database Schema that is associated with this API connection.
+        The CRIPT Database Schema is used  to validate a node's JSON so that it is compatible with the CRIPT API.
         """
-        return copy.copy(self._db_schema)
+        return self._db_schema
 
     @property
     def host(self):
         """
         Read only access to the currently connected host.
-        If the connection to a new host is desired, create a new API object.
+
+        Examples
+        --------
+        ```python
+        print(cript_api.host)
+        ```
+        Output
+        ```Python
+        https://criptapp.org/api/v1
+        ```
         """
         return self._host
 
@@ -399,9 +415,15 @@ class API:
         project: Project
             the Project Node that the user wants to save
 
+        Raises
+        ------
+        CRIPTAPISaveError
+            If the API responds with anything other than an HTTP of `200`, the API error is displayed to the user
+
         Returns
         -------
         None
+            Just sends a `POST` or `Patch` request to the API
         """
         # TODO work on this later to allow for PATCH as well
         response = requests.post(url=f"{self._host}/{project.node_type.lower()}", headers=self._http_headers, data=project.json)
@@ -420,33 +442,29 @@ class API:
         value_to_search: Union[None, str],
     ) -> Paginator:
         """
-        This is the method used to perform a search on the CRIPT platform.
+        This method is used to perform search on the CRIPT platform.
 
-        since we are using Enum here we don't even need to check if the search mode is valid
-        because if the search mode is invalid then it would throw an AttributeError
+        ```python
+        # search by node type
+        materials_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
+        ```
 
-        checks which mode the search is asking for, takes all the needed arguments and puts it within a paginator
-        object and returns the paginator to the user that contains all the needed data
 
         Parameters
         ----------
         node_type : PrimaryBaseNode
             Type of node that you are searching for.
         search_mode : SearchModes
-            Type of search you want to do. You can search by name, UUID, URL, etc.
+            Type of search you want to do. You can search by name, `UUID`, `EXACT_NAME`, etc.
+            Refer to [valid search modes](../search_modes)
         value_to_search : Union[str, None]
             What you are searching for can be either a value, and if you are only searching for
-            a node type, then this value can be empty or None
-
-        Raises
-        -------
-        InvalidSearchModeError
-            In case none of the search modes were fulfilled
+            a `NODE_TYPE`, then this value can be empty or `None`
 
         Returns
         -------
         Paginator
-            paginator object for the user to use to continue searching and flipping through pages
+            paginator object for the user to use to flip through pages of search results
         """
 
         # get node typ from class

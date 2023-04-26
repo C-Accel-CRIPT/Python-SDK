@@ -5,7 +5,10 @@ repo_name: C-Accel-CRIPT/Python-SDK
 
 nav:
   - Home: index.md
-  - API: api/api.md
+  - API:
+    - API: api/api.md
+    - Search Modes: api/search_modes.md
+    - Paginator: api/paginator.md
   - Primary Nodes:
       - Collection: nodes/primary_nodes/collection.md
       - Computation: nodes/primary_nodes/computation.md

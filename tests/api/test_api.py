@@ -48,7 +48,7 @@ def test_prepare_host(cript_api: cript.API) -> None:
 #     assert cript.api.api._get_global_cached_api() is not None
 
 
-def test_get_db_schema_from_api(cript_api: cript.API) -> None:
+def test_get_db_schema_from_api(cript_api) -> None:
     """
     tests that the Python SDK can successfully get the db schema from API
     """

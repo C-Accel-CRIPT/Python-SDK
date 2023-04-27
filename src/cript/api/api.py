@@ -158,6 +158,7 @@ class API:
 
     def __enter__(self):
         self.connect()
+        return self
 
     def __exit__(self, type, value, traceback):
         self.disconnect()

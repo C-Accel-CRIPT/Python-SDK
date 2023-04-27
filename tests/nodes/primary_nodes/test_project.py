@@ -100,3 +100,10 @@ def test_delete_project_from_api() -> None:
     tries to get the project from API, and it is expected for the API to give an error response
     """
     pass
+
+
+def test_api_save_project(cript_api: cript.API, simple_project_node) -> None:
+    """
+    Tests if API object can successfully save a node
+    """
+    simple_project_node.save()

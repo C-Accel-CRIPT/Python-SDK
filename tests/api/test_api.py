@@ -149,13 +149,6 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
         cript_api._is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="some_invalid_word")
 
 
-def test_api_save_project(cript_api: cript.API, simple_project_node) -> None:
-    """
-    Tests if API object can successfully save a node
-    """
-    cript_api.save(simple_project_node)
-
-
 def test_api_search_node_type(cript_api: cript.API) -> None:
     """
     tests the api.search() method with just a node type material search

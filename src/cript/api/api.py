@@ -9,7 +9,6 @@ import requests
 
 from cript.api.exceptions import (
     CRIPTAPIAccessError,
-    CRIPTAPISaveError,
     CRIPTConnectionError,
     InvalidHostError,
     InvalidVocabulary,
@@ -20,7 +19,6 @@ from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import all_controlled_vocab_categories
 from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTNodeSchemaError
-from cript.nodes.primary_nodes.project import Project
 
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.
@@ -93,7 +91,7 @@ class API:
         --------
         ```Python
         with cript.API('https://criptapp.org', 'secret_token') as api:
-           # node creation, api.save(), etc.
+           # node creation, project.save(), etc.
         ```
 
         Notes
@@ -409,37 +407,6 @@ class API:
 
         # if validation goes through without any problems return True
         return True
-
-    def save(self, project: Project) -> None:
-        """
-        This method takes a project node, serializes the class into JSON
-        and then sends the JSON to be saved to the API.
-        It takes Project node because everything is connected to the Project node,
-        and it can be used to send either a POST or PATCH request to API
-
-        Parameters
-        ----------
-        project: Project
-            the Project Node that the user wants to save
-
-        Raises
-        ------
-        CRIPTAPISaveError
-            If the API responds with anything other than an HTTP of `200`, the API error is displayed to the user
-
-        Returns
-        -------
-        None
-            Just sends a `POST` or `Patch` request to the API
-        """
-        # TODO work on this later to allow for PATCH as well
-        response = requests.post(url=f"{self._host}/{project.node_type.lower()}", headers=self._http_headers, data=project.json)
-
-        response = response.json()
-
-        # if htt response is not 200 then show the API error to the user
-        if response["code"] != 200:
-            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
 
     # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(

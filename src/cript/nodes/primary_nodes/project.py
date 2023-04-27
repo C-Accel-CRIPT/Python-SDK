@@ -1,6 +1,9 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
+import requests
+
+from cript.api.exceptions import CRIPTAPISaveError
 from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
@@ -44,7 +47,7 @@ class Project(PrimaryBaseNode):
         collections: List[Collection] = None,
         material: List[Material] = None,
         notes: str = "",
-        **kwargs
+        **kwargs,
     ):
         """
         Create a Project node with Project name and Group
@@ -75,6 +78,42 @@ class Project(PrimaryBaseNode):
 
         self._json_attrs = replace(self._json_attrs, name=name, collections=collections, material=material)
         self.validate()
+
+    def save(self, api=None) -> None:
+        """
+        This method takes a project node, serializes the class into JSON
+        and then sends the JSON to be saved to the API.
+        It takes Project node because everything is connected to the Project node,
+        and it can be used to send either a POST or PATCH request to API
+
+        Parameters
+        ----------
+        api: API
+            API object with which the operation should be performed. If None the current active (context managed) api object is used.
+
+        Raises
+        ------
+        CRIPTAPISaveError
+            If the API responds with anything other than an HTTP of `200`, the API error is displayed to the user
+
+        Returns
+        -------
+        None
+            Just sends a `POST` or `Patch` request to the API
+        """
+        from cript.api.api import _get_global_cached_api
+
+        # TODO work on this later to allow for PATCH as well
+        if api is None:
+            api = _get_global_cached_api()
+
+        response = requests.post(url=f"{api.host}/{self.node_type.lower()}", headers=api._http_headers, data=self.json)
+
+        response = response.json()
+
+        # if htt response is not 200 then show the API error to the user
+        if response["code"] != 200:
+            raise CRIPTAPISaveError(api_host_domain=api.host, http_code=response["code"], api_response=response["error"])
 
     # ------------------ Properties ------------------
 

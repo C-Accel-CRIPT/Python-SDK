@@ -22,10 +22,10 @@ and the [CRIPT research paper](https://pubs.acs.org/doi/10.1021/acscentsci.3c000
 _We are always looking for ways to improve and create software that is a joy to use!_
 
 ---
+
 **Q:** Where can I find more CRIPT examples?
 
 **A:** _Please visit [CRIPT Scripts](https://criptscripts.org) where there are many CRIPT examples ranging from CRIPT graphs drawn out from research papers, Python scripts, TypeScript scripts, and more!_
-
 
 ---
 
@@ -37,7 +37,7 @@ _We are always looking for ways to improve and create software that is a joy to 
 
 **Q:** How can I contribute to this project?
 
-**A:** We would love to have you contribute. 
+**A:** We would love to have you contribute.
 _Please read the[GitHub repository wiki](https://github.com/C-Accel-CRIPT/Python-SDK/wiki)
 to understand more and get started. Feel free to contribute to any bugs you find, any issues within the
 [GitHub repository](https://github.com/C-Accel-CRIPT/Python-SDK/issues), or any features you want._

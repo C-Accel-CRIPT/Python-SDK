@@ -73,6 +73,6 @@ def cript_api():
     """
 
     assert cript.api.api._global_cached_api is None
-    with cript.API("http://development.api.mycriptapp.org/", token=None) as api:
+    with cript.API(host=None, token=None) as api:
         yield api
     assert cript.api.api._global_cached_api is None

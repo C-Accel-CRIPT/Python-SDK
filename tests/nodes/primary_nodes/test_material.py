@@ -1,5 +1,7 @@
 import json
 
+from util import strip_uid_from_dict
+
 import cript
 
 
@@ -89,7 +91,9 @@ def test_serialize_material_to_json(simple_material_node) -> None:
     }
 
     # compare dicts because that is more accurate
-    assert json.loads(simple_material_node.json) == expected_dict
+    ref_dict = json.loads(simple_material_node.json)
+    ref_dict = strip_uid_from_dict(ref_dict)
+    assert ref_dict == expected_dict
 
 
 # ---------- Integration Tests ----------
@@ -128,9 +132,7 @@ def test_deserialize_material_from_json() -> None:
     }
 
     material_string = json.dumps(api_material)
-    print(material_string)
     my_material = cript.load_nodes_from_json(nodes_json=material_string)
-    print(type(my_material))
 
     # assertions
     assert isinstance(my_material, cript.Material)

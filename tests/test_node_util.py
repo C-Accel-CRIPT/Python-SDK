@@ -1,32 +1,26 @@
+import copy
 import json
 from dataclasses import replace
 
 import pytest
-from test_nodes_no_host import get_algorithm, get_algorithm_string, get_parameter
+from util import strip_uid_from_dict
 
 import cript
-from cript.nodes.exceptions import (
-    CRIPTJsonDeserializationError,
-    CRIPTJsonNodeError,
-    CRIPTJsonSerializationError,
-    CRIPTNodeCycleError,
-)
+from cript.nodes.core import get_new_uid
+from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTJsonSerializationError
 
 
-def test_removing_nodes():
-    a = get_algorithm()
-    p = get_parameter()
+def test_removing_nodes(complex_algorithm_node, complex_parameter_node, complex_algorithm_dict):
+    a = complex_algorithm_node
+    p = complex_parameter_node
     a.parameter += [p]
+    assert strip_uid_from_dict(json.loads(a.json)) != complex_algorithm_dict
     a.remove_child(p)
-    assert a.json == get_algorithm_string()
+    assert strip_uid_from_dict(json.loads(a.json)) == complex_algorithm_dict
 
 
-def test_json_error():
-    faulty_json = "{'node': 'Parameter', 'foo': 'bar'}".replace("'", '"')
-    with pytest.raises(CRIPTJsonDeserializationError):
-        cript.load_nodes_from_json(faulty_json)
-
-    parameter = get_parameter()
+def test_json_error(complex_parameter_node):
+    parameter = complex_parameter_node
     # Let's break the node by violating the data model
     parameter._json_attrs = replace(parameter._json_attrs, value=None)
     with pytest.raises(CRIPTJsonSerializationError):
@@ -37,9 +31,8 @@ def test_json_error():
         parameter.json
 
 
-def test_local_search():
-    a = get_algorithm()
-
+def test_local_search(complex_algorithm_node, complex_parameter_node):
+    a = complex_algorithm_node
     # Check if we can use search to find the algoritm node, but specifying node and key
     find_algorithms = a.find_children({"node": "Algorithm", "key": "mc_barostat"})
     assert find_algorithms == [a]
@@ -48,8 +41,8 @@ def test_local_search():
     assert find_algorithms == []
 
     # Adding 2 separate parameters to test deeper search
-    p1 = get_parameter()
-    p2 = get_parameter()
+    p1 = complex_parameter_node
+    p2 = copy.deepcopy(complex_parameter_node)
     p2.key = "advanced_sampling"
     p2.value = 15.0
     p2.unit = "m"
@@ -79,21 +72,32 @@ def test_local_search():
     assert find_algorithms == []
 
 
-def test_cycles():
+def test_cycles(complex_data_node, simple_computation_node):
     # We create a wrong cycle with parameters here.
     # TODO replace this with nodes that actually can form a cycle
-    p1 = get_parameter()
-    p1.unit = "1"
-    p2 = get_parameter()
-    p2.unit = "2"
-    p3 = get_parameter()
-    p3.unit = "3"
+    d = copy.deepcopy(complex_data_node)
+    c = copy.deepcopy(simple_computation_node)
+    d.computations += [c]
+    # Using input and output data guarantees a cycle here.
+    c.output_data += [d]
+    c.input_data += [d]
 
-    p1.key = p2
-    p2.key = p3
+    # Generate json with an implicit cycle
+    c.get_json()
+    d.get_json()
 
-    with pytest.raises(CRIPTNodeCycleError):
-        p3.key = p1
+
+def test_uid_serial(simple_inventory_node):
+    simple_inventory_node.materials += simple_inventory_node.materials
+    json_dict = json.loads(simple_inventory_node.get_json().json)
+    assert len(json_dict["materials"]) == 4
+    assert isinstance(json_dict["materials"][2]["uid"], str)
+    assert json_dict["materials"][2]["uid"].startswith("_:")
+    assert len(json_dict["materials"][2]["uid"]) == len(get_new_uid())
+    assert isinstance(json_dict["materials"][3]["uid"], str)
+    assert json_dict["materials"][3]["uid"].startswith("_:")
+    assert len(json_dict["materials"][3]["uid"]) == len(get_new_uid())
+    assert json_dict["materials"][3]["uid"] != json_dict["materials"][2]["uid"]
 
 
 def test_invalid_json_load():

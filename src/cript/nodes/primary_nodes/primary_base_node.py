@@ -17,8 +17,6 @@ class PrimaryBaseNode(BaseNode, ABC):
         All shared attributes between all Primary nodes and set to their default values
         """
 
-        url: str = ""
-        uid: str = ""
         locked: bool = False
         model_version: str = ""
         updated_by: User = None
@@ -46,7 +44,6 @@ class PrimaryBaseNode(BaseNode, ABC):
         --------
         {
         'url': '',
-        'uid': '',
         'locked': False,
         'model_version': '',
         'updated_by': None,
@@ -66,10 +63,6 @@ class PrimaryBaseNode(BaseNode, ABC):
     @property
     def url(self):
         return self._json_attrs.url
-
-    @property
-    def uid(self):
-        return self._json_attrs.uid
 
     @property
     def locked(self):

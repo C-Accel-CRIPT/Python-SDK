@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from util import strip_uid_from_dict
 
 import cript
 
@@ -61,7 +62,7 @@ def test_file_type_invalid_vocabulary() -> None:
     pass
 
 
-def test_file_getters_and_setters(simple_file_node) -> None:
+def test_file_getters_and_setters(complex_file_node) -> None:
     """
     tests that all the getters and setters are working fine
 
@@ -76,19 +77,19 @@ def test_file_getters_and_setters(simple_file_node) -> None:
     new_data_dictionary = "new data dictionary"
 
     # ------- set properties -------
-    simple_file_node.source = new_source
-    simple_file_node.type = new_file_type
-    simple_file_node.extension = new_file_extension
-    simple_file_node.data_dictionary = new_data_dictionary
+    complex_file_node.source = new_source
+    complex_file_node.type = new_file_type
+    complex_file_node.extension = new_file_extension
+    complex_file_node.data_dictionary = new_data_dictionary
 
     # ------- assert set and get properties are the same -------
-    assert simple_file_node.source == new_source
-    assert simple_file_node.type == new_file_type
-    assert simple_file_node.extension == new_file_extension
-    assert simple_file_node.data_dictionary == new_data_dictionary
+    assert complex_file_node.source == new_source
+    assert complex_file_node.type == new_file_type
+    assert complex_file_node.extension == new_file_extension
+    assert complex_file_node.data_dictionary == new_data_dictionary
 
 
-def test_serialize_file_to_json(simple_file_node) -> None:
+def test_serialize_file_to_json(complex_file_node) -> None:
     """
     tests that it can correctly turn the file node into its equivalent JSON
     """
@@ -102,7 +103,7 @@ def test_serialize_file_to_json(simple_file_node) -> None:
     }
 
     # compare dicts for more accurate comparison
-    assert json.loads(simple_file_node.json) == expected_file_node_dict
+    assert strip_uid_from_dict(json.loads(complex_file_node.json)) == expected_file_node_dict
 
 
 # ---------- Integration tests ----------

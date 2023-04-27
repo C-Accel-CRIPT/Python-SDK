@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from util import strip_uid_from_dict
 
 import cript
 
@@ -43,7 +44,7 @@ def test_group_serialization_and_deserialization():
     actual_group_node = json.loads(actual_group_node)
 
     # group node from JSON and original group JSON are equivalent
-    assert actual_group_node == group_node_dict
+    assert strip_uid_from_dict(actual_group_node) == strip_uid_from_dict(group_node_dict)
 
 
 @pytest.fixture(scope="session")

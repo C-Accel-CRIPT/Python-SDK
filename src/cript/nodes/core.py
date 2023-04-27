@@ -1,11 +1,16 @@
 import copy
 import dataclasses
 import json
+import uuid
 from abc import ABC
 from dataclasses import asdict, dataclass, replace
 from typing import List
 
-from cript.nodes.exceptions import CRIPTJsonSerializationError, CRIPTNodeCycleError
+from cript.nodes.exceptions import CRIPTJsonSerializationError
+
+
+def get_new_uid():
+    return "_:" + str(uuid.uuid4())
 
 
 class BaseNode(ABC):
@@ -18,12 +23,14 @@ class BaseNode(ABC):
 
     @dataclass(frozen=True)
     class JsonAttributes:
-        node: str = dataclasses.field(default_factory=list)
+        node: List[str] = dataclasses.field(default_factory=list)
+        uid: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, node: str):
-        self._json_attrs = replace(self._json_attrs, node=[node])
+    def __init__(self, node):
+        uid = get_new_uid()
+        self._json_attrs = replace(self._json_attrs, node=[node], uid=uid)
 
     def __str__(self) -> str:
         """
@@ -36,6 +43,10 @@ class BaseNode(ABC):
         """
         return str(asdict(self._json_attrs))
 
+    @property
+    def uid(self):
+        return self._json_attrs.uid
+
     def _update_json_attrs_if_valid(self, new_json_attr: JsonAttributes):
         old_json_attrs = copy.copy(self._json_attrs)
         self._json_attrs = new_json_attr
@@ -44,28 +55,6 @@ class BaseNode(ABC):
         except Exception as exc:
             self._json_attrs = old_json_attrs
             raise exc
-
-    def _has_cycle(self, handled_nodes=None):
-        """
-        Return true if the current data graph contains a cycle, False otherwise.
-        """
-        if handled_nodes is None:
-            handled_nodes = []
-
-        if self in handled_nodes:
-            return True
-        handled_nodes.append(self)
-
-        # Iterate over all fields and call the cycle detection recursively
-        cycle_detected = False
-        for field in self._json_attrs.__dataclass_fields__:
-            value = getattr(self._json_attrs, field)
-            if isinstance(value, BaseNode):
-                cycle = value._has_cycle(handled_nodes)
-                if cycle is True:
-                    cycle_detected = True
-                    return cycle_detected
-        return cycle_detected
 
     def validate(self) -> None:
         """
@@ -76,41 +65,89 @@ class BaseNode(ABC):
         Exception with more error information.
         """
 
-        if self._has_cycle():
-            raise CRIPTNodeCycleError(str(self))
+        pass
 
     @classmethod
-    def _from_json(cls, json: dict):
+    def _from_json(cls, json_dict: dict):
         # Child nodes can inherit and overwrite this.
-        # They should call super()._from_json first, and modified the returned object after if necessary.
-        # This creates a basic version of the intended node.
-        # All attributes from the backend are passed over, but some like created_by are ignored
-        node = cls(**json)
-        # Now we push the full json attributes into the class if it is valid
+        # They should call super()._from_json first, and modified the returned object after if necessary
+        # We create manually a dict that contains all elements from the send dict.
+        # That eliminates additional fields and doesn't require asdict.
+        arguments = {}
+        for field in cls.JsonAttributes().__dataclass_fields__:
+            if field in json_dict:
+                arguments[field] = json_dict[field]
 
-        valid_keyword_dict = {}
-        reference_nodes = asdict(node._json_attrs)
-        for key in reference_nodes:
-            if key in json:
-                valid_keyword_dict[key] = json[key]
+        # The call to the constructor might ignore fields that are usually not writable.
+        try:
+            node = cls(**arguments)
+        except Exception as exc:
+            print(cls, arguments)
+            raise exc
+        attrs = cls.JsonAttributes(**arguments)
+        # Handle UID manually. Conserve newly assigned uid if uid is default (empty)
+        if attrs.uid == cls.JsonAttributes().uid:
+            attrs = replace(attrs, uid=node.uid)
 
-        attrs = cls.JsonAttributes(**valid_keyword_dict)
+        # But here we force even usually unwritable fields to be set.
         node._update_json_attrs_if_valid(attrs)
+        return node
+
+    def __deepcopy__(self, memo):
+        # Ideally I would call `asdict`, but that is not allowed inside a deepcopy chain.
+        # Making a manual transform into a dictionary here.
+        arguments = {}
+        for field in self.JsonAttributes().__dataclass_fields__:
+            arguments[field] = copy.deepcopy(getattr(self._json_attrs, field), memo)
+        # TODO URL handling
+
+        arguments["uid"] = get_new_uid()
+
+        # Create node and init constructor attributes
+        node = self.__class__(**arguments)
+        # Update none constructor writable attributes.
+        node._update_json_attrs_if_valid(self.JsonAttributes(**arguments))
         return node
 
     @property
     def json(self):
         """
-        User facing access to get the JSON of a node.
+        Property to obtain a simple json string.
+        Calls `get_json` with default arguments.
         """
+        return self.get_json().json
+
+    def get_json(self, handled_ids: set = None, **kwargs):
+        """
+        User facing access to get the JSON of a node.
+        Opposed to the also available property json this functions allows further control.
+
+        Returns named tuple with json and handled ids as result.
+        """
+
+        @dataclass(frozen=True)
+        class ReturnTuple:
+            json: str
+            handled_ids: set
+
+        # Default is sorted keys
+        kwargs["sort_keys"] = kwargs.get("sort_keys", True)
+        # Do not check for circular references, since we handle them manually
+        kwargs["check_circular"] = kwargs.get("check_circular", False)
+
         # Delayed import to avoid circular imports
         from cript.nodes.util import NodeEncoder
 
+        previous_handled_nodes = copy.deepcopy(NodeEncoder.handled_ids)
+        if handled_ids is not None:
+            NodeEncoder.handled_ids = handled_ids
         try:
             self.validate()
-            return json.dumps(self, cls=NodeEncoder, sort_keys=True)
+            return ReturnTuple(json.dumps(self, cls=NodeEncoder, **kwargs), NodeEncoder.handled_ids)
         except Exception as exc:
             raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc
+        finally:
+            NodeEncoder.handled_ids = previous_handled_nodes
 
     def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes=None) -> List:
         """

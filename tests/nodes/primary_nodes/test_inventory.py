@@ -1,5 +1,7 @@
 import json
 
+from util import strip_uid_from_dict
+
 import cript
 
 
@@ -43,7 +45,9 @@ def test_inventory_serialization(simple_inventory_node) -> None:
     }
 
     # TODO this needs better testing
-    assert expected_dict == json.loads(simple_inventory_node.json)
+    ref_dict = json.loads(simple_inventory_node.json)
+    ref_dict = strip_uid_from_dict(ref_dict)
+    assert expected_dict == ref_dict
 
 
 # --------------- Integration Tests ---------------

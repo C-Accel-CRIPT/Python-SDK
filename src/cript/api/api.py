@@ -394,10 +394,11 @@ class API:
         except KeyError:
             raise CRIPTNodeSchemaError(error_message=f"'node' attriubte not present in serialization of {node_json}. Missing for exmaple 'node': ['material'].")
 
+        # checking the node field "node": "Material"
         if isinstance(node_list, list) and len(node_list) == 1 and isinstance(node_list[0], str):
             node_type = node_list[0]
         else:
-            raise CRIPTJsonNodeError(node_list, node_type)
+            raise CRIPTJsonNodeError(node_list, str(node_list))
 
         # set which node you are using schema validation for
         db_schema["$ref"] = f"#/$defs/{node_type}Post"

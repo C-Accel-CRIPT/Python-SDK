@@ -19,7 +19,7 @@ from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import all_controlled_vocab_categories
 from cript.nodes.core import BaseNode
-from cript.nodes.exceptions import CRIPTNodeSchemaError
+from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.project import Project
 
 # Do not use this directly! That includes devs.
@@ -390,9 +390,14 @@ class API:
 
         node_dict = json.loads(node_json)
         try:
-            node_type = node_dict["node"][0].title()  # get node type from "node": ["material"]
+            node_list = node_dict["node"]
         except KeyError:
-            raise CRIPTNodeSchemaError(error_message=f"'node': ['material'] not present in serialization of {node_json}")
+            raise CRIPTNodeSchemaError(error_message=f"'node' attriubte not present in serialization of {node_json}. Missing for exmaple 'node': ['material'].")
+
+        if isinstance(node_list, list) and len(node_list) == 1 and isinstance(node_list[0], str):
+            node_type = node_list[0]
+        else:
+            raise CRIPTJsonNodeError(node_list, node_type)
 
         # set which node you are using schema validation for
         db_schema["$ref"] = f"#/$defs/{node_type}Post"

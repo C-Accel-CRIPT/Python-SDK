@@ -77,6 +77,7 @@ class API:
     ## Definition
     API Client class to communicate with the CRIPT API
     """
+
     _host: str = ""
     _token: str = ""
     _vocabulary: dict = {}

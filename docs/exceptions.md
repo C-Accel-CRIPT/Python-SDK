@@ -1,5 +1,0 @@
-# CRIPT Python SDK Exceptions
-
----
-
----

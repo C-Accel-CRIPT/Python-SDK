@@ -126,7 +126,7 @@ def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:
     checks if it can successfully get the controlled vocabulary list from CRIPT API
     """
     number_of_vocab_categories = 26
-    vocab = cript_api._get_vocab()
+    vocab = cript_api._fetch_vocab()
 
     # assertions
     # check vocabulary list is not empty

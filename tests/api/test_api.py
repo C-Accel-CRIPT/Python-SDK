@@ -9,25 +9,6 @@ from cript.api.paginator import Paginator
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 
-# TODO use the cript_api from conftest.py
-@pytest.fixture(scope="session")
-def cript_api() -> cript.API:
-    """
-    Create an API instance for the rest of the tests to use.
-
-    Returns:
-        API: The created API instance.
-    """
-
-    # assert cript.api.api._global_cached_api is None
-    # with cript.API("http://development.api.mycriptapp.org/", "123456789") as api:
-    #     yield api
-    # assert cript.api.api._global_cached_api is None
-    token: str = open("../../.env").read()
-
-    return cript.API(host="http://development.api.mycriptapp.org/", token=token)
-
-
 def test_create_api() -> None:
     """
     tests that an API object can be successfully created with host and token

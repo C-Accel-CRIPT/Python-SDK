@@ -31,4 +31,5 @@ jobs:
           python3 -m pip install pytest
           python3 -m pip install -r requirements.txt
           python3 -c "import cript"
+          export CRIPT_TOKEN="125433546"
           python3 -m pytest

@@ -37,7 +37,9 @@ nav:
       - User: nodes/supporting_nodes/user.md
       - Group: nodes/supporting_nodes/group.md
       - File: nodes/supporting_nodes/file.md
-  - Exceptions: exceptions.md
+  - Exceptions:
+      - API Exceptions: exceptions/api_exceptions.md
+      - Node Exceptions: exceptions/node_exceptions.md
   - FAQ: faq.md
 #    TODO add developer documentations
 #  - Developers Documentation:

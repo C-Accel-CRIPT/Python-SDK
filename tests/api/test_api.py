@@ -13,7 +13,7 @@ def test_create_api() -> None:
     """
     tests that an API object can be successfully created with host and token
     """
-    api = cript.API("http://development.api.mycriptapp.org/", "123456789")
+    api = cript.API(host=None, toke=None)
 
     # assertions
     assert api is not None

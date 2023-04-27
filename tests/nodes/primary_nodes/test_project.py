@@ -1,5 +1,7 @@
 import json
 
+from util import strip_uid_from_dict
+
 import cript
 
 
@@ -58,7 +60,9 @@ def test_serialize_project_to_json(simple_project_node) -> None:
     }
 
     # comparing dicts instead of JSON strings because dict comparison is more accurate
-    assert json.loads(simple_project_node.json) == expected_dict
+    ref_dict = json.loads(simple_project_node.json)
+    ref_dict = strip_uid_from_dict(ref_dict)
+    assert ref_dict == expected_dict
 
 
 # ---------- Integration tests ----------

@@ -15,26 +15,6 @@ class CRIPTNodeSchemaError(CRIPTException):
         return self.error_message
 
 
-class CRIPTNodeCycleError(CRIPTException):
-    """
-    Exception that is raised when a DB schema validation fails for a node.
-
-    This is a dummy implementation.
-    This needs to be way more sophisticated for good error reporting.
-    """
-
-    def __init__(self, obj_str: str):
-        self.obj_str = str(obj_str)
-
-    def __str__(self):
-        ret_str = "The created data graph contains a cycle. "
-        ret_str += " This is usually doesn't make sense in the data flow, "
-        ret_str += f" and is not supported by the SDK. Last created object string {self.obj_str}."
-        ret_str += "We recommend double checking the flow of information in the graph you are creating. "
-        ret_str += "A sketch on paper of the expected graph might reveal the created cycle."
-        return ret_str
-
-
 class CRIPTJsonDeserializationError(CRIPTException):
     """
     Exception to throw if deserialization of nodes fails.
@@ -54,12 +34,14 @@ class CRIPTJsonNodeError(CRIPTJsonDeserializationError):
     Exception that is raised if a `node` attribute is present, but not a single itemed list.
     """
 
-    def __init__(self, node_list):
+    def __init__(self, node_list, json_str):
         self.node_list = node_list
+        self.json_str = json_str
 
     def __str__(self):
         ret_str = f"Invalid JSON contains `node` attribute {self.node_list} but this is not a list with a single element."
         ret_str += " Expected is a single element list with the node name as a single string element."
+        ret_str += f" Full json string was {self.json_str}."
         return ret_str
 
 

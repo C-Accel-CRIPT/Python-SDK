@@ -1,5 +1,7 @@
 import json
 
+from util import strip_uid_from_dict
+
 import cript
 
 
@@ -24,7 +26,7 @@ def test_create_simple_collection(simple_experiment_node) -> None:
     assert my_collection.experiments == [simple_experiment_node]
 
 
-def test_create_complex_collection(simple_experiment_node, simple_inventory_node, simple_citation_node) -> None:
+def test_create_complex_collection(simple_experiment_node, simple_inventory_node, complex_citation_node) -> None:
     """
     test to see if Collection can be made with all the possible optional arguments
     """
@@ -36,7 +38,7 @@ def test_create_complex_collection(simple_experiment_node, simple_inventory_node
         experiments=[simple_experiment_node],
         inventories=[simple_inventory_node],
         cript_doi=my_cript_doi,
-        citations=[simple_citation_node],
+        citations=[complex_citation_node],
     )
 
     # assertions
@@ -45,10 +47,10 @@ def test_create_complex_collection(simple_experiment_node, simple_inventory_node
     assert my_collection.experiments == [simple_experiment_node]
     assert my_collection.inventories == [simple_inventory_node]
     assert my_collection.cript_doi == my_cript_doi
-    assert my_collection.citations == [simple_citation_node]
+    assert my_collection.citations == [complex_citation_node]
 
 
-def test_collection_getters_and_setters(simple_experiment_node, simple_inventory_node, simple_citation_node) -> None:
+def test_collection_getters_and_setters(simple_experiment_node, simple_inventory_node, complex_citation_node) -> None:
     """
     test that Collection getters and setters are working properly
 
@@ -67,7 +69,7 @@ def test_collection_getters_and_setters(simple_experiment_node, simple_inventory
     my_collection.experiments = [simple_experiment_node]
     my_collection.inventories = [simple_inventory_node]
     my_collection.cript_doi = new_cript_doi
-    my_collection.citations = [simple_citation_node]
+    my_collection.citations = [complex_citation_node]
 
     # assert getters and setters are the same
     assert isinstance(my_collection, cript.Collection)
@@ -75,7 +77,7 @@ def test_collection_getters_and_setters(simple_experiment_node, simple_inventory
     assert my_collection.experiments == [simple_experiment_node]
     assert my_collection.inventories == [simple_inventory_node]
     assert my_collection.cript_doi == new_cript_doi
-    assert my_collection.citations == [simple_citation_node]
+    assert my_collection.citations == [complex_citation_node]
 
 
 def test_serialize_collection_to_json(simple_collection_node) -> None:
@@ -100,7 +102,9 @@ def test_serialize_collection_to_json(simple_collection_node) -> None:
     }
 
     # assert
-    assert json.loads(simple_collection_node.json) == expected_collection_dict
+    ref_dict = json.loads(simple_collection_node.json)
+    ref_dict = strip_uid_from_dict(ref_dict)
+    assert ref_dict == expected_collection_dict
 
 
 # ---------- Integration tests ----------

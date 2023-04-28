@@ -10,13 +10,13 @@ def test_create_simple_material() -> None:
     tests that a simple material can be created with only the required arguments
     """
 
-    my_identifiers = [{"alternative_names": "my material alternative name"}]
+    smiles = "CC"
 
     material_name = "my material"
 
-    my_material = cript.Material(name=material_name, identifiers=my_identifiers)
+    my_material = cript.Material(name=material_name, smiles=smiles)
 
-    assert my_material.identifiers == my_identifiers
+    assert my_material.smiles == smiles
     assert my_material.name == material_name
 
 
@@ -44,7 +44,7 @@ def test_all_getters_and_setters(simple_material_node) -> None:
         {"preferred_name": "my preferred material name"},
     ]
 
-    new_properties = [cript.Property(key="air_flow", type="modulus_shear", unit="gram", value=1.00)]
+    new_properties = [cript.Property(key="air_flow", type="value", unit="gram", value=1.00)]
 
     new_process = [cript.Process(name="my process name 1", type="affinity_pure", description="my simple material description", keywords=["anionic"])]
 
@@ -87,7 +87,6 @@ def test_serialize_material_to_json(simple_material_node) -> None:
     expected_dict = {
         "node": ["Material"],
         "name": "my material",
-        "identifiers": [{"alternative_names": "my material alternative name"}],
     }
 
     # compare dicts because that is more accurate
@@ -120,15 +119,14 @@ def test_deserialize_material_from_json() -> None:
         "component_count": 0,
         "computational_forcefield_count": 0,
         "created_at": "2023-03-14T00:45:02.196297Z",
-        "identifier_count": 0,
-        "identifiers": [],
         "model_version": "1.0.0",
         "node": ["Material"],
         "notes": "",
         "property_count": 0,
-        "uid": "0x24a08",
+        "uid": "_:0x24a08",
         "updated_at": "2023-03-14T00:45:02.196276Z",
         "uuid": "403fa02c-9a84-4f9e-903c-35e535151b08",
+        "smiles": "CCC",
     }
 
     material_string = json.dumps(api_material)
@@ -137,7 +135,6 @@ def test_deserialize_material_from_json() -> None:
     # assertions
     assert isinstance(my_material, cript.Material)
     assert my_material.name == api_material["name"]
-    assert my_material.identifiers == []
     assert my_material.components == []
     assert my_material.properties == []
     assert my_material.process == []

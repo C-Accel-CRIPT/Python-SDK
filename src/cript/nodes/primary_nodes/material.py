@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List
+from typing import Any, List, Union
 
 # from cript import Property, Process, ComputationalProcess
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
@@ -16,7 +16,6 @@ class Material(PrimaryBaseNode):
     ## Attributes
     | attribute               | type                                                | example                                           | description                                  | required    | vocab |
     |-------------------------|-----------------------------------------------------|---------------------------------------------------|----------------------------------------------|-------------|-------|
-    | identifiers             | list[Identifier]                                    |                                                   | material identifiers                         | True        |       |
     | components              | list[[Material](./)]                                |                                                   | list of components that make up the mixture  |             |       |
     | properties              | list[[Property](../subobjects/property)]            |                                                   | material properties                          |             |       |
     | process                 | [Process](../process)                               |                                                   | process node that made this material         |             |       |
@@ -29,7 +28,6 @@ class Material(PrimaryBaseNode):
     under the navigation within the [Materials link](https://criptapp.org/material/)
 
     ## Available Sub-Objects for Material
-    * [Identifier](../../subobjects/identifier)
     * [Property](../../subobjects/property)
     * [Computational_forcefield](../../subobjects/computational_forcefield)
 
@@ -49,8 +47,6 @@ class Material(PrimaryBaseNode):
         "component_count": 0,
         "computational_forcefield_count": 0,
         "created_at": "2023-03-14T00:45:02.196297Z",
-        "identifier_count": 0,
-        "identifiers": [],
         "model_version": "1.0.0",
         "node": "Material",
         "notes": "",
@@ -77,13 +73,21 @@ class Material(PrimaryBaseNode):
         parent_materials: List["Material"] = field(default_factory=list)
         computation_forcefield: List[Any] = field(default_factory=list)
         keywords: List[str] = field(default_factory=list)
+        bigsmiles: str = ""
+        cas: str = ""
+        chem_formula: str = ""
+        inchi: str = ""
+        inchi_key: str = ""
+        mol_form: str = ""
+        # TODO assign default
+        pubchem_cid: Union[int, None] = -1
+        smiles: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(
         self,
         name: str,
-        identifiers: List[dict[str, str]],
         components: List["Material"] = None,
         properties: List[Any] = None,
         process: List[Any] = None,
@@ -91,6 +95,15 @@ class Material(PrimaryBaseNode):
         computation_forcefield: List[Any] = None,
         keywords: List[str] = None,
         notes: str = "",
+        bigsmiles: str = "",
+        cas: str = "",
+        chem_formula: str = "",
+        inchi: str = "",
+        inchi_key: str = "",
+        mol_form: str = "",
+        # TODO assign default
+        pubchem_cid: Union[int, None] = -1,
+        smiles: str = "",
         **kwargs
     ):
         """
@@ -99,13 +112,20 @@ class Material(PrimaryBaseNode):
         Parameters
         ----------
         name: str
-        identifiers: List[dict[str, str]]
         components: List["Material"], default=None
         properties: List[Property], default=None
         process: List[Process], default=None
         parent_materials: List["Material"], default=None
         computation_forcefield: List[ComputationalProcess], default=None
         keywords: List[str], default=None
+        bigsmiles: str = "",
+        cas: str = "",
+        chem_formula: str = "",
+        inchi: str="",
+        inchi_key: str = "",
+        mol_form: str = "",
+        pubchem_cid: Union[int, None] = None,
+        smiles: str = "",
 
         Returns
         -------
@@ -140,13 +160,20 @@ class Material(PrimaryBaseNode):
         self._json_attrs = replace(
             self._json_attrs,
             name=name,
-            identifiers=identifiers,
             components=components,
             properties=properties,
             process=process,
             parent_materials=parent_materials,
             computation_forcefield=computation_forcefield,
             keywords=keywords,
+            bigsmiles=bigsmiles,
+            cas=cas,
+            chem_formula=chem_formula,
+            inchi=inchi,
+            inchi_key=inchi_key,
+            mol_form=mol_form,
+            pubchem_cid=pubchem_cid,
+            smiles=smiles,
         )
 
     # ------------ Properties ------------
@@ -184,38 +211,75 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def identifiers(self) -> List[dict[str, str]]:
-        """
-        get the identifiers for this material
+    def bigsmiles(self) -> str:
+        return self._json_attrs.bigsmiles
 
-        ```python
-        my_material.identifier = {"alternative_names": "my material alternative name"}
-        ```
+    @bigsmiles.setter
+    def bigsmiles(self, new_bigsmiles: str):
+        new_attrs = replace(self._json_attrs, bigsmiles=new_bigsmiles)
+        self._update_json_attrs_if_valid(new_attrs)
 
-        Returns
-        -------
-        List[dict[str, str]]
-            list of dictionary that has identifiers for this material
-        """
-        return self._json_attrs.identifiers.copy()
+    @property
+    def cas(self) -> str:
+        return self._json_attrs.cas
 
-    @identifiers.setter
-    def identifiers(self, new_identifiers_list: List[dict[str, str]]) -> None:
-        """
-        set the list of identifiers for this material
+    @cas.setter
+    def cas(self, new_cas: str):
+        new_attrs = replace(self._json_attrs, cas=new_cas)
+        self._update_json_attrs_if_valid(new_attrs)
 
-        the identifier keys must come from the
-        material identifiers keywords within the CRIPT controlled vocabulary
+    @property
+    def chem_formula(self) -> str:
+        return self._json_attrs.chem_formula
 
-        Parameters
-        ----------
-        new_identifiers_list: List[dict[str, str]]
+    @chem_formula.setter
+    def chem_formula(self, new_chem_formula: str):
+        new_attrs = replace(self._json_attrs, chem_formula=new_chem_formula)
+        self._update_json_attrs_if_valid(new_attrs)
 
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, identifiers=new_identifiers_list)
+    @property
+    def inchi(self) -> str:
+        return self._json_attrs.inchi
+
+    @inchi.setter
+    def inchi(self, new_inchi: str):
+        new_attrs = replace(self._json_attrs, inchi=new_inchi)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    def inchi_key(self) -> str:
+        return self._json_attrs.inchi_key
+
+    @inchi_key.setter
+    def inchi_key(self, new_inchi_key: str):
+        new_attrs = replace(self._json_attrs, inchi_key=new_inchi_key)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    def mol_form(self) -> str:
+        return self._json_attrs.mol_form
+
+    @mol_form.setter
+    def mol_form(self, new_mol_form: str):
+        new_attrs = replace(self._json_attrs, mol_form=new_mol_form)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    def pubchem_cid(self) -> Union[int, None]:
+        return self._json_attrs.pubchem_cid
+
+    @pubchem_cid.setter
+    def pubchem_cid(self, new_pubchem_cid: str):
+        new_attrs = replace(self._json_attrs, pubchem_cid=new_pubchem_cid)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    def smiles(self) -> str:
+        return self._json_attrs.smiles
+
+    @smiles.setter
+    def smiles(self, new_smiles: str):
+        new_attrs = replace(self._json_attrs, smiles=new_smiles)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

@@ -104,6 +104,7 @@ class BaseNode(ABC):
         except Exception as exc:
             print(cls, arguments)
             raise exc
+
         attrs = cls.JsonAttributes(**arguments)
         # Handle UID manually. Conserve newly assigned uid if uid is default (empty)
         if attrs.uid == cls.JsonAttributes().uid:

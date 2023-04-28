@@ -51,10 +51,11 @@ def _node_json_hook(node_str: str):
     for key, pyclass in inspect.getmembers(cript.nodes, inspect.isclass):
         if BaseNode in inspect.getmro(pyclass):
             if key == node_str:
+                return pyclass._from_json(node_dict)
                 try:
                     return pyclass._from_json(node_dict)
                 except Exception as exc:
-                    raise CRIPTJsonDeserializationError(key, node_str) from exc
+                    raise CRIPTJsonDeserializationError(key, node_dict) from exc
     # Fall back
     return node_dict
 

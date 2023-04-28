@@ -26,12 +26,6 @@ class Parameter(BaseNode):
         self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit)
         self.validate()
 
-    def validate(self):
-        super().validate()
-        # TODO. Remove this dummy validation of parameter
-        if not (isinstance(self._json_attrs.value, float) or isinstance(self._json_attrs.value, int) or isinstance(self._json_attrs.value, str)):
-            raise CRIPTNodeSchemaError
-
     @property
     def key(self) -> str:
         return self._json_attrs.key

@@ -73,7 +73,7 @@ class BaseNode(ABC):
             self._json_attrs = old_json_attrs
             raise exc
 
-    def validate(self) -> None:
+    def validate(self, api=None) -> None:
         """
         Validate this node (and all its children) against the schema provided by the data bank.
 
@@ -81,8 +81,11 @@ class BaseNode(ABC):
         -------
         Exception with more error information.
         """
+        from cript.api.api import _get_global_cached_api
 
-        pass
+        if api is None:
+            api = _get_global_cached_api()
+        api._is_node_schema_valid(self.json)
 
     @classmethod
     def _from_json(cls, json_dict: dict):
@@ -159,7 +162,6 @@ class BaseNode(ABC):
         if handled_ids is not None:
             NodeEncoder.handled_ids = handled_ids
         try:
-            self.validate()
             return ReturnTuple(json.dumps(self, cls=NodeEncoder, **kwargs), NodeEncoder.handled_ids)
         except Exception as exc:
             raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc

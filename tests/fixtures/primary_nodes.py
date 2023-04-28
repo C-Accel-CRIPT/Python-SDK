@@ -93,7 +93,7 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
     # TODO should be using simple_data_node fixture
     data_files = cript.File(source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary")
 
-    input_data = cript.Data(name="my data name", type="afm_amp", files=[data_files])
+    input_data = cript.Data(name="my data name", type="afm_amp", file=[data_files])
 
     # ingredients with Material and Quantity node
     my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
@@ -120,7 +120,7 @@ def simple_data_node(complex_file_node) -> cript.Data:
     """
     minimal data node
     """
-    my_data = cript.Data(name="my data name", type="afm_amp", files=[complex_file_node])
+    my_data = cript.Data(name="my data name", type="afm_amp", file=[complex_file_node])
 
     return my_data
 
@@ -140,7 +140,7 @@ def complex_data_node(
     my_complex_data = cript.Data(
         name="my complex data node name",
         type="afm_amp",
-        files=[copy.deepcopy(complex_file_node)],
+        file=[copy.deepcopy(complex_file_node)],
         sample_preperation=copy.deepcopy(simple_process_node),
         computations=[simple_computation_node],
         computational_process=[simple_computational_process_node],

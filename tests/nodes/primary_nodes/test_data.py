@@ -11,12 +11,12 @@ def test_create_simple_data_node(complex_file_node) -> None:
     """
     my_data_type = "afm_amp"
 
-    my_data = cript.Data(name="my data name", type=my_data_type, files=[complex_file_node])
+    my_data = cript.Data(name="my data name", type=my_data_type, file=[complex_file_node])
 
     # assertions
     assert isinstance(my_data, cript.Data)
     assert my_data.type == my_data_type
-    assert my_data.files == [complex_file_node]
+    assert my_data.file == [complex_file_node]
 
 
 def test_create_complex_data_node(
@@ -33,25 +33,25 @@ def test_create_complex_data_node(
     my_complex_data = cript.Data(
         name="my complex data node name",
         type="afm_amp",
-        files=[complex_file_node],
+        file=[complex_file_node],
         sample_preperation=simple_process_node,
         computations=[simple_computation_node],
         computational_process=[simple_computational_process_node],
         materials=[simple_material_node],
         processes=[simple_process_node],
-        citations=[complex_citation_node],
+        citation=[complex_citation_node],
     )
 
     # assertions
     assert isinstance(my_complex_data, cript.Data)
     assert my_complex_data.type == "afm_amp"
-    assert my_complex_data.files == [complex_file_node]
+    assert my_complex_data.file == [complex_file_node]
     assert my_complex_data.sample_preperation == simple_process_node
     assert my_complex_data.computations == [simple_computation_node]
     assert my_complex_data.computational_process == [simple_computational_process_node]
     assert my_complex_data.materials == [simple_material_node]
     assert my_complex_data.processes == [simple_process_node]
-    assert my_complex_data.citations == [complex_citation_node]
+    assert my_complex_data.citation == [complex_citation_node]
 
 
 def test_data_type_invalid_vocabulary() -> None:
@@ -99,23 +99,23 @@ def test_data_getters_and_setters(
 
     # use setters
     simple_data_node.type = my_data_type
-    simple_data_node.files = my_new_files
+    simple_data_node.file = my_new_files
     simple_data_node.sample_preperation = simple_process_node
     simple_data_node.computations = [simple_computation_node]
     simple_data_node.computational_process = simple_computational_process_node
     simple_data_node.materials = [simple_material_node]
     simple_data_node.processes = [simple_process_node]
-    simple_data_node.citations = [complex_citation_node]
+    simple_data_node.citation = [complex_citation_node]
 
     # assertions check getters and setters
     assert simple_data_node.type == my_data_type
-    assert simple_data_node.files == my_new_files
+    assert simple_data_node.file == my_new_files
     assert simple_data_node.sample_preperation == simple_process_node
     assert simple_data_node.computations == [simple_computation_node]
     assert simple_data_node.computational_process == simple_computational_process_node
     assert simple_data_node.materials == [simple_material_node]
     assert simple_data_node.processes == [simple_process_node]
-    assert simple_data_node.citations == [complex_citation_node]
+    assert simple_data_node.citation == [complex_citation_node]
 
 
 def test_serialize_data_to_json(simple_data_node) -> None:
@@ -128,7 +128,7 @@ def test_serialize_data_to_json(simple_data_node) -> None:
         "node": ["Data"],
         "type": "afm_amp",
         "name": "my data name",
-        "files": [
+        "file": [
             {
                 "data_dictionary": "my file's data dictionary",
                 "extension": ".csv",

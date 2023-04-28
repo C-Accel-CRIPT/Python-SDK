@@ -24,7 +24,7 @@ class Process(PrimaryBaseNode):
     | prerequisite_ processes | list[Process]    |                                                                                 | processes that must be completed prior to the start of this process |          |       |
     | conditions              | list[Condition]  |                                                                                 | global process conditions                                           |          |       |
     | properties              | list[Property]   |                                                                                 | process properties                                                  |          |       |
-    | keywords                | list[str]        |                                                                                 | words that classify the process                                     |          | True  |
+    | keyword                | list[str]        |                                                                                 | words that classify the process                                     |          | True  |
     | citations               | list[Citation]   |                                                                                 | reference to a book, paper, or scholarly work                       |          |       |
 
     ## Available Subobjects
@@ -52,7 +52,7 @@ class Process(PrimaryBaseNode):
         prerequisite_processes: List["Process"] = field(default_factory=list)
         conditions: List[Any] = field(default_factory=list)
         properties: List[Any] = field(default_factory=list)
-        keywords: List[str] = None
+        keyword: List[str] = None
         citations: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -69,7 +69,7 @@ class Process(PrimaryBaseNode):
         prerequisite_processes: List[Any] = None,
         conditions: List[Any] = None,
         properties: List[Any] = None,
-        keywords: List[str] = None,
+        keyword: List[str] = None,
         citations: List[Any] = None,
         notes: str = "",
         **kwargs
@@ -100,9 +100,9 @@ class Process(PrimaryBaseNode):
             list of [conditions](../../subobjects/condition) that this process was created under
         properties: List[Property] = None
             list of [properties](../../subobjects/property) for this process
-        keywords: List[str] = None
+        keyword: List[str] = None
             list of keywords for this process must come from
-            [CRIPT process keywords controlled keywords](https://criptapp.org/keys/process-keyword/)
+            [CRIPT process keyword controlled keyword](https://criptapp.org/keys/process-keyword/)
         citations: List[Citation] = None
             list of [citations](../../subobjects/citation)
 
@@ -133,8 +133,8 @@ class Process(PrimaryBaseNode):
         if properties is None:
             properties = []
 
-        if keywords is None:
-            keywords = []
+        if keyword is None:
+            keyword = []
 
         if citations is None:
             citations = []
@@ -152,7 +152,7 @@ class Process(PrimaryBaseNode):
             conditions=conditions,
             prerequisite_processes=prerequisite_processes,
             properties=properties,
-            keywords=keywords,
+            keyword=keyword,
             citations=citations,
         )
         self._update_json_attrs_if_valid(new_attrs)
@@ -480,35 +480,35 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def keywords(self) -> List[str]:
+    def keyword(self) -> List[str]:
         """
-        List of keywords for this process
+        List of keyword for this process
 
-        [Process keywords](https://criptapp.org/keys/process-keyword/) must come from CRIPT controlled vocabulary
+        [Process keyword](https://criptapp.org/keys/process-keyword/) must come from CRIPT controlled vocabulary
 
         Returns
         -------
         List[str]
             list of keywords for this process nod
         """
-        return self._json_attrs.keywords.copy()
+        return self._json_attrs.keyword.copy()
 
-    @keywords.setter
-    def keywords(self, new_keywords_list: List[str]) -> None:
+    @keyword.setter
+    def keyword(self, new_keyword_list: List[str]) -> None:
         """
-        set the list of keywords for this process from CRIPT controlled vocabulary
+        set the list of keyword for this process from CRIPT controlled vocabulary
 
         Parameters
         ----------
-        new_keywords_list: List[str]
-            replace the current list of keywords
+        new_keyword_list: List[str]
+            replace the current list of keyword
 
         Returns
         -------
         None
         """
         # TODO validate with CRIPT controlled vocabulary
-        new_attrs = replace(self._json_attrs, keywords=new_keywords_list)
+        new_attrs = replace(self._json_attrs, keyword=new_keyword_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

@@ -88,7 +88,7 @@ def test_cycles(complex_data_node, simple_computation_node):
 
 
 def test_uid_serial(simple_inventory_node):
-    simple_inventory_node.materials += simple_inventory_node.materials
+    simple_inventory_node.material += simple_inventory_node.material
     json_dict = json.loads(simple_inventory_node.get_json().json)
     assert len(json_dict["materials"]) == 4
     assert isinstance(json_dict["materials"][2]["uid"], str)

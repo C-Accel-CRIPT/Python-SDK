@@ -2,7 +2,6 @@ from dataclasses import dataclass, replace
 from typing import Union
 
 from cript.nodes.core import BaseNode
-from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 
 class Parameter(BaseNode):

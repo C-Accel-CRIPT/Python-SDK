@@ -47,7 +47,7 @@ def complex_reference_node() -> cript.Reference:
     reference = cript.Reference(
         "journal_article",
         title=title,
-        authors=["Ludwig Schneider", "Marcus Müller"],
+        author=["Ludwig Schneider", "Marcus Müller"],
         journal="Computer Physics Communications",
         publisher="Elsevier",
         year=2019,
@@ -65,7 +65,7 @@ def complex_reference_dict() -> dict:
         "node": ["Reference"],
         "type": "journal_article",
         "title": "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)",
-        "authors": ["Ludwig Schneider", "Marcus Müller"],
+        "author": ["Ludwig Schneider", "Marcus Müller"],
         "journal": "Computer Physics Communications",
         "publisher": "Elsevier",
         "year": 2019,

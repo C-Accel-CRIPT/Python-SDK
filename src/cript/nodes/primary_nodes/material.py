@@ -79,8 +79,7 @@ class Material(PrimaryBaseNode):
         inchi: str = ""
         inchi_key: str = ""
         mol_form: str = ""
-        # TODO assign default
-        pubchem_cid: Union[int, None] = -1
+        pubchem_cid: Union[int, None] = None
         smiles: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -102,7 +101,7 @@ class Material(PrimaryBaseNode):
         inchi_key: str = "",
         mol_form: str = "",
         # TODO assign default
-        pubchem_cid: Union[int, None] = -1,
+        pubchem_cid: Union[int, None] = None,
         smiles: str = "",
         **kwargs
     ):

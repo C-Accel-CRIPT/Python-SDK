@@ -237,7 +237,7 @@ class API:
             raise CRIPTConnectionError(self.host, self._token) from exc
 
     # TODO this needs a better name because the current name is unintuitive if you are just getting vocab
-    def _fetch_vocab(self) -> dict:
+    def _get_vocab(self) -> dict:
         """
         gets the entire controlled vocabulary to be used with validating nodes
         with attributes from controlled vocabulary
@@ -311,7 +311,7 @@ class API:
         # TODO do we need to raise an InvalidVocabularyCategory here, or can we just give a KeyError?
         try:
             # get the entire vocabulary
-            controlled_vocabulary = self._fetch_vocab()
+            controlled_vocabulary = self._get_vocab()
             # get just the category needed
             controlled_vocabulary = controlled_vocabulary[vocab_category]
         except KeyError:

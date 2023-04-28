@@ -41,8 +41,6 @@ nav:
       - API Exceptions: exceptions/api_exceptions.md
       - Node Exceptions: exceptions/node_exceptions.md
   - FAQ: faq.md
-#    TODO add developer documentations
-#  - Developers Documentation:
 
 theme:
   name: material

@@ -209,7 +209,6 @@ class APIError(CRIPTException):
         self.api_error = api_error
 
     def __str__(self):
-        # TODO this error message may need more context as to what the SDK was doing when it got this error
         error_message: str = f"The API responded with {self.api_error}"
 
         return error_message

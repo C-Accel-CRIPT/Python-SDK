@@ -13,7 +13,7 @@ from cript.api.exceptions import (
     CRIPTConnectionError,
     InvalidHostError,
     InvalidVocabulary,
-    InvalidVocabularyCategory,
+    InvalidVocabularyCategory, APIError,
 )
 from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes
@@ -348,9 +348,13 @@ class API:
         # fetch db_schema from API
         else:
             # fetch db schema, get the JSON body of it, and get the data of that JSON
-            response = requests.get(f"{self.host}/schema/").json()["data"]
+            response = requests.get(url=f"{self.host}/schema/").json()
 
-            self._db_schema = response
+            if response["code"] != 200:
+                raise APIError(api_error=response.json())
+
+            # get the data from the API JSON response
+            self._db_schema = response["data"]
             return self._db_schema
 
     # TODO this should later work with both POST and PATCH. Currently, just works for POST

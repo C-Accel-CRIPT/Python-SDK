@@ -84,7 +84,7 @@ extra:
 copyright: © 2023 MIT | All Rights Reserved
 
 extra_css:
-  - assets/stylesheets/extra.css
+  - extra.css
 
 plugins:
   - search

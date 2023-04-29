@@ -511,7 +511,7 @@ class Reference(BaseNode):
         Returns
         -------
         str
-           digital object identifier (DOI) for this reference node
+            digital object identifier (DOI) for this reference node
         """
         return self._json_attrs.doi
 

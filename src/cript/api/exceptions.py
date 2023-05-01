@@ -191,6 +191,7 @@ class APIError(CRIPTException):
     """
     Generic error made to display API errors to the user
     """
+
     api_error: str = ""
 
     def __init__(self, api_error: str) -> None:

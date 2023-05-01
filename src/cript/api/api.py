@@ -14,7 +14,7 @@ from cript.api.exceptions import (
     CRIPTConnectionError,
     InvalidHostError,
     InvalidVocabulary,
-    InvalidVocabularyCategory, APIError,
+    InvalidVocabularyCategory,
 )
 from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes

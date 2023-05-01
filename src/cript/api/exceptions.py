@@ -1,4 +1,3 @@
-from abc import ABC
 from typing import Any, List
 
 from cript.api.valid_search_modes import SearchModes
@@ -191,6 +190,7 @@ class APIError(CRIPTException):
     """
     Generic error made to display API errors to the user
     """
+
     api_error: str = ""
 
     def __init__(self, api_error: str) -> None:

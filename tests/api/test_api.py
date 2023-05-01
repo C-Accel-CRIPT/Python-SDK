@@ -5,7 +5,6 @@ import requests
 
 import cript
 from cript.api.exceptions import InvalidVocabulary, InvalidVocabularyCategory
-from cript.api.paginator import Paginator
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 
@@ -258,7 +257,6 @@ def test_get_my_group_node_from_api(cript_api: cript.API) -> None:
     tests that group node that is associated with their API Token can be gotten correctly
     """
     pass
-
 
 
 def test_get_my_projects_from_api(cript_api: cript.API) -> None:

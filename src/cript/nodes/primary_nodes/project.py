@@ -1,6 +1,10 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
+from cript.nodes.exceptions import (
+    CRIPTOrphranedExperimentError,
+    CRIPTOrphranedMaterialError,
+)
 from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
@@ -75,6 +79,37 @@ class Project(PrimaryBaseNode):
 
         self._json_attrs = replace(self._json_attrs, name=name, collections=collections, material=material)
         self.validate()
+
+    def validate(self):
+        # First validate like other nodes
+        super().validate()
+
+        # Check graph for orphraned nodes, that should be listed in project
+        # Project.materials should contain all material nodes
+        all_materials = self.find_children({"node": ["Material"]})
+        for material in all_materials:
+            if material not in self.materials:
+                raise CRIPTOrphranedMaterialError(material)
+
+        # Check graph for orphraned nodes, that should be listed in the experiments
+        all_experiments = self.find_children({"node": ["Experiment"]})
+        # All in the graph has to be in at least one experiment
+        node_types = ("Process", "Computation", "ComputationalProcess", "Data")
+        for node_type in node_types:
+            all_nodes = self.find_children({"node": [node_type]})
+            node_type_attr = node_type.lower()
+            # Non-consistent naming makes this necessary for Computation Process
+            if node_type == "ComputationalProcess":
+                node_type_attr = "computational_process"
+
+            for node in all_nodes:
+                node_found = False
+                for experiment in all_experiments:
+                    if node in getattr(experiment, node_type_attr):
+                        node_found = True
+                        break
+                if not node_found:
+                    raise CRIPTOrphranedExperimentError(node)
 
     # ------------------ Properties ------------------
 

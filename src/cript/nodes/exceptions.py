@@ -1,3 +1,5 @@
+from abc import ABC, abstractmethod
+
 from cript.exceptions import CRIPTException
 
 
@@ -57,3 +59,37 @@ class CRIPTJsonSerializationError(CRIPTException):
 
     def __str__(self):
         return f"JSON Serialization failed for node type {self.node_type} with JSON dict: {self.json_str}"
+
+
+class CRIPTOrphranedNodesError(CRIPTException, ABC):
+    def __init__(self, orphraned_node: "BaseNode"):
+        self.orphaned_node = orphraned_node
+
+    @abstractmethod
+    def __str__(self):
+        pass
+
+
+class CRIPTOrphranedMaterialError(CRIPTOrphranedNodesError):
+    def __init__(self, orphaned_node: "Material"):
+        super().__init__(orphaned_node)
+
+    def __str__(self):
+        ret_string = "While validating a project graph, an orphraned material node was found. "
+        ret_string += "This material is present in the graph, but not listed in the project. "
+        ret_string += "Please add the node like: `your_project.materials += [orphaned_material]`. "
+        ret_string += f"The orphraned material was {self.orphraned_node}."
+        return ret_string
+
+
+class CRIPTOrphranedExperimentError(CRIPTOrphranedNodesError):
+    def __init__(self, orphaned_node):
+        super().__init__(orphaned_node)
+
+    def __str__(self):
+        node_name = self.orphaned_node.node_type.lower()
+        ret_string = f"While validating a project graph, an orphraned {node_name} node was found. "
+        ret_string += f"This {node_name} node is present in the graph, but not listed in any experiment of the  project. "
+        ret_string += f"Please add the node like: `your_experiment.{node_name} += [orphaned_{node_name}]`. "
+        ret_string += f"The orphraned {node_name} was {self.orphraned_node}."
+        return ret_string

@@ -149,6 +149,12 @@ class Material(PrimaryBaseNode):
             keywords=keywords,
         )
 
+        # Add material to the currently active project
+        from cript.nodes.primary_nodes.project import _get_global_cached_project
+
+        current_project = _get_global_cached_project()
+        current_project.materials += [self]
+
     # ------------ Properties ------------
     @property
     def name(self) -> str:

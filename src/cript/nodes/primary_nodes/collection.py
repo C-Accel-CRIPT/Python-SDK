@@ -86,6 +86,12 @@ class Collection(PrimaryBaseNode):
 
         self.validate()
 
+        # Add collection to the currently active project
+        from cript.nodes.primary_nodes.project import _get_global_cached_project
+
+        current_project = _get_global_cached_project()
+        current_project.collections += [self]
+
     # ------------------ Properties ------------------
 
     @property
@@ -142,7 +148,7 @@ class Collection(PrimaryBaseNode):
         )
 
         my_inventory = cript.Inventory(
-            name="my inventory name", materials_list=[material_1, material_2]
+            name="my inventory name", materials=[material_1, material_2]
         )
 
         my_collection.inventories = [my_inventory]

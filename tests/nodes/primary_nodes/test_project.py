@@ -1,3 +1,4 @@
+import copy
 import json
 
 from util import strip_uid_from_dict
@@ -28,20 +29,21 @@ def test_project_getters_and_setters(simple_project_node, simple_collection_node
     3. get all of its attributes
     4. what was set and what was gotten should be equivalent
     """
+    project_node = copy.deepcopy(simple_project_node)
     new_project_name = "my new project name"
 
     # set attributes
-    simple_project_node.name = new_project_name
-    simple_project_node.collections = [complex_collection_node]
-    simple_project_node.materials = [simple_material_node]
+    project_node.name = new_project_name
+    project_node.collections = [complex_collection_node]
+    project_node.materials = [simple_material_node]
 
     # get attributes and assert that they are the same
-    assert simple_project_node.name == new_project_name
-    assert simple_project_node.collections == [complex_collection_node]
-    assert simple_project_node.materials == [simple_material_node]
+    assert project_node.name == new_project_name
+    assert project_node.collections == [complex_collection_node]
+    assert project_node.materials == [simple_material_node]
 
 
-def test_serialize_project_to_json(simple_project_node) -> None:
+def test_serialize_project_to_json(simple_project_node, simple_collection_node) -> None:
     """
     tests that a Project node can be correctly converted to a JSON
     """
@@ -60,8 +62,12 @@ def test_serialize_project_to_json(simple_project_node) -> None:
     }
 
     # comparing dicts instead of JSON strings because dict comparison is more accurate
-    ref_dict = json.loads(simple_project_node.json)
-    ref_dict = strip_uid_from_dict(ref_dict)
+    project_node = copy.deepcopy(simple_project_node)
+    project_node.collections = [simple_collection_node]
+    project_node.materials = []
+    ref_node = json.loads(project_node.json)
+    ref_dict = strip_uid_from_dict(ref_node)
+
     assert ref_dict == expected_dict
 
 

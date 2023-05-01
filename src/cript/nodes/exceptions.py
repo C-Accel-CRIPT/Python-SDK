@@ -57,3 +57,22 @@ class CRIPTJsonSerializationError(CRIPTException):
 
     def __str__(self):
         return f"JSON Serialization failed for node type {self.node_type} with JSON dict: {self.json_str}"
+
+
+class CRIPTProjectAccessError(CRIPTException):
+    """
+    Exception to be raised when the cached API object is requested, but no cached API exists yet.
+    """
+
+    def __init__(self):
+        pass
+
+    def __str__(self) -> str:
+        ret_str = "An operation you requested (see stack trace) requires that you "
+        ret_str += " a project first.\n"
+        ret_str += "This is common for node creation (especially materials).\n"
+        ret_str += "It is necessary that you activate the project via a context manager like this:\n"
+        ret_str += "`with cript.Project(....) as project:\n"
+        ret_str += "\t# code that uses the project explicily or implicitly."
+        ret_str += "See documentation of cript.Project for more details."
+        return ret_str

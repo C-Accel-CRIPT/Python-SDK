@@ -1,10 +1,25 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
+from cript.nodes.exceptions import CRIPTProjectAccessError
 from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.supporting_nodes.group import Group
+
+# Do not use this directly! That includes devs.
+# Use the `_get_global_cached_project for access.
+_global_cached_project = None
+
+
+def _get_global_cached_project():
+    """
+    Read-Only access to the globally cached API object.
+    Raises an exception if no global API object is cached yet.
+    """
+    if _global_cached_project is None:
+        raise CRIPTProjectAccessError
+    return _global_cached_project
 
 
 class Project(PrimaryBaseNode):
@@ -76,6 +91,43 @@ class Project(PrimaryBaseNode):
         self._json_attrs = replace(self._json_attrs, name=name, collections=collections, material=material)
         self.validate()
 
+    def activate(self):
+        """
+        Activate this Project globally.
+        When a project is activated new or fetched Collections and Materials are automatically added.
+        It is not necessary to call this function manually if a context manager is used.
+        A context manager is preferred where possible.
+        Jupyter notebooks are a use case where this activation can be handled manually.
+        If this function is called manually, the `Project.deactivate` function has to be called later.
+
+        For manual connection: nested Project object are discouraged.
+        """
+
+        global _global_cached_project
+        self._previous_global_cached_project = _global_cached_project
+        _global_cached_project = self
+        return self
+
+    def deactivate(self):
+        """
+        Deactivate this Project globally.
+        It is not necessary to call this function manually if a context manager is used.
+        A context manager is preferred where possible.
+        Jupyter notebooks are a use case where this activation can be handled manually.
+        This function has to be called manually if  the `Project.activate` function has to be called before.
+
+        For manual connection: nested Project object are discouraged.
+        """
+        # Restore the previously active global API (might be None)
+        global _global_cached_project
+        _global_cached_project = self._previous_global_cached_project
+
+    def __enter__(self):
+        return self.activate()
+
+    def __exit__(self, type, value, traceback):
+        self.deactivate()
+
     # ------------------ Properties ------------------
 
     # GROUP
@@ -146,6 +198,8 @@ class Project(PrimaryBaseNode):
         -------
         None
         """
+        # Remove duplicate entries
+        new_collection = list(dict.fromkeys(new_collection))
         new_attrs = replace(self._json_attrs, collections=new_collection)
         self._update_json_attrs_if_valid(new_attrs)
 
@@ -184,5 +238,7 @@ class Project(PrimaryBaseNode):
         -------
         None
         """
+        # Remove duplicate entries
+        new_materials = list(dict.fromkeys(new_materials))
         new_attrs = replace(self._json_attrs, material=new_materials)
         self._update_json_attrs_if_valid(new_attrs)

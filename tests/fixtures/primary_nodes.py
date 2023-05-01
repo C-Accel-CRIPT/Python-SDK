@@ -5,8 +5,8 @@ import pytest
 import cript
 
 
-@pytest.fixture(scope="function")
-def simple_project_node(simple_collection_node) -> cript.Project:
+@pytest.fixture(scope="session", autouse=True)
+def simple_project_node() -> cript.Project:
     """
     create a minimal Project node with only required arguments for other tests to use
 
@@ -14,20 +14,10 @@ def simple_project_node(simple_collection_node) -> cript.Project:
     -------
     cript.Project
     """
-
-    return cript.Project(name="my Project name", collections=[simple_collection_node])
-
-
-@pytest.fixture(scope="function")
-def complex_project_node(complex_collection_node, complex_material_node) -> cript.Project:
-    """
-    a complex Project node that includes all possible optional arguments that are themselves complex as well
-    """
-    project_name = "my project name"
-
-    complex_project = cript.Project(name=project_name, collections=[complex_collection_node], materials=[complex_material_node])
-
-    return complex_project
+    assert cript.nodes.primary_nodes.project._global_cached_project is None
+    with cript.Project(name="my Project name") as project:
+        yield project
+    assert cript.nodes.primary_nodes.project._global_cached_project is None
 
 
 @pytest.fixture(scope="function")
@@ -233,7 +223,7 @@ def simple_inventory_node() -> None:
 
     material_2 = cript.Material(name="material 2", identifiers=[{"alternative_names": "material 2 alternative name"}])
 
-    my_inventory = cript.Inventory(name="my inventory name", materials_list=[material_1, material_2])
+    my_inventory = cript.Inventory(name="my inventory name", materials=[material_1, material_2])
 
     # use my_inventory in another test
     return my_inventory

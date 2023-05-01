@@ -35,7 +35,7 @@ class Inventory(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, materials_list: List[Material], notes: str = "", **kwargs) -> None:
+    def __init__(self, name: str, materials: List[Material], notes: str = "", **kwargs) -> None:
         """
         Instantiate an inventory node
 
@@ -60,7 +60,7 @@ class Inventory(PrimaryBaseNode):
 
         Parameters
         ----------
-        materials_list: List[Material]
+        materials: List[Material]
             list of materials in this inventory
 
         Returns
@@ -69,12 +69,12 @@ class Inventory(PrimaryBaseNode):
             instantiate an inventory node
         """
 
-        if materials_list is None:
-            materials_list = []
+        if materials is None:
+            materials = []
 
         super().__init__(name=name, notes=notes)
 
-        self._json_attrs = replace(self._json_attrs, materials=materials_list)
+        self._json_attrs = replace(self._json_attrs, materials=materials)
 
     # ------------------ Properties ------------------
     @property

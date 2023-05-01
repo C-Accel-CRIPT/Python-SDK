@@ -114,3 +114,27 @@ def test_invalid_json_load():
     raise_node_dict(node_dict)
     node_dict = {"node": [None]}
     raise_node_dict(node_dict)
+
+
+def test_project_auto_assignement(simple_project_node, simple_material_node, simple_collection_node):
+    material_length = len(simple_project_node.materials)
+    collection_length = len(simple_project_node.collections)
+
+    # Let's create a new project (from the old project)
+    # Let's activate this project
+    with copy.deepcopy(simple_project_node) as new_project:
+        # Let's create a new materials
+        new_material = copy.deepcopy(simple_material_node)
+        # It should be in the new project, but not the old project
+        assert new_material in new_project.materials
+        assert new_material not in simple_project_node.materials
+
+        # Same for collection
+        new_collection = copy.deepcopy(simple_collection_node)
+        assert new_collection in new_project.collections
+        assert new_collection not in simple_project_node.collections
+
+    simple_project_node.deactivate()
+    assert cript.nodes.primary_nodes.project._global_cached_project is not simple_project_node
+    simple_project_node.activate()
+    assert cript.nodes.primary_nodes.project._global_cached_project is simple_project_node

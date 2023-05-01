@@ -117,9 +117,6 @@ def test_invalid_json_load():
 
 
 def test_project_auto_assignement(simple_project_node, simple_material_node, simple_collection_node):
-    material_length = len(simple_project_node.materials)
-    collection_length = len(simple_project_node.collections)
-
     # Let's create a new project (from the old project)
     # Let's activate this project
     with copy.deepcopy(simple_project_node) as new_project:

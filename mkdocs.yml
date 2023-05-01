@@ -41,8 +41,6 @@ nav:
       - API Exceptions: exceptions/api_exceptions.md
       - Node Exceptions: exceptions/node_exceptions.md
   - FAQ: faq.md
-#    TODO add developer documentations
-#  - Developers Documentation:
 
 theme:
   name: material
@@ -86,7 +84,7 @@ extra:
 copyright: © 2023 MIT | All Rights Reserved
 
 extra_css:
-  - assets/stylesheets/extra.css
+  - extra.css
 
 plugins:
   - search

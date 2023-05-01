@@ -13,7 +13,7 @@ from cript.api.exceptions import (
     CRIPTConnectionError,
     InvalidHostError,
     InvalidVocabulary,
-    InvalidVocabularyCategory,
+    InvalidVocabularyCategory, APIError,
 )
 from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes
@@ -237,7 +237,7 @@ class API:
             raise CRIPTConnectionError(self.host, self._token) from exc
 
     # TODO this needs a better name because the current name is unintuitive if you are just getting vocab
-    def _fetch_vocab(self) -> dict:
+    def _get_vocab(self) -> dict:
         """
         gets the entire controlled vocabulary to be used with validating nodes
         with attributes from controlled vocabulary
@@ -311,7 +311,7 @@ class API:
         # TODO do we need to raise an InvalidVocabularyCategory here, or can we just give a KeyError?
         try:
             # get the entire vocabulary
-            controlled_vocabulary = self._fetch_vocab()
+            controlled_vocabulary = self._get_vocab()
             # get just the category needed
             controlled_vocabulary = controlled_vocabulary[vocab_category]
         except KeyError:
@@ -348,9 +348,13 @@ class API:
         # fetch db_schema from API
         else:
             # fetch db schema, get the JSON body of it, and get the data of that JSON
-            response = requests.get(f"{self.host}/schema/").json()["data"]
+            response = requests.get(url=f"{self.host}/schema/").json()
 
-            self._db_schema = response
+            if response["code"] != 200:
+                raise APIError(api_error=response.json())
+
+            # get the data from the API JSON response
+            self._db_schema = response["data"]
             return self._db_schema
 
     # TODO this should later work with both POST and PATCH. Currently, just works for POST

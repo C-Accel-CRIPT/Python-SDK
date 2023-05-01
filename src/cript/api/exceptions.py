@@ -1,3 +1,4 @@
+from abc import ABC
 from typing import Any, List
 
 from cript.api.valid_search_modes import SearchModes
@@ -184,3 +185,30 @@ class InvalidHostError(CRIPTException):
         """
 
         return self.error_message
+
+
+class APIError(CRIPTException):
+    """
+    Generic error made to display API errors to the user
+    """
+    api_error: str = ""
+
+    def __init__(self, api_error: str) -> None:
+        """
+        create an APIError
+        Parameters
+        ----------
+        api_error: str
+            JSON string of API error
+
+        Returns
+        -------
+        None
+            create an API Error
+        """
+        self.api_error = api_error
+
+    def __str__(self):
+        error_message: str = f"The API responded with {self.api_error}"
+
+        return error_message

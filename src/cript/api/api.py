@@ -8,6 +8,7 @@ import jsonschema
 import requests
 
 from cript.api.exceptions import (
+    APIError,
     CRIPTAPIAccessError,
     CRIPTAPISaveError,
     CRIPTConnectionError,

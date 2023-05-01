@@ -363,11 +363,7 @@ class Data(PrimaryBaseNode):
     @property
     def citation(self) -> List[Any]:
         """
-<<<<<<< HEAD
         List of [citation](../supporting_nodes/citations.md) within the data node
-=======
-        List of [citations](../../subobjects/citation) within the data node
->>>>>>> wip_api
 
         Example
         -------

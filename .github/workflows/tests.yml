@@ -1,4 +1,4 @@
-name: install
+name: Tests
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
         python-version: [3.7, 3.8, 3.9, 3.10, 3.11]
     steps:
       - name: Checkout
@@ -28,6 +28,8 @@ jobs:
 
       - name: Check installation
         run: |
+          export CRIPT_TOKEN="125433546"
+          export CRIPT_HOST="http://development.api.mycriptapp.org/"
           python3 -m pip install pytest
           python3 -m pip install -r requirements.txt
           python3 -c "import cript"

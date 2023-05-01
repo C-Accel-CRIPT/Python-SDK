@@ -11,7 +11,7 @@ class Data(PrimaryBaseNode):
      node contains the meta-data to describe raw data that is beyond a single value, (i.e. n-dimensional data).
      Each `Data` node must be linked to a single `Experiment` node.
 
-    ## Sub-Objects
+    ## Available Sub-Objects
     * [Citation](../../subobjects/citation)
 
     ## Attributes
@@ -45,9 +45,6 @@ class Data(PrimaryBaseNode):
     # create data node with required arguments
     my_data = cript.Data(name="my data name", type="afm_amp", files=[simple_file_node])
     ```
-
-    ## Available Subobjects
-    * [citations](../../subobjects/citation)
 
     ## JSON
     ```json
@@ -93,7 +90,7 @@ class Data(PrimaryBaseNode):
         notes: str = "",
         **kwargs
     ):
-        super().__init__(node="Data", name=name, notes=notes)
+        super().__init__(name=name, notes=notes)
 
         if files is None:
             files = []
@@ -366,7 +363,7 @@ class Data(PrimaryBaseNode):
     @property
     def citations(self) -> List[Any]:
         """
-        List of [citations](../supporting_nodes/citations.md) within the data node
+        List of [citations](../../subobjects/citation) within the data node
 
         Example
         -------

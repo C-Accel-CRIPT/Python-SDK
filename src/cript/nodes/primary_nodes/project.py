@@ -33,7 +33,7 @@ class Project(PrimaryBaseNode):
         # TODO is group needed?
         group: Group = None
         collections: List[Collection] = field(default_factory=list)
-        materials: List[Material] = field(default_factory=list)
+        material: List[Material] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -42,7 +42,7 @@ class Project(PrimaryBaseNode):
         name: str,
         # group: Group,
         collections: List[Collection] = None,
-        materials: List[Material] = None,
+        material: List[Material] = None,
         notes: str = "",
         **kwargs
     ):
@@ -55,7 +55,7 @@ class Project(PrimaryBaseNode):
             project name
         collections: List[Collection]
             list of Collections that belongs to this Project
-        materials: List[Material]
+         material: List[Material]
             list of materials that belongs to this project
         notes: str
             notes for this project
@@ -65,15 +65,15 @@ class Project(PrimaryBaseNode):
         None
             instantiate a Project node
         """
-        super().__init__(node="Project", name=name, notes=notes)
+        super().__init__(name=name, notes=notes)
 
         if collections is None:
             collections = []
 
-        if materials is None:
-            materials = []
+        if material is None:
+            material = []
 
-        self._json_attrs = replace(self._json_attrs, name=name, collections=collections, materials=materials)
+        self._json_attrs = replace(self._json_attrs, name=name, collections=collections, material=material)
         self.validate()
 
     # ------------------ Properties ------------------
@@ -151,7 +151,7 @@ class Project(PrimaryBaseNode):
 
     # Material
     @property
-    def materials(self) -> List[Material]:
+    def material(self) -> List[Material]:
         """
         List of Materials that belong to this Project.
 
@@ -169,9 +169,9 @@ class Project(PrimaryBaseNode):
         Material: List[Material]
             List of materials that belongs to this project
         """
-        return self._json_attrs.materials
+        return self._json_attrs.material
 
-    @materials.setter
+    @material.setter
     def materials(self, new_materials: List[Material]) -> None:
         """
         set the list of materials for this project
@@ -184,5 +184,5 @@ class Project(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, materials=new_materials)
+        new_attrs = replace(self._json_attrs, material=new_materials)
         self._update_json_attrs_if_valid(new_attrs)

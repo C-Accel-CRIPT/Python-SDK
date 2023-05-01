@@ -147,7 +147,7 @@ class ComputationalProcess(PrimaryBaseNode):
         None
             instantiate computationalProcess node
         """
-        super().__init__(node="Computational_Process", name=name, notes=notes)
+        super().__init__(name=name, notes=notes)
 
         # TODO validate type from vocab
 

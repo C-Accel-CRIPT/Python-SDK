@@ -22,7 +22,7 @@ class Experiment(PrimaryBaseNode):
     | computational_ processes | List[Computational  Process] | computation process nodes associated with this experiment | False     |
     | data                     | List[Data]                   | data nodes associated with this experiment                | False     |
     | funding                  | List[str]                    | funding source for experiment                             | False     |
-    | citations                | List[Citation]               | reference to a book, paper, or scholarly work             | False     |
+    | citation                | List[Citation]               | reference to a book, paper, or scholarly work             | False     |
 
 
     ## Subobjects
@@ -35,7 +35,7 @@ class Experiment(PrimaryBaseNode):
     * [Computational_Process](../computational_process)
     * [Data](../data)
     * [Funding](../funding)
-    * [Citations](../citation)
+    * [Citation](../citation)
 
 
     Warnings
@@ -112,7 +112,7 @@ class Experiment(PrimaryBaseNode):
         if citation is None:
             citation = []
 
-        super().__init__(node="Experiment", name=name, notes=notes)
+        super().__init__(name=name, notes=notes)
 
         self._json_attrs = replace(
             self._json_attrs,
@@ -332,7 +332,7 @@ class Experiment(PrimaryBaseNode):
     @property
     def citation(self) -> List[Any]:
         """
-        List of [citations](../citation) for this experiment
+        List of [citation](../citation) for this experiment
 
         Examples
         --------
@@ -358,7 +358,7 @@ class Experiment(PrimaryBaseNode):
 
         Parameters
         ----------
-        new_citation_list: List[Citation]
+        new_citations_list: List[Citation]
             replace the list of citations for this experiment with a new list of citations
 
         Returns

@@ -45,7 +45,7 @@ class Condition(BaseNode):
     ):
         if material is None:
             material = []
-        super().__init__("Condition")
+        super().__init__()
 
         self._json_attrs = replace(
             self._json_attrs,

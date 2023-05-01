@@ -43,4 +43,5 @@ share/python-wheels/
 
 # ignore coverage.py files and directories
 .coverage
+/.coverage
 htmlcov/

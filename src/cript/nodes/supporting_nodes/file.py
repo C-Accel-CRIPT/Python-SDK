@@ -107,7 +107,7 @@ class File(BaseNode):
             ```
         """
 
-        super().__init__(node="File")
+        super().__init__()
 
         # TODO check if vocabulary is valid or not
         # is_vocab_valid("file type", type)

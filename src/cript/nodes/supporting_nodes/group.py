@@ -85,7 +85,7 @@ class Group(BaseNode):
         users: List[User])
             List of users in this group
         """
-        super().__init__(node="Group")
+        super().__init__()
         self._json_attrs = replace(self._json_attrs, name=name, admins=admins, users=users)
         self.validate()
 

@@ -63,7 +63,7 @@ from util import strip_uid_from_dict
 import cript
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 def cript_api():
     """
     Create an API instance for the rest of the tests to use.
@@ -73,6 +73,6 @@ def cript_api():
     """
 
     assert cript.api.api._global_cached_api is None
-    with cript.API("http://development.api.mycriptapp.org/", "123456789") as api:
+    with cript.API(host=None, token=None) as api:
         yield api
     assert cript.api.api._global_cached_api is None

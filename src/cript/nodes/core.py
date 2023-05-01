@@ -13,6 +13,16 @@ def get_new_uid():
     return "_:" + str(uuid.uuid4())
 
 
+class classproperty(object):
+    def __init__(self, f):
+        self.f = f
+
+    def __get__(self, obj, owner):
+        if obj is None:
+            return self.f(owner)
+        return self.f(obj)
+
+
 class BaseNode(ABC):
     """
     This abstract class is the base of all CRIPT nodes.
@@ -28,9 +38,16 @@ class BaseNode(ABC):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, node):
+    @classproperty
+    def node_type(self):
+        name = type(self).__name__
+        if name == "ABCMeta":
+            name = self.__name__
+        return name
+
+    def __init__(self):
         uid = get_new_uid()
-        self._json_attrs = replace(self._json_attrs, node=[node], uid=uid)
+        self._json_attrs = replace(self._json_attrs, node=[self.node_type], uid=uid)
 
     def __str__(self) -> str:
         """

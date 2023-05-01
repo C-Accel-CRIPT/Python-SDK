@@ -29,7 +29,7 @@ class Equipment(BaseNode):
             files = []
         if citations is None:
             citations = []
-        super().__init__("Equipment")
+        super().__init__()
         self._json_attrs = replace(self._json_attrs, key=key, description=description, conditions=conditions, files=files, citations=citations)
         self.validate()
 

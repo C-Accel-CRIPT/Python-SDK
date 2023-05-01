@@ -65,23 +65,35 @@ class InvalidVocabularyCategory(CRIPTException):
         return ret_str
 
 
-class CRIPTAPIAccessError(CRIPTException):
+class CRIPTAPIRequiredError(CRIPTException):
     """
     Exception to be raised when the cached API object is requested, but no cached API exists yet.
+
+    The CRIPT Python SDK relies on a cript.API object for creation, validation, and modification of nodes.
+    The cript.API object may be explicitly called by the user to perform operations to the API, or
+    implicitly called by the Python SDK under the hood to perform some sort of validation.
+
+    To fix the error please instantiate an api object
+
+    ```python
+    import cript
+
+    my_host = "https://criptapp.org"
+    my_token = "123456" # To use your token securely, please consider using environment variables
+
+    my_api = cript.API(host=my_host, token=my_token)
+    ```
     """
 
     def __init__(self):
         pass
 
     def __str__(self) -> str:
-        ret_str = "An operation you requested (see stack trace) requires that you "
-        ret_str += " connect to a CRIPT host via an cript.API object first.\n"
-        ret_str += "This is common for node creation, validation and modification.\n"
-        ret_str += "It is necessary that you connect with the API via a context manager like this:\n"
-        ret_str += "`with cript.API('https://criptapp.org/', secret_token) as api:\n"
-        ret_str += "\t# code that use the API object explicitly (`api.save(..)`) or implicitly (`cript.Experiment(...)`)."
-        ret_str += "See documentation of cript.API for more details."
-        return ret_str
+        return (
+            "cript.API object is required for an operation, but it does not exist."
+            "Please instantiate a cript.API object to continue."
+            "See the documentation for more details."
+        )
 
 
 class CRIPTAPISaveError(CRIPTException):

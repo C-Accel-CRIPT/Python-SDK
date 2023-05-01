@@ -1,4 +1,3 @@
-from abc import ABC
 from typing import Any, List
 
 from cript.api.valid_search_modes import SearchModes

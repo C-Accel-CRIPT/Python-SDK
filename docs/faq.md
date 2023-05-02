@@ -38,7 +38,7 @@ _We are always looking for ways to improve and create software that is a joy to 
 **Q:** How can I contribute to this project?
 
 **A:** We would love to have you contribute.
-_Please read the[GitHub repository wiki](https://github.com/C-Accel-CRIPT/Python-SDK/wiki)
+_Please read the [GitHub repository wiki](https://github.com/C-Accel-CRIPT/Python-SDK/wiki)
 to understand more and get started. Feel free to contribute to any bugs you find, any issues within the
 [GitHub repository](https://github.com/C-Accel-CRIPT/Python-SDK/issues), or any features you want._
 
@@ -46,15 +46,16 @@ to understand more and get started. Feel free to contribute to any bugs you find
 
 **Q:** This repository is awesome, how can I build a plugin to add to it?
 
-**A:** _We have built this code with plugins in mind! Please visit the 
+**A:** _We have built this code with plugins in mind! Please visit the
 [CRIPT Python SDK GitHub repository Wiki](https://github.com/C-Accel-CRIPT/Python-SDK/wiki)
 tab for developer documentation._
 
 ---
+
 **Q:** I have this question that is not covered anywhere, where can I ask it?
 
 **A:** _Please visit the [CRIPT Python SDK repository](https://github.com/C-Accel-CRIPT/Python-SDK)
-and ask your question within the 
+and ask your question within the
 [discussions tab Q/A section](https://github.com/C-Accel-CRIPT/Python-SDK/discussions/categories/q-a)_
 
 ---
@@ -62,9 +63,9 @@ and ask your question within the
 **Q:** Besides the user documentation are there any developer documentation that I can read through on how
 the code is written to get a better grasp of it?
 
-**A:** _You bet! There are documentation for developers within the 
-[CRIPT Python SDK Wiki](https://github.com/C-Accel-CRIPT/Python-SDK/wiki). 
-There you will find documentation on everything from how our code is structure, 
+**A:** _You bet! There are documentation for developers within the
+[CRIPT Python SDK Wiki](https://github.com/C-Accel-CRIPT/Python-SDK/wiki).
+There you will find documentation on everything from how our code is structure,
 how we aim to write our documentation, CI/CD, and more._
 
-_We try to also have type hinting, comments, and docstrings for all the code that we work on so it is clear and easy for anyone working on it to understand._
+_We try to also have type hinting, comments, and docstrings for all the code that we work on so it is clear and easy for anyone reading it to easily understand._

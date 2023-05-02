@@ -39,14 +39,31 @@ class InvalidVocabulary(CRIPTException):
     vocab: str = ""
     possible_vocab: List[str] = []
 
-    def __init__(self, vocab: str, possible_vocab: List[str]):
+    def __init__(self, vocab: str, possible_vocab: List[str]) -> None:
+        """
+        create an InvalidVocabularyError
+
+        Parameters
+        ----------
+        vocab: str
+        possible_vocab: List[str]
+        """
         self.vocab = vocab
         self.possible_vocab = possible_vocab
 
     def __str__(self) -> str:
-        ret_str = f"The vocabulary '{self.vocab}' entered does not exist within the CRIPT controlled vocabulary."
-        ret_str += f" Please pick a valid CRIPT vocabulary from {self.possible_vocab}"
-        return ret_str
+        """
+        show user the error message
+
+        Returns
+        -------
+        error_message: str
+        """
+        error_message = (
+            f"The vocabulary '{self.vocab}' entered does not exist within the CRIPT controlled vocabulary."
+            f" Please pick a valid CRIPT vocabulary from {self.possible_vocab}"
+        )
+        return error_message
 
 
 class InvalidVocabularyCategory(CRIPTException):

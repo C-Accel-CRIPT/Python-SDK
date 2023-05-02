@@ -1,6 +1,11 @@
 from abc import ABC, abstractmethod
 
 from cript.exceptions import CRIPTException
+from cript.nodes.primary_nodes.computation import Computation
+from cript.nodes.primary_nodes.computational_process import ComputationalProcess
+from cript.nodes.primary_nodes.data import Data
+from cript.nodes.primary_nodes.material import Material
+from cript.nodes.primary_nodes.process import Process
 
 
 class CRIPTNodeSchemaError(CRIPTException):
@@ -61,35 +66,121 @@ class CRIPTJsonSerializationError(CRIPTException):
         return f"JSON Serialization failed for node type {self.node_type} with JSON dict: {self.json_str}"
 
 
-class CRIPTOrphranedNodesError(CRIPTException, ABC):
-    def __init__(self, orphraned_node: "BaseNode"):
-        self.orphaned_node = orphraned_node
+class CRIPTOrphanedNodesError(CRIPTException, ABC):
+    """
+    This error is raised when a child node is not attached to the
+    appropriate parent node. For example, all material nodes used
+    within a project must belong to the project inventory or are explictly listed as material of that project.
+    If there is a material node that is used within a project but not a part of the
+    inventory and the validation code finds it then it raises an `CRIPTOrphanedNodeError`
+
+    Fixing this is simple and easy, just take the node that CRIPT Python SDK
+    found a problem with and associate it with the appropriate parent via
+
+    ```
+    my_project.material += my_orphaned_material_node
+    ```
+    """
+
+    def __init__(self, orphaned_node):
+        self.orphaned_node = orphaned_node
 
     @abstractmethod
     def __str__(self):
         pass
 
 
-class CRIPTOrphranedMaterialError(CRIPTOrphranedNodesError):
-    def __init__(self, orphaned_node: "Material"):
+class CRIPTOrphanedMaterialError(CRIPTOrphanedNodesError):
+    """
+    CRIPTOrphanedNodesError, but specific for orphaned materials.
+    Handle this error by adding the orphaned materials into the parent project or its inventories.
+    """
+
+    def __init__(self, orphaned_node: Material):
+        assert isinstance(orphaned_node, Material)
         super().__init__(orphaned_node)
 
     def __str__(self):
-        ret_string = "While validating a project graph, an orphraned material node was found. "
+        ret_string = "While validating a project graph, an orphaned material node was found. "
         ret_string += "This material is present in the graph, but not listed in the project. "
-        ret_string += "Please add the node like: `your_project.materials += [orphaned_material]`. "
-        ret_string += f"The orphraned material was {self.orphraned_node}."
+        ret_string += "Please add the node like: `my_project.materials += [orphaned_material]`. "
+        ret_string += f"The orphaned material was {self.orphaned_node}."
         return ret_string
 
 
-class CRIPTOrphranedExperimentError(CRIPTOrphranedNodesError):
+class CRIPTOrphanedExperimentError(CRIPTOrphanedNodesError):
+    """
+    CRIPTOrphanedNodesError, but specific for orphaned nodes that should be listed in one of the experiments.
+    Handle this error by adding the orphaned node into one the parent project's experiments.
+    """
+
     def __init__(self, orphaned_node):
         super().__init__(orphaned_node)
 
-    def __str__(self):
+    def __str__(self) -> str:
         node_name = self.orphaned_node.node_type.lower()
-        ret_string = f"While validating a project graph, an orphraned {node_name} node was found. "
-        ret_string += f"This {node_name} node is present in the graph, but not listed in any experiment of the  project. "
+        ret_string = f"While validating a project graph, an orphaned {node_name} node was found. "
+        ret_string += f"This {node_name} node is present in the graph, but not listed in any of the experiments of the  project. "
         ret_string += f"Please add the node like: `your_experiment.{node_name} += [orphaned_{node_name}]`. "
-        ret_string += f"The orphraned {node_name} was {self.orphraned_node}."
+        ret_string += f"The orphaned {node_name} was {self.orphaned_node}."
         return ret_string
+
+
+def get_orphaned_experiment_exception(orphaned_node):
+    """
+    Return the correct specific Exception based in the orphaned node type for nodes not correctly listed in experiment.
+    """
+    if isinstance(orphaned_node, Data):
+        return CRIPTOrphanedDataError(orphaned_node)
+    if isinstance(orphaned_node, Process):
+        return CRIPTOrphanedProcessError(orphaned_node)
+    if isinstance(orphaned_node, Computation):
+        return CRIPTOrphanedComputationError(orphaned_node)
+    if isinstance(orphaned_node, ComputationalProcess):
+        return CRIPTOrphanedComputationalProcessError(orphaned_node)
+    # Base case raise the parent exception. TODO add bug warning.
+    return CRIPTOrphanedExperimentError(orphaned_node)
+
+
+class CRIPTOrphanedDataError(CRIPTOrphanedExperimentError):
+    """
+    CRIPTOrphanedExeprimentError, but specific for orphaned Data node that should be listed in one of the experiments.
+    Handle this error by adding the orphaned node into one the parent project's experiments `data` attribute.
+    """
+
+    def __init__(self, orphaned_node: Data):
+        assert isinstance(orphaned_node, Data)
+        super().__init__(orphaned_node)
+
+
+class CRIPTOrphanedProcessError(CRIPTOrphanedExperimentError):
+    """
+    CRIPTOrphanedExeprimentError, but specific for orphaned Process node that should be listed in one of the experiments.
+    Handle this error by adding the orphaned node into one the parent project's experiments `process` attribute.
+    """
+
+    def __init__(self, orphaned_node: Process):
+        assert isinstance(orphaned_node, Process)
+        super().__init__(orphaned_node)
+
+
+class CRIPTOrphanedComputationError(CRIPTOrphanedExperimentError):
+    """
+    CRIPTOrphanedExeprimentError, but specific for orphaned Computation node that should be listed in one of the experiments.
+    Handle this error by adding the orphaned node into one the parent project's experiments `Computation` attribute.
+    """
+
+    def __init__(self, orphaned_node: Computation):
+        assert isinstance(orphaned_node, Computation)
+        super().__init__(orphaned_node)
+
+
+class CRIPTOrphanedComputationalProcessError(CRIPTOrphanedExperimentError):
+    """
+    CRIPTOrphanedExeprimentError, but specific for orphaned ComputationalProcess node that should be listed in one of the experiments.
+    Handle this error by adding the orphaned node into one the parent project's experiments `ComputationalProcess` attribute.
+    """
+
+    def __init__(self, orphaned_node: ComputationalProcess):
+        assert isinstance(orphaned_node, ComputationalProcess)
+        super().__init__(orphaned_node)

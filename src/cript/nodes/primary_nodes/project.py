@@ -2,8 +2,8 @@ from dataclasses import dataclass, field, replace
 from typing import List
 
 from cript.nodes.exceptions import (
-    CRIPTOrphranedExperimentError,
     CRIPTOrphranedMaterialError,
+    get_orphaned_experiment_exception,
 )
 from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
@@ -88,7 +88,10 @@ class Project(PrimaryBaseNode):
         # Project.materials should contain all material nodes
         project_graph_materials = self.find_children({"node": ["Material"]})
         # Combine all materials listed in the project inventories
-        project_inventory_materials = [material for material in inventory.materials for inventory in self.inventories]
+        project_inventory_materials = []
+        for inventory in self.find_children({"node": ["Inventory"]}):
+            for material in inventory.materials:
+                project_inventory_materials.append(material)
         for material in project_graph_materials:
             if material not in self.materials and material not in project_inventory_materials:
                 raise CRIPTOrphranedMaterialError(material)
@@ -108,10 +111,13 @@ class Project(PrimaryBaseNode):
 
             # Concatination of all experiment attributes (process, computation, etc.)
             # Every node of the graph must be present somewhere in this concatinated list.
-            experiment_nodes = [ex_node for ex_node in getattr(experiment, node_type_attr) for experiment in project_experiments]
+            experiment_nodes = []
+            for experiment in project_experiments:
+                for ex_node in getattr(experiment, node_type_attr):
+                    experiment_nodes.append(ex_node)
             for node in project_graph_nodes:
                 if node not in experiment_nodes:
-                    raise CRIPTOrphranedExperimentError(node)
+                    raise get_orphaned_experiment_exception(node)
 
     # ------------------ Properties ------------------
 

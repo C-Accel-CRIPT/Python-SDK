@@ -7,7 +7,15 @@ from util import strip_uid_from_dict
 
 import cript
 from cript.nodes.core import get_new_uid
-from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTJsonSerializationError
+from cript.nodes.exceptions import (
+    CRIPTJsonNodeError,
+    CRIPTJsonSerializationError,
+    CRIPTOrphanedComputationalProcessError,
+    CRIPTOrphanedComputationError,
+    CRIPTOrphanedDataError,
+    CRIPTOrphanedMaterialError,
+    CRIPTOrphanedProcessError,
+)
 
 
 def test_removing_nodes(complex_algorithm_node, complex_parameter_node, complex_algorithm_dict):
@@ -114,3 +122,80 @@ def test_invalid_json_load():
     raise_node_dict(node_dict)
     node_dict = {"node": [None]}
     raise_node_dict(node_dict)
+
+
+def test_invalid_project_graphs(simple_project_node, simple_material_node, simple_process_node, simple_property_node, simple_data_node, simple_computation_node, simple_computational_process_node):
+    project = copy.deepcopy(simple_project_node)
+    process = copy.deepcopy(simple_process_node)
+    material = copy.deepcopy(simple_material_node)
+
+    ingredient = cript.Ingredient(material=material, quantities=[cript.Quantity(key="mass", value=1.23, unit="gram")])
+    process.ingredients += [ingredient]
+
+    # Add the process to the experiment, but not in inventory or materials
+    # Invalid graph
+    project.collections[0].experiments[0].process += [process]
+    with pytest.raises(CRIPTOrphanedMaterialError):
+        project.validate()
+
+    # First fix add material to inventory
+    project.collections[0].inventories += [cript.Inventory("test_inventory", materials=[material])]
+    project.validate()
+    # Reverse this fix
+    project.collections[0].inventories = []
+    with pytest.raises(CRIPTOrphanedMaterialError):
+        project.validate()
+
+    # Fix by add to the materials list instead.
+    # Using the util helper function for this.
+    cript.add_orphaned_nodes_to_project(project, active_experiment=None)
+    project.validate()
+
+    # Now add an orphan process to the graph
+    process2 = copy.deepcopy(simple_process_node)
+    process.prerequisite_processes += [process2]
+    with pytest.raises(CRIPTOrphanedProcessError):
+        project.validate()
+
+    # Wrong fix it helper node
+    dummy_experiment = copy.deepcopy(project.collections[0].experiments[0])
+    with pytest.raises(RuntimeError):
+        cript.add_orphaned_nodes_to_project(project, dummy_experiment)
+    # Problem still presists
+    with pytest.raises(CRIPTOrphanedProcessError):
+        project.validate()
+    # Fix by using the helper function correctly
+    cript.add_orphaned_nodes_to_project(project, project.collections[0].experiments[0])
+    project.validate()
+
+    # We add property to the material, because that adds the opportunity for orphaned data and computation
+    property = copy.deepcopy(simple_property_node)
+    material.properties += [property]
+    project.validate()
+    # Now add an orphan data
+    data = copy.deepcopy(simple_data_node)
+    property.data = data
+    with pytest.raises(CRIPTOrphanedDataError):
+        project.validate()
+    # Fix with the helper function
+    cript.add_orphaned_nodes_to_project(project, project.collections[0].experiments[0])
+    project.validate()
+
+    # Add an orphan Computation
+    computation = copy.deepcopy(simple_computation_node)
+    property.computations += [computation]
+    with pytest.raises(CRIPTOrphanedComputationError):
+        project.validate()
+    # Fix with the helper function
+    cript.add_orphaned_nodes_to_project(project, project.collections[0].experiments[0])
+    project.validate()
+
+    # Add orphan computational process
+    comp_proc = copy.deepcopy(simple_computational_process_node)
+    # Do not orphan materials
+    project.materials += [comp_proc.ingredients[0].material]
+    data.computational_process += [comp_proc]
+    with pytest.raises(CRIPTOrphanedComputationalProcessError):
+        project.validate()
+    cript.add_orphaned_nodes_to_project(project, project.collections[0].experiments[0])
+    project.validate()

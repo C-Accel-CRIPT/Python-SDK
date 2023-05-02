@@ -102,13 +102,11 @@ class Project(PrimaryBaseNode):
             if node_type == "ComputationalProcess":
                 node_type_attr = "computational_process"
 
+            # Concatination of all experiment attributes (process, computation, etc.)
+            # Every node of the graph must be present somewhere in this concatinated list.
+            experiment_nodes = [ex_node for ex_node in getattr(experiment, node_type_attr) for experiment in all_experiments]
             for node in all_nodes:
-                node_found = False
-                for experiment in all_experiments:
-                    if node in getattr(experiment, node_type_attr):
-                        node_found = True
-                        break
-                if not node_found:
+                if node not in experiment_nodes:
                     raise CRIPTOrphranedExperimentError(node)
 
     # ------------------ Properties ------------------

@@ -59,10 +59,7 @@ class InvalidVocabulary(CRIPTException):
         -------
         error_message: str
         """
-        error_message = (
-            f"The vocabulary '{self.vocab}' entered does not exist within the CRIPT controlled vocabulary." 
-            f" Please pick a valid CRIPT vocabulary from {self.possible_vocab}"
-        )
+        error_message = f"The vocabulary '{self.vocab}' entered does not exist within the CRIPT controlled vocabulary." f" Please pick a valid CRIPT vocabulary from {self.possible_vocab}"
         return error_message
 
 
@@ -85,10 +82,7 @@ class InvalidVocabularyCategory(CRIPTException):
         error_message:str
             error message for the user
         """
-        error_message = (
-            f"The vocabulary category {self.vocab_category} does not exist within the CRIPT controlled vocabulary. "
-            f"Please pick a valid CRIPT vocabulary category from {self.valid_vocab_category}."
-        )
+        error_message = f"The vocabulary category {self.vocab_category} does not exist within the CRIPT controlled vocabulary. " f"Please pick a valid CRIPT vocabulary category from {self.valid_vocab_category}."
 
         return error_message
 
@@ -149,50 +143,6 @@ class CRIPTAPISaveError(CRIPTException):
 
     def __str__(self) -> str:
         error_message = f"API responded with 'http:{self.http_code} {self.api_response}'"
-
-        return error_message
-
-
-class InvalidSearchModeError(CRIPTException):
-    """
-    Exception for when the user tries to search the API with an invalid search mode that is not supported
-    """
-
-    invalid_search_mode: str = ""
-
-    def __init__(self, invalid_search_mode: Any):
-        self.invalid_search_mode = invalid_search_mode
-
-    # TODO this method is not being used currently, if it never gets used, remove it
-    def _get_valid_search_modes(self) -> List[str]:
-        """
-        gets the valid search modes available in the CRIPT API
-
-        This method can be easily converted to a function if needed
-
-        Returns
-        -------
-        list of valid search modes: List[str]
-        """
-
-        # list of valid search mode values "", "uuid", "contains_name", etc.
-        # return [mode.value for mode in SearchModes]
-
-        # outputs: ['NODE_TYPE', 'UUID', 'CONTAINS_NAME', 'EXACT_NAME', 'UUID_CHILDREN']
-        return list(SearchModes.__members__.keys())
-
-    def __str__(self) -> str:
-        """
-        tells the user the search mode they picked for the api client to get a node from the API is invalid
-        and lists all the valid search modes they can pick from
-
-        Returns
-        -------
-        error message: str
-        """
-
-        # TODO This error message needs more documentation because it is not as intuitive
-        error_message = f"'{self.invalid_search_mode}' is an invalid search mode. " f"The valid search modes come from cript.api.SearchModes"
 
         return error_message
 

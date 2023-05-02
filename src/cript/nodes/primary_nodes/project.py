@@ -87,8 +87,10 @@ class Project(PrimaryBaseNode):
         # Check graph for orphraned nodes, that should be listed in project
         # Project.materials should contain all material nodes
         project_graph_materials = self.find_children({"node": ["Material"]})
+        # Combine all materials listed in the project inventories
+        project_inventory_materials = [material for material in inventory.materials for inventory in self.inventories]
         for material in project_graph_materials:
-            if material not in self.materials:
+            if material not in self.materials and material not in project_inventory_materials:
                 raise CRIPTOrphranedMaterialError(material)
 
         # Check graph for orphraned nodes, that should be listed in the experiments

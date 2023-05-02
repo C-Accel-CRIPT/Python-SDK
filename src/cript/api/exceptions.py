@@ -63,13 +63,15 @@ class InvalidVocabularyCategory(CRIPTException):
 
 class CRIPTAPIRequiredError(CRIPTException):
     """
+    ## Definition
     Exception to be raised when the API object is requested, but no cript.API object exists yet.
 
     The CRIPT Python SDK relies on a cript.API object for creation, validation, and modification of nodes.
     The cript.API object may be explicitly called by the user to perform operations to the API, or
     implicitly called by the Python SDK under the hood to perform some sort of validation.
 
-    To fix the error please instantiate an api object
+    ## How to Fix
+    To fix this error please instantiate an api object
 
     ```python
     import cript
@@ -92,8 +94,15 @@ class CRIPTAPIRequiredError(CRIPTException):
 
 class CRIPTAPISaveError(CRIPTException):
     """
+    ## Definition
     CRIPTAPISaveError is raised when the API responds with a http status code that is anything other than 200.
     The status code and API response is shown to the user to help them debug the issue.
+
+    ## How to Fix
+    This error is more of a case by case basis, but the best way to approach it to understand that the
+    CRIPT Python SDK sent an HTTP POST request with a giant JSON in the request body
+    to the CRIPT API. The API then read that request, and it responded with some sort of error either
+    to the that JSON or how the request was sent.
     """
 
     api_host_domain: str

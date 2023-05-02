@@ -38,8 +38,59 @@ class NodeEncoder(json.JSONEncoder):
                     if getattr(obj._json_attrs, key) != default_values[key]:
                         serialize_dict[key] = getattr(obj._json_attrs, key)
             serialize_dict["node"] = obj._json_attrs.node
+
+            # if node is material, then convert the identifiers list to JSON fields
+            if serialize_dict["node"] == ["Material"]:
+                serialize_dict = material_identifiers_list_to_json_fields(serialize_dict)
+
             return serialize_dict
         return json.JSONEncoder.default(self, obj)
+
+
+def material_identifiers_list_to_json_fields(serialize_dict: dict) -> dict:
+    """
+    input:
+    ```json
+        {
+            "node":["Material"],
+            "name":"my material",
+            "identifiers":[ {"cas":"my material cas"} ],
+            "uid":"_:a78203cb-82ea-4376-910e-dee74088cd37"
+        }
+    ```
+
+    output:
+    ```json
+    {
+        "node":["Material"],
+        "name":"my material",
+        "cas":"my material cas",
+        "uid":"_:08018f4a-e8e3-4ac0-bdad-fa704fdc0145"
+    }
+    ```
+
+    Parameters
+    ----------
+    serialize_dict: dict
+        the serialized dictionary of the node
+
+    Returns
+    -------
+    serialized_dict = dict
+        new dictionary that has converted the list of dictionary identifiers into the dictionary as fields
+
+    """
+    if serialize_dict.get("identifiers"):
+        # gets `[{"cas": "my material cas"}, {"other_id": "my material id"}]`
+        for identifier in serialize_dict.get("identifiers"):
+            # gets `"cas": "my material cas"`
+            for key, value in identifier.items():
+                serialize_dict[key] = value
+
+        # remove identifiers list of objects after it has been flattened
+        del serialize_dict["identifiers"]
+
+    return serialize_dict
 
 
 def _node_json_hook(node_str: str):

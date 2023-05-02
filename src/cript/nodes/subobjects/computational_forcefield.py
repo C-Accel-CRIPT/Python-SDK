@@ -6,7 +6,7 @@ from cript.nodes.primary_nodes.data import Data
 from cript.nodes.subobjects.citation import Citation
 
 
-class ComputationForcefield(BaseNode):
+class ComputationalForcefield(BaseNode):
     """
     ComputationForcefield
     """

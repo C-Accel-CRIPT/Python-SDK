@@ -98,11 +98,11 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
     # ingredients with Material and Quantity node
     my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
 
-    my_quantity = cript.Quantity(key="mass", value=1.23, unit="gram")
+    my_quantity = cript.Quantity(key="mass", value=1.23, unit="kg")
 
     ingredients = cript.Ingredient(
         material=my_material,
-        quantities=[my_quantity],
+        quantity=[my_quantity],
     )
 
     my_computational_process = cript.ComputationalProcess(

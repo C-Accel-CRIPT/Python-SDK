@@ -8,11 +8,11 @@ import cript
 
 
 @pytest.fixture(scope="function")
-def complex_computation_forcefield() -> cript.ComputationForcefield:
+def complex_computational_forcefield() -> cript.ComputationalForcefield:
     """
     create a minimal computation_forcefield to use for other tests
     """
-    return cript.ComputationForcefield(key="amber", building_block="atom")
+    return cript.ComputationalForcefield(key="amber", building_block="atom")
 
 
 @pytest.fixture(scope="function")
@@ -250,8 +250,8 @@ def complex_equipment_dict(complex_condition_dict, complex_citation_dict) -> dic
 
 
 @pytest.fixture(scope="function")
-def complex_computation_forcefield_node(simple_data_node, complex_citation_node) -> cript.ComputationForcefield:
-    cf = cript.ComputationForcefield(
+def complex_computational_forcefield_node(simple_data_node, complex_citation_node) -> cript.ComputationalForcefield:
+    cf = cript.ComputationalForcefield(
         "OPLS",
         "atom",
         "atom -> atom",
@@ -265,9 +265,9 @@ def complex_computation_forcefield_node(simple_data_node, complex_citation_node)
 
 
 @pytest.fixture(scope="function")
-def complex_computation_forcefield_dict(simple_data_node, complex_citation_dict) -> dict:
+def complex_computational_forcefield_dict(simple_data_node, complex_citation_dict) -> dict:
     ret_dict = {
-        "node": ["ComputationForcefield"],
+        "node": ["ComputationalForcefield"],
         "key": "OPLS",
         "building_block": "atom",
         "coarse_grained_mapping": "atom -> atom",

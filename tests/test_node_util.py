@@ -98,14 +98,14 @@ def test_cycles(complex_data_node, simple_computation_node):
 def test_uid_serial(simple_inventory_node):
     simple_inventory_node.material += simple_inventory_node.material
     json_dict = json.loads(simple_inventory_node.get_json().json)
-    assert len(json_dict["materials"]) == 4
-    assert isinstance(json_dict["materials"][2]["uid"], str)
-    assert json_dict["materials"][2]["uid"].startswith("_:")
-    assert len(json_dict["materials"][2]["uid"]) == len(get_new_uid())
-    assert isinstance(json_dict["materials"][3]["uid"], str)
-    assert json_dict["materials"][3]["uid"].startswith("_:")
-    assert len(json_dict["materials"][3]["uid"]) == len(get_new_uid())
-    assert json_dict["materials"][3]["uid"] != json_dict["materials"][2]["uid"]
+    assert len(json_dict["material"]) == 4
+    assert isinstance(json_dict["material"][2]["uid"], str)
+    assert json_dict["material"][2]["uid"].startswith("_:")
+    assert len(json_dict["material"][2]["uid"]) == len(get_new_uid())
+    assert isinstance(json_dict["material"][3]["uid"], str)
+    assert json_dict["material"][3]["uid"].startswith("_:")
+    assert len(json_dict["material"][3]["uid"]) == len(get_new_uid())
+    assert json_dict["material"][3]["uid"] != json_dict["material"][2]["uid"]
 
 
 def test_invalid_json_load():

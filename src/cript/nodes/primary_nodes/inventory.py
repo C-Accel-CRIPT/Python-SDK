@@ -74,7 +74,7 @@ class Inventory(PrimaryBaseNode):
 
         super().__init__(name=name, notes=notes)
 
-        self._json_attrs = replace(self._json_attrs, materials=materials)
+        self._json_attrs = replace(self._json_attrs, material=material)
 
     # ------------------ Properties ------------------
     @property

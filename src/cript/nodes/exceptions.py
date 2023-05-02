@@ -61,6 +61,21 @@ class CRIPTJsonDeserializationError(CRIPTException):
     This exception is raised when converting a node from JSON to Python class fails.
     This process fails when the attributes within the JSON does not match the node's class
     attributes within the `JsonAttributes` of that specific node
+
+    ### Error Example
+    Invalid JSON that cannot be deserialized to a CRIPT Python SDK Node
+
+    ```json
+    ```
+
+
+    ### Valid Example
+    Valid JSON that can be deserialized to a CRIPT Python SDK Node
+
+    ```json
+    ```
+
+    ## How to Fix
     """
 
     def __init__(self, node_type: str, json_str: str) -> None:
@@ -73,7 +88,11 @@ class CRIPTJsonDeserializationError(CRIPTException):
 
 class CRIPTJsonNodeError(CRIPTJsonDeserializationError):
     """
+    ## Definition
     Exception that is raised if a `node` attribute is present, but not a single itemed list.
+
+    ## How to Fix
+
     """
 
     def __init__(self, node_list, json_str) -> None:
@@ -91,8 +110,10 @@ class CRIPTJsonNodeError(CRIPTJsonDeserializationError):
 
 class CRIPTJsonSerializationError(CRIPTException):
     """
+    ## Definition
     Exception to throw if deserialization of nodes fails.
 
+    ## How to Fix
     """
 
     def __init__(self, node_type: str, json_dict: str) -> None:

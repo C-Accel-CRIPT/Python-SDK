@@ -76,12 +76,18 @@ def load_nodes_from_json(nodes_json: str):
     return json.loads(nodes_json, object_hook=_node_json_hook)
 
 
-def add_orphaned_material_to_project(project: Project, max_iteration: int = -1):
+def add_orphaned_nodes_to_project(project: Project, active_experiment: Experiment, max_iteration: int = -1):
     """
     Helper function that adds all orphaned material nodes of the project graph to the
     `project.materials` attribute.
+    Material additions only is permissible with `active_experiment is None`.
+    This function also adds all orphaned data, process, computation and computational process nodes
+    of the project graph to the `active_experiment`.
     This functions call `project.validate` and might raise Exceptions from there.
     """
+    if active_experiment is not None and active_experiment not in project.find_children({"node": ["Experiment"]}):
+        raise RuntimeError(f"The provided active experiment {active_experiment} is not part of the project graph. Choose an active experiment that is part of a collection of this project.")
+
     counter = 0
     while True:
         if counter > max_iteration >= 0:
@@ -89,27 +95,8 @@ def add_orphaned_material_to_project(project: Project, max_iteration: int = -1):
         try:
             project.validate()
         except CRIPTOrphanedMaterialError as exc:
-            try:
-                # beccause calling the setter calls `validate` we have to force add the material.
-                project._json_attrs.materials.append(exc.orphaned_node)
-            except CRIPTOrphanedMaterialError:
-                pass
-        else:
-            break
-
-
-def add_orphaned_nodes_to_experiment(project: Project, active_experiment: Experiment, max_iteration: int = -1):
-    """
-    Helper function that adds all orphaned data, process, computation and computational process nodes
-    of the project graph to the `active_experiment`.
-    This functions call `project.validate` and might raise Exceptions from there.
-    """
-    counter = 0
-    while True:
-        if max_iteration >= 0 and counter > max_iteration:
-            break  # Emergency stop
-        try:
-            project.validate()
+            # beccause calling the setter calls `validate` we have to force add the material.
+            project._json_attrs.material.append(exc.orphaned_node)
         except CRIPTOrphanedDataError as exc:
             active_experiment.data += [exc.orphaned_node]
         except CRIPTOrphanedProcessError as exc:
@@ -120,3 +107,4 @@ def add_orphaned_nodes_to_experiment(project: Project, active_experiment: Experi
             active_experiment.computational_process += [exc.orphaned_node]
         else:
             break
+        counter += 1

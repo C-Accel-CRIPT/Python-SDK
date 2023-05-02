@@ -85,7 +85,7 @@ class Project(PrimaryBaseNode):
         # First validate like other nodes
         super().validate()
 
-        # Check graph for orphraned nodes, that should be listed in project
+        # Check graph for orphaned nodes, that should be listed in project
         # Project.materials should contain all material nodes
         project_graph_materials = self.find_children({"node": ["Material"]})
         # Combine all materials listed in the project inventories
@@ -95,9 +95,9 @@ class Project(PrimaryBaseNode):
                 project_inventory_materials.append(material)
         for material in project_graph_materials:
             if material not in self.materials and material not in project_inventory_materials:
-                raise CRIPTOrphranedMaterialError(material)
+                raise CRIPTOrphanedMaterialError(material)
 
-        # Check graph for orphraned nodes, that should be listed in the experiments
+        # Check graph for orphaned nodes, that should be listed in the experiments
         project_experiments = self.find_children({"node": ["Experiment"]})
         # There are 4 different types of nodes Experiments are collecting.
         node_types = ("Process", "Computation", "ComputationalProcess", "Data")

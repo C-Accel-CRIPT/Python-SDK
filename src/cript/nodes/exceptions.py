@@ -91,7 +91,7 @@ class CRIPTOrphanedMaterialError(CRIPTOrphanedNodesError):
     Handle this error by adding the orphaned materials into the parent project or its inventories.
     """
 
-    def __init__(self, orphaned_node: "Material"):
+    def __init__(self, orphaned_node):
         from cript.nodes.primary_nodes.material import Material
 
         assert isinstance(orphaned_node, Material)
@@ -150,7 +150,7 @@ class CRIPTOrphanedDataError(CRIPTOrphanedExperimentError):
     Handle this error by adding the orphaned node into one the parent project's experiments `data` attribute.
     """
 
-    def __init__(self, orphaned_node: "Data"):
+    def __init__(self, orphaned_node):
         from cript.nodes.primary_nodes.data import Data
 
         assert isinstance(orphaned_node, Data)
@@ -163,7 +163,7 @@ class CRIPTOrphanedProcessError(CRIPTOrphanedExperimentError):
     Handle this error by adding the orphaned node into one the parent project's experiments `process` attribute.
     """
 
-    def __init__(self, orphaned_node: "Process"):
+    def __init__(self, orphaned_node):
         from cript.nodes.primary_nodes.process import Process
 
         assert isinstance(orphaned_node, Process)
@@ -176,7 +176,7 @@ class CRIPTOrphanedComputationError(CRIPTOrphanedExperimentError):
     Handle this error by adding the orphaned node into one the parent project's experiments `Computation` attribute.
     """
 
-    def __init__(self, orphaned_node: "Computation"):
+    def __init__(self, orphaned_node):
         from cript.nodes.primary_nodes.computation import Computation
 
         assert isinstance(orphaned_node, Computation)
@@ -189,7 +189,7 @@ class CRIPTOrphanedComputationalProcessError(CRIPTOrphanedExperimentError):
     Handle this error by adding the orphaned node into one the parent project's experiments `ComputationalProcess` attribute.
     """
 
-    def __init__(self, orphaned_node: "ComputationalProcess"):
+    def __init__(self, orphaned_node):
         from cript.nodes.primary_nodes.computational_process import ComputationalProcess
 
         assert isinstance(orphaned_node, ComputationalProcess)

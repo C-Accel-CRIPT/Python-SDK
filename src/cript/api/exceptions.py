@@ -60,7 +60,7 @@ class InvalidVocabulary(CRIPTException):
         error_message: str
         """
         error_message = (
-            f"The vocabulary '{self.vocab}' entered does not exist within the CRIPT controlled vocabulary."
+            f"The vocabulary '{self.vocab}' entered does not exist within the CRIPT controlled vocabulary." 
             f" Please pick a valid CRIPT vocabulary from {self.possible_vocab}"
         )
         return error_message
@@ -77,9 +77,20 @@ class InvalidVocabularyCategory(CRIPTException):
         self.valid_vocab_category = valid_vocab_category
 
     def __str__(self) -> str:
-        ret_str = f"The vocabulary category '{self.vocab_category}' does not exist within the CRIPT controlled vocabulary."
-        ret_str += f" Please pick a valid CRIPT vocabulary category from {self.valid_vocab_category}."
-        return ret_str
+        """
+        Returns an error message for the user.
+
+        Returns
+        -------
+        error_message:str
+            error message for the user
+        """
+        error_message = (
+            f"The vocabulary category {self.vocab_category} does not exist within the CRIPT controlled vocabulary. "
+            f"Please pick a valid CRIPT vocabulary category from {self.valid_vocab_category}."
+        )
+
+        return error_message
 
 
 class CRIPTAPIRequiredError(CRIPTException):
@@ -106,11 +117,7 @@ class CRIPTAPIRequiredError(CRIPTException):
         pass
 
     def __str__(self) -> str:
-        return (
-            "cript.API object is required for an operation, but it does not exist."
-            "Please instantiate a cript.API object to continue."
-            "See the documentation for more details."
-        )
+        return "cript.API object is required for an operation, but it does not exist." "Please instantiate a cript.API object to continue." "See the documentation for more details."
 
 
 class CRIPTAPISaveError(CRIPTException):

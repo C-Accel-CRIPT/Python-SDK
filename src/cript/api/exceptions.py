@@ -32,10 +32,7 @@ class CRIPTConnectionError(CRIPTException):
             Explanation of the error
         """
 
-        error_message = (
-            f"Could not connect to CRIPT with the given host ({self.host}) and token ({self.token}). "
-            f"Please be sure both host and token are entered correctly."
-        )
+        error_message = f"Could not connect to CRIPT with the given host ({self.host}) and token ({self.token}). " f"Please be sure both host and token are entered correctly."
 
         return error_message
 
@@ -127,10 +124,7 @@ class CRIPTAPIRequiredError(CRIPTException):
         -------
         error message: str
         """
-        error_message = (
-            "cript.API object is required for an operation, but it does not exist."
-            "Please instantiate a cript.API object to continue." "See the documentation for more details."
-        )
+        error_message = "cript.API object is required for an operation, but it does not exist." "Please instantiate a cript.API object to continue." "See the documentation for more details."
 
         return error_message
 

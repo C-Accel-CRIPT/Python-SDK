@@ -86,17 +86,19 @@ class Project(PrimaryBaseNode):
 
         # Check graph for orphraned nodes, that should be listed in project
         # Project.materials should contain all material nodes
-        all_materials = self.find_children({"node": ["Material"]})
-        for material in all_materials:
+        project_graph_materials = self.find_children({"node": ["Material"]})
+        for material in project_graph_materials:
             if material not in self.materials:
                 raise CRIPTOrphranedMaterialError(material)
 
         # Check graph for orphraned nodes, that should be listed in the experiments
-        all_experiments = self.find_children({"node": ["Experiment"]})
-        # All in the graph has to be in at least one experiment
+        project_experiments = self.find_children({"node": ["Experiment"]})
+        # There are 4 different types of nodes Experiments are collecting.
         node_types = ("Process", "Computation", "ComputationalProcess", "Data")
+        # We loop over them with the same logic
         for node_type in node_types:
-            all_nodes = self.find_children({"node": [node_type]})
+            # All in the graph has to be in at least one experiment
+            project_graph_nodes = self.find_children({"node": [node_type]})
             node_type_attr = node_type.lower()
             # Non-consistent naming makes this necessary for Computation Process
             if node_type == "ComputationalProcess":
@@ -104,8 +106,8 @@ class Project(PrimaryBaseNode):
 
             # Concatination of all experiment attributes (process, computation, etc.)
             # Every node of the graph must be present somewhere in this concatinated list.
-            experiment_nodes = [ex_node for ex_node in getattr(experiment, node_type_attr) for experiment in all_experiments]
-            for node in all_nodes:
+            experiment_nodes = [ex_node for ex_node in getattr(experiment, node_type_attr) for experiment in project_experiments]
+            for node in project_graph_nodes:
                 if node not in experiment_nodes:
                     raise CRIPTOrphranedExperimentError(node)
 

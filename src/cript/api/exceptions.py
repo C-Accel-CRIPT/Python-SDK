@@ -1,6 +1,5 @@
-from typing import Any, List
+from typing import List
 
-from cript.api.valid_search_modes import SearchModes
 from cript.exceptions import CRIPTException
 
 

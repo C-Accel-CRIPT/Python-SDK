@@ -397,7 +397,7 @@ class API:
         try:
             node_list = node_dict["node"]
         except KeyError:
-            raise CRIPTNodeSchemaError(error_message=f"'node' attriubte not present in serialization of {node_json}. Missing for exmaple 'node': ['material'].")
+            raise CRIPTNodeSchemaError(error_message=f"'node' attribute not present in serialization of {node_json}.")
 
         # checking the node field "node": "Material"
         if isinstance(node_list, list) and len(node_list) == 1 and isinstance(node_list[0], str):
@@ -410,8 +410,8 @@ class API:
 
         try:
             jsonschema.validate(instance=node_dict, schema=db_schema)
-        except jsonschema.exceptions.ValidationError as error:
-            raise CRIPTNodeSchemaError(error_message=str(error))
+        except jsonschema.exceptions.ValidationError as db_schema_validation_error:
+            raise CRIPTNodeSchemaError(node=node_type, json_schema_validation_error=db_schema_validation_error)
 
         # if validation goes through without any problems return True
         return True

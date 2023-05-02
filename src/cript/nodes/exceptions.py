@@ -1,4 +1,5 @@
 from cript.exceptions import CRIPTException
+from cript.nodes.core import BaseNode
 
 
 class CRIPTNodeSchemaError(CRIPTException):
@@ -37,13 +38,23 @@ class CRIPTNodeSchemaError(CRIPTException):
     ```
     """
 
-    error_message: str
+    node_type: str = ""
+    json_schema_validation_error: str = ""
 
-    def __init__(self, error_message: str):
-        self.error_message = error_message
+    # TODO accept both node type string and the actual node to get the node typ from
+    # TODO fix how this error is raised
+    def __init__(self, node: BaseNode, json_schema_validation_error: str) -> None:
+        # get the node type from node e.g. "Project" or "Material"
+        self.node_type = node.node_type[0].title()
+        self.json_schema_validation_error: str = json_schema_validation_error
 
-    def __str__(self):
-        return self.error_message
+    def __str__(self) -> str:
+        error_message: str = (
+            f"JSON database schema validation for node {self.node_type} failed."
+            f"Error: {self.json_schema_validation_error}"
+        )
+
+        return error_message
 
 
 class CRIPTJsonDeserializationError(CRIPTException):

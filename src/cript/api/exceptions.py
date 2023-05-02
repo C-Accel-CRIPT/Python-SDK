@@ -158,12 +158,35 @@ class CRIPTAPISaveError(CRIPTException):
 
 class InvalidHostError(CRIPTException):
     """
+    ## Definition
     Exception is raised when the host given to the API is invalid
 
-    Error message is given to it to be displayed to the user
+    ## How to Fix
+    This is a simple error to fix, simply put `http://` or preferably `https://` in front of your domain
+    when passing in the host to the cript.API class.
+
+    Currently, the only protocol that is supported with the CRIPT Python SDK is `HTTP`.
+
+    ### Example
+    ```python
+    import cript
+
+    my_valid_host = "https://criptapp.org"
+    my_token = "123456" # To use your token securely, please consider using environment variables
+
+    my_api = cript.API(host=my_valid_host, token=my_token)
+    ```
+
+    Warnings
+    --------
+    Please consider always using [HTTPS](https://developer.mozilla.org/en-US/docs/Glossary/HTTPS)
+    as that is a secure protocol and avoid using `HTTP` as it is an insecure.
+    The CRIPT Python SDK will give a warning in the terminal when it detects a host with `HTTP`
+
+
     """
 
-    def __init__(self, error_message: str) -> None:
+    def __init__(self) -> None:
         pass
 
     def __str__(self) -> str:
@@ -175,7 +198,6 @@ class InvalidHostError(CRIPTException):
         -------
         error message: str
         """
-
         return "The host must start with http or https"
 
 

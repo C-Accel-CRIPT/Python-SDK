@@ -68,7 +68,7 @@ def _prepare_host(host: str) -> str:
         warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
 
     if not host.startswith("http"):
-        raise InvalidHostError("The host must start with http or https")
+        raise InvalidHostError()
 
     return host
 

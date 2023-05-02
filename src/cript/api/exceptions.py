@@ -204,10 +204,8 @@ class InvalidHostError(CRIPTException):
     Error message is given to it to be displayed to the user
     """
 
-    error_message: str
-
-    def __init__(self, error_message: str):
-        self.error_message = error_message
+    def __init__(self, error_message: str) -> None:
+        pass
 
     def __str__(self) -> str:
         """
@@ -219,7 +217,7 @@ class InvalidHostError(CRIPTException):
         error message: str
         """
 
-        return self.error_message
+        return "The host must start with http or https"
 
 
 class APIError(CRIPTException):

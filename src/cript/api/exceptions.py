@@ -63,7 +63,7 @@ class InvalidVocabularyCategory(CRIPTException):
 
 class CRIPTAPIRequiredError(CRIPTException):
     """
-    Exception to be raised when the cached API object is requested, but no cached API exists yet.
+    Exception to be raised when the API object is requested, but no cript.API object exists yet.
 
     The CRIPT Python SDK relies on a cript.API object for creation, validation, and modification of nodes.
     The cript.API object may be explicitly called by the user to perform operations to the API, or
@@ -118,9 +118,9 @@ class InvalidHostError(CRIPTException):
 
     ## How to Fix
     This is a simple error to fix, simply put `http://` or preferably `https://` in front of your domain
-    when passing in the host to the cript.API class.
+    when passing in the host to the cript.API class such as `https://criptapp.org`
 
-    Currently, the only protocol that is supported with the CRIPT Python SDK is `HTTP`.
+    Currently, the only web protocol that is supported with the CRIPT Python SDK is `HTTP`.
 
     ### Example
     ```python
@@ -135,7 +135,7 @@ class InvalidHostError(CRIPTException):
     Warnings
     --------
     Please consider always using [HTTPS](https://developer.mozilla.org/en-US/docs/Glossary/HTTPS)
-    as that is a secure protocol and avoid using `HTTP` as it is an insecure.
+    as that is a secure protocol and avoid using `HTTP` as it is insecure.
     The CRIPT Python SDK will give a warning in the terminal when it detects a host with `HTTP`
 
 

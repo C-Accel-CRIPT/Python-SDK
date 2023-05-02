@@ -3,7 +3,38 @@ from cript.exceptions import CRIPTException
 
 class CRIPTNodeSchemaError(CRIPTException):
     """
-    Exception that is raised when a DB schema validation fails for a node.
+    ## Definition
+    This error is raised when the CRIPT [json database schema](https://json-schema.org/)
+    validation fails for a node.
+
+    Please keep in mind that the CRIPT Python SDK converts all the Python nodes inside the
+    [Project](../../nodes/primary_nodes/project) into a giant JSON
+    and sends an HTTP `POST` or `PATCH` request to the API to be processed.
+
+    However, before a request is sent to the API, the JSON is validated against API database schema
+    via the [JSON Schema library](https://python-jsonschema.readthedocs.io/en/stable/),
+    and if the database schema validation fails for whatever reason this error is shown.
+
+    ### Possible Reasons
+
+    1. There was a mistake in nesting of the nodes
+    1. There was a mistake in creating the nodes
+    1. Nodes are missing
+    1. Nodes have invalid vocabulary
+        * The database schema wants something a different controlled vocabulary than what is provided
+    1. There was an error with the way the JSON was created within the Python SDK
+        * The format of the JSON the CRIPT Python SDK created was invalid
+    1. There is something wrong with the database schema
+
+    ## How to Troubleshoot
+    The easiest way to troubleshoot this is to examine the JSON that the SDK created via printing out the
+    [Project](../../nodes/primary_nodes/project) node's JSON and checking the place that the schema validation
+    says failed
+
+    ### Example
+    ```python
+    print(my_project.json)
+    ```
     """
 
     error_message: str

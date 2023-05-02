@@ -98,8 +98,8 @@ class CRIPTAPIRequiredError(CRIPTException):
 
 class CRIPTAPISaveError(CRIPTException):
     """
-    CRIPTAPISaveError is raised when the API responds with a status that is not 200
-    The API response along with status code is shown to the user
+    CRIPTAPISaveError is raised when the API responds with a http status code that is anything other than 200.
+    The status code and API response is shown to the user to help them debug the issue.
 
     Parameters
     ----------

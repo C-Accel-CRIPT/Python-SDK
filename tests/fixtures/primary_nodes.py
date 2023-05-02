@@ -15,7 +15,7 @@ def simple_project_node(simple_collection_node) -> cript.Project:
     cript.Project
     """
 
-    return cript.Project(name="my Project name", collections=[simple_collection_node])
+    return cript.Project(name="my Project name", collection=[simple_collection_node])
 
 
 @pytest.fixture(scope="function")
@@ -25,7 +25,7 @@ def complex_project_node(complex_collection_node, complex_material_node) -> crip
     """
     project_name = "my project name"
 
-    complex_project = cript.Project(name=project_name, collections=[complex_collection_node], materials=[complex_material_node])
+    complex_project = cript.Project(name=project_name, collection=[complex_collection_node], material=[complex_material_node])
 
     return complex_project
 
@@ -44,7 +44,7 @@ def simple_collection_node(simple_experiment_node) -> cript.Collection:
     """
     my_collection_name = "my collection name"
 
-    my_collection = cript.Collection(name=my_collection_name, experiments=[simple_experiment_node])
+    my_collection = cript.Collection(name=my_collection_name, experiment=[simple_experiment_node])
 
     return my_collection
 
@@ -59,7 +59,7 @@ def complex_collection_node(simple_experiment_node, simple_inventory_node, compl
 
     my_collection = cript.Collection(
         name=my_collection_name,
-        experiments=[simple_experiment_node],
+        experiment=[simple_experiment_node],
         inventories=[simple_inventory_node],
         cript_doi=my_cript_doi,
         citations=[complex_citation_node],
@@ -82,7 +82,7 @@ def simple_experiment_node() -> cript.Experiment:
 
 
 @pytest.fixture(scope="function")
-def simple_computational_process_node() -> cript.ComputationalProcess:
+def simple_computation_process_node() -> cript.ComputationProcess:
     """
     simple Computational Process node with only required arguments to use in other tests
     """
@@ -105,14 +105,14 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
         quantity=[my_quantity],
     )
 
-    my_computational_process = cript.ComputationalProcess(
+    my_computational_process = cript.ComputationProcess(
         name="my computational process name",
         type=my_computational_process_type,
         input_data=[input_data],
-        ingredients=[ingredients],
+        ingredient=[ingredients],
     )
 
-    return my_computational_process
+    return copy.deepcopy(my_computational_process)
 
 
 @pytest.fixture(scope="function")
@@ -130,7 +130,7 @@ def complex_data_node(
     complex_file_node,
     simple_process_node,
     simple_computation_node,
-    simple_computational_process_node,
+    simple_computation_process_node,
     simple_material_node,
     complex_citation_node,
 ) -> None:
@@ -143,7 +143,7 @@ def complex_data_node(
         file=[copy.deepcopy(complex_file_node)],
         sample_preperation=copy.deepcopy(simple_process_node),
         computations=[simple_computation_node],
-        computational_process=[simple_computational_process_node],
+        computational_process=[simple_computation_process_node],
         materials=[simple_material_node],
         processes=[copy.deepcopy(simple_process_node)],
         citations=[copy.deepcopy(complex_citation_node)],

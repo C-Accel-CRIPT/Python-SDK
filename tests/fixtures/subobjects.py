@@ -17,7 +17,7 @@ def complex_computational_forcefield() -> cript.ComputationalForcefield:
 
 @pytest.fixture(scope="function")
 def complex_parameter_node() -> cript.Parameter:
-    parameter = cript.Parameter("update_frequency", 1000.0, "1/ns")
+    parameter = cript.Parameter("update_frequency", 1000.0, "1/second")
     return parameter
 
 

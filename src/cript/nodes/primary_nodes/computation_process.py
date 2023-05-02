@@ -5,7 +5,7 @@ from typing import Any, List
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
-class ComputationalProcess(PrimaryBaseNode):
+class ComputationProcess(PrimaryBaseNode):
     """
     ## Definition
 
@@ -27,7 +27,7 @@ class ComputationalProcess(PrimaryBaseNode):
     | type                     | str                           | general molecular dynamics simulation | category of computation                         | True     | True  |
     | input_data               | list[Data]                    |                                       | input data nodes                                | True     |       |
     | output_data              | list[Data]                    |                                       | output data nodes                               |          |       |
-    | ingredients              | list[Ingredient]              |                                       | ingredients                                     | True     |       |
+    | ingredient              | list[Ingredient]              |                                       | ingredients                                     | True     |       |
     | software_ configurations | list[Software  Configuration] |                                       | software and algorithms used                    |          |       |
     | condition                | list[Condition]               |                                       | setup information                               |          |       |
     | properties               | list[Property]                |                                       | computation process properties                  |          |       |
@@ -54,7 +54,7 @@ class ComputationalProcess(PrimaryBaseNode):
         # TODO add proper typing in future, using Any for now to avoid circular import error
         input_data: List[Any] = field(default_factory=list)
         output_data: List[Any] = field(default_factory=list)
-        ingredients: List[Any] = field(default_factory=list)
+        ingredient: List[Any] = field(default_factory=list)
         software_configurations: List[Any] = field(default_factory=list)
         conditions: List[Any] = field(default_factory=list)
         properties: List[Any] = field(default_factory=list)
@@ -67,7 +67,7 @@ class ComputationalProcess(PrimaryBaseNode):
         name: str,
         type: str,
         input_data: List[Any],
-        ingredients: List[Any],
+        ingredient: List[Any],
         output_data: List[Any] = None,
         software_configurations: List[Any] = None,
         conditions: List[Any] = None,
@@ -104,7 +104,7 @@ class ComputationalProcess(PrimaryBaseNode):
         my_quantity = cript.Quantity(key="mass", value=1.23, unit="gram")
 
         # create ingredient node
-        ingredients = cript.Ingredient(
+        ingredient = cript.Ingredient(
             material=my_material,
             quantities=[my_quantity],
         )
@@ -114,7 +114,7 @@ class ComputationalProcess(PrimaryBaseNode):
             name="my computational process name",
             type="cross_linking",
             input_data=[input_data],
-            ingredients=[ingredients],
+            ingredient=[ingredient],
         )
         ```
 
@@ -127,7 +127,7 @@ class ComputationalProcess(PrimaryBaseNode):
             type of computation process from CRIPT controlled vocabulary
         input_data: List[Data]
             list of input data for computational process
-        ingredients: List[Ingredient]
+        ingredient: List[Ingredient]
             list of ingredients for this computational process node
         output_data: List[Data] default=None
             list of output data for this computational process node
@@ -154,8 +154,8 @@ class ComputationalProcess(PrimaryBaseNode):
         if input_data is None:
             input_data = []
 
-        if ingredients is None:
-            ingredients = []
+        if ingredient is None:
+            ingredient = []
 
         if output_data is None:
             output_data = []
@@ -176,7 +176,7 @@ class ComputationalProcess(PrimaryBaseNode):
             self._json_attrs,
             type=type,
             input_data=input_data,
-            ingredients=ingredients,
+            ingredient=ingredient,
             output_data=output_data,
             software_configurations=software_configurations,
             conditions=conditions,
@@ -320,7 +320,7 @@ class ComputationalProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def ingredients(self) -> List[Any]:
+    def ingredient(self) -> List[Any]:
         """
         List of ingredients for the computational_process
 
@@ -328,7 +328,7 @@ class ComputationalProcess(PrimaryBaseNode):
         --------
         ```python
         # create ingredient node
-        ingredients = cript.Ingredient(
+        ingredient = cript.Ingredient(
             material=simple_material_node,
             quantities=[simple_quantity_node],
         )
@@ -341,22 +341,22 @@ class ComputationalProcess(PrimaryBaseNode):
         List[Ingredient]
             list of ingredients for this computational process
         """
-        return self._json_attrs.ingredients.copy()
+        return self._json_attrs.ingredient.copy()
 
-    @ingredients.setter
-    def ingredients(self, new_ingredients_list: List[Any]) -> None:
+    @ingredient.setter
+    def ingredient(self, new_ingredient_list: List[Any]) -> None:
         """
         set the ingredients list for this computational process
 
         Parameters
         ----------
-        new_ingredients_list: List[Ingredient]
+        new_ingredient_list: List[Ingredient]
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, ingredients=new_ingredients_list)
+        new_attrs = replace(self._json_attrs, ingredient=new_ingredient_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

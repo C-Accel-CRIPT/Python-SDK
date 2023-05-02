@@ -2,7 +2,7 @@
 from cript.nodes.primary_nodes import (
     Collection,
     Computation,
-    ComputationalProcess,
+    ComputationProcess,
     Data,
     Experiment,
     Inventory,

@@ -8,7 +8,7 @@ from cript.nodes import (
     Collection,
     Computation,
     ComputationalForcefield,
-    ComputationalProcess,
+    ComputationProcess,
     Condition,
     Data,
     Equipment,

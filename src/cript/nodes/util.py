@@ -105,7 +105,7 @@ def add_orphaned_nodes_to_project(project: Project, active_experiment: Experimen
         except CRIPTOrphanedComputationError as exc:
             active_experiment.computation += [exc.orphaned_node]
         except CRIPTOrphanedComputationalProcessError as exc:
-            active_experiment.computational_process += [exc.orphaned_node]
+            active_experiment.computation_process += [exc.orphaned_node]
         else:
             break
         counter += 1

@@ -91,24 +91,24 @@ class Project(PrimaryBaseNode):
         # Combine all materials listed in the project inventories
         project_inventory_materials = []
         for inventory in self.find_children({"node": ["Inventory"]}):
-            for material in inventory.materials:
+            for material in inventory.material:
                 project_inventory_materials.append(material)
         for material in project_graph_materials:
-            if material not in self.materials and material not in project_inventory_materials:
+            if material not in self.material and material not in project_inventory_materials:
                 raise CRIPTOrphanedMaterialError(material)
 
         # Check graph for orphaned nodes, that should be listed in the experiments
         project_experiments = self.find_children({"node": ["Experiment"]})
         # There are 4 different types of nodes Experiments are collecting.
-        node_types = ("Process", "Computation", "ComputationalProcess", "Data")
+        node_types = ("Process", "Computation", "ComputationProcess", "Data")
         # We loop over them with the same logic
         for node_type in node_types:
             # All in the graph has to be in at least one experiment
             project_graph_nodes = self.find_children({"node": [node_type]})
             node_type_attr = node_type.lower()
             # Non-consistent naming makes this necessary for Computation Process
-            if node_type == "ComputationalProcess":
-                node_type_attr = "computational_process"
+            if node_type == "ComputationProcess":
+                node_type_attr = "computation_process"
 
             # Concatination of all experiment attributes (process, computation, etc.)
             # Every node of the graph must be present somewhere in this concatinated list.

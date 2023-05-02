@@ -19,7 +19,7 @@ from fixtures.primary_nodes import (
     complex_project_node,
     simple_collection_node,
     simple_computation_node,
-    simple_computational_process_node,
+    simple_computation_process_node,
     simple_data_node,
     simple_experiment_node,
     simple_inventory_node,

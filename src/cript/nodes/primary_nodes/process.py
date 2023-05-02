@@ -16,7 +16,7 @@ class Process(PrimaryBaseNode):
     | attribute               | type             | example                                                                         | description                                                         | required | vocab |
     |-------------------------|------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------|----------|-------|
     | type                    | str              | mix                                                                             | type of process                                                     | True     | True  |
-    | ingredients             | list[Ingredient] |                                                                                 | ingredients                                                         |          |       |
+    | ingredient             | list[Ingredient] |                                                                                 | ingredients                                                         |          |       |
     | description             | str              | To oven-dried 20 mL glass vial, 5 mL of styrene and 10 ml of toluene was added. | explanation of the process                                          |          |       |
     | equipment               | list[Equipment]  |                                                                                 | equipment used in the process                                       |          |       |
     | products                | list[Material]   |                                                                                 | desired material produced from the process                          |          |       |
@@ -44,7 +44,7 @@ class Process(PrimaryBaseNode):
 
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        ingredients: List[Any] = field(default_factory=list)
+        ingredient: List[Any] = field(default_factory=list)
         description: str = ""
         equipments: List[Any] = field(default_factory=list)
         products: List[Any] = field(default_factory=list)
@@ -61,7 +61,7 @@ class Process(PrimaryBaseNode):
         self,
         name: str,
         type: str,
-        ingredients: List[Any] = None,
+        ingredient: List[Any] = None,
         description: str = "",
         equipments: List[Any] = None,
         products: List[Any] = None,
@@ -83,8 +83,8 @@ class Process(PrimaryBaseNode):
 
         Parameters
         ----------
-        ingredients: List[Ingredient]
-            [ingredients](../../subobjects/ingredient) used in this process
+        ingredient: List[Ingredient]
+            [ingredient](../../subobjects/ingredient) used in this process
         type: str = ""
             Process type must come from
             [CRIPT Controlled vocabulary process type](https://criptapp.org/keys/process-type/)
@@ -112,8 +112,8 @@ class Process(PrimaryBaseNode):
             instantiate a process node
         """
 
-        if ingredients is None:
-            ingredients = []
+        if ingredient is None:
+            ingredient = []
 
         if equipments is None:
             equipments = []
@@ -143,7 +143,7 @@ class Process(PrimaryBaseNode):
 
         new_attrs = replace(
             self._json_attrs,
-            ingredients=ingredients,
+            ingredient=ingredient,
             type=type,
             description=description,
             equipments=equipments,
@@ -195,9 +195,9 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def ingredients(self) -> List[Any]:
+    def ingredient(self) -> List[Any]:
         """
-        List of [ingredients](../../subobjects/ingredients) for this process
+        List of [ingredient](../../subobjects/ingredients) for this process
 
         Examples
         ---------
@@ -207,7 +207,7 @@ class Process(PrimaryBaseNode):
             quantities=[simple_quantity_node],
         )
 
-        my_process.ingredients = [my_ingredients]
+        my_process.ingredient = [my_ingredients]
         ```
 
         Returns
@@ -215,16 +215,16 @@ class Process(PrimaryBaseNode):
         List[Ingredient]
             list of ingredients for this process
         """
-        return self._json_attrs.ingredients.copy()
+        return self._json_attrs.ingredient.copy()
 
-    @ingredients.setter
-    def ingredients(self, new_ingredients_list: List[Any]) -> None:
+    @ingredient.setter
+    def ingredient(self, new_ingredient_list: List[Any]) -> None:
         """
         set the list of the ingredients for this process
 
         Parameters
         ----------
-        new_ingredients_list
+        new_ingredient_list
             list of ingredients to replace the current list
 
         Returns
@@ -233,7 +233,7 @@ class Process(PrimaryBaseNode):
         """
         # TODO need to validate with CRIPT controlled vocabulary
         #   and if invalid then raise an error immediately
-        new_attrs = replace(self._json_attrs, ingredients=new_ingredients_list)
+        new_attrs = replace(self._json_attrs, ingredient=new_ingredient_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

@@ -5,7 +5,13 @@ from cript.exceptions import CRIPTException
 
 class CRIPTConnectionError(CRIPTException):
     """
-    Raised when the API object cannot connect to CRIPT with the given host and token
+    ## Definition
+    Raised when the cript.API object cannot connect to CRIPT with the given host and token
+
+    ## How to Fix
+    The best way to fix this error is to check that your host and token are written and used correctly within
+    the cript.API object. This error could also be shown if the API is unresponsive and the cript.API object
+    just cannot successfully connect to it.
     """
 
     def __init__(self, host, token):
@@ -18,6 +24,7 @@ class CRIPTConnectionError(CRIPTException):
 
     def __str__(self) -> str:
         """
+        shows the error message to the user
 
         Returns
         -------
@@ -25,9 +32,12 @@ class CRIPTConnectionError(CRIPTException):
             Explanation of the error
         """
 
-        ret_str = f"Could not connect to CRIPT with the given host ({self.host}) and token ({self.token})."
-        ret_str += " Please be sure both host and token are entered correctly."
-        return ret_str
+        error_message = (
+            f"Could not connect to CRIPT with the given host ({self.host}) and token ({self.token}). "
+            f"Please be sure both host and token are entered correctly."
+        )
+
+        return error_message
 
 
 class InvalidVocabulary(CRIPTException):

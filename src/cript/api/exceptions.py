@@ -120,7 +120,19 @@ class CRIPTAPIRequiredError(CRIPTException):
         pass
 
     def __str__(self) -> str:
-        return "cript.API object is required for an operation, but it does not exist." "Please instantiate a cript.API object to continue." "See the documentation for more details."
+        """
+        return error message to user
+
+        Returns
+        -------
+        error message: str
+        """
+        error_message = (
+            "cript.API object is required for an operation, but it does not exist."
+            "Please instantiate a cript.API object to continue." "See the documentation for more details."
+        )
+
+        return error_message
 
 
 class CRIPTAPISaveError(CRIPTException):

@@ -27,7 +27,7 @@ class CRIPTNodeSchemaError(CRIPTException):
         * The format of the JSON the CRIPT Python SDK created was invalid
     1. There is something wrong with the database schema
 
-    ## How to Troubleshoot
+    ## How to Fix
     The easiest way to troubleshoot this is to examine the JSON that the SDK created via printing out the
     [Project](../../nodes/primary_nodes/project) node's JSON and checking the place that the schema validation
     says failed
@@ -59,8 +59,10 @@ class CRIPTNodeSchemaError(CRIPTException):
 
 class CRIPTJsonDeserializationError(CRIPTException):
     """
-    Exception to throw if deserialization of nodes fails.
-
+    ## Definition
+    This exception is raised when converting a node from JSON to Python class fails.
+    This process fails when the attributes within the JSON does not match the node's class
+    attributes within the `JsonAttributes` of that specific node
     """
 
     def __init__(self, node_type: str, json_str: str):

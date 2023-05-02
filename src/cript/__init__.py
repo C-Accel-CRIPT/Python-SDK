@@ -29,5 +29,6 @@ from cript.nodes import (
     Software,
     SoftwareConfiguration,
     User,
+    add_orphaned_nodes_to_project,
     load_nodes_from_json,
 )

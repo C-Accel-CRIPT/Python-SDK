@@ -76,6 +76,50 @@ class Project(PrimaryBaseNode):
         self._json_attrs = replace(self._json_attrs, name=name, collections=collections, material=material)
         self.validate()
 
+    def validate(self):
+        from cript.nodes.exceptions import (
+            CRIPTOrphanedMaterialError,
+            get_orphaned_experiment_exception,
+        )
+
+        # First validate like other nodes
+        super().validate()
+
+        # Check graph for orphaned nodes, that should be listed in project
+        # Project.materials should contain all material nodes
+        project_graph_materials = self.find_children({"node": ["Material"]})
+        # Combine all materials listed in the project inventories
+        project_inventory_materials = []
+        for inventory in self.find_children({"node": ["Inventory"]}):
+            for material in inventory.materials:
+                project_inventory_materials.append(material)
+        for material in project_graph_materials:
+            if material not in self.materials and material not in project_inventory_materials:
+                raise CRIPTOrphanedMaterialError(material)
+
+        # Check graph for orphaned nodes, that should be listed in the experiments
+        project_experiments = self.find_children({"node": ["Experiment"]})
+        # There are 4 different types of nodes Experiments are collecting.
+        node_types = ("Process", "Computation", "ComputationalProcess", "Data")
+        # We loop over them with the same logic
+        for node_type in node_types:
+            # All in the graph has to be in at least one experiment
+            project_graph_nodes = self.find_children({"node": [node_type]})
+            node_type_attr = node_type.lower()
+            # Non-consistent naming makes this necessary for Computation Process
+            if node_type == "ComputationalProcess":
+                node_type_attr = "computational_process"
+
+            # Concatination of all experiment attributes (process, computation, etc.)
+            # Every node of the graph must be present somewhere in this concatinated list.
+            experiment_nodes = []
+            for experiment in project_experiments:
+                for ex_node in getattr(experiment, node_type_attr):
+                    experiment_nodes.append(ex_node)
+            for node in project_graph_nodes:
+                if node not in experiment_nodes:
+                    raise get_orphaned_experiment_exception(node)
+
     # ------------------ Properties ------------------
 
     # GROUP

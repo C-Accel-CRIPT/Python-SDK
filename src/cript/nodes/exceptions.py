@@ -49,10 +49,8 @@ class CRIPTNodeSchemaError(CRIPTException):
         self.json_schema_validation_error: str = json_schema_validation_error
 
     def __str__(self) -> str:
-        error_message: str = (
-            f"JSON database schema validation for node {self.node_type} failed."
-            f"Error: {self.json_schema_validation_error}"
-        )
+        error_message: str = f"JSON database schema validation for node {self.node_type} failed."
+        error_message += f"Error: {self.json_schema_validation_error}"
 
         return error_message
 

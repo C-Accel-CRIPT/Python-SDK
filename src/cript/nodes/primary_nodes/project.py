@@ -18,7 +18,7 @@ class Project(PrimaryBaseNode):
 
     | attribute   | type             | description                            |
     |-------------|------------------|----------------------------------------|
-    | collections | List[Collection] | collections that relate to the project |
+    | collection | List[Collection] | collections that relate to the project |
     | materials   | List[Materials]  | materials owned by the project         |
 
     <!-- TODO consider adding JSON section -->
@@ -32,7 +32,7 @@ class Project(PrimaryBaseNode):
 
         # TODO is group needed?
         group: Group = None
-        collections: List[Collection] = field(default_factory=list)
+        collection: List[Collection] = field(default_factory=list)
         material: List[Material] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -41,7 +41,7 @@ class Project(PrimaryBaseNode):
         self,
         name: str,
         # group: Group,
-        collections: List[Collection] = None,
+        collection: List[Collection] = None,
         material: List[Material] = None,
         notes: str = "",
         **kwargs
@@ -53,7 +53,7 @@ class Project(PrimaryBaseNode):
         ----------
         name: str
             project name
-        collections: List[Collection]
+        collection: List[Collection]
             list of Collections that belongs to this Project
          material: List[Material]
             list of materials that belongs to this project
@@ -67,13 +67,13 @@ class Project(PrimaryBaseNode):
         """
         super().__init__(name=name, notes=notes)
 
-        if collections is None:
-            collections = []
+        if collection is None:
+            collection = []
 
         if material is None:
             material = []
 
-        self._json_attrs = replace(self._json_attrs, name=name, collections=collections, material=material)
+        self._json_attrs = replace(self._json_attrs, name=name, collection=collection, material=material)
         self.validate()
 
     def validate(self):
@@ -154,7 +154,7 @@ class Project(PrimaryBaseNode):
 
     # Collection
     @property
-    def collections(self) -> List[Collection]:
+    def collection(self) -> List[Collection]:
         """
         Collection is a Project node's property that can be set during creation in the constructor
         or later by setting the project's property
@@ -166,7 +166,7 @@ class Project(PrimaryBaseNode):
             name="my collection name", experiments=[my_experiment_node]
         )
 
-        my_project.collections = my_new_collection
+        my_project.collection = my_new_collection
         ```
 
         Returns
@@ -174,11 +174,11 @@ class Project(PrimaryBaseNode):
         Collection: List[Collection]
             the list of collections within this project
         """
-        return self._json_attrs.collections
+        return self._json_attrs.collection
 
     # Collection
-    @collections.setter
-    def collections(self, new_collection: List[Collection]) -> None:
+    @collection.setter
+    def collection(self, new_collection: List[Collection]) -> None:
         """
         set list of collections for the project node
 
@@ -190,7 +190,7 @@ class Project(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, collections=new_collection)
+        new_attrs = replace(self._json_attrs, collection=new_collection)
         self._update_json_attrs_if_valid(new_attrs)
 
     # Material

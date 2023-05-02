@@ -91,13 +91,13 @@ def complex_citation_dict(complex_reference_dict) -> dict:
 
 @pytest.fixture(scope="function")
 def complex_quantity_node() -> cript.Quantity:
-    quantity = cript.Quantity("mass", 11.2, "kg", 0.2, "std")
+    quantity = cript.Quantity("mass", 11.2, "kg", "number", 0.2, "std")
     return quantity
 
 
 @pytest.fixture(scope="function")
 def complex_quantity_dict() -> dict:
-    ret_dict = {"node": ["Quantity"], "key": "mass", "value": 11.2, "unit": "kg", "uncertainty": 0.2, "uncertainty_type": "std"}
+    ret_dict = {"node": ["Quantity"], "key": "mass", "value": 11.2, "unit": "kg", "type": "number", "uncertainty": 0.2, "uncertainty_type": "std"}
     return ret_dict
 
 

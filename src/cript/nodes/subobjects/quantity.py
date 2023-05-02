@@ -15,14 +15,15 @@ class Quantity(BaseNode):
         key: str = ""
         value: Union[Number, None] = None
         unit: str = ""
+        type: str = ""
         uncertainty: Union[Number, None] = None
         uncertainty_type: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, key: str, value: Number, unit: str, uncertainty: Union[Number, None] = None, uncertainty_type: str = "", **kwargs):
+    def __init__(self, key: str, value: Number, unit: str, type: str, uncertainty: Union[Number, None] = None, uncertainty_type: str = "", **kwargs):
         super().__init__()
-        self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit, uncertainty=uncertainty, uncertainty_type=uncertainty_type)
+        self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit, type=type, uncertainty=uncertainty, uncertainty_type=uncertainty_type)
         self.validate()
 
     @property
@@ -50,6 +51,15 @@ class Quantity(BaseNode):
     @unit.setter
     def unit(self, new_unit: str):
         new_attrs = replace(self._json_attrs, unit=new_unit)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    def type(self) -> str:
+        return self._json_attrs.type
+
+    @type.setter
+    def type(self, new_type: str):
+        new_attrs = replace(self._json_attrs, type=new_type)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

@@ -114,3 +114,7 @@ def test_invalid_json_load():
     raise_node_dict(node_dict)
     node_dict = {"node": [None]}
     raise_node_dict(node_dict)
+
+
+def test_invalid_project_graphs(simple_project_node):
+    project = copy.deepcopy(simple_project_node)

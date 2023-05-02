@@ -4,14 +4,15 @@ from dataclasses import asdict
 
 import cript.nodes
 from cript.nodes.core import BaseNode
-from cript.nodes.exception import (
+from cript.nodes.exceptions import (
+    CRIPTJsonDeserializationError,
+    CRIPTJsonNodeError,
     CRIPTOrphanedComputationalProcessError,
     CRIPTOrphanedComputationError,
     CRIPTOrphanedDataError,
     CRIPTOrphanedMaterialError,
     CRIPTOrphanedProcessError,
 )
-from cript.nodes.exceptions import CRIPTJsonDeserializationError, CRIPTJsonNodeError
 from cript.nodes.primary_nodes.experiment import Experiment
 from cript.nodes.primary_nodes.project import Project
 

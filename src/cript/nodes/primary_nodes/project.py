@@ -1,10 +1,6 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
-from cript.nodes.exceptions import (
-    CRIPTOrphranedMaterialError,
-    get_orphaned_experiment_exception,
-)
 from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
@@ -81,6 +77,11 @@ class Project(PrimaryBaseNode):
         self.validate()
 
     def validate(self):
+        from cript.nodes.exceptions import (
+            CRIPTOrphanedMaterialError,
+            get_orphaned_experiment_exception,
+        )
+
         # First validate like other nodes
         super().validate()
 

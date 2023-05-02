@@ -23,15 +23,6 @@ class CRIPTConnectionError(CRIPTException):
         self.token += token[-uncovered_chars:]
 
     def __str__(self) -> str:
-        """
-        shows the error message to the user
-
-        Returns
-        -------
-        str
-            Explanation of the error
-        """
-
         error_message = f"Could not connect to CRIPT with the given host ({self.host}) and token ({self.token}). " f"Please be sure both host and token are entered correctly."
 
         return error_message
@@ -46,25 +37,10 @@ class InvalidVocabulary(CRIPTException):
     possible_vocab: List[str] = []
 
     def __init__(self, vocab: str, possible_vocab: List[str]) -> None:
-        """
-        create an InvalidVocabularyError
-
-        Parameters
-        ----------
-        vocab: str
-        possible_vocab: List[str]
-        """
         self.vocab = vocab
         self.possible_vocab = possible_vocab
 
     def __str__(self) -> str:
-        """
-        show user the error message
-
-        Returns
-        -------
-        error_message: str
-        """
         error_message = f"The vocabulary '{self.vocab}' entered does not exist within the CRIPT controlled vocabulary." f" Please pick a valid CRIPT vocabulary from {self.possible_vocab}"
         return error_message
 
@@ -80,14 +56,6 @@ class InvalidVocabularyCategory(CRIPTException):
         self.valid_vocab_category = valid_vocab_category
 
     def __str__(self) -> str:
-        """
-        Returns an error message for the user.
-
-        Returns
-        -------
-        error_message:str
-            error message for the user
-        """
         error_message = f"The vocabulary category {self.vocab_category} does not exist within the CRIPT controlled vocabulary. " f"Please pick a valid CRIPT vocabulary category from {self.valid_vocab_category}."
 
         return error_message
@@ -117,13 +85,6 @@ class CRIPTAPIRequiredError(CRIPTException):
         pass
 
     def __str__(self) -> str:
-        """
-        return error message to user
-
-        Returns
-        -------
-        error message: str
-        """
         error_message = "cript.API object is required for an operation, but it does not exist." "Please instantiate a cript.API object to continue." "See the documentation for more details."
 
         return error_message
@@ -133,18 +94,6 @@ class CRIPTAPISaveError(CRIPTException):
     """
     CRIPTAPISaveError is raised when the API responds with a http status code that is anything other than 200.
     The status code and API response is shown to the user to help them debug the issue.
-
-    Parameters
-    ----------
-    api_host_domain: str
-        cript API host domain such as "https://criptapp.org"
-    api_response: str
-        message that the API returned
-
-    Returns
-    -------
-    Error Message: str
-        Error message telling the user what was the issue and giving them helpful clues as how to fix the error
     """
 
     api_host_domain: str
@@ -196,14 +145,6 @@ class InvalidHostError(CRIPTException):
         pass
 
     def __str__(self) -> str:
-        """
-        tells the user the search mode they picked for the api client to get a node from the API is invalid
-        and lists all the valid search modes they can pick from
-
-        Returns
-        -------
-        error message: str
-        """
         return "The host must start with http or https"
 
 
@@ -226,18 +167,6 @@ class APIError(CRIPTException):
     api_error: str = ""
 
     def __init__(self, api_error: str) -> None:
-        """
-        create an APIError
-        Parameters
-        ----------
-        api_error: str
-            JSON string of API error
-
-        Returns
-        -------
-        None
-            create an API Error
-        """
         self.api_error = api_error
 
     def __str__(self) -> str:

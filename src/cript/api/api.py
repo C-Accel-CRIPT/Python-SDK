@@ -2,7 +2,7 @@ import copy
 import json
 import os
 import warnings
-from typing import Union
+from typing import Union, List
 
 import jsonschema
 import requests
@@ -393,17 +393,14 @@ class API:
 
         db_schema = self._get_db_schema()
 
-        node_dict = json.loads(node_json)
-        try:
-            node_list = node_dict["node"]
-        except KeyError:
-            raise CRIPTNodeSchemaError(error_message=f"'node' attribute not present in serialization of {node_json}.")
+        node_dict: dict = json.loads(node_json)
+        node_type_list: List = node_dict["node"]
 
         # checking the node field "node": "Material"
-        if isinstance(node_list, list) and len(node_list) == 1 and isinstance(node_list[0], str):
-            node_type = node_list[0]
+        if isinstance(node_type_list, list) and len(node_type_list) == 1 and isinstance(node_type_list[0], str):
+            node_type: str = node_type_list[0]
         else:
-            raise CRIPTJsonNodeError(node_list, str(node_list))
+            raise CRIPTJsonNodeError(node_type_list, str(node_type_list))
 
         # set which node you are using schema validation for
         db_schema["$ref"] = f"#/$defs/{node_type}Post"
@@ -411,7 +408,7 @@ class API:
         try:
             jsonschema.validate(instance=node_dict, schema=db_schema)
         except jsonschema.exceptions.ValidationError as db_schema_validation_error:
-            raise CRIPTNodeSchemaError(node=node_type, json_schema_validation_error=db_schema_validation_error)
+            raise CRIPTNodeSchemaError(node_type=node_type, json_schema_validation_error=str(db_schema_validation_error))
 
         # if validation goes through without any problems return True
         return True

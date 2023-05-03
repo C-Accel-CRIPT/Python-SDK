@@ -397,6 +397,7 @@ class API:
         node_type_list: List = node_dict["node"]
 
         # checking the node field "node": "Material"
+        # TODO this should be switched to a guard clause later to make the code cleaner
         if isinstance(node_type_list, list) and len(node_type_list) == 1 and isinstance(node_type_list[0], str):
             node_type: str = node_type_list[0]
         else:

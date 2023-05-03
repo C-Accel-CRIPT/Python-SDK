@@ -1,3 +1,6 @@
+import json
+from typing import Union
+
 from cript.exceptions import CRIPTException
 from cript.nodes.core import BaseNode
 
@@ -41,12 +44,9 @@ class CRIPTNodeSchemaError(CRIPTException):
     node_type: str = ""
     json_schema_validation_error: str = ""
 
-    # TODO accept both node type string and the actual node to get the node typ from
-    # TODO fix how this error is raised
-    def __init__(self, node: BaseNode, json_schema_validation_error: str) -> None:
-        # get the node type from node e.g. "Project" or "Material"
-        self.node_type = node.node_type[0].title()
+    def __init__(self, node_type: str, json_schema_validation_error: str) -> None:
         self.json_schema_validation_error: str = json_schema_validation_error
+        self.node_type = node_type
 
     def __str__(self) -> str:
         error_message: str = f"JSON database schema validation for node {self.node_type} failed."
@@ -89,10 +89,63 @@ class CRIPTJsonDeserializationError(CRIPTException):
 class CRIPTJsonNodeError(CRIPTJsonDeserializationError):
     """
     ## Definition
-    Exception that is raised if a `node` attribute is present, but not a single itemed list.
+    This exception is raised if a `node` attribute is present in JSON,
+    but the list has more or less than exactly one type of node type.
+
+    > Note: It is expected that there is only a single node type per JSON object.
+
+    ### Example
+    !!! Example "Valid JSON representation of a Material node"
+        ```json
+        {
+          "node": [
+            "Material"
+          ],
+          "name": "Whey protein isolate",
+          "uid": "_:Whey protein isolate"
+        },
+        ```
+
+    ??? Example "Invalid JSON representation of a Material node"
+
+        ```json
+        {
+          "node": [
+            "Material",
+            "Property"
+          ],
+          "name": "Whey protein isolate",
+          "uid": "_:Whey protein isolate"
+        },
+        ```
+
+        ---
+
+        ```json
+        {
+          "node": [],
+          "name": "Whey protein isolate",
+          "uid": "_:Whey protein isolate"
+        },
+        ```
+
 
     ## How to Fix
+    Debugging skills are most helpful here as there is no one-size-fits-all approach.
 
+    It is best to identify whether the invalid JSON was created in the Python SDK
+    or if the invalid JSON was given from the API.
+
+    If the Python SDK created invalid JSON during serialization, then it is helpful to track down and
+    identify the point where the invalid JSON was started.
+
+    You may consider, inspecting the python objects to see if the node type are written incorrectly in python
+    and the issue is only being caught during serialization or if the Python node is written correctly
+    and the issue is created during serialization.
+
+    If the problem is with the Python SDK or API, it is best to leave an issue or create a discussion within the
+    [Python SDK GitHub repository](https://github.com/C-Accel-CRIPT/Python-SDK) for one of the members of the
+    CRIPT team to look into any issues that there could have been.
     """
 
     def __init__(self, node_list, json_str) -> None:

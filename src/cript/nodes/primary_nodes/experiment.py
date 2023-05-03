@@ -112,7 +112,7 @@ class Experiment(PrimaryBaseNode):
         if citation is None:
             citation = []
 
-        super().__init__(name=name, notes=notes)
+        super().__init__(name=name, notes=notes, **kwargs)
 
         self._json_attrs = replace(
             self._json_attrs,

@@ -1,7 +1,8 @@
+import uuid
 from abc import ABC
 from dataclasses import dataclass, replace
 
-from cript.nodes.core import BaseNode
+from cript.nodes.core import BaseNode, get_uuid_from_uid
 from cript.nodes.supporting_nodes.user import User
 
 
@@ -24,15 +25,17 @@ class PrimaryBaseNode(BaseNode, ABC):
         public: bool = False
         name: str = ""
         notes: str = ""
+        uuid: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, notes: str):
+    def __init__(self, name: str, notes: str, **kwargs):
         # initialize Base class with node
         super().__init__()
-
+        # Resepect uuid if passed as argument, otherwise construct uuid from uid
+        uuid = kwargs.get("uuid", get_uuid_from_uid(self.uid))
         # replace name and notes within PrimaryBase
-        self._json_attrs = replace(self._json_attrs, name=name, notes=notes)
+        self._json_attrs = replace(self._json_attrs, name=name, notes=notes, uuid=uuid)
 
     def __str__(self) -> str:
         """
@@ -61,8 +64,15 @@ class PrimaryBaseNode(BaseNode, ABC):
         return super().__str__()
 
     @property
+    def uuid(self) -> uuid.UUID:
+        return uuid.UUID(self._json_attrs.uuid)
+
+    @property
     def url(self):
-        return self._json_attrs.url
+        from cript.api.api import _API_VERSION_STRING, _get_global_cached_api
+
+        api = _get_global_cached_api()
+        return f"{api.host}/api/{_API_VERSION_STRING}/{self.uuid}"
 
     @property
     def locked(self):

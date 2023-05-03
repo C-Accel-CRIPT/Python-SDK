@@ -27,6 +27,8 @@ from cript.nodes.primary_nodes.project import Project
 # Use the `_get_global_cached_api for access.
 _global_cached_api = None
 
+_API_VERSION_STRING = "v1"
+
 
 def _get_global_cached_api():
     """
@@ -61,7 +63,7 @@ def _prepare_host(host: str) -> str:
     # strip ending slash to make host always uniform
     host = host.rstrip("/")
 
-    host = f"{host}/api/v1"
+    host = f"{host}/api/{_API_VERSION_STRING}"
 
     # if host is using unsafe "http://" then give a warning
     if host.startswith("http://"):

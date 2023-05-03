@@ -13,6 +13,10 @@ def get_new_uid():
     return "_:" + str(uuid.uuid4())
 
 
+def get_uuid_from_uid(uid):
+    return str(uuid.UUID(uid[2:]))
+
+
 class classproperty(object):
     def __init__(self, f):
         self.f = f
@@ -119,10 +123,14 @@ class BaseNode(ABC):
         # Making a manual transform into a dictionary here.
         arguments = {}
         for field in self.JsonAttributes().__dataclass_fields__:
-            arguments[field] = copy.deepcopy(getattr(self._json_attrs, field), memo)
+            if field != "uuid":  # Do not copy uuids, but everything else
+                arguments[field] = copy.deepcopy(getattr(self._json_attrs, field), memo)
         # TODO URL handling
 
-        arguments["uid"] = get_new_uid()
+        # Since we excluded 'uuid' from arguments,
+        # a new uid will prompt the creation of a new matching uuid.
+        uid = get_new_uid()
+        arguments["uid"] = uid
 
         # Create node and init constructor attributes
         node = self.__class__(**arguments)

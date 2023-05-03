@@ -64,7 +64,7 @@ class Collection(PrimaryBaseNode):
         None
             Instantiates a Collection node
         """
-        super().__init__(name=name, notes=notes)
+        super().__init__(name=name, notes=notes, **kwargs)
 
         if experiment is None:
             experiment = []

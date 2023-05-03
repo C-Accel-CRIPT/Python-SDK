@@ -110,7 +110,7 @@ class Computation(PrimaryBaseNode):
             instantiate a computation node
 
         """
-        super().__init__(name=name, notes=notes)
+        super().__init__(name=name, notes=notes, **kwargs)
 
         if input_data is None:
             input_data = []

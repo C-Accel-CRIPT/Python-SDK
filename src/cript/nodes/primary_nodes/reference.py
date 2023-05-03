@@ -1,7 +1,8 @@
+import uuid
 from dataclasses import dataclass, field, replace
 from typing import List
 
-from cript.nodes.core import BaseNode
+from cript.nodes.core import BaseNode, get_uuid_from_uid
 
 
 class Reference(BaseNode):
@@ -53,7 +54,6 @@ class Reference(BaseNode):
         instead of a placeholder number such as 0 or -1
         """
 
-        url: str = ""
         type: str = ""
         title: str = ""
         author: List[str] = field(default_factory=list)
@@ -68,6 +68,7 @@ class Reference(BaseNode):
         arxiv_id: str = ""
         pmid: int = None
         website: str = ""
+        uuid: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -88,7 +89,7 @@ class Reference(BaseNode):
         arxiv_id: str = "",
         pmid: int = None,
         website: str = "",
-        **kwargs
+        **kwargs,
     ):
         """
         create a reference node
@@ -149,46 +150,28 @@ class Reference(BaseNode):
 
         super().__init__()
 
+        # Resepect uuid if passed as argument, otherwise construct uuid from uid
+        uuid = kwargs.get("uuid", get_uuid_from_uid(self.uid))
+
         new_attrs = replace(
-            self._json_attrs,
-            url=url,
-            type=type,
-            title=title,
-            author=author,
-            journal=journal,
-            publisher=publisher,
-            year=year,
-            volume=volume,
-            issue=issue,
-            pages=pages,
-            doi=doi,
-            issn=issn,
-            arxiv_id=arxiv_id,
-            pmid=pmid,
-            website=website,
+            self._json_attrs, url=url, type=type, title=title, author=author, journal=journal, publisher=publisher, year=year, volume=volume, issue=issue, pages=pages, doi=doi, issn=issn, arxiv_id=arxiv_id, pmid=pmid, website=website, uuid=uuid
         )
 
         self._update_json_attrs_if_valid(new_attrs)
         self.validate()
 
     # ------------------ Properties ------------------
+
     @property
-    def url(self) -> str:
-        """
-        Url attribute for the reference node to be assigned by the CRIPT API
+    def uuid(self) -> uuid.UUID:
+        return uuid.UUID(self._json_attrs.uuid)
 
-        Notes
-        -----
-        Can only get the URL and not set it.
-        Only the API can assign URLs to nodes
+    @property
+    def url(self):
+        from cript.api.api import _API_VERSION_STRING, _get_global_cached_api
 
-        Returns
-        -------
-        str
-            reference node url
-        """
-        # TODO need to create the URl from the UUID
-        return self._json_attrs.url
+        api = _get_global_cached_api()
+        return f"{api.host}/api/{_API_VERSION_STRING}/{self.uuid}"
 
     @property
     def type(self) -> str:

@@ -39,15 +39,39 @@ class NodeEncoder(json.JSONEncoder):
                         serialize_dict[key] = getattr(obj._json_attrs, key)
             serialize_dict["node"] = obj._json_attrs.node
 
-            # if node is material, then convert the identifiers list to JSON fields
-            if serialize_dict["node"] == ["Material"]:
-                serialize_dict = material_identifiers_list_to_json_fields(serialize_dict)
+            # check if further modifications to the dict is needed before considering it done
+            serialize_dict = _apply_modifications(serialize_dict)
 
             return serialize_dict
         return json.JSONEncoder.default(self, obj)
 
 
-def material_identifiers_list_to_json_fields(serialize_dict: dict) -> dict:
+def _apply_modifications(serialize_dict):
+    """
+    checks the serialized_dict to see if any other operations are required before it
+    can be considered done. If other operations are required, then it passes it to the other operations
+    and at the end returns the fully finished dict.
+
+    This function is essentially a big switch case that checks the node type
+    and sees what other operations are required for it
+
+    Parameters
+    ----------
+    serialize_dict: dict
+
+
+    Returns
+    -------
+    serialize_dict: dict
+    """
+    # if node is material, then convert the identifiers list to JSON fields
+    if serialize_dict["node"] == ["Material"]:
+        serialize_dict = _material_identifiers_list_to_json_fields(serialize_dict)
+
+    return serialize_dict
+
+
+def _material_identifiers_list_to_json_fields(serialize_dict: dict) -> dict:
     """
     input:
     ```json

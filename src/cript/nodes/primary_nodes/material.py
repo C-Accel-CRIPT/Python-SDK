@@ -16,12 +16,12 @@ class Material(PrimaryBaseNode):
     ## Attributes
     | attribute               | type                                                | example                                           | description                                  | required    | vocab |
     |-------------------------|-----------------------------------------------------|---------------------------------------------------|----------------------------------------------|-------------|-------|
-    | components              | list[[Material](./)]                                |                                                   | list of components that make up the mixture  |             |       |
+    | component              | list[[Material](./)]                                |                                                   | list of components that make up the mixture  |             |       |
     | properties              | list[[Property](../subobjects/property)]            |                                                   | material properties                          |             |       |
     | process                 | [Process](../process)                               |                                                   | process node that made this material         |             |       |
     | parent_material         | [Material](./)                                      |                                                   | material node that this node was copied from |             |       |
     | computation_ forcefield | [Computation  Forcefield](../computational_process) |                                                   | computation forcefield                       | Conditional |       |
-    | keywords                | list[str]                                           | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material             |             | True  |
+    | keyword                | list[str]                                           | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material             |             | True  |
 
     ## Navigating to Material
     Materials can be easily found on the [CRIPT](https://criptapp.org) home screen in the
@@ -67,12 +67,12 @@ class Material(PrimaryBaseNode):
         # identifier sub-object for the material
         identifiers: List[dict[str, str]] = field(default_factory=dict)
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        components: List["Material"] = field(default_factory=list)
+        component: List["Material"] = field(default_factory=list)
         properties: List[Any] = field(default_factory=list)
         process: List[Any] = field(default_factory=list)
-        parent_materials: List["Material"] = field(default_factory=list)
+        parent_material: List["Material"] = field(default_factory=list)
         computation_forcefield: List[Any] = field(default_factory=list)
-        keywords: List[str] = field(default_factory=list)
+        keyword: List[str] = field(default_factory=list)
         bigsmiles: str = ""
         cas: str = ""
         chem_formula: str = ""
@@ -87,12 +87,12 @@ class Material(PrimaryBaseNode):
     def __init__(
         self,
         name: str,
-        components: List["Material"] = None,
+        component: List["Material"] = None,
         properties: List[Any] = None,
         process: List[Any] = None,
-        parent_materials: List["Material"] = None,
+        parent_material: List["Material"] = None,
         computation_forcefield: List[Any] = None,
-        keywords: List[str] = None,
+        keyword: List[str] = None,
         notes: str = "",
         bigsmiles: str = "",
         cas: str = "",
@@ -111,12 +111,12 @@ class Material(PrimaryBaseNode):
         Parameters
         ----------
         name: str
-        components: List["Material"], default=None
+        component: List["Material"], default=None
         properties: List[Property], default=None
         process: List[Process], default=None
-        parent_materials: List["Material"], default=None
+        parent_material: List["Material"], default=None
         computation_forcefield: List[ComputationalProcess], default=None
-        keywords: List[str], default=None
+        keyword: List[str], default=None
         bigsmiles: str = "",
         cas: str = "",
         chem_formula: str = "",
@@ -134,8 +134,8 @@ class Material(PrimaryBaseNode):
 
         super().__init__(name=name, notes=notes)
 
-        if components is None:
-            components = []
+        if component is None:
+            component = []
 
         if properties is None:
             properties = []
@@ -143,28 +143,24 @@ class Material(PrimaryBaseNode):
         if process is None:
             process = []
 
-        if parent_materials is None:
-            parent_materials = []
+        if parent_material is None:
+            parent_material = []
 
         if computation_forcefield is None:
             computation_forcefield = []
 
-        if keywords is None:
-            keywords = []
-
-        # validate keywords if they exist
-        if keywords is not None:
-            self._validate_keywords(keywords=keywords)
+        if keyword is None:
+            keyword = []
 
         self._json_attrs = replace(
             self._json_attrs,
             name=name,
-            components=components,
+            component=component,
             properties=properties,
             process=process,
-            parent_materials=parent_materials,
+            parent_material=parent_material,
             computation_forcefield=computation_forcefield,
-            keywords=keywords,
+            keyword=keyword,
             bigsmiles=bigsmiles,
             cas=cas,
             chem_formula=chem_formula,
@@ -282,7 +278,7 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def components(self) -> List["Material"]:
+    def component(self) -> List["Material"]:
         """
         list of components ([material nodes](./)) that make up this material
 
@@ -290,7 +286,7 @@ class Material(PrimaryBaseNode):
         --------
         ```python
         # material component
-        my_components = [
+        my_component = [
             cript.Material(
                 name="my component material 1",
                 identifiers=[{"alternative_names": "component 1 alternative name"}],
@@ -303,7 +299,7 @@ class Material(PrimaryBaseNode):
 
 
         identifiers = [{"alternative_names": "my material alternative name"}]
-        my_material = cript.Material(name="my material", components=my_components, identifiers=identifiers)
+        my_material = cript.Material(name="my material", component=my_component, identifiers=identifiers)
         ```
 
         Returns
@@ -311,22 +307,22 @@ class Material(PrimaryBaseNode):
         List[Material]
             list of components that make up this material
         """
-        return self._json_attrs.components
+        return self._json_attrs.component.copy()
 
-    @components.setter
-    def components(self, new_components_list: List["Material"]) -> None:
+    @component.setter
+    def component(self, new_component_list: List["Material"]) -> None:
         """
         set the list of components (material nodes) that make up this material
 
         Parameters
         ----------
-        new_components_list: List["Material"]
+        new_component_list: List["Material"]
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, components=new_components_list)
+        new_attrs = replace(self._json_attrs, component=new_component_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -346,7 +342,7 @@ class Material(PrimaryBaseNode):
         List[Property]
             list of properties that define this material
         """
-        return self._json_attrs.properties
+        return self._json_attrs.properties.copy()
 
     @properties.setter
     def properties(self, new_properties_list: List[Any]) -> None:
@@ -400,7 +396,7 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def parent_materials(self) -> List["Material"]:
+    def parent_material(self) -> List["Material"]:
         """
         List of parent materials
 
@@ -409,23 +405,23 @@ class Material(PrimaryBaseNode):
         List["Material"]
             list of parent materials
         """
-        return self._json_attrs.parent_materials
+        return self._json_attrs.parent_material
 
-    @parent_materials.setter
-    def parent_materials(self, new_parent_materials_list: List["Material"]) -> None:
+    @parent_material.setter
+    def parent_material(self, new_parent_material_list: List["Material"]) -> None:
         """
         set the [parent materials](./) for this material
 
         Parameters
         ----------
-        new_parent_materials_list: List["Material"]
+        new_parent_material_list: List["Material"]
 
         Returns
         -------
         None
         """
 
-        new_attrs = replace(self._json_attrs, parent_materials=new_parent_materials_list)
+        new_attrs = replace(self._json_attrs, parent_material=new_parent_material_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -457,7 +453,7 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def keywords(self) -> List[str]:
+    def keyword(self) -> List[str]:
         """
         List of keywords for this material
 
@@ -471,7 +467,7 @@ class Material(PrimaryBaseNode):
         material_keywords = ["acetylene", "acrylate", "alternating"]
 
         my_material = cript.Material(
-            name="my material", keywords=material_keywords, identifiers=identifiers
+            name="my material", keyword=material_keywords, identifiers=identifiers
         )
         ```
 
@@ -480,10 +476,10 @@ class Material(PrimaryBaseNode):
         List[str]
             list of material keywords
         """
-        return self._json_attrs.keywords
+        return self._json_attrs.keyword.copy()
 
-    @keywords.setter
-    def keywords(self, new_keywords_list: List[str]) -> None:
+    @keyword.setter
+    def keyword(self, new_keyword_list: List[str]) -> None:
         """
         set the keywords for this material
 
@@ -491,58 +487,11 @@ class Material(PrimaryBaseNode):
 
         Parameters
         ----------
-        new_keywords_list
+        new_keyword_list
 
         Returns
         -------
         None
         """
-        # TODO validate keywords before setting them
-        self._validate_keywords(keywords=new_keywords_list)
-
-        new_attrs = replace(self._json_attrs, keywords=new_keywords_list)
+        new_attrs = replace(self._json_attrs, keyword=new_keyword_list)
         self._update_json_attrs_if_valid(new_attrs)
-
-    # ------------ validation ------------
-    # TODO this can be a function instead of a method
-    def _validate_keywords(self, keywords: List[str]) -> None:
-        """
-        takes a list of material keywords and loops through validating every single one
-
-        this is a simple loop that calls another method, but I thought it needs to be made into a method
-        since both constructor and keywords setter has the same code
-
-        Parameters
-        ----------
-        keywords: List[str]
-
-        Returns
-        -------
-        None
-        """
-        # TODO add this validation in the future
-        # for keywords in keywords:
-        #     is_vocab_valid(keywords)
-        pass
-
-    # TODO this can be a function instead of a method
-    def _validate_identifiers(self, identifiers: List[dict[str, str]]) -> None:
-        """
-        takes a list of material identifiers and loops through validating every single one
-
-        since validation is needed in both constructor and the setter, this is a simple method for it
-
-        Parameters
-        ----------
-        identifiers: List[dict[str, str]]
-
-        Returns
-        -------
-        None
-        """
-
-        for identifier_dictionary in identifiers:
-            for key, value in identifier_dictionary.items():
-                # TODO validate keys here
-                # is_vocab_valid("material_identifiers", value)
-                pass

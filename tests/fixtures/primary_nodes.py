@@ -184,30 +184,30 @@ def simple_material_node() -> cript.Material:
 
 
 @pytest.fixture(scope="function")
-def complex_material_node(simple_property_node, simple_process_node, complex_computation_forcefield) -> cript.Material:
+def complex_material_node(simple_property_node, simple_process_node, complex_computational_forcefield_node) -> cript.Material:
     """
     complex Material node with all possible attributes filled
     """
     my_identifier = [{"alternative_names": "my material alternative name"}]
 
-    my_components = [
+    my_component = [
         cript.Material(name="my component material 1", identifiers=[{"alternative_names": "component 1 alternative name"}]),
         cript.Material(name="my component material 2", identifiers=[{"alternative_names": "component 2 alternative name"}]),
     ]
 
     parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
 
-    my_material_keywords = ["acetylene"]
+    my_material_keyword = ["acetylene"]
 
     my_complex_material = cript.Material(
         name="my complex material",
         identifiers=my_identifier,
-        components=my_components,
-        properties=simple_property_node,
+        component=my_component,
+        property=simple_property_node,
         process=copy.deepcopy(simple_process_node),
-        parent_materials=parent_material,
-        computation_forcefield=complex_computation_forcefield,
-        keywords=my_material_keywords,
+        parent_material=parent_material,
+        computational_forcefield=complex_computational_forcefield_node,
+        keyword=my_material_keyword,
     )
 
     return copy.deepcopy(my_complex_material)

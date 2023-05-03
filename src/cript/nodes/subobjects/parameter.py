@@ -11,7 +11,7 @@ class Parameter(BaseNode):
     class JsonAttributes(BaseNode.JsonAttributes):
         key: str = ""
         value: Union[int, float, str] = ""
-        # We explictly allow None for unit here (instead of empty str),
+        # We explicitly allow None for unit here (instead of empty str),
         # this presents number without physical unit, like counting
         # particles or dimensionless numbers.
         unit: Union[str, None] = None

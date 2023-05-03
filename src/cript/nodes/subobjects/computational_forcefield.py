@@ -19,15 +19,18 @@ class ComputationalForcefield(BaseNode):
         implicit_solvent: str = ""
         source: str = ""
         description: str = ""
-        data: Union[Data, None] = None
+        data: List[Data] = field(default_factory=list)
         citation: List[Citation] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, key: str, building_block: str, coarse_grained_mapping: str = "", implicit_solvent: str = "", source: str = "", description: str = "", data: Union[Data, None] = None, citation: Union[List[Citation], None] = None, **kwargs):
+    def __init__(self, key: str, building_block: str, coarse_grained_mapping: str = "", implicit_solvent: str = "", source: str = "", description: str = "", data: List[Data] = None, citation: Union[List[Citation], None] = None, **kwargs):
         if citation is None:
             citation = []
         super().__init__()
+
+        if data is None:
+            data = []
 
         self._json_attrs = replace(
             self._json_attrs,
@@ -97,11 +100,11 @@ class ComputationalForcefield(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def data(self) -> Union[Data, None]:
-        return self._json_attrs.data
+    def data(self) -> List[Data]:
+        return self._json_attrs.data.copy()
 
     @data.setter
-    def data(self, new_data: Union[Data, None]):
+    def data(self, new_data: List[Data]):
         new_attrs = replace(self._json_attrs, data=new_data)
         self._update_json_attrs_if_valid(new_attrs)
 

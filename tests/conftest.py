@@ -33,7 +33,6 @@ from fixtures.subobjects import (
     complex_algorithm_node,
     complex_citation_dict,
     complex_citation_node,
-    complex_computational_forcefield,
     complex_computational_forcefield_dict,
     complex_computational_forcefield_node,
     complex_condition_dict,

@@ -8,14 +8,6 @@ import cript
 
 
 @pytest.fixture(scope="function")
-def complex_computational_forcefield() -> cript.ComputationalForcefield:
-    """
-    create a minimal computation_forcefield to use for other tests
-    """
-    return cript.ComputationalForcefield(key="amber", building_block="atom")
-
-
-@pytest.fixture(scope="function")
 def complex_parameter_node() -> cript.Parameter:
     parameter = cript.Parameter("update_frequency", 1000.0, "1/second")
     return parameter
@@ -252,13 +244,13 @@ def complex_equipment_dict(complex_condition_dict, complex_citation_dict) -> dic
 @pytest.fixture(scope="function")
 def complex_computational_forcefield_node(simple_data_node, complex_citation_node) -> cript.ComputationalForcefield:
     cf = cript.ComputationalForcefield(
-        "OPLS",
+        "opls_aa",
         "atom",
         "atom -> atom",
         "no implicit solvent",
         "local LigParGen installation",
         "this is a test forcefield",
-        simple_data_node,
+        [simple_data_node],
         [complex_citation_node],
     )
     return cf
@@ -268,14 +260,14 @@ def complex_computational_forcefield_node(simple_data_node, complex_citation_nod
 def complex_computational_forcefield_dict(simple_data_node, complex_citation_dict) -> dict:
     ret_dict = {
         "node": ["ComputationalForcefield"],
-        "key": "OPLS",
+        "key": "opls_aa",
         "building_block": "atom",
         "coarse_grained_mapping": "atom -> atom",
         "implicit_solvent": "no implicit solvent",
         "source": "local LigParGen installation",
         "description": "this is a test forcefield",
         "citation": [complex_citation_dict],
-        "data": json.loads(simple_data_node.json),
+        "data": [json.loads(simple_data_node.json)],
     }
     return ret_dict
 

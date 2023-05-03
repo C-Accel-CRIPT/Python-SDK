@@ -69,9 +69,29 @@ def _node_json_hook(node_str: str):
     return node_dict
 
 
-def load_nodes_from_json(nodes_json: str):
+def load_nodes_from_json(nodes_json: str) -> BaseNode:
     """
-    User facing function, that return a node and all its children from a json input.
+    converts the node from JSON to Python object
+
+    Examples
+    --------
+
+    ```python
+    material_json = "{ "node": [ "Material" ], "name": "my material", "uid": "123456" }"
+
+    # convert json string of a node to Python object
+    material_node = cript.load_nodes_from_json(material_json)
+    ```
+
+    Parameters
+    ----------
+    nodes_json: str
+        JSON representation of a node
+
+    Returns
+    -------
+    CRIPT Node: BaseNode
+        converted the node from JSON to Python object
     """
     return json.loads(nodes_json, object_hook=_node_json_hook)
 

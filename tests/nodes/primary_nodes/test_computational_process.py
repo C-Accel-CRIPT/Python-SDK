@@ -10,18 +10,18 @@ def test_create_simple_computational_process(simple_data_node, complex_ingredien
     create a simple computational_process node with required arguments
     """
 
-    my_computational_process = cript.ComputationalProcess(
+    my_computational_process = cript.ComputationProcess(
         name="my computational process node name",
         type="cross_linking",
         input_data=[simple_data_node],
-        ingredients=[complex_ingredient_node],
+        ingredient=[complex_ingredient_node],
     )
 
     # assertions
-    assert isinstance(my_computational_process, cript.ComputationalProcess)
+    assert isinstance(my_computational_process, cript.ComputationProcess)
     assert my_computational_process.type == "cross_linking"
     assert my_computational_process.input_data == [simple_data_node]
-    assert my_computational_process.ingredients == [complex_ingredient_node]
+    assert my_computational_process.ingredient == [complex_ingredient_node]
 
 
 def test_create_complex_computational_process(
@@ -40,29 +40,29 @@ def test_create_complex_computational_process(
     computational_process_name = "my computational process name"
     computational_process_type = "cross_linking"
 
-    my_computational_process = cript.ComputationalProcess(
+    my_computational_process = cript.ComputationProcess(
         name=computational_process_name,
         type=computational_process_type,
         input_data=[simple_data_node],
-        ingredients=[complex_ingredient_node],
+        ingredient=[complex_ingredient_node],
         output_data=[simple_data_node],
-        software_configurations=[complex_software_configuration_node],
-        conditions=[complex_condition_node],
+        software_configuration=[complex_software_configuration_node],
+        condition=[complex_condition_node],
         properties=[simple_property_node],
-        citations=[complex_citation_node],
+        citation=[complex_citation_node],
     )
 
     # assertions
-    assert isinstance(my_computational_process, cript.ComputationalProcess)
+    assert isinstance(my_computational_process, cript.ComputationProcess)
     assert my_computational_process.name == computational_process_name
     assert my_computational_process.type == computational_process_type
     assert my_computational_process.input_data == [simple_data_node]
-    assert my_computational_process.ingredients == [complex_ingredient_node]
+    assert my_computational_process.ingredient == [complex_ingredient_node]
     assert my_computational_process.output_data == [simple_data_node]
-    assert my_computational_process.software_configurations == [complex_software_configuration_node]
-    assert my_computational_process.conditions == [complex_condition_node]
+    assert my_computational_process.software_configuration == [complex_software_configuration_node]
+    assert my_computational_process.condition == [complex_condition_node]
     assert my_computational_process.properties == [simple_property_node]
-    assert my_computational_process.citations == [complex_citation_node]
+    assert my_computational_process.citation == [complex_citation_node]
 
 
 def test_serialize_computational_process_to_json(simple_computational_process_node) -> None:

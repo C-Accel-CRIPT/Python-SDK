@@ -13,14 +13,14 @@ class Collection(PrimaryBaseNode):
     [Collection node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=8)
     is nested inside a [Project](../project) node.
 
-    A Collection node can be thought as a folder/bucket that can hold [Experiments](../experiment)
+    A Collection node can be thought as a folder/bucket that can hold [experiment](../experiment)
     or [Inventories](../inventory) node.
 
     | attribute   | type             | example             | description                                                                    |
     |-------------|------------------|---------------------|--------------------------------------------------------------------------------|
-    | experiment | list[Experiment] |                     | experiments that relate to the collection                                      |
+    | experiment | list[Experiment] |                     | experiment that relate to the collection                                      |
     | inventory | list[Inventory]  |                     | inventory owned by the collection                                              |
-    | cript_doi   | str              | `10.1038/1781168a0` | DOI: digital object identifier for a published collection; CRIPT generated DOI |
+    | doi       | str              | `10.1038/1781168a0` | DOI: digital object identifier for a published collection; CRIPT generated DOI |
     | citation   | list[Citation]   |                     | reference to a book, paper, or scholarly work                                  |
 
 
@@ -36,25 +36,25 @@ class Collection(PrimaryBaseNode):
         # TODO add proper typing in future, using Any for now to avoid circular import error
         experiment: List[Any] = None
         inventory: List[Any] = None
-        cript_doi: str = ""
+        doi: str = ""
         citation: List[Any] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, experiment: List[Any] = None, inventory: List[Any] = None, cript_doi: str = "", citation: List[Any] = None, notes: str = "", **kwargs) -> None:
+    def __init__(self, name: str, experiment: List[Any] = None, inventory: List[Any] = None, doi: str = "", citation: List[Any] = None, notes: str = "", **kwargs) -> None:
         """
         create a Collection with a name
-        add list of experiments, inventory, citation, cript_doi, and notes if available.
+        add list of experiment, inventory, citation, doi, and notes if available.
 
         Parameters
         ----------
         name: str
             name of the Collection you want to make
         experiment: List[Experiment], default=None
-            list of experiments within the Collection
+            list of experiment within the Collection
         inventory: List[Inventory], default=None
             list of inventories within this collection
-        cript_doi: str = "", default=""
+        doi: str = "", default=""
             cript doi
         citation: List[Citation], default=None
             List of citations for this collection
@@ -80,7 +80,7 @@ class Collection(PrimaryBaseNode):
             name=name,
             experiment=experiment,
             inventory=inventory,
-            cript_doi=cript_doi,
+            doi=doi,
             citation=citation,
         )
 
@@ -91,7 +91,7 @@ class Collection(PrimaryBaseNode):
     @property
     def experiment(self) -> List[Any]:
         """
-        List of all [Experiments](../experiment) within this Collection
+        List of all [experiment](../experiment) within this Collection
 
         Examples
         --------
@@ -102,7 +102,7 @@ class Collection(PrimaryBaseNode):
         Returns
         -------
         List[Experiment]
-            list of all [Experiments](../experiment) within this Collection
+            list of all [experiment](../experiment) within this Collection
         """
         return self._json_attrs.experiment.copy()
 
@@ -114,7 +114,7 @@ class Collection(PrimaryBaseNode):
         Parameters
         ----------
         new_experiment: List[Experiment]
-            list of Experiments
+            list of experiment
 
         Returns
         -------
@@ -173,35 +173,35 @@ class Collection(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def cript_doi(self) -> str:
+    def doi(self) -> str:
         """
         The CRIPT DOI for this collection
 
         ```python
-        my_collection.cript_doi = "10.1038/1781168a0"
+        my_collection.doi = "10.1038/1781168a0"
         ```
 
         Returns
         -------
-        cript_doi: str
+        doi: str
             the CRIPT DOI e.g. `10.1038/1781168a0`
         """
-        return self._json_attrs.cript_doi
+        return self._json_attrs.doi
 
-    @cript_doi.setter
-    def cript_doi(self, new_cript_doi: str) -> None:
+    @doi.setter
+    def doi(self, new_doi: str) -> None:
         """
         set the CRIPT DOI for this collection to new CRIPT DOI
 
         Parameters
         ----------
-        new_cript_doi: str
+        new_doi: str
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, cript_doi=new_cript_doi)
+        new_attrs = replace(self._json_attrs, doi=new_doi)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

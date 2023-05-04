@@ -5,7 +5,7 @@ from util import strip_uid_from_dict
 import cript
 
 
-def test_create_simple_experiment(simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, complex_citation_node) -> None:
+def test_create_simple_experiment() -> None:
     """
     test just to see if a minimal experiment can be made without any issues
     """

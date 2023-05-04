@@ -1,3 +1,4 @@
+import copy
 import json
 
 from util import strip_uid_from_dict
@@ -105,6 +106,21 @@ def test_serialize_collection_to_json(simple_collection_node) -> None:
     ref_dict = json.loads(simple_collection_node.json)
     ref_dict = strip_uid_from_dict(ref_dict)
     assert ref_dict == expected_collection_dict
+
+
+def test_uuid(complex_collection_node):
+    collection_node = complex_collection_node
+
+    # Deep copies should not share uuid (or uids) or urls
+    collection_node2 = copy.deepcopy(complex_collection_node)
+    assert collection_node.uuid != collection_node2.uuid
+    assert collection_node.uid != collection_node2.uid
+    assert collection_node.url != collection_node2.url
+
+    # Loads from json have the same uuid and url
+    collection_node3 = cript.load_nodes_from_json(collection_node.json)
+    assert collection_node3.uuid == collection_node.uuid
+    assert collection_node3.url == collection_node.url
 
 
 # ---------- Integration tests ----------

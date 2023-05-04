@@ -3,7 +3,6 @@ from abc import ABC
 from dataclasses import dataclass, replace
 
 from cript.nodes.core import BaseNode, get_uuid_from_uid
-from cript.nodes.supporting_nodes.user import User
 
 
 class UUIDBaseNode(BaseNode):
@@ -40,6 +39,11 @@ class UUIDBaseNode(BaseNode):
         api = _get_global_cached_api()
         return f"{api.host}/api/{_API_VERSION_STRING}/{self.uuid}"
 
+    def __deepcopy__(self, memo):
+        node = super().__deepcopy__(memo)
+        node._json_attrs = replace(node._json_attrs, uuid=get_uuid_from_uid(node.uid))
+        return node
+
 
 class PrimaryBaseNode(UUIDBaseNode, ABC):
     """
@@ -55,8 +59,8 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
 
         locked: bool = False
         model_version: str = ""
-        updated_by: User = None
-        created_by: User = None
+        updated_by = None
+        created_by = None
         public: bool = False
         name: str = ""
         notes: str = ""
@@ -78,7 +82,6 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
         Examples
         --------
         {
-        'url': '',
         'locked': False,
         'model_version': '',
         'updated_by': None,

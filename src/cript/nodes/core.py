@@ -123,8 +123,7 @@ class BaseNode(ABC):
         # Making a manual transform into a dictionary here.
         arguments = {}
         for field in self.JsonAttributes().__dataclass_fields__:
-            if field != "uuid":  # Do not copy uuids, but everything else
-                arguments[field] = copy.deepcopy(getattr(self._json_attrs, field), memo)
+            arguments[field] = copy.deepcopy(getattr(self._json_attrs, field), memo)
         # TODO URL handling
 
         # Since we excluded 'uuid' from arguments,

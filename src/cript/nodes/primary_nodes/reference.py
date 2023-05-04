@@ -1,4 +1,3 @@
-import uuid
 from dataclasses import dataclass, field, replace
 from typing import List
 
@@ -21,7 +20,6 @@ class Reference(UUIDBaseNode):
     ## Attributes
     | attribute | type      | example                                    | description                                   | required      | vocab |
     |-----------|-----------|--------------------------------------------|-----------------------------------------------|---------------|-------|
-    | url       | str       |                                            | CRIPT’s unique ID of the node assigned by API | True          |       |
     | type      | str       | journal_article                            | type of literature                            | True          | True  |
     | title     | str       | 'Living' Polymers                          | title of publication                          | True          |       |
     | author   | list[str] | Michael Szwarc                             | list of authors                               |               |       |
@@ -75,7 +73,6 @@ class Reference(UUIDBaseNode):
         self,
         type: str,
         title: str,
-        url: str = "",
         author: List[str] = None,
         journal: str = "",
         publisher: str = "",
@@ -97,8 +94,6 @@ class Reference(UUIDBaseNode):
 
         Parameters
         ----------
-        url: str
-            unique URL assigned by API
         type: str
             type of literature.
             The reference type must come from CRIPT controlled vocabulary
@@ -149,7 +144,7 @@ class Reference(UUIDBaseNode):
 
         super().__init__(**kwargs)
 
-        new_attrs = replace(self._json_attrs, url=url, type=type, title=title, author=author, journal=journal, publisher=publisher, year=year, volume=volume, issue=issue, pages=pages, doi=doi, issn=issn, arxiv_id=arxiv_id, pmid=pmid, website=website)
+        new_attrs = replace(self._json_attrs, type=type, title=title, author=author, journal=journal, publisher=publisher, year=year, volume=volume, issue=issue, pages=pages, doi=doi, issn=issn, arxiv_id=arxiv_id, pmid=pmid, website=website)
 
         self._update_json_attrs_if_valid(new_attrs)
         self.validate()

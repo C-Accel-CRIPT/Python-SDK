@@ -198,8 +198,10 @@ class BaseNode(ABC):
             """
             Helper function that checks if an attribute is present in a node.
             """
-
-            attr_key = getattr(node._json_attrs, key)
+            try:
+                attr_key = getattr(node._json_attrs, key)
+            except AttributeError:
+                return False
 
             # To save code paths, I convert non-lists into lists with one element.
             if not isinstance(attr_key, list):

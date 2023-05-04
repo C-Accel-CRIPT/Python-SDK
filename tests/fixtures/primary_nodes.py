@@ -237,3 +237,18 @@ def simple_inventory_node() -> None:
 
     # use my_inventory in another test
     return my_inventory
+
+
+@pytest.fixture(scope="function")
+def simple_computational_process_node(simple_data_node, complex_ingredient_node) -> None:
+    """
+    simple/minimal computational_process node with only required arguments
+    """
+    my_computational_process = cript.ComputationProcess(
+        name="my computational process node name",
+        type="cross_linking",
+        input_data=[simple_data_node],
+        ingredient=[complex_ingredient_node],
+    )
+
+    return my_computational_process

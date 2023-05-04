@@ -2,7 +2,11 @@ import uuid
 from abc import ABC
 from dataclasses import dataclass, replace
 
-from cript.nodes.core import BaseNode, get_uuid_from_uid
+from cript.nodes.core import BaseNode
+
+
+def get_uuid_from_uid(uid):
+    return str(uuid.UUID(uid[2:]))
 
 
 class UUIDBaseNode(BaseNode):

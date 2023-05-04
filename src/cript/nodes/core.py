@@ -13,10 +13,6 @@ def get_new_uid():
     return "_:" + str(uuid.uuid4())
 
 
-def get_uuid_from_uid(uid):
-    return str(uuid.UUID(uid[2:]))
-
-
 class classproperty(object):
     def __init__(self, f):
         self.f = f

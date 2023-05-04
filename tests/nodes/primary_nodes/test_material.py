@@ -46,11 +46,11 @@ def test_all_getters_and_setters(simple_material_node) -> None:
 
     new_properties = [cript.Property(key="air_flow", type="value", unit="gram", value=1.00)]
 
-    new_process = [cript.Process(name="my process name 1", type="affinity_pure", description="my simple material description", keywords=["anionic"])]
+    new_process = [cript.Process(name="my process name 1", type="affinity_pure", description="my simple material description", keyword=["anionic"])]
 
     new_parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
 
-    new_computation_forcefield = cript.ComputationForcefield(key="amber", building_block="atom")
+    new_computation_forcefield = cript.ComputationalForcefield(key="amber", building_block="atom")
 
     new_material_keywords = ["acetylene"]
 
@@ -61,22 +61,22 @@ def test_all_getters_and_setters(simple_material_node) -> None:
     # set all attributes for Material node
     simple_material_node.name = new_name
     simple_material_node.identifiers = new_identifiers
-    simple_material_node.properties = new_properties
+    simple_material_node.property = new_properties
     simple_material_node.process = new_process
-    simple_material_node.parent_materials = new_parent_material
+    simple_material_node.parent_material = new_parent_material
     simple_material_node.computation_forcefield = new_computation_forcefield
-    simple_material_node.keywords = new_material_keywords
-    simple_material_node.components = new_components
+    simple_material_node.keyword = new_material_keywords
+    simple_material_node.component = new_components
 
     # get all attributes and assert that they are equal to the setter
     assert simple_material_node.name == new_name
     assert simple_material_node.identifiers == new_identifiers
-    assert simple_material_node.properties == new_properties
+    assert simple_material_node.property == new_properties
     assert simple_material_node.process == new_process
-    assert simple_material_node.parent_materials == new_parent_material
+    assert simple_material_node.parent_material == new_parent_material
     assert simple_material_node.computation_forcefield == new_computation_forcefield
-    assert simple_material_node.keywords == new_material_keywords
-    assert simple_material_node.components == new_components
+    assert simple_material_node.keyword == new_material_keywords
+    assert simple_material_node.component == new_components
 
 
 def test_serialize_material_to_json(simple_material_node) -> None:
@@ -135,12 +135,12 @@ def test_deserialize_material_from_json() -> None:
     # assertions
     assert isinstance(my_material, cript.Material)
     assert my_material.name == api_material["name"]
-    assert my_material.components == []
-    assert my_material.properties == []
+    assert my_material.component == []
+    assert my_material.property == []
     assert my_material.process == []
-    assert my_material.parent_materials == []
+    assert my_material.parent_material == []
     assert my_material.computation_forcefield == []
-    assert my_material.keywords == []
+    assert my_material.keyword == []
     assert my_material.notes == api_material["notes"]
 
 

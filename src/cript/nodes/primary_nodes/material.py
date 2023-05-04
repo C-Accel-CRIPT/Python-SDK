@@ -17,7 +17,7 @@ class Material(PrimaryBaseNode):
     | attribute               | type                                                | example                                           | description                                  | required    | vocab |
     |-------------------------|-----------------------------------------------------|---------------------------------------------------|----------------------------------------------|-------------|-------|
     | component              | list[[Material](./)]                                |                                                   | list of components that make up the mixture  |             |       |
-    | properties              | list[[Property](../subobjects/property)]            |                                                   | material properties                          |             |       |
+    | property              | list[[Property](../subobjects/property)]            |                                                   | material properties                          |             |       |
     | process                 | [Process](../process)                               |                                                   | process node that made this material         |             |       |
     | parent_material         | [Material](./)                                      |                                                   | material node that this node was copied from |             |       |
     | computation_ forcefield | [Computation  Forcefield](../computational_process) |                                                   | computation forcefield                       | Conditional |       |
@@ -68,7 +68,7 @@ class Material(PrimaryBaseNode):
         identifiers: List[dict[str, str]] = field(default_factory=dict)
         # TODO add proper typing in future, using Any for now to avoid circular import error
         component: List["Material"] = field(default_factory=list)
-        properties: List[Any] = field(default_factory=list)
+        property: List[Any] = field(default_factory=list)
         process: List[Any] = field(default_factory=list)
         parent_material: List["Material"] = field(default_factory=list)
         computation_forcefield: List[Any] = field(default_factory=list)
@@ -88,7 +88,7 @@ class Material(PrimaryBaseNode):
         self,
         name: str,
         component: List["Material"] = None,
-        properties: List[Any] = None,
+        property: List[Any] = None,
         process: List[Any] = None,
         parent_material: List["Material"] = None,
         computation_forcefield: List[Any] = None,
@@ -112,7 +112,7 @@ class Material(PrimaryBaseNode):
         ----------
         name: str
         component: List["Material"], default=None
-        properties: List[Property], default=None
+        property: List[Property], default=None
         process: List[Process], default=None
         parent_material: List["Material"], default=None
         computation_forcefield: List[ComputationalProcess], default=None
@@ -137,8 +137,8 @@ class Material(PrimaryBaseNode):
         if component is None:
             component = []
 
-        if properties is None:
-            properties = []
+        if property is None:
+            property = []
 
         if process is None:
             process = []
@@ -156,7 +156,7 @@ class Material(PrimaryBaseNode):
             self._json_attrs,
             name=name,
             component=component,
-            properties=properties,
+            property=property,
             process=process,
             parent_material=parent_material,
             computation_forcefield=computation_forcefield,
@@ -326,41 +326,6 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def properties(self) -> List[Any]:
-        """
-        list of material [properties](../../subobjects/property)
-
-        ```python
-        # property subobject
-        my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
-
-        my_material.properties = my_property
-        ```
-
-        Returns
-        -------
-        List[Property]
-            list of properties that define this material
-        """
-        return self._json_attrs.properties.copy()
-
-    @properties.setter
-    def properties(self, new_properties_list: List[Any]) -> None:
-        """
-        set the list of properties for this material
-
-        Parameters
-        ----------
-        new_properties_list: List[Property]
-
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, properties=new_properties_list)
-        self._update_json_attrs_if_valid(new_attrs)
-
-    @property
     def process(self) -> List[Any]:
         """
         List of [process](../process) for this material
@@ -494,4 +459,40 @@ class Material(PrimaryBaseNode):
         None
         """
         new_attrs = replace(self._json_attrs, keyword=new_keyword_list)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    # Note that we overwrite in built-in property. After that no more properties can be added
+    @property
+    def property(self) -> List[Any]:
+        """
+        list of material [property](../../subobjects/property)
+
+        ```python
+        # property subobject
+        my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
+
+        my_material.property = my_property
+        ```
+
+        Returns
+        -------
+        List[Property]
+            list of properties that define this material
+        """
+        return self._json_attrs.property.copy()
+
+    @property.setter
+    def property(self, new_property_list: List[Any]) -> None:
+        """
+        set the list of properties for this material
+
+        Parameters
+        ----------
+        new_property_list: List[Property]
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, property=new_property_list)
         self._update_json_attrs_if_valid(new_attrs)

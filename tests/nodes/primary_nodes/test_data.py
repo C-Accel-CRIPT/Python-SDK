@@ -34,11 +34,11 @@ def test_create_complex_data_node(
         name="my complex data node name",
         type="afm_amp",
         file=[complex_file_node],
-        sample_preperation=simple_process_node,
-        computations=[simple_computation_node],
-        computational_process=[simple_computational_process_node],
-        materials=[simple_material_node],
-        processes=[simple_process_node],
+        sample_preparation=simple_process_node,
+        computation=[simple_computation_node],
+        computation_process=[simple_computational_process_node],
+        material=[simple_material_node],
+        process=[simple_process_node],
         citation=[complex_citation_node],
     )
 
@@ -46,11 +46,11 @@ def test_create_complex_data_node(
     assert isinstance(my_complex_data, cript.Data)
     assert my_complex_data.type == "afm_amp"
     assert my_complex_data.file == [complex_file_node]
-    assert my_complex_data.sample_preperation == simple_process_node
-    assert my_complex_data.computations == [simple_computation_node]
-    assert my_complex_data.computational_process == [simple_computational_process_node]
-    assert my_complex_data.materials == [simple_material_node]
-    assert my_complex_data.processes == [simple_process_node]
+    assert my_complex_data.sample_preparation == simple_process_node
+    assert my_complex_data.computation == [simple_computation_node]
+    assert my_complex_data.computation_process == [simple_computational_process_node]
+    assert my_complex_data.material == [simple_material_node]
+    assert my_complex_data.process == [simple_process_node]
     assert my_complex_data.citation == [complex_citation_node]
 
 
@@ -100,21 +100,21 @@ def test_data_getters_and_setters(
     # use setters
     simple_data_node.type = my_data_type
     simple_data_node.file = my_new_files
-    simple_data_node.sample_preperation = simple_process_node
-    simple_data_node.computations = [simple_computation_node]
-    simple_data_node.computational_process = simple_computational_process_node
-    simple_data_node.materials = [simple_material_node]
-    simple_data_node.processes = [simple_process_node]
+    simple_data_node.sample_preparation = simple_process_node
+    simple_data_node.computation = [simple_computation_node]
+    simple_data_node.computation_process = simple_computational_process_node
+    simple_data_node.material = [simple_material_node]
+    simple_data_node.process = [simple_process_node]
     simple_data_node.citation = [complex_citation_node]
 
     # assertions check getters and setters
     assert simple_data_node.type == my_data_type
     assert simple_data_node.file == my_new_files
-    assert simple_data_node.sample_preperation == simple_process_node
-    assert simple_data_node.computations == [simple_computation_node]
-    assert simple_data_node.computational_process == simple_computational_process_node
-    assert simple_data_node.materials == [simple_material_node]
-    assert simple_data_node.processes == [simple_process_node]
+    assert simple_data_node.sample_preparation == simple_process_node
+    assert simple_data_node.computation == [simple_computation_node]
+    assert simple_data_node.computation_process == simple_computational_process_node
+    assert simple_data_node.material == [simple_material_node]
+    assert simple_data_node.process == [simple_process_node]
     assert simple_data_node.citation == [complex_citation_node]
 
 

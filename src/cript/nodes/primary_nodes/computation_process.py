@@ -31,7 +31,7 @@ class ComputationProcess(PrimaryBaseNode):
     | software_ configurations | list[Software  Configuration] |                                       | software and algorithms used                    |          |       |
     | condition                | list[Condition]               |                                       | setup information                               |          |       |
     | properties               | list[Property]                |                                       | computation process properties                  |          |       |
-    | citations                | list[Citation]                |                                       | reference to a book, paper, or scholarly work   |          |       |
+    | citation                | list[Citation]                |                                       | reference to a book, paper, or scholarly work   |          |       |
     | notes                    | str                           |                                       | additional description of the step              |          |       |
 
 
@@ -55,10 +55,10 @@ class ComputationProcess(PrimaryBaseNode):
         input_data: List[Any] = field(default_factory=list)
         output_data: List[Any] = field(default_factory=list)
         ingredient: List[Any] = field(default_factory=list)
-        software_configurations: List[Any] = field(default_factory=list)
-        conditions: List[Any] = field(default_factory=list)
+        software_configuration: List[Any] = field(default_factory=list)
+        condition: List[Any] = field(default_factory=list)
         properties: List[Any] = field(default_factory=list)
-        citations: List[Any] = field(default_factory=list)
+        citation: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -69,10 +69,10 @@ class ComputationProcess(PrimaryBaseNode):
         input_data: List[Any],
         ingredient: List[Any],
         output_data: List[Any] = None,
-        software_configurations: List[Any] = None,
-        conditions: List[Any] = None,
+        software_configuration: List[Any] = None,
+        condition: List[Any] = None,
         properties: List[Any] = None,
-        citations: List[Any] = None,
+        citation: List[Any] = None,
         notes: str = "",
         **kwargs
     ):
@@ -131,14 +131,14 @@ class ComputationProcess(PrimaryBaseNode):
             list of ingredients for this computational process node
         output_data: List[Data] default=None
             list of output data for this computational process node
-        software_configurations: List[SoftwareConfiguration] default=None
+        software_configuration: List[SoftwareConfiguration] default=None
             list of software configurations for this computational process node
-        conditions: List[Condition] default=None
-            list of conditions for this computational process node
+        condition: List[Condition] default=None
+            list of condition for this computational process node
         properties: List[Property] default=None
             list of properties for this computational process node
-        citations: List[Citation] default=None
-            list of citations for this computational process node
+        citation: List[Citation] default=None
+            list of citation for this computational process node
         notes: str default=""
             optional notes for the computational process node
 
@@ -160,17 +160,17 @@ class ComputationProcess(PrimaryBaseNode):
         if output_data is None:
             output_data = []
 
-        if software_configurations is None:
-            software_configurations = []
+        if software_configuration is None:
+            software_configuration = []
 
-        if conditions is None:
-            conditions = []
+        if condition is None:
+            condition = []
 
         if properties is None:
             properties = []
 
-        if citations is None:
-            citations = []
+        if citation is None:
+            citation = []
 
         self._json_attrs = replace(
             self._json_attrs,
@@ -178,13 +178,13 @@ class ComputationProcess(PrimaryBaseNode):
             input_data=input_data,
             ingredient=ingredient,
             output_data=output_data,
-            software_configurations=software_configurations,
-            conditions=conditions,
+            software_configuration=software_configuration,
+            condition=condition,
             properties=properties,
-            citations=citations,
+            citation=citation,
         )
 
-        self.validate()
+        # self.validate()
 
     # -------------- Properties --------------
 
@@ -360,9 +360,9 @@ class ComputationProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def software_configurations(self) -> List[Any]:
+    def software_configuration(self) -> List[Any]:
         """
-        List of software_configurations for the computational process
+        List of software_configuration for the computational process
 
         Examples
         --------
@@ -378,10 +378,10 @@ class ComputationProcess(PrimaryBaseNode):
         List[SoftwareConfiguration]
             List of software configurations used for this computational process node
         """
-        return self._json_attrs.software_configurations.copy()
+        return self._json_attrs.software_configuration.copy()
 
-    @software_configurations.setter
-    def software_configurations(self, new_software_configuration_list: List[Any]) -> None:
+    @software_configuration.setter
+    def software_configuration(self, new_software_configuration_list: List[Any]) -> None:
         """
         set the list of software_configuration for the computational process
 
@@ -397,9 +397,9 @@ class ComputationProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def conditions(self) -> List[Any]:
+    def condition(self) -> List[Any]:
         """
-        List of conditions for the computational process
+        List of condition for the computational process
 
         Examples
         --------
@@ -407,31 +407,31 @@ class ComputationProcess(PrimaryBaseNode):
         # create condition node
          my_condition = cript.Condition(key="atm", type="min", value=1)
 
-         my_computational_process.conditions = [my_condition]
+         my_computational_process.condition = [my_condition]
 
         ```
 
         Returns
         -------
         List[Condition]
-            list of conditions for this computational process node
+            list of condition for this computational process node
         """
-        return self._json_attrs.conditions.copy()
+        return self._json_attrs.condition.copy()
 
-    @conditions.setter
-    def conditions(self, new_conditions: List[Any]) -> None:
+    @condition.setter
+    def condition(self, new_condition: List[Any]) -> None:
         """
-        set the conditions for the computational process
+        set the condition for the computational process
 
         Parameters
         ----------
-        new_conditions: List[Condition]
+        new_condition: List[Condition]
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, conditions=new_conditions)
+        new_attrs = replace(self._json_attrs, condition=new_condition)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -472,9 +472,9 @@ class ComputationProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def citations(self) -> List[Any]:
+    def citation(self) -> List[Any]:
         """
-        List of citations for the computational process
+        List of citation for the computational process
 
         Examples
         --------
@@ -485,28 +485,28 @@ class ComputationProcess(PrimaryBaseNode):
         # create a reference
         my_citation = cript.Citation(type="derived_from", reference=my_reference)
 
-        my_computational_process.citations = [my_citation]
+        my_computational_process.citation = [my_citation]
         ```
 
         Returns
         -------
         List[Citation]
-            list of citations for this computational process
+            list of citation for this computational process
         """
-        return self._json_attrs.citations.copy()
+        return self._json_attrs.citation.copy()
 
-    @citations.setter
-    def citations(self, new_citations_list: List[Any]) -> None:
+    @citation.setter
+    def citation(self, new_citation_list: List[Any]) -> None:
         """
-        set the citations list for the computational process node
+        set the citation list for the computational process node
 
         Parameters
         ----------
-        new_citations_list: List[Citation]
+        new_citation_list: List[Citation]
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, citations=new_citations_list)
+        new_attrs = replace(self._json_attrs, citation=new_citation_list)
         self._update_json_attrs_if_valid(new_attrs)

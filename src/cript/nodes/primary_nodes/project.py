@@ -216,7 +216,7 @@ class Project(PrimaryBaseNode):
         return self._json_attrs.material
 
     @material.setter
-    def materials(self, new_materials: List[Material]) -> None:
+    def material(self, new_materials: List[Material]) -> None:
         """
         set the list of materials for this project
 

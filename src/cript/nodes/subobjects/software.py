@@ -1,41 +1,27 @@
 import uuid
 from dataclasses import dataclass, replace
 
-from cript.nodes.core import BaseNode, get_uuid_from_uid
+from cript.nodes.primary_nodes.primary_base_node import UUIDBaseNode
 
 
-class Software(BaseNode):
+class Software(UUIDBaseNode):
     """
     Software node
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         name: str = ""
         version: str = ""
         source: str = ""
-        uuid: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(self, name: str, version: str, source: str = "", **kwargs):
-        super().__init__()
-        # Resepect uuid if passed as argument, otherwise construct uuid from uid
-        uuid = kwargs.get("uuid", get_uuid_from_uid(self.uid))
+        super().__init__(**kwargs)
 
-        self._json_attrs = replace(self._json_attrs, name=name, version=version, source=source, uuid=uuid)
+        self._json_attrs = replace(self._json_attrs, name=name, version=version, source=source)
         self.validate()
-
-    @property
-    def uuid(self) -> uuid.UUID:
-        return uuid.UUID(self._json_attrs.uuid)
-
-    @property
-    def url(self):
-        from cript.api.api import _API_VERSION_STRING, _get_global_cached_api
-
-        api = _get_global_cached_api()
-        return f"{api.host}/api/{_API_VERSION_STRING}/{self.uuid}"
 
     @property
     def name(self) -> str:

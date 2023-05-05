@@ -73,7 +73,6 @@ class Material(PrimaryBaseNode):
         # TODO add proper typing in future, using Any for now to avoid circular import error
         components: List["Material"] = field(default_factory=list)
         properties: List[Any] = field(default_factory=list)
-        process: List[Any] = field(default_factory=list)
         parent_materials: List["Material"] = field(default_factory=list)
         computation_forcefield: List[Any] = field(default_factory=list)
         keywords: List[str] = field(default_factory=list)
@@ -86,7 +85,6 @@ class Material(PrimaryBaseNode):
         identifiers: List[dict[str, str]],
         components: List["Material"] = None,
         properties: List[Any] = None,
-        process: List[Any] = None,
         parent_materials: List["Material"] = None,
         computation_forcefield: List[Any] = None,
         keywords: List[str] = None,
@@ -121,9 +119,6 @@ class Material(PrimaryBaseNode):
         if properties is None:
             properties = []
 
-        if process is None:
-            process = []
-
         if parent_materials is None:
             parent_materials = []
 
@@ -143,7 +138,6 @@ class Material(PrimaryBaseNode):
             identifiers=identifiers,
             components=components,
             properties=properties,
-            process=process,
             parent_materials=parent_materials,
             computation_forcefield=computation_forcefield,
             keywords=keywords,
@@ -299,41 +293,6 @@ class Material(PrimaryBaseNode):
         None
         """
         new_attrs = replace(self._json_attrs, properties=new_properties_list)
-        self._update_json_attrs_if_valid(new_attrs)
-
-    @property
-    def process(self) -> List[Any]:
-        """
-        List of [process](../process) for this material
-
-        ```python
-        # process node
-        my_process = cript.Process(name="my process name", type="affinity_pure")
-
-        my_material.process = my_process
-        ```
-
-        Returns
-        -------
-        List[Process]
-            list of [Processes](../process) that created this material
-        """
-        return self._json_attrs.process
-
-    @process.setter
-    def process(self, new_process_list: List[Any]) -> None:
-        """
-        set the list of process for this material
-
-        Parameters
-        ----------
-        new_process_list: List[Process]
-
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, process=new_process_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

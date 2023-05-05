@@ -56,6 +56,7 @@ from fixtures.subobjects import (
     complex_software_node,
     simple_property_dict,
     simple_property_node,
+    simple_computational_forcefield_node,
 )
 from fixtures.supporting_nodes import complex_file_node
 from util import strip_uid_from_dict

@@ -55,7 +55,7 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     simple_material_node.property = [simple_property_node]
     # simple_material_node.process = [simple_process_node]
     simple_material_node.parent_material = new_parent_material
-    # simple_material_node.computation_forcefield = simple_computational_forcefield_node
+    simple_material_node.computation_forcefield = simple_computational_forcefield_node
     simple_material_node.keyword = new_material_keywords
     simple_material_node.component = new_components
 
@@ -65,7 +65,7 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     assert simple_material_node.property == [simple_property_node]
     # assert simple_material_node.process == [simple_process_node]
     assert simple_material_node.parent_material == new_parent_material
-    # assert simple_material_node.computation_forcefield == simple_computational_forcefield_node
+    assert simple_material_node.computation_forcefield == simple_computational_forcefield_node
     assert simple_material_node.keyword == new_material_keywords
     # assert simple_material_node.component == new_components
 

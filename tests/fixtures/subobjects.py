@@ -288,3 +288,12 @@ def complex_software_configuration_dict(complex_software_dict, complex_algorithm
         "citation": [complex_citation_dict],
     }
     return ret_dict
+
+
+@pytest.fixture(scope="function")
+def simple_computational_forcefield_node():
+    """
+    simple minimal computational forcefield node
+    """
+
+    return cript.ComputationalForcefield(key="amber", building_block="atom")

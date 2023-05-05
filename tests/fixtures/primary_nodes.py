@@ -178,7 +178,7 @@ def simple_material_node() -> cript.Material:
     simple material node to use between tests
     """
     identifiers = [{"bigsmiles": "123456"}]
-    my_material = cript.Material(name="my material", identifiers=[identifiers])
+    my_material = cript.Material(name="my material", identifiers=identifiers)
 
     return my_material
 

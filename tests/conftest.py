@@ -28,6 +28,7 @@ from fixtures.primary_nodes import (
     simple_project_node,
     simple_software_configuration,
     simple_computational_process_node,
+    simple_material_dict,
 )
 from fixtures.subobjects import (
     complex_algorithm_dict,

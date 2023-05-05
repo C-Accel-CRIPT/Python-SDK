@@ -224,16 +224,15 @@ def simple_software_configuration(simple_software_node) -> cript.SoftwareConfigu
 
 
 @pytest.fixture(scope="function")
-def simple_inventory_node() -> None:
+def simple_inventory_node(simple_material_node) -> None:
     """
     minimal inventory node to use for other tests
     """
     # set up inventory node
-    material_1 = cript.Material(name="material 1", identifiers=[{"alternative_names": "material 1 alternative name"}])
 
-    material_2 = cript.Material(name="material 2", identifiers=[{"alternative_names": "material 2 alternative name"}])
+    material_2 = cript.Material(name="material 2", identifiers=[{"bigsmiles": "my big smiles"}])
 
-    my_inventory = cript.Inventory(name="my inventory name", material=[material_1, material_2])
+    my_inventory = cript.Inventory(name="my inventory name", material=[simple_material_node, material_2])
 
     # use my_inventory in another test
     return my_inventory

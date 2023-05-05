@@ -87,6 +87,7 @@ def test_serialize_material_to_json(simple_material_node) -> None:
     expected_dict = {
         "node": ["Material"],
         "name": "my material",
+        "bigsmiles": "123456",
     }
 
     # compare dicts because that is more accurate

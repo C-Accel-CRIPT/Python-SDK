@@ -177,10 +177,10 @@ def simple_material_node() -> cript.Material:
     """
     simple material node to use between tests
     """
-    identifiers = [{"alternative_names": "my material alternative name"}]
-    my_material = cript.Material(name="my material", identifiers=identifiers)
+    identifiers = [{"bigsmiles": "123456"}]
+    my_material = cript.Material(name="my material", identifiers=[identifiers])
 
-    return copy.deepcopy(my_material)
+    return my_material
 
 
 @pytest.fixture(scope="function")

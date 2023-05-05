@@ -184,6 +184,21 @@ def simple_material_node() -> cript.Material:
 
 
 @pytest.fixture(scope="function")
+def simple_material_dict() -> dict:
+    """
+    the dictionary that `simple_material_node` produces
+    putting it in one location to make updating it easy
+    """
+    simple_material_dict: dict = {
+        "node": [ "Material"],
+        "name": "my material",
+        "bigsmiles": "123456"
+    }
+
+    return simple_material_dict
+
+
+@pytest.fixture(scope="function")
 def complex_material_node(simple_property_node, simple_process_node, complex_computational_forcefield_node) -> cript.Material:
     """
     complex Material node with all possible attributes filled

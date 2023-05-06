@@ -82,37 +82,20 @@ def simple_experiment_node() -> cript.Experiment:
 
 
 @pytest.fixture(scope="function")
-def simple_computation_process_node() -> cript.ComputationProcess:
+def simple_computation_process_node(complex_ingredient_node) -> cript.ComputationProcess:
     """
     simple Computational Process node with only required arguments to use in other tests
     """
     my_computational_process_type = "cross_linking"
 
-    # input data
-
-    # TODO should be using simple_data_node fixture
-    data_files = cript.File(source="https://criptapp.org", type="calibration", extension=".csv", data_dictionary="my file's data dictionary")
-
-    input_data = cript.Data(name="my data name", type="afm_amp", file=[data_files])
-
-    # ingredients with Material and Quantity node
-    my_material = cript.Material(name="my material", identifiers=[{"alternative_names": "my material alternative name"}])
-
-    my_quantity = cript.Quantity(key="mass", value=1.23, unit="kg")
-
-    ingredients = cript.Ingredient(
-        material=my_material,
-        quantity=[my_quantity],
-    )
-
     my_computational_process = cript.ComputationProcess(
         name="my computational process name",
         type=my_computational_process_type,
-        input_data=[input_data],
-        ingredient=[ingredients],
+        input_data=[simple_data_node],
+        ingredient=[complex_ingredient_node],
     )
 
-    return copy.deepcopy(my_computational_process)
+    return my_computational_process
 
 
 @pytest.fixture(scope="function")
@@ -199,18 +182,16 @@ def simple_material_dict() -> dict:
 
 
 @pytest.fixture(scope="function")
-def complex_material_node(simple_property_node, simple_process_node, complex_computational_forcefield_node) -> cript.Material:
+def complex_material_node(simple_property_node, simple_process_node, complex_computational_forcefield_node, simple_material_node) -> cript.Material:
     """
     complex Material node with all possible attributes filled
     """
-    my_identifier = [{"alternative_names": "my material alternative name"}]
+    my_identifier = [{"bigsmiles": "my complex_material_node"}]
 
     my_component = [
-        cript.Material(name="my component material 1", identifiers=[{"alternative_names": "component 1 alternative name"}]),
-        cript.Material(name="my component material 2", identifiers=[{"alternative_names": "component 2 alternative name"}]),
+        cript.Material(name="my component material 1", identifiers=[{"bigsmiles": "component 1 bigsmiles"}]),
+        cript.Material(name="my component material 2", identifiers=[{"bigsmiles": "component 2 bigsmiles"}]),
     ]
-
-    parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
 
     my_material_keyword = ["acetylene"]
 
@@ -220,12 +201,12 @@ def complex_material_node(simple_property_node, simple_process_node, complex_com
         component=my_component,
         property=simple_property_node,
         process=copy.deepcopy(simple_process_node),
-        parent_material=parent_material,
+        parent_material=simple_material_node,
         computational_forcefield=complex_computational_forcefield_node,
         keyword=my_material_keyword,
     )
 
-    return copy.deepcopy(my_complex_material)
+    return my_complex_material
 
 
 @pytest.fixture(scope="function")

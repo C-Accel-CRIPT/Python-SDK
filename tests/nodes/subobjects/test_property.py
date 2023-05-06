@@ -40,9 +40,9 @@ def test_setter_getter(complex_property_node, simple_material_node, simple_proce
 
     p2.sample_preparation = simple_process_node
     assert p2.sample_preparation is simple_process_node
-    assert len(p2.conditions) == 1
-    p2.conditions += [complex_condition_node]
-    assert len(p2.conditions) == 2
+    assert len(p2.condition) == 1
+    p2.condition += [complex_condition_node]
+    assert len(p2.condition) == 2
     # TODO Data
     p2.data = simple_data_node
     assert p2.data is simple_data_node
@@ -50,8 +50,8 @@ def test_setter_getter(complex_property_node, simple_material_node, simple_proce
     p2.computations += [simple_computation_node]
     assert p2.computations[-1] is simple_computation_node
 
-    assert len(p2.citations) == 1
-    p2.citations += [complex_citation_node]
-    assert len(p2.citations) == 2
+    assert len(p2.citation) == 1
+    p2.citation += [complex_citation_node]
+    assert len(p2.citation) == 2
     p2.notes = "notes2"
     assert p2.notes == "notes2"

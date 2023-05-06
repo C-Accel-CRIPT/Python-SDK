@@ -58,6 +58,8 @@ from fixtures.subobjects import (
     simple_property_dict,
     simple_property_node,
     simple_computational_forcefield_node,
+    simple_condition_node,
+    simple_equipment_node,
 )
 from fixtures.supporting_nodes import complex_file_node
 from util import strip_uid_from_dict

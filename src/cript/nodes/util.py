@@ -131,20 +131,58 @@ def _rename_field(serialize_dict: dict, old_name: str, new_name: str) -> dict:
     return serialize_dict
 
 
-def _node_json_hook(node_str: str):
+def _is_node_field_valid(node_type_list: list) -> bool:
+    """
+    a simple function that checks if the node field has only a single node type in there
+    and not 2 or None
+
+    Parameters
+    ----------
+    node_type_list: list
+        e.g. "node": ["Material"]
+
+    Returns
+    ------
+    bool
+        if all tests pass then it returns true, otherwise false
+    """
+
+    # TODO consider having exception handling for the dict
+    if isinstance(node_type_list, list) and len(node_type_list) == 1 and isinstance(node_type_list[0], str):
+        return True
+    else:
+        return False
+
+
+def _node_json_hook(node_str: str) -> dict:
     """
     Internal function, used as a hook for json deserialization.
+
+    This function is called recursively to convert every JSON of a node and it's children from node to JSON.
+
+    If given a JSON without a "node" field then it is assumed that it is not a node
+    and just a key value pair data, and the JSON string is then just converted from string to dict and returned
+    applicable for places where the data is something like
+
+    ```json
+    { "bigsmiles": "123456" }
+    ```
+
+    no serialization is needed in this case and just needs to be converted from str to dict
+
+    if the node field is present then continue and convert the JSON node into a Python object
     """
     node_dict = json.loads(node_str)
     try:
-        node_list = node_dict["node"]
+        node_type_list = node_dict["node"]
     except KeyError:  # Not a node, just a regular dictionary
         return node_dict
 
-    if isinstance(node_list, list) and len(node_list) == 1 and isinstance(node_list[0], str):
-        node_str = node_list[0]
+    # TODO consider putting this into the try because it might need error handling for the dict
+    if _is_node_field_valid(node_type_list):
+        node_str = node_type_list[0]
     else:
-        raise CRIPTJsonNodeError(node_list, node_str)
+        raise CRIPTJsonNodeError(node_type_list, node_str)
 
     # Iterate over all nodes in cript to find the correct one here
     for key, pyclass in inspect.getmembers(cript.nodes, inspect.isclass):

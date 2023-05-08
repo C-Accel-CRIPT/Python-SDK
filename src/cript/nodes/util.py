@@ -135,7 +135,7 @@ def _node_json_hook(node_str: str):
     """
     Internal function, used as a hook for json deserialization.
     """
-    node_dict = dict(node_str)
+    node_dict = json.loads(node_str)
     try:
         node_list = node_dict["node"]
     except KeyError:  # Not a node, just a regular dictionary

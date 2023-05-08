@@ -67,6 +67,10 @@ def _apply_modifications(serialize_dict):
     # if node is material, then convert the identifiers list to JSON fields
     if serialize_dict["node"] == ["Material"]:
         serialize_dict = _material_identifiers_list_to_json_fields(serialize_dict)
+        serialize_dict = _rename_field(serialize_dict=serialize_dict, old_name="property_", new_name="property")
+
+    elif serialize_dict["node"] == ["Process"]:
+        serialize_dict = _rename_field(serialize_dict=serialize_dict, old_name="property_", new_name="property")
 
     return serialize_dict
 
@@ -113,6 +117,16 @@ def _material_identifiers_list_to_json_fields(serialize_dict: dict) -> dict:
 
         # remove identifiers list of objects after it has been flattened
         del serialize_dict["identifiers"]
+
+    return serialize_dict
+
+
+def _rename_field(serialize_dict: dict, old_name: str, new_name: str) -> dict:
+    """
+    renames `property_` to `property` the JSON
+    """
+    if "property_" in serialize_dict:
+        serialize_dict[new_name] = serialize_dict.pop(old_name)
 
     return serialize_dict
 

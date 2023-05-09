@@ -172,7 +172,7 @@ def _node_json_hook(node_str: str) -> dict:
 
     if the node field is present then continue and convert the JSON node into a Python object
     """
-    node_dict = json.loads(node_str)
+    node_dict = dict(node_str)
     try:
         node_type_list = node_dict["node"]
     except KeyError:  # Not a node, just a regular dictionary

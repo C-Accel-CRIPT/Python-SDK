@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field, replace
 from typing import Any, List
 
-from cript.nodes.primary_nodes.primary_base_node import UUIDBaseNode
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
 class Group(UUIDBaseNode):

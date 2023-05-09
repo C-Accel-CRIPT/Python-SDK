@@ -1,6 +1,6 @@
 from dataclasses import dataclass, replace
 
-from cript.nodes.primary_nodes.primary_base_node import UUIDBaseNode
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
 def _is_local_file(file_source: str) -> bool:

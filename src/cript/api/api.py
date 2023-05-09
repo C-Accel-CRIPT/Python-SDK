@@ -163,14 +163,6 @@ class API:
         _global_cached_api = self._previous_global_cached_api
 
     @property
-    def api_handle(self):
-        return self._api_handle
-
-    @property
-    def api_version(self):
-        return self._api_version
-
-    @property
     def schema(self):
         """
         Access the CRIPT Database Schema that is associated with this API connection.
@@ -197,7 +189,7 @@ class API:
 
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
-        host = f"{host}/{self.api_handle}/{self.api_version}"
+        host = f"{host}/{self._api_handle}/{self._api_version}"
 
         # if host is using unsafe "http://" then give a warning
         if host.startswith("http://") and not self._https_warning_sent:

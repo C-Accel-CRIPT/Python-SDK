@@ -64,9 +64,30 @@ class BaseNode(ABC):
     def uid(self):
         return self._json_attrs.uid
 
-    def _update_json_attrs_if_valid(self, new_json_attr: JsonAttributes):
-        old_json_attrs = copy.copy(self._json_attrs)
+    def _update_json_attrs_if_valid(self, new_json_attr: JsonAttributes) -> None:
+        """
+        tries to update the node if valid and then checks if it is valid or not
+
+        1. updates the node with the new information
+        1. run db schema validation on it
+            1. if db schema validation succeeds then update and continue
+            1. else: raise an error and tell the user what went wrong
+
+        Parameters
+        ----------
+        new_json_attr
+
+        Raises
+        ------
+        Exception
+
+        Returns
+        -------
+        None
+        """
+        old_json_attrs = self._json_attrs
         self._json_attrs = new_json_attr
+
         try:
             self.validate()
         except Exception as exc:
@@ -101,6 +122,8 @@ class BaseNode(ABC):
         # The call to the constructor might ignore fields that are usually not writable.
         try:
             node = cls(**arguments)
+        # TODO we should not catch all exceptions if we are handling them, and instead let it fail
+        #  to create a good error message that points to the correct place that it failed to make debugging easier
         except Exception as exc:
             print(cls, arguments)
             raise exc
@@ -165,6 +188,9 @@ class BaseNode(ABC):
         try:
             return ReturnTuple(json.dumps(self, cls=NodeEncoder, **kwargs), NodeEncoder.handled_ids)
         except Exception as exc:
+            # TODO this handling that doesn't tell the user what happened and how they can fix it
+            #   this just tells the user that something is wrong
+            #   this should be improved to tell the user what went wrong and where
             raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc
         finally:
             NodeEncoder.handled_ids = previous_handled_nodes

@@ -116,8 +116,8 @@ def complex_property_node(complex_material_node, complex_condition_node, complex
         structure="structure",
         method="method",
         sample_preparation=[copy.deepcopy(simple_process_node)],
-        conditions=[complex_condition_node],
-        computations=[copy.deepcopy(simple_computation_node)],
+        condition=[complex_condition_node],
+        computation=[copy.deepcopy(simple_computation_node)],
         citations=[complex_citation_node],
         notes="notes",
     )
@@ -137,9 +137,9 @@ def complex_property_dict(complex_material_node, complex_condition_dict, complex
         "structure": "structure",
         "sample_preparation": [json.loads(simple_process_node.json)],
         "method": "method",
-        "conditions": [complex_condition_dict],
+        "condition": [complex_condition_dict],
         "citations": [complex_citation_dict],
-        "computations": [json.loads(simple_computation_node.json)],
+        "computation": [json.loads(simple_computation_node.json)],
         "notes": "notes",
     }
     return strip_uid_from_dict(ret_dict)
@@ -226,7 +226,7 @@ def complex_equipment_node(complex_condition_node, complex_citation_node) -> cri
     e = cript.Equipment(
         "hot plate",
         "fancy hot plate",
-        conditions=[complex_condition_node],
+        condition=[complex_condition_node],
         citations=[complex_citation_node],
     )
     return e
@@ -247,7 +247,7 @@ def complex_equipment_dict(complex_condition_dict, complex_citation_dict) -> dic
         "node": ["Equipment"],
         "key": "hot plate",
         "description": "fancy hot plate",
-        "conditions": [complex_condition_dict],
+        "condition": [complex_condition_dict],
         "citations": [complex_citation_dict],
     }
     return ret_dict

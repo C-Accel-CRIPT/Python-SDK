@@ -27,11 +27,11 @@ def test_setter_getter(complex_property_node, simple_material_node, simple_proce
     assert p2.uncertainty == 10.5
     assert p2.uncertainty_type == "var"
 
-    p2.components += [simple_material_node]
-    assert p2.components[-1] is simple_material_node
+    p2.component += [simple_material_node]
+    assert p2.component[-1] is simple_material_node
     # TODO compoments_relative
-    p2.components_relative += [simple_material_node]
-    assert p2.components_relative[-1] is simple_material_node
+    p2.component_relative += [simple_material_node]
+    assert p2.component_relative[-1] is simple_material_node
     p2.structure = "structure2"
     assert p2.structure == "structure2"
 
@@ -46,9 +46,9 @@ def test_setter_getter(complex_property_node, simple_material_node, simple_proce
     # TODO Data
     p2.data = simple_data_node
     assert p2.data is simple_data_node
-    # TODO Computations
-    p2.computations += [simple_computation_node]
-    assert p2.computations[-1] is simple_computation_node
+    # TODO Computation
+    p2.computation += [simple_computation_node]
+    assert p2.computation[-1] is simple_computation_node
 
     assert len(p2.citation) == 1
     p2.citation += [complex_citation_node]

@@ -18,7 +18,7 @@ class Material(PrimaryBaseNode):
     |-------------------------|-----------------------------------------------------|---------------------------------------------------|----------------------------------------------|-------------|-------|
     | identifiers             | list[Identifier]                                    |                                                   | material identifiers                         | True        |       |
     | components              | list[[Material](./)]                                |                                                   | list of components that make up the mixture  |             |       |
-    | properties              | list[[Property](../subobjects/property)]            |                                                   | material properties                          |             |       |
+    | property              | list[[Property](../subobjects/property)]            |                                                   | material properties                          |             |       |
     | process                 | [Process](../process)                               |                                                   | process node that made this material         |             |       |
     | parent_material         | [Material](./)                                      |                                                   | material node that this node was copied from |             |       |
     | computational_ forcefield | [Computation  Forcefield](../computational_forcefield) |                                                   | computation forcefield                       | Conditional |       |
@@ -72,7 +72,7 @@ class Material(PrimaryBaseNode):
         identifiers: List[dict[str, str]] = field(default_factory=dict)
         # TODO add proper typing in future, using Any for now to avoid circular import error
         components: List["Material"] = field(default_factory=list)
-        properties: List[Any] = field(default_factory=list)
+        property: List[Any] = field(default_factory=list)
         parent_materials: List["Material"] = field(default_factory=list)
         computational_forcefield: List[Any] = field(default_factory=list)
         keywords: List[str] = field(default_factory=list)
@@ -84,7 +84,7 @@ class Material(PrimaryBaseNode):
         name: str,
         identifiers: List[dict[str, str]],
         components: List["Material"] = None,
-        properties: List[Any] = None,
+        property: List[Any] = None,
         parent_materials: List["Material"] = None,
         computational_forcefield: List[Any] = None,
         keywords: List[str] = None,
@@ -99,7 +99,7 @@ class Material(PrimaryBaseNode):
         name: str
         identifiers: List[dict[str, str]]
         components: List["Material"], default=None
-        properties: List[Property], default=None
+        property: List[Property], default=None
         process: List[Process], default=None
         parent_materials: List["Material"], default=None
         computational_forcefield: List[ComputationalProcess], default=None
@@ -116,8 +116,8 @@ class Material(PrimaryBaseNode):
         if components is None:
             components = []
 
-        if properties is None:
-            properties = []
+        if property is None:
+            property = []
 
         if parent_materials is None:
             parent_materials = []
@@ -137,7 +137,7 @@ class Material(PrimaryBaseNode):
             name=name,
             identifiers=identifiers,
             components=components,
-            properties=properties,
+            property=property,
             parent_materials=parent_materials,
             computational_forcefield=computational_forcefield,
             keywords=keywords,
@@ -258,41 +258,6 @@ class Material(PrimaryBaseNode):
         None
         """
         new_attrs = replace(self._json_attrs, components=new_components_list)
-        self._update_json_attrs_if_valid(new_attrs)
-
-    @property
-    def properties(self) -> List[Any]:
-        """
-        list of material [properties](../../subobjects/property)
-
-        ```python
-        # property subobject
-        my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
-
-        my_material.properties = my_property
-        ```
-
-        Returns
-        -------
-        List[Property]
-            list of properties that define this material
-        """
-        return self._json_attrs.properties
-
-    @properties.setter
-    def properties(self, new_properties_list: List[Any]) -> None:
-        """
-        set the list of properties for this material
-
-        Parameters
-        ----------
-        new_properties_list: List[Property]
-
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, properties=new_properties_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -442,3 +407,38 @@ class Material(PrimaryBaseNode):
                 # TODO validate keys here
                 # is_vocab_valid("material_identifiers", value)
                 pass
+
+    @property
+    def property(self) -> List[Any]:
+        """
+        list of material [property](../../subobjects/property)
+
+        ```python
+        # property subobject
+        my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
+
+        my_material.property = my_property
+        ```
+
+        Returns
+        -------
+        List[Property]
+            list of property that define this material
+        """
+        return self._json_attrs.property.copy()
+
+    @property.setter
+    def property(self, new_property_list: List[Any]) -> None:
+        """
+        set the list of properties for this material
+
+        Parameters
+        ----------
+        new_property_list: List[Property]
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, property=new_property_list)
+        self._update_json_attrs_if_valid(new_attrs)

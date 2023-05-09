@@ -119,6 +119,32 @@ class BaseNode(ABC):
             if field in json_dict:
                 arguments[field] = json_dict[field]
 
+        # TODO find a better way to know identifiers
+        all_identifier_list = [
+            "amino_acid",
+            "bigsmiles",
+            "cas",
+            "chem_formula",
+            "chem_repeat",
+            "chemical_id",
+            "inchi",
+            "inchi_key",
+            "lot_number",
+            "mol_form",
+            "names",
+            "pubchem_cid",
+            "smiles",
+            "vendor",
+        ]
+
+        identifier_argument = []
+        # Convert identifiers to to a list
+        for identifier in all_identifier_list:
+            if identifier in arguments:
+                identifier_argument.append({identifier: arguments[identifier]})
+                del arguments[identifier]
+        arguments["identifiers"] = identifier_argument
+
         # The call to the constructor might ignore fields that are usually not writable.
         try:
             node = cls(**arguments)

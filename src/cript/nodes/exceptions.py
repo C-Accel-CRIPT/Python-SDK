@@ -61,6 +61,25 @@ class CRIPTJsonSerializationError(CRIPTException):
         return f"JSON Serialization failed for node type {self.node_type} with JSON dict: {self.json_str}"
 
 
+class CRIPTAttributeModificationError(CRIPTException):
+    """
+    Exception that is thrown when a node attribute is modified, that wasn't intended to be modified.
+    """
+
+    def __init__(self, name, key, value):
+        self.name = name
+        self.key = key
+        self.value = value
+
+    def __str__(self):
+        return (
+            f"Attempt to modify an attribute of a node ({self.name}) that wasn't intended to be modified."
+            f"Here the non-existing attribute {self.key} of {self.name} was attempted to be modified."
+            "Most likely this is due to a typo in the attribute that was intended to be modified i.e. `project.materials` instead of `project.material`."
+            "To ensure compatibility with the underlying CRIPT data model we do not allow custom attributes."
+        )
+
+
 class CRIPTOrphanedNodesError(CRIPTException, ABC):
     """
     This error is raised when a child node is not attached to the

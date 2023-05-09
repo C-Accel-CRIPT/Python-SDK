@@ -6,7 +6,10 @@ from abc import ABC
 from dataclasses import asdict, dataclass, replace
 from typing import List
 
-from cript.nodes.exceptions import CRIPTJsonSerializationError
+from cript.nodes.exceptions import (
+    CRIPTAttributeModificationError,
+    CRIPTJsonSerializationError,
+)
 
 
 def get_new_uid():
@@ -49,7 +52,7 @@ class BaseNode(ABC):
     # This might just be temporary, but for now, I don't want to acciditentally add new attributes, when I mean to modify one.
     def __setattr__(self, key, value):
         if not hasattr(self, key):
-            raise TypeError(f"{key} -> {value} attempted to set in a frozen class.")
+            raise CRIPTAttributeModificationError(self.node_type, key, value)
         super().__setattr__(key, value)
 
     def __init__(self):

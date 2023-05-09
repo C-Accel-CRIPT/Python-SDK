@@ -73,7 +73,7 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
     assert my_complex_process.prerequisite_processes == [simple_process_node]
     assert my_complex_process.conditions == [complex_condition_node]
     assert my_complex_process.properties == [simple_property_node]
-    assert my_complex_process.keywords == my_process_keywords
+    assert my_complex_process.keyword == my_process_keywords
     assert my_complex_process.citations == [complex_citation_node]
 
 
@@ -110,7 +110,7 @@ def test_process_getters_and_setters(
     simple_process_node.prerequisite_processes = [simple_process_node]
     simple_process_node.condition = [complex_condition_node]
     simple_process_node.property_ = [simple_property_node]
-    simple_process_node.keywords = [new_process_keywords]
+    simple_process_node.keyword = [new_process_keywords]
     simple_process_node.citation = [complex_citation_node]
 
     # test getters
@@ -123,7 +123,7 @@ def test_process_getters_and_setters(
     assert simple_process_node.prerequisite_processes == [simple_process_node]
     assert simple_process_node.condition == [complex_condition_node]
     assert simple_process_node.property_ == [simple_property_node]
-    assert simple_process_node.keywords == [new_process_keywords]
+    assert simple_process_node.keyword == [new_process_keywords]
     assert simple_process_node.citation == [complex_citation_node]
 
 
@@ -131,7 +131,7 @@ def test_serialize_process_to_json(simple_process_node) -> None:
     """
     test serializing process node to JSON
     """
-    expected_process_dict = {"node": ["Process"], "name": "my process name", "keywords": [], "type": "affinity_pure"}
+    expected_process_dict = {"node": ["Process"], "name": "my process name", "keyword": [], "type": "affinity_pure"}
 
     # comparing dicts because they are more accurate
     ref_dict = json.loads(simple_process_node.json)

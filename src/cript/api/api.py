@@ -116,7 +116,7 @@ class API:
             if token is None:
                 raise RuntimeError("API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n" "Set the environment variable (preferred) or specify the token explictly at the creation of API.")
 
-        self._host = _prepare_host(host=host, api_handle=self._api_handle, api_version=self._api_version)
+        self._host = self._prepare_host(host=host)
         self._token = token
 
         # assign headers

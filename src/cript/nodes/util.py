@@ -192,17 +192,10 @@ def _node_json_hook(node_str: str) -> dict:
     return node_dict
 
 
-def load_nodes_from_json(nodes_json: str, api=None):
+def load_nodes_from_json(nodes_json: str):
     """
     User facing function, that return a node and all its children from a json input.
     """
-    if api is None:
-        from cript.api.api import _get_global_cached_api
-
-        api = _get_global_cached_api()
-    print(nodes_json)
-    api._is_node_schema_valid(nodes_json)
-
     return json.loads(nodes_json, object_hook=_node_json_hook)
 
 

@@ -17,12 +17,12 @@ class Material(PrimaryBaseNode):
     | attribute               | type                                                | example                                           | description                                  | required    | vocab |
     |-------------------------|-----------------------------------------------------|---------------------------------------------------|----------------------------------------------|-------------|-------|
     | identifiers             | list[Identifier]                                    |                                                   | material identifiers                         | True        |       |
-    | components              | list[[Material](./)]                                |                                                   | list of components that make up the mixture  |             |       |
+    | component              | list[[Material](./)]                                |                                                   | list of component that make up the mixture  |             |       |
     | property              | list[[Property](../subobjects/property)]            |                                                   | material properties                          |             |       |
     | process                 | [Process](../process)                               |                                                   | process node that made this material         |             |       |
     | parent_material         | [Material](./)                                      |                                                   | material node that this node was copied from |             |       |
     | computational_ forcefield | [Computation  Forcefield](../computational_forcefield) |                                                   | computation forcefield                       | Conditional |       |
-    | keywords                | list[str]                                           | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material             |             | True  |
+    | keyword                | list[str]                                           | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material             |             | True  |
 
     ## Navigating to Material
     Materials can be easily found on the [CRIPT](https://criptapp.org) home screen in the
@@ -71,11 +71,11 @@ class Material(PrimaryBaseNode):
         # identifier sub-object for the material
         identifiers: List[dict[str, str]] = field(default_factory=dict)
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        components: List["Material"] = field(default_factory=list)
+        component: List["Material"] = field(default_factory=list)
         property: List[Any] = field(default_factory=list)
-        parent_materials: List["Material"] = field(default_factory=list)
+        parent_material: List["Material"] = field(default_factory=list)
         computational_forcefield: List[Any] = field(default_factory=list)
-        keywords: List[str] = field(default_factory=list)
+        keyword: List[str] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -83,11 +83,11 @@ class Material(PrimaryBaseNode):
         self,
         name: str,
         identifiers: List[dict[str, str]],
-        components: List["Material"] = None,
+        component: List["Material"] = None,
         property: List[Any] = None,
-        parent_materials: List["Material"] = None,
+        parent_material: List["Material"] = None,
         computational_forcefield: List[Any] = None,
-        keywords: List[str] = None,
+        keyword: List[str] = None,
         notes: str = "",
         **kwargs
     ):
@@ -98,12 +98,12 @@ class Material(PrimaryBaseNode):
         ----------
         name: str
         identifiers: List[dict[str, str]]
-        components: List["Material"], default=None
+        component: List["Material"], default=None
         property: List[Property], default=None
         process: List[Process], default=None
-        parent_materials: List["Material"], default=None
+        parent_material: List["Material"], default=None
         computational_forcefield: List[ComputationalProcess], default=None
-        keywords: List[str], default=None
+        keyword: List[str], default=None
 
         Returns
         -------
@@ -113,34 +113,34 @@ class Material(PrimaryBaseNode):
 
         super().__init__(name=name, notes=notes)
 
-        if components is None:
-            components = []
+        if component is None:
+            component = []
 
         if property is None:
             property = []
 
-        if parent_materials is None:
-            parent_materials = []
+        if parent_material is None:
+            parent_material = []
 
         if computational_forcefield is None:
             computational_forcefield = []
 
-        if keywords is None:
-            keywords = []
+        if keyword is None:
+            keyword = []
 
-        # validate keywords if they exist
-        if keywords is not None:
-            self._validate_keywords(keywords=keywords)
+        # validate keyword if they exist
+        if keyword is not None:
+            self._validate_keyword(keyword=keyword)
 
         self._json_attrs = replace(
             self._json_attrs,
             name=name,
             identifiers=identifiers,
-            components=components,
+            component=component,
             property=property,
-            parent_materials=parent_materials,
+            parent_material=parent_material,
             computational_forcefield=computational_forcefield,
-            keywords=keywords,
+            keyword=keyword,
         )
 
     # ------------ Properties ------------
@@ -199,7 +199,7 @@ class Material(PrimaryBaseNode):
         set the list of identifiers for this material
 
         the identifier keys must come from the
-        material identifiers keywords within the CRIPT controlled vocabulary
+        material identifiers keyword within the CRIPT controlled vocabulary
 
         Parameters
         ----------
@@ -213,15 +213,15 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def components(self) -> List["Material"]:
+    def component(self) -> List["Material"]:
         """
-        list of components ([material nodes](./)) that make up this material
+        list of component ([material nodes](./)) that make up this material
 
         Examples
         --------
         ```python
         # material component
-        my_components = [
+        my_component = [
             cript.Material(
                 name="my component material 1",
                 identifiers=[{"alternative_names": "component 1 alternative name"}],
@@ -234,34 +234,34 @@ class Material(PrimaryBaseNode):
 
 
         identifiers = [{"alternative_names": "my material alternative name"}]
-        my_material = cript.Material(name="my material", components=my_components, identifiers=identifiers)
+        my_material = cript.Material(name="my material", component=my_component, identifiers=identifiers)
         ```
 
         Returns
         -------
         List[Material]
-            list of components that make up this material
+            list of component that make up this material
         """
-        return self._json_attrs.components
+        return self._json_attrs.component
 
-    @components.setter
-    def components(self, new_components_list: List["Material"]) -> None:
+    @component.setter
+    def component(self, new_component_list: List["Material"]) -> None:
         """
-        set the list of components (material nodes) that make up this material
+        set the list of component (material nodes) that make up this material
 
         Parameters
         ----------
-        new_components_list: List["Material"]
+        new_component_list: List["Material"]
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, components=new_components_list)
+        new_attrs = replace(self._json_attrs, component=new_component_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def parent_materials(self) -> List["Material"]:
+    def parent_material(self) -> List["Material"]:
         """
         List of parent materials
 
@@ -270,23 +270,23 @@ class Material(PrimaryBaseNode):
         List["Material"]
             list of parent materials
         """
-        return self._json_attrs.parent_materials
+        return self._json_attrs.parent_material
 
-    @parent_materials.setter
-    def parent_materials(self, new_parent_materials_list: List["Material"]) -> None:
+    @parent_material.setter
+    def parent_material(self, new_parent_material_list: List["Material"]) -> None:
         """
         set the [parent materials](./) for this material
 
         Parameters
         ----------
-        new_parent_materials_list: List["Material"]
+        new_parent_material_list: List["Material"]
 
         Returns
         -------
         None
         """
 
-        new_attrs = replace(self._json_attrs, parent_materials=new_parent_materials_list)
+        new_attrs = replace(self._json_attrs, parent_material=new_parent_material_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -318,71 +318,71 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def keywords(self) -> List[str]:
+    def keyword(self) -> List[str]:
         """
-        List of keywords for this material
+        List of keyword for this material
 
-        the material keywords must come from the
+        the material keyword must come from the
         [CRIPT controlled vocabulary](https://criptapp.org/keys/material-keyword/)
 
         ```python
         identifiers = [{"alternative_names": "my material alternative name"}]
 
-        # keywords
-        material_keywords = ["acetylene", "acrylate", "alternating"]
+        # keyword
+        material_keyword = ["acetylene", "acrylate", "alternating"]
 
         my_material = cript.Material(
-            name="my material", keywords=material_keywords, identifiers=identifiers
+            name="my material", keyword=material_keyword, identifiers=identifiers
         )
         ```
 
         Returns
         -------
         List[str]
-            list of material keywords
+            list of material keyword
         """
-        return self._json_attrs.keywords
+        return self._json_attrs.keyword
 
-    @keywords.setter
-    def keywords(self, new_keywords_list: List[str]) -> None:
+    @keyword.setter
+    def keyword(self, new_keyword_list: List[str]) -> None:
         """
-        set the keywords for this material
+        set the keyword for this material
 
-        the material keywords must come from the CRIPT controlled vocabulary
+        the material keyword must come from the CRIPT controlled vocabulary
 
         Parameters
         ----------
-        new_keywords_list
+        new_keyword_list
 
         Returns
         -------
         None
         """
-        # TODO validate keywords before setting them
-        self._validate_keywords(keywords=new_keywords_list)
+        # TODO validate keyword before setting them
+        self._validate_keyword(keyword=new_keyword_list)
 
-        new_attrs = replace(self._json_attrs, keywords=new_keywords_list)
+        new_attrs = replace(self._json_attrs, keyword=new_keyword_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     # ------------ validation ------------
     # TODO this can be a function instead of a method
-    def _validate_keywords(self, keywords: List[str]) -> None:
+    def _validate_keyword(self, keyword: List[str]) -> None:
         """
-        takes a list of material keywords and loops through validating every single one
+        takes a list of material keyword and loops through validating every single one
 
         this is a simple loop that calls another method, but I thought it needs to be made into a method
-        since both constructor and keywords setter has the same code
+        since both constructor and keyword setter has the same code
 
         Parameters
         ----------
-        keywords: List[str]
+        keyword: List[str]
 
         Returns
         -------
         None
         """
         # TODO add this validation in the future
-        # for keywords in keywords:
+        # for keyword in keyword:
         #     is_vocab_valid(keywords)
         pass
 

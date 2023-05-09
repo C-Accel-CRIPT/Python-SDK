@@ -60,8 +60,9 @@ def test_get_db_schema_from_api(cript_api: cript.API) -> None:
     assert bool(db_schema)
     assert isinstance(db_schema, dict)
 
-    total_fields_in_db_schema = 69
-    assert len(db_schema["$defs"]) == total_fields_in_db_schema
+    # TODO this is constantly changing, so we can't check it for now.
+    # total_fields_in_db_schema = 69
+    # assert len(db_schema["$defs"]) == total_fields_in_db_schema
 
 
 def test_is_node_schema_valid(cript_api: cript.API) -> None:

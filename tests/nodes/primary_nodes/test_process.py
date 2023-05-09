@@ -59,7 +59,7 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
         waste=process_waste,
         prerequisite_processes=[simple_process_node],
         condition=[simple_condition_node],
-        property_=[simple_property_node],
+        property=[simple_property_node],
         keyword=my_process_keywords,
         citation=[complex_citation_node],
     )
@@ -109,7 +109,7 @@ def test_process_getters_and_setters(
     simple_process_node.waste = [simple_material_node]
     simple_process_node.prerequisite_processes = [simple_process_node]
     simple_process_node.condition = [complex_condition_node]
-    simple_process_node.property_ = [simple_property_node]
+    simple_process_node.property = [simple_property_node]
     simple_process_node.keyword = [new_process_keywords]
     simple_process_node.citation = [complex_citation_node]
 
@@ -122,7 +122,7 @@ def test_process_getters_and_setters(
     assert simple_process_node.waste == [simple_material_node]
     assert simple_process_node.prerequisite_processes == [simple_process_node]
     assert simple_process_node.condition == [complex_condition_node]
-    assert simple_process_node.property_ == [simple_property_node]
+    assert simple_process_node.property == [simple_property_node]
     assert simple_process_node.keyword == [new_process_keywords]
     assert simple_process_node.citation == [complex_citation_node]
 

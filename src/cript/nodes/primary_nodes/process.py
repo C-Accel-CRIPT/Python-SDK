@@ -51,7 +51,7 @@ class Process(PrimaryBaseNode):
         waste: List[Any] = field(default_factory=list)
         prerequisite_process: List["Process"] = field(default_factory=list)
         condition: List[Any] = field(default_factory=list)
-        property_: List[Any] = field(default_factory=list)
+        property: List[Any] = field(default_factory=list)
         keyword: List[str] = None
         citation: List[Any] = field(default_factory=list)
 
@@ -68,7 +68,7 @@ class Process(PrimaryBaseNode):
         waste: List[Any] = None,
         prerequisite_process: List[Any] = None,
         condition: List[Any] = None,
-        property_: List[Any] = None,
+        property: List[Any] = None,
         keyword: List[str] = None,
         citation: List[Any] = None,
         notes: str = "",
@@ -98,7 +98,7 @@ class Process(PrimaryBaseNode):
             waste that this process created
         condition: List[Condition] = None
             list of [condition](../../subobjects/condition) that this process was created under
-        property_: List[Property] = None
+        property: List[Property] = None
             list of [properties](../../subobjects/property) for this process
         keyword: List[str] = None
             list of keywords for this process must come from
@@ -130,8 +130,8 @@ class Process(PrimaryBaseNode):
         if condition is None:
             condition = []
 
-        if property_ is None:
-            property_ = []
+        if property is None:
+            property = []
 
         if keyword is None:
             keyword = []
@@ -151,7 +151,7 @@ class Process(PrimaryBaseNode):
             waste=waste,
             condition=condition,
             prerequisite_process=prerequisite_process,
-            property_=property_,
+            property=property,
             keyword=keyword,
             citation=citation,
         )
@@ -442,44 +442,6 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def property_(self) -> List[Any]:
-        """
-        List of [Property nodes](../../subobjects/property) for this process
-
-        Examples
-        --------
-        ```python
-        # create property node
-         my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
-
-         my_process.properties = [my_property]
-        ```
-
-        Returns
-        -------
-        List[Property]
-            list of properties for this process
-        """
-        return self._json_attrs.property_.copy()
-
-    @property_.setter
-    def property_(self, new_property_list: List[Any]) -> None:
-        """
-        set the list of Property nodes for this process
-
-        Parameters
-        ----------
-        new_property_list: List[Property]
-            replace the current list of properties
-
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, properties=new_property_list)
-        self._update_json_attrs_if_valid(new_attrs)
-
-    @property
     def keyword(self) -> List[str]:
         """
         List of keyword for this process
@@ -550,4 +512,42 @@ class Process(PrimaryBaseNode):
         None
         """
         new_attrs = replace(self._json_attrs, citation=new_citation_list)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    def property(self) -> List[Any]:
+        """
+        List of [Property nodes](../../subobjects/property) for this process
+
+        Examples
+        --------
+        ```python
+        # create property node
+         my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
+
+         my_process.properties = [my_property]
+        ```
+
+        Returns
+        -------
+        List[Property]
+            list of properties for this process
+        """
+        return self._json_attrs.property.copy()
+
+    @property.setter
+    def property(self, new_property_list: List[Any]) -> None:
+        """
+        set the list of Property nodes for this process
+
+        Parameters
+        ----------
+        new_property_list: List[Property]
+            replace the current list of properties
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, properties=new_property_list)
         self._update_json_attrs_if_valid(new_attrs)

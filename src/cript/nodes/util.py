@@ -67,10 +67,6 @@ def _apply_modifications(serialize_dict):
     # if node is material, then convert the identifiers list to JSON fields
     if serialize_dict["node"] == ["Material"]:
         serialize_dict = _material_identifiers_list_to_json_fields(serialize_dict)
-        serialize_dict = _rename_field(serialize_dict=serialize_dict, old_name="property_", new_name="property")
-
-    elif serialize_dict["node"] == ["Process"]:
-        serialize_dict = _rename_field(serialize_dict=serialize_dict, old_name="property_", new_name="property")
 
     return serialize_dict
 

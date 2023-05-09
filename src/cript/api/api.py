@@ -38,21 +38,6 @@ def _get_global_cached_api():
     return _global_cached_api
 
 
-def _prepare_host(host: str, api_handle: str, api_version: str) -> str:
-    # strip ending slash to make host always uniform
-    host = host.rstrip("/")
-    host = f"{host}/{api_handle}/{api_version}"
-
-    # if host is using unsafe "http://" then give a warning
-    if host.startswith("http://"):
-        warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
-
-    if not host.startswith("http"):
-        raise InvalidHostError("The host must start with http or https")
-
-    return host
-
-
 class API:
     """
     ## Definition
@@ -142,6 +127,20 @@ class API:
         self._check_initial_host_connection()
 
         self._get_db_schema()
+
+    def _prepare_host(self, host: str) -> str:
+        # strip ending slash to make host always uniform
+        host = host.rstrip("/")
+        host = f"{self._host}/{self._api_handle}/{self._api_version}"
+
+        # if host is using unsafe "http://" then give a warning
+        if host.startswith("http://"):
+            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
+
+        if not host.startswith("http"):
+            raise InvalidHostError("The host must start with http or https")
+
+        return host
 
     def __enter__(self):
         self.connect()

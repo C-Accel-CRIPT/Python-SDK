@@ -25,14 +25,13 @@ class Quantity(BaseNode):
         self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit, uncertainty=uncertainty, uncertainty_type=uncertainty_type)
         self.validate()
 
+    def set_key_unit(self, new_key: str, new_unit: str):
+        new_attrs = replace(self._json_attrs, key=new_key, unit=new_unit)
+        self._update_json_attrs_if_valid(new_attrs)
+
     @property
     def key(self) -> str:
         return self._json_attrs.key
-
-    @key.setter
-    def key(self, new_key: str):
-        new_attrs = replace(self._json_attrs, key=new_key)
-        self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def value(self) -> Union[int, float, str]:
@@ -46,11 +45,6 @@ class Quantity(BaseNode):
     @property
     def unit(self) -> str:
         return self._json_attrs.unit
-
-    @unit.setter
-    def unit(self, new_unit: str):
-        new_attrs = replace(self._json_attrs, unit=new_unit)
-        self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def uncertainty(self):

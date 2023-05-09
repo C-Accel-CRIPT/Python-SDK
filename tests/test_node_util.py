@@ -153,7 +153,7 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
 
     # Now add an orphan process to the graph
     process2 = copy.deepcopy(simple_process_node)
-    process.prerequisite_processes += [process2]
+    process.prerequisite_process += [process2]
     with pytest.raises(CRIPTOrphanedProcessError):
         project.validate()
 

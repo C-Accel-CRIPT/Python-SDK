@@ -64,7 +64,7 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     simple_material_node.identifiers = new_identifiers
     simple_material_node.property = [simple_property_node]
     simple_material_node.parent_material = new_parent_material
-    simple_material_node.computation_forcefield = simple_computational_forcefield_node
+    simple_material_node.computational_forcefield = simple_computational_forcefield_node
     simple_material_node.keyword = new_material_keywords
     simple_material_node.component = new_components
 
@@ -73,9 +73,9 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     assert simple_material_node.identifiers == new_identifiers
     assert simple_material_node.property == [simple_property_node]
     assert simple_material_node.parent_material == new_parent_material
-    assert simple_material_node.computation_forcefield == simple_computational_forcefield_node
+    assert simple_material_node.computational_forcefield == simple_computational_forcefield_node
     assert simple_material_node.keyword == new_material_keywords
-    # assert simple_material_node.component == new_components
+    assert simple_material_node.component == new_components
 
 
 def test_serialize_material_to_json(simple_material_node) -> None:
@@ -137,9 +137,8 @@ def test_deserialize_material_from_json() -> None:
     assert my_material.name == api_material["name"]
     assert my_material.component == []
     assert my_material.property == []
-    assert my_material.process == []
     assert my_material.parent_material == []
-    assert my_material.computation_forcefield == []
+    assert my_material.computational_forcefield == []
     assert my_material.keyword == []
     assert my_material.notes == api_material["notes"]
 

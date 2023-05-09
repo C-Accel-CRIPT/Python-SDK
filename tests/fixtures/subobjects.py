@@ -89,7 +89,7 @@ def complex_quantity_node() -> cript.Quantity:
 
 @pytest.fixture(scope="function")
 def complex_quantity_dict() -> dict:
-    return {"node": ["Quantity"], "key": "mass", "value": 11.2, "unit": "kg", "uncertainty": "0.2", "uncertainty_type": "std"}
+    return {"node": ["Quantity"], "key": "mass", "value": 11.2, "unit": "kg", "uncertainty": "0.2", "uncertainty_type": "stdev"}
 
 
 @pytest.fixture(scope="function")
@@ -210,14 +210,14 @@ def complex_ingredient_node(complex_material_node, complex_quantity_node) -> cri
     """
     complex ingredient node with all possible parameters filled
     """
-    complex_ingredient_node = cript.Ingredient(material=complex_material_node, quantity=[complex_quantity_node], keyword="catalyst")
+    complex_ingredient_node = cript.Ingredient(material=complex_material_node, quantity=[complex_quantity_node], keyword=["catalyst"])
 
     return complex_ingredient_node
 
 
 @pytest.fixture(scope="function")
 def complex_ingredient_dict(complex_material_node, complex_quantity_dict) -> dict:
-    ret_dict = {"node": ["Ingredient"], "material": json.loads(complex_material_node.json), "quantities": [complex_quantity_dict], "keyword": "catalyst"}
+    ret_dict = {"node": ["Ingredient"], "material": json.loads(complex_material_node.json), "quantities": [complex_quantity_dict], "keyword": ["catalyst"]}
     return ret_dict
 
 

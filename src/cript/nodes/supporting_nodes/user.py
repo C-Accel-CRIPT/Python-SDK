@@ -1,5 +1,4 @@
-from dataclasses import dataclass, field, replace
-from typing import Any, List
+from dataclasses import dataclass, replace
 
 from cript.nodes.uuid_base import UUIDBaseNode
 
@@ -19,7 +18,6 @@ class User(UUIDBaseNode):
     | username   | str         | "john_doe"                 | User’s name                                | True     |       |
     | email      | str         | "user@cript.com"           | email of the user                          | True     |       |
     | orcid      | str         | "0000-0000-0000-0000"      | ORCID ID of the user                       | True     |       |
-    | groups     | List[Group] |                            | groups you belong to                       |          |       |
     | updated_at | datetime*   | 2023-03-06 18:45:23.450248 | last date the node was modified (UTC time) | True     |       |
     | created_at | datetime*   | 2023-03-06 18:45:23.450248 | date it was created (UTC time)             | True     |       |
 
@@ -52,12 +50,10 @@ class User(UUIDBaseNode):
         username: str = ""
         email: str = ""
         orcid: str = ""
-        # TODO add type hints later, currently avoiding circular import error
-        groups: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, username: str, email: str, orcid: str, groups: List[Any] = None, **kwargs):
+    def __init__(self, username: str, email: str, orcid: str, **kwargs):
         """
         Json from CRIPT API to be converted to a node
         optionally the group can be None if the user doesn't have a group
@@ -70,14 +66,10 @@ class User(UUIDBaseNode):
             user email
         orcid: str
             user ORCID
-        groups: List[Group
-            groups that this user belongs to
-
         """
-        if groups is None:
-            groups = []
         super().__init__(**kwargs)
-        self._json_attrs = replace(self._json_attrs, username=username, email=email, orcid=orcid, groups=groups)
+        self._json_attrs = replace(self._json_attrs, username=username, email=email, orcid=orcid)
+
         self.validate()
 
     # ------------------ properties ------------------
@@ -129,19 +121,3 @@ class User(UUIDBaseNode):
             user's ORCID
         """
         return self._json_attrs.orcid
-
-    @property
-    def groups(self) -> List[Any]:
-        """
-        gets the list of group nodes that the user belongs in
-
-        Raises
-        ------
-        AttributeError
-
-        Returns
-        -------
-        user's groups: List[Any]
-            List of Group nodes that the user belongs in
-        """
-        return self._json_attrs.groups

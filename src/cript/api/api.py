@@ -44,14 +44,17 @@ class API:
     API Client class to communicate with the CRIPT API
     """
 
-    _raw_host: str = ""
-    _https_warning_sent: bool = False
-    _token: str = ""
-    _vocabulary: dict = {}
-    _db_schema: dict = {}
-    _http_headers: dict = {}
     _api_handle: str = "api"
     _api_version: str = "v1"
+    _host: str = ""
+
+    _token: str = ""
+
+    _http_headers: dict = {}
+
+    _vocabulary: dict = {}
+    _db_schema: dict = {}
+
 
     def __init__(self, host: Union[str, None], token: [str, None]):
         """
@@ -113,7 +116,7 @@ class API:
             if token is None:
                 raise RuntimeError("API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n" "Set the environment variable (preferred) or specify the token explictly at the creation of API.")
 
-        self._raw_host = host
+        self._host = self._prepare_host(host=host)
         self._token = token
 
         # assign headers
@@ -124,6 +127,20 @@ class API:
         self._check_initial_host_connection()
 
         self._get_db_schema()
+
+    def _prepare_host(self, host: str) -> str:
+        # strip ending slash to make host always uniform
+        host = host.rstrip("/")
+        host = f"{self._host}/{self._api_handle}/{self._api_version}"
+
+        # if host is using unsafe "http://" then give a warning
+        if host.startswith("http://"):
+            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
+
+        if not host.startswith("http"):
+            raise InvalidHostError("The host must start with http or https")
+
+        return host
 
     def __enter__(self):
         self.connect()
@@ -185,21 +202,7 @@ class API:
         https://criptapp.org/api/v1
         ```
         """
-        host = self._raw_host.strip()
-
-        # strip ending slash to make host always uniform
-        host = host.rstrip("/")
-        host = f"{host}/{self._api_handle}/{self._api_version}"
-
-        # if host is using unsafe "http://" then give a warning
-        if host.startswith("http://") and not self._https_warning_sent:
-            self._https_warning_sent = True
-            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
-
-        if not host.startswith("http"):
-            raise InvalidHostError("The host must start with http or https")
-
-        return host
+        return self._host
 
     def _check_initial_host_connection(self) -> None:
         """

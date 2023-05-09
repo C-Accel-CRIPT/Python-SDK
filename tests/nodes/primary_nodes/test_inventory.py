@@ -34,22 +34,7 @@ def test_inventory_serialization(simple_inventory_node, simple_material_dict) ->
     2. strips the UID from all the nodes within that dict
     3. compares the expected_dict written to what JSON deserializes
     """
-    expected_dict = {
-       "node":[
-          "Inventory"
-       ],
-       "name": "my inventory name",
-       "material": [
-          simple_material_dict,
-          {
-             "node": [
-                "Material"
-             ],
-             "name": "material 2",
-             "bigsmiles": "my big smiles"
-          }
-       ]
-    }
+    expected_dict = {"node": ["Inventory"], "name": "my inventory name", "material": [simple_material_dict, {"node": ["Material"], "name": "material 2", "bigsmiles": "my big smiles"}]}
 
     # TODO this needs better testing
     deserialized_inventory: dict = json.loads(simple_inventory_node.json)

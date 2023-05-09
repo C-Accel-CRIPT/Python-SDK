@@ -83,14 +83,13 @@ def complex_citation_dict(complex_reference_dict) -> dict:
 
 @pytest.fixture(scope="function")
 def complex_quantity_node() -> cript.Quantity:
-    quantity = cript.Quantity(key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev")
+    quantity = cript.Quantity(key="mass", value=11.2, unit="kg", uncertainty="0.2", uncertainty_type="stdev")
     return quantity
 
 
 @pytest.fixture(scope="function")
 def complex_quantity_dict() -> dict:
-    ret_dict = {"node": ["Quantity"], "key": "mass", "value": 11.2, "unit": "kg", "uncertainty": 0.2, "uncertainty_type": "std"}
-    return ret_dict
+    return {"node": ["Quantity"], "key": "mass", "value": 11.2, "unit": "kg", "uncertainty": "0.2", "uncertainty_type": "std"}
 
 
 @pytest.fixture(scope="function")
@@ -208,8 +207,12 @@ def complex_condition_dict(complex_material_node, complex_data_node) -> dict:
 
 @pytest.fixture(scope="function")
 def complex_ingredient_node(complex_material_node, complex_quantity_node) -> cript.Ingredient:
-    i = cript.Ingredient(complex_material_node, [complex_quantity_node], "catalyst")
-    return i
+    """
+    complex ingredient node with all possible parameters filled
+    """
+    complex_ingredient_node = cript.Ingredient(material=complex_material_node, quantity=[complex_quantity_node], keyword="catalyst")
+
+    return complex_ingredient_node
 
 
 @pytest.fixture(scope="function")
@@ -227,6 +230,15 @@ def complex_equipment_node(complex_condition_node, complex_citation_node) -> cri
         citations=[complex_citation_node],
     )
     return e
+
+
+@pytest.fixture(scope="function")
+def simple_equipment_node() -> cript.Equipment:
+    """
+    simple and minimal equipment
+    """
+    my_equipment = cript.Equipment(key="burner")
+    return my_equipment
 
 
 @pytest.fixture(scope="function")
@@ -288,3 +300,20 @@ def complex_software_configuration_dict(complex_software_dict, complex_algorithm
         "citation": [complex_citation_dict],
     }
     return ret_dict
+
+
+@pytest.fixture(scope="function")
+def simple_computational_forcefield_node():
+    """
+    simple minimal computational forcefield node
+    """
+
+    return cript.ComputationalForcefield(key="amber", building_block="atom")
+
+
+@pytest.fixture(scope="function")
+def simple_condition_node() -> cript.Condition:
+    """
+    simple and minial condition node
+    """
+    return cript.Condition(key="atm", type="max", value=1)

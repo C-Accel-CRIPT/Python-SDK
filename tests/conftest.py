@@ -27,6 +27,8 @@ from fixtures.primary_nodes import (
     simple_process_node,
     simple_project_node,
     simple_software_configuration,
+    simple_computational_process_node,
+    simple_material_dict,
 )
 from fixtures.subobjects import (
     complex_algorithm_dict,
@@ -55,6 +57,9 @@ from fixtures.subobjects import (
     complex_software_node,
     simple_property_dict,
     simple_property_node,
+    simple_computational_forcefield_node,
+    simple_condition_node,
+    simple_equipment_node,
 )
 from fixtures.supporting_nodes import complex_file_node
 from util import strip_uid_from_dict
@@ -70,8 +75,10 @@ def cript_api():
     Returns:
         API: The created API instance.
     """
+    host: str = "http://development.api.mycriptapp.org/"
+    token = "123456"
 
     assert cript.api.api._global_cached_api is None
-    with cript.API(host=None, token=None) as api:
+    with cript.API(host=host, token=token) as api:
         yield api
     assert cript.api.api._global_cached_api is None

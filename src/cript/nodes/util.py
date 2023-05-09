@@ -38,8 +38,97 @@ class NodeEncoder(json.JSONEncoder):
                     if getattr(obj._json_attrs, key) != default_values[key]:
                         serialize_dict[key] = getattr(obj._json_attrs, key)
             serialize_dict["node"] = obj._json_attrs.node
+
+            # check if further modifications to the dict is needed before considering it done
+            serialize_dict = _apply_modifications(serialize_dict)
+
             return serialize_dict
         return json.JSONEncoder.default(self, obj)
+
+
+def _apply_modifications(serialize_dict):
+    """
+    checks the serialized_dict to see if any other operations are required before it
+    can be considered done. If other operations are required, then it passes it to the other operations
+    and at the end returns the fully finished dict.
+
+    This function is essentially a big switch case that checks the node type
+    and sees what other operations are required for it
+
+    Parameters
+    ----------
+    serialize_dict: dict
+
+
+    Returns
+    -------
+    serialize_dict: dict
+    """
+    # if node is material, then convert the identifiers list to JSON fields
+    if serialize_dict["node"] == ["Material"]:
+        serialize_dict = _material_identifiers_list_to_json_fields(serialize_dict)
+        serialize_dict = _rename_field(serialize_dict=serialize_dict, old_name="property_", new_name="property")
+
+    elif serialize_dict["node"] == ["Process"]:
+        serialize_dict = _rename_field(serialize_dict=serialize_dict, old_name="property_", new_name="property")
+
+    return serialize_dict
+
+
+def _material_identifiers_list_to_json_fields(serialize_dict: dict) -> dict:
+    """
+    input:
+    ```json
+        {
+            "node":["Material"],
+            "name":"my material",
+            "identifiers":[ {"cas":"my material cas"} ],
+            "uid":"_:a78203cb-82ea-4376-910e-dee74088cd37"
+        }
+    ```
+
+    output:
+    ```json
+    {
+        "node":["Material"],
+        "name":"my material",
+        "cas":"my material cas",
+        "uid":"_:08018f4a-e8e3-4ac0-bdad-fa704fdc0145"
+    }
+    ```
+
+    Parameters
+    ----------
+    serialize_dict: dict
+        the serialized dictionary of the node
+
+    Returns
+    -------
+    serialized_dict = dict
+        new dictionary that has converted the list of dictionary identifiers into the dictionary as fields
+
+    """
+
+    # TODO this if statement might not be needed in future
+    if "identifiers" in serialize_dict:
+        for identifier in serialize_dict["identifiers"]:
+            for key, value in identifier.items():
+                serialize_dict[key] = value
+
+        # remove identifiers list of objects after it has been flattened
+        del serialize_dict["identifiers"]
+
+    return serialize_dict
+
+
+def _rename_field(serialize_dict: dict, old_name: str, new_name: str) -> dict:
+    """
+    renames `property_` to `property` the JSON
+    """
+    if "property_" in serialize_dict:
+        serialize_dict[new_name] = serialize_dict.pop(old_name)
+
+    return serialize_dict
 
 
 def _node_json_hook(node_str: str):
@@ -61,11 +150,10 @@ def _node_json_hook(node_str: str):
     for key, pyclass in inspect.getmembers(cript.nodes, inspect.isclass):
         if BaseNode in inspect.getmro(pyclass):
             if key == node_str:
-                return pyclass._from_json(node_dict)
                 try:
                     return pyclass._from_json(node_dict)
                 except Exception as exc:
-                    raise CRIPTJsonDeserializationError(key, node_dict) from exc
+                    raise CRIPTJsonDeserializationError(key, node_str) from exc
     # Fall back
     return node_dict
 

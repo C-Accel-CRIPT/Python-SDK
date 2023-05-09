@@ -38,10 +38,10 @@ class UUIDBaseNode(BaseNode, ABC):
 
     @property
     def url(self):
-        from cript.api.api import _API_VERSION_STRING, _get_global_cached_api
+        from cript.api.api import _get_global_cached_api
 
         api = _get_global_cached_api()
-        return f"{api.host}/api/{_API_VERSION_STRING}/{self.uuid}"
+        return f"{api.host}/{self.uuid}"
 
     def __deepcopy__(self, memo):
         node = super().__deepcopy__(memo)

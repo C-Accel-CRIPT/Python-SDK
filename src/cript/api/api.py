@@ -27,8 +27,6 @@ from cript.nodes.primary_nodes.project import Project
 # Use the `_get_global_cached_api for access.
 _global_cached_api = None
 
-_API_VERSION_STRING = "v1"
-
 
 def _get_global_cached_api():
     """
@@ -40,52 +38,20 @@ def _get_global_cached_api():
     return _global_cached_api
 
 
-def _prepare_host(host: str) -> str:
-    """
-    prepares the host and gets it ready to be used within the api client
-
-    1. removes any trailing spaces from the left or right side
-    1. removes "/" from the end so that it is always uniform
-    1. adds "/api", so all queries are sent directly to the API
-
-    Parameters
-    ----------
-    host: str
-        api host
-
-    Returns
-    -------
-    host: str
-    """
-    # strip any empty spaces on left or right
-    host = host.strip()
-
-    # strip ending slash to make host always uniform
-    host = host.rstrip("/")
-
-    host = f"{host}/api/{_API_VERSION_STRING}"
-
-    # if host is using unsafe "http://" then give a warning
-    if host.startswith("http://"):
-        warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
-
-    if not host.startswith("http"):
-        raise InvalidHostError("The host must start with http or https")
-
-    return host
-
-
 class API:
     """
     ## Definition
     API Client class to communicate with the CRIPT API
     """
 
-    _host: str = ""
+    _raw_host: str = ""
+    _https_warning_sent: bool = False
     _token: str = ""
     _vocabulary: dict = {}
     _db_schema: dict = {}
     _http_headers: dict = {}
+    _api_handle: str = "api"
+    _api_version: str = "v1"
 
     def __init__(self, host: Union[str, None], token: [str, None]):
         """
@@ -147,7 +113,7 @@ class API:
             if token is None:
                 raise RuntimeError("API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n" "Set the environment variable (preferred) or specify the token explictly at the creation of API.")
 
-        self._host = _prepare_host(host=host)
+        self._raw_host = host
         self._token = token
 
         # assign headers
@@ -197,6 +163,14 @@ class API:
         _global_cached_api = self._previous_global_cached_api
 
     @property
+    def api_handle(self):
+        return self._api_handle
+
+    @property
+    def api_version(self):
+        return self._api_version
+
+    @property
     def schema(self):
         """
         Access the CRIPT Database Schema that is associated with this API connection.
@@ -219,7 +193,21 @@ class API:
         https://criptapp.org/api/v1
         ```
         """
-        return self._host
+        host = self._raw_host.strip()
+
+        # strip ending slash to make host always uniform
+        host = host.rstrip("/")
+        host = f"{host}/{self.api_handle}/{self.api_version}"
+
+        # if host is using unsafe "http://" then give a warning
+        if host.startswith("http://") and not self._https_warning_sent:
+            self._https_warning_sent = True
+            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
+
+        if not host.startswith("http"):
+            raise InvalidHostError("The host must start with http or https")
+
+        return host
 
     def _check_initial_host_connection(self) -> None:
         """

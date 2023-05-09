@@ -19,11 +19,11 @@ def test_get_and_set_inventory(simple_inventory_node) -> None:
     material_1 = cript.Material(name="new material 1", identifiers=[{"alternative_names": "new material 1 alternative name"}])
 
     # set inventory materials
-    simple_inventory_node.materials = [material_1]
+    simple_inventory_node.material = [material_1]
 
     # get and check inventory materials
     assert isinstance(simple_inventory_node, cript.Inventory)
-    assert simple_inventory_node.materials == [material_1]
+    assert simple_inventory_node.material == [material_1]
 
 
 def test_inventory_serialization(simple_inventory_node, simple_material_dict) -> None:

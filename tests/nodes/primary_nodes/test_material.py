@@ -41,12 +41,22 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
 
     new_identifiers = [{"bigsmiles": "6789"}]
 
-    new_parent_material = cript.Material(name="my parent material", identifiers=[{"bigsmiles": "9876"},])
+    new_parent_material = cript.Material(
+        name="my parent material",
+        identifiers=[
+            {"bigsmiles": "9876"},
+        ],
+    )
 
     new_material_keywords = ["acetylene"]
 
     new_components = [
-        cript.Material(name="my component material 1", identifiers=[{"bigsmiles": "654321"},]),
+        cript.Material(
+            name="my component material 1",
+            identifiers=[
+                {"bigsmiles": "654321"},
+            ],
+        ),
     ]
 
     # set all attributes for Material node

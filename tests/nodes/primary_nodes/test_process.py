@@ -68,9 +68,9 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
     assert my_complex_process.ingredients == [complex_ingredient_node]
     assert my_complex_process.description == my_process_description
     assert my_complex_process.equipments == [complex_equipment_node]
-    assert my_complex_process.products == process_product
+    assert my_complex_process.products == [simple_property_node]
     assert my_complex_process.waste == process_waste
-    assert my_complex_process.prerequisite_processes == [prerequisite_processes]
+    assert my_complex_process.prerequisite_processes == [simple_process_node]
     assert my_complex_process.conditions == [complex_condition_node]
     assert my_complex_process.properties == [simple_property_node]
     assert my_complex_process.keywords == my_process_keywords

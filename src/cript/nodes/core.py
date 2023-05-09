@@ -117,6 +117,7 @@ class BaseNode(ABC):
 
     @classmethod
     def _from_json(cls, json_dict: dict):
+        print("General From Json", cls)
         # Child nodes can inherit and overwrite this.
         # They should call super()._from_json first, and modified the returned object after if necessary
         # We create manually a dict that contains all elements from the send dict.
@@ -125,32 +126,6 @@ class BaseNode(ABC):
         for field in cls.JsonAttributes().__dataclass_fields__:
             if field in json_dict:
                 arguments[field] = json_dict[field]
-
-        # TODO find a better way to know identifiers
-        all_identifier_list = [
-            "amino_acid",
-            "bigsmiles",
-            "cas",
-            "chem_formula",
-            "chem_repeat",
-            "chemical_id",
-            "inchi",
-            "inchi_key",
-            "lot_number",
-            "mol_form",
-            "names",
-            "pubchem_cid",
-            "smiles",
-            "vendor",
-        ]
-
-        identifier_argument = []
-        # Convert identifiers to to a list
-        for identifier in all_identifier_list:
-            if identifier in arguments:
-                identifier_argument.append({identifier: arguments[identifier]})
-                del arguments[identifier]
-        arguments["identifiers"] = identifier_argument
 
         # The call to the constructor might ignore fields that are usually not writable.
         try:

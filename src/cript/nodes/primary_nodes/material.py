@@ -442,3 +442,34 @@ class Material(PrimaryBaseNode):
         """
         new_attrs = replace(self._json_attrs, property=new_property_list)
         self._update_json_attrs_if_valid(new_attrs)
+
+    @classmethod
+    def _from_json(cls, json_dict: dict):
+        # TODO find a better way to know identifiers
+        all_identifier_list = [
+            "amino_acid",
+            "bigsmiles",
+            "cas",
+            "chem_formula",
+            "chem_repeat",
+            "chemical_id",
+            "inchi",
+            "inchi_key",
+            "lot_number",
+            "mol_form",
+            "names",
+            "pubchem_cid",
+            "smiles",
+            "vendor",
+        ]
+
+        identifier_argument = []
+        # Convert identifiers to to a list
+        for identifier in all_identifier_list:
+            if identifier in json_dict:
+                identifier_argument.append({identifier: json_dict[identifier]})
+                del json_dict[identifier]
+            json_dict["identifiers"] = identifier_argument
+
+        print("Material from_json", cls)
+        return super()._from_json(json_dict)

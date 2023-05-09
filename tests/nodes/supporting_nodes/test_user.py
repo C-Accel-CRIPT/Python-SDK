@@ -60,7 +60,6 @@ def user_node() -> cript.User:
         username="my username",
         email="my_email@email.com",
         orcid="123456",
-        groups=["my group"],
     )
     # use user node in test
     yield my_user

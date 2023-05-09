@@ -21,7 +21,7 @@ class Material(PrimaryBaseNode):
     | properties              | list[[Property](../subobjects/property)]            |                                                   | material properties                          |             |       |
     | process                 | [Process](../process)                               |                                                   | process node that made this material         |             |       |
     | parent_material         | [Material](./)                                      |                                                   | material node that this node was copied from |             |       |
-    | computation_ forcefield | [Computation  Forcefield](../computational_process) |                                                   | computation forcefield                       | Conditional |       |
+    | computational_ forcefield | [Computation  Forcefield](../computational_forcefield) |                                                   | computation forcefield                       | Conditional |       |
     | keywords                | list[str]                                           | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material             |             | True  |
 
     ## Navigating to Material
@@ -74,7 +74,7 @@ class Material(PrimaryBaseNode):
         components: List["Material"] = field(default_factory=list)
         properties: List[Any] = field(default_factory=list)
         parent_materials: List["Material"] = field(default_factory=list)
-        computation_forcefield: List[Any] = field(default_factory=list)
+        computational_forcefield: List[Any] = field(default_factory=list)
         keywords: List[str] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -86,7 +86,7 @@ class Material(PrimaryBaseNode):
         components: List["Material"] = None,
         properties: List[Any] = None,
         parent_materials: List["Material"] = None,
-        computation_forcefield: List[Any] = None,
+        computational_forcefield: List[Any] = None,
         keywords: List[str] = None,
         notes: str = "",
         **kwargs
@@ -102,7 +102,7 @@ class Material(PrimaryBaseNode):
         properties: List[Property], default=None
         process: List[Process], default=None
         parent_materials: List["Material"], default=None
-        computation_forcefield: List[ComputationalProcess], default=None
+        computational_forcefield: List[ComputationalProcess], default=None
         keywords: List[str], default=None
 
         Returns
@@ -122,8 +122,8 @@ class Material(PrimaryBaseNode):
         if parent_materials is None:
             parent_materials = []
 
-        if computation_forcefield is None:
-            computation_forcefield = []
+        if computational_forcefield is None:
+            computational_forcefield = []
 
         if keywords is None:
             keywords = []
@@ -139,7 +139,7 @@ class Material(PrimaryBaseNode):
             components=components,
             properties=properties,
             parent_materials=parent_materials,
-            computation_forcefield=computation_forcefield,
+            computational_forcefield=computational_forcefield,
             keywords=keywords,
         )
 
@@ -325,7 +325,7 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def computation_forcefield(self) -> List[Any]:
+    def computational_forcefield(self) -> List[Any]:
         """
         list of [computational_forcefield](../../subobjects/computational_forcefield) for this material node
 
@@ -334,22 +334,22 @@ class Material(PrimaryBaseNode):
         List[ComputationForcefield]
             list of computational_forcefield that created this material
         """
-        return self._json_attrs.computation_forcefield
+        return self._json_attrs.computational_forcefield
 
-    @computation_forcefield.setter
-    def computation_forcefield(self, new_computation_forcefield_list: List[Any]) -> None:
+    @computational_forcefield.setter
+    def computational_forcefield(self, new_computational_forcefield_list: List[Any]) -> None:
         """
-        sets the list of computation forcefields for this material
+        sets the list of computational forcefields for this material
 
         Parameters
         ----------
-        new_computation_forcefield_list: List[ComputationalProcess]
+        new_computation_forcefield_list: List[ComputationalForcefield]
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, computation_forcefield=new_computation_forcefield_list)
+        new_attrs = replace(self._json_attrs, computational_forcefield=new_computational_forcefield_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

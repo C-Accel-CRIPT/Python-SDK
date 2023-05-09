@@ -45,6 +45,13 @@ class BaseNode(ABC):
             name = self.__name__
         return name
 
+    # Prevent new attributes being set.
+    # This might just be temporary, but for now, I don't want to acciditentally add new attributes, when I mean to modify one.
+    def __setattr__(self, key, value):
+        if not hasattr(self, key):
+            raise TypeError(f"{key} -> {value} attempted to set in a frozen class.")
+        super().__setattr__(key, value)
+
     def __init__(self):
         uid = get_new_uid()
         self._json_attrs = replace(self._json_attrs, node=[self.node_type], uid=uid)

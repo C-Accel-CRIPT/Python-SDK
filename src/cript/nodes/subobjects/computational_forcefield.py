@@ -27,7 +27,7 @@ class ComputationalForcefield(BaseNode):
     def __init__(self, key: str, building_block: str, coarse_grained_mapping: str = "", implicit_solvent: str = "", source: str = "", description: str = "", data: List[Data] = None, citation: Union[List[Citation], None] = None, **kwargs):
         if citation is None:
             citation = []
-        super().__init__()
+        super().__init__(**kwargs)
 
         if data is None:
             data = []

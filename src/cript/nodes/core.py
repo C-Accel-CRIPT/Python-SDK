@@ -6,7 +6,17 @@ from abc import ABC
 from dataclasses import asdict, dataclass, replace
 from typing import List
 
-from cript.nodes.exceptions import CRIPTJsonSerializationError
+from cript.nodes.exceptions import CRIPTExtraJsonAttributes, CRIPTJsonSerializationError
+
+tolerated_extra_json = ["component_count", "computational_forcefield_count", "property_count"]
+
+
+def add_tolerated_extra_json(additional_tolerated_json: str):
+    """
+    In case a node should be loaded from JSON (such as `getting` them from the API),
+    but the API sends additional JSON attributes, these can be set to tolerated temprarily with this routine.
+    """
+    tolerated_extra_json.append(additional_tolerated_json)
 
 
 def get_new_uid():
@@ -52,7 +62,10 @@ class BaseNode(ABC):
             raise TypeError(f"{key} -> {value} attempted to set in a frozen class.")
         super().__setattr__(key, value)
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        for kwarg in kwargs:
+            if kwarg not in tolerated_extra_json:
+                raise CRIPTExtraJsonAttributes(self.node_type, kwarg)
         uid = get_new_uid()
         self._json_attrs = replace(self._json_attrs, node=[self.node_type], uid=uid)
 

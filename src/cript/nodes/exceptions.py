@@ -61,6 +61,19 @@ class CRIPTJsonSerializationError(CRIPTException):
         return f"JSON Serialization failed for node type {self.node_type} with JSON dict: {self.json_str}"
 
 
+class CRIPTExtraJsonAttributes(CRIPTException):
+    def __init__(self, name_type: str, extra_attribute: str):
+        self.name_type = name_type
+        self.extra_attribute = extra_attribute
+
+    def __str__(self):
+        return (
+            f"During the construction of a node {self.name_type} an additional attribute {self.extra_attribute} was detected."
+            "This might be a typo or an extra delivered argument from the back end."
+            f"In the latter case, you can disable this error temporarily by calling `cript.add_tolerated_extra_json('{self.extra_attribute}')`."
+        )
+
+
 class CRIPTOrphanedNodesError(CRIPTException, ABC):
     """
     This error is raised when a child node is not attached to the

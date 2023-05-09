@@ -471,5 +471,4 @@ class Material(PrimaryBaseNode):
                 del json_dict[identifier]
             json_dict["identifiers"] = identifier_argument
 
-        print("Material from_json", cls)
         return super()._from_json(json_dict)

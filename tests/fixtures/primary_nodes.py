@@ -60,9 +60,9 @@ def complex_collection_node(simple_experiment_node, simple_inventory_node, compl
     my_collection = cript.Collection(
         name=my_collection_name,
         experiment=[simple_experiment_node],
-        inventories=[simple_inventory_node],
-        cript_doi=my_cript_doi,
-        citations=[complex_citation_node],
+        inventory=[simple_inventory_node],
+        doi=my_cript_doi,
+        citation=[complex_citation_node],
     )
 
     return my_collection

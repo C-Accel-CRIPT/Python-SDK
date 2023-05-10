@@ -21,7 +21,7 @@ class Parameter(BaseNode):
     # Note that the key word args are ignored.
     # They are just here, such that we can feed more kwargs in that we get from the back end.
     def __init__(self, key: str, value: Union[int, float], unit: Union[str, None] = None, **kwargs):
-        super().__init__()
+        super().__init__(**kwargs)
         self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit)
         self.validate()
 

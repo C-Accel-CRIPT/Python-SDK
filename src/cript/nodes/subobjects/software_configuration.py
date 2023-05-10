@@ -26,7 +26,7 @@ class SoftwareConfiguration(BaseNode):
             algorithms = []
         if citation is None:
             citation = []
-        super().__init__()
+        super().__init__(**kwargs)
         self._json_attrs = replace(self._json_attrs, software=software, algorithms=algorithms, notes=notes, citation=citation)
         self.validate()
 

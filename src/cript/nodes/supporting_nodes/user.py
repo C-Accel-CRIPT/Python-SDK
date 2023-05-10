@@ -1,9 +1,9 @@
 from dataclasses import dataclass, replace
 
-from cript.nodes.core import BaseNode
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class User(BaseNode):
+class User(UUIDBaseNode):
     """
     The [User node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=27)
     represents any researcher or individual who interacts with the CRIPT platform.
@@ -42,7 +42,7 @@ class User(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         """
         all User attributes
         """
@@ -67,8 +67,9 @@ class User(BaseNode):
         orcid: str
             user ORCID
         """
-        super().__init__()
+        super().__init__(**kwargs)
         self._json_attrs = replace(self._json_attrs, username=username, email=email, orcid=orcid)
+
         self.validate()
 
     # ------------------ properties ------------------

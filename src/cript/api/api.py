@@ -38,52 +38,23 @@ def _get_global_cached_api():
     return _global_cached_api
 
 
-def _prepare_host(host: str) -> str:
-    """
-    prepares the host and gets it ready to be used within the api client
-
-    1. removes any trailing spaces from the left or right side
-    1. removes "/" from the end so that it is always uniform
-    1. adds "/api", so all queries are sent directly to the API
-
-    Parameters
-    ----------
-    host: str
-        api host
-
-    Returns
-    -------
-    host: str
-    """
-    # strip any empty spaces on left or right
-    host = host.strip()
-
-    # strip ending slash to make host always uniform
-    host = host.rstrip("/")
-
-    host = f"{host}/api/v1"
-
-    # if host is using unsafe "http://" then give a warning
-    if host.startswith("http://"):
-        warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
-
-    if not host.startswith("http"):
-        raise InvalidHostError("The host must start with http or https")
-
-    return host
-
-
 class API:
     """
     ## Definition
     API Client class to communicate with the CRIPT API
     """
 
+    _api_handle: str = "api"
+    _api_version: str = "v1"
     _host: str = ""
+
     _token: str = ""
+
+    _http_headers: dict = {}
+
     _vocabulary: dict = {}
     _db_schema: dict = {}
-    _http_headers: dict = {}
+
 
     def __init__(self, host: Union[str, None], token: [str, None]):
         """
@@ -145,7 +116,7 @@ class API:
             if token is None:
                 raise RuntimeError("API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n" "Set the environment variable (preferred) or specify the token explictly at the creation of API.")
 
-        self._host = _prepare_host(host=host)
+        self._host = self._prepare_host(host=host)
         self._token = token
 
         # assign headers
@@ -156,6 +127,20 @@ class API:
         self._check_initial_host_connection()
 
         self._get_db_schema()
+
+    def _prepare_host(self, host: str) -> str:
+        # strip ending slash to make host always uniform
+        host = host.rstrip("/")
+        host = f"{self._host}/{self._api_handle}/{self._api_version}"
+
+        # if host is using unsafe "http://" then give a warning
+        if host.startswith("http://"):
+            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
+
+        if not host.startswith("http"):
+            raise InvalidHostError("The host must start with http or https")
+
+        return host
 
     def __enter__(self):
         self.connect()

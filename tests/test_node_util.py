@@ -148,7 +148,7 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
 
     # Fix by add to the materials list instead.
     # Using the util helper function for this.
-    cript.add_orphaned_nodes_to_project(project, active_experiment=None, max_iteration=1000)
+    cript.add_orphaned_nodes_to_project(project, active_experiment=None, max_iteration=10)
     project.validate()
 
     # Now add an orphan process to the graph
@@ -165,7 +165,7 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
     with pytest.raises(CRIPTOrphanedProcessError):
         project.validate()
     # Fix by using the helper function correctly
-    cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 1000)
+    cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
     project.validate()
 
     # We add property to the material, because that adds the opportunity for orphaned data and computation
@@ -178,7 +178,7 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
     with pytest.raises(CRIPTOrphanedDataError):
         project.validate()
     # Fix with the helper function
-    cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 1000)
+    cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
     project.validate()
 
     # Add an orphan Computation
@@ -187,7 +187,7 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
     with pytest.raises(CRIPTOrphanedComputationError):
         project.validate()
     # Fix with the helper function
-    cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 1000)
+    cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
     project.validate()
 
     # Add orphan computational process
@@ -197,5 +197,5 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
     data.computational_process += [comp_proc]
     with pytest.raises(CRIPTOrphanedComputationalProcessError):
         project.validate()
-    cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 1000)
+    cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
     project.validate()

@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field, replace
 from typing import Any, List
 
-from cript.nodes.core import BaseNode
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class Group(BaseNode):
+class Group(UUIDBaseNode):
     """
     ## Definition
 
@@ -59,7 +59,7 @@ class Group(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         """
         all Group attributes
         """
@@ -85,7 +85,7 @@ class Group(BaseNode):
         users: List[User])
             List of users in this group
         """
-        super().__init__()
+        super().__init__(**kwargs)
         self._json_attrs = replace(self._json_attrs, name=name, admins=admins, users=users)
         self.validate()
 

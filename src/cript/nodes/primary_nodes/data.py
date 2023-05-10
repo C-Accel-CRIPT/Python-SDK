@@ -90,7 +90,7 @@ class Data(PrimaryBaseNode):
         notes: str = "",
         **kwargs
     ):
-        super().__init__(name=name, notes=notes)
+        super().__init__(name=name, notes=notes, **kwargs)
 
         if file is None:
             file = []

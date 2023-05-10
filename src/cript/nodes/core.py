@@ -155,7 +155,10 @@ class BaseNode(ABC):
             arguments[field] = copy.deepcopy(getattr(self._json_attrs, field), memo)
         # TODO URL handling
 
-        arguments["uid"] = get_new_uid()
+        # Since we excluded 'uuid' from arguments,
+        # a new uid will prompt the creation of a new matching uuid.
+        uid = get_new_uid()
+        arguments["uid"] = uid
 
         # Create node and init constructor attributes
         node = self.__class__(**arguments)

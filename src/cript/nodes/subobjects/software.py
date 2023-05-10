@@ -1,16 +1,15 @@
 from dataclasses import dataclass, replace
 
-from cript.nodes.core import BaseNode
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class Software(BaseNode):
+class Software(UUIDBaseNode):
     """
     Software node
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
-        url: str = ""
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         name: str = ""
         version: str = ""
         source: str = ""
@@ -18,13 +17,10 @@ class Software(BaseNode):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __init__(self, name: str, version: str, source: str = "", **kwargs):
-        super().__init__()
+        super().__init__(**kwargs)
+
         self._json_attrs = replace(self._json_attrs, name=name, version=version, source=source)
         self.validate()
-
-    @property
-    def url(self) -> str:
-        return self._json_attrs.url
 
     @property
     def name(self) -> str:

@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
-from cript.nodes.core import BaseNode
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class Reference(BaseNode):
+class Reference(UUIDBaseNode):
     """
     ## Definition
 
@@ -20,7 +20,6 @@ class Reference(BaseNode):
     ## Attributes
     | attribute | type      | example                                    | description                                   | required      | vocab |
     |-----------|-----------|--------------------------------------------|-----------------------------------------------|---------------|-------|
-    | url       | str       |                                            | CRIPT’s unique ID of the node assigned by API | True          |       |
     | type      | str       | journal_article                            | type of literature                            | True          | True  |
     | title     | str       | 'Living' Polymers                          | title of publication                          | True          |       |
     | author   | list[str] | Michael Szwarc                             | list of authors                               |               |       |
@@ -45,7 +44,7 @@ class Reference(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         """
         all reference nodes attributes
 
@@ -53,7 +52,6 @@ class Reference(BaseNode):
         instead of a placeholder number such as 0 or -1
         """
 
-        url: str = ""
         type: str = ""
         title: str = ""
         author: List[str] = field(default_factory=list)
@@ -75,7 +73,6 @@ class Reference(BaseNode):
         self,
         type: str,
         title: str,
-        url: str = "",
         author: List[str] = None,
         journal: str = "",
         publisher: str = "",
@@ -88,7 +85,7 @@ class Reference(BaseNode):
         arxiv_id: str = "",
         pmid: int = None,
         website: str = "",
-        **kwargs
+        **kwargs,
     ):
         """
         create a reference node
@@ -97,8 +94,6 @@ class Reference(BaseNode):
 
         Parameters
         ----------
-        url: str
-            unique URL assigned by API
         type: str
             type of literature.
             The reference type must come from CRIPT controlled vocabulary
@@ -147,49 +142,14 @@ class Reference(BaseNode):
         if pages is None:
             pages = []
 
-        super().__init__()
+        super().__init__(**kwargs)
 
-        new_attrs = replace(
-            self._json_attrs,
-            url=url,
-            type=type,
-            title=title,
-            author=author,
-            journal=journal,
-            publisher=publisher,
-            year=year,
-            volume=volume,
-            issue=issue,
-            pages=pages,
-            doi=doi,
-            issn=issn,
-            arxiv_id=arxiv_id,
-            pmid=pmid,
-            website=website,
-        )
+        new_attrs = replace(self._json_attrs, type=type, title=title, author=author, journal=journal, publisher=publisher, year=year, volume=volume, issue=issue, pages=pages, doi=doi, issn=issn, arxiv_id=arxiv_id, pmid=pmid, website=website)
 
         self._update_json_attrs_if_valid(new_attrs)
         self.validate()
 
     # ------------------ Properties ------------------
-    @property
-    def url(self) -> str:
-        """
-        Url attribute for the reference node to be assigned by the CRIPT API
-
-        Notes
-        -----
-        Can only get the URL and not set it.
-        Only the API can assign URLs to nodes
-
-        Returns
-        -------
-        str
-            reference node url
-        """
-        # TODO need to create the URl from the UUID
-        return self._json_attrs.url
-
     @property
     def type(self) -> str:
         """

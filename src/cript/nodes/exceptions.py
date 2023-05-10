@@ -73,10 +73,10 @@ class CRIPTAttributeModificationError(CRIPTException):
 
     def __str__(self):
         return (
-            f"Attempt to modify an attribute of a node ({self.name}) that wasn't intended to be modified."
-            f"Here the non-existing attribute {self.key} of {self.name} was attempted to be modified."
-            "Most likely this is due to a typo in the attribute that was intended to be modified i.e. `project.materials` instead of `project.material`."
-            "To ensure compatibility with the underlying CRIPT data model we do not allow custom attributes."
+            f"Attempt to modify an attribute of a node ({self.name}) that wasn't intended to be modified.\n"
+            f"Here the non-existing attribute {self.key} of {self.name} was attempted to be modified.\n"
+            "Most likely this is due to a typo in the attribute that was intended to be modified i.e. `project.materials` instead of `project.material`.\n"
+            "To ensure compatibility with the underlying CRIPT data model we do not allow custom attributes.\n"
         )
 
 
@@ -87,9 +87,9 @@ class CRIPTExtraJsonAttributes(CRIPTException):
 
     def __str__(self):
         return (
-            f"During the construction of a node {self.name_type} an additional attribute {self.extra_attribute} was detected."
-            "This might be a typo or an extra delivered argument from the back end."
-            f"In the latter case, you can disable this error temporarily by calling `cript.add_tolerated_extra_json('{self.extra_attribute}')`."
+            f"During the construction of a node {self.name_type} an additional attribute {self.extra_attribute} was detected.\n"
+            "This might be a typo or an extra delivered argument from the back end.\n"
+            f"In the latter case, you can disable this error temporarily by calling `cript.add_tolerated_extra_json('{self.extra_attribute}')`.\n"
         )
 
 

@@ -52,7 +52,6 @@ class API:
     _http_headers: dict = {}
     _vocabulary: dict = {}
     _db_schema: dict = {}
-    _http_headers: dict = {}
     _api_handle: str = "api"
     _api_version: str = "v1"
 

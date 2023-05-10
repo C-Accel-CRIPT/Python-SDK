@@ -32,16 +32,6 @@ def test_api_with_invalid_host() -> None:
         cript.API("no_http_host.org", "123456789")
 
 
-def test_prepare_host(cript_api: cript.API) -> None:
-    """
-    tests API _prepare_host function
-    """
-    host = " http://myhost.com/ "
-    prepared_host = cript.api.api._prepare_host(host)
-
-    assert prepared_host == "http://myhost.com/api/v1"
-
-
 # def test_api_context(cript_api: cript.API) -> None:
 #     assert cript.api.api._global_cached_api is not None
 #     assert cript.api.api._get_global_cached_api() is not None

@@ -10,6 +10,7 @@ from cript.nodes.core import get_new_uid
 from cript.nodes.exceptions import (
     CRIPTJsonNodeError,
     CRIPTJsonSerializationError,
+    CRIPTNodeSchemaError,
     CRIPTOrphanedComputationalProcessError,
     CRIPTOrphanedComputationError,
     CRIPTOrphanedDataError,
@@ -30,9 +31,9 @@ def test_removing_nodes(complex_algorithm_node, complex_parameter_node, complex_
 def test_json_error(complex_parameter_node):
     parameter = complex_parameter_node
     # Let's break the node by violating the data model
-    parameter._json_attrs = replace(parameter._json_attrs, value=None)
-    with pytest.raises(CRIPTJsonSerializationError):
-        parameter.json
+    parameter._json_attrs = replace(parameter._json_attrs, value="abc")
+    with pytest.raises(CRIPTNodeSchemaError):
+        parameter.validate()
     # Let's break it completely
     parameter._json_attrs = None
     with pytest.raises(CRIPTJsonSerializationError):
@@ -51,13 +52,13 @@ def test_local_search(complex_algorithm_node, complex_parameter_node):
     # Adding 2 separate parameters to test deeper search
     p1 = complex_parameter_node
     p2 = copy.deepcopy(complex_parameter_node)
-    p2.key = "advanced_sampling"
+    p2.key = "damping_time"
     p2.value = 15.0
     p2.unit = "m"
     a.parameter += [p1, p2]
 
     # Test if we can find a specific one of the parameters
-    find_parameter = a.find_children({"key": "advanced_sampling"})
+    find_parameter = a.find_children({"key": "damping_time"})
     assert find_parameter == [p2]
 
     # Test to find the other parameter
@@ -69,14 +70,14 @@ def test_local_search(complex_algorithm_node, complex_parameter_node):
     assert find_parameter == []
 
     # Test nested search. Here we are looking for any node that has a child node parameter as specified.
-    find_algorithms = a.find_children({"parameter": {"key": "advanced_sampling"}})
+    find_algorithms = a.find_children({"parameter": {"key": "damping_time"}})
     assert find_algorithms == [a]
     # Same as before, but specifiying two children that have to be present (AND condition)
-    find_algorithms = a.find_children({"parameter": [{"key": "advanced_sampling"}, {"key": "update_frequency"}]})
+    find_algorithms = a.find_children({"parameter": [{"key": "damping_time"}, {"key": "update_frequency"}]})
     assert find_algorithms == [a]
 
     # Test that the main node is correctly excluded if we specify an additionally non-existent paramter
-    find_algorithms = a.find_children({"parameter": [{"key": "advanced_sampling"}, {"key": "update_frequency"}, {"foo": "bar"}]})
+    find_algorithms = a.find_children({"parameter": [{"key": "damping_time"}, {"key": "update_frequency"}, {"foo": "bar"}]})
     assert find_algorithms == []
 
 

@@ -77,6 +77,8 @@ class CRIPTAttributeModificationError(CRIPTException):
             f"Here the non-existing attribute {self.key} of {self.name} was attempted to be modified."
             "Most likely this is due to a typo in the attribute that was intended to be modified i.e. `project.materials` instead of `project.material`."
             "To ensure compatibility with the underlying CRIPT data model we do not allow custom attributes."
+        )
+
 
 class CRIPTExtraJsonAttributes(CRIPTException):
     def __init__(self, name_type: str, extra_attribute: str):

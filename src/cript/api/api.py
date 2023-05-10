@@ -43,6 +43,7 @@ class API:
     ## Definition
     API Client class to communicate with the CRIPT API
     """
+
     _host: str = ""
     _token: str = ""
     _http_headers: dict = {}
@@ -127,7 +128,7 @@ class API:
     def _prepare_host(self, host: str) -> str:
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
-        host = f"{self._host}/{self._api_handle}/{self._api_version}"
+        host = f"{host}/{self._api_handle}/{self._api_version}"
 
         # if host is using unsafe "http://" then give a warning
         if host.startswith("http://"):
@@ -198,21 +199,7 @@ class API:
         https://criptapp.org/api/v1
         ```
         """
-        host = self._raw_host.strip()
-
-        # strip ending slash to make host always uniform
-        host = host.rstrip("/")
-        host = f"{host}/{self._api_handle}/{self._api_version}"
-
-        # if host is using unsafe "http://" then give a warning
-        if host.startswith("http://") and not self._https_warning_sent:
-            self._https_warning_sent = True
-            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
-
-        if not host.startswith("http"):
-            raise InvalidHostError("The host must start with http or https")
-
-        return host
+        return self._host
 
     def _check_initial_host_connection(self) -> None:
         """

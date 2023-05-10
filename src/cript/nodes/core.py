@@ -8,10 +8,11 @@ from typing import List
 
 from cript.nodes.exceptions import (
     CRIPTAttributeModificationError,
+    CRIPTExtraJsonAttributes,
     CRIPTJsonSerializationError,
 )
 
-tolerated_extra_json = ["component_count", "computational_forcefield_count", "property_count"]
+tolerated_extra_json = ["component_count", "computational_forcefield_count", "property_count", "node", "uid", "uuid", "model_version", "locked", "public"]
 
 
 def add_tolerated_extra_json(additional_tolerated_json: str):

@@ -1,9 +1,12 @@
 import copy
+import datetime
 import json
 import os
+import uuid
 import warnings
 from typing import Union
 
+import boto3
 import jsonschema
 import requests
 
@@ -429,6 +432,86 @@ class API:
         # if htt response is not 200 then show the API error to the user
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
+
+    def upload_file(self, absolute_file_path: str) -> str:
+        """
+        uploads a file to AWS S3 bucket and returns a URL of the uploaded file in AWS S3
+
+        1. take an absolute file path to the file on local storage
+            * e.g.: "C:\\Users\\my_username\\OneDrive\\Desktop\\upload_this_file.txt"
+        1. get the file
+        1. rename the file to avoid clash or overwriting of previously uploaded files
+            * change file name to `original_name_uuid4.extension`
+        1. upload file to AWS S3
+        1. get the link of the just uploaded file and return it
+
+        Parameters
+        ----------
+        absolute_file_path: str
+            absolute file path to the file
+
+        Returns
+        -------
+        url: str
+            url of the AWS S3 uploaded file
+        """
+
+        # ------------------------------- constants -------------------------------
+        region_name: str = "us-east-1"
+        identity_pool_id: str = "us-east-1:555e15fe-05c1-4f63-9f58-c84d8fd6dc99"
+        cognito_login_provider: str = "cognito-idp.us-east-1.amazonaws.com/us-east-1_VinmyZ0zW"
+        bucket_name: str = "cript-development-user-data"
+
+        id_token: str = ""
+
+        # -------------------------------------------------------------------------------------
+        auth = boto3.client("cognito-identity", region_name=region_name)
+
+        identity_id = auth.get_id(
+            IdentityPoolId=identity_pool_id, Logins={cognito_login_provider: id_token}
+        )
+
+        aws_credentials = auth.get_credentials_for_identity(
+            IdentityId=identity_id["IdentityId"], Logins={cognito_login_provider: id_token}
+        )
+
+        aws_credentials = aws_credentials["Credentials"]
+
+        s3_client = boto3.client(
+            "s3",
+            aws_access_key_id=aws_credentials["AccessKeyId"],
+            aws_secret_access_key=aws_credentials["SecretKey"],
+            aws_session_token=aws_credentials["SessionToken"],
+        )
+
+        # get file name from absolute file path
+        file_name = os.path.basename(absolute_file_path)
+
+        # get the file extension of the file from absolute path
+        file_extension = os.path.splitext(absolute_file_path)[1]
+
+        # generate a UUID4 string
+        uuid_str = str(uuid.uuid4())
+
+        object_name = f"tests/{file_name}_{uuid_str}.{file_extension}"
+
+        # upload file to AWS S3
+        s3_client.upload_file(
+            absolute_file_path,
+            bucket_name,
+            object_name
+        )
+
+        # Generate a presigned URL to access the file
+        # TODO not sure if expiration time is too much or too little or if we should just not provide one
+        url_expire_time = datetime.timedelta(minutes=5)  # URL will expire in 5 minutes
+        s3_file_url = s3_client.generate_presigned_url(
+            'get_object',
+            Params={'Bucket': bucket_name, 'Key': object_name},
+            ExpiresIn=url_expire_time.total_seconds()
+        )
+
+        return s3_file_url
 
     # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(

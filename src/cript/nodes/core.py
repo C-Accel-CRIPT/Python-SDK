@@ -130,7 +130,7 @@ class BaseNode(ABC):
 
         if api is None:
             api = _get_global_cached_api()
-        api._is_node_schema_valid(self.json)
+        api._is_node_schema_valid(self.get_json().json)
 
     @classmethod
     def _from_json(cls, json_dict: dict):
@@ -186,6 +186,7 @@ class BaseNode(ABC):
         Property to obtain a simple json string.
         Calls `get_json` with default arguments.
         """
+        self.validate()
         return self.get_json().json
 
     def get_json(self, handled_ids: set = None, **kwargs):

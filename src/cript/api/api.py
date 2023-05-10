@@ -460,6 +460,7 @@ class API:
         identity_pool_id: str = "us-east-1:555e15fe-05c1-4f63-9f58-c84d8fd6dc99"
         cognito_login_provider: str = "cognito-idp.us-east-1.amazonaws.com/us-east-1_VinmyZ0zW"
         bucket_name: str = "cript-development-user-data"
+        bucket_directory_name: str = "tests"
 
         id_token: str = ""
 
@@ -492,7 +493,8 @@ class API:
         # generate a UUID4 string
         uuid_str = str(uuid.uuid4())
 
-        object_name = f"tests/{file_name}_{uuid_str}.{file_extension}"
+        # e.g. "directory/file_name.extension"
+        object_name = f"{bucket_directory_name}/{file_name}_{uuid_str}.{file_extension}"
 
         # upload file to AWS S3
         s3_client.upload_file(

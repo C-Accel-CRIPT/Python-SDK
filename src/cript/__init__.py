@@ -15,7 +15,6 @@ from cript.nodes import (
     Experiment,
     File,
     Group,
-    Identifier,
     Ingredient,
     Inventory,
     Material,

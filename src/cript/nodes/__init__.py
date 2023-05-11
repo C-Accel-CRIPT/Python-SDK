@@ -17,7 +17,6 @@ from cript.nodes.subobjects import (
     ComputationalForcefield,
     Condition,
     Equipment,
-    Identifier,
     Ingredient,
     Parameter,
     Property,

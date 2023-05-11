@@ -95,6 +95,46 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     assert cript_api._is_node_schema_valid(node_json=json.dumps(valid_file_dict)) is True
 
 
+def test_get_vocabulary_by_category(cript_api: cript.API) -> None:
+    """
+    tests if a vocabulary can be retrieved by category
+    1. tests response is a list of dicts as expected
+    1. tests that the fundamental identifiers exist within the API vocabulary response
+
+    tests that if a vocabulary is not valid category it raises an error
+
+    Warnings
+    --------
+    This test only gets the vocabulary category for "material_identifier_key" and does not test all the possible
+    CRIPT controlled vocabulary
+    """
+
+    material_identifier_vocab_list = cript_api.get_vocab_by_category("material_identifier_key")
+
+    # test response is a list of dicts
+    assert isinstance(material_identifier_vocab_list, list)
+
+    # test it has basic material identifiers
+    has_alternative_names = False
+    has_bigsmiles = False
+    has_smiles = False
+
+    for identifier in material_identifier_vocab_list:
+        if identifier.get("name") == "alternative_names":
+            has_alternative_names = True
+
+        elif identifier.get("name") == "bigsmiles":
+            has_bigsmiles = True
+
+        elif identifier.get("name") == "smiles":
+            has_smiles = True
+
+    # assertions
+    assert has_alternative_names is True
+    assert has_bigsmiles is True
+    assert has_smiles is True
+
+
 def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:
     """
     checks if it can successfully get the controlled vocabulary list from CRIPT API

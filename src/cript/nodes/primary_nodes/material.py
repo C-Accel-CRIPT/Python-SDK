@@ -445,27 +445,24 @@ class Material(PrimaryBaseNode):
 
     @classmethod
     def _from_json(cls, json_dict: dict):
-        # TODO find a better way to know identifiers
-        all_identifier_list = [
-            "amino_acid",
-            "bigsmiles",
-            "cas",
-            "chem_formula",
-            "chem_repeat",
-            "chemical_id",
-            "inchi",
-            "inchi_key",
-            "lot_number",
-            "mol_form",
-            "names",
-            "pubchem_cid",
-            "smiles",
-            "vendor",
-        ]
+
+        from cript.api.api import _get_global_cached_api
+        api = _get_global_cached_api()
+
+        # get JSON vocabulary of all "material_identifier_key"
+        all_identifiers: List[dict] = api.get_vocab_by_category("material_identifier_key")
+
+        # placeholder for what eventually will be all the names of material identifiers
+        # e.g. "smiles", "bigsmiles", etc.
+        all_identifiers_list: List[str] = []
+
+        # loop through and take all "name" from every dict and append it to `all_identifiers_list`
+        for identifier in all_identifiers:
+            all_identifiers_list.append(identifier.get("name"))
 
         identifier_argument = []
-        # Convert identifiers to to a list
-        for identifier in all_identifier_list:
+        # Convert identifiers to a list
+        for identifier in all_identifiers_list:
             if identifier in json_dict:
                 identifier_argument.append({identifier: json_dict[identifier]})
                 del json_dict[identifier]

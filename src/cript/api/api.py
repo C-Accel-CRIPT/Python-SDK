@@ -2,7 +2,7 @@ import copy
 import json
 import os
 import warnings
-from typing import Union
+from typing import Union, List
 
 import jsonschema
 import requests
@@ -219,6 +219,7 @@ class API:
             raise CRIPTConnectionError(self.host, self._token) from exc
 
     # TODO this needs a better name because the current name is unintuitive if you are just getting vocab
+    # TODO this should call `get_vocabulary_by_category()`, compile the list, and return the whole thing
     def _get_vocab(self) -> dict:
         """
         gets the entire controlled vocabulary to be used with validating nodes
@@ -257,6 +258,33 @@ class API:
             self._vocabulary[category] = response
 
         return self._vocabulary
+
+    # TODO needs to work with enums instead of strings
+    def get_vocab_by_category(self, category: str) -> List[dict]:
+        """
+        get the CRIPT controlled vocabulary by category
+
+        Parameters
+        ----------
+        category: str
+            category of
+
+        Returns
+        -------
+        List[dict]
+            list of JSON containing the controlled vocabulary
+        """
+
+        response = requests.get(f"{self.host}/cv/{category}").json()
+
+        if response["code"] != 200:
+            # TODO give a better CRIPT custom Exception
+            raise Exception(
+                f"while getting controlled vocabulary from CRIPT by {category}, "
+                f"the API responded with http {response} "
+            )
+
+        return response["data"]
 
     def _is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
         """

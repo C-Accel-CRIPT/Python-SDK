@@ -1,4 +1,7 @@
 import json
+import tempfile
+import datetime
+import uuid
 
 import pytest
 import requests
@@ -78,7 +81,8 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
 
     # ------ valid material schema ------
     # valid material node
-    valid_material_dict = {"node": ["Material"], "name": "0.053 volume fraction CM gel", "uid": "_:0.053 volume fraction CM gel"}
+    valid_material_dict = {"node": ["Material"], "name": "0.053 volume fraction CM gel",
+                           "uid": "_:0.053 volume fraction CM gel"}
 
     # convert dict to JSON string because method expects JSON string
     assert cript_api._is_node_schema_valid(node_json=json.dumps(valid_material_dict)) is True
@@ -140,6 +144,55 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
     # invalid vocab category and invalid vocab word
     with pytest.raises(InvalidVocabularyCategory):
         cript_api._is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="some_invalid_word")
+
+
+@pytest.fixture(scope="session")
+def temp_file_text() -> str:
+    """
+    file text for the temporary file that is uploaded to AWS S3
+    then later downloaded and checked if the file contents are the same
+
+    Notes
+    -----
+    this fixture is set as "session" because the same fixture needs to be available for both
+    api.upload_file() test and api.download_file() test
+    """
+
+    file_text: str = (
+        f"This is an automated test from the Python SDK within `tests/api/test_api.py` \n"
+        f"within the `test_upload_file_to_aws_s3()` test function \n"
+        f"on UTC time of '{datetime.datetime.utcnow()}' \n"
+        f"with the unique UUID of '{str(uuid.uuid4())}'"
+    )
+
+    return file_text
+
+
+def test_upload_file_to_aws_s3(temp_file_text: str) -> None:
+    """
+    tests that a file can be correctly uploaded to S3
+
+    1. create a temporary file
+        1. write a unique string to the temporary file via UUID4 and date
+            so when downloading it later the downloaded file cannot possibly be a mistake and we know
+            for sure that it is the correct file uploaded and downloaded
+    1. upload to AWS S3 `tests/` directory
+    1. we can be sure that the file has been correctly uploaded to AWS S3 if we can download the file
+        and assert that the file contents are the same as original
+    """
+    with tempfile.NamedTemporaryFile(mode="w+t", suffix=".txt") as temp_file:
+        absolute_file_path = temp_file.name
+
+        # write text to temporary file
+        temp_file.write(temp_file_text)
+
+        # this next part is problematic because every time we run this test we are uploading a file to AWS S3
+        # this could increase our storage costs.
+        # Additionally, we have to tell the AWS S3 to upload these files in the `tests/` directory
+        # and upload real data in the `data/` directory so real and test data are not confused
+        # cript_api.upload_file(absolute_file_path=absolute_file_path)
+
+    pass
 
 
 # TODO get save to work with the API

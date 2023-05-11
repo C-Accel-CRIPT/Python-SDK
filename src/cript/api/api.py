@@ -55,6 +55,17 @@ class API:
     _api_handle: str = "api"
     _api_version: str = "v1"
 
+    # AWS S3 constants
+    _REGION_NAME: str = "us-east-1"
+    _IDENTITY_POOL_ID: str = "us-east-1:555e15fe-05c1-4f63-9f58-c84d8fd6dc99"
+    _COGNITO_LOGIN_PROVIDER: str = "cognito-idp.us-east-1.amazonaws.com/us-east-1_VinmyZ0zW"
+    _BUCKET_NAME: str = "cript-development-user-data"
+    _BUCKET_DIRECTORY_NAME: str = "tests"
+    # TODO not sure about the type hint here
+    _S3_client = None
+
+    _aws_s3_id_token: str = ""
+
     def __init__(self, host: Union[str, None], token: [str, None]):
         """
         Initialize object with host and token.
@@ -140,6 +151,31 @@ class API:
             raise InvalidHostError("The host must start with http or https")
 
         return host
+
+    def _prepare_s3_client(self):
+        """
+
+        Returns
+        -------
+        """
+        auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
+
+        identity_id = auth.get_id(
+            IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._aws_s3_id_token}
+        )
+
+        aws_credentials = auth.get_credentials_for_identity(
+            IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: self._aws_s3_id_token}
+        )
+
+        aws_credentials = aws_credentials["Credentials"]
+
+        s3_client = boto3.client(
+            "s3",
+            aws_access_key_id=aws_credentials["AccessKeyId"],
+            aws_secret_access_key=aws_credentials["SecretKey"],
+            aws_session_token=aws_credentials["SessionToken"],
+        )
 
     def __enter__(self):
         self.connect()
@@ -455,35 +491,6 @@ class API:
             url of the AWS S3 uploaded file
         """
 
-        # ------------------------------- constants -------------------------------
-        region_name: str = "us-east-1"
-        identity_pool_id: str = "us-east-1:555e15fe-05c1-4f63-9f58-c84d8fd6dc99"
-        cognito_login_provider: str = "cognito-idp.us-east-1.amazonaws.com/us-east-1_VinmyZ0zW"
-        bucket_name: str = "cript-development-user-data"
-        bucket_directory_name: str = "tests"
-
-        id_token: str = ""
-
-        # -------------------------------------------------------------------------------------
-        auth = boto3.client("cognito-identity", region_name=region_name)
-
-        identity_id = auth.get_id(
-            IdentityPoolId=identity_pool_id, Logins={cognito_login_provider: id_token}
-        )
-
-        aws_credentials = auth.get_credentials_for_identity(
-            IdentityId=identity_id["IdentityId"], Logins={cognito_login_provider: id_token}
-        )
-
-        aws_credentials = aws_credentials["Credentials"]
-
-        s3_client = boto3.client(
-            "s3",
-            aws_access_key_id=aws_credentials["AccessKeyId"],
-            aws_secret_access_key=aws_credentials["SecretKey"],
-            aws_session_token=aws_credentials["SessionToken"],
-        )
-
         # get file name from absolute file path
         file_name = os.path.basename(absolute_file_path)
 
@@ -513,6 +520,35 @@ class API:
         )
 
         return s3_file_url
+
+    # TODO not sure if `download_file` should return the file or save the file to disk in
+    #  `destination_absolute_file_path`
+    def download_file(self, file_name: str, destination_absolute_file_path: str) -> None:
+        """
+        download a file from AWS S3 and save it to the specified path on local storage
+
+
+
+        Parameters
+        ----------
+        file_name: str
+            AWS S3 file name with the extension e.g. "my_file_name.txt
+            the file is then searched within "Data/{file_name}" and saved to local storage
+        destination_absolute_file_path: str
+            where you would like the file to be saved on local storage after retrieved and downloaded from AWS S3
+
+        Returns
+        -------
+        None
+            just downloads the file and does not return anything
+        """
+
+        # object name in AWS S3
+        object_name: str = f"{self._BUCKET_DIRECTORY_NAME}/{file_name}"
+
+        self._S3_client.download_file(self._BUCKET_NAME, object_name, destination_absolute_file_path)
+
+        return
 
     # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(

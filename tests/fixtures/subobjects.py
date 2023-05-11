@@ -15,7 +15,7 @@ def complex_parameter_node() -> cript.Parameter:
 
 @pytest.fixture(scope="function")
 def complex_parameter_dict() -> dict:
-    ret_dict = {"node": ["Parameter"], "key": "update_frequency", "value": 1000.0, "unit": "1/ns"}
+    ret_dict = {"node": ["Parameter"], "key": "update_frequency", "value": 1000.0, "unit": "1/second"}
     return ret_dict
 
 

@@ -186,6 +186,8 @@ class BaseNode(ABC):
         Property to obtain a simple json string.
         Calls `get_json` with default arguments.
         """
+        # We cannot validate in `get_json` because we call it inside `validate`.
+        # But most uses are probably the property, so we can validate the node here.
         self.validate()
         return self.get_json().json
 
@@ -193,6 +195,7 @@ class BaseNode(ABC):
         """
         User facing access to get the JSON of a node.
         Opposed to the also available property json this functions allows further control.
+        Additionally, this function does not call `self.validate()` but the property `json` does.
 
         Returns named tuple with json and handled ids as result.
         """

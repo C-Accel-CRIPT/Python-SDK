@@ -7,8 +7,8 @@ import cript
 
 def test_parameter_setter_getter(complex_parameter_node):
     p = complex_parameter_node
-    p.key = "advanced_sampling"
-    assert p.key == "advanced_sampling"
+    p.key = "damping_time"
+    assert p.key == "damping_time"
     p.value = 15.0
     assert p.value == 15.0
     p.unit = "m"

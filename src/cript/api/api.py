@@ -18,7 +18,8 @@ from cript.api.exceptions import (
     CRIPTConnectionError,
     InvalidHostError,
     InvalidVocabulary,
-    InvalidVocabularyCategory, FileDownloadError,
+    InvalidVocabularyCategory,
+    FileDownloadError,
 )
 from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes
@@ -160,13 +161,9 @@ class API:
         """
         auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
 
-        identity_id = auth.get_id(
-            IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._token}
-        )
+        identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
 
-        aws_credentials = auth.get_credentials_for_identity(
-            IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: self._token}
-        )
+        aws_credentials = auth.get_credentials_for_identity(IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
 
         aws_credentials = aws_credentials["Credentials"]
 
@@ -176,8 +173,6 @@ class API:
             aws_secret_access_key=aws_credentials["SecretKey"],
             aws_session_token=aws_credentials["SessionToken"],
         )
-
-        print(type(s3_client))
 
         return s3_client
 
@@ -535,16 +530,12 @@ class API:
         object_name = f"{self._BUCKET_DIRECTORY_NAME}/{new_file_name}"
 
         # upload file to AWS S3
-        self._s3_client.upload_file(
-            file_path,
-            self._BUCKET_NAME,
-            object_name
-        )
+        self._s3_client.upload_file(file_path, self._BUCKET_NAME, object_name)
 
         # Generate a presigned URL to access the file from S3 that is available forever
         s3_file_url = self._s3_client.generate_presigned_url(
-            'get_object',
-            Params={'Bucket': self._BUCKET_NAME, 'Key': object_name},
+            "get_object",
+            Params={"Bucket": self._BUCKET_NAME, "Key": object_name},
         )
 
         # not sure if we want to return the file name to be found later or the S3 file URL

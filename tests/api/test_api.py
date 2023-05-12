@@ -146,29 +146,7 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
         cript_api._is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="some_invalid_word")
 
 
-@pytest.fixture(scope="session")
-def temp_file_text() -> str:
-    """
-    file text for the temporary file that is uploaded to AWS S3
-    then later downloaded and checked if the file contents are the same
-
-    Notes
-    -----
-    this fixture is set as "session" because the same fixture needs to be available for both
-    api.upload_file() test and api.download_file() test
-    """
-
-    file_text: str = (
-        f"This is an automated test from the Python SDK within `tests/api/test_api.py` \n"
-        f"within the `test_upload_file_to_aws_s3()` test function \n"
-        f"on UTC time of '{datetime.datetime.utcnow()}' \n"
-        f"with the unique UUID of '{str(uuid.uuid4())}'"
-    )
-
-    return file_text
-
-
-def test_upload_file_to_aws_s3(temp_file_text: str, cript_api) -> None:
+def test_upload_and_download_file(cript_api) -> None:
     """
     tests that a file can be correctly uploaded to S3
 
@@ -183,22 +161,32 @@ def test_upload_file_to_aws_s3(temp_file_text: str, cript_api) -> None:
 
     from pathlib import Path
 
-    with tempfile.NamedTemporaryFile(mode="w+t", suffix=".txt") as temp_file:
+    file_text: str = (
+        f"This is an automated test from the Python SDK within `tests/api/test_api.py` "
+        f"within the `test_upload_file_to_aws_s3()` test function "
+        f"on UTC time of '{datetime.datetime.utcnow()}' "
+        f"with the unique UUID of '{str(uuid.uuid4())}'"
+    )
+
+    with tempfile.NamedTemporaryFile(mode="w+t", suffix=".txt", delete=False) as temp_file:
         absolute_file_path = temp_file.name
 
         # write text to temporary file
-        temp_file.write(temp_file_text)
+        temp_file.write(file_text)
+        temp_file.flush()
 
-        # this next part is problematic because every time we run this test we are uploading a file to AWS S3
-        # this could increase our storage costs.
-        # Additionally, we have to tell the AWS S3 to upload these files in the `tests/` directory
-        # and upload real data in the `data/` directory so real and test data are not confused
-        desktop_file_path = (Path(__file__) / Path("../../../../../test_file_upload/my_test_file.txt")).resolve()
+        # upload file to AWS S3
+        my_file_url = cript_api.upload_file(file_path=absolute_file_path)
 
-        my_file_url = cript_api.upload_file(file_path=desktop_file_path)
+        # Download the file to a temporary destination
+        with tempfile.NamedTemporaryFile(mode='w+b', delete=False) as tmp_dest:
+            dest_path = tmp_dest.name
+            cript_api.download_file(file_url=my_file_url, destination_path=dest_path)
 
-        desktop_path = (Path(__file__) / Path("../../../../../test_file_upload/my_downloaded_file.txt")).resolve()
-        cript_api.download_file(file_url=my_file_url, destination_path=desktop_path)
+            # Compare the contents of the downloaded file with the original file
+            with open(dest_path, 'r') as downloaded_file:
+                downloaded_message = downloaded_file.read()
+                assert downloaded_message == file_text
 
 
 # TODO get save to work with the API

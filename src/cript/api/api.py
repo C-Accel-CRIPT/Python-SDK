@@ -63,8 +63,7 @@ class API:
     _COGNITO_LOGIN_PROVIDER: str = "cognito-idp.us-east-1.amazonaws.com/us-east-1_VinmyZ0zW"
     _BUCKET_NAME: str = "cript-development-user-data"
     _BUCKET_DIRECTORY_NAME: str = "tests"
-    # TODO not sure about the type hint here
-    _s3_client = None
+    _s3_client: boto3.client = None
 
     def __init__(self, host: Union[str, None], token: [str, None]):
         """
@@ -154,7 +153,7 @@ class API:
 
         return host
 
-    def _create_s3_client(self):
+    def _create_s3_client(self) -> boto3.client:
         """
 
         Returns
@@ -178,6 +177,8 @@ class API:
             aws_secret_access_key=aws_credentials["SecretKey"],
             aws_session_token=aws_credentials["SessionToken"],
         )
+
+        print(type(s3_client))
 
         return s3_client
 
@@ -516,7 +517,7 @@ class API:
         Returns
         -------
         url: str
-            url of the AWS S3 uploaded file
+            url of the AWS S3 uploaded file to be put into the File node source attribute
         """
 
         # convert file path from whatever the user passed in to a pathlib object
@@ -541,14 +542,10 @@ class API:
             object_name
         )
 
-        # Generate a presigned URL to access the file from S3, not sure if needed or not
-        # TODO not sure if expiration time is too much or too little or if we should just not provide one
-        # TODO do we need to add a time where the file link expires?
-        # url_expire_time = datetime.timedelta(minutes=5)  # URL will expire in 5 minutes
+        # Generate a presigned URL to access the file from S3 that is available forever
         s3_file_url = self._s3_client.generate_presigned_url(
             'get_object',
             Params={'Bucket': self._BUCKET_NAME, 'Key': object_name},
-            # ExpiresIn=url_expire_time.total_seconds()
         )
 
         # not sure if we want to return the file name to be found later or the S3 file URL

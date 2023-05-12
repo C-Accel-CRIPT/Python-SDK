@@ -477,18 +477,36 @@ class API:
         """
         uploads a file to AWS S3 bucket and returns a URL of the uploaded file in AWS S3
 
-        1. take an absolute file path to the file on local storage
-            * e.g.: "C:\\Users\\my_username\\OneDrive\\Desktop\\upload_this_file.txt"
+        1. take an absolute file path of type path to the file on local storage
+            * see Example for more details
         1. get the file
         1. rename the file to avoid clash or overwriting of previously uploaded files
             * change file name to `original_name_uuid4.extension`
         1. upload file to AWS S3
-        1. get the link of the just uploaded file and return it
+        1. get the link of the uploaded file and return it
+
+        ```python
+        import cript
+
+        api = cript.API(host, token)
+
+        # programmatically create the absolute path of your file, so the program always works correctly
+        my_file_path = (Path(__file__) / Path('../upload_to_s3/my_file.txt')).resolve()
+
+        my_file_s3_url = api.upload_file(absolute_file_path=my_file_path)
+        ```
 
         Parameters
         ----------
         absolute_file_path: str
             absolute file path to the file
+
+        Raises
+        ------
+        FileNotFoundError
+            In case the file could not be found because the file does not exist,
+            the path is written incorrectly,
+            or the Python script is ran from a different directory and python cannot find the relative path
 
         Returns
         -------

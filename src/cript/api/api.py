@@ -4,6 +4,7 @@ import json
 import os
 import uuid
 import warnings
+from pathlib import Path
 from typing import Union
 
 import boto3
@@ -62,7 +63,7 @@ class API:
     _BUCKET_NAME: str = "cript-development-user-data"
     _BUCKET_DIRECTORY_NAME: str = "tests"
     # TODO not sure about the type hint here
-    _S3_client = None
+    _s3_client = None
 
     _aws_s3_id_token: str = ""
 
@@ -133,6 +134,8 @@ class API:
         # TODO might need to add Bearer to it or check for it
         self._http_headers = {"Authorization": f"{self._token}", "Content-Type": "application/json"}
 
+        self._s3_client = self._create_s3_client()
+
         # check that api can connect to CRIPT with host and token
         self._check_initial_host_connection()
 
@@ -152,7 +155,7 @@ class API:
 
         return host
 
-    def _prepare_s3_client(self):
+    def _create_s3_client(self):
         """
 
         Returns
@@ -176,6 +179,8 @@ class API:
             aws_secret_access_key=aws_credentials["SecretKey"],
             aws_session_token=aws_credentials["SessionToken"],
         )
+
+        return s3_client
 
     def __enter__(self):
         self.connect()
@@ -468,7 +473,7 @@ class API:
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
 
-    def upload_file(self, absolute_file_path: str) -> str:
+    def upload_file(self, absolute_file_path: Path) -> str:
         """
         uploads a file to AWS S3 bucket and returns a URL of the uploaded file in AWS S3
 
@@ -501,21 +506,21 @@ class API:
         uuid_str = str(uuid.uuid4())
 
         # e.g. "directory/file_name.extension"
-        object_name = f"{bucket_directory_name}/{file_name}_{uuid_str}.{file_extension}"
+        object_name = f"{self._BUCKET_DIRECTORY_NAME}/{file_name}_{uuid_str}.{file_extension}"
 
         # upload file to AWS S3
-        s3_client.upload_file(
+        self._s3_client.upload_file(
             absolute_file_path,
-            bucket_name,
+            self._BUCKET_NAME,
             object_name
         )
 
         # Generate a presigned URL to access the file
         # TODO not sure if expiration time is too much or too little or if we should just not provide one
         url_expire_time = datetime.timedelta(minutes=5)  # URL will expire in 5 minutes
-        s3_file_url = s3_client.generate_presigned_url(
+        s3_file_url = self._s3_client.generate_presigned_url(
             'get_object',
-            Params={'Bucket': bucket_name, 'Key': object_name},
+            Params={'Bucket': self._BUCKET_NAME, 'Key': object_name},
             ExpiresIn=url_expire_time.total_seconds()
         )
 
@@ -523,7 +528,7 @@ class API:
 
     # TODO not sure if `download_file` should return the file or save the file to disk in
     #  `destination_absolute_file_path`
-    def download_file(self, file_name: str, destination_absolute_file_path: str) -> None:
+    def download_file(self, file_name: str, destination_absolute_file_path: Path) -> None:
         """
         download a file from AWS S3 and save it to the specified path on local storage
 
@@ -546,7 +551,7 @@ class API:
         # object name in AWS S3
         object_name: str = f"{self._BUCKET_DIRECTORY_NAME}/{file_name}"
 
-        self._S3_client.download_file(self._BUCKET_NAME, object_name, destination_absolute_file_path)
+        self._s3_client.download_file(self._BUCKET_NAME, object_name, destination_absolute_file_path)
 
         return
 

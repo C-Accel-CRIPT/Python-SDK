@@ -550,7 +550,7 @@ class API:
         )
 
         # not sure if we want to return the file name to be found later or the S3 file URL
-        return new_file_name
+        return s3_file_url
 
     # TODO not sure if `download_file` should return the file or save the file to disk in
     #  `destination_absolute_file_path`

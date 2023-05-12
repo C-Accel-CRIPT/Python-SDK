@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 import datetime
 import uuid
@@ -169,7 +170,7 @@ def test_upload_and_download_file(cript_api) -> None:
     )
 
     with tempfile.NamedTemporaryFile(mode="w+t", suffix=".txt", delete=False) as temp_file:
-        absolute_file_path = temp_file.name
+        upload_file_path = temp_file.name
 
         # write text to temporary file
         temp_file.write(file_text)
@@ -178,17 +179,21 @@ def test_upload_and_download_file(cript_api) -> None:
         temp_file.flush()
 
         # upload file to AWS S3
-        my_file_url = cript_api.upload_file(file_path=absolute_file_path)
+        my_file_url = cript_api.upload_file(file_path=upload_file_path)
 
         # Download the file to a temporary destination
         with tempfile.NamedTemporaryFile(mode='w+b', delete=False) as tmp_dest:
-            dest_path = tmp_dest.name
-            cript_api.download_file(file_url=my_file_url, destination_path=dest_path)
+            download_dest_path = tmp_dest.name
+            cript_api.download_file(file_url=my_file_url, destination_path=download_dest_path)
 
             # Compare the contents of the downloaded file with the original file
-            with open(dest_path, 'r') as downloaded_file:
+            with open(download_dest_path, 'r') as downloaded_file:
                 downloaded_message = downloaded_file.read()
                 assert downloaded_message == file_text
+
+    # clean up created files to not leave them on disk
+    os.remove(upload_file_path)
+    os.remove(download_dest_path)
 
 
 # TODO get save to work with the API

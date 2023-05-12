@@ -526,8 +526,10 @@ class API:
         # get the file extension of the file from absolute path
         file_extension = os.path.splitext(absolute_file_path)[1]
 
-        # generate a UUID4 string
-        uuid_str = str(uuid.uuid4())
+        # generate a UUID4 string without dashes, making a cleaner file name
+        # e.g. instead of `document_4cb69f3a-f453-4fdf-b4d3-89f7864d85f0.txt`
+        # it would be `document_42926a201a624fdba0fd6271defc9e88.txt` removing the hyphens
+        uuid_str = str(uuid.uuid4().hex)
 
         # e.g. "directory/file_name_uuid.extension"
         object_name = f"{self._BUCKET_DIRECTORY_NAME}/{file_name}_{uuid_str}{file_extension}"

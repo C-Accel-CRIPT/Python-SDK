@@ -173,6 +173,8 @@ def test_upload_and_download_file(cript_api) -> None:
 
         # write text to temporary file
         temp_file.write(file_text)
+
+        # force text to be written to file
         temp_file.flush()
 
         # upload file to AWS S3

@@ -2,6 +2,7 @@ import copy
 import datetime
 import json
 import os
+import pathlib
 import uuid
 import warnings
 from pathlib import Path
@@ -134,7 +135,7 @@ class API:
         # TODO might need to add Bearer to it or check for it
         self._http_headers = {"Authorization": f"{self._token}", "Content-Type": "application/json"}
 
-        self._s3_client = self._create_s3_client()
+        # self._s3_client = self._create_s3_client()
 
         # check that api can connect to CRIPT with host and token
         self._check_initial_host_connection()
@@ -473,12 +474,13 @@ class API:
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
 
-    def upload_file(self, absolute_file_path: Path) -> str:
+    def upload_file(self, absolute_file_path: Union[Path, str]) -> str:
         """
         uploads a file to AWS S3 bucket and returns a URL of the uploaded file in AWS S3
 
-        1. take an absolute file path of type path to the file on local storage
+        1. take an absolute file path of type path or str to the file on local storage
             * see Example for more details
+        1. convert the file path to pathlib object, so it is always uniform regardless of what the user passed in
         1. get the file
         1. rename the file to avoid clash or overwriting of previously uploaded files
             * change file name to `original_name_uuid4.extension`
@@ -514,8 +516,12 @@ class API:
             url of the AWS S3 uploaded file
         """
 
-        # get file name from absolute file path
-        file_name = os.path.basename(absolute_file_path)
+        # convert file path from whatever the user passed in to a pathlib object
+        absolute_file_path = pathlib.Path(absolute_file_path)
+
+        # get file_name and file_extension from absolute file path
+        # file_extension includes the dot, e.g. ".txt"
+        file_name, file_extension = os.path.splitext(os.path.basename(absolute_file_path))
 
         # get the file extension of the file from absolute path
         file_extension = os.path.splitext(absolute_file_path)[1]
@@ -523,8 +529,8 @@ class API:
         # generate a UUID4 string
         uuid_str = str(uuid.uuid4())
 
-        # e.g. "directory/file_name.extension"
-        object_name = f"{self._BUCKET_DIRECTORY_NAME}/{file_name}_{uuid_str}.{file_extension}"
+        # e.g. "directory/file_name_uuid.extension"
+        object_name = f"{self._BUCKET_DIRECTORY_NAME}/{file_name}_{uuid_str}{file_extension}"
 
         # upload file to AWS S3
         self._s3_client.upload_file(

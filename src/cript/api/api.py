@@ -527,8 +527,8 @@ class API:
         file_extension = os.path.splitext(absolute_file_path)[1]
 
         # generate a UUID4 string without dashes, making a cleaner file name
-        # e.g. instead of `document_4cb69f3a-f453-4fdf-b4d3-89f7864d85f0.txt`
-        # it would be `document_42926a201a624fdba0fd6271defc9e88.txt` removing the hyphens
+        # e.g. instead of: `document_4cb69f3a-f453-4fdf-b4d3-89f7864d85f0.txt`
+        # it would be without the hyphens like: `document_42926a201a624fdba0fd6271defc9e88.txt`
         uuid_str = str(uuid.uuid4().hex)
 
         # e.g. "directory/file_name_uuid.extension"

@@ -19,7 +19,7 @@ from cript.api.exceptions import (
     CRIPTConnectionError,
     InvalidHostError,
     InvalidVocabulary,
-    InvalidVocabularyCategory,
+    InvalidVocabularyCategory, FileDownloadError,
 )
 from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes
@@ -474,41 +474,46 @@ class API:
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
 
-    def upload_file(self, absolute_file_path: Union[Path, str]) -> str:
+    def upload_file(self, file_path: Union[Path, str]) -> str:
         """
         uploads a file to AWS S3 bucket and returns a URL of the uploaded file in AWS S3
+        The URL is has no expiration time limit and is available forever
 
-        1. take an absolute file path of type path or str to the file on local storage
+        1. take an  file path of type path or str to the file on local storage
             * see Example for more details
-        1. convert the file path to pathlib object, so it is always uniform regardless of what the user passed in
+        1. convert the file path to pathlib object, so it is versatile and
+            always uniform regardless if the user passes in a str or path object
         1. get the file
         1. rename the file to avoid clash or overwriting of previously uploaded files
             * change file name to `original_name_uuid4.extension`
+                *  `document_42926a201a624fdba0fd6271defc9e88.txt`
+        # it would be without the hyphens like: `document_42926a201a624fdba0fd6271defc9e88.txt`
         1. upload file to AWS S3
         1. get the link of the uploaded file and return it
 
+
+        Examples
+        --------
         ```python
         import cript
 
         api = cript.API(host, token)
 
         # programmatically create the absolute path of your file, so the program always works correctly
-        my_file_path = (Path(__file__) / Path('../upload_to_s3/my_file.txt')).resolve()
+        my_file_path = (Path(__file__) / Path('../upload_files/my_file.txt')).resolve()
 
         my_file_s3_url = api.upload_file(absolute_file_path=my_file_path)
         ```
 
         Parameters
         ----------
-        absolute_file_path: str
-            absolute file path to the file
+        file_path: Union[str, Path]
+            file path as str or Path object. Path Object is recommended
 
         Raises
         ------
         FileNotFoundError
-            In case the file could not be found because the file does not exist,
-            the path is written incorrectly,
-            or the Python script is ran from a different directory and python cannot find the relative path
+            In case the file could not be found because the file does not exist
 
         Returns
         -------
@@ -517,15 +522,13 @@ class API:
         """
 
         # convert file path from whatever the user passed in to a pathlib object
-        absolute_file_path = pathlib.Path(absolute_file_path)
+        file_path = pathlib.Path(file_path).resolve()
 
         # get file_name and file_extension from absolute file path
         # file_extension includes the dot, e.g. ".txt"
-        file_name, file_extension = os.path.splitext(os.path.basename(absolute_file_path))
+        file_name, file_extension = os.path.splitext(os.path.basename(file_path))
 
         # generate a UUID4 string without dashes, making a cleaner file name
-        # e.g. instead of: `document_4cb69f3a-f453-4fdf-b4d3-89f7864d85f0.txt`
-        # it would be without the hyphens like: `document_42926a201a624fdba0fd6271defc9e88.txt`
         uuid_str = str(uuid.uuid4().hex)
 
         new_file_name: str = f"{file_name}_{uuid_str}{file_extension}"
@@ -535,48 +538,70 @@ class API:
 
         # upload file to AWS S3
         self._s3_client.upload_file(
-            absolute_file_path,
+            file_path,
             self._BUCKET_NAME,
             object_name
         )
 
         # Generate a presigned URL to access the file from S3, not sure if needed or not
         # TODO not sure if expiration time is too much or too little or if we should just not provide one
-        url_expire_time = datetime.timedelta(minutes=5)  # URL will expire in 5 minutes
+        # TODO do we need to add a time where the file link expires?
+        # url_expire_time = datetime.timedelta(minutes=5)  # URL will expire in 5 minutes
         s3_file_url = self._s3_client.generate_presigned_url(
             'get_object',
             Params={'Bucket': self._BUCKET_NAME, 'Key': object_name},
-            ExpiresIn=url_expire_time.total_seconds()
+            # ExpiresIn=url_expire_time.total_seconds()
         )
 
         # not sure if we want to return the file name to be found later or the S3 file URL
         return s3_file_url
 
-    # TODO not sure if `download_file` should return the file or save the file to disk in
-    #  `destination_absolute_file_path`
-    def download_file(self, file_url: str, destination_absolute_file_path: Union[Path, str]) -> None:
+    def download_file(self, file_url: str, destination_path: Union[Path, str]) -> None:
         """
         download a file from AWS S3 and save it to the specified path on local storage
+
+        making a simple GET request to the URL that would download the file
 
         Parameters
         ----------
         file_url: str
             AWS S3 file name with the extension e.g. "my_file_name.txt
             the file is then searched within "Data/{file_name}" and saved to local storage
-        destination_absolute_file_path: str
-            where you would like the file to be saved on local storage after retrieved and downloaded from AWS S3
+        destination_path: str
+            please provide a path with file name of where you would like the file to be saved
+            on local storage after retrieved and downloaded from AWS S3
+
+        Examples
+        --------
+        ```python
+        desktop_path = (Path(__file__) / Path("../../../../../test_file_upload/my_downloaded_file.txt")).resolve()
+        cript_api.download_file(file_url=my_file_url, destination_path=desktop_path)
+        ```
+
+        Raises
+        ------
+        FileNotFoundError
+            In case the file could not be found because the file does not exist
 
         Returns
         -------
         None
-            just downloads the file and does not return anything
+            just downloads the file to the specified path
         """
 
-        destination_absolute_file_path = pathlib.Path(destination_absolute_file_path)
+        response = requests.get(url=file_url)
 
-        self._s3_client.download_file(file_url, destination_absolute_file_path, "my_downloaded_file.txt")
+        # if the status of the response is other than HTTP 200, raise an error
+        if response.status_code != 200:
+            raise FileDownloadError(error_message=response.json())
 
+        file_contents: bytes = response.content
 
+        # convert str or Path object to Path object to be flexible in accepting user input
+        destination_file_path = Path(destination_path).resolve()
+
+        with open(destination_file_path, "wb") as file:
+            file.write(file_contents)
 
     # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(

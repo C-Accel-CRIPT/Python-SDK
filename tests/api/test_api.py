@@ -195,10 +195,10 @@ def test_upload_file_to_aws_s3(temp_file_text: str, cript_api) -> None:
         # and upload real data in the `data/` directory so real and test data are not confused
         desktop_file_path = (Path(__file__) / Path("../../../../../test_file_upload/my_test_file.txt")).resolve()
 
-        new_file_name = cript_api.upload_file(absolute_file_path=desktop_file_path)
+        my_file_url = cript_api.upload_file(file_path=desktop_file_path)
 
-        desktop_path = Path("../../../../../test_file_upload").resolve()
-        cript_api.download_file(file_url=new_file_name, destination_absolute_file_path=desktop_path)
+        desktop_path = (Path(__file__) / Path("../../../../../test_file_upload/my_downloaded_file.txt")).resolve()
+        cript_api.download_file(file_url=my_file_url, destination_path=desktop_path)
 
 
 # TODO get save to work with the API

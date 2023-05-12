@@ -168,7 +168,7 @@ def temp_file_text() -> str:
     return file_text
 
 
-def test_upload_file_to_aws_s3(temp_file_text: str) -> None:
+def test_upload_file_to_aws_s3(temp_file_text: str, cript_api) -> None:
     """
     tests that a file can be correctly uploaded to S3
 
@@ -180,6 +180,9 @@ def test_upload_file_to_aws_s3(temp_file_text: str) -> None:
     1. we can be sure that the file has been correctly uploaded to AWS S3 if we can download the file
         and assert that the file contents are the same as original
     """
+
+    from pathlib import Path
+
     with tempfile.NamedTemporaryFile(mode="w+t", suffix=".txt") as temp_file:
         absolute_file_path = temp_file.name
 
@@ -190,9 +193,12 @@ def test_upload_file_to_aws_s3(temp_file_text: str) -> None:
         # this could increase our storage costs.
         # Additionally, we have to tell the AWS S3 to upload these files in the `tests/` directory
         # and upload real data in the `data/` directory so real and test data are not confused
-        # cript_api.upload_file(absolute_file_path=absolute_file_path)
+        desktop_file_path = (Path(__file__) / Path("../../../../../test_file_upload/my_test_file.txt")).resolve()
 
-    pass
+        new_file_name = cript_api.upload_file(absolute_file_path=desktop_file_path)
+
+        desktop_path = Path("../../../../../test_file_upload").resolve()
+        cript_api.download_file(file_url=new_file_name, destination_absolute_file_path=desktop_path)
 
 
 # TODO get save to work with the API

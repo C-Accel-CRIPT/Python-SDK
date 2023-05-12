@@ -554,15 +554,13 @@ class API:
 
     # TODO not sure if `download_file` should return the file or save the file to disk in
     #  `destination_absolute_file_path`
-    def download_file(self, file_name: str, destination_absolute_file_path: Union[Path, str]) -> None:
+    def download_file(self, file_url: str, destination_absolute_file_path: Union[Path, str]) -> None:
         """
         download a file from AWS S3 and save it to the specified path on local storage
 
-
-
         Parameters
         ----------
-        file_name: str
+        file_url: str
             AWS S3 file name with the extension e.g. "my_file_name.txt
             the file is then searched within "Data/{file_name}" and saved to local storage
         destination_absolute_file_path: str
@@ -576,12 +574,9 @@ class API:
 
         destination_absolute_file_path = pathlib.Path(destination_absolute_file_path)
 
-        # object name in AWS S3
-        object_name: str = f"{self._BUCKET_DIRECTORY_NAME}/{file_name}"
+        self._s3_client.download_file(file_url, destination_absolute_file_path, "my_downloaded_file.txt")
 
-        self._s3_client.download_file(self._BUCKET_NAME, object_name, destination_absolute_file_path)
 
-        return
 
     # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(

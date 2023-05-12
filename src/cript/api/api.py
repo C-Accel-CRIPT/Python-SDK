@@ -135,7 +135,7 @@ class API:
         # TODO might need to add Bearer to it or check for it
         self._http_headers = {"Authorization": f"{self._token}", "Content-Type": "application/json"}
 
-        # self._s3_client = self._create_s3_client()
+        self._s3_client = self._create_s3_client()
 
         # check that api can connect to CRIPT with host and token
         self._check_initial_host_connection()
@@ -523,16 +523,15 @@ class API:
         # file_extension includes the dot, e.g. ".txt"
         file_name, file_extension = os.path.splitext(os.path.basename(absolute_file_path))
 
-        # get the file extension of the file from absolute path
-        file_extension = os.path.splitext(absolute_file_path)[1]
-
         # generate a UUID4 string without dashes, making a cleaner file name
         # e.g. instead of: `document_4cb69f3a-f453-4fdf-b4d3-89f7864d85f0.txt`
         # it would be without the hyphens like: `document_42926a201a624fdba0fd6271defc9e88.txt`
         uuid_str = str(uuid.uuid4().hex)
 
+        new_file_name: str = f"{file_name}_{uuid_str}{file_extension}"
+
         # e.g. "directory/file_name_uuid.extension"
-        object_name = f"{self._BUCKET_DIRECTORY_NAME}/{file_name}_{uuid_str}{file_extension}"
+        object_name = f"{self._BUCKET_DIRECTORY_NAME}/{new_file_name}"
 
         # upload file to AWS S3
         self._s3_client.upload_file(
@@ -541,7 +540,7 @@ class API:
             object_name
         )
 
-        # Generate a presigned URL to access the file
+        # Generate a presigned URL to access the file from S3, not sure if needed or not
         # TODO not sure if expiration time is too much or too little or if we should just not provide one
         url_expire_time = datetime.timedelta(minutes=5)  # URL will expire in 5 minutes
         s3_file_url = self._s3_client.generate_presigned_url(
@@ -550,11 +549,12 @@ class API:
             ExpiresIn=url_expire_time.total_seconds()
         )
 
-        return s3_file_url
+        # not sure if we want to return the file name to be found later or the S3 file URL
+        return new_file_name
 
     # TODO not sure if `download_file` should return the file or save the file to disk in
     #  `destination_absolute_file_path`
-    def download_file(self, file_name: str, destination_absolute_file_path: Path) -> None:
+    def download_file(self, file_name: str, destination_absolute_file_path: Union[Path, str]) -> None:
         """
         download a file from AWS S3 and save it to the specified path on local storage
 
@@ -573,6 +573,8 @@ class API:
         None
             just downloads the file and does not return anything
         """
+
+        destination_absolute_file_path = pathlib.Path(destination_absolute_file_path)
 
         # object name in AWS S3
         object_name: str = f"{self._BUCKET_DIRECTORY_NAME}/{file_name}"

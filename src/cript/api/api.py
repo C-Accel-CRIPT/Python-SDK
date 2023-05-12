@@ -66,8 +66,6 @@ class API:
     # TODO not sure about the type hint here
     _s3_client = None
 
-    _aws_s3_id_token: str = ""
-
     def __init__(self, host: Union[str, None], token: [str, None]):
         """
         Initialize object with host and token.
@@ -165,11 +163,11 @@ class API:
         auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
 
         identity_id = auth.get_id(
-            IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._aws_s3_id_token}
+            IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._token}
         )
 
         aws_credentials = auth.get_credentials_for_identity(
-            IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: self._aws_s3_id_token}
+            IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: self._token}
         )
 
         aws_credentials = aws_credentials["Credentials"]

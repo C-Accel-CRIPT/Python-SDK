@@ -7,14 +7,7 @@ from typing import Union, List
 import jsonschema
 import requests
 
-from cript.api.exceptions import (
-    APIError,
-    CRIPTAPIAccessError,
-    CRIPTAPISaveError,
-    CRIPTConnectionError,
-    InvalidHostError,
-    InvalidVocabulary
-)
+from cript.api.exceptions import APIError, CRIPTAPIAccessError, CRIPTAPISaveError, CRIPTConnectionError, InvalidHostError, InvalidVocabulary
 from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import ControlledVocabularyCategories
@@ -275,10 +268,7 @@ class API:
 
         if response["code"] != 200:
             # TODO give a better CRIPT custom Exception
-            raise Exception(
-                f"while getting controlled vocabulary from CRIPT by {category}, "
-                f"the API responded with http {response} "
-            )
+            raise Exception(f"while getting controlled vocabulary from CRIPT by {category}, " f"the API responded with http {response} ")
 
         # add to cache
         self._vocabulary[category.value] = response["data"]

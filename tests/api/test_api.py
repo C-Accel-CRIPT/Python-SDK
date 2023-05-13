@@ -109,9 +109,7 @@ def test_get_vocabulary_by_category(cript_api: cript.API) -> None:
     CRIPT controlled vocabulary
     """
 
-    material_identifier_vocab_list = cript_api.get_vocab_by_category(
-        cript.ControlledVocabularyCategories.MATERIAL_IDENTIFIER_KEY
-        )
+    material_identifier_vocab_list = cript_api.get_vocab_by_category(cript.ControlledVocabularyCategories.MATERIAL_IDENTIFIER_KEY)
 
     # test response is a list of dicts
     assert isinstance(material_identifier_vocab_list, list)

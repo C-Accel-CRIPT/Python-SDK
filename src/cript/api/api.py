@@ -538,7 +538,6 @@ class API:
             Params={"Bucket": self._BUCKET_NAME, "Key": object_name},
         )
 
-        # not sure if we want to return the file name to be found later or the S3 file URL
         return s3_file_url
 
     def download_file(self, file_url: str, destination_path: Union[Path, str]) -> None:

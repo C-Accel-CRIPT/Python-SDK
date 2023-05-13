@@ -222,13 +222,13 @@ class API:
     # TODO this should call `get_vocabulary_by_category()`, compile the list, and return the whole thing
     def _get_vocab(self) -> dict:
         """
-        gets the entire controlled vocabulary to be used with validating nodes
-        with attributes from controlled vocabulary
-        1. checks global variable to see if it is already set
-            if it is already set then it just returns that
-        2. if global variable is empty, then it makes a request to the API
-           and gets the entire controlled vocabulary
-           and then sets the global variable to it
+        gets the entire CRIPT controlled vocabulary and stores it in _vocabulary
+
+        1. loops through all controlled vocabulary categories
+            1. if the category already exists in the controlled vocabulary then skip that category and continue
+            1. if the category does not exist in the `_vocabulary` dict,
+            then request it from the API and append it to the `_vocabulary` dict
+        1. at the end the `_vocabulary` should have all the controlled vocabulary and that will be returned
 
            Examples
            --------
@@ -244,16 +244,12 @@ class API:
            ```
         """
 
-        # check cache if vocabulary dict is already populated
-        # TODO needs to be changed to MappingTypeProxy
-        if bool(self._vocabulary):
-            return self._vocabulary
-
-        # TODO this needs to be converted to a dict of dicts instead of dict of lists
-        #  because it would be faster to find needed vocab word within the vocab category
         # loop through all vocabulary categories and make a request to each vocabulary category
         # and put them all inside of self._vocab with the keys being the vocab category name
         for category in all_controlled_vocab_categories:
+            if category in self._vocabulary:
+                continue
+
             response = requests.get(f"{self.host}/cv/{category}").json()["data"]
             self._vocabulary[category] = response
 
@@ -275,6 +271,11 @@ class API:
             list of JSON containing the controlled vocabulary
         """
 
+        # check if the vocabulary category is already cached
+        if category in self._vocabulary:
+            return self._vocabulary[category]
+
+        # if vocabulary category is not in cache, then get it from API and cache it
         response = requests.get(f"{self.host}/cv/{category}").json()
 
         if response["code"] != 200:
@@ -284,7 +285,10 @@ class API:
                 f"the API responded with http {response} "
             )
 
-        return response["data"]
+        # add to cache
+        self._vocabulary[category] = response["data"]
+
+        return self._vocabulary[category]
 
     def _is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
         """

@@ -155,9 +155,12 @@ class API:
 
     def _create_s3_client(self) -> boto3.client:
         """
+        create a fully authenticated and ready s3 client
 
         Returns
         -------
+        s3_client: boto3.client
+            fully prepared and authenticated s3 client ready to be used throughout the script
         """
         auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
 

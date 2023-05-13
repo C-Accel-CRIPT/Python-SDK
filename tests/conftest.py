@@ -80,5 +80,7 @@ def cript_api():
 
     assert cript.api.api._global_cached_api is None
     with cript.API(host=host, token=token) as api:
+        # putting all test files in the tests directory of the AWS S3 bucket
+        api._BUCKET_DIRECTORY_NAME = "tests"
         yield api
     assert cript.api.api._global_cached_api is None

@@ -250,8 +250,7 @@ class API:
             if category in self._vocabulary:
                 continue
 
-            response = requests.get(f"{self.host}/cv/{category}").json()["data"]
-            self._vocabulary[category] = response
+            self._vocabulary[category] = self.get_vocab_by_category(category)
 
         return self._vocabulary
 

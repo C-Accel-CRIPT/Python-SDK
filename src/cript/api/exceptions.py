@@ -55,14 +55,16 @@ class InvalidVocabularyCategory(CRIPTException):
     and gives the user a list of all valid vocabulary categories
     """
 
-    def __init__(self, vocab_category: str, valid_vocab_category: List[str]):
+    def __init__(self, vocab_category: str):
         self.vocab_category = vocab_category
-        self.valid_vocab_category = valid_vocab_category
 
     def __str__(self) -> str:
-        ret_str = f"The vocabulary category '{self.vocab_category}' does not exist within the CRIPT controlled vocabulary."
-        ret_str += f" Please pick a valid CRIPT vocabulary category from {self.valid_vocab_category}."
-        return ret_str
+        error_message = (
+            f"The vocabulary category '{self.vocab_category}' does not exist within the CRIPT controlled "
+            f"vocabulary. Please pick a valid CRIPT vocabulary category "
+            f"from `cript.ControlledVocabularyCategories`."
+        )
+        return error_message
 
 
 class CRIPTAPIAccessError(CRIPTException):

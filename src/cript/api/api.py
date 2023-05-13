@@ -18,7 +18,7 @@ from cript.api.exceptions import (
 )
 from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes
-from cript.api.vocabulary_categories import all_controlled_vocab_categories
+from cript.api.vocabulary_categories import ControlledVocabularyCategories
 from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.project import Project
@@ -246,7 +246,7 @@ class API:
 
         # loop through all vocabulary categories and make a request to each vocabulary category
         # and put them all inside of self._vocab with the keys being the vocab category name
-        for category in all_controlled_vocab_categories:
+        for category in ControlledVocabularyCategories:
             if category in self._vocabulary:
                 continue
 
@@ -255,7 +255,7 @@ class API:
         return self._vocabulary
 
     # TODO needs to work with enums instead of strings
-    def get_vocab_by_category(self, category: str) -> List[dict]:
+    def get_vocab_by_category(self, category: ControlledVocabularyCategories) -> List[dict]:
         """
         get the CRIPT controlled vocabulary by category
 
@@ -271,11 +271,11 @@ class API:
         """
 
         # check if the vocabulary category is already cached
-        if category in self._vocabulary:
-            return self._vocabulary[category]
+        if category.value in self._vocabulary:
+            return self._vocabulary[category.value]
 
         # if vocabulary category is not in cache, then get it from API and cache it
-        response = requests.get(f"{self.host}/cv/{category}").json()
+        response = requests.get(f"{self.host}/cv/{category.value}").json()
 
         if response["code"] != 200:
             # TODO give a better CRIPT custom Exception
@@ -329,7 +329,7 @@ class API:
             controlled_vocabulary = controlled_vocabulary[vocab_category]
         except KeyError:
             # vocabulary category does not exist within CRIPT Controlled Vocabulary
-            raise InvalidVocabularyCategory(vocab_category=vocab_category, valid_vocab_category=all_controlled_vocab_categories)
+            raise InvalidVocabularyCategory(vocab_category=vocab_category)
 
         # TODO this can be faster with a dict of dicts that can do o(1) look up
         #  looping through an unsorted list is an O(n) look up which is slow

@@ -251,7 +251,6 @@ class API:
 
         return self._vocabulary
 
-    # TODO needs to work with enums instead of strings
     def get_vocab_by_category(self, category: ControlledVocabularyCategories) -> List[dict]:
         """
         get the CRIPT controlled vocabulary by category
@@ -318,7 +317,6 @@ class API:
         if vocab_word.startswith("+"):
             return True
 
-        # TODO update docstrings to say that it is taking enum instead of string
         # get the entire vocabulary
         controlled_vocabulary = self._get_vocab()
         # get just the category needed

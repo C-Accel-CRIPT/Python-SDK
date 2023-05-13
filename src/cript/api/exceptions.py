@@ -31,6 +31,7 @@ class CRIPTConnectionError(CRIPTException):
         return ret_str
 
 
+# TODO refactor
 class InvalidVocabulary(CRIPTException):
     """
     Raised when the CRIPT controlled vocabulary is invalid
@@ -47,24 +48,6 @@ class InvalidVocabulary(CRIPTException):
         ret_str = f"The vocabulary '{self.vocab}' entered does not exist within the CRIPT controlled vocabulary."
         ret_str += f" Please pick a valid CRIPT vocabulary from {self.possible_vocab}"
         return ret_str
-
-
-class InvalidVocabularyCategory(CRIPTException):
-    """
-    Raised when the CRIPT controlled vocabulary category is unknown
-    and gives the user a list of all valid vocabulary categories
-    """
-
-    def __init__(self, vocab_category: str):
-        self.vocab_category = vocab_category
-
-    def __str__(self) -> str:
-        error_message = (
-            f"The vocabulary category '{self.vocab_category}' does not exist within the CRIPT controlled "
-            f"vocabulary. Please pick a valid CRIPT vocabulary category "
-            f"from `cript.ControlledVocabularyCategories`."
-        )
-        return error_message
 
 
 class CRIPTAPIAccessError(CRIPTException):

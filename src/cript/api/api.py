@@ -13,8 +13,7 @@ from cript.api.exceptions import (
     CRIPTAPISaveError,
     CRIPTConnectionError,
     InvalidHostError,
-    InvalidVocabulary,
-    InvalidVocabularyCategory,
+    InvalidVocabulary
 )
 from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes
@@ -218,8 +217,6 @@ class API:
         except Exception as exc:
             raise CRIPTConnectionError(self.host, self._token) from exc
 
-    # TODO this needs a better name because the current name is unintuitive if you are just getting vocab
-    # TODO this should call `get_vocabulary_by_category()`, compile the list, and return the whole thing
     def _get_vocab(self) -> dict:
         """
         gets the entire CRIPT controlled vocabulary and stores it in _vocabulary
@@ -250,7 +247,7 @@ class API:
             if category in self._vocabulary:
                 continue
 
-            self._vocabulary[category] = self.get_vocab_by_category(category)
+            self._vocabulary[category.value] = self.get_vocab_by_category(category)
 
         return self._vocabulary
 
@@ -285,11 +282,11 @@ class API:
             )
 
         # add to cache
-        self._vocabulary[category] = response["data"]
+        self._vocabulary[category.value] = response["data"]
 
-        return self._vocabulary[category]
+        return self._vocabulary[category.value]
 
-    def _is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
+    def _is_vocab_valid(self, vocab_category: ControlledVocabularyCategories, vocab_word: str) -> bool:
         """
         checks if the vocabulary is valid within the CRIPT controlled vocabulary.
         Either returns True or InvalidVocabulary Exception
@@ -301,14 +298,14 @@ class API:
 
         Parameters
         ----------
-        vocab_category: str
-            the category the vocabulary is in e.g. "Material keyword", "Data type", "Equipment key"
+        vocab_category: ControlledVocabularyCategories
+            ControlledVocabularyCategories enums
         vocab_word: str
             the vocabulary word e.g. "CAS", "SMILES", "BigSmiles", "+my_custom_key"
 
         Returns
         -------
-        a boolean of if the vocabulary is valid or not
+        a boolean of if the vocabulary is valid
 
         Raises
         ------
@@ -321,15 +318,11 @@ class API:
         if vocab_word.startswith("+"):
             return True
 
-        # TODO do we need to raise an InvalidVocabularyCategory here, or can we just give a KeyError?
-        try:
-            # get the entire vocabulary
-            controlled_vocabulary = self._get_vocab()
-            # get just the category needed
-            controlled_vocabulary = controlled_vocabulary[vocab_category]
-        except KeyError:
-            # vocabulary category does not exist within CRIPT Controlled Vocabulary
-            raise InvalidVocabularyCategory(vocab_category=vocab_category)
+        # TODO update docstrings to say that it is taking enum instead of string
+        # get the entire vocabulary
+        controlled_vocabulary = self._get_vocab()
+        # get just the category needed
+        controlled_vocabulary = controlled_vocabulary[vocab_category.value]
 
         # TODO this can be faster with a dict of dicts that can do o(1) look up
         #  looping through an unsorted list is an O(n) look up which is slow
@@ -371,7 +364,7 @@ class API:
             return self._db_schema
 
     # TODO this should later work with both POST and PATCH. Currently, just works for POST
-    def _is_node_schema_valid(self, node_json: str) -> Union[bool, CRIPTNodeSchemaError]:
+    def _is_node_schema_valid(self, node_json: str) -> bool:
         """
         checks a node JSON schema against the db schema to return if it is valid or not.
 

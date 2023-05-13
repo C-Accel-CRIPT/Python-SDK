@@ -4,7 +4,7 @@ import pytest
 import requests
 
 import cript
-from cript.api.exceptions import InvalidVocabulary, InvalidVocabularyCategory
+from cript.api.exceptions import InvalidVocabulary
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 
@@ -164,24 +164,16 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
     tests invalid category and invalid vocabulary word
     """
     # custom vocab
-    assert cript_api._is_vocab_valid(vocab_category="algorithm_key", vocab_word="+my_custom_key") is True
+    assert cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.ALGORITHM_KEY, vocab_word="+my_custom_key") is True
 
     # valid vocab category and valid word
     assert cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.FILE_TYPE, vocab_word="calibration") is True
     assert cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.QUANTITY_KEY, vocab_word="mass") is True
     assert cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.UNCERTAINTY_TYPE, vocab_word="fwhm") is True
 
-    # # invalid vocab category but valid word
-    with pytest.raises(InvalidVocabularyCategory):
-        cript_api._is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="calibration")
-
     # valid vocab category but invalid vocab word
     with pytest.raises(InvalidVocabulary):
         cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.FILE_TYPE, vocab_word="some_invalid_word")
-
-    # invalid vocab category and invalid vocab word
-    with pytest.raises(InvalidVocabularyCategory):
-        cript_api._is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="some_invalid_word")
 
 
 # TODO get save to work with the API

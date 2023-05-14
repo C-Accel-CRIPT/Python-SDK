@@ -295,7 +295,7 @@ def complex_software_configuration_dict(complex_software_dict, complex_algorithm
     ret_dict = {
         "node": ["SoftwareConfiguration"],
         "software": complex_software_dict,
-        "algorithms": [complex_algorithm_dict],
+        "algorithm": [complex_algorithm_dict],
         "notes": "my_notes",
         "citation": [complex_citation_dict],
     }

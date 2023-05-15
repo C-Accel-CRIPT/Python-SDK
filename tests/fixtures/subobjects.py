@@ -169,7 +169,7 @@ def simple_property_dict() -> dict:
 
 
 @pytest.fixture(scope="function")
-def complex_condition_node(complex_material_node, complex_data_node) -> cript.Condition:
+def complex_condition_node(complex_data_node) -> cript.Condition:
     c = cript.Condition(
         "temperature",
         "value",
@@ -180,13 +180,13 @@ def complex_condition_node(complex_material_node, complex_data_node) -> cript.Co
         uncertainty_type="stdev",
         set_id=0,
         measurement_id=2,
-        data=[complex_data_node],
+        data=[copy.deepcopy(complex_data_node)],
     )
     return c
 
 
 @pytest.fixture(scope="function")
-def complex_condition_dict(complex_material_node, complex_data_node) -> dict:
+def complex_condition_dict(complex_data_node) -> dict:
     ret_dict = {
         "node": ["Condition"],
         "key": "temperature",

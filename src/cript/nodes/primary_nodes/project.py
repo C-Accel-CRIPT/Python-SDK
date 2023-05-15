@@ -4,7 +4,7 @@ from typing import List
 from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
-from cript.nodes.supporting_nodes.group import Group
+from cript.nodes.supporting_nodes import User
 
 
 class Project(PrimaryBaseNode):
@@ -30,22 +30,14 @@ class Project(PrimaryBaseNode):
         all Project attributes
         """
 
-        # TODO is group needed?
-        group: Group = None
+        member: List[User] = field(default_factory=list)
+        admin: User = None
         collection: List[Collection] = field(default_factory=list)
         material: List[Material] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(
-        self,
-        name: str,
-        # group: Group,
-        collection: List[Collection] = None,
-        material: List[Material] = None,
-        notes: str = "",
-        **kwargs
-    ):
+    def __init__(self, name: str, collection: List[Collection] = None, material: List[Material] = None, notes: str = "", **kwargs):
         """
         Create a Project node with Project name and Group
 
@@ -122,35 +114,13 @@ class Project(PrimaryBaseNode):
 
     # ------------------ Properties ------------------
 
-    # GROUP
     @property
-    def group(self) -> Group:
-        """
-        group property getter method
+    def member(self) -> List[User]:
+        return self._json_attrs.member.copy()
 
-        Returns
-        -------
-        group: cript.Group
-            Group that owns the project
-        """
-        return self._json_attrs.group
-
-    @group.setter
-    def group(self, new_group: Group):
-        """
-        Sets the group the project belongs to
-
-        Parameters
-        ----------
-        new_group: Group
-            new Group object
-
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, group=new_group)
-        self._update_json_attrs_if_valid(new_attrs)
+    @property
+    def admin(self) -> User:
+        return self._json_attrs.admin
 
     # Collection
     @property

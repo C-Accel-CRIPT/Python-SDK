@@ -16,6 +16,7 @@ from fixtures.primary_nodes import (
     complex_collection_node,
     complex_data_node,
     complex_material_node,
+    complex_project_dict,
     complex_project_node,
     simple_collection_node,
     simple_computation_node,
@@ -61,7 +62,11 @@ from fixtures.subobjects import (
     simple_property_dict,
     simple_property_node,
 )
-from fixtures.supporting_nodes import complex_file_node
+from fixtures.supporting_nodes import (
+    complex_file_node,
+    complex_user_dict,
+    complex_user_node,
+)
 from util import strip_uid_from_dict
 
 import cript

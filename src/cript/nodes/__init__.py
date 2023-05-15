@@ -24,7 +24,7 @@ from cript.nodes.subobjects import (
     Software,
     SoftwareConfiguration,
 )
-from cript.nodes.supporting_nodes import File, Group, User
+from cript.nodes.supporting_nodes import File, User
 from cript.nodes.util import (
     NodeEncoder,
     add_orphaned_nodes_to_project,

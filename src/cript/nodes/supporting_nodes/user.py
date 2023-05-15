@@ -47,9 +47,13 @@ class User(UUIDBaseNode):
         all User attributes
         """
 
-        username: str = ""
+        created_at: str = ""
         email: str = ""
+        model_version: str = ""
         orcid: str = ""
+        picture: str = ""
+        updated_at: str = ""
+        username: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -75,20 +79,8 @@ class User(UUIDBaseNode):
     # ------------------ properties ------------------
 
     @property
-    def username(self) -> str:
-        """
-        username of the User node
-
-        Raises
-        ------
-        AttributeError
-
-        Returns
-        -------
-        username: str
-            username of the User node
-        """
-        return self._json_attrs.username
+    def created_at(self) -> str:
+        return self._json_attrs.created_at
 
     @property
     def email(self) -> str:
@@ -107,6 +99,10 @@ class User(UUIDBaseNode):
         return self._json_attrs.email
 
     @property
+    def model_version(self) -> str:
+        return self._json_attrs.model_version
+
+    @property
     def orcid(self) -> str:
         """
         users [ORCID](https://orcid.org/)
@@ -121,3 +117,27 @@ class User(UUIDBaseNode):
             user's ORCID
         """
         return self._json_attrs.orcid
+
+    @property
+    def picture(self) -> str:
+        return self._json_attrs.picture
+
+    @property
+    def updated_at(self) -> str:
+        return self._json_attrs.updated_at
+
+    @property
+    def username(self) -> str:
+        """
+        username of the User node
+
+        Raises
+        ------
+        AttributeError
+
+        Returns
+        -------
+        username: str
+            username of the User node
+        """
+        return self._json_attrs.username

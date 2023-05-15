@@ -41,26 +41,13 @@ def test_project_getters_and_setters(simple_project_node, simple_collection_node
     assert simple_project_node.material == [simple_material_node]
 
 
-def test_serialize_project_to_json(simple_project_node) -> None:
+def test_serialize_project_to_json(complex_project_node, complex_project_dict) -> None:
     """
     tests that a Project node can be correctly converted to a JSON
     """
-    expected_dict: dict = {
-        "node": ["Project"],
-        "name": "my Project name",
-        "collection": [
-            {
-                "node": ["Collection"],
-                "name": "my collection name",
-                "experiment": [{"node": ["Experiment"], "name": "my experiment name"}],
-                "inventory": [],
-                "citation": [],
-            }
-        ],
-    }
-
+    expected_dict = complex_project_dict
     # comparing dicts instead of JSON strings because dict comparison is more accurate
-    serialized_project: dict = json.loads(simple_project_node.json)
+    serialized_project: dict = json.loads(complex_project_node.json)
     serialized_project = strip_uid_from_dict(serialized_project)
 
     assert serialized_project == expected_dict

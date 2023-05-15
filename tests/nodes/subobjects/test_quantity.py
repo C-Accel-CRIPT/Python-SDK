@@ -17,9 +17,9 @@ def test_getter_setter(complex_quantity_node):
     q = complex_quantity_node
     q.value = 0.5
     assert q.value == 0.5
-    q.set_uncertainty(0.1, "var")
+    q.set_uncertainty(0.1, "stderr")
     assert q.uncertainty == 0.1
-    assert q.uncertainty_type == "var"
+    assert q.uncertainty_type == "stderr"
 
     q.set_key_unit("volume", "m**3")
     assert q.key == "volume"

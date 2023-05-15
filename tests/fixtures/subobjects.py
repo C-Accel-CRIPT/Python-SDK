@@ -15,7 +15,7 @@ def complex_parameter_node() -> cript.Parameter:
 
 @pytest.fixture(scope="function")
 def complex_parameter_dict() -> dict:
-    ret_dict = {"node": ["Parameter"], "key": "update_frequency", "value": 1000.0, "unit": "1/ns"}
+    ret_dict = {"node": ["Parameter"], "key": "update_frequency", "value": 1000.0, "unit": "1/second"}
     return ret_dict
 
 
@@ -112,7 +112,7 @@ def complex_property_node(complex_material_node, complex_condition_node, complex
         5.0,
         "GPa",
         0.1,
-        "std",
+        "stdev",
         structure="structure",
         method="method",
         sample_preparation=[copy.deepcopy(simple_process_node)],
@@ -133,7 +133,7 @@ def complex_property_dict(complex_material_node, complex_condition_dict, complex
         "value": 5.0,
         "unit": "GPa",
         "uncertainty": 0.1,
-        "uncertainty_type": "std",
+        "uncertainty_type": "stdev",
         "structure": "structure",
         "sample_preparation": [json.loads(simple_process_node.json)],
         "method": "method",
@@ -169,38 +169,36 @@ def simple_property_dict() -> dict:
 
 
 @pytest.fixture(scope="function")
-def complex_condition_node(complex_material_node, complex_data_node) -> cript.Condition:
+def complex_condition_node(complex_data_node) -> cript.Condition:
     c = cript.Condition(
-        "temp",
+        "temperature",
         "value",
         22,
         "C",
         "room temperature of lab",
         uncertainty=5,
-        uncertainty_type="var",
+        uncertainty_type="stdev",
         set_id=0,
         measurement_id=2,
-        material=[complex_material_node],
-        data=complex_data_node,
+        data=[copy.deepcopy(complex_data_node)],
     )
     return c
 
 
 @pytest.fixture(scope="function")
-def complex_condition_dict(complex_material_node, complex_data_node) -> dict:
+def complex_condition_dict(complex_data_node) -> dict:
     ret_dict = {
         "node": ["Condition"],
-        "key": "temp",
+        "key": "temperature",
         "type": "value",
         "descriptor": "room temperature of lab",
         "value": 22,
         "unit": "C",
         "uncertainty": 5,
-        "uncertainty_type": "var",
+        "uncertainty_type": "stdev",
         "set_id": 0,
         "measurement_id": 2,
-        "material": [json.loads(complex_material_node.json)],
-        "data": json.loads(complex_data_node.json),
+        "data": [json.loads(complex_data_node.json)],
     }
     return ret_dict
 
@@ -217,7 +215,7 @@ def complex_ingredient_node(complex_material_node, complex_quantity_node) -> cri
 
 @pytest.fixture(scope="function")
 def complex_ingredient_dict(complex_material_node, complex_quantity_dict) -> dict:
-    ret_dict = {"node": ["Ingredient"], "material": json.loads(complex_material_node.json), "quantities": [complex_quantity_dict], "keyword": ["catalyst"]}
+    ret_dict = {"node": ["Ingredient"], "material": json.loads(complex_material_node.json), "quantity": [complex_quantity_dict], "keyword": ["catalyst"]}
     return ret_dict
 
 
@@ -295,7 +293,7 @@ def complex_software_configuration_dict(complex_software_dict, complex_algorithm
     ret_dict = {
         "node": ["SoftwareConfiguration"],
         "software": complex_software_dict,
-        "algorithms": [complex_algorithm_dict],
+        "algorithm": [complex_algorithm_dict],
         "notes": "my_notes",
         "citation": [complex_citation_dict],
     }

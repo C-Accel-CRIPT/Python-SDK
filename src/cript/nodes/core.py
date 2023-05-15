@@ -88,6 +88,10 @@ class BaseNode(ABC):
     def uid(self):
         return self._json_attrs.uid
 
+    @property
+    def node(self):
+        return self._json_attrs.node
+
     def _update_json_attrs_if_valid(self, new_json_attr: JsonAttributes) -> None:
         """
         tries to update the node if valid and then checks if it is valid or not
@@ -186,13 +190,16 @@ class BaseNode(ABC):
         Property to obtain a simple json string.
         Calls `get_json` with default arguments.
         """
+        # We cannot validate in `get_json` because we call it inside `validate`.
+        # But most uses are probably the property, so we can validate the node here.
         self.validate()
         return self.get_json().json
 
-    def get_json(self, handled_ids: set = None, **kwargs):
+    def get_json(self, handled_ids: set = None, condense_to_uuid={"Material": "parent_material", "Inventory": "material"}, **kwargs):
         """
         User facing access to get the JSON of a node.
         Opposed to the also available property json this functions allows further control.
+        Additionally, this function does not call `self.validate()` but the property `json` does.
 
         Returns named tuple with json and handled ids as result.
         """
@@ -202,8 +209,6 @@ class BaseNode(ABC):
             json: str
             handled_ids: set
 
-        # Default is sorted keys
-        kwargs["sort_keys"] = kwargs.get("sort_keys", True)
         # Do not check for circular references, since we handle them manually
         kwargs["check_circular"] = kwargs.get("check_circular", False)
 
@@ -213,6 +218,9 @@ class BaseNode(ABC):
         previous_handled_nodes = copy.deepcopy(NodeEncoder.handled_ids)
         if handled_ids is not None:
             NodeEncoder.handled_ids = handled_ids
+        previous_condense_to_uuid = copy.deepcopy(NodeEncoder.condense_to_uuid)
+        NodeEncoder.condense_to_uuid = condense_to_uuid
+
         try:
             return ReturnTuple(json.dumps(self, cls=NodeEncoder, **kwargs), NodeEncoder.handled_ids)
         except Exception as exc:
@@ -222,6 +230,7 @@ class BaseNode(ABC):
             raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc
         finally:
             NodeEncoder.handled_ids = previous_handled_nodes
+            NodeEncoder.condense_to_uuid = previous_condense_to_uuid
 
     def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes=None) -> List:
         """

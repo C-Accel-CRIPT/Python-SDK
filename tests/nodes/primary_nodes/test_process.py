@@ -65,7 +65,7 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
     )
     # assertions
     assert my_complex_process.type == my_process_type
-    assert my_complex_process.ingredients == [complex_ingredient_node]
+    assert my_complex_process.ingredient == [complex_ingredient_node]
     assert my_complex_process.description == my_process_description
     assert my_complex_process.equipments == [complex_equipment_node]
     assert my_complex_process.products == [simple_property_node]
@@ -102,7 +102,7 @@ def test_process_getters_and_setters(
 
     # test setters
     simple_process_node.type = new_process_type
-    simple_process_node.ingredients = [complex_ingredient_node]
+    simple_process_node.ingredient = [complex_ingredient_node]
     simple_process_node.description = new_process_description
     simple_process_node.equipments = [complex_equipment_node]
     simple_process_node.product = [simple_process_node]
@@ -115,7 +115,7 @@ def test_process_getters_and_setters(
 
     # test getters
     assert simple_process_node.type == new_process_type
-    assert simple_process_node.ingredients == [complex_ingredient_node]
+    assert simple_process_node.ingredient == [complex_ingredient_node]
     assert simple_process_node.description == new_process_description
     assert simple_process_node.equipments == [complex_equipment_node]
     assert simple_process_node.product == [simple_process_node]

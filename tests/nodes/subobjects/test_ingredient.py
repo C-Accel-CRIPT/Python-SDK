@@ -18,7 +18,7 @@ def test_getter_setter(complex_ingredient_node, complex_quantity_node, simple_ma
     q2 = complex_quantity_node
     i2.set_material(simple_material_node, [complex_quantity_node])
     assert i2.material is simple_material_node
-    assert i2.quantities[-1] is q2
+    assert i2.quantity[-1] is q2
 
-    i2.keyword = "monomer"
-    assert i2.keyword == "monomer"
+    i2.keyword = ["monomer"]
+    assert i2.keyword == ["monomer"]

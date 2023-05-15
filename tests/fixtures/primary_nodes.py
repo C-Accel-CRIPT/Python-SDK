@@ -1,4 +1,5 @@
 import copy
+import json
 
 import pytest
 
@@ -19,13 +20,28 @@ def simple_project_node(simple_collection_node) -> cript.Project:
 
 
 @pytest.fixture(scope="function")
-def complex_project_node(complex_collection_node, complex_material_node) -> cript.Project:
+def complex_project_dict(complex_collection_node, complex_material_node, complex_user_node) -> dict:
+    project_dict = {"node": ["Project"]}
+    project_dict["locked"] = True
+    project_dict["model_version"] = 1.0
+    project_dict["updated_by"] = complex_user_node
+    project_dict["create_by"] = complex_user_node
+    project_dict["public"] = True
+    project_dict["name"] = "my project name"
+    project_dict["notes"] = "my project notes"
+    project_dict["member"] = [complex_user_node]
+    project_dict["admin"] = complex_user_node
+    project_dict["collection"] = [complex_collection_node]
+    project_dict["material"] = [complex_material_node]
+
+
+@pytest.fixture(scope="function")
+def complex_project_node(complex_project_dict) -> cript.Project:
     """
     a complex Project node that includes all possible optional arguments that are themselves complex as well
     """
-    project_name = "my project name"
 
-    complex_project = cript.Project(name=project_name, collection=[complex_collection_node], material=[complex_material_node])
+    complex_project = cript.load_nodes_from_json(json.dumps(complex_project_dict))
 
     return complex_project
 
@@ -82,7 +98,7 @@ def simple_experiment_node() -> cript.Experiment:
 
 
 @pytest.fixture(scope="function")
-def simple_computation_process_node(complex_ingredient_node) -> cript.ComputationProcess:
+def simple_computation_process_node(complex_ingredient_node, simple_data_node) -> cript.ComputationProcess:
     """
     simple Computational Process node with only required arguments to use in other tests
     """
@@ -91,7 +107,7 @@ def simple_computation_process_node(complex_ingredient_node) -> cript.Computatio
     my_computational_process = cript.ComputationProcess(
         name="my computational process name",
         type=my_computational_process_type,
-        input_data=[simple_data_node],
+        input_data=[copy.deepcopy(simple_data_node)],
         ingredient=[complex_ingredient_node],
     )
 
@@ -124,12 +140,12 @@ def complex_data_node(
         name="my complex data node name",
         type="afm_amp",
         file=[copy.deepcopy(complex_file_node)],
-        sample_preperation=copy.deepcopy(simple_process_node),
-        computations=[simple_computation_node],
-        computational_process=[simple_computation_process_node],
-        materials=[simple_material_node],
-        processes=[copy.deepcopy(simple_process_node)],
-        citations=[copy.deepcopy(complex_citation_node)],
+        sample_preparation=copy.deepcopy(simple_process_node),
+        computation=[simple_computation_node],
+        computation_process=[simple_computation_process_node],
+        material=[simple_material_node],
+        process=[copy.deepcopy(simple_process_node)],
+        citation=[copy.deepcopy(complex_citation_node)],
     )
 
     return my_complex_data
@@ -195,7 +211,7 @@ def complex_material_node(simple_property_node, simple_process_node, complex_com
         name="my complex material",
         identifiers=my_identifier,
         component=my_component,
-        property=simple_property_node,
+        property=[simple_property_node],
         # process=copy.deepcopy(simple_process_node),
         parent_material=simple_material_node,
         computational_forcefield=complex_computational_forcefield_node,

@@ -1,10 +1,9 @@
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, replace
 from numbers import Number
-from typing import List, Union
+from typing import Union
 
 from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.data import Data
-from cript.nodes.primary_nodes.material import Material
 
 
 class Condition(BaseNode):
@@ -21,7 +20,6 @@ class Condition(BaseNode):
         unit: str = ""
         uncertainty: Union[Number, None] = None
         uncertainty_type: str = ""
-        material: List[Material] = field(default_factory=list)
         set_id: Union[int, None] = None
         measurement_id: Union[int, None] = None
         data: Union[Data, None] = None
@@ -37,14 +35,11 @@ class Condition(BaseNode):
         descriptor: str = "",
         uncertainty: Union[Number, None] = None,
         uncertainty_type: str = "",
-        material: Union[List[Material], None] = None,
         set_id: Union[int, None] = None,
         measurement_id: Union[int, None] = None,
         data: Union[Data, None] = None,
         **kwargs
     ):
-        if material is None:
-            material = []
         super().__init__(**kwargs)
 
         self._json_attrs = replace(
@@ -56,7 +51,6 @@ class Condition(BaseNode):
             unit=unit,
             uncertainty=uncertainty,
             uncertainty_type=uncertainty_type,
-            material=material,
             set_id=set_id,
             measurement_id=measurement_id,
             data=data,
@@ -113,15 +107,6 @@ class Condition(BaseNode):
     @property
     def uncertainty_type(self) -> str:
         return self._json_attrs.uncertainty_type
-
-    @property
-    def material(self) -> List[Material]:
-        return self._json_attrs.material.copy()
-
-    @material.setter
-    def material(self, new_material: List[Material]):
-        new_attrs = replace(self._json_attrs, material=new_material)
-        self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def set_id(self) -> Union[int, None]:

@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field, replace
 from typing import Any, List
 
+import cript
 # from cript import Property, Process, ComputationalProcess
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -450,7 +451,9 @@ class Material(PrimaryBaseNode):
         api = _get_global_cached_api()
 
         # get JSON vocabulary of all "material_identifier_key"
-        all_identifiers: List[dict] = api.get_vocab_by_category("material_identifier_key")
+        all_identifiers: List[dict] = api.get_vocab_by_category(
+            cript.ControlledVocabularyCategories.MATERIAL_IDENTIFIER_KEY
+        )
 
         # placeholder for what eventually will be all the names of material identifiers
         # e.g. "smiles", "bigsmiles", etc.
@@ -459,6 +462,9 @@ class Material(PrimaryBaseNode):
         # loop through and take all "name" from every dict and append it to `all_identifiers_list`
         for identifier in all_identifiers:
             all_identifiers_list.append(identifier.get("name"))
+
+        # pop "name" from identifiers list because the node has to have a name
+        all_identifiers_list.remove("name")
 
         identifier_argument = []
         # Convert identifiers to a list

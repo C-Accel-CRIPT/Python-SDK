@@ -98,7 +98,7 @@ def simple_experiment_node() -> cript.Experiment:
 
 
 @pytest.fixture(scope="function")
-def simple_computation_process_node(complex_ingredient_node) -> cript.ComputationProcess:
+def simple_computation_process_node(complex_ingredient_node, simple_data_node) -> cript.ComputationProcess:
     """
     simple Computational Process node with only required arguments to use in other tests
     """
@@ -107,7 +107,7 @@ def simple_computation_process_node(complex_ingredient_node) -> cript.Computatio
     my_computational_process = cript.ComputationProcess(
         name="my computational process name",
         type=my_computational_process_type,
-        input_data=[simple_data_node],
+        input_data=[copy.deepcopy(simple_data_node)],
         ingredient=[complex_ingredient_node],
     )
 

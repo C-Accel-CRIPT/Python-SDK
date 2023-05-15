@@ -180,7 +180,6 @@ def complex_condition_node(complex_material_node, complex_data_node) -> cript.Co
         uncertainty_type="stdev",
         set_id=0,
         measurement_id=2,
-        material=[complex_material_node],
         data=complex_data_node,
     )
     return c
@@ -199,7 +198,6 @@ def complex_condition_dict(complex_material_node, complex_data_node) -> dict:
         "uncertainty_type": "stdev",
         "set_id": 0,
         "measurement_id": 2,
-        "material": [json.loads(complex_material_node.json)],
         "data": json.loads(complex_data_node.json),
     }
     return ret_dict
@@ -217,7 +215,7 @@ def complex_ingredient_node(complex_material_node, complex_quantity_node) -> cri
 
 @pytest.fixture(scope="function")
 def complex_ingredient_dict(complex_material_node, complex_quantity_dict) -> dict:
-    ret_dict = {"node": ["Ingredient"], "material": json.loads(complex_material_node.json), "quantities": [complex_quantity_dict], "keyword": ["catalyst"]}
+    ret_dict = {"node": ["Ingredient"], "material": json.loads(complex_material_node.json), "quantity": [complex_quantity_dict], "keyword": ["catalyst"]}
     return ret_dict
 
 

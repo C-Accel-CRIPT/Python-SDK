@@ -1,3 +1,4 @@
+import copy
 import json
 
 from util import strip_uid_from_dict
@@ -26,7 +27,6 @@ def test_create_simple_computational_process(simple_data_node, complex_ingredien
 
 def test_create_complex_computational_process(
     simple_data_node,
-    simple_material_node,
     complex_ingredient_node,
     complex_software_configuration_node,
     complex_condition_node,
@@ -40,11 +40,13 @@ def test_create_complex_computational_process(
     computational_process_name = "my computational process name"
     computational_process_type = "cross_linking"
 
+    ingredient = copy.deepcopy(complex_ingredient_node)
+    data = copy.deepcopy(simple_data_node)
     my_computational_process = cript.ComputationProcess(
         name=computational_process_name,
         type=computational_process_type,
-        input_data=[simple_data_node],
-        ingredient=[complex_ingredient_node],
+        input_data=[data],
+        ingredient=[ingredient],
         output_data=[simple_data_node],
         software_configuration=[complex_software_configuration_node],
         condition=[complex_condition_node],
@@ -56,8 +58,8 @@ def test_create_complex_computational_process(
     assert isinstance(my_computational_process, cript.ComputationProcess)
     assert my_computational_process.name == computational_process_name
     assert my_computational_process.type == computational_process_type
-    assert my_computational_process.input_data == [simple_data_node]
-    assert my_computational_process.ingredient == [complex_ingredient_node]
+    assert my_computational_process.input_data == [data]
+    assert my_computational_process.ingredient == [ingredient]
     assert my_computational_process.output_data == [simple_data_node]
     assert my_computational_process.software_configuration == [complex_software_configuration_node]
     assert my_computational_process.condition == [complex_condition_node]
@@ -71,33 +73,56 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
     """
     expected_dict: dict = {
         "node": ["ComputationProcess"],
-        "name": "my computational process name",
+        "name": "my computational process node name",
         "type": "cross_linking",
-        "input_data": [
-            {
-                "node": ["Data"],
-                "name": "my data name",
-                "type": "afm_amp",
-                "files": [
-                    {
-                        "node": ["File"],
-                        "source": "https://criptapp.org",
-                        "type": "calibration",
-                        "extension": ".csv",
-                        "data_dictionary": "my file's data dictionary",
-                    }
-                ],
-            }
-        ],
-        "ingredients": [
+        "input_data": [{"node": ["Data"], "name": "my data name", "type": "afm_amp", "file": [{"node": ["File"], "source": "https://criptapp.org", "type": "calibration", "extension": ".csv", "data_dictionary": "my file's data dictionary"}]}],
+        "ingredient": [
             {
                 "node": ["Ingredient"],
                 "material": {
                     "node": ["Material"],
-                    "name": "my material",
-                    "identifiers": [{"alternative_names": "my material alternative name"}],
+                    "name": "my complex material",
+                    "component": [{"node": ["Material"], "name": "my component material 1", "bigsmiles": "component 1 bigsmiles"}, {"node": ["Material"], "name": "my component material 2", "bigsmiles": "component 2 bigsmiles"}],
+                    "property": [{"node": ["Property"], "key": "modulus_shear", "type": "value", "value": 5.0, "unit": "GPa"}],
+                    "parent_material": {},
+                    "computational_forcefield": {
+                        "node": ["ComputationalForcefield"],
+                        "key": "opls_aa",
+                        "building_block": "atom",
+                        "coarse_grained_mapping": "atom -> atom",
+                        "implicit_solvent": "no implicit solvent",
+                        "source": "local LigParGen installation",
+                        "description": "this is a test forcefield",
+                        "data": [
+                            {
+                                "node": ["Data"],
+                            }
+                        ],
+                        "citation": [
+                            {
+                                "node": ["Citation"],
+                                "type": "reference",
+                                "reference": {
+                                    "node": ["Reference"],
+                                    "type": "journal_article",
+                                    "title": "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)",
+                                    "author": ["Ludwig Schneider", "Marcus M\u00fcller"],
+                                    "journal": "Computer Physics Communications",
+                                    "publisher": "Elsevier",
+                                    "year": 2019,
+                                    "pages": [463, 476],
+                                    "doi": "10.1016/j.cpc.2018.08.011",
+                                    "issn": "0010-4655",
+                                    "website": "https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+                                },
+                            }
+                        ],
+                    },
+                    "keyword": ["acetylene"],
+                    "bigsmiles": "my complex_material_node",
                 },
-                "quantities": [{"node": ["Quantity"], "key": "mass", "value": 1.23, "unit": "gram"}],
+                "quantity": [{"node": ["Quantity"], "key": "mass", "value": 11.2, "unit": "kg", "uncertainty": 0.2, "uncertainty_type": "stdev"}],
+                "keyword": ["catalyst"],
             }
         ],
     }

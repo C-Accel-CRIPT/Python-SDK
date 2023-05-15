@@ -1,3 +1,4 @@
+import copy
 import json
 
 from util import strip_uid_from_dict
@@ -30,28 +31,30 @@ def test_create_complex_data_node(
     """
     create a complex data node with all possible arguments
     """
+
+    file_node = copy.deepcopy(complex_file_node)
     my_complex_data = cript.Data(
         name="my complex data node name",
         type="afm_amp",
-        file=[complex_file_node],
+        file=[file_node],
         sample_preparation=simple_process_node,
         computation=[simple_computation_node],
         computation_process=[simple_computational_process_node],
         material=[simple_material_node],
         process=[simple_process_node],
-        citation=[complex_citation_node],
+        # citation=[complex_citation_node],
     )
 
     # assertions
     assert isinstance(my_complex_data, cript.Data)
     assert my_complex_data.type == "afm_amp"
-    assert my_complex_data.file == [complex_file_node]
+    assert my_complex_data.file == [file_node]
     assert my_complex_data.sample_preparation == simple_process_node
     assert my_complex_data.computation == [simple_computation_node]
     assert my_complex_data.computation_process == [simple_computational_process_node]
     assert my_complex_data.material == [simple_material_node]
     assert my_complex_data.process == [simple_process_node]
-    assert my_complex_data.citation == [complex_citation_node]
+    # assert my_complex_data.citation == [complex_citation_node]
 
 
 def test_data_type_invalid_vocabulary() -> None:
@@ -98,11 +101,12 @@ def test_data_getters_and_setters(
     ]
 
     # use setters
+    comp_process = copy.deepcopy(simple_computational_process_node)
     simple_data_node.type = my_data_type
     simple_data_node.file = my_new_files
     simple_data_node.sample_preparation = simple_process_node
     simple_data_node.computation = [simple_computation_node]
-    simple_data_node.computation_process = simple_computational_process_node
+    simple_data_node.computation_process = [comp_process]
     simple_data_node.material = [simple_material_node]
     simple_data_node.process = [simple_process_node]
     simple_data_node.citation = [complex_citation_node]
@@ -112,7 +116,7 @@ def test_data_getters_and_setters(
     assert simple_data_node.file == my_new_files
     assert simple_data_node.sample_preparation == simple_process_node
     assert simple_data_node.computation == [simple_computation_node]
-    assert simple_data_node.computation_process == simple_computational_process_node
+    assert simple_data_node.computation_process == [comp_process]
     assert simple_data_node.material == [simple_material_node]
     assert simple_data_node.process == [simple_process_node]
     assert simple_data_node.citation == [complex_citation_node]

@@ -450,18 +450,13 @@ class Material(PrimaryBaseNode):
         from cript.api.api import _get_global_cached_api
         api = _get_global_cached_api()
 
-        # get JSON vocabulary of all "material_identifier_key"
-        all_identifiers: List[dict] = api.get_vocab_by_category(
-            cript.ControlledVocabularyCategories.MATERIAL_IDENTIFIER_KEY
-        )
-
-        # placeholder for what eventually will be all the names of material identifiers
-        # e.g. "smiles", "bigsmiles", etc.
-        all_identifiers_list: List[str] = []
-
-        # loop through and take all "name" from every dict and append it to `all_identifiers_list`
-        for identifier in all_identifiers:
-            all_identifiers_list.append(identifier.get("name"))
+        # get material identifiers keys from API
+        # create a list with all material identifiers in the "name" column
+        # eg ["smiles", "bigsmiles", etc.]
+        all_identifiers_list = [
+            identifier.get("name")
+            for identifier in api.get_vocab_by_category(cript.ControlledVocabularyCategories.MATERIAL_IDENTIFIER_KEY)
+        ]
 
         # pop "name" from identifiers list because the node has to have a name
         all_identifiers_list.remove("name")

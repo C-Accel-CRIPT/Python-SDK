@@ -461,15 +461,13 @@ class Material(PrimaryBaseNode):
 
         Notes
         -----
-        The following properties are required in the JSON dictionary:
+        required fields in JSON:
+        * `name`: The name of the node
 
-        * `name`: The name of the node.
-
-        The following properties are optional in the JSON dictionary:
-
+        optional fields in JSON:
         * `identifiers`: A list of material identifiers.
-
-        If the `identifiers` property is not present in the JSON dictionary, it will be set to an empty list.
+            * If the `identifiers` property is not present in the JSON dictionary,
+            it will be set to an empty list.
         """
 
         from cript.api.api import _get_global_cached_api

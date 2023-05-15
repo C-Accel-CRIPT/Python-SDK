@@ -140,12 +140,12 @@ def complex_data_node(
         name="my complex data node name",
         type="afm_amp",
         file=[copy.deepcopy(complex_file_node)],
-        sample_preperation=copy.deepcopy(simple_process_node),
-        computations=[simple_computation_node],
-        computational_process=[simple_computation_process_node],
-        materials=[simple_material_node],
-        processes=[copy.deepcopy(simple_process_node)],
-        citations=[copy.deepcopy(complex_citation_node)],
+        sample_preparation=copy.deepcopy(simple_process_node),
+        computation=[simple_computation_node],
+        computation_process=[simple_computation_process_node],
+        material=[simple_material_node],
+        process=[copy.deepcopy(simple_process_node)],
+        citation=[copy.deepcopy(complex_citation_node)],
     )
 
     return my_complex_data

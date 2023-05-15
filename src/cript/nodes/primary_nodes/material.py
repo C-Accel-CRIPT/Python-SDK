@@ -446,6 +446,31 @@ class Material(PrimaryBaseNode):
 
     @classmethod
     def _from_json(cls, json_dict: dict):
+        """
+        Create a new instance of a node from a JSON representation.
+
+        Parameters
+        ----------
+        json_dict : dict
+            A JSON dictionary representing a node
+
+        Returns
+        -------
+        node
+            A new instance of a node.
+
+        Notes
+        -----
+        The following properties are required in the JSON dictionary:
+
+        * `name`: The name of the node.
+
+        The following properties are optional in the JSON dictionary:
+
+        * `identifiers`: A list of material identifiers.
+
+        If the `identifiers` property is not present in the JSON dictionary, it will be set to an empty list.
+        """
 
         from cript.api.api import _get_global_cached_api
         api = _get_global_cached_api()

@@ -19,6 +19,7 @@ from cript.nodes.primary_nodes.project import Project
 
 class NodeEncoder(json.JSONEncoder):
     handled_ids = set()
+    condense_to_uuid = list()
 
     def default(self, obj):
         if isinstance(obj, BaseNode):
@@ -29,7 +30,7 @@ class NodeEncoder(json.JSONEncoder):
             else:
                 if uid in NodeEncoder.handled_ids:
                     return {"node": obj._json_attrs.node, "uid": uid}
-                NodeEncoder.handled_ids.add(uid)
+
             default_values = asdict(obj.JsonAttributes())
             serialize_dict = {}
             # Remove default values from serialization
@@ -40,35 +41,69 @@ class NodeEncoder(json.JSONEncoder):
             serialize_dict["node"] = obj._json_attrs.node
 
             # check if further modifications to the dict is needed before considering it done
-            serialize_dict = _apply_modifications(serialize_dict)
+            serialize_dict, condensed_uid = self._apply_modifications(serialize_dict)
+            if uid not in condensed_uid:  # We can uid (node) as handled if we don't condense it to uuid
+                NodeEncoder.handled_ids.add(uid)
 
             return serialize_dict
         return json.JSONEncoder.default(self, obj)
 
+    def _apply_modifications(self, serialize_dict):
+        """
+        checks the serialized_dict to see if any other operations are required before it
+        can be considered done. If other operations are required, then it passes it to the other operations
+        and at the end returns the fully finished dict.
 
-def _apply_modifications(serialize_dict):
-    """
-    checks the serialized_dict to see if any other operations are required before it
-    can be considered done. If other operations are required, then it passes it to the other operations
-    and at the end returns the fully finished dict.
+        This function is essentially a big switch case that checks the node type
+        and sees what other operations are required for it
 
-    This function is essentially a big switch case that checks the node type
-    and sees what other operations are required for it
-
-    Parameters
-    ----------
-    serialize_dict: dict
+        Parameters
+        ----------
+        serialize_dict: dict
 
 
-    Returns
-    -------
-    serialize_dict: dict
-    """
-    # if node is material, then convert the identifiers list to JSON fields
-    if serialize_dict["node"] == ["Material"]:
-        serialize_dict = _material_identifiers_list_to_json_fields(serialize_dict)
+        Returns
+        -------
+        serialize_dict: dict
+        """
 
-    return serialize_dict
+        def strip_to_edge_uuid(element):
+            try:
+                uuid = getattr(element, "uuid")
+            except AttributeError:
+                uuid = element["uuid"]
+                if len(element) == 1:  # Already a condensed element
+                    return element, None
+            try:
+                uid = getattr(element, "uid")
+            except AttributeError:
+                uid = element["uid"]
+
+            element = {}
+            element["uuid"] = str(uuid)
+            return element, uid
+
+        uid_of_condensed = []
+        # if node is material, then convert the identifiers list to JSON fields
+        if serialize_dict["node"] == ["Material"]:
+            serialize_dict = _material_identifiers_list_to_json_fields(serialize_dict)
+
+        # Since node is a list, we have to iterate here.
+        for node in serialize_dict["node"]:
+            if node in self.condense_to_uuid and self.condense_to_uuid[node] in serialize_dict:
+                attribute_to_condense = serialize_dict[self.condense_to_uuid[node]]
+                if isinstance(attribute_to_condense, list):
+                    for i, element in enumerate(attribute_to_condense):
+                        attribute_to_condense[i], uid = strip_to_edge_uuid(element)
+                        if uid is not None:
+                            uid_of_condensed += [uid]
+                else:  # Not a list, but single element
+                    attribute_to_condense, uid = strip_to_edge_uuid(attribute_to_condense)
+                    if uid is not None:
+                        uid_of_condensed += [uid]
+                serialize_dict[self.condense_to_uuid[node]] = attribute_to_condense
+
+        return serialize_dict, uid_of_condensed
 
 
 def _material_identifiers_list_to_json_fields(serialize_dict: dict) -> dict:

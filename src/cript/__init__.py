@@ -14,7 +14,6 @@ from cript.nodes import (
     Equipment,
     Experiment,
     File,
-    Group,
     Ingredient,
     Inventory,
     Material,

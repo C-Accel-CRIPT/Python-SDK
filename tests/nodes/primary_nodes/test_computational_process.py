@@ -48,7 +48,7 @@ def test_create_complex_computational_process(
         output_data=[simple_data_node],
         software_configuration=[complex_software_configuration_node],
         condition=[complex_condition_node],
-        properties=[simple_property_node],
+        property=[simple_property_node],
         citation=[complex_citation_node],
     )
 
@@ -61,7 +61,7 @@ def test_create_complex_computational_process(
     assert my_computational_process.output_data == [simple_data_node]
     assert my_computational_process.software_configuration == [complex_software_configuration_node]
     assert my_computational_process.condition == [complex_condition_node]
-    assert my_computational_process.properties == [simple_property_node]
+    assert my_computational_process.property == [simple_property_node]
     assert my_computational_process.citation == [complex_citation_node]
 
 

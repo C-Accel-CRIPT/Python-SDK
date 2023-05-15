@@ -80,5 +80,7 @@ def cript_api():
 
     assert cript.api.api._global_cached_api is None
     with cript.API(host=host, token=token) as api:
+        with open("db_schema.json", "w") as file_handle:
+            json.dump(api.schema, file_handle, indent=2)
         yield api
     assert cript.api.api._global_cached_api is None

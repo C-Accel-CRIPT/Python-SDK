@@ -195,7 +195,7 @@ def complex_material_node(simple_property_node, simple_process_node, complex_com
         name="my complex material",
         identifiers=my_identifier,
         component=my_component,
-        property=simple_property_node,
+        property=[simple_property_node],
         # process=copy.deepcopy(simple_process_node),
         parent_material=simple_material_node,
         computational_forcefield=complex_computational_forcefield_node,

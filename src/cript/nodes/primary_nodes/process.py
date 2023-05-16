@@ -386,7 +386,7 @@ class Process(PrimaryBaseNode):
         List[Process]
             list of process that had to happen before this process
         """
-        return self._json_attrs.prerequisite_process
+        return self._json_attrs.prerequisite_process.copy()
 
     @prerequisite_process.setter
     def prerequisite_process(self, new_prerequisite_process_list: List["Process"]) -> None:

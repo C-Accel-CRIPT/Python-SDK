@@ -118,7 +118,7 @@ def complex_property_node(complex_material_node, complex_condition_node, complex
         sample_preparation=[copy.deepcopy(simple_process_node)],
         condition=[complex_condition_node],
         computation=[copy.deepcopy(simple_computation_node)],
-        citations=[complex_citation_node],
+        citation=[complex_citation_node],
         notes="notes",
     )
     return p
@@ -138,7 +138,7 @@ def complex_property_dict(complex_material_node, complex_condition_dict, complex
         "sample_preparation": [json.loads(simple_process_node.json)],
         "method": "method",
         "condition": [complex_condition_dict],
-        "citations": [complex_citation_dict],
+        "citation": [complex_citation_dict],
         "computation": [json.loads(simple_computation_node.json)],
         "notes": "notes",
     }
@@ -222,10 +222,10 @@ def complex_ingredient_dict(complex_material_node, complex_quantity_dict) -> dic
 @pytest.fixture(scope="function")
 def complex_equipment_node(complex_condition_node, complex_citation_node) -> cript.Equipment:
     e = cript.Equipment(
-        "hot plate",
+        "hot_plate",
         "fancy hot plate",
         condition=[complex_condition_node],
-        citations=[complex_citation_node],
+        citation=[complex_citation_node],
     )
     return e
 
@@ -243,10 +243,10 @@ def simple_equipment_node() -> cript.Equipment:
 def complex_equipment_dict(complex_condition_dict, complex_citation_dict) -> dict:
     ret_dict = {
         "node": ["Equipment"],
-        "key": "hot plate",
+        "key": "hot_plate",
         "description": "fancy hot plate",
         "condition": [complex_condition_dict],
-        "citations": [complex_citation_dict],
+        "citation": [complex_citation_dict],
     }
     return ret_dict
 

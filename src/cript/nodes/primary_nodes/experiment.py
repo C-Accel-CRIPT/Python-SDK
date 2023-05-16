@@ -17,9 +17,9 @@ class Experiment(PrimaryBaseNode):
     | attribute                | type                         | description                                               | required |
     |--------------------------|------------------------------|-----------------------------------------------------------|----------|
     | collection               | Collection                   | collection associated with the experiment                 | True     |
-    | processes                | List[Process]                | process nodes associated with this experiment             | False     |
+    | process                | List[Process]                | process nodes associated with this experiment             | False     |
     | computations             | List[Computation]            | computation method nodes associated with this experiment  | False     |
-    | computation_processes | List[Computational  Process] | computation process nodes associated with this experiment | False     |
+    | computation_process | List[Computational  Process] | computation process nodes associated with this experiment | False     |
     | data                     | List[Data]                   | data nodes associated with this experiment                | False     |
     | funding                  | List[str]                    | funding source for experiment                             | False     |
     | citation                | List[Citation]               | reference to a book, paper, or scholarly work             | False     |

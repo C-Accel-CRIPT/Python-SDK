@@ -48,10 +48,7 @@ def test_config_file(cript_api: cript.API) -> None:
     test if the api can read configurations from `config.json`
     """
 
-    config_file_texts = {
-        "host": "https://development.api.mycriptapp.org",
-        "token": "I am token"
-    }
+    config_file_texts = {"host": "https://development.api.mycriptapp.org", "token": "I am token"}
 
     with tempfile.NamedTemporaryFile(mode="w+t", suffix=".json", delete=False) as temp_file:
         config_file_path = temp_file.name
@@ -66,6 +63,7 @@ def test_config_file(cript_api: cript.API) -> None:
 
         assert api._host == config_file_texts["host"] + "/api/v1"
         assert api._token == config_file_texts["token"]
+
 
 # def test_api_context(cript_api: cript.API) -> None:
 #     assert cript.api.api._global_cached_api is not None

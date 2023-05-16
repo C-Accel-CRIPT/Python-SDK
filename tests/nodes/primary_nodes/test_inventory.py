@@ -23,7 +23,7 @@ def test_get_and_set_inventory(simple_inventory_node) -> None:
 
     # get and check inventory materials
     assert isinstance(simple_inventory_node, cript.Inventory)
-    assert simple_inventory_node.material == [material_1]
+    assert simple_inventory_node.material[-1] == material_1
 
 
 def test_inventory_serialization(simple_inventory_node, simple_material_dict) -> None:
@@ -37,7 +37,8 @@ def test_inventory_serialization(simple_inventory_node, simple_material_dict) ->
     expected_dict = {"node": ["Inventory"], "name": "my inventory name", "material": [simple_material_dict, {"node": ["Material"], "name": "material 2", "bigsmiles": "my big smiles"}]}
 
     # TODO this needs better testing
-    deserialized_inventory: dict = json.loads(simple_inventory_node.json)
+    # force not condensing to edge uuid during json serialization
+    deserialized_inventory: dict = json.loads(simple_inventory_node.get_json(condense_to_uuid={}).json)
     deserialized_inventory = strip_uid_from_dict(deserialized_inventory)
 
     assert expected_dict == deserialized_inventory

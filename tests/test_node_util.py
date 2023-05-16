@@ -171,7 +171,7 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
 
     # We add property to the material, because that adds the opportunity for orphaned data and computation
     property = copy.deepcopy(simple_property_node)
-    material.properties += [property]
+    material.property += [property]
     project.validate()
     # Now add an orphan data
     data = copy.deepcopy(simple_data_node)

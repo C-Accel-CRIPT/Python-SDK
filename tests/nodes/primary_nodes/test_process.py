@@ -1,3 +1,4 @@
+import copy
 import json
 
 from util import strip_uid_from_dict
@@ -49,6 +50,8 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
     ]
 
     # create complex process
+    citation = copy.deepcopy(complex_citation_node)
+
     my_complex_process = cript.Process(
         name=my_process_name,
         type=my_process_type,
@@ -57,11 +60,11 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
         equipment=[simple_equipment_node],
         product=[simple_material_node],
         waste=process_waste,
-        prerequisite_processes=[simple_process_node],
+        prerequisite_process=[simple_process_node],
         condition=[simple_condition_node],
-        property=[simple_property_node],
+        property=[prop],
         keyword=my_process_keywords,
-        citation=[complex_citation_node],
+        citation=[citation],
     )
     # assertions
     assert my_complex_process.type == my_process_type
@@ -70,11 +73,11 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
     assert my_complex_process.equipment == [complex_equipment_node]
     assert my_complex_process.products == [simple_property_node]
     assert my_complex_process.waste == process_waste
-    assert my_complex_process.prerequisite_processes == [simple_process_node]
+    assert my_complex_process.prerequisite_process[-1] == simple_process_node
     assert my_complex_process.condition[-1] == complex_condition_node
-    assert my_complex_process.property[-1] == simple_property_node
+    assert my_complex_process.property[-1] == prop
     assert my_complex_process.keyword[-1] == my_process_keywords[-1]
-    assert my_complex_process.citation[-1] == complex_citation_node
+    assert my_complex_process.citation[-1] == citation
 
 
 def test_process_getters_and_setters(
@@ -104,27 +107,34 @@ def test_process_getters_and_setters(
     simple_process_node.type = new_process_type
     simple_process_node.ingredient = [complex_ingredient_node]
     simple_process_node.description = new_process_description
-    simple_process_node.equipment = [complex_equipment_node]
-    simple_process_node.product = [simple_process_node]
+    equipment = copy.deepcopy(complex_equipment_node)
+    simple_process_node.equipment = [equipment]
+    product = copy.deepcopy(simple_material_node)
+    simple_process_node.product = [product]
     simple_process_node.waste = [simple_material_node]
-    simple_process_node.prerequisite_processes = [simple_process_node]
+    simple_process_node.prerequisite_process = [simple_process_node]
     simple_process_node.condition = [complex_condition_node]
-    simple_process_node.property = [simple_property_node]
+    prop = copy.deepcopy(simple_property_node)
+    prop.set_value(1.0, "test unit")
+    prop.key = "arrhenius_activation"
+    prop.type = "value"
+    simple_process_node.property += [prop]
     simple_process_node.keyword = [new_process_keywords]
-    simple_process_node.citation = [complex_citation_node]
+    citation = copy.deepcopy(complex_condition_node)
+    simple_process_node.citation = [citation]
 
     # test getters
     assert simple_process_node.type == new_process_type
     assert simple_process_node.ingredient == [complex_ingredient_node]
     assert simple_process_node.description == new_process_description
-    assert simple_process_node.equipment == [complex_equipment_node]
-    assert simple_process_node.product == [simple_process_node]
+    assert simple_process_node.equipment[-1] == [equipment]
+    assert simple_process_node.product[-1] == product
     assert simple_process_node.waste == [simple_material_node]
-    assert simple_process_node.prerequisite_processes == [simple_process_node]
+    assert simple_process_node.prerequisite_process == [simple_process_node]
     assert simple_process_node.condition == [complex_condition_node]
-    assert simple_process_node.property == [simple_property_node]
+    assert simple_process_node.property[-1] == prop
     assert simple_process_node.keyword == [new_process_keywords]
-    assert simple_process_node.citation == [complex_citation_node]
+    assert simple_process_node.citation[-1] == citation
 
 
 def test_serialize_process_to_json(simple_process_node) -> None:

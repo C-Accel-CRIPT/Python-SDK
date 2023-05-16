@@ -1,3 +1,4 @@
+import copy
 import inspect
 import json
 from dataclasses import asdict
@@ -37,7 +38,7 @@ class NodeEncoder(json.JSONEncoder):
             for key in default_values:
                 if key in obj._json_attrs.__dataclass_fields__:
                     if getattr(obj._json_attrs, key) != default_values[key]:
-                        serialize_dict[key] = getattr(obj._json_attrs, key)
+                        serialize_dict[key] = copy.copy(getattr(obj._json_attrs, key))
             serialize_dict["node"] = obj._json_attrs.node
 
             # check if further modifications to the dict is needed before considering it done

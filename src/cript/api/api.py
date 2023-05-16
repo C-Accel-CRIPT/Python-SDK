@@ -165,6 +165,9 @@ class API:
         """
 
         if config_file_path and not host and not token:
+            # convert str path or path object to file path
+            config_file_path = Path(config_file_path)
+
             # read host and token from config.json
             with open(config_file_path.resolve(), "r") as file_handle:
                 config_file: Dict[str, str] = json.loads(file_handle.read())

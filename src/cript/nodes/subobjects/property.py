@@ -25,12 +25,11 @@ class Property(BaseNode):
         uncertainty: Union[Number, None] = None
         uncertainty_type: str = ""
         component: List[Material] = field(default_factory=list)
-        component_relative: List[Material] = field(default_factory=list)
         structure: str = ""
         method: str = ""
         sample_preparation: Union[Process, None] = None
         condition: List[Condition] = field(default_factory=list)
-        data: Union[Data, None] = None
+        data: List[Data] = field(default_factory=list)
         computation: List[Computation] = field(default_factory=list)
         citation: List[Citation] = field(default_factory=list)
         notes: str = ""
@@ -46,12 +45,11 @@ class Property(BaseNode):
         uncertainty: Union[Number, None] = None,
         uncertainty_type: str = "",
         component: Union[List[Material], None] = None,
-        component_relative: Union[List[Material], None] = None,
         structure: str = "",
         method: str = "",
         sample_preparation: Union[Process, None] = None,
         condition: Union[List[Condition], None] = None,
-        data: Union[Data, None] = None,
+        data: Union[List[Data], None] = None,
         computation: Union[List[Computation], None] = None,
         citation: Union[List[Citation], None] = None,
         notes: str = "",
@@ -59,12 +57,12 @@ class Property(BaseNode):
     ):
         if component is None:
             component = []
-        if component_relative is None:
-            component_relative = []
         if condition is None:
             condition = []
         if computation is None:
             computation = []
+        if data is None:
+            data = []
         if citation is None:
             citation = []
 
@@ -78,7 +76,6 @@ class Property(BaseNode):
             uncertainty=uncertainty,
             uncertainty_type=uncertainty_type,
             component=component,
-            component_relative=component_relative,
             structure=structure,
             method=method,
             sample_preparation=sample_preparation,
@@ -142,15 +139,6 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def component_relative(self) -> List[Material]:
-        return self._json_attrs.component_relative.copy()
-
-    @component_relative.setter
-    def component_relative(self, new_component_relative: List[Material]):
-        new_attrs = replace(self._json_attrs, component_relative=new_component_relative)
-        self._update_json_attrs_if_valid(new_attrs)
-
-    @property
     def structure(self) -> str:
         return self._json_attrs.structure
 
@@ -187,11 +175,11 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def data(self) -> Union[Data, None]:
-        return self._json_attrs.data
+    def data(self) -> List[Data]:
+        return self._json_attrs.data.copy()
 
     @data.setter
-    def data(self, new_data: Union[Data, None]):
+    def data(self, new_data: List[Data]):
         new_attrs = replace(self._json_attrs, data=new_data)
         self._update_json_attrs_if_valid(new_attrs)
 

@@ -1,4 +1,5 @@
 import json
+import tempfile
 
 import pytest
 import requests
@@ -41,6 +42,30 @@ def test_prepare_host(cript_api: cript.API) -> None:
 
     assert prepared_host == "http://myhost.com/api/v1"
 
+
+def test_config_file(cript_api: cript.API) -> None:
+    """
+    test if the api can read configurations from `config.json`
+    """
+
+    config_file_texts = {
+        "host": "https://development.api.mycriptapp.org",
+        "token": "I am token"
+    }
+
+    with tempfile.NamedTemporaryFile(mode="w+t", suffix=".json", delete=False) as temp_file:
+        config_file_path = temp_file.name
+
+        # write JSON to temporary file
+        temp_file.write(json.dumps(config_file_texts))
+
+        # force text to be written to file
+        temp_file.flush()
+
+        api = cript.API(config_file_path=config_file_path)
+
+        assert api._host == config_file_texts["host"] + "/api/v1"
+        assert api._token == config_file_texts["token"]
 
 # def test_api_context(cript_api: cript.API) -> None:
 #     assert cript.api.api._global_cached_api is not None

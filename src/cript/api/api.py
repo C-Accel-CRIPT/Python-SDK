@@ -2,7 +2,8 @@ import copy
 import json
 import os
 import warnings
-from typing import Union
+from pathlib import Path
+from typing import Union, Dict
 
 import jsonschema
 import requests
@@ -85,16 +86,42 @@ class API:
     _db_schema: dict = {}
     _http_headers: dict = {}
 
-    def __init__(self, host: Union[str, None], token: [str, None]):
+    def __init__(self, host: Union[str, None] = "", token: [str, None] = "", config_file_path: Union[Path, str] = ""):
         """
-        Initialize object with host and token.
-        It is necessary to use a `with` context manager for the API
+        Initialize CRIPT API client with host and token.
+        Additionally, you can  use a config.json file and specify the file path.
+
+        !!! note "api client context manager"
+            It is necessary to use a `with` context manager for the API
 
         Examples
         --------
+        ### Create API client with host and token
         ```Python
         with cript.API('https://criptapp.org', 'secret_token') as api:
            # node creation, api.save(), etc.
+        ```
+
+        ---
+
+        ### Create API client with config.json
+        `config.json`
+        ```json
+        {
+            "host": "https://criptapp.org",
+            "token": "I am token"
+        }
+        ```
+
+        `my_script.py`
+        ```python
+        from pathlib import Path
+
+        # create a file path object of where the config file is
+        config_file_path = Path(__file__) / Path('./config.json')
+
+        with cript.API(config_file_path=config_file_path) as api:
+            # node creation, api.save(), etc.
         ```
 
         Notes
@@ -111,6 +138,8 @@ class API:
             You can find your personal token on the cript website at User > Security Settings.
             The user icon is in the top right.
             If `None` is specified, the token is inferred from the environment variable `CRIPT_TOKEN`.
+        config_file_path: Union[Path, str]
+            the file path to the config.json file where the token and host can be found
 
 
         Notes
@@ -134,6 +163,14 @@ class API:
         None
             Instantiate a new CRIPT API object
         """
+
+        if config_file_path and not host and not token:
+            # read host and token from config.json
+            with open(config_file_path.resolve(), "r") as file_handle:
+                config_file: Dict[str, str] = json.loads(file_handle.read())
+                # set api host and token
+                host = config_file["host"]
+                token = config_file["token"]
 
         # if host and token is none then it will grab host and token from user's environment variables
         if host is None:

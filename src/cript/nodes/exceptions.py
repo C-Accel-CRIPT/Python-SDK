@@ -132,7 +132,7 @@ class CRIPTOrphanedMaterialError(CRIPTOrphanedNodesError):
     def __str__(self):
         ret_string = "While validating a project graph, an orphaned material node was found. "
         ret_string += "This material is present in the graph, but not listed in the project. "
-        ret_string += "Please add the node like: `my_project.materials += [orphaned_material]`. "
+        ret_string += "Please add the node like: `my_project.material += [orphaned_material]`. "
         ret_string += f"The orphaned material was {self.orphaned_node}."
         return ret_string
 

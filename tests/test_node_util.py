@@ -98,7 +98,7 @@ def test_cycles(complex_data_node, simple_computation_node):
 
 def test_uid_serial(simple_inventory_node):
     simple_inventory_node.material += simple_inventory_node.material
-    json_dict = json.loads(simple_inventory_node.get_json().json)
+    json_dict = json.loads(simple_inventory_node.get_json(condense_to_uuid={}).json)
     assert len(json_dict["material"]) == 4
     assert isinstance(json_dict["material"][2]["uid"], str)
     assert json_dict["material"][2]["uid"].startswith("_:")
@@ -175,7 +175,7 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
     project.validate()
     # Now add an orphan data
     data = copy.deepcopy(simple_data_node)
-    property.data = data
+    property.data = [data]
     with pytest.raises(CRIPTOrphanedDataError):
         project.validate()
     # Fix with the helper function
@@ -184,7 +184,7 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
 
     # Add an orphan Computation
     computation = copy.deepcopy(simple_computation_node)
-    property.computations += [computation]
+    property.computation += [computation]
     with pytest.raises(CRIPTOrphanedComputationError):
         project.validate()
     # Fix with the helper function
@@ -193,10 +193,15 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
 
     # Add orphan computational process
     comp_proc = copy.deepcopy(simple_computation_process_node)
-    # Do not orphan materials
-    project.materials += [comp_proc.ingredient[0].material]
-    data.computational_process += [comp_proc]
+    data.computation_process += [comp_proc]
     with pytest.raises(CRIPTOrphanedComputationalProcessError):
-        project.validate()
+        while True:
+            try:  # Do trigger not orphan materials
+                project.validate()
+            except CRIPTOrphanedMaterialError as exc:
+                project._json_attrs.material.append(exc.orphaned_node)
+            else:
+                break
+
     cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
     project.validate()

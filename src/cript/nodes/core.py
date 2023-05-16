@@ -12,7 +12,7 @@ from cript.nodes.exceptions import (
     CRIPTJsonSerializationError,
 )
 
-tolerated_extra_json = ["component_count", "computational_forcefield_count", "property_count", "node", "uid", "uuid", "model_version", "locked", "public"]
+tolerated_extra_json = ["component_count", "computational_forcefield_count", "property_count"]
 
 
 def add_tolerated_extra_json(additional_tolerated_json: str):
@@ -68,7 +68,7 @@ class BaseNode(ABC):
 
     def __init__(self, **kwargs):
         for kwarg in kwargs:
-            if kwarg not in tolerated_extra_json:
+            if kwarg not in tolerated_extra_json + list(self._json_attrs.__dataclass_fields__.keys()):
                 raise CRIPTExtraJsonAttributes(self.node_type, kwarg)
         uid = get_new_uid()
         self._json_attrs = replace(self._json_attrs, node=[self.node_type], uid=uid)

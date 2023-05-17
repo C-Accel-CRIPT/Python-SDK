@@ -99,9 +99,8 @@ def test_get_vocabulary_by_category(cript_api: cript.API) -> None:
     """
     tests if a vocabulary can be retrieved by category
     1. tests response is a list of dicts as expected
+    1. create a new list of just material identifiers
     1. tests that the fundamental identifiers exist within the API vocabulary response
-
-    tests that if a vocabulary is not valid category it raises an error
 
     Warnings
     --------
@@ -114,25 +113,12 @@ def test_get_vocabulary_by_category(cript_api: cript.API) -> None:
     # test response is a list of dicts
     assert isinstance(material_identifier_vocab_list, list)
 
-    # test it has basic material identifiers
-    has_alternative_names = False
-    has_bigsmiles = False
-    has_smiles = False
-
-    for identifier in material_identifier_vocab_list:
-        if identifier.get("name") == "alternative_names":
-            has_alternative_names = True
-
-        elif identifier.get("name") == "bigsmiles":
-            has_bigsmiles = True
-
-        elif identifier.get("name") == "smiles":
-            has_smiles = True
+    material_identifiers = [identifier["name"] for identifier in material_identifier_vocab_list]
 
     # assertions
-    assert has_alternative_names is True
-    assert has_bigsmiles is True
-    assert has_smiles is True
+    assert "bigsmiles" in material_identifiers
+    assert "smiles" in material_identifiers
+    assert "pubchem_cid" in material_identifiers
 
 
 def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:

@@ -65,7 +65,8 @@ def _deserialize_flattened_material_identifiers(json_dict: Dict) -> Dict:
     all_identifiers_list.remove("name")
 
     identifier_argument: List[Dict] = []
-    # Convert identifiers to a list
+
+    # move material identifiers from JSON attribute to identifiers attributes
     for identifier in all_identifiers_list:
         if identifier in json_dict:
             identifier_argument.append({identifier: json_dict[identifier]})

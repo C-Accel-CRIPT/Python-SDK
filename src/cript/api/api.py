@@ -86,7 +86,7 @@ class API:
     _db_schema: dict = {}
     _http_headers: dict = {}
 
-    def __init__(self, host: Union[str, None] = "", token: [str, None] = "", config_file_path: Union[Path, str] = ""):
+    def __init__(self, host: Union[str, None] = None, token: [str, None] = None, config_file_path: Union[Path, str] = ""):
         """
         Initialize CRIPT API client with host and token.
         Additionally, you can  use a config.json file and specify the file path.

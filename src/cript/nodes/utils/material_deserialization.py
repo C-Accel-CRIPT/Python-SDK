@@ -53,8 +53,7 @@ def _deserialize_flattened_material_identifiers(json_dict: Dict) -> Dict:
 
     api = _get_global_cached_api()
 
-    # get material identifiers keys from API
-    # create a list with all material identifiers in the "name" column
+    # get material identifiers keys from API and create a simple list
     # eg ["smiles", "bigsmiles", etc.]
     all_identifiers_list: List[str] = [
         identifier.get("name")

@@ -86,7 +86,7 @@ class API:
     _db_schema: dict = {}
     _http_headers: dict = {}
 
-    def __init__(self, host: Union[str, None] = None, token: [str, None] = None, config_file_path: Union[Path, str] = ""):
+    def __init__(self, host: Union[str, None] = None, token: [str, None] = None, config_file_path: str = ""):
         """
         Initialize CRIPT API client with host and token.
         Additionally, you can  use a config.json file and specify the file path.
@@ -164,12 +164,12 @@ class API:
             Instantiate a new CRIPT API object
         """
 
-        if config_file_path and not host and not token:
-            # convert str path or path object to file path
-            config_file_path = Path(config_file_path)
+        if config_file_path:
+            # convert str path or path object
+            config_file_path = Path(config_file_path).resolve()
 
             # read host and token from config.json
-            with open(config_file_path.resolve(), "r") as file_handle:
+            with open(config_file_path, "r") as file_handle:
                 config_file: Dict[str, str] = json.loads(file_handle.read())
                 # set api host and token
                 host = config_file["host"]

@@ -51,6 +51,7 @@ def test_config_file(cript_api: cript.API) -> None:
     config_file_texts = {"host": "https://development.api.mycriptapp.org", "token": "I am token"}
 
     with tempfile.NamedTemporaryFile(mode="w+t", suffix=".json", delete=False) as temp_file:
+        # absolute file path
         config_file_path = temp_file.name
 
         # write JSON to temporary file

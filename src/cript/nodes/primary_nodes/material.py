@@ -1,9 +1,8 @@
 from dataclasses import dataclass, field, replace
 from typing import Any, List
 
-import cript
-# from cript import Property, Process, ComputationalProcess
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.utils.material_deserialization import _deserialize_flattened_material_identifiers
 
 
 class Material(PrimaryBaseNode):
@@ -470,26 +469,6 @@ class Material(PrimaryBaseNode):
             it will be set to an empty list.
         """
 
-        from cript.api.api import _get_global_cached_api
-        api = _get_global_cached_api()
-
-        # get material identifiers keys from API
-        # create a list with all material identifiers in the "name" column
-        # eg ["smiles", "bigsmiles", etc.]
-        all_identifiers_list = [
-            identifier.get("name")
-            for identifier in api.get_vocab_by_category(cript.ControlledVocabularyCategories.MATERIAL_IDENTIFIER_KEY)
-        ]
-
-        # pop "name" from identifiers list because the node has to have a name
-        all_identifiers_list.remove("name")
-
-        identifier_argument = []
-        # Convert identifiers to a list
-        for identifier in all_identifiers_list:
-            if identifier in json_dict:
-                identifier_argument.append({identifier: json_dict[identifier]})
-                del json_dict[identifier]
-            json_dict["identifiers"] = identifier_argument
+        json_dict = _deserialize_flattened_material_identifiers(json_dict)
 
         return super()._from_json(json_dict)

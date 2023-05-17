@@ -543,7 +543,7 @@ class API:
 
         return s3_file_url
 
-    def download_file(self, file_url: str, destination_path: Union[Path, str]) -> None:
+    def download_file(self, file_url: str, destination_path: str = ".") -> None:
         """
         download a file from AWS S3 and save it to the specified path on local storage
 

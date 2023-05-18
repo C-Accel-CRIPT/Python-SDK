@@ -1,36 +1,34 @@
 from abc import ABC
 from dataclasses import dataclass, replace
 
-from cript.nodes.core import BaseNode
-from cript.nodes.supporting_nodes.user import User
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class PrimaryBaseNode(BaseNode, ABC):
+class PrimaryBaseNode(UUIDBaseNode, ABC):
     """
     Abstract class that defines what it means to be a PrimaryNode,
     and other primary nodes can inherit from.
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         """
         All shared attributes between all Primary nodes and set to their default values
         """
 
         locked: bool = False
         model_version: str = ""
-        updated_by: User = None
-        created_by: User = None
+        updated_by = None
+        created_by = None
         public: bool = False
         name: str = ""
         notes: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, notes: str):
+    def __init__(self, name: str, notes: str, **kwargs):
         # initialize Base class with node
-        super().__init__()
-
+        super().__init__(**kwargs)
         # replace name and notes within PrimaryBase
         self._json_attrs = replace(self._json_attrs, name=name, notes=notes)
 
@@ -43,7 +41,6 @@ class PrimaryBaseNode(BaseNode, ABC):
         Examples
         --------
         {
-        'url': '',
         'locked': False,
         'model_version': '',
         'updated_by': None,
@@ -59,10 +56,6 @@ class PrimaryBaseNode(BaseNode, ABC):
             A string representation of the primary node common attributes.
         """
         return super().__str__()
-
-    @property
-    def url(self):
-        return self._json_attrs.url
 
     @property
     def locked(self):

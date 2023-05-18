@@ -14,14 +14,14 @@ class Ingredient(BaseNode):
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
         material: Union[Material, None] = None
-        quantities: List[Quantity] = field(default_factory=list)
+        quantity: List[Quantity] = field(default_factory=list)
         keyword: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, material: Material, quantities: List[Quantity], keyword: str = "", **kwargs):
-        super().__init__()
-        self._json_attrs = replace(self._json_attrs, material=material, quantities=quantities, keyword=keyword)
+    def __init__(self, material: Material, quantity: List[Quantity], keyword: str = "", **kwargs):
+        super().__init__(**kwargs)
+        self._json_attrs = replace(self._json_attrs, material=material, quantity=quantity, keyword=keyword)
         self.validate()
 
     @property
@@ -29,11 +29,11 @@ class Ingredient(BaseNode):
         return self._json_attrs.material
 
     @property
-    def quantities(self) -> List[Quantity]:
-        return self._json_attrs.quantities.copy()
+    def quantity(self) -> List[Quantity]:
+        return self._json_attrs.quantity.copy()
 
-    def set_material(self, new_material: Material, new_quantities: List[Quantity]):
-        new_attrs = replace(self._json_attrs, material=new_material, quantities=new_quantities)
+    def set_material(self, new_material: Material, new_quantity: List[Quantity]):
+        new_attrs = replace(self._json_attrs, material=new_material, quantity=new_quantity)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

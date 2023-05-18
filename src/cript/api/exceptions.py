@@ -28,6 +28,7 @@ class CRIPTConnectionError(CRIPTException):
         return error_message
 
 
+# TODO refactor
 class InvalidVocabulary(CRIPTException):
     """
     Raised when the CRIPT controlled vocabulary is invalid
@@ -56,9 +57,9 @@ class InvalidVocabularyCategory(CRIPTException):
         self.valid_vocab_category = valid_vocab_category
 
     def __str__(self) -> str:
-        error_message = f"The vocabulary category {self.vocab_category} does not exist within the CRIPT controlled vocabulary. " f"Please pick a valid CRIPT vocabulary category from {self.valid_vocab_category}."
-
-        return error_message
+        ret_str = f"The vocabulary category '{self.vocab_category}' does not exist within the CRIPT controlled vocabulary."
+        ret_str += f" Please pick a valid CRIPT vocabulary category from {self.valid_vocab_category}."
+        return ret_str
 
 
 class CRIPTAPIRequiredError(CRIPTException):

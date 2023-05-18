@@ -24,15 +24,14 @@ class Property(BaseNode):
         unit: str = ""
         uncertainty: Union[Number, None] = None
         uncertainty_type: str = ""
-        components: List[Material] = field(default_factory=list)
-        components_relative: List[Material] = field(default_factory=list)
+        component: List[Material] = field(default_factory=list)
         structure: str = ""
         method: str = ""
         sample_preparation: Union[Process, None] = None
-        conditions: List[Condition] = field(default_factory=list)
-        data: Union[Data, None] = None
-        computations: List[Computation] = field(default_factory=list)
-        citations: List[Citation] = field(default_factory=list)
+        condition: List[Condition] = field(default_factory=list)
+        data: List[Data] = field(default_factory=list)
+        computation: List[Computation] = field(default_factory=list)
+        citation: List[Citation] = field(default_factory=list)
         notes: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -45,30 +44,29 @@ class Property(BaseNode):
         unit: str,
         uncertainty: Union[Number, None] = None,
         uncertainty_type: str = "",
-        components: Union[List[Material], None] = None,
-        components_relative: Union[List[Material], None] = None,
+        component: Union[List[Material], None] = None,
         structure: str = "",
         method: str = "",
         sample_preparation: Union[Process, None] = None,
-        conditions: Union[List[Condition], None] = None,
-        data: Union[Data, None] = None,
-        computations: Union[List[Computation], None] = None,
-        citations: Union[List[Citation], None] = None,
+        condition: Union[List[Condition], None] = None,
+        data: Union[List[Data], None] = None,
+        computation: Union[List[Computation], None] = None,
+        citation: Union[List[Citation], None] = None,
         notes: str = "",
         **kwargs
     ):
-        if components is None:
-            components = []
-        if components_relative is None:
-            components_relative = []
-        if conditions is None:
-            conditions = []
-        if computations is None:
-            computations = []
-        if citations is None:
-            citations = []
+        if component is None:
+            component = []
+        if condition is None:
+            condition = []
+        if computation is None:
+            computation = []
+        if data is None:
+            data = []
+        if citation is None:
+            citation = []
 
-        super().__init__()
+        super().__init__(**kwargs)
         self._json_attrs = replace(
             self._json_attrs,
             key=key,
@@ -77,15 +75,14 @@ class Property(BaseNode):
             unit=unit,
             uncertainty=uncertainty,
             uncertainty_type=uncertainty_type,
-            components=components,
-            components_relative=components_relative,
+            component=component,
             structure=structure,
             method=method,
             sample_preparation=sample_preparation,
-            conditions=conditions,
+            condition=condition,
             data=data,
-            computations=computations,
-            citations=citations,
+            computation=computation,
+            citation=citation,
             notes=notes,
         )
         self.validate()
@@ -133,21 +130,12 @@ class Property(BaseNode):
         return self._json_attrs.uncertainty_type
 
     @property
-    def components(self) -> List[Material]:
-        return self._json_attrs.components.copy()
+    def component(self) -> List[Material]:
+        return self._json_attrs.component.copy()
 
-    @components.setter
-    def components(self, new_components: List[Material]):
-        new_attrs = replace(self._json_attrs, components=new_components)
-        self._update_json_attrs_if_valid(new_attrs)
-
-    @property
-    def components_relative(self) -> List[Material]:
-        return self._json_attrs.components_relative.copy()
-
-    @components_relative.setter
-    def components_relative(self, new_components_relative: List[Material]):
-        new_attrs = replace(self._json_attrs, components_relative=new_components_relative)
+    @component.setter
+    def component(self, new_component: List[Material]):
+        new_attrs = replace(self._json_attrs, component=new_component)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -178,39 +166,39 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def conditions(self) -> List[Condition]:
-        return self._json_attrs.conditions.copy()
+    def condition(self) -> List[Condition]:
+        return self._json_attrs.condition.copy()
 
-    @conditions.setter
-    def conditions(self, new_conditions: List[Condition]):
-        new_attrs = replace(self._json_attrs, conditions=new_conditions)
+    @condition.setter
+    def condition(self, new_condition: List[Condition]):
+        new_attrs = replace(self._json_attrs, condition=new_condition)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def data(self) -> Union[Data, None]:
-        return self._json_attrs.data
+    def data(self) -> List[Data]:
+        return self._json_attrs.data.copy()
 
     @data.setter
-    def data(self, new_data: Union[Data, None]):
+    def data(self, new_data: List[Data]):
         new_attrs = replace(self._json_attrs, data=new_data)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def computations(self) -> List[Computation]:
-        return self._json_attrs.computations.copy()
+    def computation(self) -> List[Computation]:
+        return self._json_attrs.computation.copy()
 
-    @computations.setter
-    def computations(self, new_computations: List[Computation]):
-        new_attrs = replace(self._json_attrs, computations=new_computations)
+    @computation.setter
+    def computation(self, new_computation: List[Computation]):
+        new_attrs = replace(self._json_attrs, computation=new_computation)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def citations(self) -> List[Citation]:
-        return self._json_attrs.citations.copy()
+    def citation(self) -> List[Citation]:
+        return self._json_attrs.citation.copy()
 
-    @citations.setter
-    def citations(self, new_citations: List[Citation]):
-        new_attrs = replace(self._json_attrs, citations=new_citations)
+    @citation.setter
+    def citation(self, new_citation: List[Citation]):
+        new_attrs = replace(self._json_attrs, citation=new_citation)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

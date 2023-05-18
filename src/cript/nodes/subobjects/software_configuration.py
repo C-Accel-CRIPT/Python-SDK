@@ -15,19 +15,19 @@ class SoftwareConfiguration(BaseNode):
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
         software: Union[Software, None] = None
-        algorithms: List[Algorithm] = field(default_factory=list)
+        algorithm: List[Algorithm] = field(default_factory=list)
         notes: str = ""
         citation: List[Citation] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, software: Software, algorithms: Union[List[Algorithm], None] = None, notes: str = "", citation: Union[List[Citation], None] = None, **kwargs):
-        if algorithms is None:
-            algorithms = []
+    def __init__(self, software: Software, algorithm: Union[List[Algorithm], None] = None, notes: str = "", citation: Union[List[Citation], None] = None, **kwargs):
+        if algorithm is None:
+            algorithm = []
         if citation is None:
             citation = []
-        super().__init__()
-        self._json_attrs = replace(self._json_attrs, software=software, algorithms=algorithms, notes=notes, citation=citation)
+        super().__init__(**kwargs)
+        self._json_attrs = replace(self._json_attrs, software=software, algorithm=algorithm, notes=notes, citation=citation)
         self.validate()
 
     @property
@@ -40,12 +40,12 @@ class SoftwareConfiguration(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def algorithms(self) -> List[Algorithm]:
-        return self._json_attrs.algorithms.copy()
+    def algorithm(self) -> List[Algorithm]:
+        return self._json_attrs.algorithm.copy()
 
-    @algorithms.setter
-    def algorithms(self, new_algorithms: List[Algorithm]):
-        new_attrs = replace(self._json_attrs, algorithms=new_algorithms)
+    @algorithm.setter
+    def algorithm(self, new_algorithm: List[Algorithm]):
+        new_attrs = replace(self._json_attrs, algorithm=new_algorithm)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

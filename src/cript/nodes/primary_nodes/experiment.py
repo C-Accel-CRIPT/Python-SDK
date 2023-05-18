@@ -17,9 +17,9 @@ class Experiment(PrimaryBaseNode):
     | attribute                | type                         | description                                               | required |
     |--------------------------|------------------------------|-----------------------------------------------------------|----------|
     | collection               | Collection                   | collection associated with the experiment                 | True     |
-    | processes                | List[Process]                | process nodes associated with this experiment             | False     |
+    | process                | List[Process]                | process nodes associated with this experiment             | False     |
     | computations             | List[Computation]            | computation method nodes associated with this experiment  | False     |
-    | computational_ processes | List[Computational  Process] | computation process nodes associated with this experiment | False     |
+    | computation_process | List[Computational  Process] | computation process nodes associated with this experiment | False     |
     | data                     | List[Data]                   | data nodes associated with this experiment                | False     |
     | funding                  | List[str]                    | funding source for experiment                             | False     |
     | citation                | List[Citation]               | reference to a book, paper, or scholarly work             | False     |
@@ -32,7 +32,7 @@ class Experiment(PrimaryBaseNode):
 
     * [Process](../process)
     * [Computations](../computation)
-    * [Computational_Process](../computational_process)
+    * [Computation_Process](../computational_process)
     * [Data](../data)
     * [Funding](../funding)
     * [Citation](../citation)
@@ -56,14 +56,14 @@ class Experiment(PrimaryBaseNode):
 
         process: List[Any] = field(default_factory=list)
         computation: List[Any] = field(default_factory=list)
-        computational_process: List[Any] = field(default_factory=list)
+        computation_process: List[Any] = field(default_factory=list)
         data: List[Any] = field(default_factory=list)
         funding: List[str] = field(default_factory=list)
         citation: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, process: List[Any] = None, computation: List[Any] = None, computational_process: List[Any] = None, data: List[Any] = None, funding: List[str] = None, citation: List[Any] = None, notes: str = "", **kwargs):
+    def __init__(self, name: str, process: List[Any] = None, computation: List[Any] = None, computation_process: List[Any] = None, data: List[Any] = None, funding: List[str] = None, citation: List[Any] = None, notes: str = "", **kwargs):
         """
         create an Experiment node
 
@@ -75,7 +75,7 @@ class Experiment(PrimaryBaseNode):
             list of Process nodes for this Experiment
         computation: List[Computation]
             list of computation nodes for this Experiment
-        computational_process: List[ComputationalProcess]
+        computation_process: List[ComputationalProcess]
             list of computational_process nodes for this Experiment
         data: List[Data]
             list of data nodes for this experiment
@@ -103,8 +103,8 @@ class Experiment(PrimaryBaseNode):
             process = []
         if computation is None:
             computation = []
-        if computational_process is None:
-            computational_process = []
+        if computation_process is None:
+            computation_process = []
         if data is None:
             data = []
         if funding is None:
@@ -112,14 +112,14 @@ class Experiment(PrimaryBaseNode):
         if citation is None:
             citation = []
 
-        super().__init__(name=name, notes=notes)
+        super().__init__(name=name, notes=notes, **kwargs)
 
         self._json_attrs = replace(
             self._json_attrs,
             name=name,
             process=process,
             computation=computation,
-            computational_process=computational_process,
+            computation_process=computation_process,
             data=data,
             funding=funding,
             citation=citation,
@@ -206,22 +206,22 @@ class Experiment(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def computational_process(self) -> List[Any]:
+    def computation_process(self) -> List[Any]:
         """
-        List of [computational_process](../computational_process) for this experiment
+        List of [computation_process](../computational_process) for this experiment
 
         Examples
         --------
         ```python
-        my_computational_process = cript.ComputationalProcess(
+        my_computation_process = cript.ComputationalProcess(
             name="my computational process name",
             type="cross_linking",       # must come from CRIPT Controlled Vocabulary
             input_data=[input_data],    # input data is another data node
             ingredients=[ingredients],  # output data is another data node
         )
 
-        # add computational_process node to experiment node
-        my_experiment.computational_process = [my_computational_process]
+        # add computation_process node to experiment node
+        my_experiment.computation_process = [my_computational_process]
         ```
 
         Returns
@@ -229,23 +229,23 @@ class Experiment(PrimaryBaseNode):
         List[ComputationalProcess]
             computational process that were performed in this experiment
         """
-        return self._json_attrs.computational_process.copy()
+        return self._json_attrs.computation_process.copy()
 
-    @computational_process.setter
-    def computational_process(self, new_computational_process_list: List[Any]) -> None:
+    @computation_process.setter
+    def computation_process(self, new_computation_process_list: List[Any]) -> None:
         """
-        set the list of computational_process for this experiment
+        set the list of computation_process for this experiment
 
         Parameters
         ----------
-        new_computational_process_list: List[ComputationalProcess]
+        new_computation_process_list: List[ComputationalProcess]
             new list of computations to replace the current for the experiment
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, computational_process=new_computational_process_list)
+        new_attrs = replace(self._json_attrs, computation_process=new_computation_process_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

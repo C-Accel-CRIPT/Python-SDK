@@ -16,21 +16,21 @@ class Equipment(BaseNode):
     class JsonAttributes(BaseNode.JsonAttributes):
         key: str = ""
         description: str = ""
-        conditions: List[Condition] = field(default_factory=list)
-        files: List[File] = field(default_factory=list)
-        citations: List[Citation] = field(default_factory=list)
+        condition: List[Condition] = field(default_factory=list)
+        file: List[File] = field(default_factory=list)
+        citation: List[Citation] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, key: str, description: str = "", conditions: Union[List[Condition], None] = None, files: Union[List[File], None] = None, citations: Union[List[Citation], None] = None, **kwargs):
-        if conditions is None:
-            conditions = []
-        if files is None:
-            files = []
-        if citations is None:
-            citations = []
-        super().__init__()
-        self._json_attrs = replace(self._json_attrs, key=key, description=description, conditions=conditions, files=files, citations=citations)
+    def __init__(self, key: str, description: str = "", condition: Union[List[Condition], None] = None, file: Union[List[File], None] = None, citation: Union[List[Citation], None] = None, **kwargs):
+        if condition is None:
+            condition = []
+        if file is None:
+            file = []
+        if citation is None:
+            citation = []
+        super().__init__(**kwargs)
+        self._json_attrs = replace(self._json_attrs, key=key, description=description, condition=condition, file=file, citation=citation)
         self.validate()
 
     @property
@@ -52,28 +52,28 @@ class Equipment(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def conditions(self) -> List[Condition]:
-        return self._json_attrs.conditions.copy()
+    def condition(self) -> List[Condition]:
+        return self._json_attrs.condition.copy()
 
-    @conditions.setter
-    def conditions(self, new_conditions):
-        new_attrs = replace(self._json_attrs, conditions=new_conditions)
+    @condition.setter
+    def condition(self, new_condition):
+        new_attrs = replace(self._json_attrs, condition=new_condition)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def files(self) -> List[File]:
-        return self._json_attrs.files.copy()
+    def file(self) -> List[File]:
+        return self._json_attrs.file.copy()
 
-    @files.setter
-    def files(self, new_files: List[File]):
-        new_attrs = replace(self._json_attrs, files=new_files)
+    @file.setter
+    def file(self, new_file: List[File]):
+        new_attrs = replace(self._json_attrs, file=new_file)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def citations(self) -> List[Citation]:
-        return self._json_attrs.citations.copy()
+    def citation(self) -> List[Citation]:
+        return self._json_attrs.citation.copy()
 
-    @citations.setter
-    def citations(self, new_citations: List[Citation]):
-        new_attrs = replace(self._json_attrs, citations=new_citations)
+    @citation.setter
+    def citation(self, new_citation: List[Citation]):
+        new_attrs = replace(self._json_attrs, citation=new_citation)
         self._update_json_attrs_if_valid(new_attrs)

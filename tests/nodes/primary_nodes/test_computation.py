@@ -1,8 +1,24 @@
+import copy
 import json
 
 from util import strip_uid_from_dict
 
 import cript
+
+
+def test_create_simple_computation_node() -> None:
+    """
+    test that a simple computation node with all possible arguments can be created successfully
+    """
+    my_computation_type = "analysis"
+    my_computation_name = "this is my computation name"
+
+    my_computation_node = cript.Computation(name=my_computation_name, type=my_computation_type)
+
+    # assertions
+    assert isinstance(my_computation_node, cript.Computation)
+    assert my_computation_node.name == my_computation_name
+    assert my_computation_node.type == my_computation_type
 
 
 def test_create_complex_computation_node(simple_data_node, complex_software_configuration_node, complex_condition_node, simple_computation_node, complex_citation_node) -> None:
@@ -11,15 +27,17 @@ def test_create_complex_computation_node(simple_data_node, complex_software_conf
     """
     my_computation_type = "analysis"
 
+    citation = copy.deepcopy(complex_citation_node)
+    condition = copy.deepcopy(complex_condition_node)
     my_computation_node = cript.Computation(
         name="my complex computation node name",
         type="analysis",
         input_data=[simple_data_node],
         output_data=[simple_data_node],
-        software_configurations=[complex_software_configuration_node],
-        conditions=[complex_condition_node],
+        software_configuration=[complex_software_configuration_node],
+        condition=[condition],
         prerequisite_computation=simple_computation_node,
-        citations=[complex_citation_node],
+        citation=[citation],
     )
 
     # assertions
@@ -27,10 +45,10 @@ def test_create_complex_computation_node(simple_data_node, complex_software_conf
     assert my_computation_node.type == my_computation_type
     assert my_computation_node.input_data == [simple_data_node]
     assert my_computation_node.output_data == [simple_data_node]
-    assert my_computation_node.software_configurations == [complex_software_configuration_node]
-    assert my_computation_node.conditions == [complex_condition_node]
+    assert my_computation_node.software_configuration == [complex_software_configuration_node]
+    assert my_computation_node.condition == [condition]
     assert my_computation_node.prerequisite_computation == simple_computation_node
-    assert my_computation_node.citations == [complex_citation_node]
+    assert my_computation_node.citation == [citation]
 
 
 def test_computation_type_invalid_vocabulary() -> None:
@@ -59,18 +77,20 @@ def test_computation_getters_and_setters(simple_computation_node, simple_data_no
     simple_computation_node.type = new_type
     simple_computation_node.input_data = [simple_data_node]
     simple_computation_node.output_data = [simple_data_node]
-    simple_computation_node.software_configurations = [complex_software_configuration_node]
-    simple_computation_node.conditions = [complex_condition_node]
-    simple_computation_node.citations = [complex_citation_node]
+    simple_computation_node.software_configuration = [complex_software_configuration_node]
+    condition = copy.deepcopy(complex_condition_node)
+    simple_computation_node.condition = [condition]
+    citation = copy.deepcopy(complex_citation_node)
+    simple_computation_node.citation = [citation]
     simple_computation_node.notes = new_notes
 
     # assert getter and setter are same
     assert simple_computation_node.type == new_type
     assert simple_computation_node.input_data == [simple_data_node]
     assert simple_computation_node.output_data == [simple_data_node]
-    assert simple_computation_node.software_configurations == [complex_software_configuration_node]
-    assert simple_computation_node.conditions == [complex_condition_node]
-    assert simple_computation_node.citations == [complex_citation_node]
+    assert simple_computation_node.software_configuration == [complex_software_configuration_node]
+    assert simple_computation_node.condition == [condition]
+    assert simple_computation_node.citation == [citation]
     assert simple_computation_node.notes == new_notes
 
 
@@ -79,7 +99,7 @@ def test_serialize_computation_to_json(simple_computation_node) -> None:
     tests that it can correctly turn the computation node into its equivalent JSON
     """
     # TODO test this more vigorously
-    expected_dict = {"node": ["Computation"], "name": "my computation name", "type": "analysis", "citations": []}
+    expected_dict = {"node": ["Computation"], "name": "my computation name", "type": "analysis", "citation": []}
 
     # comparing dicts for better test
     ref_dict = json.loads(simple_computation_node.json)

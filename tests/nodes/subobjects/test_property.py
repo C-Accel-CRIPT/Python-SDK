@@ -1,3 +1,4 @@
+import copy
 import json
 
 from util import strip_uid_from_dict
@@ -23,35 +24,33 @@ def test_setter_getter(complex_property_node, simple_material_node, simple_proce
     assert p2.value == 600.1
     assert p2.unit == "MPa"
 
-    p2.set_uncertainty(10.5, "var")
+    p2.set_uncertainty(10.5, "stdev")
     assert p2.uncertainty == 10.5
-    assert p2.uncertainty_type == "var"
+    assert p2.uncertainty_type == "stdev"
 
-    p2.components += [simple_material_node]
-    assert p2.components[-1] is simple_material_node
-    # TODO compoments_relative
-    p2.components_relative += [simple_material_node]
-    assert p2.components_relative[-1] is simple_material_node
+    p2.component += [simple_material_node]
+    assert p2.component[-1] is simple_material_node
     p2.structure = "structure2"
     assert p2.structure == "structure2"
 
-    p2.method = "method2"
-    assert p2.method == "method2"
+    p2.method = "scale"
+    assert p2.method == "scale"
 
     p2.sample_preparation = simple_process_node
     assert p2.sample_preparation is simple_process_node
-    assert len(p2.conditions) == 1
-    p2.conditions += [complex_condition_node]
-    assert len(p2.conditions) == 2
-    # TODO Data
-    p2.data = simple_data_node
-    assert p2.data is simple_data_node
-    # TODO Computations
-    p2.computations += [simple_computation_node]
-    assert p2.computations[-1] is simple_computation_node
+    assert len(p2.condition) == 1
+    p2.condition += [complex_condition_node]
+    assert len(p2.condition) == 2
+    p2.data = [simple_data_node]
+    assert p2.data[0] is simple_data_node
 
-    assert len(p2.citations) == 1
-    p2.citations += [complex_citation_node]
-    assert len(p2.citations) == 2
+    p2.computation += [simple_computation_node]
+    assert p2.computation[-1] is simple_computation_node
+
+    assert len(p2.citation) == 1
+    cit2 = copy.deepcopy(complex_citation_node)
+    p2.citation += [cit2]
+    assert len(p2.citation) == 2
+    assert p2.citation[-1] == cit2
     p2.notes = "notes2"
     assert p2.notes == "notes2"

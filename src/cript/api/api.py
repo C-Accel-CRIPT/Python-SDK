@@ -18,6 +18,7 @@ from cript.api.exceptions import (
     InvalidVocabularyCategory,
 )
 from cript.api.paginator import Paginator
+from cript.api.utils._get_host_and_token import _resolve_host_and_token
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import all_controlled_vocab_categories
 from cript.nodes.core import BaseNode
@@ -164,26 +165,12 @@ class API:
             Instantiate a new CRIPT API object
         """
 
-        if config_file_path:
-            # convert str path or path object
-            config_file_path = Path(config_file_path).resolve()
+        # if using env vars or config file, get host and token from there
+        if config_file_path or (host is None and token is None):
+            config_dict = _resolve_host_and_token(host=host, token=token, config_file_path=config_file_path)
 
-            # read host and token from config.json
-            with open(config_file_path, "r") as file_handle:
-                config_file: Dict[str, str] = json.loads(file_handle.read())
-                # set api host and token
-                host = config_file["host"]
-                token = config_file["token"]
-
-        # if host and token is none then it will grab host and token from user's environment variables
-        if host is None:
-            host = os.environ.get("CRIPT_HOST")
-            if host is None:
-                raise RuntimeError("API initilized with `host=None` but environment variable `CRIPT_HOST` not found.\n" "Set the environment variable (preferred) or specify the host explictly at the creation of API.")
-        if token is None:
-            token = os.environ.get("CRIPT_TOKEN")
-            if token is None:
-                raise RuntimeError("API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n" "Set the environment variable (preferred) or specify the token explictly at the creation of API.")
+            host = config_dict["host"]
+            token = config_dict["token"]
 
         self._host = _prepare_host(host=host)
         self._token = token

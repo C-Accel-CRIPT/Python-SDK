@@ -16,9 +16,6 @@ from cript.nodes.exceptions import (
 )
 from cript.nodes.primary_nodes.experiment import Experiment
 from cript.nodes.primary_nodes.project import Project
-from cript.nodes.util.material_deserialization import (
-    _deserialize_flattened_material_identifiers,
-)
 
 
 class NodeEncoder(json.JSONEncoder):

@@ -2,12 +2,19 @@ import copy
 import json
 import os
 import warnings
-from typing import Union, List
+from typing import List, Union
 
 import jsonschema
 import requests
 
-from cript.api.exceptions import APIError, CRIPTAPIAccessError, CRIPTAPISaveError, CRIPTConnectionError, InvalidHostError, InvalidVocabulary
+from cript.api.exceptions import (
+    APIError,
+    CRIPTAPIAccessError,
+    CRIPTAPISaveError,
+    CRIPTConnectionError,
+    InvalidHostError,
+    InvalidVocabulary,
+)
 from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import ControlledVocabularyCategories

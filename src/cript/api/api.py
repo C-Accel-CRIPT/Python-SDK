@@ -92,6 +92,14 @@ class API:
         Initialize CRIPT API client with host and token.
         Additionally, you can  use a config.json file and specify the file path.
 
+        ## Priority
+        1. it will first check if `config_file_path` is specified
+            1. if it is then it will read the `host` and `token` from there, continue, and ignore the other options
+        1. it will check if `host` and `token` are both set to `None`
+            1. if they both are, then it will try to read host from `CRIPT_Host` and read token from `CRIPT_TOKEN`
+        1. if neither of the above conditions are satisfied then it will attempt to read the host and token
+         directly from arguments given
+
         !!! note "api client context manager"
             It is necessary to use a `with` context manager for the API
 

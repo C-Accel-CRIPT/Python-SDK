@@ -2,23 +2,15 @@ import copy
 import json
 import os
 import warnings
-from typing import Union
+from typing import Union, List
 
 import jsonschema
 import requests
 
-from cript.api.exceptions import (
-    APIError,
-    CRIPTAPIAccessError,
-    CRIPTAPISaveError,
-    CRIPTConnectionError,
-    InvalidHostError,
-    InvalidVocabulary,
-    InvalidVocabularyCategory,
-)
+from cript.api.exceptions import APIError, CRIPTAPIAccessError, CRIPTAPISaveError, CRIPTConnectionError, InvalidHostError, InvalidVocabulary
 from cript.api.paginator import Paginator
 from cript.api.valid_search_modes import SearchModes
-from cript.api.vocabulary_categories import all_controlled_vocab_categories
+from cript.api.vocabulary_categories import ControlledVocabularyCategories
 from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.project import Project
@@ -218,16 +210,15 @@ class API:
         except Exception as exc:
             raise CRIPTConnectionError(self.host, self._token) from exc
 
-    # TODO this needs a better name because the current name is unintuitive if you are just getting vocab
     def _get_vocab(self) -> dict:
         """
-        gets the entire controlled vocabulary to be used with validating nodes
-        with attributes from controlled vocabulary
-        1. checks global variable to see if it is already set
-            if it is already set then it just returns that
-        2. if global variable is empty, then it makes a request to the API
-           and gets the entire controlled vocabulary
-           and then sets the global variable to it
+        gets the entire CRIPT controlled vocabulary and stores it in _vocabulary
+
+        1. loops through all controlled vocabulary categories
+            1. if the category already exists in the controlled vocabulary then skip that category and continue
+            1. if the category does not exist in the `_vocabulary` dict,
+            then request it from the API and append it to the `_vocabulary` dict
+        1. at the end the `_vocabulary` should have all the controlled vocabulary and that will be returned
 
            Examples
            --------
@@ -243,22 +234,48 @@ class API:
            ```
         """
 
-        # check cache if vocabulary dict is already populated
-        # TODO needs to be changed to MappingTypeProxy
-        if bool(self._vocabulary):
-            return self._vocabulary
-
-        # TODO this needs to be converted to a dict of dicts instead of dict of lists
-        #  because it would be faster to find needed vocab word within the vocab category
         # loop through all vocabulary categories and make a request to each vocabulary category
         # and put them all inside of self._vocab with the keys being the vocab category name
-        for category in all_controlled_vocab_categories:
-            response = requests.get(f"{self.host}/cv/{category}").json()["data"]
-            self._vocabulary[category] = response
+        for category in ControlledVocabularyCategories:
+            if category in self._vocabulary:
+                continue
+
+            self._vocabulary[category.value] = self.get_vocab_by_category(category)
 
         return self._vocabulary
 
-    def _is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
+    def get_vocab_by_category(self, category: ControlledVocabularyCategories) -> List[dict]:
+        """
+        get the CRIPT controlled vocabulary by category
+
+        Parameters
+        ----------
+        category: str
+            category of
+
+        Returns
+        -------
+        List[dict]
+            list of JSON containing the controlled vocabulary
+        """
+
+        # check if the vocabulary category is already cached
+        if category.value in self._vocabulary:
+            return self._vocabulary[category.value]
+
+        # if vocabulary category is not in cache, then get it from API and cache it
+        response = requests.get(f"{self.host}/cv/{category.value}").json()
+
+        if response["code"] != 200:
+            # TODO give a better CRIPT custom Exception
+            raise Exception(f"while getting controlled vocabulary from CRIPT by {category}, " f"the API responded with http {response} ")
+
+        # add to cache
+        self._vocabulary[category.value] = response["data"]
+
+        return self._vocabulary[category.value]
+
+    def _is_vocab_valid(self, vocab_category: ControlledVocabularyCategories, vocab_word: str) -> bool:
         """
         checks if the vocabulary is valid within the CRIPT controlled vocabulary.
         Either returns True or InvalidVocabulary Exception
@@ -270,14 +287,14 @@ class API:
 
         Parameters
         ----------
-        vocab_category: str
-            the category the vocabulary is in e.g. "Material keyword", "Data type", "Equipment key"
+        vocab_category: ControlledVocabularyCategories
+            ControlledVocabularyCategories enums
         vocab_word: str
             the vocabulary word e.g. "CAS", "SMILES", "BigSmiles", "+my_custom_key"
 
         Returns
         -------
-        a boolean of if the vocabulary is valid or not
+        a boolean of if the vocabulary is valid
 
         Raises
         ------
@@ -290,15 +307,10 @@ class API:
         if vocab_word.startswith("+"):
             return True
 
-        # TODO do we need to raise an InvalidVocabularyCategory here, or can we just give a KeyError?
-        try:
-            # get the entire vocabulary
-            controlled_vocabulary = self._get_vocab()
-            # get just the category needed
-            controlled_vocabulary = controlled_vocabulary[vocab_category]
-        except KeyError:
-            # vocabulary category does not exist within CRIPT Controlled Vocabulary
-            raise InvalidVocabularyCategory(vocab_category=vocab_category, valid_vocab_category=all_controlled_vocab_categories)
+        # get the entire vocabulary
+        controlled_vocabulary = self._get_vocab()
+        # get just the category needed
+        controlled_vocabulary = controlled_vocabulary[vocab_category.value]
 
         # TODO this can be faster with a dict of dicts that can do o(1) look up
         #  looping through an unsorted list is an O(n) look up which is slow
@@ -340,7 +352,7 @@ class API:
             return self._db_schema
 
     # TODO this should later work with both POST and PATCH. Currently, just works for POST
-    def _is_node_schema_valid(self, node_json: str) -> Union[bool, CRIPTNodeSchemaError]:
+    def _is_node_schema_valid(self, node_json: str) -> bool:
         """
         checks a node JSON schema against the db schema to return if it is valid or not.
 

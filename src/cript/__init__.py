@@ -1,6 +1,6 @@
 # trunk-ignore-all(ruff/F401)
 
-from cript.api import API, SearchModes
+from cript.api import API, SearchModes, ControlledVocabularyCategories
 from cript.exceptions import CRIPTException
 from cript.nodes import (
     Algorithm,

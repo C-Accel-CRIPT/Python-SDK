@@ -130,7 +130,7 @@ class API:
             Instantiate a new CRIPT API object
         """
 
-        if config_file_path and host is None and token is None:
+        if config_file_path or (host is None and token is None):
             authentication_dict: Dict[str, str] = resolve_host_and_token(host, token, config_file_path)
             
             host = authentication_dict["host"]

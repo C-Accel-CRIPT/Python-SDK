@@ -9,7 +9,7 @@ from cript.api.exceptions import InvalidVocabulary
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 
-def test_create_api() -> None:
+def test_create_api(cript_api: cript.API) -> None:
     """
     tests that an API object can be successfully created with host and token
     """

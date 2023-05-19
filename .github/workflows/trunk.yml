@@ -11,6 +11,7 @@ on:
       - main
       - develop
       - trunk-merge/**
+      - "*"
 
 jobs:
   trunk:

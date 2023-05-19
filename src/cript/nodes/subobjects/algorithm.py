@@ -5,11 +5,16 @@ from cript.nodes.core import BaseNode
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.parameter import Parameter
 
+import cript
+
 
 class Algorithm(BaseNode):
     """ 
     ## Definition
-    [algorithm node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=25)
+
+    An [algorithm subobject](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=25)
+    is a set of instructions that define a computational process.
+    An algorithm consists of parameters that are used in the computation and the computational process itself.
 
     
     ## Attributes
@@ -23,8 +28,40 @@ class Algorithm(BaseNode):
     
 
     ## Available Subobjects
+    * [Parameter](../parameter)
+    * [Citation](../citation)
 
-
+    ## JSON Representation
+    ```json
+    {
+        "node": ["Algorithm"], 
+        "key": "mc_barostat", 
+        "type": "barostat",
+        "parameter": {
+            "node": ["Parameter"], 
+            "key": "update_frequency", 
+            "value": 1000.0, 
+            "unit": "1/second"
+        },
+        "citation": {
+            "node": ["Citation"], 
+            "type": "reference"
+            "reference": {
+                    "node": ["Reference"],
+                    "type": "journal_article",
+                    "title": "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)",
+                    "author": ["Ludwig Schneider", "Marcus Müller"],
+                    "journal": "Computer Physics Communications",
+                    "publisher": "Elsevier",
+                    "year": 2019,
+                    "pages": [463, 476],
+                    "doi": "10.1016/j.cpc.2018.08.011",
+                    "issn": "0010-4655",
+                    "website": "https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+            },
+        },
+    }
+    ```
     """
 
     @dataclass(frozen=True)
@@ -55,6 +92,8 @@ class Algorithm(BaseNode):
         Examples
         --------
         ```python
+        # create algorithm subobject
+        algorithm = cript.Algorithm(key="mc_barostat", type="barostat")
         ```
 
         Returns
@@ -73,12 +112,14 @@ class Algorithm(BaseNode):
     @property
     def key(self) -> str:
         """
-        get or set algorithm key. Algorithm key must come from [CRIPT controlled vocabulary]()
+        Algorithm key
+
+        > Algorithm key must come from [CRIPT controlled vocabulary]()
 
         Examples
         --------
         ```python
-
+        algorithm.key = "amorphous_cell_module"
         ```
 
         Returns
@@ -89,14 +130,26 @@ class Algorithm(BaseNode):
         return self._json_attrs.key
 
     @key.setter
-    def key(self, new_key: str):
+    def key(self, new_key: str) -> None:
+        """
+        set the algorithm key
+
+        > Algorithm key must come from [CRIPT Controlled Vocabulary]()
+
+        Parameters
+        ----------
+        new_key : str
+            algorithm key
+        """
         new_attrs = replace(self._json_attrs, key=new_key)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def type(self) -> str:
         """
-        get or set algorithm type. Algorithm type must come from [CRIPT controlled vocabulary]()
+        Algorithm type 
+        
+        > Algorithm type must come from [CRIPT controlled vocabulary]()
 
         Returns
         -------
@@ -106,51 +159,104 @@ class Algorithm(BaseNode):
         return self._json_attrs.type
 
     @type.setter
-    def type(self, new_type: str):
+    def type(self, new_type: str) -> None:
         new_attrs = replace(self._json_attrs, type=new_type)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def parameter(self) -> List[Parameter]:
         """
+        list of [Parameter](../parameter) subobjects for the algorithm subobject
 
         Examples
         --------
         ```python
+        # create parameter subobject
+        my_parameter = [
+            cript.Parameter("update_frequency", 1000.0, "1/second")
+            cript.Parameter("damping_time", 1.0, "second")
+        ]
 
+        # add parameter subobject to algorithm subobject
+        algorithm.parameter = my_parameter
         ```
 
         Returns
         -------
         List[Parameter]
-            _description_
+            list of parameters for the algorithm subobject
         """
         return self._json_attrs.parameter.copy()
 
     @parameter.setter
-    def parameter(self, new_parameter: List[Parameter]):
+    def parameter(self, new_parameter: List[Parameter]) -> None:
+        """
+        set a list of cript.Parameter subobjects
+
+        Parameters
+        ----------
+        new_parameter : List[Parameter]
+            list of Parameter subobjects for the algorithm subobject
+
+        Returns
+        -------
+        None
+        """
         new_attrs = replace(self._json_attrs, parameter=new_parameter)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def citation(self):
+    def citation(self) -> cript.Citation:
         """
-        get or set citation subobject for algorithm node
+        [citation](../citation) subobject for algorithm subobject
 
         Examples
         --------
         ```python
+        title = "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
+        title += "SOft coarse grained Monte-Carlo Acceleration (SOMA)"
 
+        # create reference node
+        my_reference = cript.Reference(
+            "journal_article",
+            title=title,
+            author=["Ludwig Schneider", "Marcus Müller"],
+            journal="Computer Physics Communications",
+            publisher="Elsevier",
+            year=2019,
+            pages=[463, 476],
+            doi="10.1016/j.cpc.2018.08.011",
+            issn="0010-4655",
+            website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+        )
+
+        # create citation subobject and add reference to it
+        my_citation = cript.Citation("reference", my_reference)
+
+        # add citation to algorithm node
+        algorithm.citation = my_citation
         ```
 
         Returns
         -------
-        _type_
-            _description_
+        citation node: cript.Citation
+            get the algorithm citation node
         """
         return self._json_attrs.citation.copy()
 
     @citation.setter
-    def citation(self, new_citation):
+    def citation(self, new_citation: cript.Citation) -> None:
+        """
+        set the algorithm citation subobject
+
+        Parameters
+        ----------
+        new_citation : cript.Citation
+            new citation subobject to replace the current
+
+        Returns
+        -------
+        None
+        """
         new_attrs = replace(self._json_attrs, citation=new_citation)
         self._update_json_attrs_if_valid(new_attrs)

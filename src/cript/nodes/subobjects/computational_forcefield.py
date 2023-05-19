@@ -8,7 +8,27 @@ from cript.nodes.subobjects.citation import Citation
 
 class ComputationalForcefield(BaseNode):
     """
-    ComputationForcefield
+    ## Definition
+    
+    [Computational Process](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=14)
+    
+    
+    ## Attributes
+    | attribute              | type           | example                                                                | description                                                              | required | vocab |
+    |------------------------|----------------|------------------------------------------------------------------------|--------------------------------------------------------------------------|----------|-------|
+    | key                    | str            | CHARMM27                                                               | type of forcefield                                                       | True     | True  |
+    | building_block         | str            | atom                                                                   | type of building block                                                   | True     | True  |
+    | coarse_grained_mapping | str            | SC3 beads in MARTINI forcefield                                        | atom to beads mapping                                                    |          |       |
+    | implicit_solvent       | str            | water                                                                  | Name of implicit solvent                                                 |          |       |
+    | source                 | str            | package in GROMACS                                                     | source of forcefield                                                     |          |       |
+    | description            | str            | OPLS forcefield with partial charges calculated via the LBCC algorithm | description of the forcefield and any modifications that have been added |          |       |
+    | data                   | Data           |                                                                        | details of mapping schema and forcefield parameters                      |          |       |
+    | citation               | list[Citation] |                                                                        | reference to a book, paper, or scholarly work                            |          |       |
+
+
+    ## Available Subobjects
+    * 
+    
     """
 
     @dataclass(frozen=True)

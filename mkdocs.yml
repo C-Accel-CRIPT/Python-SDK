@@ -12,7 +12,7 @@ nav:
   - Primary Nodes:
       - Collection: nodes/primary_nodes/collection.md
       - Computation: nodes/primary_nodes/computation.md
-      - Computational Process: nodes/primary_nodes/computational_process.md
+      - Computation Process: nodes/primary_nodes/computation_process.md
       - Data: nodes/primary_nodes/data.md
       - Experiment: nodes/primary_nodes/experiment.md
       - Inventory: nodes/primary_nodes/inventory.md

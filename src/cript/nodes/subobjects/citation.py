@@ -2,8 +2,7 @@ from dataclasses import dataclass, replace
 from typing import Union
 
 from cript.nodes.core import BaseNode
-
-import cript
+from cript.nodes.primary_nodes.reference import Reference
 
 
 class Citation(BaseNode):
@@ -65,7 +64,7 @@ class Citation(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, type: str, reference: cript.Reference, **kwargs):
+    def __init__(self, type: str, reference: Reference, **kwargs):
         """
         create a Citation subobject
 
@@ -83,7 +82,7 @@ class Citation(BaseNode):
         title += "SOft coarse grained Monte-Carlo Acceleration (SOMA)"
 
         # create a Reference node for the Citation subobject
-        my_reference = cript.Reference(
+        my_reference = Reference(
             "journal_article",
             title=title,
             author=["Ludwig Schneider", "Marcus Müller"],
@@ -149,7 +148,7 @@ class Citation(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def reference(self) -> cript.Reference:
+    def reference(self) -> Reference:
         """
         citation reference node
 
@@ -157,7 +156,7 @@ class Citation(BaseNode):
         --------
         ```python
         # create a Reference node for the Citation subobject
-        my_reference = cript.Reference(
+        my_reference = Reference(
             "journal_article",
             title="my title",
             author=["Ludwig Schneider", "Marcus Müller"],
@@ -175,19 +174,19 @@ class Citation(BaseNode):
 
         Returns
         -------
-        cript.Reference
+        Reference
             Reference node
         """
         return self._json_attrs.reference
 
     @reference.setter
-    def reference(self, new_reference: cript.Reference) -> None:
+    def reference(self, new_reference: Reference) -> None:
         """
         replace the current Reference node for the citation subobject
 
         Parameters
         ----------
-        new_reference : cript.Reference
+        new_reference : Reference
 
         Returns
         -------

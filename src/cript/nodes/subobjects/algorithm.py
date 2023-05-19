@@ -5,8 +5,6 @@ from cript.nodes.core import BaseNode
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.parameter import Parameter
 
-import cript
-
 
 class Algorithm(BaseNode):
     """ 
@@ -206,7 +204,7 @@ class Algorithm(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def citation(self) -> cript.Citation:
+    def citation(self) -> Citation:
         """
         [citation](../citation) subobject for algorithm subobject
 
@@ -231,7 +229,7 @@ class Algorithm(BaseNode):
         )
 
         # create citation subobject and add reference to it
-        my_citation = cript.Citation("reference", my_reference)
+        my_citation = Citation("reference", my_reference)
 
         # add citation to algorithm node
         algorithm.citation = my_citation
@@ -239,19 +237,19 @@ class Algorithm(BaseNode):
 
         Returns
         -------
-        citation node: cript.Citation
+        citation node: Citation
             get the algorithm citation node
         """
         return self._json_attrs.citation.copy()
 
     @citation.setter
-    def citation(self, new_citation: cript.Citation) -> None:
+    def citation(self, new_citation: Citation) -> None:
         """
         set the algorithm citation subobject
 
         Parameters
         ----------
-        new_citation : cript.Citation
+        new_citation : Citation
             new citation subobject to replace the current
 
         Returns

@@ -30,10 +30,7 @@ def resolve_host_and_token(host, token, config_file_path) -> Dict[str, str]:
             host = config_file["host"]
             token = config_file["token"]
 
-            return {
-                "host": host,
-                "token": token
-            }
+            return {"host": host, "token": token}
 
     # if host and token is none then it will grab host and token from user's environment variables
     if host is None:
@@ -42,10 +39,7 @@ def resolve_host_and_token(host, token, config_file_path) -> Dict[str, str]:
     if token is None:
         token = _read_env_var(env_var_name="CRIPT_TOKEN")
 
-    return {
-        "host": host,
-        "token": token
-    }
+    return {"host": host, "token": token}
 
 
 def _read_env_var(env_var_name: str) -> str:
@@ -59,9 +53,6 @@ def _read_env_var(env_var_name: str) -> str:
     env_var = os.environ.get(env_var_name)
 
     if env_var is None:
-        raise RuntimeError(
-            f"API initialized with `host=None` and `token=None` but environment variable `{env_var_name}` "
-            f"was not found."
-        )
+        raise RuntimeError(f"API initialized with `host=None` and `token=None` but environment variable `{env_var_name}` " f"was not found.")
 
     return env_var

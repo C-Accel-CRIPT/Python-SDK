@@ -1,7 +1,7 @@
 import copy
 import json
 import warnings
-from typing import List, Union, Dict
+from typing import Dict, List, Union
 
 import jsonschema
 import requests
@@ -50,7 +50,6 @@ class API:
     _db_schema: dict = {}
     _api_handle: str = "api"
     _api_version: str = "v1"
-
 
     def __init__(self, host: Union[str, None] = None, token: Union[str, None] = None, config_file_path: str = ""):
         """
@@ -132,7 +131,7 @@ class API:
 
         if config_file_path or (host is None and token is None):
             authentication_dict: Dict[str, str] = resolve_host_and_token(host, token, config_file_path)
-            
+
             host = authentication_dict["host"]
             token = authentication_dict["token"]
 

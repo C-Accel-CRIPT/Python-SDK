@@ -9,7 +9,8 @@ from cript.nodes.subobjects.quantity import Quantity
 class Ingredient(BaseNode):
     """
     ## Definition
-    Ingredients are links to material nodes with the associated quantities. 
+    An [Ingredient](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=22) 
+    subobjects are links to material nodes with the associated quantities. 
 
     ---
 

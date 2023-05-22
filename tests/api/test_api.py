@@ -79,6 +79,7 @@ def test_get_db_schema_from_api(cript_api: cript.API) -> None:
     # assert len(db_schema["$defs"]) == total_fields_in_db_schema
 
 
+
 def test_is_node_schema_valid(cript_api: cript.API) -> None:
     """
     test that a CRIPT node can be correctly validated and invalidated with the db schema

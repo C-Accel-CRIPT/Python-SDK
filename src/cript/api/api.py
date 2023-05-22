@@ -8,7 +8,7 @@ import requests
 
 from cript.api.exceptions import (
     APIError,
-    CRIPTAPIAccessError,
+    CRIPTAPIRequiredError,
     CRIPTAPISaveError,
     CRIPTConnectionError,
     InvalidHostError,
@@ -33,9 +33,8 @@ def _get_global_cached_api():
     Raises an exception if no global API object is cached yet.
     """
     if _global_cached_api is None:
-        raise CRIPTAPIAccessError
+        raise CRIPTAPIRequiredError()
     return _global_cached_api
-
 
 class API:
     """

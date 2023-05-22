@@ -18,7 +18,7 @@ class Ingredient(BaseNode):
     * [process](../../primary_nodes/process)
     * [computation_process](../../primary_nodes/computation_process)
 
-    # Available Subobjects:
+    ## Available Subobjects:
     * [Quantity](../quantity)
 
     ---

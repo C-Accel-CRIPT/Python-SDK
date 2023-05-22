@@ -36,6 +36,7 @@ def _get_global_cached_api():
         raise CRIPTAPIRequiredError()
     return _global_cached_api
 
+
 class API:
     """
     ## Definition

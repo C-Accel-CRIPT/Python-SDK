@@ -62,7 +62,7 @@ class InvalidVocabularyCategory(CRIPTException):
         return error_message
 
 
-class CRIPTAPIAccessError(CRIPTException):
+class CRIPTAPIRequiredError(CRIPTException):
     """
     ## Definition
     Exception to be raised when the API object is requested, but no cript.API object exists yet.

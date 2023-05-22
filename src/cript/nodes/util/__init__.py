@@ -91,18 +91,20 @@ class NodeEncoder(json.JSONEncoder):
 
         # Since node is a list, we have to iterate here.
         for node in serialize_dict["node"]:
-            if node in self.condense_to_uuid and self.condense_to_uuid[node] in serialize_dict:
-                attribute_to_condense = serialize_dict[self.condense_to_uuid[node]]
-                if isinstance(attribute_to_condense, list):
-                    for i, element in enumerate(attribute_to_condense):
-                        attribute_to_condense[i], uid = strip_to_edge_uuid(element)
-                        if uid is not None:
-                            uid_of_condensed += [uid]
-                else:  # Not a list, but single element
-                    attribute_to_condense, uid = strip_to_edge_uuid(attribute_to_condense)
-                    if uid is not None:
-                        uid_of_condensed += [uid]
-                serialize_dict[self.condense_to_uuid[node]] = attribute_to_condense
+            if node in self.condense_to_uuid:
+                for temp in self.condense_to_uuid[node]:
+                    if temp in serialize_dict:
+                        attribute_to_condense = serialize_dict[temp]
+                        if isinstance(attribute_to_condense, list):
+                            for i, element in enumerate(attribute_to_condense):
+                                attribute_to_condense[i], uid = strip_to_edge_uuid(element)
+                                if uid is not None:
+                                    uid_of_condensed += [uid]
+                        else:  # Not a list, but single element
+                            attribute_to_condense, uid = strip_to_edge_uuid(attribute_to_condense)
+                            if uid is not None:
+                                uid_of_condensed += [uid]
+                        serialize_dict[temp] = attribute_to_condense
 
         return serialize_dict, uid_of_condensed
 

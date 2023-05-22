@@ -79,48 +79,7 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
         "ingredient": [
             {
                 "node": ["Ingredient"],
-                "material": {
-                    "node": ["Material"],
-                    "name": "my complex material",
-                    "component": [{"node": ["Material"], "name": "my component material 1", "bigsmiles": "component 1 bigsmiles"}, {"node": ["Material"], "name": "my component material 2", "bigsmiles": "component 2 bigsmiles"}],
-                    "property": [{"node": ["Property"], "key": "modulus_shear", "type": "value", "value": 5.0, "unit": "GPa"}],
-                    "parent_material": {},
-                    "computational_forcefield": {
-                        "node": ["ComputationalForcefield"],
-                        "key": "opls_aa",
-                        "building_block": "atom",
-                        "coarse_grained_mapping": "atom -> atom",
-                        "implicit_solvent": "no implicit solvent",
-                        "source": "local LigParGen installation",
-                        "description": "this is a test forcefield",
-                        "data": [
-                            {
-                                "node": ["Data"],
-                            }
-                        ],
-                        "citation": [
-                            {
-                                "node": ["Citation"],
-                                "type": "reference",
-                                "reference": {
-                                    "node": ["Reference"],
-                                    "type": "journal_article",
-                                    "title": "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)",
-                                    "author": ["Ludwig Schneider", "Marcus M\u00fcller"],
-                                    "journal": "Computer Physics Communications",
-                                    "publisher": "Elsevier",
-                                    "year": 2019,
-                                    "pages": [463, 476],
-                                    "doi": "10.1016/j.cpc.2018.08.011",
-                                    "issn": "0010-4655",
-                                    "website": "https://www.sciencedirect.com/science/article/pii/S0010465518303072",
-                                },
-                            }
-                        ],
-                    },
-                    "keyword": ["acetylene"],
-                    "bigsmiles": "my complex_material_node",
-                },
+                "material": {},
                 "quantity": [{"node": ["Quantity"], "key": "mass", "value": 11.2, "unit": "kg", "uncertainty": 0.2, "uncertainty_type": "stdev"}],
                 "keyword": ["catalyst"],
             }

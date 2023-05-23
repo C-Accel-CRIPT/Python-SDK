@@ -9,14 +9,14 @@ class Quantity(BaseNode):
     """
     ## Definition
     The [Quantity](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=22)
-    subobjects are the amount of material involved in a process
+    sub-objects are the amount of material involved in a process
 
     ---
 
     ## Can Be Added To:
     * [Ingredient](../ingredient)
 
-    ## Available Subobjects
+    ## Available sub-objects
     * None
 
     ----
@@ -51,7 +51,7 @@ class Quantity(BaseNode):
 
     def __init__(self, key: str, value: Number, unit: str, uncertainty: Union[Number, None] = None, uncertainty_type: str = "", **kwargs):
         """
-        create Quantity subobject
+        create Quantity sub-object
 
         Parameters
         ----------
@@ -77,7 +77,7 @@ class Quantity(BaseNode):
         Returns
         -------
         None
-            create Quantity subobject
+            create Quantity sub-object
         """
         super().__init__(**kwargs)
         self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit, uncertainty=uncertainty, uncertainty_type=uncertainty_type)
@@ -112,7 +112,7 @@ class Quantity(BaseNode):
     @property
     def key(self) -> str:
         """
-        get the Quantity subobject key attribute
+        get the Quantity sub-object key attribute
 
         Returns
         -------
@@ -183,7 +183,7 @@ class Quantity(BaseNode):
     @property
     def uncertainty_type(self) -> str:
         """
-        get the uncertainty type attribute for the Quantity subobject
+        get the uncertainty type attribute for the Quantity sub-object
 
         `uncertainty_type` must come from [CRIPT Controlled Vocabulary]()
 

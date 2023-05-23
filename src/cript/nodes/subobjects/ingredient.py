@@ -10,7 +10,7 @@ class Ingredient(BaseNode):
     """
     ## Definition
     An [Ingredient](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=22)
-    subobjects are links to material nodes with the associated quantities.
+    sub-objects are links to material nodes with the associated quantities.
 
     ---
 
@@ -18,7 +18,7 @@ class Ingredient(BaseNode):
     * [process](../../primary_nodes/process)
     * [computation_process](../../primary_nodes/computation_process)
 
-    ## Available Subobjects:
+    ## Available sub-objects:
     * [Quantity](../quantity)
 
     ---
@@ -47,21 +47,21 @@ class Ingredient(BaseNode):
 
     def __init__(self, material: Material, quantity: List[Quantity], keyword: str = "", **kwargs):
         """
-        create an ingredient subobject
+        create an ingredient sub-object
 
         Examples
         --------
         ```python
         import cript
 
-        # create material and identifier for the ingredient subobject
+        # create material and identifier for the ingredient sub-object
         my_identifiers = [{"bigsmiles": "123456"}]
         my_material = cript.Material(name="my material", identifier=my_identifiers)
 
-        # create quantity subobject
+        # create quantity sub-object
         my_quantity = cript.Quantity(key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev")
 
-        # create ingredient subobject and add all appropriate nodes/subobjects
+        # create ingredient sub-object and add all appropriate nodes/sub-objects
         my_ingredient = cript.Ingredient(material=my_material, quantity=my_quantity, keyword="catalyst")
         ```
 
@@ -70,14 +70,14 @@ class Ingredient(BaseNode):
         material : Material
             material node
         quantity : List[Quantity]
-            list of quantity subobjects
+            list of quantity sub-objects
         keyword : str, optional
             ingredient keyword must come from [CRIPT Controlled Vocabulary](), by default ""
 
         Returns
         -------
         None
-            Create new Ingredient subobject
+            Create new Ingredient sub-object
         """
         super().__init__(**kwargs)
         self._json_attrs = replace(self._json_attrs, material=material, quantity=quantity, keyword=keyword)
@@ -86,30 +86,30 @@ class Ingredient(BaseNode):
     @property
     def material(self) -> Material:
         """
-        current material in this ingredient subobject
+        current material in this ingredient sub-object
 
         Returns
         -------
         Material
-            Material node within the ingredient subobject
+            Material node within the ingredient sub-object
         """
         return self._json_attrs.material
 
     @property
     def quantity(self) -> List[Quantity]:
         """
-        quantity for the ingredient subobject
+        quantity for the ingredient sub-object
 
         Returns
         -------
         List[Quantity]
-            list of quantities for the ingredient subobject
+            list of quantities for the ingredient sub-object
         """
         return self._json_attrs.quantity.copy()
 
     def set_material(self, new_material: Material, new_quantity: List[Quantity]) -> None:
         """
-        update ingredient subobject with new material and new list of quantities
+        update ingredient sub-object with new material and new list of quantities
 
         Examples
         --------
@@ -131,7 +131,7 @@ class Ingredient(BaseNode):
         new_material : Material
             new material node to replace the current
         new_quantity : List[Quantity]
-            new list of quantity subobjects to replace the current quantity subobject on this node
+            new list of quantity sub-objects to replace the current quantity subobject on this node
 
         Returns
         -------

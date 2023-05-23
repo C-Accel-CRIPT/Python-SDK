@@ -20,7 +20,7 @@ class SoftwareConfiguration(BaseNode):
     * [Computation](../../primary_nodes/computation)
     * [Computation_Process](../../primary_nodes/computation_process)
 
-    ## Available Subobjects:
+    ## Available sub-objects:
     * [Algorithm](../algorithm)
     * [Citation](../citation)
 
@@ -53,7 +53,7 @@ class SoftwareConfiguration(BaseNode):
 
     def __init__(self, software: Software, algorithm: Union[List[Algorithm], None] = None, notes: str = "", citation: Union[List[Citation], None] = None, **kwargs):
         """
-        Create Software_Configuration subobject
+        Create Software_Configuration sub-object
 
 
         Parameters
@@ -65,7 +65,7 @@ class SoftwareConfiguration(BaseNode):
         notes : str, optional
             plain text notes, by default ""
         citation : Union[List[Citation], None], optional
-            list of Citation subobject, by default None
+            list of Citation sub-object, by default None
 
         Examples
         ---------
@@ -80,7 +80,7 @@ class SoftwareConfiguration(BaseNode):
         Returns
         -------
         None
-            Create Software_Configuration subobject
+            Create Software_Configuration sub-object
         """
         if algorithm is None:
             algorithm = []
@@ -210,7 +210,7 @@ class SoftwareConfiguration(BaseNode):
     @property
     def citation(self) -> List[Citation]:
         """
-        list of Citation subobjects for the Software_Configuration
+        list of Citation sub-objects for the Software_Configuration
 
         Examples
         --------
@@ -232,7 +232,7 @@ class SoftwareConfiguration(BaseNode):
             website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
         )
 
-        # create citation subobject and add reference to it
+        # create citation sub-object and add reference to it
         my_citation = Citation("reference", my_reference)
 
         # add citation to algorithm node
@@ -249,12 +249,12 @@ class SoftwareConfiguration(BaseNode):
     @citation.setter
     def citation(self, new_citation: List[Citation]) -> None:
         """
-        set the Citation subobject
+        set the Citation sub-object
 
         Parameters
         ----------
         new_citation : List[Citation]
-            new list of Citation subobjects
+            new list of Citation sub-objects
 
         Returns
         -------

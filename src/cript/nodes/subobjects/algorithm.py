@@ -10,7 +10,7 @@ class Algorithm(BaseNode):
     """
     ## Definition
 
-    An [algorithm subobject](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=25)
+    An [algorithm sub-object](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=25)
     is a set of instructions that define a computational process.
     An algorithm consists of parameters that are used in the computation and the computational process itself.
 
@@ -25,7 +25,7 @@ class Algorithm(BaseNode):
     | citation  | list[Citation]  |                                              | reference to a book, paper, or scholarly work          |          |       |
 
 
-    ## Available Subobjects
+    ## Available sub-objects
     * [Parameter](../parameter)
     * [Citation](../citation)
 
@@ -74,7 +74,7 @@ class Algorithm(BaseNode):
 
     def __init__(self, key: str, type: str, parameter: List[Parameter] = None, citation: List[Citation] = None, **kwargs):  # ignored
         """
-        create algorithm subobject
+        create algorithm sub-object
 
         Parameters
         ----------
@@ -83,14 +83,14 @@ class Algorithm(BaseNode):
         type : str
             algorithm type must come from [CRIPT controlled vocabulary]()
         parameter : List[Parameter], optional
-            parameter subobject, by default None
+            parameter sub-object, by default None
         citation : List[Citation], optional
-            citation subobject, by default None
+            citation sub-object, by default None
 
         Examples
         --------
         ```python
-        # create algorithm subobject
+        # create algorithm sub-object
         algorithm = cript.Algorithm(key="mc_barostat", type="barostat")
         ```
 
@@ -164,37 +164,37 @@ class Algorithm(BaseNode):
     @property
     def parameter(self) -> List[Parameter]:
         """
-        list of [Parameter](../parameter) subobjects for the algorithm subobject
+        list of [Parameter](../parameter) sub-objects for the algorithm sub-object
 
         Examples
         --------
         ```python
-        # create parameter subobject
+        # create parameter sub-object
         my_parameter = [
             cript.Parameter("update_frequency", 1000.0, "1/second")
             cript.Parameter("damping_time", 1.0, "second")
         ]
 
-        # add parameter subobject to algorithm subobject
+        # add parameter sub-object to algorithm sub-object
         algorithm.parameter = my_parameter
         ```
 
         Returns
         -------
         List[Parameter]
-            list of parameters for the algorithm subobject
+            list of parameters for the algorithm sub-object
         """
         return self._json_attrs.parameter.copy()
 
     @parameter.setter
     def parameter(self, new_parameter: List[Parameter]) -> None:
         """
-        set a list of cript.Parameter subobjects
+        set a list of cript.Parameter sub-objects
 
         Parameters
         ----------
         new_parameter : List[Parameter]
-            list of Parameter subobjects for the algorithm subobject
+            list of Parameter sub-objects for the algorithm sub-object
 
         Returns
         -------

@@ -22,9 +22,9 @@ class Parameter(BaseNode):
 
     ---
     ## Can Be Added To:
-    * [Algorithm subobject](../algorithm)
+    * [Algorithm sub-object](../algorithm)
 
-    ## Available Subobjects:
+    ## Available sub-objects:
     * None
 
     ---
@@ -59,7 +59,7 @@ class Parameter(BaseNode):
     # They are just here, such that we can feed more kwargs in that we get from the back end.
     def __init__(self, key: str, value: Union[int, float], unit: Union[str, None] = None, **kwargs):
         """
-        create new Parameter subobject
+        create new Parameter sub-object
 
         Parameters
         ----------
@@ -81,7 +81,7 @@ class Parameter(BaseNode):
         Returns
         -------
         None
-            create Parameter subobject
+            create Parameter sub-object
         """
         super().__init__(**kwargs)
         self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit)
@@ -108,7 +108,7 @@ class Parameter(BaseNode):
     @key.setter
     def key(self, new_key: str) -> None:
         """
-        set new key for the Parameter subobject
+        set new key for the Parameter sub-object
 
         Parameter key must come from [CRIPT Controlled Vocabulary]()
 
@@ -180,7 +180,7 @@ class Parameter(BaseNode):
     @unit.setter
     def unit(self, new_unit: str) -> None:
         """
-        set the unit attribute for the Parameter subobject
+        set the unit attribute for the Parameter sub-object
 
         Parameters
         ----------

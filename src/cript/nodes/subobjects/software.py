@@ -18,7 +18,7 @@ class Software(UUIDBaseNode):
     ## Can Be Added To:
     * [Software_Configuration](../../subobjects/software_configuration)
 
-    ## Available Subobjects
+    ## Available sub-objects
     * None
 
     ---

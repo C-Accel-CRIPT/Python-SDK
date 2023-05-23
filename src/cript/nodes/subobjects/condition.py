@@ -10,7 +10,7 @@ class Condition(BaseNode):
     """
     ## Definition
 
-    A [Condition](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=21) subobject
+    A [Condition](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=21) sub-object
     is the conditions under which the experiment was conducted.
     Some examples include temperature, mixing_rate, stirring, time_duration.
 
@@ -104,7 +104,7 @@ class Condition(BaseNode):
         **kwargs
     ):
         """
-        create Condition subobject
+        create Condition sub-object
 
         Parameters
         ----------
@@ -133,7 +133,7 @@ class Condition(BaseNode):
         Examples
         --------
         ```python
-        # instantiate a Condition subobject
+        # instantiate a Condition sub-object
         my_condition = cript.Condition(
             key="temperature",
             type="value",
@@ -186,7 +186,7 @@ class Condition(BaseNode):
     @key.setter
     def key(self, new_key: str) -> None:
         """
-        set this Condition subobject key
+        set this Condition sub-object key
 
         > Condition key must come from [CRIPT Controlled Vocabulary]()
 
@@ -251,14 +251,14 @@ class Condition(BaseNode):
         Returns
         -------
         description: str
-            description of this Condition Subobject
+            description of this Condition sub-object
         """
         return self._json_attrs.descriptor
 
     @descriptor.setter
     def descriptor(self, new_descriptor: str) -> None:
         """
-        set the description of this Condition subobject
+        set the description of this Condition sub-object
 
         Parameters
         ----------

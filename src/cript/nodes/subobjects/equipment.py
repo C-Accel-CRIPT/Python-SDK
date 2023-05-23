@@ -11,14 +11,14 @@ class Equipment(BaseNode):
     """
     ## Definition
     An [Equipment](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=23)
-    subobject specifies the physical instruments, tools, glassware, etc. used in a process.
+    sub-object specifies the physical instruments, tools, glassware, etc. used in a process.
 
     ---
 
     ## Can Be Added To:
     * [Process node](../../primary_nodes/process)
 
-    ## Available Subobjects:
+    ## Available sub-objects:
     * [Condition](../condition)
     * [Citation](../citation)
 
@@ -53,7 +53,7 @@ class Equipment(BaseNode):
 
     def __init__(self, key: str, description: str = "", condition: Union[List[Condition], None] = None, file: Union[List[File], None] = None, citation: Union[List[Citation], None] = None, **kwargs) -> None:
         """
-        create equipment subobject
+        create equipment sub-object
 
         Parameters
         ----------
@@ -77,7 +77,7 @@ class Equipment(BaseNode):
         Returns
         -------
         None
-            instantiate equipment subobject
+            instantiate equipment sub-object
         """
         if condition is None:
             condition = []
@@ -119,7 +119,7 @@ class Equipment(BaseNode):
         Parameters
         ----------
         new_key : str
-            equipment subobject key
+            equipment sub-object key
 
         Returns
         -------
@@ -171,7 +171,7 @@ class Equipment(BaseNode):
         Examples
         --------
         ```python
-        # create a Condition subobject
+        # create a Condition sub-object
         my_condition = cript.Condition(
             key="temperature",
             type="value",
@@ -179,26 +179,26 @@ class Equipment(BaseNode):
             unit="C",
         )
 
-        # add Condition subobject to Equipment subobject
+        # add Condition sub-object to Equipment sub-object
         my_equipment.condition = [my_condition]
         ```
 
         Returns
         -------
         List[Condition]
-            list of Condition subobjects
+            list of Condition sub-objects
         """
         return self._json_attrs.condition.copy()
 
     @condition.setter
     def condition(self, new_condition: List[Condition]) -> None:
         """
-        set a list of Conditions for the equipment subobject
+        set a list of Conditions for the equipment sub-object
 
         Parameters
         ----------
         new_condition : List[Condition]
-            list of Condition subobjects
+            list of Condition sub-objects
 
         Returns
         -------
@@ -215,14 +215,14 @@ class Equipment(BaseNode):
         Examples
         --------
         ```python
-        # create a file node to be added to the equipment subobject
+        # create a file node to be added to the equipment sub-object
         my_file = cript.File(
             source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
             type="calibration",
             extension=".pdf",
         )
 
-        # add file node to equipment subobject
+        # add file node to equipment sub-object
         my_equipment.file = [my_file]
 
         ```

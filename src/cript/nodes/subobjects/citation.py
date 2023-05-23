@@ -8,7 +8,7 @@ from cript.nodes.primary_nodes.reference import Reference
 class Citation(BaseNode):
     """
     ## Definition
-    The [Citation subobject](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=26)
+    The [Citation sub-object](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=26)
     essentially houses [Reference nodes](../../primary_nodes/reference). The citation subobject can then be added to CRIPT Primary nodes.
 
     ## Attributes

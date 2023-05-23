@@ -14,7 +14,7 @@ from cript.nodes.subobjects.condition import Condition
 class Property(BaseNode):
     """
     ## Definition
-    [Property](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=18) subobjects
+    [Property](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=18) sub-objects
     are qualities/traits of a [material](../../primary_nodes/material) or or [Process](../../primary_nodes/process)
 
     ---
@@ -24,7 +24,7 @@ class Property(BaseNode):
     * [Process](../../primary_nodes/process)
     * [Computation_Process](../../primary_nodes/Computation_Process)
 
-    ## Available Subobjects:
+    ## Available sub-objects:
     * [Condition](../condition)
     * [Citation](../citation)
 
@@ -98,7 +98,7 @@ class Property(BaseNode):
         **kwargs
     ):
         """
-        create a property subobject
+        create a property sub-object
 
         Parameters
         ----------
@@ -145,7 +145,7 @@ class Property(BaseNode):
         Returns
         -------
         None
-            create a Property subobject
+            create a Property sub-object
         """
         if component is None:
             component = []
@@ -200,7 +200,7 @@ class Property(BaseNode):
     @key.setter
     def key(self, new_key: str) -> None:
         """
-        set the key for this Property subobject
+        set the key for this Property sub-object
 
         Parameters
         ----------
@@ -217,7 +217,7 @@ class Property(BaseNode):
     @property
     def type(self) -> str:
         """
-        type of value for this Property subobject
+        type of value for this Property sub-object
 
         Examples
         ```python
@@ -227,7 +227,7 @@ class Property(BaseNode):
         Returns
         -------
         str
-            type of value for this Property subobject
+            type of value for this Property sub-object
         """
         return self._json_attrs.type
 

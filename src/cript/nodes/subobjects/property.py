@@ -15,7 +15,7 @@ class Property(BaseNode):
     """
     ## Definition
     [Property](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=18) subobjects
-    are qualities/traits of a [material](../../primary_nodes/material.md) or or [Process](../../primary_nodes/process.md)
+    are qualities/traits of a [material](../../primary_nodes/material) or or [Process](../../primary_nodes/process)
 
     ---
 

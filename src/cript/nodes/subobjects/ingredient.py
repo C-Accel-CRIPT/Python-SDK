@@ -73,6 +73,11 @@ class Ingredient(BaseNode):
             list of quantity subobjects
         keyword : str, optional
             ingredient keyword must come from [CRIPT Controlled Vocabulary](), by default ""
+
+        Returns
+        -------
+        None
+            Create new Ingredient subobject
         """
         super().__init__(**kwargs)
         self._json_attrs = replace(self._json_attrs, material=material, quantity=quantity, keyword=keyword)
@@ -127,6 +132,10 @@ class Ingredient(BaseNode):
             new material node to replace the current
         new_quantity : List[Quantity]
             new list of quantity subobjects to replace the current quantity subobject on this node 
+
+        Returns
+        -------
+        None
         """
         new_attrs = replace(self._json_attrs, material=new_material, quantity=new_quantity)
         self._update_json_attrs_if_valid(new_attrs)
@@ -161,6 +170,10 @@ class Ingredient(BaseNode):
         ----------
         new_keyword : str
             new ingredient keyword
+        
+        Returns
+        -------
+        None
         """
         new_attrs = replace(self._json_attrs, keyword=new_keyword)
         self._update_json_attrs_if_valid(new_attrs)

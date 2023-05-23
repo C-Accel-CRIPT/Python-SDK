@@ -9,12 +9,12 @@ from cript.nodes.subobjects.citation import Citation
 class ComputationalForcefield(BaseNode):
     """
     ## Definition
-    A [Computational Forcefield Subobject](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=23) 
-    is a mathematical model that describes the forces between atoms and molecules. 
-    It is used in computational chemistry and molecular dynamics simulations to predict the behavior of materials. 
-    Forcefields are typically based on experimental data or quantum mechanical calculations, 
+    A [Computational Forcefield Subobject](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=23)
+    is a mathematical model that describes the forces between atoms and molecules.
+    It is used in computational chemistry and molecular dynamics simulations to predict the behavior of materials.
+    Forcefields are typically based on experimental data or quantum mechanical calculations,
     and they are often used to study the properties of materials such as their structure, dynamics, and reactivity.
-    
+
     ## Attributes
     | attribute              | type           | example                                                                | description                                                              | required | vocab |
     |------------------------|----------------|------------------------------------------------------------------------|--------------------------------------------------------------------------|----------|-------|
@@ -56,7 +56,7 @@ class ComputationalForcefield(BaseNode):
             ]
         },
         "citation": {
-            "node": ["Citation"], 
+            "node": ["Citation"],
             "type": "reference"
             "reference": {
                 "node": ["Reference"],
@@ -75,7 +75,7 @@ class ComputationalForcefield(BaseNode):
 
 
     ```
-    
+
     """
 
     @dataclass(frozen=True)
@@ -114,7 +114,7 @@ class ComputationalForcefield(BaseNode):
         citation : Union[List[Citation], None], optional
             reference to a book, paper, or scholarly work, by default None
 
-        
+
         Examples
         --------
         ```python
@@ -215,7 +215,7 @@ class ComputationalForcefield(BaseNode):
         ----------
         new_building_block : str
             new type of building block
-        
+
         Returns
         -------
         None
@@ -250,7 +250,7 @@ class ComputationalForcefield(BaseNode):
         ----------
         new_coarse_grained_mapping : str
             new coarse_grained_mapping
-        
+
         Returns
         -------
         None
@@ -347,7 +347,7 @@ class ComputationalForcefield(BaseNode):
         ----------
         new_description : str
             new computational_forcefields description
-        
+
         Returns
         -------
         None
@@ -365,8 +365,8 @@ class ComputationalForcefield(BaseNode):
         ```python
         # create file nodes for the data node
         my_file = cript.File(
-            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf", 
-            type="calibration", 
+            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
+            type="calibration",
             extension=".pdf",
         )
 

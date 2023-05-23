@@ -16,7 +16,7 @@ class Citation(BaseNode):
     |-----------|-----------|--------------|-----------------------------------------------|----------|-------|
     | type      | str       | derived_from | key for identifier                            | True     | True  |
     | reference | Reference |              | reference to a book, paper, or scholarly work | True     |       |
-        
+
     ## Can Be Added To
     ### Primary Nodes
     * [Collection node](../../primary_nodes/collection)
@@ -38,7 +38,7 @@ class Citation(BaseNode):
     ## JSON Representation
     ```json
     "citation": {
-            "node": ["Citation"], 
+            "node": ["Citation"],
             "type": "reference",
             "reference": {
                     "node": ["Reference"],
@@ -167,7 +167,7 @@ class Citation(BaseNode):
             doi="10.1016/j.cpc.2018.08.011",
             issn="0010-4655",
             website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
-        )        
+        )
 
         my_citation.reference = my_reference
         ```

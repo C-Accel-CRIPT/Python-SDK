@@ -14,7 +14,7 @@ from cript.nodes.subobjects.condition import Condition
 class Property(BaseNode):
     """
     ## Definition
-    [Property](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=18) subobjects 
+    [Property](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=18) subobjects
     are qualities/traits of a [material](../../primary_nodes/material.md) or or [Process](../../primary_nodes/process.md)
 
     ---
@@ -132,7 +132,7 @@ class Property(BaseNode):
             reference scholarly work, by default None
         notes : str, optional
             miscellaneous information, or custom data structure (e.g.; JSON), by default ""
-            
+
 
         Examples
         --------
@@ -206,7 +206,7 @@ class Property(BaseNode):
         ----------
         new_key : str
             new Property key
-        
+
         Returns
         -------
         None
@@ -356,7 +356,7 @@ class Property(BaseNode):
         Examples
         ---------
         ```python
-        
+
         my_identifiers = [{"bigsmiles": "123456"}]
         my_material = cript.Material(name="my material", identifier=my_identifiers)
 
@@ -409,13 +409,13 @@ class Property(BaseNode):
     @structure.setter
     def structure(self, new_structure: str) -> None:
         """
-        set the this Property's structure 
+        set the this Property's structure
 
         Parameters
         ----------
         new_structure : str
             new structure
-        
+
         Returns
         -------
         None
@@ -454,7 +454,7 @@ class Property(BaseNode):
         ----------
         new_method : str
             new Property method
-        
+
         Returns
         -------
         None
@@ -575,7 +575,7 @@ class Property(BaseNode):
         ----------
         new_data : List[Data]
             new list of Data nodes
-        
+
         Returns
         -------
         None

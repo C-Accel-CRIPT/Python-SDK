@@ -85,7 +85,7 @@ class Quantity(BaseNode):
 
     def set_key_unit(self, new_key: str, new_unit: str) -> None:
         """
-        set the Quantity key and unit attributes 
+        set the Quantity key and unit attributes
 
         Quantity key must come from [CRIPT Controlled Vocabulary]()
 
@@ -101,7 +101,7 @@ class Quantity(BaseNode):
             new Quantity key. Quantity key must come from [CRIPT Controlled Vocabulary]()
         new_unit : str
             new unit
-        
+
         Returns
         -------
         None

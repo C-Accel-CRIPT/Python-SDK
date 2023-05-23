@@ -7,23 +7,23 @@ from cript.nodes.subobjects.parameter import Parameter
 
 
 class Algorithm(BaseNode):
-    """ 
+    """
     ## Definition
 
     An [algorithm subobject](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=25)
     is a set of instructions that define a computational process.
     An algorithm consists of parameters that are used in the computation and the computational process itself.
 
-    
+
     ## Attributes
-      
+
     | Keys      | Type            | Example                                      | Description                                            | Required | Vocab |
     |-----------|-----------------|----------------------------------------------|--------------------------------------------------------|----------|-------|
     | key       | str             | ensemble, thermo-barostat                    | system configuration, algorithms used in a computation | True     | True  |
     | type      | str             | NPT for ensemble, Nose-Hoover for thermostat | specific type of configuration, algorithm              | True     |       |
     | parameter | list[Parameter] |                                              | setup associated parameters                            |          |       |
     | citation  | list[Citation]  |                                              | reference to a book, paper, or scholarly work          |          |       |
-    
+
 
     ## Available Subobjects
     * [Parameter](../parameter)
@@ -32,17 +32,17 @@ class Algorithm(BaseNode):
     ## JSON Representation
     ```json
     {
-        "node": ["Algorithm"], 
-        "key": "mc_barostat", 
+        "node": ["Algorithm"],
+        "key": "mc_barostat",
         "type": "barostat",
         "parameter": {
-            "node": ["Parameter"], 
-            "key": "update_frequency", 
-            "value": 1000.0, 
+            "node": ["Parameter"],
+            "key": "update_frequency",
+            "value": 1000.0,
             "unit": "1/second"
         },
         "citation": {
-            "node": ["Citation"], 
+            "node": ["Citation"],
             "type": "reference"
             "reference": {
                     "node": ["Reference"],
@@ -145,8 +145,8 @@ class Algorithm(BaseNode):
     @property
     def type(self) -> str:
         """
-        Algorithm type 
-        
+        Algorithm type
+
         > Algorithm type must come from [CRIPT controlled vocabulary]()
 
         Returns

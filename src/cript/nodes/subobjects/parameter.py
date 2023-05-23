@@ -8,15 +8,15 @@ class Parameter(BaseNode):
     """
     ## Definition
 
-    A [parameter](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=25) 
-    is an input value to an algorithm. 
+    A [parameter](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=25)
+    is an input value to an algorithm.
 
     ??? note "Difference between `Parameter` and `Condition`"
         For typical computations, the difference between
         parameter and condition lies in whether it changes the thermodynamic state of the simulated
         system: Variables that are part of defining a thermodynamic state should be defined as a condition
-        in a parent node. 
-        
+        in a parent node.
+
         Therefore, `number` and `volume` need to be listed as conditions while
         `boundaries` and `origin` are parameters of ensemble size
 
@@ -37,7 +37,7 @@ class Parameter(BaseNode):
     | value     | Any  |         | value              | True     |       |
     | unit      | str  |         | unit for parameter |          |       |
 
-    
+
     ## JSON Representation
     ```json
 
@@ -91,7 +91,7 @@ class Parameter(BaseNode):
     def key(self) -> str:
         """
         Parameter key must come from the [CRIPT Controlled Vocabulary]()
-        
+
         Examples
         --------
         ```python
@@ -116,7 +116,7 @@ class Parameter(BaseNode):
         ----------
         new_key : str
             new Parameter key
-        
+
         Returns
         -------
         None
@@ -180,13 +180,13 @@ class Parameter(BaseNode):
     @unit.setter
     def unit(self, new_unit: str) -> None:
         """
-        set the unit attribute for the Parameter subobject        
+        set the unit attribute for the Parameter subobject
 
         Parameters
         ----------
         new_unit : str
             new Parameter unit
-        
+
         Returns
         -------
         None

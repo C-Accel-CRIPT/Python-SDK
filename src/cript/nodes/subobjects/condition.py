@@ -10,8 +10,8 @@ class Condition(BaseNode):
     """
     ## Definition
 
-    A [Condition](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=21) subobject 
-    is the conditions under which the experiment was conducted. 
+    A [Condition](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=21) subobject
+    is the conditions under which the experiment was conducted.
     Some examples include temperature, mixing_rate, stirring, time_duration.
 
     ----
@@ -454,7 +454,7 @@ class Condition(BaseNode):
         ----------
         new_measurement_id : Union[int, None]
             ID for a single measurement
-        
+
         Returns
         -------
         None
@@ -472,8 +472,8 @@ class Condition(BaseNode):
         ```python
         # create file nodes for the data node
         my_file = cript.File(
-            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf", 
-            type="calibration", 
+            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
+            type="calibration",
             extension=".pdf",
         )
 
@@ -504,7 +504,7 @@ class Condition(BaseNode):
         ----------
         new_data : Data
             new Data node
-        
+
         Returns
         -------
         None

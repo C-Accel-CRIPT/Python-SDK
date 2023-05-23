@@ -33,7 +33,7 @@ class Software(UUIDBaseNode):
 
     ## JSON Representation
     ```json
-    
+
     ```
     """
 
@@ -134,7 +134,7 @@ class Software(UUIDBaseNode):
         ----------
         new_version : str
             new Software version
-        
+
         Returns
         -------
         None
@@ -169,7 +169,7 @@ class Software(UUIDBaseNode):
         ----------
         new_source : str
             new Software source
-        
+
         Returns
         -------
         None

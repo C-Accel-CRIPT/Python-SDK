@@ -9,8 +9,8 @@ from cript.nodes.subobjects.quantity import Quantity
 class Ingredient(BaseNode):
     """
     ## Definition
-    An [Ingredient](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=22) 
-    subobjects are links to material nodes with the associated quantities. 
+    An [Ingredient](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=22)
+    subobjects are links to material nodes with the associated quantities.
 
     ---
 
@@ -131,7 +131,7 @@ class Ingredient(BaseNode):
         new_material : Material
             new material node to replace the current
         new_quantity : List[Quantity]
-            new list of quantity subobjects to replace the current quantity subobject on this node 
+            new list of quantity subobjects to replace the current quantity subobject on this node
 
         Returns
         -------
@@ -170,7 +170,7 @@ class Ingredient(BaseNode):
         ----------
         new_keyword : str
             new ingredient keyword
-        
+
         Returns
         -------
         None

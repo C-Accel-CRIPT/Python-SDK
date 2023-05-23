@@ -25,7 +25,7 @@ class SoftwareConfiguration(BaseNode):
     * [Citation](../citation)
 
     ---
-    
+
     ## Attributes
 
     | keys                                             | type            | example | description                                                      | required | vocab |
@@ -35,7 +35,7 @@ class SoftwareConfiguration(BaseNode):
     | notes                                            | str             |         | miscellaneous information, or custom data structure (e.g.; JSON) |          |       |
     | citation                                         | list[Citation]  |         | reference to a book, paper, or scholarly work                    |          |       |
 
-    
+
     ## JSON Representation
     ```json
 
@@ -54,7 +54,7 @@ class SoftwareConfiguration(BaseNode):
     def __init__(self, software: Software, algorithm: Union[List[Algorithm], None] = None, notes: str = "", citation: Union[List[Citation], None] = None, **kwargs):
         """
         Create Software_Configuration subobject
-        
+
 
         Parameters
         ----------
@@ -199,7 +199,7 @@ class SoftwareConfiguration(BaseNode):
         ----------
         new_notes : str
             new notes in plain text or JSON
-        
+
         Returns
         -------
         None

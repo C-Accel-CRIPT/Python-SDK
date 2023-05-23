@@ -10,10 +10,10 @@ from cript.nodes.supporting_nodes.file import File
 class Equipment(BaseNode):
     """
     ## Definition
-    An [Equipment](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=23) 
+    An [Equipment](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=23)
     subobject specifies the physical instruments, tools, glassware, etc. used in a process.
 
-    --- 
+    ---
 
     ## Can Be Added To:
     * [Process node](../../primary_nodes/process)
@@ -93,7 +93,7 @@ class Equipment(BaseNode):
     def key(self) -> str:
         """
         scientific instrument
-        
+
         > Equipment key must come from [CRIPT Controlled Vocabulary]()
 
         Examples
@@ -105,7 +105,7 @@ class Equipment(BaseNode):
         Returns
         -------
         Equipment: str
-            
+
         """
         return self._json_attrs.key
 
@@ -217,8 +217,8 @@ class Equipment(BaseNode):
         ```python
         # create a file node to be added to the equipment subobject
         my_file = cript.File(
-            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf", 
-            type="calibration", 
+            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
+            type="calibration",
             extension=".pdf",
         )
 
@@ -243,7 +243,7 @@ class Equipment(BaseNode):
         ----------
         new_file : List[File]
             list of File nodes
-        
+
         Returns
         -------
         None
@@ -299,7 +299,7 @@ class Equipment(BaseNode):
         ----------
         new_citation : List[Citation]
             list of Citation subobjects
-        
+
         Returns
         -------
         None

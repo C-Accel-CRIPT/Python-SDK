@@ -4,7 +4,7 @@ name: Docs
 on:
   push:
     branches:
-      - validate-nodes
+      - add_docs
 jobs:
   deploy:
     runs-on: ubuntu-latest

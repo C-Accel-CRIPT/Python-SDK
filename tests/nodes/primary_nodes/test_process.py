@@ -51,6 +51,10 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
 
     # create complex process
     citation = copy.deepcopy(complex_citation_node)
+    prop = copy.deepcopy(simple_property_node)
+    prop.set_value(1.0, "test unit")
+    prop.key = "arrhenius_activation"
+    prop.type = "value"
 
     my_complex_process = cript.Process(
         name=my_process_name,

@@ -195,7 +195,12 @@ class BaseNode(ABC):
         self.validate()
         return self.get_json().json
 
-    def get_json(self, handled_ids: set = None, condense_to_uuid={"Material": "parent_material", "Inventory": "material"}, **kwargs):
+    def get_json(
+        self,
+        handled_ids: set = None,
+        condense_to_uuid={"Material": ["parent_material", "component"], "Inventory": ["material"], "Ingredient": ["material"], "Property": ["component"], "ComputatationProcess": ["material"], "Data": ["material"], "Process": ["product", "waste"]},
+        **kwargs
+    ):
         """
         User facing access to get the JSON of a node.
         Opposed to the also available property json this functions allows further control.

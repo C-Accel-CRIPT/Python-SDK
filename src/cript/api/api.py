@@ -1,21 +1,21 @@
 import copy
 import json
-import os
 import warnings
-from typing import List, Union
+from typing import Dict, List, Union
 
 import jsonschema
 import requests
 
 from cript.api.exceptions import (
     APIError,
-    CRIPTAPIAccessError,
+    CRIPTAPIRequiredError,
     CRIPTAPISaveError,
     CRIPTConnectionError,
     InvalidHostError,
     InvalidVocabulary,
 )
 from cript.api.paginator import Paginator
+from cript.api.utils.get_host_token import resolve_host_and_token
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import ControlledVocabularyCategories
 from cript.nodes.core import BaseNode
@@ -33,7 +33,7 @@ def _get_global_cached_api():
     Raises an exception if no global API object is cached yet.
     """
     if _global_cached_api is None:
-        raise CRIPTAPIAccessError
+        raise CRIPTAPIRequiredError()
     return _global_cached_api
 
 
@@ -51,16 +51,42 @@ class API:
     _api_handle: str = "api"
     _api_version: str = "v1"
 
-    def __init__(self, host: Union[str, None], token: [str, None]):
+    def __init__(self, host: Union[str, None] = None, token: Union[str, None] = None, config_file_path: str = ""):
         """
-        Initialize object with host and token.
-        It is necessary to use a `with` context manager for the API
+        Initialize CRIPT API client with host and token.
+        Additionally, you can  use a config.json file and specify the file path.
+
+        !!! note "api client context manager"
+            It is necessary to use a `with` context manager for the API
 
         Examples
         --------
+        ### Create API client with host and token
         ```Python
         with cript.API('https://criptapp.org', 'secret_token') as api:
            # node creation, api.save(), etc.
+        ```
+
+        ---
+
+        ### Create API client with config.json
+        `config.json`
+        ```json
+        {
+            "host": "https://criptapp.org",
+            "token": "I am token"
+        }
+        ```
+
+        `my_script.py`
+        ```python
+        from pathlib import Path
+
+        # create a file path object of where the config file is
+        config_file_path = Path(__file__) / Path('./config.json')
+
+        with cript.API(config_file_path=config_file_path) as api:
+            # node creation, api.save(), etc.
         ```
 
         Notes
@@ -77,6 +103,8 @@ class API:
             You can find your personal token on the cript website at User > Security Settings.
             The user icon is in the top right.
             If `None` is specified, the token is inferred from the environment variable `CRIPT_TOKEN`.
+        config_file_path: str
+            the file path to the config.json file where the token and host can be found
 
 
         Notes
@@ -101,15 +129,11 @@ class API:
             Instantiate a new CRIPT API object
         """
 
-        # if host and token is none then it will grab host and token from user's environment variables
-        if host is None:
-            host = os.environ.get("CRIPT_HOST")
-            if host is None:
-                raise RuntimeError("API initilized with `host=None` but environment variable `CRIPT_HOST` not found.\n" "Set the environment variable (preferred) or specify the host explictly at the creation of API.")
-        if token is None:
-            token = os.environ.get("CRIPT_TOKEN")
-            if token is None:
-                raise RuntimeError("API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n" "Set the environment variable (preferred) or specify the token explictly at the creation of API.")
+        if config_file_path or (host is None and token is None):
+            authentication_dict: Dict[str, str] = resolve_host_and_token(host, token, config_file_path)
+
+            host = authentication_dict["host"]
+            token = authentication_dict["token"]
 
         self._host = self._prepare_host(host=host)
         self._token = token
@@ -133,7 +157,7 @@ class API:
             warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
 
         if not host.startswith("http"):
-            raise InvalidHostError("The host must start with http or https")
+            raise InvalidHostError()
 
         return host
 

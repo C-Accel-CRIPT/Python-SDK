@@ -61,6 +61,14 @@ class ControlledVocabularyCategories(Enum):
         Set type.
     UNCERTAINTY_TYPE: str
         Uncertainty type.
+
+    Examples
+    --------
+    ```python
+    algorithm_vocabulary = api.get_vocabulary_by_category(
+        ControlledVocabularyCategories.ALGORITHM_KEY
+        )
+    ```
     """
 
     ALGORITHM_KEY: str = "algorithm_key"

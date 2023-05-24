@@ -6,7 +6,21 @@ from abc import ABC
 from dataclasses import asdict, dataclass, replace
 from typing import List
 
-from cript.nodes.exceptions import CRIPTJsonSerializationError
+from cript.nodes.exceptions import (
+    CRIPTAttributeModificationError,
+    CRIPTExtraJsonAttributes,
+    CRIPTJsonSerializationError,
+)
+
+tolerated_extra_json = ["component_count", "computational_forcefield_count", "property_count"]
+
+
+def add_tolerated_extra_json(additional_tolerated_json: str):
+    """
+    In case a node should be loaded from JSON (such as `getting` them from the API),
+    but the API sends additional JSON attributes, these can be set to tolerated temprarily with this routine.
+    """
+    tolerated_extra_json.append(additional_tolerated_json)
 
 
 def get_new_uid():
@@ -45,7 +59,17 @@ class BaseNode(ABC):
             name = self.__name__
         return name
 
-    def __init__(self):
+    # Prevent new attributes being set.
+    # This might just be temporary, but for now, I don't want to acciditentally add new attributes, when I mean to modify one.
+    def __setattr__(self, key, value):
+        if not hasattr(self, key):
+            raise CRIPTAttributeModificationError(self.node_type, key, value)
+        super().__setattr__(key, value)
+
+    def __init__(self, **kwargs):
+        for kwarg in kwargs:
+            if kwarg not in tolerated_extra_json + list(self._json_attrs.__dataclass_fields__.keys()):
+                raise CRIPTExtraJsonAttributes(self.node_type, kwarg)
         uid = get_new_uid()
         self._json_attrs = replace(self._json_attrs, node=[self.node_type], uid=uid)
 
@@ -64,16 +88,41 @@ class BaseNode(ABC):
     def uid(self):
         return self._json_attrs.uid
 
-    def _update_json_attrs_if_valid(self, new_json_attr: JsonAttributes):
-        old_json_attrs = copy.copy(self._json_attrs)
+    @property
+    def node(self):
+        return self._json_attrs.node
+
+    def _update_json_attrs_if_valid(self, new_json_attr: JsonAttributes) -> None:
+        """
+        tries to update the node if valid and then checks if it is valid or not
+
+        1. updates the node with the new information
+        1. run db schema validation on it
+            1. if db schema validation succeeds then update and continue
+            1. else: raise an error and tell the user what went wrong
+
+        Parameters
+        ----------
+        new_json_attr
+
+        Raises
+        ------
+        Exception
+
+        Returns
+        -------
+        None
+        """
+        old_json_attrs = self._json_attrs
         self._json_attrs = new_json_attr
+
         try:
             self.validate()
         except Exception as exc:
             self._json_attrs = old_json_attrs
             raise exc
 
-    def validate(self) -> None:
+    def validate(self, api=None) -> None:
         """
         Validate this node (and all its children) against the schema provided by the data bank.
 
@@ -81,8 +130,11 @@ class BaseNode(ABC):
         -------
         Exception with more error information.
         """
+        from cript.api.api import _get_global_cached_api
 
-        pass
+        if api is None:
+            api = _get_global_cached_api()
+        api._is_node_schema_valid(self.get_json().json)
 
     @classmethod
     def _from_json(cls, json_dict: dict):
@@ -98,9 +150,12 @@ class BaseNode(ABC):
         # The call to the constructor might ignore fields that are usually not writable.
         try:
             node = cls(**arguments)
+        # TODO we should not catch all exceptions if we are handling them, and instead let it fail
+        #  to create a good error message that points to the correct place that it failed to make debugging easier
         except Exception as exc:
             print(cls, arguments)
             raise exc
+
         attrs = cls.JsonAttributes(**arguments)
         # Handle UID manually. Conserve newly assigned uid if uid is default (empty)
         if attrs.uid == cls.JsonAttributes().uid:
@@ -118,7 +173,10 @@ class BaseNode(ABC):
             arguments[field] = copy.deepcopy(getattr(self._json_attrs, field), memo)
         # TODO URL handling
 
-        arguments["uid"] = get_new_uid()
+        # Since we excluded 'uuid' from arguments,
+        # a new uid will prompt the creation of a new matching uuid.
+        uid = get_new_uid()
+        arguments["uid"] = uid
 
         # Create node and init constructor attributes
         node = self.__class__(**arguments)
@@ -132,12 +190,21 @@ class BaseNode(ABC):
         Property to obtain a simple json string.
         Calls `get_json` with default arguments.
         """
+        # We cannot validate in `get_json` because we call it inside `validate`.
+        # But most uses are probably the property, so we can validate the node here.
+        self.validate()
         return self.get_json().json
 
-    def get_json(self, handled_ids: set = None, **kwargs):
+    def get_json(
+        self,
+        handled_ids: set = None,
+        condense_to_uuid={"Material": ["parent_material", "component"], "Inventory": ["material"], "Ingredient": ["material"], "Property": ["component"], "ComputatationProcess": ["material"], "Data": ["material"], "Process": ["product", "waste"]},
+        **kwargs
+    ):
         """
         User facing access to get the JSON of a node.
         Opposed to the also available property json this functions allows further control.
+        Additionally, this function does not call `self.validate()` but the property `json` does.
 
         Returns named tuple with json and handled ids as result.
         """
@@ -147,8 +214,6 @@ class BaseNode(ABC):
             json: str
             handled_ids: set
 
-        # Default is sorted keys
-        kwargs["sort_keys"] = kwargs.get("sort_keys", True)
         # Do not check for circular references, since we handle them manually
         kwargs["check_circular"] = kwargs.get("check_circular", False)
 
@@ -158,13 +223,19 @@ class BaseNode(ABC):
         previous_handled_nodes = copy.deepcopy(NodeEncoder.handled_ids)
         if handled_ids is not None:
             NodeEncoder.handled_ids = handled_ids
+        previous_condense_to_uuid = copy.deepcopy(NodeEncoder.condense_to_uuid)
+        NodeEncoder.condense_to_uuid = condense_to_uuid
+
         try:
-            self.validate()
             return ReturnTuple(json.dumps(self, cls=NodeEncoder, **kwargs), NodeEncoder.handled_ids)
         except Exception as exc:
+            # TODO this handling that doesn't tell the user what happened and how they can fix it
+            #   this just tells the user that something is wrong
+            #   this should be improved to tell the user what went wrong and where
             raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc
         finally:
             NodeEncoder.handled_ids = previous_handled_nodes
+            NodeEncoder.condense_to_uuid = previous_condense_to_uuid
 
     def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes=None) -> List:
         """
@@ -195,8 +266,10 @@ class BaseNode(ABC):
             """
             Helper function that checks if an attribute is present in a node.
             """
-
-            attr_key = asdict(node._json_attrs).get(key)
+            try:
+                attr_key = getattr(node._json_attrs, key)
+            except AttributeError:
+                return False
 
             # To save code paths, I convert non-lists into lists with one element.
             if not isinstance(attr_key, list):

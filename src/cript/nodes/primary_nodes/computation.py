@@ -32,7 +32,7 @@ class Computation(PrimaryBaseNode):
     | software_ configurations | list[Software  Configuration] |                                       | software and algorithms used                  |          |       |
     | condition                | list[Condition]               |                                       | setup information                             |          |       |
     | prerequisite_computation | Computation                   |                                       | prior computation method in chain             |          |       |
-    | citations                | list[Citation]                |                                       | reference to a book, paper, or scholarly work |          |       |
+    | citation                | list[Citation]                |                                       | reference to a book, paper, or scholarly work |          |       |
     | notes                    | str                           |                                       | additional description of the step            |          |       |
 
     ## Available Subobjects
@@ -52,10 +52,10 @@ class Computation(PrimaryBaseNode):
         # TODO add proper typing in future, using Any for now to avoid circular import error
         input_data: List[Any] = field(default_factory=list)
         output_data: List[Any] = field(default_factory=list)
-        software_configurations: List[Any] = field(default_factory=list)
-        conditions: List[Any] = field(default_factory=list)
+        software_configuration: List[Any] = field(default_factory=list)
+        condition: List[Any] = field(default_factory=list)
         prerequisite_computation: "Computation" = None
-        citations: List[Any] = None
+        citation: List[Any] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -65,10 +65,10 @@ class Computation(PrimaryBaseNode):
         type: str,
         input_data: List[Any] = None,
         output_data: List[Any] = None,
-        software_configurations: List[Any] = None,
-        conditions: List[Any] = None,
+        software_configuration: List[Any] = None,
+        condition: List[Any] = None,
         prerequisite_computation: "Computation" = None,
-        citations: List[Any] = None,
+        citation: List[Any] = None,
         notes: str = "",
         **kwargs
     ) -> None:
@@ -85,13 +85,13 @@ class Computation(PrimaryBaseNode):
             input data (data node)
         output_data: List[Data] default=None
             output data (data node)
-        software_configurations: List[SoftwareConfiguration] default=None
+        software_configuration: List[SoftwareConfiguration] default=None
             software configuration of computation node
-        conditions: List[Condition] default=None
-            conditions for the computation node
+        condition: List[Condition] default=None
+            condition for the computation node
         prerequisite_computation: Computation default=None
             prerequisite computation
-        citations: List[Citation] default=None
+        citation: List[Citation] default=None
             list of citations
         notes: str = ""
             any notes for this computation node
@@ -110,7 +110,7 @@ class Computation(PrimaryBaseNode):
             instantiate a computation node
 
         """
-        super().__init__(name=name, notes=notes)
+        super().__init__(name=name, notes=notes, **kwargs)
 
         if input_data is None:
             input_data = []
@@ -118,24 +118,24 @@ class Computation(PrimaryBaseNode):
         if output_data is None:
             output_data = []
 
-        if software_configurations is None:
-            software_configurations = []
+        if software_configuration is None:
+            software_configuration = []
 
-        if conditions is None:
-            conditions = []
+        if condition is None:
+            condition = []
 
-        if citations is None:
-            citations = []
+        if citation is None:
+            citation = []
 
         self._json_attrs = replace(
             self._json_attrs,
             type=type,
             input_data=input_data,
             output_data=output_data,
-            software_configurations=software_configurations,
-            conditions=conditions,
+            software_configuration=software_configuration,
+            condition=condition,
             prerequisite_computation=prerequisite_computation,
-            citations=citations,
+            citation=citation,
         )
 
         self.validate()
@@ -273,9 +273,9 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def software_configurations(self) -> List[Any]:
+    def software_configuration(self) -> List[Any]:
         """
-        List of software_configurations for this computation node
+        List of software_configuration for this computation node
 
         Examples
         --------
@@ -291,29 +291,29 @@ class Computation(PrimaryBaseNode):
         List[SoftwareConfiguration]
             list of software configurations
         """
-        return self._json_attrs.software_configurations.copy()
+        return self._json_attrs.software_configuration.copy()
 
-    @software_configurations.setter
-    def software_configurations(self, new_software_configurations_list: List[Any]) -> None:
+    @software_configuration.setter
+    def software_configuration(self, new_software_configuration_list: List[Any]) -> None:
         """
-        set the list of software_configurations for this computation node
+        set the list of software_configuration for this computation node
 
         Parameters
         ----------
-        new_software_configurations_list: List[software_configurations]
-            new_software_configurations_list to replace the current one
+        new_software_configuration_list: List[software_configuration]
+            new_software_configuration_list to replace the current one
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, software_configurations=new_software_configurations_list)
+        new_attrs = replace(self._json_attrs, software_configuration=new_software_configuration_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def conditions(self) -> List[Any]:
+    def condition(self) -> List[Any]:
         """
-        List of conditions for this computation node
+        List of condition for this computation node
 
         Examples
         --------
@@ -327,14 +327,14 @@ class Computation(PrimaryBaseNode):
         Returns
         -------
         List[Condition]
-            list of conditions for the computation node
+            list of condition for the computation node
         """
-        return self._json_attrs.conditions.copy()
+        return self._json_attrs.condition.copy()
 
-    @conditions.setter
-    def conditions(self, new_condition_list: List[Any]) -> None:
+    @condition.setter
+    def condition(self, new_condition_list: List[Any]) -> None:
         """
-        set the list of conditions for this node
+        set the list of condition for this node
 
         Parameters
         ----------
@@ -344,7 +344,7 @@ class Computation(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, conditions=new_condition_list)
+        new_attrs = replace(self._json_attrs, condition=new_condition_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -385,7 +385,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def citations(self) -> List[Any]:
+    def citation(self) -> List[Any]:
         """
         List of citations
 
@@ -398,7 +398,7 @@ class Computation(PrimaryBaseNode):
          # create a reference
          my_citation = cript.Citation(type="derived_from", reference=my_reference)
 
-         my_computation.citations = [my_citation]
+         my_computation.citation = [my_citation]
          ```
 
          Returns
@@ -406,21 +406,21 @@ class Computation(PrimaryBaseNode):
          List[Citation]
              list of citations for this computation node
         """
-        return self._json_attrs.citations.copy()
+        return self._json_attrs.citation.copy()
 
-    @citations.setter
-    def citations(self, new_citations_list: List[Any]) -> None:
+    @citation.setter
+    def citation(self, new_citation_list: List[Any]) -> None:
         """
         set the List of citations
 
         Parameters
         ----------
-        new_citations_list: List[Citation]
+        new_citation_list: List[Citation]
             list of citations for this computation node
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, citations=new_citations_list)
+        new_attrs = replace(self._json_attrs, citation=new_citation_list)
         self._update_json_attrs_if_valid(new_attrs)

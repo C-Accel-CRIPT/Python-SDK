@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
-from cript.nodes.core import BaseNode
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class Reference(BaseNode):
+class Reference(UUIDBaseNode):
     """
     ## Definition
 
@@ -20,10 +20,9 @@ class Reference(BaseNode):
     ## Attributes
     | attribute | type      | example                                    | description                                   | required      | vocab |
     |-----------|-----------|--------------------------------------------|-----------------------------------------------|---------------|-------|
-    | url       | str       |                                            | CRIPT’s unique ID of the node assigned by API | True          |       |
     | type      | str       | journal_article                            | type of literature                            | True          | True  |
     | title     | str       | 'Living' Polymers                          | title of publication                          | True          |       |
-    | authors   | list[str] | Michael Szwarc                             | list of authors                               |               |       |
+    | author   | list[str] | Michael Szwarc                             | list of authors                               |               |       |
     | journal   | str       | Nature                                     | journal of the publication                    |               |       |
     | publisher | str       | Springer                                   | publisher of publication                      |               |       |
     | year      | int       | 1956                                       | year of publication                           |               |       |
@@ -45,7 +44,7 @@ class Reference(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         """
         all reference nodes attributes
 
@@ -53,10 +52,9 @@ class Reference(BaseNode):
         instead of a placeholder number such as 0 or -1
         """
 
-        url: str = ""
         type: str = ""
         title: str = ""
-        authors: List[str] = field(default_factory=list)
+        author: List[str] = field(default_factory=list)
         journal: str = ""
         publisher: str = ""
         year: int = None
@@ -75,8 +73,7 @@ class Reference(BaseNode):
         self,
         type: str,
         title: str,
-        url: str = "",
-        authors: List[str] = None,
+        author: List[str] = None,
         journal: str = "",
         publisher: str = "",
         year: int = None,
@@ -88,7 +85,7 @@ class Reference(BaseNode):
         arxiv_id: str = "",
         pmid: int = None,
         website: str = "",
-        **kwargs
+        **kwargs,
     ):
         """
         create a reference node
@@ -97,14 +94,12 @@ class Reference(BaseNode):
 
         Parameters
         ----------
-        url: str
-            unique URL assigned by API
         type: str
             type of literature.
             The reference type must come from CRIPT controlled vocabulary
         title: str
             title of publication
-        authors: List[str] default=""
+        author: List[str] default=""
             list of authors
         journal: str default=""
             journal of publication
@@ -141,55 +136,20 @@ class Reference(BaseNode):
         None
             Instantiate a reference node
         """
-        if authors is None:
-            authors = []
+        if author is None:
+            author = []
 
         if pages is None:
             pages = []
 
-        super().__init__()
+        super().__init__(**kwargs)
 
-        new_attrs = replace(
-            self._json_attrs,
-            url=url,
-            type=type,
-            title=title,
-            authors=authors,
-            journal=journal,
-            publisher=publisher,
-            year=year,
-            volume=volume,
-            issue=issue,
-            pages=pages,
-            doi=doi,
-            issn=issn,
-            arxiv_id=arxiv_id,
-            pmid=pmid,
-            website=website,
-        )
+        new_attrs = replace(self._json_attrs, type=type, title=title, author=author, journal=journal, publisher=publisher, year=year, volume=volume, issue=issue, pages=pages, doi=doi, issn=issn, arxiv_id=arxiv_id, pmid=pmid, website=website)
 
         self._update_json_attrs_if_valid(new_attrs)
         self.validate()
 
     # ------------------ Properties ------------------
-    @property
-    def url(self) -> str:
-        """
-        Url attribute for the reference node to be assigned by the CRIPT API
-
-        Notes
-        -----
-        Can only get the URL and not set it.
-        Only the API can assign URLs to nodes
-
-        Returns
-        -------
-        str
-            reference node url
-        """
-        # TODO need to create the URl from the UUID
-        return self._json_attrs.url
-
     @property
     def type(self) -> str:
         """
@@ -262,14 +222,14 @@ class Reference(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def authors(self) -> List[str]:
+    def author(self) -> List[str]:
         """
         List of authors for this reference node
 
         Examples
         --------
         ```python
-        my_reference.authors = ["Bradley D. Olsen", "Dylan Walsh"]
+        my_reference.author = ["Bradley D. Olsen", "Dylan Walsh"]
         ```
 
         Returns
@@ -277,22 +237,22 @@ class Reference(BaseNode):
         List[str]
             list of authors
         """
-        return self._json_attrs.authors.copy()
+        return self._json_attrs.author.copy()
 
-    @authors.setter
-    def authors(self, new_authors: List[str]) -> None:
+    @author.setter
+    def author(self, new_author: List[str]) -> None:
         """
         set the list of authors for the reference node
 
         Parameters
         ----------
-        new_authors: List[str]
+        new_author: List[str]
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, authors=new_authors)
+        new_attrs = replace(self._json_attrs, author=new_author)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

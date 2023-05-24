@@ -11,6 +11,7 @@ on:
       - main
       - develop
       - trunk-merge/**
+      - "*"
 
 jobs:
   install:
@@ -33,4 +34,6 @@ jobs:
           python3 -m pip install pytest
           python3 -m pip install -r requirements.txt
           python3 -c "import cript"
+          export CRIPT_TOKEN="125433546"
+          export CRIPT_HOST="http://development.api.mycriptapp.org/"
           python3 -m pytest

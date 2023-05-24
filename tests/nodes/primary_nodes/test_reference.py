@@ -44,7 +44,7 @@ def test_complex_reference() -> None:
     my_reference = cript.Reference(
         type=reference_type,
         title=title,
-        authors=authors,
+        author=authors,
         journal=journal,
         publisher=publisher,
         year=year,
@@ -62,7 +62,7 @@ def test_complex_reference() -> None:
     assert isinstance(my_reference, cript.Reference)
     assert my_reference.type == reference_type
     assert my_reference.title == title
-    assert my_reference.authors == authors
+    assert my_reference.author == authors
     assert my_reference.journal == journal
     assert my_reference.publisher == publisher
     assert my_reference.year == year
@@ -100,7 +100,7 @@ def test_getters_and_setters_reference(complex_reference_node) -> None:
     # set reference attributes
     complex_reference_node.type = reference_type
     complex_reference_node.title = title
-    complex_reference_node.authors = authors
+    complex_reference_node.author = authors
     complex_reference_node.journal = journal
     complex_reference_node.publisher = publisher
     complex_reference_node.publisher = publisher
@@ -118,7 +118,7 @@ def test_getters_and_setters_reference(complex_reference_node) -> None:
     assert isinstance(complex_reference_node, cript.Reference)
     assert complex_reference_node.type == reference_type
     assert complex_reference_node.title == title
-    assert complex_reference_node.authors == authors
+    assert complex_reference_node.author == authors
     assert complex_reference_node.journal == journal
     assert complex_reference_node.publisher == publisher
     assert complex_reference_node.publisher == publisher

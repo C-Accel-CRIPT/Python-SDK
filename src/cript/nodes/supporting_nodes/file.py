@@ -1,6 +1,6 @@
 from dataclasses import dataclass, replace
 
-from cript.nodes.core import BaseNode
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
 def _is_local_file(file_source: str) -> bool:
@@ -21,7 +21,7 @@ def _is_local_file(file_source: str) -> bool:
         return True
 
 
-class File(BaseNode):
+class File(UUIDBaseNode):
     """
     ## Definition
 
@@ -55,7 +55,7 @@ class File(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         """
         all file attributes
         """
@@ -107,7 +107,7 @@ class File(BaseNode):
             ```
         """
 
-        super().__init__()
+        super().__init__(**kwargs)
 
         # TODO check if vocabulary is valid or not
         # is_vocab_valid("file type", type)

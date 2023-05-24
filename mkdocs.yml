@@ -5,14 +5,16 @@ repo_name: C-Accel-CRIPT/Python-SDK
 
 nav:
   - Home: index.md
+#  - Crash Course: crash_course.md
   - API:
       - API: api/api.md
       - Search Modes: api/search_modes.md
       - Paginator: api/paginator.md
+      - Controlled Vocabulary Categories: api/controlled_vocabulary_categories.md
   - Primary Nodes:
       - Collection: nodes/primary_nodes/collection.md
       - Computation: nodes/primary_nodes/computation.md
-      - Computational Process: nodes/primary_nodes/computational_process.md
+      - Computation Process: nodes/primary_nodes/computation_process.md
       - Data: nodes/primary_nodes/data.md
       - Experiment: nodes/primary_nodes/experiment.md
       - Inventory: nodes/primary_nodes/inventory.md

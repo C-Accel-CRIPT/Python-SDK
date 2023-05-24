@@ -20,13 +20,13 @@ class Data(PrimaryBaseNode):
     | experiment            | [Experiment](experiment.md)                         |                            | Experiment the data belongs to                                                          | True     |
     | name                  | str                                                 | `"my_data_name"`           | Name of the data node                                                                   | True     |
     | type                  | str                                                 | `"nmr_h1"`                 | Pick from [CRIPT data type controlled vocabulary](https://criptapp.org/keys/data-type/) | True     |
-    | files                 | List[[File](../supporting_nodes/file.md)]           | `[file_1, file_2, file_3]` | list of file nodes                                                                      | False    |
-    | sample_preperation    | [Process](process.md)                               |                            |                                                                                         | False    |
-    | computations          | List[[Computation](computation.md)]                 |                            | data produced from this Computation method                                              | False    |
-    | computational_process | [Computational Process](./computational_process.md) |                            | data was produced from this computation process                                         | False    |
-    | materials             | List[[Material](./material.md)]                     |                            | materials with attributes associated with the data node                                 | False    |
+    | file                 | List[[File](../supporting_nodes/file.md)]           | `[file_1, file_2, file_3]` | list of file nodes                                                                      | False    |
+    | sample_preparation    | [Process](process.md)                               |                            |                                                                                         | False    |
+    | computation          | List[[Computation](computation.md)]                 |                            | data produced from this Computation method                                              | False    |
+    | computation_process | [Computational Process](./computational_process.md) |                            | data was produced from this computation process                                         | False    |
+    | material             | List[[Material](./material.md)]                     |                            | materials with attributes associated with the data node                                 | False    |
     | process               | List[[Process](./process.md)]                       |                            | processes with attributes associated with the data node                                 | False    |
-    | citations             | [Citation](../subobjects/citation.md)               |                            | reference to a book, paper, or scholarly work                                           | False    |
+    | citation             | [Citation](../subobjects/citation.md)               |                            | reference to a book, paper, or scholarly work                                           | False    |
 
     Example
     --------
@@ -43,7 +43,7 @@ class Data(PrimaryBaseNode):
     ]
 
     # create data node with required arguments
-    my_data = cript.Data(name="my data name", type="afm_amp", files=[simple_file_node])
+    my_data = cript.Data(name="my data name", type="afm_amp", file=[simple_file_node])
     ```
 
     ## JSON
@@ -66,13 +66,13 @@ class Data(PrimaryBaseNode):
 
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        files: List[Any] = field(default_factory=list)
-        sample_preperation: Any = field(default_factory=list)
-        computations: List[Any] = field(default_factory=list)
-        computational_process: Any = field(default_factory=list)
-        materials: List[Any] = field(default_factory=list)
-        processes: List[Any] = field(default_factory=list)
-        citations: List[Any] = field(default_factory=list)
+        file: List[Any] = field(default_factory=list)
+        sample_preparation: Any = field(default_factory=list)
+        computation: List[Any] = field(default_factory=list)
+        computation_process: Any = field(default_factory=list)
+        material: List[Any] = field(default_factory=list)
+        process: List[Any] = field(default_factory=list)
+        citation: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -80,49 +80,49 @@ class Data(PrimaryBaseNode):
         self,
         name: str,
         type: str,
-        files: List[Any],
-        sample_preperation: Any = None,
-        computations: List[Any] = None,
-        computational_process: Any = None,
-        materials: List[Any] = None,
-        processes: List[Any] = None,
-        citations: List[Any] = None,
+        file: List[Any],
+        sample_preparation: Any = None,
+        computation: List[Any] = None,
+        computation_process: Any = None,
+        material: List[Any] = None,
+        process: List[Any] = None,
+        citation: List[Any] = None,
         notes: str = "",
         **kwargs
     ):
-        super().__init__(name=name, notes=notes)
+        super().__init__(name=name, notes=notes, **kwargs)
 
-        if files is None:
-            files = []
+        if file is None:
+            file = []
 
-        if sample_preperation is None:
-            sample_preperation = []
+        if sample_preparation is None:
+            sample_preparation = []
 
-        if computations is None:
-            computations = []
+        if computation is None:
+            computation = []
 
-        if computational_process is None:
-            computational_process = []
+        if computation_process is None:
+            computation_process = []
 
-        if materials is None:
-            materials = []
+        if material is None:
+            material = []
 
-        if processes is None:
-            processes = []
+        if process is None:
+            process = []
 
-        if citations is None:
-            citations = []
+        if citation is None:
+            citation = []
 
         self._json_attrs = replace(
             self._json_attrs,
             type=type,
-            files=files,
-            sample_preperation=sample_preperation,
-            computations=computations,
-            computational_process=computational_process,
-            materials=materials,
-            processes=processes,
-            citations=citations,
+            file=file,
+            sample_preparation=sample_preparation,
+            computation=computation,
+            computation_process=computation_process,
+            material=material,
+            process=process,
+            citation=citation,
         )
 
         self.validate()
@@ -166,7 +166,7 @@ class Data(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def files(self) -> List[Any]:
+    def file(self) -> List[Any]:
         """
         get the list of files for this data node
 
@@ -184,7 +184,7 @@ class Data(PrimaryBaseNode):
             ),
         ]
 
-        data_node.files = my_new_files
+        data_node.file = my_new_files
         ```
 
         Returns
@@ -192,12 +192,12 @@ class Data(PrimaryBaseNode):
         List[File]
             list of files for this data node
         """
-        return self._json_attrs.files.copy()
+        return self._json_attrs.file.copy()
 
-    @files.setter
-    def files(self, new_files_list: List[Any]) -> None:
+    @file.setter
+    def file(self, new_file_list: List[Any]) -> None:
         """
-        set the list of files for this data node
+        set the list of file for this data node
 
         Parameters
         ----------
@@ -208,40 +208,40 @@ class Data(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, files=new_files_list)
+        new_attrs = replace(self._json_attrs, file=new_file_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def sample_preperation(self) -> Any:
+    def sample_preparation(self) -> Any:
         """
         The sample preperation for this data node
 
         Returns
         -------
-        sample_preperation: Process
+        sample_preparation: Process
             sample preparation for this data node
         """
-        return self._json_attrs.sample_preperation
+        return self._json_attrs.sample_preparation
 
-    @sample_preperation.setter
-    def sample_preperation(self, new_sample_preperation: Any) -> None:
+    @sample_preparation.setter
+    def sample_preparation(self, new_sample_preparation: Any) -> None:
         """
-        set sample_preperation
+        set sample_preparation
 
         Parameters
         ----------
-        new_sample_preperation: Process
-            new_sample_preperation to replace the current one for this node
+        new_sample_preparation: Process
+            new_sample_preparation to replace the current one for this node
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, sample_preperation=new_sample_preperation)
+        new_attrs = replace(self._json_attrs, sample_preparation=new_sample_preparation)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def computations(self) -> List[Any]:
+    def computation(self) -> List[Any]:
         """
         list of computation nodes for this material node
 
@@ -250,12 +250,12 @@ class Data(PrimaryBaseNode):
         None
             list of computation nodes
         """
-        return self._json_attrs.computations.copy()
+        return self._json_attrs.computation.copy()
 
-    @computations.setter
-    def computations(self, new_computation_list: List[Any]) -> None:
+    @computation.setter
+    def computation(self, new_computation_list: List[Any]) -> None:
         """
-        set list of computations  for this data node
+        set list of computation  for this data node
 
         Parameters
         ----------
@@ -266,69 +266,69 @@ class Data(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, computations=new_computation_list)
+        new_attrs = replace(self._json_attrs, computation=new_computation_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def computational_process(self) -> Any:
+    def computation_process(self) -> Any:
         """
-        The computational_process for this data node
+        The computation_process for this data node
 
         Returns
         -------
         ComputationalProcess
             computational process node for this data node
         """
-        return self._json_attrs.computational_process
+        return self._json_attrs.computation_process
 
-    @computational_process.setter
-    def computational_process(self, new_computational_process: Any) -> None:
+    @computation_process.setter
+    def computation_process(self, new_computation_process: Any) -> None:
         """
         set the computational process
 
         Parameters
         ----------
-        new_computational_process: ComputationalProcess
+        new_computation_process: ComputationalProcess
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, computational_process=new_computational_process)
+        new_attrs = replace(self._json_attrs, computation_process=new_computation_process)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def materials(self) -> List[Any]:
+    def material(self) -> List[Any]:
         """
         List of materials for this node
 
         Returns
         -------
         List[Material]
-            list of materials
+            list of material
         """
-        return self._json_attrs.materials.copy()
+        return self._json_attrs.material.copy()
 
-    @materials.setter
-    def materials(self, new_materials_list: List[Any]) -> None:
+    @material.setter
+    def material(self, new_material_list: List[Any]) -> None:
         """
         set the list of materials for this data node
 
         Parameters
         ----------
-        new_materials_list: List[Material]
+        new_material_list: List[Material]
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, materials=new_materials_list)
+        new_attrs = replace(self._json_attrs, material=new_material_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def processes(self) -> List[Any]:
+    def process(self) -> List[Any]:
         """
-        list of [Processes nodes](./process.md) for this data node
+        list of [Process nodes](./process.md) for this data node
 
         Notes
         -----
@@ -341,10 +341,10 @@ class Data(PrimaryBaseNode):
         List[Process]
             list of process for the data node
         """
-        return self._json_attrs.processes.copy()
+        return self._json_attrs.process.copy()
 
-    @processes.setter
-    def processes(self, new_process_list: List[Any]) -> None:
+    @process.setter
+    def process(self, new_process_list: List[Any]) -> None:
         """
         set the list of process for this data node
 
@@ -357,13 +357,13 @@ class Data(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, processes=new_process_list)
+        new_attrs = replace(self._json_attrs, process=new_process_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def citations(self) -> List[Any]:
+    def citation(self) -> List[Any]:
         """
-        List of [citations](../../subobjects/citation) within the data node
+        List of [citation](../supporting_nodes/citations.md) within the data node
 
         Example
         -------
@@ -375,7 +375,7 @@ class Data(PrimaryBaseNode):
         my_citation = cript.Citation(type="derived_from", reference=my_reference)
 
         # add citations to data node
-        my_data.citations = my_citations
+        my_data.citation = my_citations
         ```
 
         Returns
@@ -383,21 +383,21 @@ class Data(PrimaryBaseNode):
         List[Citation]
             list of citations for this data node
         """
-        return self._json_attrs.citations.copy()
+        return self._json_attrs.citation.copy()
 
-    @citations.setter
-    def citations(self, new_citations_list: List[Any]) -> None:
+    @citation.setter
+    def citation(self, new_citation_list: List[Any]) -> None:
         """
-        set the list of citations
+        set the list of citation
 
         Parameters
         ----------
-        new_citations_list: List[Citation]
-            new list of citations to replace the current one
+        new_citation_list: List[Citation]
+            new list of citation to replace the current one
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, citations=new_citations_list)
+        new_attrs = replace(self._json_attrs, citation=new_citation_list)
         self._update_json_attrs_if_valid(new_attrs)

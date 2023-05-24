@@ -10,14 +10,14 @@ def test_create_simple_material() -> None:
     tests that a simple material can be created with only the required arguments
     """
 
-    my_identifiers = [{"alternative_names": "my material alternative name"}]
+    material_name = "my material name"
+    identifiers = [{"bigsmiles": "1234"}, {"bigsmiles": "4567"}]
 
-    material_name = "my material"
+    my_material = cript.Material(name=material_name, identifiers=identifiers)
 
-    my_material = cript.Material(name=material_name, identifiers=my_identifiers)
-
-    assert my_material.identifiers == my_identifiers
+    assert isinstance(my_material, cript.Material)
     assert my_material.name == material_name
+    assert my_material.identifiers == identifiers
 
 
 def test_invalid_material_keywords() -> None:
@@ -28,7 +28,7 @@ def test_invalid_material_keywords() -> None:
     pass
 
 
-def test_all_getters_and_setters(simple_material_node) -> None:
+def test_all_getters_and_setters(simple_material_node, simple_property_node, simple_process_node, simple_computational_forcefield_node) -> None:
     """
     tests the getters and setters for the simple material object
 
@@ -39,44 +39,43 @@ def test_all_getters_and_setters(simple_material_node) -> None:
     # new attributes
     new_name = "new material name"
 
-    new_identifiers = [
-        {"alternative_names": "my material alternative name"},
-        {"preferred_name": "my preferred material name"},
-    ]
+    new_identifiers = [{"bigsmiles": "6789"}]
 
-    new_properties = [cript.Property(key="air_flow", type="modulus_shear", unit="gram", value=1.00)]
-
-    new_process = [cript.Process(name="my process name 1", type="affinity_pure", description="my simple material description", keywords=["anionic"])]
-
-    new_parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
-
-    new_computation_forcefield = cript.ComputationForcefield(key="amber", building_block="atom")
+    new_parent_material = cript.Material(
+        name="my parent material",
+        identifiers=[
+            {"bigsmiles": "9876"},
+        ],
+    )
 
     new_material_keywords = ["acetylene"]
 
     new_components = [
-        cript.Material(name="my component material 1", identifiers=[{"alternative_names": "component 1 alternative name"}]),
+        cript.Material(
+            name="my component material 1",
+            identifiers=[
+                {"bigsmiles": "654321"},
+            ],
+        ),
     ]
 
     # set all attributes for Material node
     simple_material_node.name = new_name
     simple_material_node.identifiers = new_identifiers
-    simple_material_node.properties = new_properties
-    simple_material_node.process = new_process
-    simple_material_node.parent_materials = new_parent_material
-    simple_material_node.computation_forcefield = new_computation_forcefield
-    simple_material_node.keywords = new_material_keywords
-    simple_material_node.components = new_components
+    simple_material_node.property = [simple_property_node]
+    simple_material_node.parent_material = new_parent_material
+    simple_material_node.computational_forcefield = simple_computational_forcefield_node
+    simple_material_node.keyword = new_material_keywords
+    simple_material_node.component = new_components
 
     # get all attributes and assert that they are equal to the setter
     assert simple_material_node.name == new_name
     assert simple_material_node.identifiers == new_identifiers
-    assert simple_material_node.properties == new_properties
-    assert simple_material_node.process == new_process
-    assert simple_material_node.parent_materials == new_parent_material
-    assert simple_material_node.computation_forcefield == new_computation_forcefield
-    assert simple_material_node.keywords == new_material_keywords
-    assert simple_material_node.components == new_components
+    assert simple_material_node.property == [simple_property_node]
+    assert simple_material_node.parent_material == new_parent_material
+    assert simple_material_node.computational_forcefield == simple_computational_forcefield_node
+    assert simple_material_node.keyword == new_material_keywords
+    assert simple_material_node.component == new_components
 
 
 def test_serialize_material_to_json(simple_material_node) -> None:
@@ -87,7 +86,7 @@ def test_serialize_material_to_json(simple_material_node) -> None:
     expected_dict = {
         "node": ["Material"],
         "name": "my material",
-        "identifiers": [{"alternative_names": "my material alternative name"}],
+        "bigsmiles": "123456",
     }
 
     # compare dicts because that is more accurate
@@ -120,15 +119,14 @@ def test_deserialize_material_from_json() -> None:
         "component_count": 0,
         "computational_forcefield_count": 0,
         "created_at": "2023-03-14T00:45:02.196297Z",
-        "identifier_count": 0,
-        "identifiers": [],
         "model_version": "1.0.0",
         "node": ["Material"],
         "notes": "",
         "property_count": 0,
-        "uid": "0x24a08",
+        "uid": "_:0x24a08",
         "updated_at": "2023-03-14T00:45:02.196276Z",
         "uuid": "403fa02c-9a84-4f9e-903c-35e535151b08",
+        "smiles": "CCC",
     }
 
     material_string = json.dumps(api_material)
@@ -137,13 +135,11 @@ def test_deserialize_material_from_json() -> None:
     # assertions
     assert isinstance(my_material, cript.Material)
     assert my_material.name == api_material["name"]
-    assert my_material.identifiers == []
-    assert my_material.components == []
-    assert my_material.properties == []
-    assert my_material.process == []
-    assert my_material.parent_materials == []
-    assert my_material.computation_forcefield == []
-    assert my_material.keywords == []
+    assert my_material.component == []
+    assert my_material.property == []
+    assert my_material.parent_material == []
+    assert my_material.computational_forcefield == []
+    assert my_material.keyword == []
     assert my_material.notes == api_material["notes"]
 
 

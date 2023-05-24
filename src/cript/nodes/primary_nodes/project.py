@@ -4,7 +4,7 @@ from typing import List
 from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
-from cript.nodes.supporting_nodes.group import Group
+from cript.nodes.supporting_nodes import User
 
 
 class Project(PrimaryBaseNode):
@@ -18,7 +18,7 @@ class Project(PrimaryBaseNode):
 
     | attribute   | type             | description                            |
     |-------------|------------------|----------------------------------------|
-    | collections | List[Collection] | collections that relate to the project |
+    | collection | List[Collection] | collections that relate to the project |
     | materials   | List[Materials]  | materials owned by the project         |
 
     <!-- TODO consider adding JSON section -->
@@ -30,22 +30,14 @@ class Project(PrimaryBaseNode):
         all Project attributes
         """
 
-        # TODO is group needed?
-        group: Group = None
-        collections: List[Collection] = field(default_factory=list)
+        member: List[User] = field(default_factory=list)
+        admin: User = None
+        collection: List[Collection] = field(default_factory=list)
         material: List[Material] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(
-        self,
-        name: str,
-        # group: Group,
-        collections: List[Collection] = None,
-        material: List[Material] = None,
-        notes: str = "",
-        **kwargs
-    ):
+    def __init__(self, name: str, collection: List[Collection] = None, material: List[Material] = None, notes: str = "", **kwargs):
         """
         Create a Project node with Project name and Group
 
@@ -53,7 +45,7 @@ class Project(PrimaryBaseNode):
         ----------
         name: str
             project name
-        collections: List[Collection]
+        collection: List[Collection]
             list of Collections that belongs to this Project
          material: List[Material]
             list of materials that belongs to this project
@@ -65,15 +57,15 @@ class Project(PrimaryBaseNode):
         None
             instantiate a Project node
         """
-        super().__init__(name=name, notes=notes)
+        super().__init__(name=name, notes=notes, **kwargs)
 
-        if collections is None:
-            collections = []
+        if collection is None:
+            collection = []
 
         if material is None:
             material = []
 
-        self._json_attrs = replace(self._json_attrs, name=name, collections=collections, material=material)
+        self._json_attrs = replace(self._json_attrs, name=name, collection=collection, material=material)
         self.validate()
 
     def validate(self):
@@ -91,24 +83,24 @@ class Project(PrimaryBaseNode):
         # Combine all materials listed in the project inventories
         project_inventory_materials = []
         for inventory in self.find_children({"node": ["Inventory"]}):
-            for material in inventory.materials:
+            for material in inventory.material:
                 project_inventory_materials.append(material)
         for material in project_graph_materials:
-            if material not in self.materials and material not in project_inventory_materials:
+            if material not in self.material and material not in project_inventory_materials:
                 raise CRIPTOrphanedMaterialError(material)
 
         # Check graph for orphaned nodes, that should be listed in the experiments
         project_experiments = self.find_children({"node": ["Experiment"]})
         # There are 4 different types of nodes Experiments are collecting.
-        node_types = ("Process", "Computation", "ComputationalProcess", "Data")
+        node_types = ("Process", "Computation", "ComputationProcess", "Data")
         # We loop over them with the same logic
         for node_type in node_types:
             # All in the graph has to be in at least one experiment
             project_graph_nodes = self.find_children({"node": [node_type]})
             node_type_attr = node_type.lower()
             # Non-consistent naming makes this necessary for Computation Process
-            if node_type == "ComputationalProcess":
-                node_type_attr = "computational_process"
+            if node_type == "ComputationProcess":
+                node_type_attr = "computation_process"
 
             # Concatination of all experiment attributes (process, computation, etc.)
             # Every node of the graph must be present somewhere in this concatinated list.
@@ -122,39 +114,17 @@ class Project(PrimaryBaseNode):
 
     # ------------------ Properties ------------------
 
-    # GROUP
     @property
-    def group(self) -> Group:
-        """
-        group property getter method
+    def member(self) -> List[User]:
+        return self._json_attrs.member.copy()
 
-        Returns
-        -------
-        group: cript.Group
-            Group that owns the project
-        """
-        return self._json_attrs.group
-
-    @group.setter
-    def group(self, new_group: Group):
-        """
-        Sets the group the project belongs to
-
-        Parameters
-        ----------
-        new_group: Group
-            new Group object
-
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, group=new_group)
-        self._update_json_attrs_if_valid(new_attrs)
+    @property
+    def admin(self) -> User:
+        return self._json_attrs.admin
 
     # Collection
     @property
-    def collections(self) -> List[Collection]:
+    def collection(self) -> List[Collection]:
         """
         Collection is a Project node's property that can be set during creation in the constructor
         or later by setting the project's property
@@ -166,7 +136,7 @@ class Project(PrimaryBaseNode):
             name="my collection name", experiments=[my_experiment_node]
         )
 
-        my_project.collections = my_new_collection
+        my_project.collection = my_new_collection
         ```
 
         Returns
@@ -174,11 +144,11 @@ class Project(PrimaryBaseNode):
         Collection: List[Collection]
             the list of collections within this project
         """
-        return self._json_attrs.collections
+        return self._json_attrs.collection
 
     # Collection
-    @collections.setter
-    def collections(self, new_collection: List[Collection]) -> None:
+    @collection.setter
+    def collection(self, new_collection: List[Collection]) -> None:
         """
         set list of collections for the project node
 
@@ -190,7 +160,7 @@ class Project(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, collections=new_collection)
+        new_attrs = replace(self._json_attrs, collection=new_collection)
         self._update_json_attrs_if_valid(new_attrs)
 
     # Material
@@ -216,7 +186,7 @@ class Project(PrimaryBaseNode):
         return self._json_attrs.material
 
     @material.setter
-    def materials(self, new_materials: List[Material]) -> None:
+    def material(self, new_materials: List[Material]) -> None:
         """
         set the list of materials for this project
 

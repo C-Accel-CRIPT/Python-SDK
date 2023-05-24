@@ -8,22 +8,14 @@ import cript
 
 
 @pytest.fixture(scope="function")
-def complex_computation_forcefield() -> cript.ComputationForcefield:
-    """
-    create a minimal computation_forcefield to use for other tests
-    """
-    return cript.ComputationForcefield(key="amber", building_block="atom")
-
-
-@pytest.fixture(scope="function")
 def complex_parameter_node() -> cript.Parameter:
-    parameter = cript.Parameter("update_frequency", 1000.0, "1/ns")
+    parameter = cript.Parameter("update_frequency", 1000.0, "1/second")
     return parameter
 
 
 @pytest.fixture(scope="function")
 def complex_parameter_dict() -> dict:
-    ret_dict = {"node": ["Parameter"], "key": "update_frequency", "value": 1000.0, "unit": "1/ns"}
+    ret_dict = {"node": ["Parameter"], "key": "update_frequency", "value": 1000.0, "unit": "1/second"}
     return ret_dict
 
 
@@ -47,7 +39,7 @@ def complex_reference_node() -> cript.Reference:
     reference = cript.Reference(
         "journal_article",
         title=title,
-        authors=["Ludwig Schneider", "Marcus Müller"],
+        author=["Ludwig Schneider", "Marcus Müller"],
         journal="Computer Physics Communications",
         publisher="Elsevier",
         year=2019,
@@ -65,7 +57,7 @@ def complex_reference_dict() -> dict:
         "node": ["Reference"],
         "type": "journal_article",
         "title": "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)",
-        "authors": ["Ludwig Schneider", "Marcus Müller"],
+        "author": ["Ludwig Schneider", "Marcus Müller"],
         "journal": "Computer Physics Communications",
         "publisher": "Elsevier",
         "year": 2019,
@@ -91,14 +83,13 @@ def complex_citation_dict(complex_reference_dict) -> dict:
 
 @pytest.fixture(scope="function")
 def complex_quantity_node() -> cript.Quantity:
-    quantity = cript.Quantity("mass", 11.2, "kg", 0.2, "std")
+    quantity = cript.Quantity(key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev")
     return quantity
 
 
 @pytest.fixture(scope="function")
 def complex_quantity_dict() -> dict:
-    ret_dict = {"node": ["Quantity"], "key": "mass", "value": 11.2, "unit": "kg", "uncertainty": 0.2, "uncertainty_type": "std"}
-    return ret_dict
+    return {"node": ["Quantity"], "key": "mass", "value": 11.2, "unit": "kg", "uncertainty": 0.2, "uncertainty_type": "stdev"}
 
 
 @pytest.fixture(scope="function")
@@ -121,13 +112,14 @@ def complex_property_node(complex_material_node, complex_condition_node, complex
         5.0,
         "GPa",
         0.1,
-        "std",
+        "stdev",
         structure="structure",
-        method="method",
-        sample_preparation=[copy.deepcopy(simple_process_node)],
-        conditions=[complex_condition_node],
-        computations=[copy.deepcopy(simple_computation_node)],
-        citations=[complex_citation_node],
+        method="comp",
+        sample_preparation=copy.deepcopy(simple_process_node),
+        condition=[complex_condition_node],
+        computation=[copy.deepcopy(simple_computation_node)],
+        data=[copy.deepcopy(complex_data_node)],
+        citation=[complex_citation_node],
         notes="notes",
     )
     return p
@@ -142,13 +134,14 @@ def complex_property_dict(complex_material_node, complex_condition_dict, complex
         "value": 5.0,
         "unit": "GPa",
         "uncertainty": 0.1,
-        "uncertainty_type": "std",
+        "uncertainty_type": "stdev",
         "structure": "structure",
-        "sample_preparation": [json.loads(simple_process_node.json)],
-        "method": "method",
-        "conditions": [complex_condition_dict],
-        "citations": [complex_citation_dict],
-        "computations": [json.loads(simple_computation_node.json)],
+        "sample_preparation": json.loads(simple_process_node.json),
+        "method": "comp",
+        "condition": [complex_condition_dict],
+        "data": [json.loads(complex_data_node.json)],
+        "citation": [complex_citation_dict],
+        "computation": [json.loads(simple_computation_node.json)],
         "notes": "notes",
     }
     return strip_uid_from_dict(ret_dict)
@@ -178,104 +171,115 @@ def simple_property_dict() -> dict:
 
 
 @pytest.fixture(scope="function")
-def complex_condition_node(complex_material_node, complex_data_node) -> cript.Condition:
+def complex_condition_node(complex_data_node) -> cript.Condition:
     c = cript.Condition(
-        "temp",
+        "temperature",
         "value",
         22,
         "C",
         "room temperature of lab",
         uncertainty=5,
-        uncertainty_type="var",
+        uncertainty_type="stdev",
         set_id=0,
         measurement_id=2,
-        material=[complex_material_node],
-        data=complex_data_node,
+        data=[copy.deepcopy(complex_data_node)],
     )
     return c
 
 
 @pytest.fixture(scope="function")
-def complex_condition_dict(complex_material_node, complex_data_node) -> dict:
+def complex_condition_dict(complex_data_node) -> dict:
     ret_dict = {
         "node": ["Condition"],
-        "key": "temp",
+        "key": "temperature",
         "type": "value",
         "descriptor": "room temperature of lab",
         "value": 22,
         "unit": "C",
         "uncertainty": 5,
-        "uncertainty_type": "var",
+        "uncertainty_type": "stdev",
         "set_id": 0,
         "measurement_id": 2,
-        "material": [json.loads(complex_material_node.json)],
-        "data": json.loads(complex_data_node.json),
+        "data": [json.loads(complex_data_node.json)],
     }
     return ret_dict
 
 
 @pytest.fixture(scope="function")
 def complex_ingredient_node(complex_material_node, complex_quantity_node) -> cript.Ingredient:
-    i = cript.Ingredient(complex_material_node, [complex_quantity_node], "catalyst")
-    return i
+    """
+    complex ingredient node with all possible parameters filled
+    """
+    complex_ingredient_node = cript.Ingredient(material=complex_material_node, quantity=[complex_quantity_node], keyword=["catalyst"])
+
+    return complex_ingredient_node
 
 
 @pytest.fixture(scope="function")
 def complex_ingredient_dict(complex_material_node, complex_quantity_dict) -> dict:
-    ret_dict = {"node": ["Ingredient"], "material": json.loads(complex_material_node.json), "quantities": [complex_quantity_dict], "keyword": "catalyst"}
+    ret_dict = {"node": ["Ingredient"], "material": json.loads(complex_material_node.json), "quantity": [complex_quantity_dict], "keyword": ["catalyst"]}
     return ret_dict
 
 
 @pytest.fixture(scope="function")
 def complex_equipment_node(complex_condition_node, complex_citation_node) -> cript.Equipment:
     e = cript.Equipment(
-        "hot plate",
+        "hot_plate",
         "fancy hot plate",
-        conditions=[complex_condition_node],
-        citations=[complex_citation_node],
+        condition=[complex_condition_node],
+        citation=[complex_citation_node],
     )
     return e
+
+
+@pytest.fixture(scope="function")
+def simple_equipment_node() -> cript.Equipment:
+    """
+    simple and minimal equipment
+    """
+    my_equipment = cript.Equipment(key="burner")
+    return my_equipment
 
 
 @pytest.fixture(scope="function")
 def complex_equipment_dict(complex_condition_dict, complex_citation_dict) -> dict:
     ret_dict = {
         "node": ["Equipment"],
-        "key": "hot plate",
+        "key": "hot_plate",
         "description": "fancy hot plate",
-        "conditions": [complex_condition_dict],
-        "citations": [complex_citation_dict],
+        "condition": [complex_condition_dict],
+        "citation": [complex_citation_dict],
     }
     return ret_dict
 
 
 @pytest.fixture(scope="function")
-def complex_computation_forcefield_node(simple_data_node, complex_citation_node) -> cript.ComputationForcefield:
-    cf = cript.ComputationForcefield(
-        "OPLS",
+def complex_computational_forcefield_node(simple_data_node, complex_citation_node) -> cript.ComputationalForcefield:
+    cf = cript.ComputationalForcefield(
+        "opls_aa",
         "atom",
         "atom -> atom",
         "no implicit solvent",
         "local LigParGen installation",
         "this is a test forcefield",
-        simple_data_node,
+        [simple_data_node],
         [complex_citation_node],
     )
     return cf
 
 
 @pytest.fixture(scope="function")
-def complex_computation_forcefield_dict(simple_data_node, complex_citation_dict) -> dict:
+def complex_computational_forcefield_dict(simple_data_node, complex_citation_dict) -> dict:
     ret_dict = {
-        "node": ["ComputationForcefield"],
-        "key": "OPLS",
+        "node": ["ComputationalForcefield"],
+        "key": "opls_aa",
         "building_block": "atom",
         "coarse_grained_mapping": "atom -> atom",
         "implicit_solvent": "no implicit solvent",
         "source": "local LigParGen installation",
         "description": "this is a test forcefield",
         "citation": [complex_citation_dict],
-        "data": json.loads(simple_data_node.json),
+        "data": [json.loads(simple_data_node.json)],
     }
     return ret_dict
 
@@ -291,8 +295,25 @@ def complex_software_configuration_dict(complex_software_dict, complex_algorithm
     ret_dict = {
         "node": ["SoftwareConfiguration"],
         "software": complex_software_dict,
-        "algorithms": [complex_algorithm_dict],
+        "algorithm": [complex_algorithm_dict],
         "notes": "my_notes",
         "citation": [complex_citation_dict],
     }
     return ret_dict
+
+
+@pytest.fixture(scope="function")
+def simple_computational_forcefield_node():
+    """
+    simple minimal computational forcefield node
+    """
+
+    return cript.ComputationalForcefield(key="amber", building_block="atom")
+
+
+@pytest.fixture(scope="function")
+def simple_condition_node() -> cript.Condition:
+    """
+    simple and minial condition node
+    """
+    return cript.Condition(key="atm", type="max", value=1)

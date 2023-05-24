@@ -4,7 +4,11 @@ name: Docs
 on:
   push:
     branches:
-      - main
+      - add_docs
+
+  # trunk-ignore(yamllint/empty-values)
+  workflow_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest

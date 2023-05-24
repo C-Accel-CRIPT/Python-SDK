@@ -2,7 +2,7 @@
 from cript.nodes.primary_nodes import (
     Collection,
     Computation,
-    ComputationalProcess,
+    ComputationProcess,
     Data,
     Experiment,
     Inventory,
@@ -14,10 +14,9 @@ from cript.nodes.primary_nodes import (
 from cript.nodes.subobjects import (
     Algorithm,
     Citation,
-    ComputationForcefield,
+    ComputationalForcefield,
     Condition,
     Equipment,
-    Identifier,
     Ingredient,
     Parameter,
     Property,
@@ -25,7 +24,7 @@ from cript.nodes.subobjects import (
     Software,
     SoftwareConfiguration,
 )
-from cript.nodes.supporting_nodes import File, Group, User
+from cript.nodes.supporting_nodes import File, User
 from cript.nodes.util import (
     NodeEncoder,
     add_orphaned_nodes_to_project,

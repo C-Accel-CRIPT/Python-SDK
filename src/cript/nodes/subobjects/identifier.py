@@ -1,4 +1,0 @@
-class Identifier:
-    """
-    Identifier subobject
-    """

@@ -1,3 +1,4 @@
+import copy
 import json
 
 from util import strip_uid_from_dict
@@ -18,12 +19,12 @@ def test_create_simple_collection(simple_experiment_node) -> None:
     """
     my_collection_name = "my collection name"
 
-    my_collection = cript.Collection(name=my_collection_name, experiments=[simple_experiment_node])
+    my_collection = cript.Collection(name=my_collection_name, experiment=[simple_experiment_node])
 
     # assertions
     assert isinstance(my_collection, cript.Collection)
     assert my_collection.name == my_collection_name
-    assert my_collection.experiments == [simple_experiment_node]
+    assert my_collection.experiment == [simple_experiment_node]
 
 
 def test_create_complex_collection(simple_experiment_node, simple_inventory_node, complex_citation_node) -> None:
@@ -35,19 +36,19 @@ def test_create_complex_collection(simple_experiment_node, simple_inventory_node
 
     my_collection = cript.Collection(
         name=my_collection_name,
-        experiments=[simple_experiment_node],
-        inventories=[simple_inventory_node],
-        cript_doi=my_cript_doi,
-        citations=[complex_citation_node],
+        experiment=[simple_experiment_node],
+        inventory=[simple_inventory_node],
+        doi=my_cript_doi,
+        citation=[complex_citation_node],
     )
 
     # assertions
     assert isinstance(my_collection, cript.Collection)
     assert my_collection.name == my_collection_name
-    assert my_collection.experiments == [simple_experiment_node]
-    assert my_collection.inventories == [simple_inventory_node]
-    assert my_collection.cript_doi == my_cript_doi
-    assert my_collection.citations == [complex_citation_node]
+    assert my_collection.experiment == [simple_experiment_node]
+    assert my_collection.inventory == [simple_inventory_node]
+    assert my_collection.doi == my_cript_doi
+    assert my_collection.citation == [complex_citation_node]
 
 
 def test_collection_getters_and_setters(simple_experiment_node, simple_inventory_node, complex_citation_node) -> None:
@@ -66,18 +67,18 @@ def test_collection_getters_and_setters(simple_experiment_node, simple_inventory
 
     # set Collection attributes
     my_collection.name = new_collection_name
-    my_collection.experiments = [simple_experiment_node]
-    my_collection.inventories = [simple_inventory_node]
-    my_collection.cript_doi = new_cript_doi
-    my_collection.citations = [complex_citation_node]
+    my_collection.experiment = [simple_experiment_node]
+    my_collection.inventory = [simple_inventory_node]
+    my_collection.doi = new_cript_doi
+    my_collection.citation = [complex_citation_node]
 
     # assert getters and setters are the same
     assert isinstance(my_collection, cript.Collection)
     assert my_collection.name == new_collection_name
-    assert my_collection.experiments == [simple_experiment_node]
-    assert my_collection.inventories == [simple_inventory_node]
-    assert my_collection.cript_doi == new_cript_doi
-    assert my_collection.citations == [complex_citation_node]
+    assert my_collection.experiment == [simple_experiment_node]
+    assert my_collection.inventory == [simple_inventory_node]
+    assert my_collection.doi == new_cript_doi
+    assert my_collection.citation == [complex_citation_node]
 
 
 def test_serialize_collection_to_json(simple_collection_node) -> None:
@@ -96,15 +97,30 @@ def test_serialize_collection_to_json(simple_collection_node) -> None:
     expected_collection_dict = {
         "node": ["Collection"],
         "name": "my collection name",
-        "experiments": [{"node": ["Experiment"], "name": "my experiment name"}],
-        "inventories": [],
-        "citations": [],
+        "experiment": [{"node": ["Experiment"], "name": "my experiment name"}],
+        "inventory": [],
+        "citation": [],
     }
 
     # assert
     ref_dict = json.loads(simple_collection_node.json)
     ref_dict = strip_uid_from_dict(ref_dict)
     assert ref_dict == expected_collection_dict
+
+
+def test_uuid(complex_collection_node):
+    collection_node = complex_collection_node
+
+    # Deep copies should not share uuid (or uids) or urls
+    collection_node2 = copy.deepcopy(complex_collection_node)
+    assert collection_node.uuid != collection_node2.uuid
+    assert collection_node.uid != collection_node2.uid
+    assert collection_node.url != collection_node2.url
+
+    # Loads from json have the same uuid and url
+    collection_node3 = cript.load_nodes_from_json(collection_node.json)
+    assert collection_node3.uuid == collection_node.uuid
+    assert collection_node3.url == collection_node.url
 
 
 # ---------- Integration tests ----------

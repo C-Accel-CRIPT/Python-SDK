@@ -9,6 +9,7 @@ nav:
       - API: api/api.md
       - Search Modes: api/search_modes.md
       - Paginator: api/paginator.md
+      - Controlled Vocabulary Categories: api/controlled_vocabulary_categories.md
   - Primary Nodes:
       - Collection: nodes/primary_nodes/collection.md
       - Computation: nodes/primary_nodes/computation.md

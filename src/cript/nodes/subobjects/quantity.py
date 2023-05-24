@@ -23,13 +23,13 @@ class Quantity(BaseNode):
 
     ## Attributes
 
-    | attribute        | type | example | description          | required | vocab |
-    |------------------|------|---------|----------------------|----------|-------|
-    | key              | str  | mass    | type of quantity     | True     | True  |
-    | value            | Any  | 1.23    | amount of material   | True     |       |
-    | unit             | str  | gram    | unit for quantity    | True     |       |
-    | uncertainty      | Any  | 0.1     | uncertainty of value |          |       |
-    | uncertainty_type | str  | std     | type of uncertainty  |          | True  |
+    | attribute        | type    | example | description          | required | vocab |
+    |------------------|---------|---------|----------------------|----------|-------|
+    | key              | str     | mass    | type of quantity     | True     | True  |
+    | value            | Any     | 1.23    | amount of material   | True     |       |
+    | unit             | str     | gram    | unit for quantity    | True     |       |
+    | uncertainty      | Number  | 0.1     | uncertainty of value |          |       |
+    | uncertainty_type | str     | std     | type of uncertainty  |          | True  |
 
 
 

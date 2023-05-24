@@ -29,19 +29,18 @@ class Condition(BaseNode):
 
     ## Attributes
 
-    | attribute         | type           | example                 | description                                                                            | required | vocab |
-    |-------------------|----------------|-------------------------|----------------------------------------------------------------------------------------|----------|-------|
-    | key               | str            | temp                    | type of condition                                                                      | True     | True  |
-    | type              | str            | min                     | type of value stored, 'value' is just the number, 'min', 'max', 'avg', etc. for series | True     | True  |
-    | descriptor        | str            | upper temperature probe | freeform description for condition                                                     |          |       |
-    | value             | Any            | 1.23                    | value or quantity                                                                      | True     |       |
-    | unit              | str            | gram                    | unit for value                                                                         |          |       |
-    | uncertainty       | Any            | 0.1                     | uncertainty of value                                                                   |          |       |
-    | uncertainty_ type | str            | std                     | type of uncertainty                                                                    |          | True  |
-    | material          | list[Material] |                         | material that the condition relates to                                                 |          |       |
-    | set_id            | int            | 0                       | ID of set (used to link measurements in as series)                                     |          |       |
-    | measurement _id   | int            | 0                       | ID for a single measurement (used to link multiple condition at a single instance)     |          |       |
-    | data              | Data           |                         | detailed data associated with the condition                                            |          |       |
+    | attribute        | type   | example                 | description                                                                            | required | vocab |
+    |------------------|--------|-------------------------|----------------------------------------------------------------------------------------|----------|-------|
+    | key              | str    | temp                    | type of condition                                                                      | True     | True  |
+    | type             | str    | min                     | type of value stored, 'value' is just the number, 'min', 'max', 'avg', etc. for series | True     | True  |
+    | descriptor       | str    | upper temperature probe | freeform description for condition                                                     |          |       |
+    | value            | Number | 1.23                    | value or quantity                                                                      | True     |       |
+    | unit             | str    | gram                    | unit for value                                                                         |          |       |
+    | uncertainty      | Number | 0.1                     | uncertainty of value                                                                   |          |       |
+    | uncertainty_type | str    | std                     | type of uncertainty                                                                    |          | True  |
+    | set_id           | int    | 0                       | ID of set (used to link measurements in as series)                                     |          |       |
+    | measurement _id  | int    | 0                       | ID for a single measurement (used to link multiple condition at a single instance)     |          |       |
+    | data             | Data   |                         | detailed data associated with the condition                                            |          |       |
 
     ## JSON Representation
     ```json

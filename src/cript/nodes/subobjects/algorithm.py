@@ -22,7 +22,7 @@ class Algorithm(BaseNode):
     | key       | str             | ensemble, thermo-barostat                    | system configuration, algorithms used in a computation | True     | True  |
     | type      | str             | NPT for ensemble, Nose-Hoover for thermostat | specific type of configuration, algorithm              | True     |       |
     | parameter | list[Parameter] |                                              | setup associated parameters                            |          |       |
-    | citation  | list[Citation]  |                                              | reference to a book, paper, or scholarly work          |          |       |
+    | citation  | Citation        |                                              | reference to a book, paper, or scholarly work          |          |       |
 
 
     ## Available sub-objects

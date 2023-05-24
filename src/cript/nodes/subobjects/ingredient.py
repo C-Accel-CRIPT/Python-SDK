@@ -28,7 +28,7 @@ class Ingredient(BaseNode):
     | attribute  | type           | example  | description            | required | vocab |
     |------------|----------------|----------|------------------------|----------|-------|
     | material   | Material       |          | material               | True     |       |
-    | quantities | list[Quantity] |          | quantities             | True     |       |
+    | quantity   | list[Quantity] |          | quantities             | True     |       |
     | keyword    | str            | catalyst | keyword for ingredient |          | True  |
 
     ## JSON Representation

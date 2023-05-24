@@ -32,24 +32,23 @@ class Property(BaseNode):
 
     ## Attributes
 
-    | attribute            | type              | example                                                                | description                                                                  | required | vocab |
-    |----------------------|-------------------|------------------------------------------------------------------------|------------------------------------------------------------------------------|----------|-------|
-    | key                  | str               | modulus_shear                                                          | type of property                                                             | True     | True  |
-    | type                 | str               | min                                                                    | type of value stored                                                         | True     | True  |
-    | value                | Any               | 1.23                                                                   | value or quantity                                                            | True     |       |
-    | unit                 | str               | gram                                                                   | unit for value                                                               | True     |       |
-    | uncertainty          | Any               | 0.1                                                                    | uncertainty of value                                                         |          |       |
-    | uncertainty_ type    | str               | standard_deviation                                                     | type of uncertainty                                                          |          | True  |
-    | components           | list[Material]    |                                                                        | material that the property relates to**                                      |          |       |
-    | components_ relative | list[Material]    |                                                                        | material that the property relative to**                                     |          |       |
-    | structure            | str               | {\[\]\[$\]\[C:1\]\[C:1\]\[$\], \[$\]\[C:2\]\[C:2\](\[C:2\]) \[$\]\[\]} | specific chemical structure associate with the property with atom mappings** |          |       |
-    | method               | str               | sec                                                                    | approach or source of property data                                          |          | True  |
-    | sample_preparation   | Process           |                                                                        | sample preparation                                                           |          |       |
-    | conditions           | list[Condition]   |                                                                        | conditions under which the property was measured                             |          |       |
-    | data                 | Data              |                                                                        | data node                                                                    |          |       |
-    | computations         | list[Computation] |                                                                        | computation method that produced property                                    |          |       |
-    | citations            | list[Citation]    |                                                                        | reference to a book, paper, or scholarly work                                |          |       |
-    | notes                | str               |                                                                        | miscellaneous information, or custom data structure (e.g.; JSON)             |          |       |
+    | attribute          | type              | example                                                                | description                                                                  | required | vocab |
+    |--------------------|-------------------|------------------------------------------------------------------------|------------------------------------------------------------------------------|----------|-------|
+    | key                | str               | modulus_shear                                                          | type of property                                                             | True     | True  |
+    | type               | str               | min                                                                    | type of value stored                                                         | True     | True  |
+    | value              | Any               | 1.23                                                                   | value or quantity                                                            | True     |       |
+    | unit               | str               | gram                                                                   | unit for value                                                               | True     |       |
+    | uncertainty        | Number            | 0.1                                                                    | uncertainty of value                                                         |          |       |
+    | uncertainty_type   | str               | standard_deviation                                                     | type of uncertainty                                                          |          | True  |
+    | component          | list[Material]    |                                                                        | material that the property relates to**                                      |          |       |
+    | structure          | str               | {\[\]\[$\]\[C:1\]\[C:1\]\[$\], \[$\]\[C:2\]\[C:2\](\[C:2\]) \[$\]\[\]} | specific chemical structure associate with the property with atom mappings** |          |       |
+    | method             | str               | sec                                                                    | approach or source of property data                                          |          | True  |
+    | sample_preparation | Process           |                                                                        | sample preparation                                                           |          |       |
+    | condition          | list[Condition]   |                                                                        | conditions under which the property was measured                             |          |       |
+    | data               | Data              |                                                                        | data node                                                                    |          |       |
+    | computation        | list[Computation] |                                                                        | computation method that produced property                                    |          |       |
+    | citation           | list[Citation]    |                                                                        | reference to a book, paper, or scholarly work                                |          |       |
+    | notes              | str               |                                                                        | miscellaneous information, or custom data structure (e.g.; JSON)             |          |       |
 
 
     ## JSON Representation

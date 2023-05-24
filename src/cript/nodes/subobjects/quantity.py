@@ -71,7 +71,9 @@ class Quantity(BaseNode):
         ```python
         import cript
 
-        my_quantity = cript.Quantity(key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev")
+        my_quantity = cript.Quantity(
+            key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        )
         ```
 
         Returns

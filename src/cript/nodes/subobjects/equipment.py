@@ -263,8 +263,8 @@ class Equipment(BaseNode):
         title = "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
         title += "SOft coarse grained Monte-Carlo Acceleration (SOMA)"
 
-        reference = cript.Reference(
-            "journal_article",
+        my_reference = cript.Reference(
+            type="journal_article",
             title=title,
             author=["Ludwig Schneider", "Marcus Müller"],
             journal="Computer Physics Communications",
@@ -277,7 +277,7 @@ class Equipment(BaseNode):
         )
 
         # create citation node and add reference node to it
-        my_citation = cript.Citation("reference", complex_reference_node)
+        my_citation = cript.Citation(type="reference", reference=my_reference)
 
         # add citation subobject to equipment
         my_equipment.citation = [my_citation]

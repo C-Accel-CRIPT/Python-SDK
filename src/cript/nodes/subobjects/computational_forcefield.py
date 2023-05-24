@@ -417,7 +417,7 @@ class ComputationalForcefield(BaseNode):
         title = "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
         title += "SOft coarse grained Monte-Carlo Acceleration (SOMA)"
 
-        reference = cript.Reference(
+        my_reference = cript.Reference(
             "journal_article",
             title=title,
             author=["Ludwig Schneider", "Marcus Müller"],
@@ -431,9 +431,9 @@ class ComputationalForcefield(BaseNode):
         )
 
         # create citation node and add reference node to it
-        my_citation = cript.Citation("reference", complex_reference_node)
+        my_citation = cript.Citation(type="reference", reference=my_reference)
 
-        my_computational_forcefield.citation = my_citation
+        my_computational_forcefield.citation = [my_citation]
         ```
 
         Returns

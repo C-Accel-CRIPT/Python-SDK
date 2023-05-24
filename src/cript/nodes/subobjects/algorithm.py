@@ -216,7 +216,7 @@ class Algorithm(BaseNode):
 
         # create reference node
         my_reference = cript.Reference(
-            "journal_article",
+            type="journal_article",
             title=title,
             author=["Ludwig Schneider", "Marcus Müller"],
             journal="Computer Physics Communications",
@@ -228,8 +228,8 @@ class Algorithm(BaseNode):
             website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
         )
 
-        # create citation subobject and add reference to it
-        my_citation = Citation("reference", my_reference)
+        # create citation sub-object and add reference to it
+        my_citation = cript.Citation(type="reference, reference==my_reference)
 
         # add citation to algorithm node
         algorithm.citation = my_citation

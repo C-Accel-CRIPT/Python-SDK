@@ -632,7 +632,7 @@ class Property(BaseNode):
         title += "Soft coarse grained Monte-Carlo Acceleration (SOMA)"
 
         my_reference = cript.Reference(
-            "journal_article",
+            type="journal_article",
             title=title,
             author=["Ludwig Schneider", "Marcus Müller"],
             journal="Computer Physics Communications",
@@ -645,7 +645,7 @@ class Property(BaseNode):
         )
 
         # create citation node and add reference node to it
-        my_citation = cript.Citation("reference", my_reference)
+        my_citation = cript.Citation(type="reference", reference=my_reference)
 
         # add citation to Property subobject
         my_property.citation = [my_citation]

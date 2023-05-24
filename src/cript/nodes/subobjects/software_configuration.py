@@ -220,7 +220,7 @@ class SoftwareConfiguration(BaseNode):
 
         # create reference node
         my_reference = cript.Reference(
-            "journal_article",
+            type"journal_article",
             title=title,
             author=["Ludwig Schneider", "Marcus Müller"],
             journal="Computer Physics Communications",

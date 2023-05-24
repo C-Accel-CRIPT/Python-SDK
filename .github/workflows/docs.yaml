@@ -6,6 +6,7 @@ on:
     branches:
       - add_docs
 
+  # trunk-ignore(yamllint/empty-values)
   workflow_dispatch:
 
 jobs:

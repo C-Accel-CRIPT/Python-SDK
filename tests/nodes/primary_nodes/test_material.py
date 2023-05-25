@@ -20,14 +20,6 @@ def test_create_simple_material() -> None:
     assert my_material.identifiers == identifiers
 
 
-def test_invalid_material_keywords() -> None:
-    """
-    tries to create a material with invalid keywords and expects to get an Exception
-    """
-    # with pytest.raises(InvalidVocabulary):
-    pass
-
-
 def test_all_getters_and_setters(simple_material_node, simple_property_node, simple_process_node, simple_computational_forcefield_node) -> None:
     """
     tests the getters and setters for the simple material object

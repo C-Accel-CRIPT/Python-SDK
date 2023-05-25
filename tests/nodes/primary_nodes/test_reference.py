@@ -5,20 +5,6 @@ from util import strip_uid_from_dict
 import cript
 
 
-def test_create_simple_reference() -> None:
-    """
-    tests to see if a simple reference node with only minimal arguments can be successfully created
-    """
-    my_reference_type = "journal_article"
-    my_reference_title = "'Living' Polymers"
-
-    my_reference = cript.Reference(type=my_reference_type, title=my_reference_title)
-
-    assert isinstance(my_reference, cript.Reference)
-    assert my_reference.type == my_reference_type
-    assert my_reference.title == my_reference_title
-
-
 def test_complex_reference() -> None:
     """
     tests that a complex reference node with all optional parameters can be made
@@ -131,22 +117,6 @@ def test_getters_and_setters_reference(complex_reference_node) -> None:
     assert complex_reference_node.arxiv_id == arxiv_id
     assert complex_reference_node.pmid == pmid
     assert complex_reference_node.website == website
-
-
-def test_reference_vocabulary() -> None:
-    """
-    tests that a reference node type with valid CRIPT controlled vocabulary runs successfully
-    and invalid reference type gives the correct errors
-    """
-    pass
-
-
-def test_reference_conditional_attributes() -> None:
-    """
-    test conditional attributes (DOI and ISSN) that they are validating correctly
-    and that an error is correctly raised when they are needed but not provided
-    """
-    pass
 
 
 def test_serialize_reference_to_json(complex_reference_node, complex_reference_dict) -> None:

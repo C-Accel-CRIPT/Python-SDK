@@ -5,6 +5,7 @@ from util import strip_uid_from_dict
 
 import cript
 
+
 def test_create_complex_computation_node(simple_data_node, complex_software_configuration_node, complex_condition_node, simple_computation_node, complex_citation_node) -> None:
     """
     test that a complex computation node with all possible arguments can be created

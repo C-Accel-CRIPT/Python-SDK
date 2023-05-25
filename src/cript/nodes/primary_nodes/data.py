@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List
+from typing import Any, List, Union
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -212,7 +212,7 @@ class Data(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def sample_preparation(self) -> Any:
+    def sample_preparation(self) -> Union[Any, None]:
         """
         The sample preparation for this data node
 
@@ -224,7 +224,7 @@ class Data(PrimaryBaseNode):
         return self._json_attrs.sample_preparation
 
     @sample_preparation.setter
-    def sample_preparation(self, new_sample_preparation: Any) -> None:
+    def sample_preparation(self, new_sample_preparation: Union[Any, None]) -> None:
         """
         set sample_preparation
 
@@ -270,7 +270,7 @@ class Data(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def computation_process(self) -> Any:
+    def computation_process(self) -> Union[Any, None]:
         """
         The computation_process for this data node
 
@@ -282,7 +282,7 @@ class Data(PrimaryBaseNode):
         return self._json_attrs.computation_process
 
     @computation_process.setter
-    def computation_process(self, new_computation_process: Any) -> None:
+    def computation_process(self, new_computation_process: Union[Any, None]) -> None:
         """
         set the computational process
 

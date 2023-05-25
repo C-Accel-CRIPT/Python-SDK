@@ -42,10 +42,10 @@ def test_json_error(complex_parameter_node):
 
 def test_local_search(complex_algorithm_node, complex_parameter_node):
     a = complex_algorithm_node
-    # Check if we can use search to find the algoritm node, but specifying node and key
+    # Check if we can use search to find the algorithm node, but specifying node and key
     find_algorithms = a.find_children({"node": "Algorithm", "key": "mc_barostat"})
     assert find_algorithms == [a]
-    # Check if it corretcly exclude the algorithm if key is specified to non-existent value
+    # Check if it correctly exclude the algorithm if key is specified to non-existent value
     find_algorithms = a.find_children({"node": "Algorithm", "key": "mc"})
     assert find_algorithms == []
 
@@ -65,18 +65,18 @@ def test_local_search(complex_algorithm_node, complex_parameter_node):
     find_parameter = a.find_children({"key": "update_frequency"})
     assert find_parameter == [p1]
 
-    # Test if correctly find no paramter if we are searching for a non-existent parameter
+    # Test if correctly find no parameter if we are searching for a non-existent parameter
     find_parameter = a.find_children({"key": "update"})
     assert find_parameter == []
 
     # Test nested search. Here we are looking for any node that has a child node parameter as specified.
     find_algorithms = a.find_children({"parameter": {"key": "damping_time"}})
     assert find_algorithms == [a]
-    # Same as before, but specifiying two children that have to be present (AND condition)
+    # Same as before, but specifying two children that have to be present (AND condition)
     find_algorithms = a.find_children({"parameter": [{"key": "damping_time"}, {"key": "update_frequency"}]})
     assert find_algorithms == [a]
 
-    # Test that the main node is correctly excluded if we specify an additionally non-existent paramter
+    # Test that the main node is correctly excluded if we specify an additionally non-existent parameter
     find_algorithms = a.find_children({"parameter": [{"key": "damping_time"}, {"key": "update_frequency"}, {"foo": "bar"}]})
     assert find_algorithms == []
 
@@ -162,7 +162,7 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
     dummy_experiment = copy.deepcopy(project.collection[0].experiment[0])
     with pytest.raises(RuntimeError):
         cript.add_orphaned_nodes_to_project(project, dummy_experiment)
-    # Problem still presists
+    # Problem still persists
     with pytest.raises(CRIPTOrphanedProcessError):
         project.validate()
     # Fix by using the helper function correctly

@@ -116,7 +116,7 @@ class API:
         Warns
         -----
         UserWarning
-            If `host` is using "http" it gives the user a warning that HTTP is insecure and the user shuold use HTTPS
+            If `host` is using "http" it gives the user a warning that HTTP is insecure and the user should use HTTPS
 
         Raises
         ------

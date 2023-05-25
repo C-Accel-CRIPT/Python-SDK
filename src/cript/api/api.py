@@ -436,7 +436,7 @@ class API:
         try:
             jsonschema.validate(instance=node_dict, schema=db_schema)
         except jsonschema.exceptions.ValidationError as error:
-            raise CRIPTNodeSchemaError(node_type=node_dict["node"], json_schema_validation_error=str(error))
+            raise CRIPTNodeSchemaError(node_type=node_dict["node"], json_schema_validation_error=str(error)) from error
 
         # if validation goes through without any problems return True
         return True

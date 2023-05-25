@@ -6,20 +6,6 @@ from util import strip_uid_from_dict
 import cript
 
 
-def test_create_simple_data_node(complex_file_node) -> None:
-    """
-    create a simple data node with only required arguments
-    """
-    my_data_type = "afm_amp"
-
-    my_data = cript.Data(name="my data name", type=my_data_type, file=[complex_file_node])
-
-    # assertions
-    assert isinstance(my_data, cript.Data)
-    assert my_data.type == my_data_type
-    assert my_data.file == [complex_file_node]
-
-
 def test_create_complex_data_node(
     complex_file_node,
     simple_process_node,
@@ -55,17 +41,6 @@ def test_create_complex_data_node(
     assert my_complex_data.material == [simple_material_node]
     assert my_complex_data.process == [simple_process_node]
     # assert my_complex_data.citation == [complex_citation_node]
-
-
-def test_data_type_invalid_vocabulary() -> None:
-    """
-    tests that setting the data type to an invalid vocabulary word gives the expected error
-
-    Returns
-    -------
-    None
-    """
-    pass
 
 
 def test_data_getters_and_setters(

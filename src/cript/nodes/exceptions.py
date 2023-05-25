@@ -299,7 +299,7 @@ def get_orphaned_experiment_exception(orphaned_node):
 class CRIPTOrphanedDataError(CRIPTOrphanedExperimentError):
     """
     ## Definition
-    CRIPTOrphanedExeprimentError, but specific for orphaned Data node that should be listed in one of the experiments.
+    CRIPTOrphanedExperimentError, but specific for orphaned Data node that should be listed in one of the experiments.
 
     ## How To Fix
     Handle this error by adding the orphaned node into one the parent project's experiments `data` attribute.
@@ -315,7 +315,7 @@ class CRIPTOrphanedDataError(CRIPTOrphanedExperimentError):
 class CRIPTOrphanedProcessError(CRIPTOrphanedExperimentError):
     """
     ## Definition
-    CRIPTOrphanedExeprimentError, but specific for orphaned Process node that should be
+    CRIPTOrphanedExperimentError, but specific for orphaned Process node that should be
     listed in one of the experiments.
 
     ## How To Fix
@@ -333,7 +333,7 @@ class CRIPTOrphanedProcessError(CRIPTOrphanedExperimentError):
 class CRIPTOrphanedComputationError(CRIPTOrphanedExperimentError):
     """
     ## Definition
-    CRIPTOrphanedExeprimentError, but specific for orphaned Computation node that should be
+    CRIPTOrphanedExperimentError, but specific for orphaned Computation node that should be
     listed in one of the experiments.
 
     ## How To Fix
@@ -351,7 +351,7 @@ class CRIPTOrphanedComputationError(CRIPTOrphanedExperimentError):
 class CRIPTOrphanedComputationalProcessError(CRIPTOrphanedExperimentError):
     """
     ## Definition
-    CRIPTOrphanedExeprimentError, but specific for orphaned ComputationalProcess
+    CRIPTOrphanedExperimentError, but specific for orphaned ComputationalProcess
     node that should be listed in one of the experiments.
 
     ## How To Fix

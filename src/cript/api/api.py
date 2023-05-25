@@ -299,7 +299,7 @@ class API:
 
         if response["code"] != 200:
             # TODO give a better CRIPT custom Exception
-            raise Exception(f"while getting controlled vocabulary from CRIPT by {category}, " f"the API responded with http {response} ")
+            raise Exception(f"while getting controlled vocabulary from CRIPT for {category}, " f"the API responded with http {response} ")
 
         # add to cache
         self._vocabulary[category.value] = response["data"]
@@ -421,7 +421,7 @@ class API:
         try:
             node_list = node_dict["node"]
         except KeyError:
-            raise CRIPTNodeSchemaError(error_message=f"'node' attribute not present in serialization of {node_json}. Missing for example 'node': ['material'].")
+            raise CRIPTJsonNodeError(node_list=node_dict["node"], json_str=json.dumps(node_dict))
 
         # TODO should use the `_is_node_field_valid()` function from utils.py to keep the code DRY
         # checking the node field "node": "Material"
@@ -436,7 +436,7 @@ class API:
         try:
             jsonschema.validate(instance=node_dict, schema=db_schema)
         except jsonschema.exceptions.ValidationError as error:
-            raise CRIPTNodeSchemaError(error_message=str(error) + str(error.context)) from error
+            raise CRIPTNodeSchemaError(node_type=node_dict["node"], json_schema_validation_error=str(error)) from error
 
         # if validation goes through without any problems return True
         return True

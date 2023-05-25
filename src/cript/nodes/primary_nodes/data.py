@@ -214,7 +214,7 @@ class Data(PrimaryBaseNode):
     @property
     def sample_preparation(self) -> Any:
         """
-        The sample preperation for this data node
+        The sample preparation for this data node
 
         Returns
         -------

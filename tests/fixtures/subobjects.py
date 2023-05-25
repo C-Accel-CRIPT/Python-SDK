@@ -314,6 +314,6 @@ def simple_computational_forcefield_node():
 @pytest.fixture(scope="function")
 def simple_condition_node() -> cript.Condition:
     """
-    simple and minial condition node
+    simple and minimal condition node
     """
     return cript.Condition(key="atm", type="max", value=1)

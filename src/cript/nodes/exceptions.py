@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List
 
 from cript.exceptions import CRIPTException
 
@@ -146,15 +147,16 @@ class CRIPTJsonNodeError(CRIPTJsonDeserializationError):
     CRIPT team to look into any issues that there could have been.
     """
 
-    def __init__(self, node_list, json_str) -> None:
+    def __init__(self, node_list: List, json_str: str) -> None:
         self.node_list = node_list
         self.json_str = json_str
 
     def __str__(self) -> str:
-        error_message: str = f"Invalid JSON contains `node` attribute {self.node_list} "
-        error_message += "but this is not a list with a single element. "
-        error_message += " Expected is a single element list with the node name as a single string element. "
-        error_message += f" Full json string was {self.json_str}. "
+        error_message: str = (
+            f"The 'node' attribute in the JSON string must be a single element list with the node name "
+            f" such as `'node: ['Material']`. The `node` attribute provided was: `{self.node_list}`"
+            f"The full JSON was: {self.json_str}."
+        )
 
         return error_message
 

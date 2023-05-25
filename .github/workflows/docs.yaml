@@ -4,7 +4,6 @@ name: Docs
 on:
   push:
     branches:
-      - main
       - validate_nodes
 
   # trunk-ignore(yamllint/empty-values)

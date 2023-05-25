@@ -471,7 +471,7 @@ class Property(BaseNode):
         ```python
         my_process = cript.Process(name="my process name", type="affinity_pure")
 
-        my_property.sample_prepration = my_process
+        my_property.sample_preparation = my_process
         ```
 
         Returns
@@ -661,7 +661,7 @@ class Property(BaseNode):
     @citation.setter
     def citation(self, new_citation: List[Citation]) -> None:
         """
-        set the list of Citation subojects for the Property subobject
+        set the list of Citation subobjects for the Property subobject
 
         Parameters
         ----------

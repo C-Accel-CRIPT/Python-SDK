@@ -97,7 +97,7 @@ class CRIPTOrphanedNodesError(CRIPTException, ABC):
     """
     This error is raised when a child node is not attached to the
     appropriate parent node. For example, all material nodes used
-    within a project must belong to the project inventory or are explictly listed as material of that project.
+    within a project must belong to the project inventory or are explicitly listed as material of that project.
     If there is a material node that is used within a project but not a part of the
     inventory and the validation code finds it then it raises an `CRIPTOrphanedNodeError`
 
@@ -178,7 +178,7 @@ def get_orphaned_experiment_exception(orphaned_node):
 
 class CRIPTOrphanedDataError(CRIPTOrphanedExperimentError):
     """
-    CRIPTOrphanedExeprimentError, but specific for orphaned Data node that should be listed in one of the experiments.
+    CRIPTOrphanedExperimentError, but specific for orphaned Data node that should be listed in one of the experiments.
     Handle this error by adding the orphaned node into one the parent project's experiments `data` attribute.
     """
 
@@ -191,7 +191,7 @@ class CRIPTOrphanedDataError(CRIPTOrphanedExperimentError):
 
 class CRIPTOrphanedProcessError(CRIPTOrphanedExperimentError):
     """
-    CRIPTOrphanedExeprimentError, but specific for orphaned Process node that should be listed in one of the experiments.
+    CRIPTOrphanedExperimentError, but specific for orphaned Process node that should be listed in one of the experiments.
     Handle this error by adding the orphaned node into one the parent project's experiments `process` attribute.
     """
 
@@ -204,7 +204,7 @@ class CRIPTOrphanedProcessError(CRIPTOrphanedExperimentError):
 
 class CRIPTOrphanedComputationError(CRIPTOrphanedExperimentError):
     """
-    CRIPTOrphanedExeprimentError, but specific for orphaned Computation node that should be listed in one of the experiments.
+    CRIPTOrphanedExperimentError, but specific for orphaned Computation node that should be listed in one of the experiments.
     Handle this error by adding the orphaned node into one the parent project's experiments `Computation` attribute.
     """
 
@@ -217,7 +217,7 @@ class CRIPTOrphanedComputationError(CRIPTOrphanedExperimentError):
 
 class CRIPTOrphanedComputationalProcessError(CRIPTOrphanedExperimentError):
     """
-    CRIPTOrphanedExeprimentError, but specific for orphaned ComputationalProcess node that should be listed in one of the experiments.
+    CRIPTOrphanedExperimentError, but specific for orphaned ComputationalProcess node that should be listed in one of the experiments.
     Handle this error by adding the orphaned node into one the parent project's experiments `ComputationalProcess` attribute.
     """
 

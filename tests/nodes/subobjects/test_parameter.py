@@ -15,7 +15,7 @@ def test_parameter_setter_getter(complex_parameter_node):
     assert p.unit == "m"
 
 
-def test_paraemter_json_serialization(complex_parameter_node, complex_parameter_dict):
+def test_parameter_json_serialization(complex_parameter_node, complex_parameter_dict):
     p = complex_parameter_node
     p_str = p.json
     p2 = cript.load_nodes_from_json(p_str)

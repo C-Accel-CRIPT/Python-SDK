@@ -116,7 +116,7 @@ class API:
         Warns
         -----
         UserWarning
-            If `host` is using "http" it gives the user a warning that HTTP is insecure and the user shuold use HTTPS
+            If `host` is using "http" it gives the user a warning that HTTP is insecure and the user should use HTTPS
 
         Raises
         ------
@@ -421,7 +421,7 @@ class API:
         try:
             node_list = node_dict["node"]
         except KeyError:
-            raise CRIPTNodeSchemaError(error_message=f"'node' attriubte not present in serialization of {node_json}. Missing for exmaple 'node': ['material'].")
+            raise CRIPTNodeSchemaError(error_message=f"'node' attribute not present in serialization of {node_json}. Missing for example 'node': ['material'].")
 
         # TODO should use the `_is_node_field_valid()` function from utils.py to keep the code DRY
         # checking the node field "node": "Material"

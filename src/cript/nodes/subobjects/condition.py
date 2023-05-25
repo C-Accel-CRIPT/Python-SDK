@@ -21,7 +21,7 @@ class Condition(BaseNode):
     * [Process](../../primary_nodes/process)
     * [Computation_Process](../../primary_nodes/computation_process)
 
-    ### Subojects
+    ### Subobjects
     * [Property](../property)
     * [Equipment](../equipment)
 

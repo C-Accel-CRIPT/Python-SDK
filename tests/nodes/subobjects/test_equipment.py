@@ -14,7 +14,7 @@ def test_json(complex_equipment_node, complex_equipment_dict):
     assert strip_uid_from_dict(json.loads(e.json)) == strip_uid_from_dict(json.loads(e2.json))
 
 
-def test_settter_getter(complex_equipment_node, complex_condition_node, complex_file_node, complex_citation_node):
+def test_setter_getter(complex_equipment_node, complex_condition_node, complex_file_node, complex_citation_node):
     e2 = complex_equipment_node
     e2.key = "glass_beaker"
     assert e2.key == "glass_beaker"

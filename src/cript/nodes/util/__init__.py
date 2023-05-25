@@ -265,7 +265,7 @@ def add_orphaned_nodes_to_project(project: Project, active_experiment: Experimen
         try:
             project.validate()
         except CRIPTOrphanedMaterialError as exc:
-            # beccause calling the setter calls `validate` we have to force add the material.
+            # because calling the setter calls `validate` we have to force add the material.
             project._json_attrs.material.append(exc.orphaned_node)
         except CRIPTOrphanedDataError as exc:
             active_experiment.data += [exc.orphaned_node]

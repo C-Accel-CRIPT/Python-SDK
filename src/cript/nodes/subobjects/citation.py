@@ -25,7 +25,7 @@ class Citation(BaseNode):
     * [Data node](../../primary_nodes/data)
 
     ### Subobjects
-    * [Computational Forecefield subobjects](../computational_forcefield)
+    * [Computational Forcefield subobjects](../computational_forcefield)
     * [Property subobject](../property)
     * [Algorithm subobject](../algorithm)
     * [Equipment subobject](../equipment)

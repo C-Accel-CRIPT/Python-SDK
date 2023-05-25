@@ -152,11 +152,7 @@ class CRIPTJsonNodeError(CRIPTJsonDeserializationError):
         self.json_str = json_str
 
     def __str__(self) -> str:
-        error_message: str = (
-            f"The 'node' attribute in the JSON string must be a single element list with the node name "
-            f" such as `'node: ['Material']`. The `node` attribute provided was: `{self.node_list}`"
-            f"The full JSON was: {self.json_str}."
-        )
+        error_message: str = f"The 'node' attribute in the JSON string must be a single element list with the node name " f" such as `'node: ['Material']`. The `node` attribute provided was: `{self.node_list}`" f"The full JSON was: {self.json_str}."
 
         return error_message
 

@@ -299,8 +299,7 @@ class API:
 
         if response["code"] != 200:
             # TODO give a better CRIPT custom Exception
-            raise Exception(f"while getting controlled vocabulary from CRIPT for {category}, " 
-                            f"the API responded with http {response} ")
+            raise Exception(f"while getting controlled vocabulary from CRIPT for {category}, " f"the API responded with http {response} ")
 
         # add to cache
         self._vocabulary[category.value] = response["data"]
@@ -422,7 +421,7 @@ class API:
         try:
             node_list = node_dict["node"]
         except KeyError:
-            raise CRIPTJsonNodeError(node_list=node_dict["node"], json_str = json.dumps(node_dict))
+            raise CRIPTJsonNodeError(node_list=node_dict["node"], json_str=json.dumps(node_dict))
 
         # TODO should use the `_is_node_field_valid()` function from utils.py to keep the code DRY
         # checking the node field "node": "Material"

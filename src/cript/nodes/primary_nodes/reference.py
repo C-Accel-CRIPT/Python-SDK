@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import List
+from typing import List, Union
 
 from cript.nodes.uuid_base import UUIDBaseNode
 
@@ -324,7 +324,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def year(self) -> int:
+    def year(self) -> Union[int, None]:
         """
         year for the scholarly work
 
@@ -341,7 +341,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.year
 
     @year.setter
-    def year(self, new_year: int) -> None:
+    def year(self, new_year: Union[int, None]) -> None:
         """
         set the year for the scholarly work within the reference node
 
@@ -358,7 +358,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def volume(self) -> int:
+    def volume(self) -> Union[int, None]:
         """
         Volume of the scholarly work from the reference node
 
@@ -376,7 +376,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.volume
 
     @volume.setter
-    def volume(self, new_volume: int) -> None:
+    def volume(self, new_volume: Union[int, None]) -> None:
         """
         set the volume of the scholarly work for this reference node
 
@@ -392,7 +392,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def issue(self) -> int:
+    def issue(self) -> Union[int, None]:
         """
         issue of the scholarly work for the reference node
 
@@ -409,7 +409,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.issue
 
     @issue.setter
-    def issue(self, new_issue: int) -> None:
+    def issue(self, new_issue: Union[int, None]) -> None:
         """
         set the issue of the scholarly work
 
@@ -565,7 +565,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def pmid(self) -> int:
+    def pmid(self) -> Union[int, None]:
         """
         The PubMed ID (PMID) for this reference node
 
@@ -583,7 +583,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.pmid
 
     @pmid.setter
-    def pmid(self, new_pmid: int) -> None:
+    def pmid(self, new_pmid: Union[int, None]) -> None:
         """
 
         Parameters

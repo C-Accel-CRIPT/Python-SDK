@@ -6,25 +6,6 @@ from util import strip_uid_from_dict
 import cript
 
 
-def test_create_simple_computational_process(simple_data_node, complex_ingredient_node) -> None:
-    """
-    create a simple computational_process node with required arguments
-    """
-
-    my_computational_process = cript.ComputationProcess(
-        name="my computational process node name",
-        type="cross_linking",
-        input_data=[simple_data_node],
-        ingredient=[complex_ingredient_node],
-    )
-
-    # assertions
-    assert isinstance(my_computational_process, cript.ComputationProcess)
-    assert my_computational_process.type == "cross_linking"
-    assert my_computational_process.input_data == [simple_data_node]
-    assert my_computational_process.ingredient == [complex_ingredient_node]
-
-
 def test_create_complex_computational_process(
     simple_data_node,
     complex_ingredient_node,

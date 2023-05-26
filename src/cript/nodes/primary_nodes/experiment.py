@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field, replace
 from typing import Any, List
 
-# from cript import Process, Computation, ComputationalProcess, Data, Citation
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from beartype import beartype
 
 
 class Experiment(PrimaryBaseNode):
@@ -63,6 +63,7 @@ class Experiment(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(self, name: str, process: List[Any] = None, computation: List[Any] = None, computation_process: List[Any] = None, data: List[Any] = None, funding: List[str] = None, citation: List[Any] = None, notes: str = "", **kwargs):
         """
         create an Experiment node
@@ -131,6 +132,7 @@ class Experiment(PrimaryBaseNode):
 
     # ------------------ Properties ------------------
     @property
+    @beartype
     def process(self) -> List[Any]:
         """
         List of process for experiment
@@ -150,6 +152,7 @@ class Experiment(PrimaryBaseNode):
         return self._json_attrs.process.copy()
 
     @process.setter
+    @beartype
     def process(self, new_process_list: List[Any]) -> None:
         """
         set the list of process for this experiment
@@ -167,6 +170,7 @@ class Experiment(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def computation(self) -> List[Any]:
         """
         List of the [computations](../computation) in this experiment
@@ -189,6 +193,7 @@ class Experiment(PrimaryBaseNode):
         return self._json_attrs.computation.copy()
 
     @computation.setter
+    @beartype
     def computation(self, new_computation_list: List[Any]) -> None:
         """
         set the list of computations for this experiment
@@ -206,6 +211,7 @@ class Experiment(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def computation_process(self) -> List[Any]:
         """
         List of [computation_process](../computational_process) for this experiment
@@ -232,6 +238,7 @@ class Experiment(PrimaryBaseNode):
         return self._json_attrs.computation_process.copy()
 
     @computation_process.setter
+    @beartype
     def computation_process(self, new_computation_process_list: List[Any]) -> None:
         """
         set the list of computation_process for this experiment
@@ -249,6 +256,7 @@ class Experiment(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def data(self) -> List[Any]:
         """
         List of [data nodes](../data) for this experiment
@@ -278,6 +286,7 @@ class Experiment(PrimaryBaseNode):
         return self._json_attrs.data.copy()
 
     @data.setter
+    @beartype
     def data(self, new_data_list: List[Any]) -> None:
         """
         set the list of data for this experiment
@@ -295,6 +304,7 @@ class Experiment(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def funding(self) -> List[str]:
         """
         List of strings of all the funders for this experiment
@@ -313,6 +323,7 @@ class Experiment(PrimaryBaseNode):
         return self._json_attrs.funding.copy()
 
     @funding.setter
+    @beartype
     def funding(self, new_funding_list: List[str]) -> None:
         """
         set the list of funders for this experiment
@@ -330,6 +341,7 @@ class Experiment(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def citation(self) -> List[Any]:
         """
         List of [citation](../citation) for this experiment
@@ -352,6 +364,7 @@ class Experiment(PrimaryBaseNode):
         return self._json_attrs.citation.copy()
 
     @citation.setter
+    @beartype
     def citation(self, new_citation_list: List[Any]) -> None:
         """
         set the list of citations for this experiment

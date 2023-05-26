@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field, replace
 from typing import List, Union
 
+from beartype import beartype
+
 from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.subobjects.quantity import Quantity
@@ -45,6 +47,7 @@ class Ingredient(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(self, material: Material, quantity: List[Quantity], keyword: str = "", **kwargs):
         """
         create an ingredient sub-object
@@ -84,6 +87,7 @@ class Ingredient(BaseNode):
         self.validate()
 
     @property
+    @beartype
     def material(self) -> Material:
         """
         current material in this ingredient sub-object
@@ -96,6 +100,7 @@ class Ingredient(BaseNode):
         return self._json_attrs.material
 
     @property
+    @beartype
     def quantity(self) -> List[Quantity]:
         """
         quantity for the ingredient sub-object
@@ -107,6 +112,7 @@ class Ingredient(BaseNode):
         """
         return self._json_attrs.quantity.copy()
 
+    @beartype
     def set_material(self, new_material: Material, new_quantity: List[Quantity]) -> None:
         """
         update ingredient sub-object with new material and new list of quantities
@@ -141,6 +147,7 @@ class Ingredient(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def keyword(self) -> str:
         """
         ingredient keyword must come from the [CRIPT controlled vocabulary]()
@@ -160,6 +167,7 @@ class Ingredient(BaseNode):
         return self._json_attrs.keyword
 
     @keyword.setter
+    @beartype
     def keyword(self, new_keyword: str) -> None:
         """
         set new ingredient keyword to replace the current

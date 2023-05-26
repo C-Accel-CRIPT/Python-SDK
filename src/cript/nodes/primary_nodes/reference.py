@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
-from cript.nodes.uuid_base import UUIDBaseNode
-
 from beartype import beartype
+
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
 class Reference(UUIDBaseNode):

@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
+from beartype import beartype
+
 from cript.nodes.core import BaseNode
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.parameter import Parameter
@@ -108,6 +110,7 @@ class Algorithm(BaseNode):
         self.validate()
 
     @property
+    @beartype
     def key(self) -> str:
         """
         Algorithm key
@@ -128,6 +131,7 @@ class Algorithm(BaseNode):
         return self._json_attrs.key
 
     @key.setter
+    @beartype
     def key(self, new_key: str) -> None:
         """
         set the algorithm key
@@ -143,6 +147,7 @@ class Algorithm(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def type(self) -> str:
         """
         Algorithm type
@@ -157,11 +162,13 @@ class Algorithm(BaseNode):
         return self._json_attrs.type
 
     @type.setter
+    @beartype
     def type(self, new_type: str) -> None:
         new_attrs = replace(self._json_attrs, type=new_type)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def parameter(self) -> List[Parameter]:
         """
         list of [Parameter](../parameter) sub-objects for the algorithm sub-object
@@ -187,6 +194,7 @@ class Algorithm(BaseNode):
         return self._json_attrs.parameter.copy()
 
     @parameter.setter
+    @beartype
     def parameter(self, new_parameter: List[Parameter]) -> None:
         """
         set a list of cript.Parameter sub-objects
@@ -204,6 +212,7 @@ class Algorithm(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def citation(self) -> Citation:
         """
         [citation](../citation) subobject for algorithm subobject
@@ -243,6 +252,7 @@ class Algorithm(BaseNode):
         return self._json_attrs.citation.copy()
 
     @citation.setter
+    @beartype
     def citation(self, new_citation: Citation) -> None:
         """
         set the algorithm citation subobject

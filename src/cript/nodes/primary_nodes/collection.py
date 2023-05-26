@@ -1,7 +1,6 @@
 from dataclasses import dataclass, replace
 from typing import Any, List
 
-# from cript import Inventory, Experiment, Citation
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 

@@ -1,8 +1,9 @@
 from dataclasses import dataclass, field, replace
 from typing import Any, List
 
-# from cript import Ingredient, Equipment, Material, Condition, Property, Citation
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+
+from beartype import beartype
 
 
 class Process(PrimaryBaseNode):
@@ -57,6 +58,7 @@ class Process(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(
         self,
         name: str,
@@ -160,6 +162,7 @@ class Process(PrimaryBaseNode):
     # --------------- Properties -------------
 
     @property
+    @beartype
     def type(self) -> str:
         """
         Process type must come from the [CRIPT controlled vocabulary](https://criptapp.org/keys/process-type/)
@@ -178,6 +181,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.type
 
     @type.setter
+    @beartype
     def type(self, new_process_type: str) -> None:
         """
         set process type from CRIPT controlled vocabulary
@@ -195,6 +199,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def ingredient(self) -> List[Any]:
         """
         List of [ingredient](../../subobjects/ingredients) for this process
@@ -218,6 +223,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.ingredient.copy()
 
     @ingredient.setter
+    @beartype
     def ingredient(self, new_ingredient_list: List[Any]) -> None:
         """
         set the list of the ingredients for this process
@@ -237,6 +243,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def description(self) -> str:
         """
         description of this process
@@ -255,6 +262,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.description
 
     @description.setter
+    @beartype
     def description(self, new_description: str) -> None:
         """
         set the description of this process
@@ -272,6 +280,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def equipment(self) -> List[Any]:
         """
         List of [equipment](../../subobjects/equipment) used for this process
@@ -284,6 +293,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.equipment.copy()
 
     @equipment.setter
+    @beartype
     def equipment(self, new_equipment_list: List[Any]) -> None:
         """
         set the list of equipment used for this process
@@ -301,6 +311,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def product(self) -> List[Any]:
         """
         List of product (material nodes) for this process
@@ -313,6 +324,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.product.copy()
 
     @product.setter
+    @beartype
     def product(self, new_product_list: List[Any]) -> None:
         """
         set the product list for this process
@@ -330,6 +342,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def waste(self) -> List[Any]:
         """
         List of waste that resulted from this process
@@ -348,6 +361,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.waste.copy()
 
     @waste.setter
+    @beartype
     def waste(self, new_waste_list: List[Any]) -> None:
         """
         set the list of waste (Material node) for that resulted from this process
@@ -365,6 +379,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def prerequisite_process(self) -> List["Process"]:
         """
         list of prerequisite process nodes
@@ -389,6 +404,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.prerequisite_process.copy()
 
     @prerequisite_process.setter
+    @beartype
     def prerequisite_process(self, new_prerequisite_process_list: List["Process"]) -> None:
         """
         set the prerequisite_process for the process node
@@ -405,6 +421,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def condition(self) -> List[Any]:
         """
         List of condition present for this process
@@ -426,6 +443,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.condition.copy()
 
     @condition.setter
+    @beartype
     def condition(self, new_condition_list: List[Any]) -> None:
         """
         set the list of condition for this process
@@ -442,6 +460,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def keyword(self) -> List[str]:
         """
         List of keyword for this process
@@ -456,6 +475,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.keyword.copy()
 
     @keyword.setter
+    @beartype
     def keyword(self, new_keyword_list: List[str]) -> None:
         """
         set the list of keyword for this process from CRIPT controlled vocabulary
@@ -474,6 +494,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def citation(self) -> List[Any]:
         """
         List of citation for this process
@@ -498,6 +519,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.citation.copy()
 
     @citation.setter
+    @beartype
     def citation(self, new_citation_list: List[Any]) -> None:
         """
         set the list of citation for this process
@@ -515,6 +537,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def property(self) -> List[Any]:
         """
         List of [Property nodes](../../subobjects/property) for this process
@@ -536,6 +559,7 @@ class Process(PrimaryBaseNode):
         return self._json_attrs.property.copy()
 
     @property.setter
+    @beartype
     def property(self, new_property_list: List[Any]) -> None:
         """
         set the list of Property nodes for this process

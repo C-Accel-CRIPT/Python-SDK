@@ -3,6 +3,8 @@ from dataclasses import dataclass, replace
 
 from cript.nodes.uuid_base import UUIDBaseNode
 
+from beartype import beartype
+
 
 class PrimaryBaseNode(UUIDBaseNode, ABC):
     """
@@ -26,12 +28,14 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(self, name: str, notes: str, **kwargs):
         # initialize Base class with node
         super().__init__(**kwargs)
         # replace name and notes within PrimaryBase
         self._json_attrs = replace(self._json_attrs, name=name, notes=notes)
 
+    @beartype
     def __str__(self) -> str:
         """
         Return a string representation of a primary node dataclass attributes.
@@ -58,30 +62,37 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
         return super().__str__()
 
     @property
+    @beartype
     def locked(self):
         return self._json_attrs.locked
 
     @property
+    @beartype
     def model_version(self):
         return self._json_attrs.model_version
 
     @property
+    @beartype
     def updated_by(self):
         return self._json_attrs.updated_by
 
     @property
+    @beartype
     def created_by(self):
         return self._json_attrs.created_by
 
     @property
+    @beartype
     def public(self):
         return self._json_attrs.public
 
     @property
+    @beartype
     def name(self):
         return self._json_attrs.name
 
     @name.setter
+    @beartype
     def name(self, new_name: str) -> None:
         """
         set the PrimaryBaseNode name
@@ -98,10 +109,12 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def notes(self):
         return self._json_attrs.notes
 
     @notes.setter
+    @beartype
     def notes(self, new_notes: str) -> None:
         """
         allow every node that inherits base attributes to set its notes

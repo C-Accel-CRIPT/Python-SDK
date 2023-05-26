@@ -81,7 +81,7 @@ def add_orphaned_nodes_to_project(project: Project, active_experiment: Experimen
     Helper function that adds all orphaned material nodes of the project graph to the
     `project.materials` attribute.
     Material additions only is permissible with `active_experiment is None`.
-    This function also adds all orphaned data, process, computation and computational process nodes
+    This function also adds all orphaned data, process, computation and computation process nodes
     of the project graph to the `active_experiment`.
     This functions call `project.validate` and might raise Exceptions from there.
     """
@@ -104,7 +104,7 @@ def add_orphaned_nodes_to_project(project: Project, active_experiment: Experimen
         except CRIPTOrphanedComputationError as exc:
             active_experiment.computation += [exc.orphaned_node]
         except CRIPTOrphanedComputationalProcessError as exc:
-            active_experiment.computational_process += [exc.orphaned_node]
+            active_experiment.computation_process += [exc.orphaned_node]
         else:
             break
         counter += 1

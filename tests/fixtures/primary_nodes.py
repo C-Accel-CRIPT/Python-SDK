@@ -82,11 +82,11 @@ def simple_experiment_node() -> cript.Experiment:
 
 
 @pytest.fixture(scope="function")
-def simple_computational_process_node() -> cript.ComputationalProcess:
+def simple_computation_process_node() -> cript.ComputationalProcess:
     """
     simple Computational Process node with only required arguments to use in other tests
     """
-    my_computational_process_type = "cross_linking"
+    my_computation_process_type = "cross_linking"
 
     # input data
 
@@ -105,14 +105,14 @@ def simple_computational_process_node() -> cript.ComputationalProcess:
         quantities=[my_quantity],
     )
 
-    my_computational_process = cript.ComputationalProcess(
-        name="my computational process name",
-        type=my_computational_process_type,
+    my_computation_process = cript.ComputationalProcess(
+        name="my computation process name",
+        type=my_computation_process_type,
         input_data=[input_data],
         ingredients=[ingredients],
     )
 
-    return my_computational_process
+    return my_computation_process
 
 
 @pytest.fixture(scope="function")
@@ -130,7 +130,7 @@ def complex_data_node(
     complex_file_node,
     simple_process_node,
     simple_computation_node,
-    simple_computational_process_node,
+    simple_computation_process_node,
     simple_material_node,
     complex_citation_node,
 ) -> None:
@@ -143,7 +143,7 @@ def complex_data_node(
         files=[copy.deepcopy(complex_file_node)],
         sample_preperation=copy.deepcopy(simple_process_node),
         computations=[simple_computation_node],
-        computational_process=[simple_computational_process_node],
+        computation_process=[simple_computation_process_node],
         materials=[simple_material_node],
         processes=[copy.deepcopy(simple_process_node)],
         citations=[copy.deepcopy(complex_citation_node)],

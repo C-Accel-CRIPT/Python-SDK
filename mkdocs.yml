@@ -12,7 +12,7 @@ nav:
   - Primary Nodes:
       - Collection: nodes/primary_nodes/collection.md
       - Computation: nodes/primary_nodes/computation.md
-      - Computational Process: nodes/primary_nodes/computational_process.md
+      - Computational Process: nodes/primary_nodes/computation_process.md
       - Data: nodes/primary_nodes/data.md
       - Experiment: nodes/primary_nodes/experiment.md
       - Inventory: nodes/primary_nodes/inventory.md
@@ -24,7 +24,7 @@ nav:
   - Sub-objects:
       - Algorithm: nodes/subobjects/algorithm.md
       - Citation: nodes/subobjects/citation.md
-      - Computational Forcefield: nodes/subobjects/computational_forcefield.md
+      - Computational Forcefield: nodes/subobjects/computation_forcefield.md
       - Condition: nodes/subobjects/condition.md
       - Equipment: nodes/subobjects/equipment.md
       - Identifier: nodes/subobjects/identifier.md

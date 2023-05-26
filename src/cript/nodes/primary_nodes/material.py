@@ -21,7 +21,7 @@ class Material(PrimaryBaseNode):
     | properties              | list[[Property](../subobjects/property)]            |                                                   | material properties                          |             |       |
     | process                 | [Process](../process)                               |                                                   | process node that made this material         |             |       |
     | parent_material         | [Material](./)                                      |                                                   | material node that this node was copied from |             |       |
-    | computation_ forcefield | [Computation  Forcefield](../computational_process) |                                                   | computation forcefield                       | Conditional |       |
+    | computation_ forcefield | [Computation  Forcefield](../computation_process) |                                                   | computation forcefield                       | Conditional |       |
     | keywords                | list[str]                                           | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material             |             | True  |
 
     ## Navigating to Material
@@ -31,7 +31,7 @@ class Material(PrimaryBaseNode):
     ## Available Sub-Objects for Material
     * [Identifier](../../subobjects/identifier)
     * [Property](../../subobjects/property)
-    * [Computational_forcefield](../../subobjects/computational_forcefield)
+    * [Computational_forcefield](../../subobjects/computation_forcefield)
 
     Example
     -------
@@ -47,7 +47,7 @@ class Material(PrimaryBaseNode):
     {
         "name": "my unique material",
         "component_count": 0,
-        "computational_forcefield_count": 0,
+        "computation_forcefield_count": 0,
         "created_at": "2023-03-14T00:45:02.196297Z",
         "identifier_count": 0,
         "identifiers": [],
@@ -368,12 +368,12 @@ class Material(PrimaryBaseNode):
     @property
     def computation_forcefield(self) -> List[Any]:
         """
-        list of [computational_forcefield](../../subobjects/computational_forcefield) for this material node
+        list of [computation_forcefield](../../subobjects/computation_forcefield) for this material node
 
         Returns
         -------
         List[ComputationForcefield]
-            list of computational_forcefield that created this material
+            list of computation_forcefield that created this material
         """
         return self._json_attrs.computation_forcefield
 

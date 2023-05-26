@@ -108,7 +108,7 @@ class Project(PrimaryBaseNode):
             node_type_attr = node_type.lower()
             # Non-consistent naming makes this necessary for Computation Process
             if node_type == "ComputationalProcess":
-                node_type_attr = "computational_process"
+                node_type_attr = "computation_process"
 
             # Concatination of all experiment attributes (process, computation, etc.)
             # Every node of the graph must be present somewhere in this concatinated list.

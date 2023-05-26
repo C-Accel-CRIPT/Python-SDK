@@ -23,7 +23,7 @@ class Data(PrimaryBaseNode):
     | files                 | List[[File](../supporting_nodes/file.md)]           | `[file_1, file_2, file_3]` | list of file nodes                                                                      | False    |
     | sample_preperation    | [Process](process.md)                               |                            |                                                                                         | False    |
     | computations          | List[[Computation](computation.md)]                 |                            | data produced from this Computation method                                              | False    |
-    | computational_process | [Computational Process](./computational_process.md) |                            | data was produced from this computation process                                         | False    |
+    | computation_process | [Computational Process](./computation_process.md) |                            | data was produced from this computation process                                         | False    |
     | materials             | List[[Material](./material.md)]                     |                            | materials with attributes associated with the data node                                 | False    |
     | process               | List[[Process](./process.md)]                       |                            | processes with attributes associated with the data node                                 | False    |
     | citations             | [Citation](../subobjects/citation.md)               |                            | reference to a book, paper, or scholarly work                                           | False    |
@@ -69,7 +69,7 @@ class Data(PrimaryBaseNode):
         files: List[Any] = field(default_factory=list)
         sample_preperation: Any = field(default_factory=list)
         computations: List[Any] = field(default_factory=list)
-        computational_process: Any = field(default_factory=list)
+        computation_process: Any = field(default_factory=list)
         materials: List[Any] = field(default_factory=list)
         processes: List[Any] = field(default_factory=list)
         citations: List[Any] = field(default_factory=list)
@@ -83,7 +83,7 @@ class Data(PrimaryBaseNode):
         files: List[Any],
         sample_preperation: Any = None,
         computations: List[Any] = None,
-        computational_process: Any = None,
+        computation_process: Any = None,
         materials: List[Any] = None,
         processes: List[Any] = None,
         citations: List[Any] = None,
@@ -101,8 +101,8 @@ class Data(PrimaryBaseNode):
         if computations is None:
             computations = []
 
-        if computational_process is None:
-            computational_process = []
+        if computation_process is None:
+            computation_process = []
 
         if materials is None:
             materials = []
@@ -119,7 +119,7 @@ class Data(PrimaryBaseNode):
             files=files,
             sample_preperation=sample_preperation,
             computations=computations,
-            computational_process=computational_process,
+            computation_process=computation_process,
             materials=materials,
             processes=processes,
             citations=citations,
@@ -270,31 +270,31 @@ class Data(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def computational_process(self) -> Any:
+    def computation_process(self) -> Any:
         """
-        The computational_process for this data node
+        The computation_process for this data node
 
         Returns
         -------
         ComputationalProcess
-            computational process node for this data node
+            computation process node for this data node
         """
-        return self._json_attrs.computational_process
+        return self._json_attrs.computation_process
 
-    @computational_process.setter
-    def computational_process(self, new_computational_process: Any) -> None:
+    @computation_process.setter
+    def computation_process(self, new_computation_process: Any) -> None:
         """
-        set the computational process
+        set the computation process
 
         Parameters
         ----------
-        new_computational_process: ComputationalProcess
+        new_computation_process: ComputationalProcess
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, computational_process=new_computational_process)
+        new_attrs = replace(self._json_attrs, computation_process=new_computation_process)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

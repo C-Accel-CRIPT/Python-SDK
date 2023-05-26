@@ -11,7 +11,7 @@ class Computation(PrimaryBaseNode):
 
     The
     [Computation node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=14)
-    describes the transformation of data or the creation of a computational data
+    describes the transformation of data or the creation of a computation data
     set.
 
     **Common computations for simulations** are energy minimization, annealing, quenching, or

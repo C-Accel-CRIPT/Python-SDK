@@ -5,7 +5,7 @@ from util import strip_uid_from_dict
 import cript
 
 
-def test_create_simple_experiment(simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, complex_citation_node) -> None:
+def test_create_simple_experiment(simple_process_node, simple_computation_node, simple_computation_process_node, simple_data_node, complex_citation_node) -> None:
     """
     test just to see if a minimal experiment can be made without any issues
     """
@@ -17,7 +17,7 @@ def test_create_simple_experiment(simple_process_node, simple_computation_node, 
     assert isinstance(my_experiment, cript.Experiment)
 
 
-def test_create_complex_experiment(simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, complex_citation_node) -> None:
+def test_create_complex_experiment(simple_process_node, simple_computation_node, simple_computation_process_node, simple_data_node, complex_citation_node) -> None:
     """
     test to see if Collection can be made with all the possible options filled
     """
@@ -28,7 +28,7 @@ def test_create_complex_experiment(simple_process_node, simple_computation_node,
         name=experiment_name,
         process=[simple_process_node],
         computation=[simple_computation_node],
-        computational_process=[simple_computational_process_node],
+        computation_process=[simple_computation_process_node],
         data=[simple_data_node],
         funding=experiment_funders,
         citation=[complex_citation_node],
@@ -39,7 +39,7 @@ def test_create_complex_experiment(simple_process_node, simple_computation_node,
     assert my_experiment.name == experiment_name
     assert my_experiment.process == [simple_process_node]
     assert my_experiment.computation == [simple_computation_node]
-    assert my_experiment.computational_process == [simple_computational_process_node]
+    assert my_experiment.computation_process == [simple_computation_process_node]
     assert my_experiment.data == [simple_data_node]
     assert my_experiment.funding == experiment_funders
     assert my_experiment.citation == [complex_citation_node]
@@ -49,7 +49,7 @@ def test_all_getters_and_setters_for_experiment(
     simple_experiment_node,
     simple_process_node,
     simple_computation_node,
-    simple_computational_process_node,
+    simple_computation_process_node,
     simple_data_node,
     complex_citation_node,
 ) -> None:
@@ -68,7 +68,7 @@ def test_all_getters_and_setters_for_experiment(
     simple_experiment_node.name = experiment_name
     simple_experiment_node.process = [simple_process_node]
     simple_experiment_node.computation = [simple_computation_node]
-    simple_experiment_node.computational_process = [simple_computational_process_node]
+    simple_experiment_node.computation_process = [simple_computation_process_node]
     simple_experiment_node.data = [simple_data_node]
     simple_experiment_node.funding = experiment_funders
     simple_experiment_node.citation = [complex_citation_node]
@@ -78,13 +78,13 @@ def test_all_getters_and_setters_for_experiment(
     assert simple_experiment_node.name == experiment_name
     assert simple_experiment_node.process == [simple_process_node]
     assert simple_experiment_node.computation == [simple_computation_node]
-    assert simple_experiment_node.computational_process == [simple_computational_process_node]
+    assert simple_experiment_node.computation_process == [simple_computation_process_node]
     assert simple_experiment_node.data == [simple_data_node]
     assert simple_experiment_node.funding == experiment_funders
     assert simple_experiment_node.citation == [complex_citation_node]
 
 
-def test_experiment_json(simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, complex_citation_node, complex_citation_dict) -> None:
+def test_experiment_json(simple_process_node, simple_computation_node, simple_computation_process_node, simple_data_node, complex_citation_node, complex_citation_dict) -> None:
     """
     tests that the experiment JSON is functioning correctly
 
@@ -105,7 +105,7 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
         name=experiment_name,
         process=[simple_process_node],
         computation=[simple_computation_node],
-        computational_process=[simple_computational_process_node],
+        computation_process=[simple_computation_process_node],
         data=[simple_data_node],
         funding=experiment_funders,
         citation=[complex_citation_node],
@@ -120,10 +120,10 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
         "notes": "these are all of my notes for this experiment",
         "process": [{"node": ["Process"], "name": "my process name", "type": "affinity_pure", "keywords": []}],
         "computation": [{"node": ["Computation"], "name": "my computation name", "type": "analysis", "citations": []}],
-        "computational_process": [
+        "computation_process": [
             {
                 "node": ["ComputationalProcess"],
-                "name": "my computational process name",
+                "name": "my computation process name",
                 "type": "cross_linking",
                 "input_data": [
                     {

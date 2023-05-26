@@ -23,7 +23,7 @@ def test_create_complex_data_node(
     complex_file_node,
     simple_process_node,
     simple_computation_node,
-    simple_computational_process_node,
+    simple_computation_process_node,
     simple_material_node,
     complex_citation_node,
 ) -> None:
@@ -36,7 +36,7 @@ def test_create_complex_data_node(
         files=[complex_file_node],
         sample_preperation=simple_process_node,
         computations=[simple_computation_node],
-        computational_process=[simple_computational_process_node],
+        computation_process=[simple_computation_process_node],
         materials=[simple_material_node],
         processes=[simple_process_node],
         citations=[complex_citation_node],
@@ -48,7 +48,7 @@ def test_create_complex_data_node(
     assert my_complex_data.files == [complex_file_node]
     assert my_complex_data.sample_preperation == simple_process_node
     assert my_complex_data.computations == [simple_computation_node]
-    assert my_complex_data.computational_process == [simple_computational_process_node]
+    assert my_complex_data.computation_process == [simple_computation_process_node]
     assert my_complex_data.materials == [simple_material_node]
     assert my_complex_data.processes == [simple_process_node]
     assert my_complex_data.citations == [complex_citation_node]
@@ -70,7 +70,7 @@ def test_data_getters_and_setters(
     complex_file_node,
     simple_process_node,
     simple_computation_node,
-    simple_computational_process_node,
+    simple_computation_process_node,
     simple_material_node,
     complex_citation_node,
 ) -> None:
@@ -102,7 +102,7 @@ def test_data_getters_and_setters(
     simple_data_node.files = my_new_files
     simple_data_node.sample_preperation = simple_process_node
     simple_data_node.computations = [simple_computation_node]
-    simple_data_node.computational_process = simple_computational_process_node
+    simple_data_node.computation_process = simple_computation_process_node
     simple_data_node.materials = [simple_material_node]
     simple_data_node.processes = [simple_process_node]
     simple_data_node.citations = [complex_citation_node]
@@ -112,7 +112,7 @@ def test_data_getters_and_setters(
     assert simple_data_node.files == my_new_files
     assert simple_data_node.sample_preperation == simple_process_node
     assert simple_data_node.computations == [simple_computation_node]
-    assert simple_data_node.computational_process == simple_computational_process_node
+    assert simple_data_node.computation_process == simple_computation_process_node
     assert simple_data_node.materials == [simple_material_node]
     assert simple_data_node.processes == [simple_process_node]
     assert simple_data_node.citations == [complex_citation_node]

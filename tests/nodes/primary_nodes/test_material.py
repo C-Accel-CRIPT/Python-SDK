@@ -118,7 +118,7 @@ def test_deserialize_material_from_json() -> None:
     api_material = {
         "name": "my cool material",
         "component_count": 0,
-        "computational_forcefield_count": 0,
+        "computation_forcefield_count": 0,
         "created_at": "2023-03-14T00:45:02.196297Z",
         "identifier_count": 0,
         "identifiers": [],

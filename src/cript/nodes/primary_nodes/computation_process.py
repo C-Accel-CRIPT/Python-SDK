@@ -13,12 +13,12 @@ class ComputationalProcess(PrimaryBaseNode):
     [Computational_Process](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=15)
     is a simulation that processes or changes a virtual material. Examples
     include simulations of chemical reactions, chain scission, cross-linking, strong shear, etc. A
-    computational process may also encapsulate any computation that dramatically changes the
+    computation process may also encapsulate any computation that dramatically changes the
     materials properties, molecular topology, and physical aspects like molecular orientation, etc. The
     computation_forcefield of a simulation is associated with a material. As a consequence, if the
-    forcefield changes or gets refined via a computational procedure (density functional theory,
+    forcefield changes or gets refined via a computation procedure (density functional theory,
     iterative Boltzmann inversion for coarse-graining etc.) this forcefield changing step must be
-    described as a computational_process and a new material node with a different
+    described as a computation_process and a new material node with a different
     computation_forcefield needs to be created.
 
     ## Attributes
@@ -47,7 +47,7 @@ class ComputationalProcess(PrimaryBaseNode):
     @dataclass(frozen=True)
     class JsonAttributes(PrimaryBaseNode.JsonAttributes):
         """
-        all computational_process nodes attributes
+        all computation_process nodes attributes
         """
 
         type: str = ""
@@ -77,7 +77,7 @@ class ComputationalProcess(PrimaryBaseNode):
         **kwargs
     ):
         """
-        create a computational_process node
+        create a computation_process node
 
         Examples
         --------
@@ -109,9 +109,9 @@ class ComputationalProcess(PrimaryBaseNode):
             quantities=[my_quantity],
         )
 
-        # create computational process node
-        my_computational_process = cript.ComputationalProcess(
-            name="my computational process name",
+        # create computation process node
+        my_computation_process = cript.ComputationalProcess(
+            name="my computation process name",
             type="cross_linking",
             input_data=[input_data],
             ingredients=[ingredients],
@@ -122,30 +122,30 @@ class ComputationalProcess(PrimaryBaseNode):
         Parameters
         ----------
         name: str
-            computational process name
+            computation process name
         type: str
             type of computation process from CRIPT controlled vocabulary
         input_data: List[Data]
-            list of input data for computational process
+            list of input data for computation process
         ingredients: List[Ingredient]
-            list of ingredients for this computational process node
+            list of ingredients for this computation process node
         output_data: List[Data] default=None
-            list of output data for this computational process node
+            list of output data for this computation process node
         software_configurations: List[SoftwareConfiguration] default=None
-            list of software configurations for this computational process node
+            list of software configurations for this computation process node
         conditions: List[Condition] default=None
-            list of conditions for this computational process node
+            list of conditions for this computation process node
         properties: List[Property] default=None
-            list of properties for this computational process node
+            list of properties for this computation process node
         citations: List[Citation] default=None
-            list of citations for this computational process node
+            list of citations for this computation process node
         notes: str default=""
-            optional notes for the computational process node
+            optional notes for the computation process node
 
         Returns
         -------
         None
-            instantiate computationalProcess node
+            instantiate computationProcess node
         """
         super().__init__(name=name, notes=notes)
 
@@ -191,46 +191,46 @@ class ComputationalProcess(PrimaryBaseNode):
     @property
     def type(self) -> str:
         """
-        The computational process type must come from CRIPT Controlled vocabulary
+        The computation process type must come from CRIPT Controlled vocabulary
 
         Examples
         --------
         ```python
-        my_computational_process.type = "DPD"
+        my_computation_process.type = "DPD"
         ```
 
         Returns
         -------
         str
-            computational process type
+            computation process type
         """
         return self._json_attrs.type
 
     @type.setter
     def type(self, new_type: str) -> None:
         """
-        set the computational_process type
+        set the computation_process type
 
-        computational_process type must come from CRIPT controlled vocabulary
+        computation_process type must come from CRIPT controlled vocabulary
 
         Parameters
         ----------
         new_type: str
-            new computational process type.
-            computational process type must come from CRIPT controlled vocabulary
+            new computation process type.
+            computation process type must come from CRIPT controlled vocabulary
 
         Returns
         -------
         None
         """
-        # TODO check computational_process type with CRIPT controlled vocabulary
+        # TODO check computation_process type with CRIPT controlled vocabulary
         new_attrs = replace(self._json_attrs, type=new_type)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def input_data(self) -> List[Any]:
         """
-        List of input data for the computational process node
+        List of input data for the computation process node
 
         Examples
         --------
@@ -246,21 +246,21 @@ class ComputationalProcess(PrimaryBaseNode):
         # create input data node
         my_input_data = cript.Data(name="my input data name", type="afm_amp", files=[my_file])
 
-        # set computational process data node
+        # set computation process data node
         my_computation.input_data = my_input_data
         ```
 
         Returns
         -------
         List[Data]
-            list of input data for this computational process node
+            list of input data for this computation process node
         """
         return self._json_attrs.input_data.copy()
 
     @input_data.setter
     def input_data(self, new_input_data_list: List[Any]) -> None:
         """
-        set the input data for this computational process
+        set the input data for this computation process
 
         Parameters
         ----------
@@ -276,7 +276,7 @@ class ComputationalProcess(PrimaryBaseNode):
     @property
     def output_data(self) -> List[Any]:
         """
-        List of the output data for the computational_process
+        List of the output data for the computation_process
 
         Examples
         --------
@@ -292,21 +292,21 @@ class ComputationalProcess(PrimaryBaseNode):
         # create input data node
         my_output_data = cript.Data(name="my output data name", type="afm_amp", files=[my_file])
 
-        # set computational process data node
+        # set computation process data node
         my_computation.output_data = my_input_data
         ```
 
         Returns
         -------
         List[Data]
-            list of output data from this computational process node
+            list of output data from this computation process node
         """
         return self._json_attrs.output_data.copy()
 
     @output_data.setter
     def output_data(self, new_output_data_list: List[Any]) -> None:
         """
-        set the output_data list for the computational_process
+        set the output_data list for the computation_process
 
         Parameters
         ----------
@@ -322,7 +322,7 @@ class ComputationalProcess(PrimaryBaseNode):
     @property
     def ingredients(self) -> List[Any]:
         """
-        List of ingredients for the computational_process
+        List of ingredients for the computation_process
 
         Examples
         --------
@@ -333,20 +333,20 @@ class ComputationalProcess(PrimaryBaseNode):
             quantities=[simple_quantity_node],
         )
 
-        my_computational_process.ingredient =
+        my_computation_process.ingredient =
         ```
 
         Returns
         -------
         List[Ingredient]
-            list of ingredients for this computational process
+            list of ingredients for this computation process
         """
         return self._json_attrs.ingredients.copy()
 
     @ingredients.setter
     def ingredients(self, new_ingredients_list: List[Any]) -> None:
         """
-        set the ingredients list for this computational process
+        set the ingredients list for this computation process
 
         Parameters
         ----------
@@ -362,7 +362,7 @@ class ComputationalProcess(PrimaryBaseNode):
     @property
     def software_configurations(self) -> List[Any]:
         """
-        List of software_configurations for the computational process
+        List of software_configurations for the computation process
 
         Examples
         --------
@@ -370,20 +370,20 @@ class ComputationalProcess(PrimaryBaseNode):
         # create software configuration node
         my_software_configuration = cript.SoftwareConfiguration(software=simple_software_node)
 
-        my_computational_process.software_configuration = my_software_configuration
+        my_computation_process.software_configuration = my_software_configuration
         ```
 
         Returns
         -------
         List[SoftwareConfiguration]
-            List of software configurations used for this computational process node
+            List of software configurations used for this computation process node
         """
         return self._json_attrs.software_configurations.copy()
 
     @software_configurations.setter
     def software_configurations(self, new_software_configuration_list: List[Any]) -> None:
         """
-        set the list of software_configuration for the computational process
+        set the list of software_configuration for the computation process
 
         Parameters
         ----------
@@ -399,7 +399,7 @@ class ComputationalProcess(PrimaryBaseNode):
     @property
     def conditions(self) -> List[Any]:
         """
-        List of conditions for the computational process
+        List of conditions for the computation process
 
         Examples
         --------
@@ -407,21 +407,21 @@ class ComputationalProcess(PrimaryBaseNode):
         # create condition node
          my_condition = cript.Condition(key="atm", type="min", value=1)
 
-         my_computational_process.conditions = [my_condition]
+         my_computation_process.conditions = [my_condition]
 
         ```
 
         Returns
         -------
         List[Condition]
-            list of conditions for this computational process node
+            list of conditions for this computation process node
         """
         return self._json_attrs.conditions.copy()
 
     @conditions.setter
     def conditions(self, new_conditions: List[Any]) -> None:
         """
-        set the conditions for the computational process
+        set the conditions for the computation process
 
         Parameters
         ----------
@@ -445,20 +445,20 @@ class ComputationalProcess(PrimaryBaseNode):
         # create a property node
         my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
 
-        my_computational_process.properties = [my_property]
+        my_computation_process.properties = [my_property]
         ```
 
         Returns
         -------
         List[Property]
-            list of properties for this computational process node
+            list of properties for this computation process node
         """
         return self._json_attrs.properties.copy()
 
     @properties.setter
     def properties(self, new_properties_list: List[Any]) -> None:
         """
-        set the properties list for the computational process
+        set the properties list for the computation process
 
         Parameters
         ----------
@@ -474,7 +474,7 @@ class ComputationalProcess(PrimaryBaseNode):
     @property
     def citations(self) -> List[Any]:
         """
-        List of citations for the computational process
+        List of citations for the computation process
 
         Examples
         --------
@@ -485,20 +485,20 @@ class ComputationalProcess(PrimaryBaseNode):
         # create a reference
         my_citation = cript.Citation(type="derived_from", reference=my_reference)
 
-        my_computational_process.citations = [my_citation]
+        my_computation_process.citations = [my_citation]
         ```
 
         Returns
         -------
         List[Citation]
-            list of citations for this computational process
+            list of citations for this computation process
         """
         return self._json_attrs.citations.copy()
 
     @citations.setter
     def citations(self, new_citations_list: List[Any]) -> None:
         """
-        set the citations list for the computational process node
+        set the citations list for the computation process node
 
         Parameters
         ----------

@@ -3,6 +3,7 @@ from typing import Any, List
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
+from beartype import beartype
 
 class Material(PrimaryBaseNode):
     """
@@ -78,6 +79,7 @@ class Material(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(
         self,
         name: str,
@@ -144,6 +146,7 @@ class Material(PrimaryBaseNode):
 
     # ------------ Properties ------------
     @property
+    @beartype
     def name(self) -> str:
         """
         material name
@@ -161,6 +164,7 @@ class Material(PrimaryBaseNode):
         return self._json_attrs.name
 
     @name.setter
+    @beartype
     def name(self, new_name: str) -> None:
         """
         set the name of the material
@@ -177,6 +181,7 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def identifiers(self) -> List[dict[str, str]]:
         """
         get the identifiers for this material
@@ -193,6 +198,7 @@ class Material(PrimaryBaseNode):
         return self._json_attrs.identifiers.copy()
 
     @identifiers.setter
+    @beartype
     def identifiers(self, new_identifiers_list: List[dict[str, str]]) -> None:
         """
         set the list of identifiers for this material
@@ -212,6 +218,7 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def component(self) -> List["Material"]:
         """
         list of component ([material nodes](./)) that make up this material
@@ -244,6 +251,7 @@ class Material(PrimaryBaseNode):
         return self._json_attrs.component
 
     @component.setter
+    @beartype
     def component(self, new_component_list: List["Material"]) -> None:
         """
         set the list of component (material nodes) that make up this material
@@ -260,6 +268,7 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def parent_material(self) -> List["Material"]:
         """
         List of parent materials
@@ -272,6 +281,7 @@ class Material(PrimaryBaseNode):
         return self._json_attrs.parent_material
 
     @parent_material.setter
+    @beartype
     def parent_material(self, new_parent_material_list: List["Material"]) -> None:
         """
         set the [parent materials](./) for this material
@@ -289,6 +299,7 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def computational_forcefield(self) -> List[Any]:
         """
         list of [computational_forcefield](../../subobjects/computational_forcefield) for this material node
@@ -301,6 +312,7 @@ class Material(PrimaryBaseNode):
         return self._json_attrs.computational_forcefield
 
     @computational_forcefield.setter
+    @beartype
     def computational_forcefield(self, new_computational_forcefield_list: List[Any]) -> None:
         """
         sets the list of computational forcefields for this material
@@ -317,6 +329,7 @@ class Material(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def keyword(self) -> List[str]:
         """
         List of keyword for this material
@@ -343,6 +356,7 @@ class Material(PrimaryBaseNode):
         return self._json_attrs.keyword
 
     @keyword.setter
+    @beartype
     def keyword(self, new_keyword_list: List[str]) -> None:
         """
         set the keyword for this material
@@ -408,6 +422,7 @@ class Material(PrimaryBaseNode):
                 pass
 
     @property
+    @beartype
     def property(self) -> List[Any]:
         """
         list of material [property](../../subobjects/property)
@@ -427,6 +442,7 @@ class Material(PrimaryBaseNode):
         return self._json_attrs.property.copy()
 
     @property.setter
+    @beartype
     def property(self, new_property_list: List[Any]) -> None:
         """
         set the list of properties for this material

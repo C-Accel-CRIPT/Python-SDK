@@ -3,6 +3,8 @@ from typing import Any, List
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
+from beartype import beartype
+
 
 class Data(PrimaryBaseNode):
     """
@@ -76,6 +78,7 @@ class Data(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(
         self,
         name: str,
@@ -129,6 +132,7 @@ class Data(PrimaryBaseNode):
 
     # ------------------ Properties ------------------
     @property
+    @beartype
     def type(self) -> str:
         """
         Type of data node. The data type must come from [CRIPT data type vocabulary]()
@@ -147,6 +151,7 @@ class Data(PrimaryBaseNode):
         return self._json_attrs.type
 
     @type.setter
+    @beartype
     def type(self, new_data_type: str) -> None:
         """
         set the data type.
@@ -166,6 +171,7 @@ class Data(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def file(self) -> List[Any]:
         """
         get the list of files for this data node
@@ -195,6 +201,7 @@ class Data(PrimaryBaseNode):
         return self._json_attrs.file.copy()
 
     @file.setter
+    @beartype
     def file(self, new_file_list: List[Any]) -> None:
         """
         set the list of file for this data node
@@ -212,6 +219,7 @@ class Data(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def sample_preparation(self) -> Any:
         """
         The sample preparation for this data node
@@ -224,6 +232,7 @@ class Data(PrimaryBaseNode):
         return self._json_attrs.sample_preparation
 
     @sample_preparation.setter
+    @beartype
     def sample_preparation(self, new_sample_preparation: Any) -> None:
         """
         set sample_preparation
@@ -241,6 +250,7 @@ class Data(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def computation(self) -> List[Any]:
         """
         list of computation nodes for this material node
@@ -253,6 +263,7 @@ class Data(PrimaryBaseNode):
         return self._json_attrs.computation.copy()
 
     @computation.setter
+    @beartype
     def computation(self, new_computation_list: List[Any]) -> None:
         """
         set list of computation  for this data node
@@ -270,6 +281,7 @@ class Data(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def computation_process(self) -> Any:
         """
         The computation_process for this data node
@@ -282,6 +294,7 @@ class Data(PrimaryBaseNode):
         return self._json_attrs.computation_process
 
     @computation_process.setter
+    @beartype
     def computation_process(self, new_computation_process: Any) -> None:
         """
         set the computational process
@@ -298,6 +311,7 @@ class Data(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def material(self) -> List[Any]:
         """
         List of materials for this node
@@ -310,6 +324,7 @@ class Data(PrimaryBaseNode):
         return self._json_attrs.material.copy()
 
     @material.setter
+    @beartype
     def material(self, new_material_list: List[Any]) -> None:
         """
         set the list of materials for this data node
@@ -326,6 +341,7 @@ class Data(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def process(self) -> List[Any]:
         """
         list of [Process nodes](./process.md) for this data node
@@ -344,6 +360,7 @@ class Data(PrimaryBaseNode):
         return self._json_attrs.process.copy()
 
     @process.setter
+    @beartype
     def process(self, new_process_list: List[Any]) -> None:
         """
         set the list of process for this data node
@@ -361,6 +378,7 @@ class Data(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def citation(self) -> List[Any]:
         """
         List of [citation](../supporting_nodes/citations.md) within the data node
@@ -386,6 +404,7 @@ class Data(PrimaryBaseNode):
         return self._json_attrs.citation.copy()
 
     @citation.setter
+    @beartype
     def citation(self, new_citation_list: List[Any]) -> None:
         """
         set the list of citation

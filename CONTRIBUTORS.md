@@ -4,3 +4,4 @@
 - [Ludwig Schneider](https://github.com/InnocentBug/)
 - [Dylan Walsh](https://github.com/dylanwal/)
 - [Brilant Kasami](https://github.com/brili)
+- [Daniel Xing](https://github.com/DanielXing1103)

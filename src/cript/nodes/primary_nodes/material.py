@@ -5,6 +5,7 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 from beartype import beartype
 
+
 class Material(PrimaryBaseNode):
     """
     ## Definition

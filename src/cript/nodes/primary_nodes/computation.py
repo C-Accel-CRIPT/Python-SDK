@@ -3,6 +3,7 @@ from typing import Any, List
 
 # from cript import Data, SoftwareConfiguration, Condition, Citation
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from beartype import beartype
 
 
 class Computation(PrimaryBaseNode):
@@ -59,6 +60,7 @@ class Computation(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(
         self,
         name: str,
@@ -143,6 +145,7 @@ class Computation(PrimaryBaseNode):
     # ------------------ Properties ------------------
 
     @property
+    @beartype
     def type(self) -> str:
         """
         The type of computation
@@ -163,6 +166,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.type
 
     @type.setter
+    @beartype
     def type(self, new_computation_type: str) -> None:
         """
         set the computation type
@@ -181,6 +185,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def input_data(self) -> List[Any]:
         """
         List of input data (data nodes) for this node
@@ -210,6 +215,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.input_data.copy()
 
     @input_data.setter
+    @beartype
     def input_data(self, new_input_data_list: List[Any]) -> None:
         """
         set the input data list
@@ -227,6 +233,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def output_data(self) -> List[Any]:
         """
         List of output data (data nodes)
@@ -256,6 +263,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.output_data.copy()
 
     @output_data.setter
+    @beartype
     def output_data(self, new_output_data_list: List[Any]) -> None:
         """
         set the list of output data (data nodes) for this node
@@ -273,6 +281,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def software_configuration(self) -> List[Any]:
         """
         List of software_configuration for this computation node
@@ -294,6 +303,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.software_configuration.copy()
 
     @software_configuration.setter
+    @beartype
     def software_configuration(self, new_software_configuration_list: List[Any]) -> None:
         """
         set the list of software_configuration for this computation node
@@ -311,6 +321,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def condition(self) -> List[Any]:
         """
         List of condition for this computation node
@@ -332,6 +343,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.condition.copy()
 
     @condition.setter
+    @beartype
     def condition(self, new_condition_list: List[Any]) -> None:
         """
         set the list of condition for this node
@@ -348,6 +360,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def prerequisite_computation(self) -> "Computation":
         """
         prerequisite computation
@@ -369,6 +382,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.prerequisite_computation
 
     @prerequisite_computation.setter
+    @beartype
     def prerequisite_computation(self, new_prerequisite_computation: "Computation") -> None:
         """
         set new prerequisite_computation
@@ -385,6 +399,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def citation(self) -> List[Any]:
         """
         List of citations
@@ -409,6 +424,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.citation.copy()
 
     @citation.setter
+    @beartype
     def citation(self, new_citation_list: List[Any]) -> None:
         """
         set the List of citations

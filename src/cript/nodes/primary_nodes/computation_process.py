@@ -3,6 +3,7 @@ from typing import Any, List
 
 # from cript import Data, Ingredient, SoftwareConfiguration, Condition, Property, Citation
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from beartype import beartype
 
 
 class ComputationProcess(PrimaryBaseNode):
@@ -62,6 +63,7 @@ class ComputationProcess(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(
         self,
         name: str,
@@ -189,6 +191,7 @@ class ComputationProcess(PrimaryBaseNode):
     # -------------- Properties --------------
 
     @property
+    @beartype
     def type(self) -> str:
         """
         The computational process type must come from CRIPT Controlled vocabulary
@@ -207,6 +210,7 @@ class ComputationProcess(PrimaryBaseNode):
         return self._json_attrs.type
 
     @type.setter
+    @beartype
     def type(self, new_type: str) -> None:
         """
         set the computational_process type
@@ -228,6 +232,7 @@ class ComputationProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def input_data(self) -> List[Any]:
         """
         List of input data for the computational process node
@@ -258,6 +263,7 @@ class ComputationProcess(PrimaryBaseNode):
         return self._json_attrs.input_data.copy()
 
     @input_data.setter
+    @beartype
     def input_data(self, new_input_data_list: List[Any]) -> None:
         """
         set the input data for this computational process
@@ -274,6 +280,7 @@ class ComputationProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def output_data(self) -> List[Any]:
         """
         List of the output data for the computational_process
@@ -304,6 +311,7 @@ class ComputationProcess(PrimaryBaseNode):
         return self._json_attrs.output_data.copy()
 
     @output_data.setter
+    @beartype
     def output_data(self, new_output_data_list: List[Any]) -> None:
         """
         set the output_data list for the computational_process
@@ -320,6 +328,7 @@ class ComputationProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def ingredient(self) -> List[Any]:
         """
         List of ingredients for the computational_process
@@ -344,6 +353,7 @@ class ComputationProcess(PrimaryBaseNode):
         return self._json_attrs.ingredient.copy()
 
     @ingredient.setter
+    @beartype
     def ingredient(self, new_ingredient_list: List[Any]) -> None:
         """
         set the ingredients list for this computational process
@@ -360,6 +370,7 @@ class ComputationProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def software_configuration(self) -> List[Any]:
         """
         List of software_configuration for the computational process
@@ -381,6 +392,7 @@ class ComputationProcess(PrimaryBaseNode):
         return self._json_attrs.software_configuration.copy()
 
     @software_configuration.setter
+    @beartype
     def software_configuration(self, new_software_configuration_list: List[Any]) -> None:
         """
         set the list of software_configuration for the computational process
@@ -397,6 +409,7 @@ class ComputationProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def condition(self) -> List[Any]:
         """
         List of condition for the computational process
@@ -419,6 +432,7 @@ class ComputationProcess(PrimaryBaseNode):
         return self._json_attrs.condition.copy()
 
     @condition.setter
+    @beartype
     def condition(self, new_condition: List[Any]) -> None:
         """
         set the condition for the computational process
@@ -435,6 +449,7 @@ class ComputationProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def citation(self) -> List[Any]:
         """
         List of citation for the computational process
@@ -459,6 +474,7 @@ class ComputationProcess(PrimaryBaseNode):
         return self._json_attrs.citation.copy()
 
     @citation.setter
+    @beartype
     def citation(self, new_citation_list: List[Any]) -> None:
         """
         set the citation list for the computational process node
@@ -475,6 +491,7 @@ class ComputationProcess(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def property(self) -> List[Any]:
         """
         List of properties
@@ -496,6 +513,7 @@ class ComputationProcess(PrimaryBaseNode):
         return self._json_attrs.property.copy()
 
     @property.setter
+    @beartype
     def property(self, new_property_list: List[Any]) -> None:
         """
         set the properties list for the computational process

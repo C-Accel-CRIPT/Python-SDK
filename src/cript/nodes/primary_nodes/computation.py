@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field, replace
 from typing import Any, List, Union
 
-# from cript import Data, SoftwareConfiguration, Condition, Citation
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 

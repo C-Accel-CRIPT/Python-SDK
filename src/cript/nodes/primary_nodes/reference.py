@@ -3,6 +3,8 @@ from typing import List
 
 from cript.nodes.uuid_base import UUIDBaseNode
 
+from beartype import beartype
+
 
 class Reference(UUIDBaseNode):
     """
@@ -69,6 +71,7 @@ class Reference(UUIDBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(
         self,
         type: str,
@@ -151,6 +154,7 @@ class Reference(UUIDBaseNode):
 
     # ------------------ Properties ------------------
     @property
+    @beartype
     def type(self) -> str:
         """
         type of reference. The reference type must come from the CRIPT controlled vocabulary
@@ -169,6 +173,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.type
 
     @type.setter
+    @beartype
     def type(self, new_reference_type: str) -> None:
         """
         set the reference type attribute
@@ -188,6 +193,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def title(self) -> str:
         """
         title of publication
@@ -206,6 +212,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.title
 
     @title.setter
+    @beartype
     def title(self, new_title: str) -> None:
         """
         set the title for the reference node
@@ -222,6 +229,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def author(self) -> List[str]:
         """
         List of authors for this reference node
@@ -240,6 +248,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.author.copy()
 
     @author.setter
+    @beartype
     def author(self, new_author: List[str]) -> None:
         """
         set the list of authors for the reference node
@@ -256,6 +265,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def journal(self) -> str:
         """
         journal of publication
@@ -274,6 +284,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.journal
 
     @journal.setter
+    @beartype
     def journal(self, new_journal: str) -> None:
         """
         set the journal attribute for this reference node
@@ -290,6 +301,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def publisher(self) -> str:
         """
         publisher for this reference node
@@ -308,6 +320,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.publisher
 
     @publisher.setter
+    @beartype
     def publisher(self, new_publisher: str) -> None:
         """
         set the publisher for this reference node
@@ -324,6 +337,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def year(self) -> int:
         """
         year for the scholarly work
@@ -341,6 +355,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.year
 
     @year.setter
+    @beartype
     def year(self, new_year: int) -> None:
         """
         set the year for the scholarly work within the reference node
@@ -358,6 +373,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def volume(self) -> int:
         """
         Volume of the scholarly work from the reference node
@@ -376,6 +392,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.volume
 
     @volume.setter
+    @beartype
     def volume(self, new_volume: int) -> None:
         """
         set the volume of the scholarly work for this reference node
@@ -392,6 +409,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def issue(self) -> int:
         """
         issue of the scholarly work for the reference node
@@ -409,6 +427,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.issue
 
     @issue.setter
+    @beartype
     def issue(self, new_issue: int) -> None:
         """
         set the issue of the scholarly work
@@ -425,6 +444,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def pages(self) -> List[int]:
         """
         pages of the scholarly work used in the reference node
@@ -442,6 +462,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.pages.copy()
 
     @pages.setter
+    @beartype
     def pages(self, new_pages_list: List[int]) -> None:
         """
         set the list of pages of the scholarly work for this reference node
@@ -458,6 +479,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def doi(self) -> str:
         """
         get the digital object identifier (DOI) for this reference node
@@ -476,6 +498,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.doi
 
     @doi.setter
+    @beartype
     def doi(self, new_doi: str) -> None:
         """
         set the digital object identifier (DOI) for the scholarly work for this reference node
@@ -498,6 +521,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def issn(self) -> str:
         """
         The international standard serial number (ISSN) for this reference node
@@ -515,6 +539,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.issn
 
     @issn.setter
+    @beartype
     def issn(self, new_issn: str) -> None:
         """
         set the international standard serial number (ISSN) for the scholarly work for this reference node
@@ -531,6 +556,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def arxiv_id(self) -> str:
         """
         The arXiv identifier for the scholarly work for this reference node
@@ -549,6 +575,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.arxiv_id
 
     @arxiv_id.setter
+    @beartype
     def arxiv_id(self, new_arxiv_id: str) -> None:
         """
         set the arXiv identifier for the scholarly work for this reference node
@@ -565,6 +592,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def pmid(self) -> int:
         """
         The PubMed ID (PMID) for this reference node
@@ -583,6 +611,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.pmid
 
     @pmid.setter
+    @beartype
     def pmid(self, new_pmid: int) -> None:
         """
 
@@ -600,6 +629,7 @@ class Reference(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def website(self) -> str:
         """
         The website URL for the scholarly work
@@ -618,6 +648,7 @@ class Reference(UUIDBaseNode):
         return self._json_attrs.website
 
     @website.setter
+    @beartype
     def website(self, new_website: str) -> None:
         """
         set the website URL for the scholarly work

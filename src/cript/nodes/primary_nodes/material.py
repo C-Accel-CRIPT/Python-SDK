@@ -377,50 +377,6 @@ class Material(PrimaryBaseNode):
         new_attrs = replace(self._json_attrs, keyword=new_keyword_list)
         self._update_json_attrs_if_valid(new_attrs)
 
-    # ------------ validation ------------
-    # TODO this can be a function instead of a method
-    def _validate_keyword(self, keyword: List[str]) -> None:
-        """
-        takes a list of material keyword and loops through validating every single one
-
-        this is a simple loop that calls another method, but I thought it needs to be made into a method
-        since both constructor and keyword setter has the same code
-
-        Parameters
-        ----------
-        keyword: List[str]
-
-        Returns
-        -------
-        None
-        """
-        # TODO add this validation in the future
-        # for keyword in keyword:
-        #     is_vocab_valid(keywords)
-        pass
-
-    # TODO this can be a function instead of a method
-    def _validate_identifiers(self, identifiers: List[dict[str, str]]) -> None:
-        """
-        takes a list of material identifiers and loops through validating every single one
-
-        since validation is needed in both constructor and the setter, this is a simple method for it
-
-        Parameters
-        ----------
-        identifiers: List[dict[str, str]]
-
-        Returns
-        -------
-        None
-        """
-
-        for identifier_dictionary in identifiers:
-            for key, value in identifier_dictionary.items():
-                # TODO validate keys here
-                # is_vocab_valid("material_identifiers", value)
-                pass
-
     @property
     @beartype
     def property(self) -> List[Any]:

@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
-from beartype import beartype
-
 from cript.nodes.uuid_base import UUIDBaseNode
+
+from beartype import beartype
 
 
 class Reference(UUIDBaseNode):
@@ -82,7 +82,7 @@ class Reference(UUIDBaseNode):
         year: int = None,
         volume: int = None,
         issue: int = None,
-        pages: [int] = None,
+        pages: List[int] = None,
         doi: str = "",
         issn: str = "",
         arxiv_id: str = "",

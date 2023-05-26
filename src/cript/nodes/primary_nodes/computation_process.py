@@ -1,9 +1,10 @@
 from dataclasses import dataclass, field, replace
 from typing import Any, List
 
+from beartype import beartype
+
 # from cript import Data, Ingredient, SoftwareConfiguration, Condition, Property, Citation
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
-from beartype import beartype
 
 
 class ComputationProcess(PrimaryBaseNode):

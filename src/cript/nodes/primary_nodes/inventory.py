@@ -1,9 +1,10 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
+from beartype import beartype
+
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
-from beartype import beartype
 
 
 class Inventory(PrimaryBaseNode):

@@ -1,9 +1,9 @@
 from abc import ABC
 from dataclasses import dataclass, replace
 
-from cript.nodes.uuid_base import UUIDBaseNode
-
 from beartype import beartype
+
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
 class PrimaryBaseNode(UUIDBaseNode, ABC):

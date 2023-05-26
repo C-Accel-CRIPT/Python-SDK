@@ -1,8 +1,9 @@
 from dataclasses import dataclass, field, replace
 from typing import Any, List
 
-from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from beartype import beartype
+
+from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
 class Experiment(PrimaryBaseNode):

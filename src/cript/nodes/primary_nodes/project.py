@@ -1,12 +1,12 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
+from beartype import beartype
+
 from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.supporting_nodes import User
-
-from beartype import beartype
 
 
 class Project(PrimaryBaseNode):

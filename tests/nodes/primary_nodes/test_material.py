@@ -5,19 +5,29 @@ from util import strip_uid_from_dict
 import cript
 
 
-def test_create_simple_material() -> None:
+def test_create_complex_material(simple_material_node, simple_computational_forcefield_node) -> None:
     """
     tests that a simple material can be created with only the required arguments
     """
 
     material_name = "my material name"
     identifiers = [{"bigsmiles": "1234"}, {"bigsmiles": "4567"}]
+    keyword = ["acetylene"]
 
-    my_material = cript.Material(name=material_name, identifiers=identifiers)
+    component = [simple_material_node]
+    forcefield = [simple_computational_forcefield_node]
+
+    my_property = [cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")]
+
+    my_material = cript.Material(name=material_name, identifiers=identifiers, keyword=keyword, component=component, property=my_property, computational_forcefield=forcefield)
 
     assert isinstance(my_material, cript.Material)
     assert my_material.name == material_name
     assert my_material.identifiers == identifiers
+    assert my_material.keyword == keyword
+    assert my_material.component == component
+    assert my_material.property == my_property
+    assert my_material.computational_forcefield == forcefield
 
 
 def test_invalid_material_keywords() -> None:

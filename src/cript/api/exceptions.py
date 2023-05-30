@@ -187,8 +187,10 @@ class APIError(CRIPTException):
 
 class FileDownloadError(CRIPTException):
     """
+    ## Definition
+
     This error is raised when the API wants to download a file from an AWS S3 URL
-    but the status is something other than 200
+    via the `cript.API.download_file()` method, but the status is something other than 200.
     """
 
     error_message: str = ""

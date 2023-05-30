@@ -106,8 +106,7 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
 
     # ------ valid material schema ------
     # valid material node
-    valid_material_dict = {"node": ["Material"], "name": "0.053 volume fraction CM gel",
-                           "uid": "_:0.053 volume fraction CM gel"}
+    valid_material_dict = {"node": ["Material"], "name": "0.053 volume fraction CM gel", "uid": "_:0.053 volume fraction CM gel"}
 
     # convert dict to JSON string because method expects JSON string
     assert cript_api._is_node_schema_valid(node_json=json.dumps(valid_material_dict)) is True
@@ -205,10 +204,7 @@ def test_upload_and_download_file(cript_api) -> None:
     from pathlib import Path
 
     file_text: str = (
-        f"This is an automated test from the Python SDK within `tests/api/test_api.py` "
-        f"within the `test_upload_file_to_aws_s3()` test function "
-        f"on UTC time of '{datetime.datetime.utcnow()}' "
-        f"with the unique UUID of '{str(uuid.uuid4())}'"
+        f"This is an automated test from the Python SDK within `tests/api/test_api.py` " f"within the `test_upload_file_to_aws_s3()` test function " f"on UTC time of '{datetime.datetime.utcnow()}' " f"with the unique UUID of '{str(uuid.uuid4())}'"
     )
 
     with tempfile.NamedTemporaryFile(mode="w+t", suffix=".txt", delete=False) as temp_file:
@@ -224,12 +220,12 @@ def test_upload_and_download_file(cript_api) -> None:
         my_file_url = cript_api.upload_file(file_path=upload_file_path)
 
         # Download the file to a temporary destination
-        with tempfile.NamedTemporaryFile(mode='w+b', delete=False) as tmp_dest:
+        with tempfile.NamedTemporaryFile(mode="w+b", delete=False) as tmp_dest:
             download_dest_path = tmp_dest.name
             cript_api.download_file(file_url=my_file_url, destination_path=download_dest_path)
 
             # Compare the contents of the downloaded file with the original file
-            with open(download_dest_path, 'r') as downloaded_file:
+            with open(download_dest_path, "r") as downloaded_file:
                 downloaded_message = downloaded_file.read()
                 assert downloaded_message == file_text
 

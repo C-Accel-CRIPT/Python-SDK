@@ -65,6 +65,7 @@
     "unwritable",
     "docstrings",
     "runtimes",
-    "timestep"
+    "timestep",
+    "boto"
   ]
 }

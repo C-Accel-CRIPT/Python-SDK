@@ -1,9 +1,8 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List
+from typing import Any, List, Union
 
 from beartype import beartype
 
-# from cript import Data, SoftwareConfiguration, Condition, Citation
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
@@ -362,7 +361,7 @@ class Computation(PrimaryBaseNode):
 
     @property
     @beartype
-    def prerequisite_computation(self) -> "Computation":
+    def prerequisite_computation(self) -> Union["Computation", None]:
         """
         prerequisite computation
 
@@ -384,7 +383,7 @@ class Computation(PrimaryBaseNode):
 
     @prerequisite_computation.setter
     @beartype
-    def prerequisite_computation(self, new_prerequisite_computation: "Computation") -> None:
+    def prerequisite_computation(self, new_prerequisite_computation: Union["Computation", None]) -> None:
         """
         set new prerequisite_computation
 

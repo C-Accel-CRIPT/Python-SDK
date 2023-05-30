@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List
+from typing import Any, List, Union
 
 from beartype import beartype
 
@@ -220,7 +220,7 @@ class Data(PrimaryBaseNode):
 
     @property
     @beartype
-    def sample_preparation(self) -> Any:
+    def sample_preparation(self) -> Union[Any, None]:
         """
         The sample preparation for this data node
 
@@ -233,7 +233,7 @@ class Data(PrimaryBaseNode):
 
     @sample_preparation.setter
     @beartype
-    def sample_preparation(self, new_sample_preparation: Any) -> None:
+    def sample_preparation(self, new_sample_preparation: Union[Any, None]) -> None:
         """
         set sample_preparation
 
@@ -282,7 +282,7 @@ class Data(PrimaryBaseNode):
 
     @property
     @beartype
-    def computation_process(self) -> Any:
+    def computation_process(self) -> Union[Any, None]:
         """
         The computation_process for this data node
 
@@ -295,7 +295,7 @@ class Data(PrimaryBaseNode):
 
     @computation_process.setter
     @beartype
-    def computation_process(self, new_computation_process: Any) -> None:
+    def computation_process(self, new_computation_process: Union[Any, None]) -> None:
         """
         set the computational process
 

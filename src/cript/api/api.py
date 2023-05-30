@@ -10,15 +10,10 @@ import boto3
 import jsonschema
 import requests
 
-from cript.api.exceptions import (
-    APIError,
-    CRIPTAPIRequiredError,
-    CRIPTAPISaveError,
-    CRIPTConnectionError,
-    InvalidHostError,
-    InvalidVocabulary,
-)
-from cript.api.exceptions import FileDownloadError
+from cript.api.exceptions import (APIError, CRIPTAPIRequiredError,
+                                  CRIPTAPISaveError, CRIPTConnectionError,
+                                  FileDownloadError, InvalidHostError,
+                                  InvalidVocabulary)
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
 from cript.api.valid_search_modes import SearchModes

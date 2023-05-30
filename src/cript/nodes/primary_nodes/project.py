@@ -102,8 +102,8 @@ class Project(PrimaryBaseNode):
             if node_type == "ComputationProcess":
                 node_type_attr = "computation_process"
 
-            # Concatination of all experiment attributes (process, computation, etc.)
-            # Every node of the graph must be present somewhere in this concatinated list.
+            # Concatenation of all experiment attributes (process, computation, etc.)
+            # Every node of the graph must be present somewhere in this concatenated list.
             experiment_nodes = []
             for experiment in project_experiments:
                 for ex_node in getattr(experiment, node_type_attr):

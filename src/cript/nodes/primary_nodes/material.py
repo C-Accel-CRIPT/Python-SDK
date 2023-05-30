@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field, replace
 from typing import Any, List
 
-# from cript import Property, Process, ComputationalProcess
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
@@ -445,30 +444,33 @@ class Material(PrimaryBaseNode):
 
     @classmethod
     def _from_json(cls, json_dict: dict):
-        # TODO find a better way to know identifiers
-        all_identifier_list = [
-            "amino_acid",
-            "bigsmiles",
-            "cas",
-            "chem_formula",
-            "chem_repeat",
-            "chemical_id",
-            "inchi",
-            "inchi_key",
-            "lot_number",
-            "mol_form",
-            "names",
-            "pubchem_cid",
-            "smiles",
-            "vendor",
-        ]
+        """
+        Create a new instance of a node from a JSON representation.
 
-        identifier_argument = []
-        # Convert identifiers to to a list
-        for identifier in all_identifier_list:
-            if identifier in json_dict:
-                identifier_argument.append({identifier: json_dict[identifier]})
-                del json_dict[identifier]
-            json_dict["identifiers"] = identifier_argument
+        Parameters
+        ----------
+        json_dict : dict
+            A JSON dictionary representing a node
+
+        Returns
+        -------
+        node
+            A new instance of a node.
+
+        Notes
+        -----
+        required fields in JSON:
+        * `name`: The name of the node
+
+        optional fields in JSON:
+        * `identifiers`: A list of material identifiers.
+            * If the `identifiers` property is not present in the JSON dictionary,
+            it will be set to an empty list.
+        """
+        from cript.nodes.util.material_deserialization import (
+            _deserialize_flattened_material_identifiers,
+        )
+
+        json_dict = _deserialize_flattened_material_identifiers(json_dict)
 
         return super()._from_json(json_dict)

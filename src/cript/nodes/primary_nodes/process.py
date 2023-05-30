@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field, replace
 from typing import Any, List
 
-# from cript import Ingredient, Equipment, Material, Condition, Property, Citation
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
@@ -23,7 +22,7 @@ class Process(PrimaryBaseNode):
     | waste                   | list[Material]   |                                                                                 | material sent to waste                                              |          |       |
     | prerequisite_ processes | list[Process]    |                                                                                 | processes that must be completed prior to the start of this process |          |       |
     | condition              | list[Condition]  |                                                                                 | global process condition                                           |          |       |
-    | properties              | list[Property]   |                                                                                 | process properties                                                  |          |       |
+    | property              | list[Property]   |                                                                                 | process properties                                                  |          |       |
     | keyword                | list[str]        |                                                                                 | words that classify the process                                     |          | True  |
     | citation               | list[Citation]   |                                                                                 | reference to a book, paper, or scholarly work                       |          |       |
 
@@ -386,7 +385,7 @@ class Process(PrimaryBaseNode):
         List[Process]
             list of process that had to happen before this process
         """
-        return self._json_attrs.prerequisite_process
+        return self._json_attrs.prerequisite_process.copy()
 
     @prerequisite_process.setter
     def prerequisite_process(self, new_prerequisite_process_list: List["Process"]) -> None:
@@ -549,5 +548,5 @@ class Process(PrimaryBaseNode):
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, properties=new_property_list)
+        new_attrs = replace(self._json_attrs, property=new_property_list)
         self._update_json_attrs_if_valid(new_attrs)

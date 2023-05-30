@@ -1,12 +1,17 @@
-from typing import Any, List
+from typing import List
 
-from cript.api.valid_search_modes import SearchModes
 from cript.exceptions import CRIPTException
 
 
 class CRIPTConnectionError(CRIPTException):
     """
-    Raised when the API object cannot connect to CRIPT with the given host and token
+    ## Definition
+    Raised when the cript.API object cannot connect to CRIPT with the given host and token
+
+    ## How to Fix
+    The best way to fix this error is to check that your host and token are written and used correctly within
+    the cript.API object. This error could also be shown if the API is unresponsive and the cript.API object
+    just cannot successfully connect to it.
     """
 
     def __init__(self, host, token):
@@ -18,19 +23,12 @@ class CRIPTConnectionError(CRIPTException):
         self.token += token[-uncovered_chars:]
 
     def __str__(self) -> str:
-        """
+        error_message = f"Could not connect to CRIPT with the given host ({self.host}) and token ({self.token}). " f"Please be sure both host and token are entered correctly."
 
-        Returns
-        -------
-        str
-            Explanation of the error
-        """
-
-        ret_str = f"Could not connect to CRIPT with the given host ({self.host}) and token ({self.token})."
-        ret_str += " Please be sure both host and token are entered correctly."
-        return ret_str
+        return error_message
 
 
+# TODO refactor
 class InvalidVocabulary(CRIPTException):
     """
     Raised when the CRIPT controlled vocabulary is invalid
@@ -39,14 +37,13 @@ class InvalidVocabulary(CRIPTException):
     vocab: str = ""
     possible_vocab: List[str] = []
 
-    def __init__(self, vocab: str, possible_vocab: List[str]):
+    def __init__(self, vocab: str, possible_vocab: List[str]) -> None:
         self.vocab = vocab
         self.possible_vocab = possible_vocab
 
     def __str__(self) -> str:
-        ret_str = f"The vocabulary '{self.vocab}' entered does not exist within the CRIPT controlled vocabulary."
-        ret_str += f" Please pick a valid CRIPT vocabulary from {self.possible_vocab}"
-        return ret_str
+        error_message = f"The vocabulary '{self.vocab}' entered does not exist within the CRIPT controlled vocabulary." f" Please pick a valid CRIPT vocabulary from {self.possible_vocab}"
+        return error_message
 
 
 class InvalidVocabularyCategory(CRIPTException):
@@ -60,46 +57,53 @@ class InvalidVocabularyCategory(CRIPTException):
         self.valid_vocab_category = valid_vocab_category
 
     def __str__(self) -> str:
-        ret_str = f"The vocabulary category '{self.vocab_category}' does not exist within the CRIPT controlled vocabulary."
-        ret_str += f" Please pick a valid CRIPT vocabulary category from {self.valid_vocab_category}."
-        return ret_str
+        error_message = f"The vocabulary category {self.vocab_category} does not exist within the CRIPT controlled vocabulary. " f"Please pick a valid CRIPT vocabulary category from {self.valid_vocab_category}."
+
+        return error_message
 
 
-class CRIPTAPIAccessError(CRIPTException):
+class CRIPTAPIRequiredError(CRIPTException):
     """
-    Exception to be raised when the cached API object is requested, but no cached API exists yet.
+    ## Definition
+    Exception to be raised when the API object is requested, but no cript.API object exists yet.
+
+    The CRIPT Python SDK relies on a cript.API object for creation, validation, and modification of nodes.
+    The cript.API object may be explicitly called by the user to perform operations to the API, or
+    implicitly called by the Python SDK under the hood to perform some sort of validation.
+
+    ## How to Fix
+    To fix this error please instantiate an api object
+
+    ```python
+    import cript
+
+    my_host = "https://criptapp.org"
+    my_token = "123456" # To use your token securely, please consider using environment variables
+
+    my_api = cript.API(host=my_host, token=my_token)
+    ```
     """
 
     def __init__(self):
         pass
 
     def __str__(self) -> str:
-        ret_str = "An operation you requested (see stack trace) requires that you "
-        ret_str += " connect to a CRIPT host via an cript.API object first.\n"
-        ret_str += "This is common for node creation, validation and modification.\n"
-        ret_str += "It is necessary that you connect with the API via a context manager like this:\n"
-        ret_str += "`with cript.API('https://criptapp.org/', secret_token) as api:\n"
-        ret_str += "\t# code that use the API object explicitly (`api.save(..)`) or implicitly (`cript.Experiment(...)`)."
-        ret_str += "See documentation of cript.API for more details."
-        return ret_str
+        error_message = "cript.API object is required for an operation, but it does not exist." "Please instantiate a cript.API object to continue." "See the documentation for more details."
+
+        return error_message
 
 
 class CRIPTAPISaveError(CRIPTException):
     """
-    CRIPTAPISaveError is raised when the API responds with a status that is not 200
-    The API response along with status code is shown to the user
+    ## Definition
+    CRIPTAPISaveError is raised when the API responds with a http status code that is anything other than 200.
+    The status code and API response is shown to the user to help them debug the issue.
 
-    Parameters
-    ----------
-    api_host_domain: str
-        cript API host domain such as "https://criptapp.org"
-    api_response: str
-        message that the API returned
-
-    Returns
-    -------
-    Error Message: str
-        Error message telling the user what was the issue and giving them helpful clues as how to fix the error
+    ## How to Fix
+    This error is more of a case by case basis, but the best way to approach it to understand that the
+    CRIPT Python SDK sent an HTTP POST request with a giant JSON in the request body
+    to the CRIPT API. The API then read that request, and it responded with some sort of error either
+    to the that JSON or how the request was sent.
     """
 
     api_host_domain: str
@@ -117,98 +121,65 @@ class CRIPTAPISaveError(CRIPTException):
         return error_message
 
 
-class InvalidSearchModeError(CRIPTException):
-    """
-    Exception for when the user tries to search the API with an invalid search mode that is not supported
-    """
-
-    invalid_search_mode: str = ""
-
-    def __init__(self, invalid_search_mode: Any):
-        self.invalid_search_mode = invalid_search_mode
-
-    # TODO this method is not being used currently, if it never gets used, remove it
-    def _get_valid_search_modes(self) -> List[str]:
-        """
-        gets the valid search modes available in the CRIPT API
-
-        This method can be easily converted to a function if needed
-
-        Returns
-        -------
-        list of valid search modes: List[str]
-        """
-
-        # list of valid search mode values "", "uuid", "contains_name", etc.
-        # return [mode.value for mode in SearchModes]
-
-        # outputs: ['NODE_TYPE', 'UUID', 'CONTAINS_NAME', 'EXACT_NAME', 'UUID_CHILDREN']
-        return list(SearchModes.__members__.keys())
-
-    def __str__(self) -> str:
-        """
-        tells the user the search mode they picked for the api client to get a node from the API is invalid
-        and lists all the valid search modes they can pick from
-
-        Returns
-        -------
-        error message: str
-        """
-
-        # TODO This error message needs more documentation because it is not as intuitive
-        error_message = f"'{self.invalid_search_mode}' is an invalid search mode. " f"The valid search modes come from cript.api.SearchModes"
-
-        return error_message
-
-
 class InvalidHostError(CRIPTException):
     """
+    ## Definition
     Exception is raised when the host given to the API is invalid
 
-    Error message is given to it to be displayed to the user
+    ## How to Fix
+    This is a simple error to fix, simply put `http://` or preferably `https://` in front of your domain
+    when passing in the host to the cript.API class such as `https://criptapp.org`
+
+    Currently, the only web protocol that is supported with the CRIPT Python SDK is `HTTP`.
+
+    ### Example
+    ```python
+    import cript
+
+    my_valid_host = "https://criptapp.org"
+    my_token = "123456" # To use your token securely, please consider using environment variables
+
+    my_api = cript.API(host=my_valid_host, token=my_token)
+    ```
+
+    Warnings
+    --------
+    Please consider always using [HTTPS](https://developer.mozilla.org/en-US/docs/Glossary/HTTPS)
+    as that is a secure protocol and avoid using `HTTP` as it is insecure.
+    The CRIPT Python SDK will give a warning in the terminal when it detects a host with `HTTP`
+
+
     """
 
-    error_message: str
-
-    def __init__(self, error_message: str):
-        self.error_message = error_message
+    def __init__(self) -> None:
+        pass
 
     def __str__(self) -> str:
-        """
-        tells the user the search mode they picked for the api client to get a node from the API is invalid
-        and lists all the valid search modes they can pick from
-
-        Returns
-        -------
-        error message: str
-        """
-
-        return self.error_message
+        return "The host must start with http or https"
 
 
 class APIError(CRIPTException):
     """
-    Generic error made to display API errors to the user
+    ## Definition
+    This is a generic error made to display API errors to the user to troubleshoot.
+
+    ## How to Fix
+    Please keep in mind that the CRIPT Python SDK turns the [Project](../../nodes/primary_nodes/project)
+    node into a giant JSON and sends that to the API to be processed. If there are any errors while processing
+    the giant JSON generated by the CRIPT Python SDK, then the API will return an error about the http request
+    and the JSON sent to it. Therefore, the error shown might be an error within the JSON and not particular
+    within the Python code that was created
+
+    The best way to trouble shoot this is to figure out what the API error means and figure out where
+    in the Python SDK this error occurred and what have been the reason under the hood.
     """
 
     api_error: str = ""
 
     def __init__(self, api_error: str) -> None:
-        """
-        create an APIError
-        Parameters
-        ----------
-        api_error: str
-            JSON string of API error
-
-        Returns
-        -------
-        None
-            create an API Error
-        """
         self.api_error = api_error
 
-    def __str__(self):
+    def __str__(self) -> str:
         error_message: str = f"The API responded with {self.api_error}"
 
         return error_message

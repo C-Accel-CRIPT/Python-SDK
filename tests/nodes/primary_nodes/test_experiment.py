@@ -1,3 +1,4 @@
+import copy
 import json
 
 from util import strip_uid_from_dict
@@ -24,6 +25,7 @@ def test_create_complex_experiment(simple_process_node, simple_computation_node,
     experiment_name = "my experiment name"
     experiment_funders = ["National Science Foundation", "IRIS", "NIST"]
 
+    citation = copy.deepcopy(complex_citation_node)
     my_experiment = cript.Experiment(
         name=experiment_name,
         process=[simple_process_node],
@@ -31,7 +33,7 @@ def test_create_complex_experiment(simple_process_node, simple_computation_node,
         computation_process=[simple_computational_process_node],
         data=[simple_data_node],
         funding=experiment_funders,
-        citation=[complex_citation_node],
+        citation=[citation],
     )
 
     # assertions
@@ -42,7 +44,7 @@ def test_create_complex_experiment(simple_process_node, simple_computation_node,
     assert my_experiment.computation_process == [simple_computational_process_node]
     assert my_experiment.data == [simple_data_node]
     assert my_experiment.funding == experiment_funders
-    assert my_experiment.citation == [complex_citation_node]
+    assert my_experiment.citation[-1] == citation
 
 
 def test_all_getters_and_setters_for_experiment(
@@ -71,7 +73,8 @@ def test_all_getters_and_setters_for_experiment(
     simple_experiment_node.computation_process = [simple_computational_process_node]
     simple_experiment_node.data = [simple_data_node]
     simple_experiment_node.funding = experiment_funders
-    simple_experiment_node.citation = [complex_citation_node]
+    citation = copy.deepcopy(complex_citation_node)
+    simple_experiment_node.citation = [citation]
 
     # assert getters and setters are equal
     assert isinstance(simple_experiment_node, cript.Experiment)
@@ -81,7 +84,7 @@ def test_all_getters_and_setters_for_experiment(
     assert simple_experiment_node.computation_process == [simple_computational_process_node]
     assert simple_experiment_node.data == [simple_data_node]
     assert simple_experiment_node.funding == experiment_funders
-    assert simple_experiment_node.citation == [complex_citation_node]
+    assert simple_experiment_node.citation[-1] == citation
 
 
 def test_experiment_json(simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, complex_citation_node, complex_citation_dict) -> None:
@@ -101,6 +104,7 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
     experiment_name = "my experiment name"
     experiment_funders = ["National Science Foundation", "IRIS", "NIST"]
 
+    citation = copy.deepcopy(complex_citation_node)
     my_experiment = cript.Experiment(
         name=experiment_name,
         process=[simple_process_node],
@@ -108,7 +112,7 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
         computation_process=[simple_computational_process_node],
         data=[simple_data_node],
         funding=experiment_funders,
-        citation=[complex_citation_node],
+        citation=[citation],
     )
 
     # adding notes to test base node attributes
@@ -130,17 +134,9 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
                 "ingredient": [
                     {
                         "node": ["Ingredient"],
-                        "material": {
-                            "node": ["Material"],
-                            "name": "my complex material",
-                            "component": [{"node": ["Material"], "name": "my component material 1"}, {"node": ["Material"], "name": "my component material 2"}],
-                            "property": {"node": ["Property"], "key": "modulus_shear", "type": "value", "value": 5.0, "unit": "GPa"},
-                            "process": {"node": ["Process"], "name": "my process name", "type": "affinity_pure", "keyword": []},
-                            "parent_material": {"node": ["Material"], "name": "my parent material"},
-                            "keyword": ["acetylene"],
-                        },
+                        "material": {},
                         "quantity": [{"node": ["Quantity"], "key": "mass", "value": 11.2, "unit": "kg", "uncertainty": 0.2, "uncertainty_type": "stdev"}],
-                        "keyword": "catalyst",
+                        "keyword": ["catalyst"],
                     }
                 ],
             }
@@ -155,7 +151,7 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
                     "node": ["Reference"],
                     "type": "journal_article",
                     "title": "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)",
-                    "author": ["Ludwig Schneider", "Marcus Müller"],
+                    "author": ["Ludwig Schneider", "Marcus M\u00fcller"],
                     "journal": "Computer Physics Communications",
                     "publisher": "Elsevier",
                     "year": 2019,

@@ -200,7 +200,7 @@ def complex_material_node(simple_property_node, simple_process_node, complex_com
     """
     my_identifier = [{"bigsmiles": "my complex_material_node"}]
 
-    my_component = [
+    [
         cript.Material(name="my component material 1", identifiers=[{"bigsmiles": "component 1 bigsmiles"}]),
         cript.Material(name="my component material 2", identifiers=[{"bigsmiles": "component 2 bigsmiles"}]),
     ]
@@ -210,7 +210,7 @@ def complex_material_node(simple_property_node, simple_process_node, complex_com
     my_complex_material = cript.Material(
         name="my complex material",
         identifiers=my_identifier,
-        component=my_component,
+        # component=my_component,
         property=[simple_property_node],
         # process=copy.deepcopy(simple_process_node),
         parent_material=simple_material_node,

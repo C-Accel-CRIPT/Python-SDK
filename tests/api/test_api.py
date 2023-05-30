@@ -3,16 +3,17 @@ import os
 import tempfile
 import datetime
 import uuid
+import tempfile
 
 import pytest
 import requests
 
 import cript
-from cript.api.exceptions import InvalidVocabulary, InvalidVocabularyCategory
+from cript.api.exceptions import InvalidVocabulary
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 
-def test_create_api() -> None:
+def test_create_api(cript_api: cript.API) -> None:
     """
     tests that an API object can be successfully created with host and token
     """
@@ -43,6 +44,29 @@ def test_api_with_invalid_host() -> None:
 # def test_api_context(cript_api: cript.API) -> None:
 #     assert cript.api.api._global_cached_api is not None
 #     assert cript.api.api._get_global_cached_api() is not None
+
+
+def test_config_file(cript_api: cript.API) -> None:
+    """
+    test if the api can read configurations from `config.json`
+    """
+
+    config_file_texts = {"host": "https://development.api.mycriptapp.org", "token": "I am token"}
+
+    with tempfile.NamedTemporaryFile(mode="w+t", suffix=".json", delete=False) as temp_file:
+        # absolute file path
+        config_file_path = temp_file.name
+
+        # write JSON to temporary file
+        temp_file.write(json.dumps(config_file_texts))
+
+        # force text to be written to file
+        temp_file.flush()
+
+        api = cript.API(config_file_path=config_file_path)
+
+        assert api._host == config_file_texts["host"] + "/api/v1"
+        assert api._token == config_file_texts["token"]
 
 
 def test_get_db_schema_from_api(cript_api: cript.API) -> None:
@@ -100,6 +124,32 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     assert cript_api._is_node_schema_valid(node_json=json.dumps(valid_file_dict)) is True
 
 
+def test_get_vocabulary_by_category(cript_api: cript.API) -> None:
+    """
+    tests if a vocabulary can be retrieved by category
+    1. tests response is a list of dicts as expected
+    1. create a new list of just material identifiers
+    1. tests that the fundamental identifiers exist within the API vocabulary response
+
+    Warnings
+    --------
+    This test only gets the vocabulary category for "material_identifier_key" and does not test all the possible
+    CRIPT controlled vocabulary
+    """
+
+    material_identifier_vocab_list = cript_api.get_vocab_by_category(cript.ControlledVocabularyCategories.MATERIAL_IDENTIFIER_KEY)
+
+    # test response is a list of dicts
+    assert isinstance(material_identifier_vocab_list, list)
+
+    material_identifiers = [identifier["name"] for identifier in material_identifier_vocab_list]
+
+    # assertions
+    assert "bigsmiles" in material_identifiers
+    assert "smiles" in material_identifiers
+    assert "pubchem_cid" in material_identifiers
+
+
 def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:
     """
     checks if it can successfully get the controlled vocabulary list from CRIPT API
@@ -127,24 +177,16 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
     tests invalid category and invalid vocabulary word
     """
     # custom vocab
-    assert cript_api._is_vocab_valid(vocab_category="algorithm_key", vocab_word="+my_custom_key") is True
+    assert cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.ALGORITHM_KEY, vocab_word="+my_custom_key") is True
 
     # valid vocab category and valid word
-    assert cript_api._is_vocab_valid(vocab_category="file_type", vocab_word="calibration") is True
-    assert cript_api._is_vocab_valid(vocab_category="quantity_key", vocab_word="mass") is True
-    assert cript_api._is_vocab_valid(vocab_category="uncertainty_type", vocab_word="fwhm") is True
-
-    # # invalid vocab category but valid word
-    with pytest.raises(InvalidVocabularyCategory):
-        cript_api._is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="calibration")
+    assert cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.FILE_TYPE, vocab_word="calibration") is True
+    assert cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.QUANTITY_KEY, vocab_word="mass") is True
+    assert cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.UNCERTAINTY_TYPE, vocab_word="fwhm") is True
 
     # valid vocab category but invalid vocab word
     with pytest.raises(InvalidVocabulary):
-        cript_api._is_vocab_valid(vocab_category="file_type", vocab_word="some_invalid_word")
-
-    # invalid vocab category and invalid vocab word
-    with pytest.raises(InvalidVocabularyCategory):
-        cript_api._is_vocab_valid(vocab_category="some_invalid_vocab_category", vocab_word="some_invalid_word")
+        cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.FILE_TYPE, vocab_word="some_invalid_word")
 
 
 def test_upload_and_download_file(cript_api) -> None:

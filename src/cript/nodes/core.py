@@ -12,13 +12,13 @@ from cript.nodes.exceptions import (
     CRIPTJsonSerializationError,
 )
 
-tolerated_extra_json = ["component_count", "computational_forcefield_count", "property_count", "node", "uid", "uuid", "model_version", "locked", "public"]
+tolerated_extra_json = ["component_count", "computational_forcefield_count", "property_count"]
 
 
 def add_tolerated_extra_json(additional_tolerated_json: str):
     """
     In case a node should be loaded from JSON (such as `getting` them from the API),
-    but the API sends additional JSON attributes, these can be set to tolerated temprarily with this routine.
+    but the API sends additional JSON attributes, these can be set to tolerated temporarily with this routine.
     """
     tolerated_extra_json.append(additional_tolerated_json)
 
@@ -60,7 +60,7 @@ class BaseNode(ABC):
         return name
 
     # Prevent new attributes being set.
-    # This might just be temporary, but for now, I don't want to acciditentally add new attributes, when I mean to modify one.
+    # This might just be temporary, but for now, I don't want to accidentally add new attributes, when I mean to modify one.
     def __setattr__(self, key, value):
         if not hasattr(self, key):
             raise CRIPTAttributeModificationError(self.node_type, key, value)
@@ -68,7 +68,7 @@ class BaseNode(ABC):
 
     def __init__(self, **kwargs):
         for kwarg in kwargs:
-            if kwarg not in tolerated_extra_json:
+            if kwarg not in tolerated_extra_json + list(self._json_attrs.__dataclass_fields__.keys()):
                 raise CRIPTExtraJsonAttributes(self.node_type, kwarg)
         uid = get_new_uid()
         self._json_attrs = replace(self._json_attrs, node=[self.node_type], uid=uid)
@@ -195,7 +195,12 @@ class BaseNode(ABC):
         self.validate()
         return self.get_json().json
 
-    def get_json(self, handled_ids: set = None, condense_to_uuid={"Material": "parent_material", "Inventory": "material"}, **kwargs):
+    def get_json(
+        self,
+        handled_ids: set = None,
+        condense_to_uuid={"Material": ["parent_material", "component"], "Inventory": ["material"], "Ingredient": ["material"], "Property": ["component"], "ComputationProcess": ["material"], "Data": ["material"], "Process": ["product", "waste"]},
+        **kwargs
+    ):
         """
         User facing access to get the JSON of a node.
         Opposed to the also available property json this functions allows further control.
@@ -242,7 +247,7 @@ class BaseNode(ABC):
 
         search_attr: dict
            Dictionary that specifies which JSON attributes have to be present in a given node.
-           If an attribute is a list, it it is suffiecient if the specified attributes are in the list,
+           If an attribute is a list, it it is sufficient if the specified attributes are in the list,
            if others are present too, that does not exclude the child.
 
            Example: search_attr = `{"node": ["Parameter"]}` finds all "Parameter" nodes.
@@ -250,10 +255,10 @@ class BaseNode(ABC):
                                            finds all "Algorithm" nodes, that have a parameter "update_frequency".
                                            Since parameter is a list an alternative notation is
                                            ``{"node": ["Algorithm"], "parameter": [{"name" : "update_frequency"}]}`
-                                           and Algorithms are not excluded they have more paramters.
+                                           and Algorithms are not excluded they have more parameters.
                     search_attr = `{"node": ["Algorithm"], "parameter": [{"name" : "update_frequency"},
                                            {"name" : "cutoff_distance"}]}`
-                                           finds all algoritms that have a parameter "update_frequency" and "cutoff_distance".
+                                           finds all algorithms that have a parameter "update_frequency" and "cutoff_distance".
 
         """
 
@@ -273,7 +278,7 @@ class BaseNode(ABC):
                 value = [value]
 
             # The definition of search is, that all values in a list have to be present.
-            # To fulfill this AND condition, we count the number of occurences of that value condition
+            # To fulfill this AND condition, we count the number of occurrences of that value condition
             number_values_found = 0
             for v in value:
                 # Test for simple values (not-nodes)
@@ -298,7 +303,7 @@ class BaseNode(ABC):
         if handled_nodes is None:
             handled_nodes = []
 
-        # Protect agains cycles in graph, by handling every instance of a node only once
+        # Protect against cycles in graph, by handling every instance of a node only once
         if self in handled_nodes:
             return []
         handled_nodes += [self]

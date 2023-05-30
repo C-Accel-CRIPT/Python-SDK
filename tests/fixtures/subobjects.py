@@ -114,11 +114,12 @@ def complex_property_node(complex_material_node, complex_condition_node, complex
         0.1,
         "stdev",
         structure="structure",
-        method="method",
-        sample_preparation=[copy.deepcopy(simple_process_node)],
+        method="comp",
+        sample_preparation=copy.deepcopy(simple_process_node),
         condition=[complex_condition_node],
         computation=[copy.deepcopy(simple_computation_node)],
-        citations=[complex_citation_node],
+        data=[copy.deepcopy(complex_data_node)],
+        citation=[complex_citation_node],
         notes="notes",
     )
     return p
@@ -135,10 +136,11 @@ def complex_property_dict(complex_material_node, complex_condition_dict, complex
         "uncertainty": 0.1,
         "uncertainty_type": "stdev",
         "structure": "structure",
-        "sample_preparation": [json.loads(simple_process_node.json)],
-        "method": "method",
+        "sample_preparation": json.loads(simple_process_node.json),
+        "method": "comp",
         "condition": [complex_condition_dict],
-        "citations": [complex_citation_dict],
+        "data": [json.loads(complex_data_node.json)],
+        "citation": [complex_citation_dict],
         "computation": [json.loads(simple_computation_node.json)],
         "notes": "notes",
     }
@@ -222,10 +224,10 @@ def complex_ingredient_dict(complex_material_node, complex_quantity_dict) -> dic
 @pytest.fixture(scope="function")
 def complex_equipment_node(complex_condition_node, complex_citation_node) -> cript.Equipment:
     e = cript.Equipment(
-        "hot plate",
+        "hot_plate",
         "fancy hot plate",
         condition=[complex_condition_node],
-        citations=[complex_citation_node],
+        citation=[complex_citation_node],
     )
     return e
 
@@ -243,10 +245,10 @@ def simple_equipment_node() -> cript.Equipment:
 def complex_equipment_dict(complex_condition_dict, complex_citation_dict) -> dict:
     ret_dict = {
         "node": ["Equipment"],
-        "key": "hot plate",
+        "key": "hot_plate",
         "description": "fancy hot plate",
         "condition": [complex_condition_dict],
-        "citations": [complex_citation_dict],
+        "citation": [complex_citation_dict],
     }
     return ret_dict
 
@@ -312,6 +314,6 @@ def simple_computational_forcefield_node():
 @pytest.fixture(scope="function")
 def simple_condition_node() -> cript.Condition:
     """
-    simple and minial condition node
+    simple and minimal condition node
     """
     return cript.Condition(key="atm", type="max", value=1)

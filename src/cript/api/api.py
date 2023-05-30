@@ -6,6 +6,8 @@ import uuid
 import warnings
 from pathlib import Path
 from typing import Union
+import warnings
+from typing import Dict, List, Union
 
 import boto3
 import jsonschema
@@ -13,7 +15,7 @@ import requests
 
 from cript.api.exceptions import (
     APIError,
-    CRIPTAPIAccessError,
+    CRIPTAPIRequiredError,
     CRIPTAPISaveError,
     CRIPTConnectionError,
     InvalidHostError,
@@ -22,8 +24,9 @@ from cript.api.exceptions import (
     FileDownloadError,
 )
 from cript.api.paginator import Paginator
+from cript.api.utils.get_host_token import resolve_host_and_token
 from cript.api.valid_search_modes import SearchModes
-from cript.api.vocabulary_categories import all_controlled_vocab_categories
+from cript.api.vocabulary_categories import ControlledVocabularyCategories
 from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.project import Project
@@ -39,7 +42,7 @@ def _get_global_cached_api():
     Raises an exception if no global API object is cached yet.
     """
     if _global_cached_api is None:
-        raise CRIPTAPIAccessError
+        raise CRIPTAPIRequiredError()
     return _global_cached_api
 
 
@@ -65,16 +68,42 @@ class API:
     _BUCKET_DIRECTORY_NAME: str = "tests"
     _s3_client: boto3.client = None
 
-    def __init__(self, host: Union[str, None], token: [str, None]):
+    def __init__(self, host: Union[str, None] = None, token: Union[str, None] = None, config_file_path: str = ""):
         """
-        Initialize object with host and token.
-        It is necessary to use a `with` context manager for the API
+        Initialize CRIPT API client with host and token.
+        Additionally, you can  use a config.json file and specify the file path.
+
+        !!! note "api client context manager"
+            It is necessary to use a `with` context manager for the API
 
         Examples
         --------
+        ### Create API client with host and token
         ```Python
         with cript.API('https://criptapp.org', 'secret_token') as api:
            # node creation, api.save(), etc.
+        ```
+
+        ---
+
+        ### Create API client with config.json
+        `config.json`
+        ```json
+        {
+            "host": "https://criptapp.org",
+            "token": "I am token"
+        }
+        ```
+
+        `my_script.py`
+        ```python
+        from pathlib import Path
+
+        # create a file path object of where the config file is
+        config_file_path = Path(__file__) / Path('./config.json')
+
+        with cript.API(config_file_path=config_file_path) as api:
+            # node creation, api.save(), etc.
         ```
 
         Notes
@@ -91,6 +120,8 @@ class API:
             You can find your personal token on the cript website at User > Security Settings.
             The user icon is in the top right.
             If `None` is specified, the token is inferred from the environment variable `CRIPT_TOKEN`.
+        config_file_path: str
+            the file path to the config.json file where the token and host can be found
 
 
         Notes
@@ -102,7 +133,7 @@ class API:
         Warns
         -----
         UserWarning
-            If `host` is using "http" it gives the user a warning that HTTP is insecure and the user shuold use HTTPS
+            If `host` is using "http" it gives the user a warning that HTTP is insecure and the user should use HTTPS
 
         Raises
         ------
@@ -115,15 +146,11 @@ class API:
             Instantiate a new CRIPT API object
         """
 
-        # if host and token is none then it will grab host and token from user's environment variables
-        if host is None:
-            host = os.environ.get("CRIPT_HOST")
-            if host is None:
-                raise RuntimeError("API initilized with `host=None` but environment variable `CRIPT_HOST` not found.\n" "Set the environment variable (preferred) or specify the host explictly at the creation of API.")
-        if token is None:
-            token = os.environ.get("CRIPT_TOKEN")
-            if token is None:
-                raise RuntimeError("API initilized with `token=None` but environment variable `CRIPT_TOKEN` not found.\n" "Set the environment variable (preferred) or specify the token explictly at the creation of API.")
+        if config_file_path or (host is None and token is None):
+            authentication_dict: Dict[str, str] = resolve_host_and_token(host, token, config_file_path)
+
+            host = authentication_dict["host"]
+            token = authentication_dict["token"]
 
         self._host = self._prepare_host(host=host)
         self._token = token
@@ -149,7 +176,7 @@ class API:
             warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
 
         if not host.startswith("http"):
-            raise InvalidHostError("The host must start with http or https")
+            raise InvalidHostError()
 
         return host
 
@@ -259,16 +286,15 @@ class API:
         except Exception as exc:
             raise CRIPTConnectionError(self.host, self._token) from exc
 
-    # TODO this needs a better name because the current name is unintuitive if you are just getting vocab
     def _get_vocab(self) -> dict:
         """
-        gets the entire controlled vocabulary to be used with validating nodes
-        with attributes from controlled vocabulary
-        1. checks global variable to see if it is already set
-            if it is already set then it just returns that
-        2. if global variable is empty, then it makes a request to the API
-           and gets the entire controlled vocabulary
-           and then sets the global variable to it
+        gets the entire CRIPT controlled vocabulary and stores it in _vocabulary
+
+        1. loops through all controlled vocabulary categories
+            1. if the category already exists in the controlled vocabulary then skip that category and continue
+            1. if the category does not exist in the `_vocabulary` dict,
+            then request it from the API and append it to the `_vocabulary` dict
+        1. at the end the `_vocabulary` should have all the controlled vocabulary and that will be returned
 
            Examples
            --------
@@ -284,22 +310,48 @@ class API:
            ```
         """
 
-        # check cache if vocabulary dict is already populated
-        # TODO needs to be changed to MappingTypeProxy
-        if bool(self._vocabulary):
-            return self._vocabulary
-
-        # TODO this needs to be converted to a dict of dicts instead of dict of lists
-        #  because it would be faster to find needed vocab word within the vocab category
         # loop through all vocabulary categories and make a request to each vocabulary category
         # and put them all inside of self._vocab with the keys being the vocab category name
-        for category in all_controlled_vocab_categories:
-            response = requests.get(f"{self.host}/cv/{category}").json()["data"]
-            self._vocabulary[category] = response
+        for category in ControlledVocabularyCategories:
+            if category in self._vocabulary:
+                continue
+
+            self._vocabulary[category.value] = self.get_vocab_by_category(category)
 
         return self._vocabulary
 
-    def _is_vocab_valid(self, vocab_category: str, vocab_word: str) -> Union[bool, InvalidVocabulary, InvalidVocabularyCategory]:
+    def get_vocab_by_category(self, category: ControlledVocabularyCategories) -> List[dict]:
+        """
+        get the CRIPT controlled vocabulary by category
+
+        Parameters
+        ----------
+        category: str
+            category of
+
+        Returns
+        -------
+        List[dict]
+            list of JSON containing the controlled vocabulary
+        """
+
+        # check if the vocabulary category is already cached
+        if category.value in self._vocabulary:
+            return self._vocabulary[category.value]
+
+        # if vocabulary category is not in cache, then get it from API and cache it
+        response = requests.get(f"{self.host}/cv/{category.value}").json()
+
+        if response["code"] != 200:
+            # TODO give a better CRIPT custom Exception
+            raise Exception(f"while getting controlled vocabulary from CRIPT for {category}, " f"the API responded with http {response} ")
+
+        # add to cache
+        self._vocabulary[category.value] = response["data"]
+
+        return self._vocabulary[category.value]
+
+    def _is_vocab_valid(self, vocab_category: ControlledVocabularyCategories, vocab_word: str) -> bool:
         """
         checks if the vocabulary is valid within the CRIPT controlled vocabulary.
         Either returns True or InvalidVocabulary Exception
@@ -311,14 +363,14 @@ class API:
 
         Parameters
         ----------
-        vocab_category: str
-            the category the vocabulary is in e.g. "Material keyword", "Data type", "Equipment key"
+        vocab_category: ControlledVocabularyCategories
+            ControlledVocabularyCategories enums
         vocab_word: str
             the vocabulary word e.g. "CAS", "SMILES", "BigSmiles", "+my_custom_key"
 
         Returns
         -------
-        a boolean of if the vocabulary is valid or not
+        a boolean of if the vocabulary is valid
 
         Raises
         ------
@@ -331,15 +383,10 @@ class API:
         if vocab_word.startswith("+"):
             return True
 
-        # TODO do we need to raise an InvalidVocabularyCategory here, or can we just give a KeyError?
-        try:
-            # get the entire vocabulary
-            controlled_vocabulary = self._get_vocab()
-            # get just the category needed
-            controlled_vocabulary = controlled_vocabulary[vocab_category]
-        except KeyError:
-            # vocabulary category does not exist within CRIPT Controlled Vocabulary
-            raise InvalidVocabularyCategory(vocab_category=vocab_category, valid_vocab_category=all_controlled_vocab_categories)
+        # get the entire vocabulary
+        controlled_vocabulary = self._get_vocab()
+        # get just the category needed
+        controlled_vocabulary = controlled_vocabulary[vocab_category.value]
 
         # TODO this can be faster with a dict of dicts that can do o(1) look up
         #  looping through an unsorted list is an O(n) look up which is slow
@@ -381,7 +428,7 @@ class API:
             return self._db_schema
 
     # TODO this should later work with both POST and PATCH. Currently, just works for POST
-    def _is_node_schema_valid(self, node_json: str) -> Union[bool, CRIPTNodeSchemaError]:
+    def _is_node_schema_valid(self, node_json: str) -> bool:
         """
         checks a node JSON schema against the db schema to return if it is valid or not.
 
@@ -419,7 +466,7 @@ class API:
         try:
             node_list = node_dict["node"]
         except KeyError:
-            raise CRIPTNodeSchemaError(error_message=f"'node' attriubte not present in serialization of {node_json}. Missing for exmaple 'node': ['material'].")
+            raise CRIPTJsonNodeError(node_list=node_dict["node"], json_str=json.dumps(node_dict))
 
         # TODO should use the `_is_node_field_valid()` function from utils.py to keep the code DRY
         # checking the node field "node": "Material"
@@ -434,7 +481,7 @@ class API:
         try:
             jsonschema.validate(instance=node_dict, schema=db_schema)
         except jsonschema.exceptions.ValidationError as error:
-            raise CRIPTNodeSchemaError(error_message=str(error) + str(error.context)) from error
+            raise CRIPTNodeSchemaError(node_type=node_dict["node"], json_schema_validation_error=str(error)) from error
 
         # if validation goes through without any problems return True
         return True

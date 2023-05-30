@@ -42,10 +42,10 @@ def test_json_error(complex_parameter_node):
 
 def test_local_search(complex_algorithm_node, complex_parameter_node):
     a = complex_algorithm_node
-    # Check if we can use search to find the algoritm node, but specifying node and key
+    # Check if we can use search to find the algorithm node, but specifying node and key
     find_algorithms = a.find_children({"node": "Algorithm", "key": "mc_barostat"})
     assert find_algorithms == [a]
-    # Check if it corretcly exclude the algorithm if key is specified to non-existent value
+    # Check if it correctly exclude the algorithm if key is specified to non-existent value
     find_algorithms = a.find_children({"node": "Algorithm", "key": "mc"})
     assert find_algorithms == []
 
@@ -65,18 +65,18 @@ def test_local_search(complex_algorithm_node, complex_parameter_node):
     find_parameter = a.find_children({"key": "update_frequency"})
     assert find_parameter == [p1]
 
-    # Test if correctly find no paramter if we are searching for a non-existent parameter
+    # Test if correctly find no parameter if we are searching for a non-existent parameter
     find_parameter = a.find_children({"key": "update"})
     assert find_parameter == []
 
     # Test nested search. Here we are looking for any node that has a child node parameter as specified.
     find_algorithms = a.find_children({"parameter": {"key": "damping_time"}})
     assert find_algorithms == [a]
-    # Same as before, but specifiying two children that have to be present (AND condition)
+    # Same as before, but specifying two children that have to be present (AND condition)
     find_algorithms = a.find_children({"parameter": [{"key": "damping_time"}, {"key": "update_frequency"}]})
     assert find_algorithms == [a]
 
-    # Test that the main node is correctly excluded if we specify an additionally non-existent paramter
+    # Test that the main node is correctly excluded if we specify an additionally non-existent parameter
     find_algorithms = a.find_children({"parameter": [{"key": "damping_time"}, {"key": "update_frequency"}, {"foo": "bar"}]})
     assert find_algorithms == []
 
@@ -98,7 +98,7 @@ def test_cycles(complex_data_node, simple_computation_node):
 
 def test_uid_serial(simple_inventory_node):
     simple_inventory_node.material += simple_inventory_node.material
-    json_dict = json.loads(simple_inventory_node.get_json().json)
+    json_dict = json.loads(simple_inventory_node.get_json(condense_to_uuid={}).json)
     assert len(json_dict["material"]) == 4
     assert isinstance(json_dict["material"][2]["uid"], str)
     assert json_dict["material"][2]["uid"].startswith("_:")
@@ -162,7 +162,7 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
     dummy_experiment = copy.deepcopy(project.collection[0].experiment[0])
     with pytest.raises(RuntimeError):
         cript.add_orphaned_nodes_to_project(project, dummy_experiment)
-    # Problem still presists
+    # Problem still persists
     with pytest.raises(CRIPTOrphanedProcessError):
         project.validate()
     # Fix by using the helper function correctly
@@ -171,11 +171,11 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
 
     # We add property to the material, because that adds the opportunity for orphaned data and computation
     property = copy.deepcopy(simple_property_node)
-    material.properties += [property]
+    material.property += [property]
     project.validate()
     # Now add an orphan data
     data = copy.deepcopy(simple_data_node)
-    property.data = data
+    property.data = [data]
     with pytest.raises(CRIPTOrphanedDataError):
         project.validate()
     # Fix with the helper function
@@ -184,7 +184,7 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
 
     # Add an orphan Computation
     computation = copy.deepcopy(simple_computation_node)
-    property.computations += [computation]
+    property.computation += [computation]
     with pytest.raises(CRIPTOrphanedComputationError):
         project.validate()
     # Fix with the helper function
@@ -193,10 +193,15 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
 
     # Add orphan computational process
     comp_proc = copy.deepcopy(simple_computation_process_node)
-    # Do not orphan materials
-    project.materials += [comp_proc.ingredient[0].material]
-    data.computational_process += [comp_proc]
+    data.computation_process += [comp_proc]
     with pytest.raises(CRIPTOrphanedComputationalProcessError):
-        project.validate()
+        while True:
+            try:  # Do trigger not orphan materials
+                project.validate()
+            except CRIPTOrphanedMaterialError as exc:
+                project._json_attrs.material.append(exc.orphaned_node)
+            else:
+                break
+
     cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
     project.validate()

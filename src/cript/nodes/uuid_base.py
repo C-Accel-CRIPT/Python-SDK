@@ -27,7 +27,7 @@ class UUIDBaseNode(BaseNode, ABC):
     def __init__(self, **kwargs):
         # initialize Base class with node
         super().__init__(**kwargs)
-        # Resepect uuid if passed as argument, otherwise construct uuid from uid
+        # Respect uuid if passed as argument, otherwise construct uuid from uid
         uuid = kwargs.get("uuid", get_uuid_from_uid(self.uid))
         # replace name and notes within PrimaryBase
         self._json_attrs = replace(self._json_attrs, uuid=uuid)

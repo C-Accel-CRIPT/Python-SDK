@@ -1,15 +1,8 @@
 import copy
 import json
-import os
-import pathlib
-import uuid
-import warnings
-from pathlib import Path
-from typing import Union
 import warnings
 from typing import Dict, List, Union
 
-import boto3
 import jsonschema
 import requests
 
@@ -20,8 +13,6 @@ from cript.api.exceptions import (
     CRIPTConnectionError,
     InvalidHostError,
     InvalidVocabulary,
-    InvalidVocabularyCategory,
-    FileDownloadError,
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
@@ -59,14 +50,6 @@ class API:
     _db_schema: dict = {}
     _api_handle: str = "api"
     _api_version: str = "v1"
-
-    # AWS S3 constants
-    _REGION_NAME: str = "us-east-1"
-    _IDENTITY_POOL_ID: str = "us-east-1:555e15fe-05c1-4f63-9f58-c84d8fd6dc99"
-    _COGNITO_LOGIN_PROVIDER: str = "cognito-idp.us-east-1.amazonaws.com/us-east-1_VinmyZ0zW"
-    _BUCKET_NAME: str = "cript-development-user-data"
-    _BUCKET_DIRECTORY_NAME: str = "tests"
-    _s3_client: boto3.client = None
 
     def __init__(self, host: Union[str, None] = None, token: Union[str, None] = None, config_file_path: str = ""):
         """
@@ -159,8 +142,6 @@ class API:
         # TODO might need to add Bearer to it or check for it
         self._http_headers = {"Authorization": f"{self._token}", "Content-Type": "application/json"}
 
-        self._s3_client = self._create_s3_client()
-
         # check that api can connect to CRIPT with host and token
         self._check_initial_host_connection()
 
@@ -179,32 +160,6 @@ class API:
             raise InvalidHostError()
 
         return host
-
-    def _create_s3_client(self) -> boto3.client:
-        """
-        create a fully authenticated and ready s3 client
-
-        Returns
-        -------
-        s3_client: boto3.client
-            fully prepared and authenticated s3 client ready to be used throughout the script
-        """
-        auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
-
-        identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
-
-        aws_credentials = auth.get_credentials_for_identity(IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
-
-        aws_credentials = aws_credentials["Credentials"]
-
-        s3_client = boto3.client(
-            "s3",
-            aws_access_key_id=aws_credentials["AccessKeyId"],
-            aws_secret_access_key=aws_credentials["SecretKey"],
-            aws_session_token=aws_credentials["SessionToken"],
-        )
-
-        return s3_client
 
     def __enter__(self):
         self.connect()
@@ -516,126 +471,6 @@ class API:
         # if htt response is not 200 then show the API error to the user
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
-
-    def upload_file(self, file_path: Union[Path, str]) -> str:
-        """
-        uploads a file to AWS S3 bucket and returns a URL of the uploaded file in AWS S3
-        The URL is has no expiration time limit and is available forever
-
-        1. take an  file path of type path or str to the file on local storage
-            * see Example for more details
-        1. convert the file path to pathlib object, so it is versatile and
-            always uniform regardless if the user passes in a str or path object
-        1. get the file
-        1. rename the file to avoid clash or overwriting of previously uploaded files
-            * change file name to `original_name_uuid4.extension`
-                *  `document_42926a201a624fdba0fd6271defc9e88.txt`
-        # it would be without the hyphens like: `document_42926a201a624fdba0fd6271defc9e88.txt`
-        1. upload file to AWS S3
-        1. get the link of the uploaded file and return it
-
-
-        Examples
-        --------
-        ```python
-        import cript
-
-        api = cript.API(host, token)
-
-        # programmatically create the absolute path of your file, so the program always works correctly
-        my_file_path = (Path(__file__) / Path('../upload_files/my_file.txt')).resolve()
-
-        my_file_s3_url = api.upload_file(absolute_file_path=my_file_path)
-        ```
-
-        Parameters
-        ----------
-        file_path: Union[str, Path]
-            file path as str or Path object. Path Object is recommended
-
-        Raises
-        ------
-        FileNotFoundError
-            In case the file could not be found because the file does not exist
-
-        Returns
-        -------
-        url: str
-            url of the AWS S3 uploaded file to be put into the File node source attribute
-        """
-
-        # convert file path from whatever the user passed in to a pathlib object
-        file_path = pathlib.Path(file_path).resolve()
-
-        # get file_name and file_extension from absolute file path
-        # file_extension includes the dot, e.g. ".txt"
-        file_name, file_extension = os.path.splitext(os.path.basename(file_path))
-
-        # generate a UUID4 string without dashes, making a cleaner file name
-        uuid_str = str(uuid.uuid4().hex)
-
-        new_file_name: str = f"{file_name}_{uuid_str}{file_extension}"
-
-        # e.g. "directory/file_name_uuid.extension"
-        object_name = f"{self._BUCKET_DIRECTORY_NAME}/{new_file_name}"
-
-        # upload file to AWS S3
-        self._s3_client.upload_file(file_path, self._BUCKET_NAME, object_name)
-
-        # Generate a presigned URL to access the file from S3 that is available forever
-        s3_file_url = self._s3_client.generate_presigned_url(
-            "get_object",
-            Params={"Bucket": self._BUCKET_NAME, "Key": object_name},
-        )
-
-        return s3_file_url
-
-    def download_file(self, file_url: str, destination_path: str = ".") -> None:
-        """
-        download a file from AWS S3 and save it to the specified path on local storage
-
-        making a simple GET request to the URL that would download the file
-
-        Parameters
-        ----------
-        file_url: str
-            AWS S3 file name with the extension e.g. "my_file_name.txt
-            the file is then searched within "Data/{file_name}" and saved to local storage
-        destination_path: str
-            please provide a path with file name of where you would like the file to be saved
-            on local storage after retrieved and downloaded from AWS S3
-
-        Examples
-        --------
-        ```python
-        desktop_path = (Path(__file__) / Path("../../../../../test_file_upload/my_downloaded_file.txt")).resolve()
-        cript_api.download_file(file_url=my_file_url, destination_path=desktop_path)
-        ```
-
-        Raises
-        ------
-        FileNotFoundError
-            In case the file could not be found because the file does not exist
-
-        Returns
-        -------
-        None
-            just downloads the file to the specified path
-        """
-
-        response = requests.get(url=file_url)
-
-        # if the status of the response is other than HTTP 200, raise an error
-        if response.status_code != 200:
-            raise FileDownloadError(error_message=response.json())
-
-        file_contents: bytes = response.content
-
-        # convert str or Path object to Path object to be flexible in accepting user input
-        destination_file_path = Path(destination_path).resolve()
-
-        with open(destination_file_path, "wb") as file:
-            file.write(file_contents)
 
     # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(

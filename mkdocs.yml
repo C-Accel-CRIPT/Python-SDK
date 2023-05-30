@@ -42,6 +42,7 @@ nav:
   - Exceptions:
       - API Exceptions: exceptions/api_exceptions.md
       - Node Exceptions: exceptions/node_exceptions.md
+  - Utility Functions: utility_functions.md
   - FAQ: faq.md
 
 theme:

@@ -201,10 +201,7 @@ def test_upload_and_download_file(cript_api) -> None:
     """
 
     file_text: str = (
-        f"This is an automated test from the Python SDK within `tests/api/test_api.py` "
-        f"within the `test_upload_file_to_aws_s3()` test function "
-        f"on UTC time of '{datetime.datetime.utcnow()}' "
-        f"with the unique UUID of '{str(uuid.uuid4())}'"
+        f"This is an automated test from the Python SDK within `tests/api/test_api.py` " f"within the `test_upload_file_to_aws_s3()` test function " f"on UTC time of '{datetime.datetime.utcnow()}' " f"with the unique UUID of '{str(uuid.uuid4())}'"
     )
 
     with tempfile.NamedTemporaryFile(mode="w+t", suffix=".txt", delete=False) as temp_file:
@@ -220,18 +217,19 @@ def test_upload_and_download_file(cript_api) -> None:
         my_file_url = cript_api.upload_file(file_path=upload_file_path)
 
         # Download the file to a temporary destination
-        with tempfile.NamedTemporaryFile(mode='w+b', delete=False) as tmp_dest:
+        with tempfile.NamedTemporaryFile(mode="w+b", delete=False) as tmp_dest:
             download_dest_path = tmp_dest.name
             cript_api.download_file(file_url=my_file_url, destination_path=download_dest_path)
 
             # Compare the contents of the downloaded file with the original file
-            with open(download_dest_path, 'r') as downloaded_file:
+            with open(download_dest_path, "r") as downloaded_file:
                 downloaded_message = downloaded_file.read()
                 assert downloaded_message == file_text
 
     # clean up created files to not leave them on disk
     os.remove(upload_file_path)
     os.remove(download_dest_path)
+
 
 # TODO get save to work with the API
 # def test_api_save_project(cript_api: cript.API, simple_project_node) -> None:

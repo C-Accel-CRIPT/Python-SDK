@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List
+from typing import Any, List, Union
 
-# from cript import Data, SoftwareConfiguration, Condition, Citation
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
@@ -348,7 +347,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def prerequisite_computation(self) -> "Computation":
+    def prerequisite_computation(self) -> Union["Computation", None]:
         """
         prerequisite computation
 
@@ -369,7 +368,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.prerequisite_computation
 
     @prerequisite_computation.setter
-    def prerequisite_computation(self, new_prerequisite_computation: "Computation") -> None:
+    def prerequisite_computation(self, new_prerequisite_computation: Union["Computation", None]) -> None:
         """
         set new prerequisite_computation
 

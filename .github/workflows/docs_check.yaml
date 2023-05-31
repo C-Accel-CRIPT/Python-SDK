@@ -1,0 +1,39 @@
+# this CI workflow checks the documentation for any broken links or errors within documentation files/configuration
+# and reports errors to catch errors and never deploy broken documentation
+name: MkDocs CI Check
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - "*"
+  pull_request:
+    branches:
+      - main
+      - develop
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      - name: Install Python SDK
+        run: pip install -e .
+
+      - name: Install Doc Dependencies
+        run: pip install -r requirements_docs.txt
+
+      - name: Build and Test Documentation
+        run: |
+          mkdocs build
+          mkdocs build

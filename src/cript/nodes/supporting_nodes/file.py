@@ -6,19 +6,25 @@ from cript.api.api import _get_global_cached_api
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
-def _is_local_file(file_source: str) -> bool:
+def _is_local_file(file_source: Union[str, Path]) -> bool:
     """
     Determines if the file the user is uploading is a local file or a link.
 
-    Args:
-        file_source (str): The source of the file.
+    the file is a local file path if it does Not start with "http" or isinstance of Path object
 
-    Returns:
-        bool: True if the file is local, False if it's a link.
+    Parameters
+    ----------
+    file_source: Union[str, Path]
+        The source of the file
+
+    Returns
+    -------
+    bool
+        True if the file is local, False if it's a link.
     """
 
     # checking "http" so it works with both "https://" and "http://"
-    if file_source.startswith("http"):
+    if file_source.startswith("http") or not isinstance(file_source, Path):
         return False
     else:
         return True
@@ -166,29 +172,11 @@ class File(UUIDBaseNode):
             data_dictionary=data_dictionary,
         )
 
-        self._file_source_setter(source=source)
+        # at the end set source attribute via setter, and when checking the node schema should be valid
+        # because everything else is already set
+        self.source = source
 
         self.validate()
-
-    def _file_source_setter(self, source: Union[str, Path]) -> str:
-        """
-        sets the file source and returns the file AWS S3 link
-
-        Parameters
-        ----------
-        source: str
-            file source can be a relative or absolute file string or pathlib object
-
-        Returns
-        -------
-        str
-            file AWS S3 link
-        """
-        if _is_local_file(file_source=source):
-            api = _get_global_cached_api()
-            url_source = api.upload_file(file_path=source)
-
-            return url_source
 
     @property
     def source(self) -> str:
@@ -216,23 +204,25 @@ class File(UUIDBaseNode):
         return self._json_attrs.source
 
     @source.setter
-    def source(self, new_source: str) -> None:
+    def source(self, new_source: Union[str, Path]) -> None:
         """
         sets the source of the file node
-        the source can either be a path to a file on local storage or a link to a file
+        the source can either be a path to a file on local storage or a URL link to a file
 
         1. checks if the file source is a link or a local file path
-        2. if the source is a link such as `https://wikipedia.com` then it sets the URL as the file source
+        2. if the source is a link such as `https://en.wikipedia.org/wiki/Polymer`
+            then it simply sets the URL as the file source and continues
         3. if the file source is a local file path such as
                 `C:\\Users\\my_username\\Desktop\\cript\\file.txt`
             1. then it opens the file and reads it
             2. uploads it to the cloud storage
             3. gets back a URL from where in the cloud the file is found
-            4. sets that as the source
+            4. sets that URL as the source and continues
 
         Parameters
         ----------
-        new_source: str
+        new_source: Union[str, Path]
+            URL to file or local file path
 
         Example
         -------
@@ -245,13 +235,10 @@ class File(UUIDBaseNode):
         None
         """
 
-        if _is_local_file(new_source):
-            with open(new_source, "r") as file:
-                # TODO upload a file to Argonne Labs or directly to the backend
-                #   get the URL of the uploaded file
-                #   set the source to the URL just gotten from argonne
-                print(file)
-                pass
+        if _is_local_file(file_source=new_source):
+            api = _get_global_cached_api()
+            url_source = api.upload_file(file_path=new_source)
+            new_source = url_source
 
         new_attrs = replace(self._json_attrs, source=new_source)
         self._update_json_attrs_if_valid(new_attrs)

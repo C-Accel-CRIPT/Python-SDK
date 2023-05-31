@@ -1,5 +1,8 @@
 from dataclasses import dataclass, replace
+from pathlib import Path
+from typing import Union
 
+from cript.api.api import _get_global_cached_api
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -74,7 +77,7 @@ class File(UUIDBaseNode):
         Parameters
         ----------
         source: str
-            link or path to local file
+            file web link or path to local file
         type: str
             Pick a file type from CRIPT controlled vocabulary [File types]()
         extension:str
@@ -105,6 +108,49 @@ class File(UUIDBaseNode):
                 notes="my notes for this file"
             )
             ```
+
+        Raises
+        ------
+        FileNotFoundError
+            Raises [FileNotFoundError](https://docs.python.org/3/library/exceptions.html#FileNotFoundError)
+            if the file could not be found when the Python SDK goes to open the file from local storage
+            to upload it to CRIPT storage.
+
+        ## File Source
+        File node `source` attribute can be either a link to a data file,such as
+        [CRIPT Data Model PDF link](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf)
+        or a path to a file on local storage.
+
+        ### Local File
+        For local file path source it can be a relative link from the current directory
+        such as
+
+        #### Relative File Path Example
+        ```python
+        my_file = cript.File(
+            source="../my_data_file.csv",
+            type="calibration",
+        )
+        ```
+
+        #### Absolute File Path Example
+        ```python
+        my_file = cript.File(
+            source=r"C:\\Users\\username\\Desktop\\my_data_file.csv",
+            type="calibration",
+        )
+        ```
+
+        ### Recommended: File Path Using [Pathlib](https://docs.python.org/3/library/pathlib.html) or [OS Module](https://docs.python.org/3/library/os.path.html)
+
+        The benefits of using something like [Pathlib](https://docs.python.org/3/library/pathlib.html)
+        over giving an absolute file path string is that it is platform independent and less chance of errors.
+
+        ```python
+        from pathlib import Path
+
+        my_file_path = (Path(__file__).parent / "my_files" / "my_data").resolve()
+        ```
         """
 
         super().__init__(**kwargs)
@@ -120,13 +166,30 @@ class File(UUIDBaseNode):
             data_dictionary=data_dictionary,
         )
 
-        self.source = source
+        self._file_source_setter(source=source)
 
         self.validate()
 
-    # TODO can be made into a function
+    def _file_source_setter(self, source: Union[str, Path]) -> str:
+        """
+        sets the file source and returns the file AWS S3 link
 
-    # --------------- Properties ---------------
+        Parameters
+        ----------
+        source: str
+            file source can be a relative or absolute file string or pathlib object
+
+        Returns
+        -------
+        str
+            file AWS S3 link
+        """
+        if _is_local_file(file_source=source):
+            api = _get_global_cached_api()
+            url_source = api.upload_file(file_path=source)
+
+            return url_source
+
     @property
     def source(self) -> str:
         """

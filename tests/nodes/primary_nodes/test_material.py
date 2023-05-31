@@ -50,7 +50,7 @@ def test_all_getters_and_setters(simple_material_node) -> None:
 
     new_parent_material = cript.Material(name="my parent material", identifiers=[{"alternative_names": "parent material 1"}])
 
-    new_computation_forcefield = cript.ComputationForcefield(key="amber", building_block="atom")
+    new_computation_forcefield = cript.ComputationalForcefield(key="amber", building_block="atom")
 
     new_material_keywords = ["acetylene"]
 

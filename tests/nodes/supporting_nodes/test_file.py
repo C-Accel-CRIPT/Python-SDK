@@ -43,7 +43,6 @@ def test_local_file_source_upload_and_download(tmpdir, tmp_path_factory) -> None
     # create a temp file and write to it
     upload_file_dir = tmp_path_factory.mktemp("file_test_upload_file_dir")
     local_file_path = upload_file_dir / "my_upload_file.txt"
-
     local_file_path.write_text(file_text)
 
     # create a file node with a local file path
@@ -53,21 +52,20 @@ def test_local_file_source_upload_and_download(tmpdir, tmp_path_factory) -> None
     assert my_file.source.startswith("https://cript-development-user-data.s3.amazonaws.com")
 
     # Get the temporary directory path and clean up handled by pytest
-    temp_dir = tmpdir.strpath
+    download_file_dir = tmp_path_factory.mktemp("file_test_download_file_dir")
+    download_file_name = "my_downloaded_file.txt"
 
-    # give the file you are downloading a name and extension
-    file_name = "my_downloaded_file.txt"
+    # download file
+    my_file.download(destination_source=download_file_dir, file_name=download_file_name)
 
-    my_file.download(destination_source=temp_dir, file_name=file_name)
+    # the path the file was downloaded to and can be read from
+    downloaded_local_file_path = download_file_dir / download_file_name
 
-    with open(f"{temp_dir}/{file_name}", mode="r") as file_handle:
-        downloaded_file_contents = file_handle.read()
+    # read file contents from where the file was downloaded
+    downloaded_file_contents = downloaded_local_file_path.read_text()
 
-        assert downloaded_file_contents == file_text
-
-    # clean up created files to not leave them on disk
-    # TODO use pytest for automatic clean up
-    # os.remove(local_file_path)
+    # assert file contents for upload and download are the same
+    assert downloaded_file_contents == file_text
 
 
 @pytest.fixture(scope="session")

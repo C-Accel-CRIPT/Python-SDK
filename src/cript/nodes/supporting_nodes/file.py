@@ -9,12 +9,10 @@ def _is_local_file(file_source: Union[str, Path]) -> bool:
     """
     Determines if the file the user is uploading is a local file or a link.
 
-    the file is a local file path if it does Not start with "http" or isinstance of Path object
-
     Parameters
     ----------
-    file_source: Union[str, Path]
-        The source of the file
+    file_source : str
+        The source of the file.
 
     Returns
     -------
@@ -410,6 +408,7 @@ class File(UUIDBaseNode):
         None
         """
         from cript.api.api import _get_global_cached_api
+
         api = _get_global_cached_api()
 
         existing_folder_path = Path(destination_source)

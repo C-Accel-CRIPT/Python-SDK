@@ -1,5 +1,9 @@
 import copy
+import datetime
 import json
+import os
+import tempfile
+import uuid
 
 import pytest
 from util import strip_uid_from_dict
@@ -16,20 +20,57 @@ def test_create_file() -> None:
     assert isinstance(file_node, cript.File)
 
 
-def test_create_file_local_source(tmp_path) -> None:
+def test_local_file_source_upload_and_download(tmpdir) -> None:
     """
-    tests that a simple file with only required attributes can be created
-    with source pointing to a local file on storage
+    upload a file and download it and be sure the contents are the same
 
-    create a temporary directory with temporary file
+    1. create a temporary file and get its file path
+    1. create a unique string
+    1. write unique string to temporary file
+    1. create a file node with the source being the temporary file
+        1. the file should then be automatically uploaded to cloud storage
+        and the source should be replaced with cloud storage source beginning with `https://`
+    1. download the file to a temporary path
+        1. read that file text and assert that the string written and read are the same
     """
+    file_text: str = (
+        f"This is an automated test from the Python SDK within `tests/nodes/supporting_nodes/test_file.py` " 
+        f"checking that the file source is automatically and correctly uploaded to AWS S3. "
+        f"The test is conducted on UTC time of '{datetime.datetime.utcnow()}' " 
+        f"with the unique UUID of '{str(uuid.uuid4())}'"
+    )
+    
+    with tempfile.NamedTemporaryFile(mode="w+t", suffix=".txt", delete=False) as temp_file:
+        local_file_path = temp_file.name
 
-    # create a temporary file in the temporary directory to test with
-    file_path = tmp_path / "test.txt"
-    with open(file_path, "w") as temporary_file:
-        temporary_file.write("hello world!")
+        # write text to temporary file
+        temp_file.write(file_text)
 
-    assert cript.File(source=str(file_path), type="calibration")
+        # force text to be written to file
+        temp_file.flush()
+
+        # create a file node with a local file path
+        my_file = cript.File(source=local_file_path, type="data")
+
+        # check that the file source has been uploaded to cloud storage and source has changed to reflect that
+        assert my_file.source.startswith("https://cript-development-user-data.s3.amazonaws.com")
+
+    # Get the temporary directory path and clean up handled by pytest
+    temp_dir = tmpdir.strpath
+
+    # give the file you are downloading a name and extension
+    file_name = "my_downloaded_file.txt"
+
+    my_file.download(destination_source=temp_dir, file_name=file_name)
+
+    with open(f"{temp_dir}/{file_name}", mode="r") as file_handle:
+        downloaded_file_contents = file_handle.read()
+
+        assert downloaded_file_contents == file_text
+
+    # clean up created files to not leave them on disk
+    # TODO use pytest for automatic clean up
+    os.remove(local_file_path)
 
 
 @pytest.fixture(scope="session")

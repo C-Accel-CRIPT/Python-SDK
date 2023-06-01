@@ -2,7 +2,6 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Union
 
-from cript.api.api import _get_global_cached_api
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -24,7 +23,7 @@ def _is_local_file(file_source: Union[str, Path]) -> bool:
     """
 
     # checking "http" so it works with both "https://" and "http://"
-    if file_source.startswith("http") or not isinstance(file_source, Path):
+    if file_source.startswith("http"):
         return False
     else:
         return True
@@ -49,6 +48,8 @@ def _upload_file_and_get_url(source: Union[str, Path]) -> str:
     str
         file AWS S3 link
     """
+    from cript.api.api import _get_global_cached_api
+
     if _is_local_file(file_source=source):
         api = _get_global_cached_api()
         url_source = api.upload_file(file_path=source)
@@ -191,6 +192,7 @@ class File(UUIDBaseNode):
         # upload file source if local file
         source = _upload_file_and_get_url(source=source)
 
+        # TODO add validation that extension must start with `.` or be uniform to work with it easier
         self._json_attrs = replace(
             self._json_attrs,
             type=type,
@@ -389,6 +391,8 @@ class File(UUIDBaseNode):
         new_attrs = replace(self._json_attrs, data_dictionary=new_data_dictionary)
         self._update_json_attrs_if_valid(new_attrs)
 
+    # TODO rename to `destination_directory_path`
+    # TODO get file name from node itself as default and allow for customization as well optional
     def download(self, destination_source: Union[str, Path], file_name: str) -> None:
         """
         download this file to current working directory or a specific destination
@@ -404,10 +408,12 @@ class File(UUIDBaseNode):
         -------
         None
         """
+        from cript.api.api import _get_global_cached_api
         api = _get_global_cached_api()
 
         existing_folder_path = Path(destination_source)
-        file_name = f"{file_name}.{self.extension}"
-        absolute_file_path = (existing_folder_path / file_name).resolve()
+        # TODO add file extension to it
+        file_name = f"{file_name}"
+        absolute_file_path = str((existing_folder_path / file_name).resolve())
 
-        api.download_file(file_url=self.source, destination_source=absolute_file_path)
+        api.download_file(file_url=self.source, destination_path=absolute_file_path)

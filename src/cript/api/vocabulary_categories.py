@@ -6,6 +6,8 @@ all_controlled_vocab_categories = [
     "citation_type",
     "computation_type",
     "computation_forcefield_key",
+    "computational_process_property_key",
+    "computational_process_type",
     "condition_key",
     "data_license",
     "data_type",

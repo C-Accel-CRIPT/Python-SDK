@@ -20,7 +20,7 @@ def test_create_file() -> None:
     assert isinstance(file_node, cript.File)
 
 
-def test_local_file_source_upload_and_download(tmpdir) -> None:
+def test_local_file_source_upload_and_download(tmpdir, tmp_path_factory) -> None:
     """
     upload a file and download it and be sure the contents are the same
 
@@ -39,21 +39,18 @@ def test_local_file_source_upload_and_download(tmpdir) -> None:
         f"The test is conducted on UTC time of '{datetime.datetime.utcnow()}' " 
         f"with the unique UUID of '{str(uuid.uuid4())}'"
     )
-    
-    with tempfile.NamedTemporaryFile(mode="w+t", suffix=".txt", delete=False) as temp_file:
-        local_file_path = temp_file.name
 
-        # write text to temporary file
-        temp_file.write(file_text)
+    # create a temp file and write to it
+    upload_file_dir = tmp_path_factory.mktemp("file_test_upload_file_dir")
+    local_file_path = upload_file_dir / "my_upload_file.txt"
 
-        # force text to be written to file
-        temp_file.flush()
+    local_file_path.write_text(file_text)
 
-        # create a file node with a local file path
-        my_file = cript.File(source=local_file_path, type="data")
+    # create a file node with a local file path
+    my_file = cript.File(source=str(local_file_path), type="data")
 
-        # check that the file source has been uploaded to cloud storage and source has changed to reflect that
-        assert my_file.source.startswith("https://cript-development-user-data.s3.amazonaws.com")
+    # check that the file source has been uploaded to cloud storage and source has changed to reflect that
+    assert my_file.source.startswith("https://cript-development-user-data.s3.amazonaws.com")
 
     # Get the temporary directory path and clean up handled by pytest
     temp_dir = tmpdir.strpath
@@ -70,7 +67,7 @@ def test_local_file_source_upload_and_download(tmpdir) -> None:
 
     # clean up created files to not leave them on disk
     # TODO use pytest for automatic clean up
-    os.remove(local_file_path)
+    # os.remove(local_file_path)
 
 
 @pytest.fixture(scope="session")

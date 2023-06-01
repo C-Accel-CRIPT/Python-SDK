@@ -30,6 +30,33 @@ def _is_local_file(file_source: Union[str, Path]) -> bool:
         return True
 
 
+def _upload_file_and_get_url(source: Union[str, Path]) -> str:
+    """
+    uploads file to cloud storage and returns the file link
+
+    1.  checks if the source is a local file path and not a web url
+    1. if it is a local file path, then it uploads it to cloud storage
+        * returns the file link in cloud storage
+    1. else it returns the same file link because it is already on the web
+
+    Parameters
+    ----------
+    source: str
+        file source can be a relative or absolute file string or pathlib object
+
+    Returns
+    -------
+    str
+        file AWS S3 link
+    """
+    if _is_local_file(file_source=source):
+        api = _get_global_cached_api()
+        url_source = api.upload_file(file_path=source)
+        source = url_source
+
+        return source
+
+
 class File(UUIDBaseNode):
     """
     ## Definition
@@ -161,20 +188,16 @@ class File(UUIDBaseNode):
 
         super().__init__(**kwargs)
 
-        # TODO check if vocabulary is valid or not
-        # is_vocab_valid("file type", type)
+        # upload file source if local file
+        source = _upload_file_and_get_url(source=source)
 
-        # setting every attribute except for source, which will be handled via setter
         self._json_attrs = replace(
             self._json_attrs,
             type=type,
+            source=source,
             extension=extension,
             data_dictionary=data_dictionary,
         )
-
-        # at the end set source attribute via setter, and when checking the node schema should be valid
-        # because everything else is already set
-        self.source = source
 
         self.validate()
 
@@ -235,12 +258,9 @@ class File(UUIDBaseNode):
         None
         """
 
-        if _is_local_file(file_source=new_source):
-            api = _get_global_cached_api()
-            url_source = api.upload_file(file_path=new_source)
-            new_source = url_source
+        file_url_source: str = _upload_file_and_get_url(source=new_source)
 
-        new_attrs = replace(self._json_attrs, source=new_source)
+        new_attrs = replace(self._json_attrs, source=file_url_source)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property

@@ -203,10 +203,7 @@ def test_upload_and_download_file(cript_api, tmp_path_factory) -> None:
     """
 
     file_text: str = (
-        f"This is an automated test from the Python SDK within `tests/api/test_api.py` " 
-        f"within the `test_upload_file_to_aws_s3()` test function " 
-        f"on UTC time of '{datetime.datetime.utcnow()}' " 
-        f"with the unique UUID of '{str(uuid.uuid4())}'"
+        f"This is an automated test from the Python SDK within `tests/api/test_api.py` " f"within the `test_upload_file_to_aws_s3()` test function " f"on UTC time of '{datetime.datetime.utcnow()}' " f"with the unique UUID of '{str(uuid.uuid4())}'"
     )
 
     # Create a temporary file with unique contents
@@ -227,6 +224,7 @@ def test_upload_and_download_file(cript_api, tmp_path_factory) -> None:
 
     # assert download file contents are the same as uploaded file contents
     assert downloaded_file_contents == file_text
+
 
 # TODO get save to work with the API
 # def test_api_save_project(cript_api: cript.API, simple_project_node) -> None:

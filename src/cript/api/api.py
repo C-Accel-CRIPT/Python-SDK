@@ -626,7 +626,6 @@ class API:
         with open(destination_file_path, "wb") as file:
             file.write(file_contents)
 
-    # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(
         self,
         node_type: BaseNode,

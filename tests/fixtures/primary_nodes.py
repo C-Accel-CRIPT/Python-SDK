@@ -106,8 +106,6 @@ def simple_computation_process_node() -> cript.ComputationalProcess:
     )
 
     my_computation_process = cript.ComputationalProcess(
-        name="my computation process name",
-        type=my_computation_process_type,
         input_data=[input_data],
         ingredients=[ingredients],
     )

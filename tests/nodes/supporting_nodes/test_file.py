@@ -34,9 +34,9 @@ def test_local_file_source_upload_and_download(tmpdir, tmp_path_factory) -> None
         1. read that file text and assert that the string written and read are the same
     """
     file_text: str = (
-        f"This is an automated test from the Python SDK within `tests/nodes/supporting_nodes/test_file.py` " 
+        f"This is an automated test from the Python SDK within `tests/nodes/supporting_nodes/test_file.py` "
         f"checking that the file source is automatically and correctly uploaded to AWS S3. "
-        f"The test is conducted on UTC time of '{datetime.datetime.utcnow()}' " 
+        f"The test is conducted on UTC time of '{datetime.datetime.utcnow()}' "
         f"with the unique UUID of '{str(uuid.uuid4())}'"
     )
 

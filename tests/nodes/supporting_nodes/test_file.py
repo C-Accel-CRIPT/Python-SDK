@@ -56,7 +56,7 @@ def test_local_file_source_upload_and_download(tmpdir, tmp_path_factory) -> None
     download_file_name = "my_downloaded_file.txt"
 
     # download file
-    my_file.download(destination_source=download_file_dir, file_name=download_file_name)
+    my_file.download(destination_directory_path=download_file_dir, file_name=download_file_name)
 
     # the path the file was downloaded to and can be read from
     downloaded_local_file_path = download_file_dir / download_file_name

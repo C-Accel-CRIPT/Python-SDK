@@ -389,19 +389,18 @@ class File(UUIDBaseNode):
         new_attrs = replace(self._json_attrs, data_dictionary=new_data_dictionary)
         self._update_json_attrs_if_valid(new_attrs)
 
-    # TODO rename to `destination_directory_path`
     # TODO get file name from node itself as default and allow for customization as well optional
-    # TODO make the destination path optional
-    def download(self, destination_source: Union[str, Path], file_name: str) -> None:
+    def download(self, file_name: str, destination_directory_path: Union[str, Path] = ".",) -> None:
         """
         download this file to current working directory or a specific destination
 
         Parameters
         ----------
-        destination_source: Union[str, Path]
-            where you want the file to be stored and what you want the name to be
         file_name: str
             what you want to name the file node on your computer
+        destination_directory_path: Union[str, Path]
+            where you want the file to be stored and what you want the name to be
+            by default it is the current working directory
 
         Returns
         -------
@@ -411,9 +410,11 @@ class File(UUIDBaseNode):
 
         api = _get_global_cached_api()
 
-        existing_folder_path = Path(destination_source)
-        # TODO add file extension to it
-        file_name = f"{file_name}"
+        existing_folder_path = Path(destination_directory_path)
+
+        # TODO add file extension to it and be sure that it is always `.csv` and never just `csv`
+        file_name = f"{file_name}{self.extension}"
+
         absolute_file_path = str((existing_folder_path / file_name).resolve())
 
         api.download_file(file_url=self.source, destination_path=absolute_file_path)

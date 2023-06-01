@@ -388,3 +388,26 @@ class File(UUIDBaseNode):
         """
         new_attrs = replace(self._json_attrs, data_dictionary=new_data_dictionary)
         self._update_json_attrs_if_valid(new_attrs)
+
+    def download(self, destination_source: Union[str, Path], file_name: str) -> None:
+        """
+        download this file to current working directory or a specific destination
+
+        Parameters
+        ----------
+        destination_source: Union[str, Path]
+            where you want the file to be stored and what you want the name to be
+        file_name: str
+            what you want to name the file node on your computer
+
+        Returns
+        -------
+        None
+        """
+        api = _get_global_cached_api()
+
+        existing_folder_path = Path(destination_source)
+        file_name = f"{file_name}.{self.extension}"
+        absolute_file_path = (existing_folder_path / file_name).resolve()
+
+        api.download_file(file_url=self.source, destination_source=absolute_file_path)

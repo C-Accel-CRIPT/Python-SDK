@@ -393,6 +393,7 @@ class File(UUIDBaseNode):
 
     # TODO rename to `destination_directory_path`
     # TODO get file name from node itself as default and allow for customization as well optional
+    # TODO make the destination path optional
     def download(self, destination_source: Union[str, Path], file_name: str) -> None:
         """
         download this file to current working directory or a specific destination

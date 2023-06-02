@@ -21,7 +21,7 @@ def _is_local_file(file_source: Union[str, Path]) -> bool:
     """
 
     # checking "http" so it works with both "https://" and "http://"
-    if file_source.startswith("http"):
+    if file_source.startswith("http") or isinstance(file_source, Path):
         return False
     else:
         return True

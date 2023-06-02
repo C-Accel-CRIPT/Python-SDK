@@ -53,7 +53,7 @@ def _upload_file_and_get_url(source: Union[str, Path]) -> str:
         url_source = api.upload_file(file_path=source)
         source = url_source
 
-        return source
+    return source
 
 
 class File(UUIDBaseNode):
@@ -187,8 +187,9 @@ class File(UUIDBaseNode):
 
         super().__init__(**kwargs)
 
-        # upload file source if local file
-        source = _upload_file_and_get_url(source=source)
+        if _is_local_file(file_source=source):
+            # upload file source if local file
+            source = _upload_file_and_get_url(source=source)
 
         # TODO add validation that extension must start with `.` or be uniform to work with it easier
         self._json_attrs = replace(
@@ -412,8 +413,9 @@ class File(UUIDBaseNode):
 
         existing_folder_path = Path(destination_directory_path)
 
-        # TODO add file extension to it and be sure that it is always `.csv` and never just `csv`
-        file_name = f"{file_name}{self.extension}"
+        # TODO automatically add the correct file extension to it from the node
+        #  and be sure that it is always `.csv` and never just `csv`
+        file_name = f"{file_name}"
 
         absolute_file_path = str((existing_folder_path / file_name).resolve())
 

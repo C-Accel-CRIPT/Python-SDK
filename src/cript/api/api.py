@@ -518,7 +518,6 @@ class API:
         1. rename the file to avoid clash or overwriting of previously uploaded files
             * change file name to `original_name_uuid4.extension`
                 *  `document_42926a201a624fdba0fd6271defc9e88.txt`
-        # it would be without the hyphens like: `document_42926a201a624fdba0fd6271defc9e88.txt`
         1. upload file to AWS S3
         1. get the link of the uploaded file and return it
 
@@ -544,7 +543,9 @@ class API:
         Raises
         ------
         FileNotFoundError
-            In case the file could not be found because the file does not exist
+            In case the CRIPT Python SDK cannot find the file on your computer because the file does not exist
+            or the path to it is incorrect it raises
+            [FileNotFoundError](https://docs.python.org/3/library/exceptions.html#FileNotFoundError)
 
         Returns
         -------
@@ -625,7 +626,6 @@ class API:
         with open(destination_file_path, "wb") as file:
             file.write(file_contents)
 
-    # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(
         self,
         node_type: BaseNode,

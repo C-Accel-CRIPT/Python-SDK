@@ -1,24 +1,59 @@
 from dataclasses import dataclass, replace
+from pathlib import Path
+from typing import Union
 
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
-def _is_local_file(file_source: str) -> bool:
+def _is_local_file(file_source: Union[str, Path]) -> bool:
     """
     Determines if the file the user is uploading is a local file or a link.
 
-    Args:
-        file_source (str): The source of the file.
+    Parameters
+    ----------
+    file_source : str
+        The source of the file.
 
-    Returns:
-        bool: True if the file is local, False if it's a link.
+    Returns
+    -------
+    bool
+        True if the file is local, False if it's a link.
     """
 
     # checking "http" so it works with both "https://" and "http://"
-    if file_source.startswith("http"):
+    if file_source.startswith("http") or isinstance(file_source, Path):
         return False
     else:
         return True
+
+
+def _upload_file_and_get_url(source: Union[str, Path]) -> str:
+    """
+    uploads file to cloud storage and returns the file link
+
+    1.  checks if the source is a local file path and not a web url
+    1. if it is a local file path, then it uploads it to cloud storage
+        * returns the file link in cloud storage
+    1. else it returns the same file link because it is already on the web
+
+    Parameters
+    ----------
+    source: str
+        file source can be a relative or absolute file string or pathlib object
+
+    Returns
+    -------
+    str
+        file AWS S3 link
+    """
+    from cript.api.api import _get_global_cached_api
+
+    if _is_local_file(file_source=source):
+        api = _get_global_cached_api()
+        url_source = api.upload_file(file_path=source)
+        source = url_source
+
+    return source
 
 
 class File(UUIDBaseNode):
@@ -74,7 +109,7 @@ class File(UUIDBaseNode):
         Parameters
         ----------
         source: str
-            link or path to local file
+            file web link or path to local file
         type: str
             Pick a file type from CRIPT controlled vocabulary [File types]()
         extension:str
@@ -105,28 +140,68 @@ class File(UUIDBaseNode):
                 notes="my notes for this file"
             )
             ```
+
+        Raises
+        ------
+        FileNotFoundError
+            Raises [FileNotFoundError](https://docs.python.org/3/library/exceptions.html#FileNotFoundError)
+            if the file could not be found when the Python SDK goes to open the file from local storage
+            to upload it to CRIPT storage.
+
+        ## File Source
+        File node `source` attribute can be either a link to a data file,such as
+        [CRIPT Data Model PDF link](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf)
+        or a path to a file on local storage.
+
+        ### Local File
+        For local file path source it can be a relative link from the current directory
+        such as
+
+        #### Relative File Path Example
+        ```python
+        my_file = cript.File(
+            source="../my_data_file.csv",
+            type="calibration",
+        )
+        ```
+
+        #### Absolute File Path Example
+        ```python
+        my_file = cript.File(
+            source=r"C:\\Users\\username\\Desktop\\my_data_file.csv",
+            type="calibration",
+        )
+        ```
+
+        ### Recommended: File Path Using [Pathlib](https://docs.python.org/3/library/pathlib.html) or [OS Module](https://docs.python.org/3/library/os.path.html)
+
+        The benefits of using something like [Pathlib](https://docs.python.org/3/library/pathlib.html)
+        over giving an absolute file path string is that it is platform independent and less chance of errors.
+
+        ```python
+        from pathlib import Path
+
+        my_file_path = (Path(__file__).parent / "my_files" / "my_data").resolve()
+        ```
         """
 
         super().__init__(**kwargs)
 
-        # TODO check if vocabulary is valid or not
-        # is_vocab_valid("file type", type)
+        if _is_local_file(file_source=source):
+            # upload file source if local file
+            source = _upload_file_and_get_url(source=source)
 
-        # setting every attribute except for source, which will be handled via setter
+        # TODO add validation that extension must start with `.` or be uniform to work with it easier
         self._json_attrs = replace(
             self._json_attrs,
             type=type,
+            source=source,
             extension=extension,
             data_dictionary=data_dictionary,
         )
 
-        self.source = source
-
         self.validate()
 
-    # TODO can be made into a function
-
-    # --------------- Properties ---------------
     @property
     def source(self) -> str:
         """
@@ -153,23 +228,25 @@ class File(UUIDBaseNode):
         return self._json_attrs.source
 
     @source.setter
-    def source(self, new_source: str) -> None:
+    def source(self, new_source: Union[str, Path]) -> None:
         """
         sets the source of the file node
-        the source can either be a path to a file on local storage or a link to a file
+        the source can either be a path to a file on local storage or a URL link to a file
 
         1. checks if the file source is a link or a local file path
-        2. if the source is a link such as `https://wikipedia.com` then it sets the URL as the file source
+        2. if the source is a link such as `https://en.wikipedia.org/wiki/Polymer`
+            then it simply sets the URL as the file source and continues
         3. if the file source is a local file path such as
                 `C:\\Users\\my_username\\Desktop\\cript\\file.txt`
             1. then it opens the file and reads it
             2. uploads it to the cloud storage
             3. gets back a URL from where in the cloud the file is found
-            4. sets that as the source
+            4. sets that URL as the source and continues
 
         Parameters
         ----------
-        new_source: str
+        new_source: Union[str, Path]
+            URL to file or local file path
 
         Example
         -------
@@ -182,15 +259,9 @@ class File(UUIDBaseNode):
         None
         """
 
-        if _is_local_file(new_source):
-            with open(new_source, "r") as file:
-                # TODO upload a file to Argonne Labs or directly to the backend
-                #   get the URL of the uploaded file
-                #   set the source to the URL just gotten from argonne
-                print(file)
-                pass
+        file_url_source: str = _upload_file_and_get_url(source=new_source)
 
-        new_attrs = replace(self._json_attrs, source=new_source)
+        new_attrs = replace(self._json_attrs, source=file_url_source)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -318,3 +389,38 @@ class File(UUIDBaseNode):
         """
         new_attrs = replace(self._json_attrs, data_dictionary=new_data_dictionary)
         self._update_json_attrs_if_valid(new_attrs)
+
+    # TODO get file name from node itself as default and allow for customization as well optional
+    def download(
+        self,
+        file_name: str,
+        destination_directory_path: Union[str, Path] = ".",
+    ) -> None:
+        """
+        download this file to current working directory or a specific destination
+
+        Parameters
+        ----------
+        file_name: str
+            what you want to name the file node on your computer
+        destination_directory_path: Union[str, Path]
+            where you want the file to be stored and what you want the name to be
+            by default it is the current working directory
+
+        Returns
+        -------
+        None
+        """
+        from cript.api.api import _get_global_cached_api
+
+        api = _get_global_cached_api()
+
+        existing_folder_path = Path(destination_directory_path)
+
+        # TODO automatically add the correct file extension to it from the node
+        #  and be sure that it is always `.csv` and never just `csv`
+        file_name = f"{file_name}"
+
+        absolute_file_path = str((existing_folder_path / file_name).resolve())
+
+        api.download_file(file_url=self.source, destination_path=absolute_file_path)

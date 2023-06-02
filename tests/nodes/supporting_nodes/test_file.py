@@ -20,7 +20,7 @@ def test_create_file() -> None:
     assert isinstance(file_node, cript.File)
 
 
-def test_local_file_source_upload_and_download(tmpdir, tmp_path_factory) -> None:
+def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
     """
     upload a file and download it and be sure the contents are the same
 

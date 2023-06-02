@@ -1,6 +1,6 @@
 # workflow to check our docstring documentation code examples using pytest doctest module to be sure they are all correct
 
-name: Pytest Doctest
+name: Doctest
 
 on: [push, pull_request]
 

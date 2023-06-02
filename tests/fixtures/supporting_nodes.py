@@ -20,7 +20,7 @@ def complex_file_node() -> cript.File:
 def complex_user_dict() -> dict:
     user_dict = {"node": ["User"]}
     user_dict["created_at"] = str(datetime.datetime.now())
-    user_dict["model_version"] = "0.0.1"
+    user_dict["model_version"] = "1.0.0"
     user_dict["picture"] = "/my/picture/path"
     user_dict["updated_at"] = str(datetime.datetime.now())
     user_dict["username"] = "testuser"

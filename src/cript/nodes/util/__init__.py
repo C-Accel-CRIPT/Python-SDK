@@ -1,6 +1,7 @@
 import copy
 import inspect
 import json
+import uuid
 from dataclasses import asdict
 
 import cript.nodes
@@ -23,6 +24,8 @@ class NodeEncoder(json.JSONEncoder):
     condense_to_uuid = list()
 
     def default(self, obj):
+        if isinstance(obj, uuid.UUID):
+            return str(obj)
         if isinstance(obj, BaseNode):
             try:
                 uid = obj.uid

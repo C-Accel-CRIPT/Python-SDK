@@ -31,6 +31,7 @@ class UUIDBaseNode(BaseNode, ABC):
         uuid = kwargs.get("uuid", get_uuid_from_uid(self.uid))
         # replace name and notes within PrimaryBase
         self._json_attrs = replace(self._json_attrs, uuid=uuid)
+        print(self._json_attrs)
 
     @property
     def uuid(self) -> uuid.UUID:

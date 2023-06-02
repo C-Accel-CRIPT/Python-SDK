@@ -391,7 +391,11 @@ class File(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     # TODO get file name from node itself as default and allow for customization as well optional
-    def download(self, file_name: str, destination_directory_path: Union[str, Path] = ".",) -> None:
+    def download(
+        self,
+        file_name: str,
+        destination_directory_path: Union[str, Path] = ".",
+    ) -> None:
         """
         download this file to current working directory or a specific destination
 

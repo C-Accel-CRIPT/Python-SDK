@@ -53,7 +53,7 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
     citation = copy.deepcopy(complex_citation_node)
     prop = copy.deepcopy(simple_property_node)
     prop.set_value(1.0, "test unit")
-    prop.key = "arrhenius_activation"
+    prop.key = "comp"
     prop.type = "value"
 
     my_complex_process = cript.Process(
@@ -120,7 +120,7 @@ def test_process_getters_and_setters(
     simple_process_node.condition = [complex_condition_node]
     prop = copy.deepcopy(simple_property_node)
     prop.set_value(1.0, "test unit")
-    prop.key = "arrhenius_activation"
+    prop.key = "comp"
     prop.type = "value"
     simple_process_node.property += [prop]
     simple_process_node.keyword = [new_process_keywords]

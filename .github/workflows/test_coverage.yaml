@@ -3,13 +3,15 @@
 
 name: Test Coverage
 
-on: [ push, pull_request ]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   test-coverage:
     runs-on: ubuntu-latest
 
-    # set environment variables for the whole workflow
     env:
       CRIPT_HOST: http://development.api.mycriptapp.org/
       CRIPT_TOKEN: 125433546

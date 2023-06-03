@@ -1,12 +1,9 @@
 # use pytest-cov to see what percentage of the code is being covered by tests
-# WARNING: this workflow will automatically fail if any of the tests withing it fail
+# WARNING: this workflow will fail if any of the tests within it fail
 
 name: Test Coverage
 
-on:
-  push:
-  pull_request:
-  workflow_dispatch:
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   test-coverage:

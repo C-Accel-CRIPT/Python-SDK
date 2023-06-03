@@ -1,0 +1,35 @@
+# use pytest-cov to see what percentage of the code is being covered by tests
+# WARNING: this workflow will automatically fail if any of the tests withing it fail
+
+name: Test Coverage
+
+on: [ push, pull_request ]
+
+jobs:
+  test-coverage:
+    runs-on: ubuntu-latest
+
+    # set environment variables for the whole workflow
+    env:
+      CRIPT_HOST: http://development.api.mycriptapp.org/
+      CRIPT_TOKEN: 125433546
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      - name: upgrade pip
+        run: pip install --upgrade pip
+
+      - name: Install CRIPT Python SDK
+        run: pip install -e .
+
+      - name: Install requirements_dev.txt
+        run: pip install -r requirements_dev.txt
+
+      - name: Test Coverage
+        run: pytest --cov --cov-fail-under=90

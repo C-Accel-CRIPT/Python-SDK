@@ -63,10 +63,23 @@ Please visit the [Python SDK Documentation Release Notes](#) or within the [GitH
 -->
 
 ## We Invite Contribution
+We welcome contributions from the community! 
 
-You are welcome to contribute code via PR to this repository.
-For the developmet, we are using [trunk.io](https://trunk.io) to achieve a consistent coding style.
-You can run `./trunk fmt` to auto-format your contributions and `./trunk check` to verify your contribution complies with our standard via trunk.
-We will run the same test automatically before we are able to merge the code.
-For development documentation to better understand the Python SDK code please visit the [Python SDK Wiki](https://github.com/C-Accel-CRIPT/Python-SDK/wiki)
-If you encounter any issues please let us know via [issues section](https://github.com/C-Accel-CRIPT/Python-SDK/issues) or [discussion sections](https://github.com/C-Accel-CRIPT/Python-SDK/discussions)
+To get started, feel free to take a look at our [Contribution Guidelines](CONTRIBUTING.md) for 
+a detailed guide on how to contribute to our repository and become a part of our community.
+
+Whether you want to report a bug, propose a new feature, or submit a pull request, your contribution is highly valued.
+
+For development documentation to better understand the Python SDK code please visit the 
+[Python SDK Wiki](https://github.com/C-Accel-CRIPT/Python-SDK/wiki).
+If you encounter any issues please let us know via 
+[issues section](https://github.com/C-Accel-CRIPT/Python-SDK/issues) or 
+[discussion sections](https://github.com/C-Accel-CRIPT/Python-SDK/discussions).
+
+To learn more about our great community and all the open source plugins made by our fantastic community available 
+for the [CRIPT Python SDK](https://github.com/C-Accel-CRIPT/Python-SDK) please take a look at the 
+[plugins section](https://github.com/C-Accel-CRIPT/Python-SDK/discussions/categories/plugins)
+
+We appreciate your interest in contributing to our project! Together, let's make it even better! 🚀
+
+Happy coding!

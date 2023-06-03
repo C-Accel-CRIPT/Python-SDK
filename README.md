@@ -11,6 +11,18 @@
 [![Using Requests Library](https://img.shields.io/badge/Dependencies-Requests-blueviolet?style=flat-square&logo=python)](https://requests.readthedocs.io/en/latest/)
 [![Material MkDocs](https://img.shields.io/badge/Docs-mkdocs--material-blueviolet?style=flat-square&logo=markdown)](https://squidfunk.github.io/mkdocs-material/)
 
+[![trunk CI](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/trunk.yml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/trunk.yml)
+[![Tests](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/tests.yml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/tests.yml)
+[![CodeQL](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/codeql.yml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/codeql.yml)
+[![Safe Dependencies](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/dependency-review.yml)
+[![mypy](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/mypy_check.yaml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/mypy_check.yaml)
+[![Doctests](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/doctest.yaml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/doctest.yaml)
+[![Documentation Deployment](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/pages/pages-build-deployment/badge.svg)
+
+<!-- just shows pass/fail instead of percentage
+[![Test Coverage](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/test_coverage.yaml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/test_coverage.yaml)
+-->
+
 ## Disclaimer
 
 This is the successor to the original [CRIPT Python SDK](https://github.com/C-Accel-CRIPT/cript). The new CRIPT Python SDK is still under development, and we will officially release it as soon as it is ready. For now please use the [original CRIPT Python SDK](https://github.com/C-Accel-CRIPT/cript)

@@ -29,7 +29,7 @@ nav:
       - Computational Forcefield: nodes/subobjects/computational_forcefield.md
       - Condition: nodes/subobjects/condition.md
       - Equipment: nodes/subobjects/equipment.md
-      - Identifier: nodes/subobjects/identifier.md
+#      - Identifier: nodes/subobjects/identifier.md
       - Ingredient: nodes/subobjects/ingredient.md
       - Parameter: nodes/subobjects/parameter.md
       - Property: nodes/subobjects/property.md
@@ -37,7 +37,7 @@ nav:
       - Software Configuration: nodes/subobjects/software_configuration.md
   - Supporting Nodes:
       - User: nodes/supporting_nodes/user.md
-      - Group: nodes/supporting_nodes/group.md
+#      - Group: nodes/supporting_nodes/group.md
       - File: nodes/supporting_nodes/file.md
   - Exceptions:
       - API Exceptions: exceptions/api_exceptions.md

@@ -1,7 +1,7 @@
 import copy
 import json
 import warnings
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional
 
 import jsonschema
 import requests
@@ -51,7 +51,7 @@ class API:
     _api_handle: str = "api"
     _api_version: str = "v1"
 
-    def __init__(self, host: Union[str, None] = None, token: Union[str, None] = None, config_file_path: str = ""):
+    def __init__(self, host: Optional[str] = None, token: Optional[str] = None, config_file_path: str = ""):
         """
         Initialize CRIPT API client with host and token.
         Additionally, you can  use a config.json file and specify the file path.

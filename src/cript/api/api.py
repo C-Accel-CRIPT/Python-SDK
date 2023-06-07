@@ -574,7 +574,7 @@ class API:
         # return the object name
         return object_name
 
-    def download_file(self, object_name: str, destination_path: str = ".") -> None:
+    def download_file(self, object_name: str, destination_path: str) -> None:
         """
         download a file from AWS S3 and save it to the specified path on local storage
 
@@ -613,7 +613,7 @@ class API:
         self._s3_client.download_file(
             Bucket=self._BUCKET_NAME,
             Key=object_name,
-            Filename='my_example_text.txt'
+            Filename=destination_path
         )
 
     def search(

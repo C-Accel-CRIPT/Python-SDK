@@ -1,5 +1,7 @@
 from dataclasses import dataclass, replace
+from typing import Optional
 
+from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -21,7 +23,7 @@ def _is_local_file(file_source: str) -> bool:
         return True
 
 
-class File(UUIDBaseNode):
+class File(PrimaryBaseNode):
     """
     ## Definition
 
@@ -67,7 +69,7 @@ class File(UUIDBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, source: str, type: str, extension: str = "", data_dictionary: str = "", **kwargs):
+    def __init__(self, name: str, source: str, type: str, extension: str = "", data_dictionary: str = "", notes: Optional[str] = "", **kwargs):
         """
         create a File node
 
@@ -107,7 +109,7 @@ class File(UUIDBaseNode):
             ```
         """
 
-        super().__init__(**kwargs)
+        super().__init__(name=name, notes=notes, **kwargs)
 
         # TODO check if vocabulary is valid or not
         # is_vocab_valid("file type", type)

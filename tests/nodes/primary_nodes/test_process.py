@@ -51,21 +51,18 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
 
     # create complex process
     citation = copy.deepcopy(complex_citation_node)
-    prop = copy.deepcopy(simple_property_node)
-    prop.set_value(1.0, "test unit")
-    prop.key = "comp"
-    prop.type = "value"
+    prop = cript.Property("n_neighbor", "value", 2.0, None)
 
     my_complex_process = cript.Process(
         name=my_process_name,
         type=my_process_type,
         ingredient=[complex_ingredient_node],
         description=my_process_description,
-        equipment=[simple_equipment_node],
+        equipment=[complex_equipment_node],
         product=[simple_material_node],
         waste=process_waste,
         prerequisite_process=[simple_process_node],
-        condition=[simple_condition_node],
+        condition=[complex_condition_node],
         property=[prop],
         keyword=my_process_keywords,
         citation=[citation],
@@ -75,7 +72,7 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
     assert my_complex_process.ingredient == [complex_ingredient_node]
     assert my_complex_process.description == my_process_description
     assert my_complex_process.equipment == [complex_equipment_node]
-    assert my_complex_process.products == [simple_property_node]
+    assert my_complex_process.product == [simple_material_node]
     assert my_complex_process.waste == process_waste
     assert my_complex_process.prerequisite_process[-1] == simple_process_node
     assert my_complex_process.condition[-1] == complex_condition_node
@@ -118,10 +115,7 @@ def test_process_getters_and_setters(
     simple_process_node.waste = [simple_material_node]
     simple_process_node.prerequisite_process = [simple_process_node]
     simple_process_node.condition = [complex_condition_node]
-    prop = copy.deepcopy(simple_property_node)
-    prop.set_value(1.0, "test unit")
-    prop.key = "comp"
-    prop.type = "value"
+    prop = cript.Property("n_neighbor", "value", 2.0, None)
     simple_process_node.property += [prop]
     simple_process_node.keyword = [new_process_keywords]
     citation = copy.deepcopy(complex_condition_node)

@@ -200,7 +200,17 @@ class BaseNode(ABC):
     def get_json(
         self,
         handled_ids: set = None,
-        condense_to_uuid={"Material": ["parent_material", "component"], "Inventory": ["material"], "Ingredient": ["material"], "Property": ["component"], "ComputationProcess": ["material"], "Data": ["material"], "Process": ["product", "waste"]},
+        condense_to_uuid={
+            "Material": ["parent_material", "component"],
+            "Inventory": ["material"],
+            "Ingredient": ["material"],
+            "Property": ["component"],
+            "ComputationProcess": ["material"],
+            "Data": ["material"],
+            "Process": ["product", "waste"],
+            "Project": ["member", "admin"],
+            "Collection": ["member", "admin"],
+        },
         **kwargs
     ):
         """

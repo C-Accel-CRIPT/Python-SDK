@@ -18,8 +18,8 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
 
         locked: bool = False
         model_version: str = ""
-        updated_by = None
-        created_by = None
+        updated_by: "User" = None
+        created_by: "User" = None
         public: bool = False
         name: str = ""
         notes: str = ""

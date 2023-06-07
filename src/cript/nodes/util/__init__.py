@@ -235,7 +235,8 @@ def _node_json_hook(node_str: str) -> dict:
         if BaseNode in inspect.getmro(pyclass):
             if key == node_str:
                 try:
-                    return pyclass._from_json(node_dict)
+                    json = pyclass._from_json(node_dict)
+                    return json
                 except Exception as exc:
                     raise CRIPTJsonDeserializationError(key, node_str) from exc
     # Fall back

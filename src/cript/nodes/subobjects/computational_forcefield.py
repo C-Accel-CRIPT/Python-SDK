@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import List, Union, Optional
+from typing import List, Optional, Union
 
 from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.data import Data

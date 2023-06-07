@@ -1,7 +1,7 @@
 import copy
 import json
 import warnings
-from typing import Dict, List, Union, Optional
+from typing import Dict, List, Optional, Union
 
 import jsonschema
 import requests

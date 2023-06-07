@@ -57,7 +57,7 @@ class File(PrimaryBaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(UUIDBaseNode.JsonAttributes):
+    class JsonAttributes(PrimaryBaseNode.JsonAttributes):
         """
         all file attributes
         """
@@ -117,6 +117,7 @@ class File(PrimaryBaseNode):
         # setting every attribute except for source, which will be handled via setter
         self._json_attrs = replace(
             self._json_attrs,
+            name=name,
             type=type,
             extension=extension,
             data_dictionary=data_dictionary,

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import List, Union
+from typing import List, Union, Optional
 
 from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.data import Data
@@ -91,7 +91,7 @@ class ComputationalForcefield(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, key: str, building_block: str, coarse_grained_mapping: str = "", implicit_solvent: str = "", source: str = "", description: str = "", data: List[Data] = None, citation: Union[List[Citation], None] = None, **kwargs):
+    def __init__(self, key: str, building_block: str, coarse_grained_mapping: str = "", implicit_solvent: str = "", source: str = "", description: str = "", data: Optional[List[Data]] = None, citation: Optional[List[Citation]] = None, **kwargs):
         """
         instantiate a computational_forcefield subobject
 

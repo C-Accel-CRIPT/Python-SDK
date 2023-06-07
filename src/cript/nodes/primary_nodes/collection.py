@@ -1,5 +1,5 @@
 from dataclasses import dataclass, replace
-from typing import Any, List
+from typing import Any, List, Optional
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -33,14 +33,14 @@ class Collection(PrimaryBaseNode):
         """
 
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        experiment: List[Any] = None
-        inventory: List[Any] = None
+        experiment: Optional[List[Any]] = None
+        inventory: Optional[List[Any]] = None
         doi: str = ""
-        citation: List[Any] = None
+        citation: Optional[List[Any]] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, experiment: List[Any] = None, inventory: List[Any] = None, doi: str = "", citation: List[Any] = None, notes: str = "", **kwargs) -> None:
+    def __init__(self, name: str, experiment: Optional[List[Any]] = None, inventory: Optional[List[Any]] = None, doi: str = "", citation: Optional[List[Any]] = None, notes: str = "", **kwargs) -> None:
         """
         create a Collection with a name
         add list of experiment, inventory, citation, doi, and notes if available.

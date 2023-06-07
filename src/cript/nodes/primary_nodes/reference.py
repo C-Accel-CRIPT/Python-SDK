@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import List, Union
+from typing import List, Union, Optional
 
 from cript.nodes.uuid_base import UUIDBaseNode
 
@@ -57,14 +57,14 @@ class Reference(UUIDBaseNode):
         author: List[str] = field(default_factory=list)
         journal: str = ""
         publisher: str = ""
-        year: int = None
-        volume: int = None
-        issue: int = None
+        year: Optional[int] = None
+        volume: Optional[int] = None
+        issue: Optional[int] = None
         pages: List[int] = field(default_factory=list)
         doi: str = ""
         issn: str = ""
         arxiv_id: str = ""
-        pmid: int = None
+        pmid: Optional[int] = None
         website: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -73,17 +73,17 @@ class Reference(UUIDBaseNode):
         self,
         type: str,
         title: str,
-        author: List[str] = None,
+        author: Optional[List[str]] = None,
         journal: str = "",
         publisher: str = "",
-        year: int = None,
-        volume: int = None,
-        issue: int = None,
-        pages: [int] = None,
+        year: Optional[int] = None,
+        volume: Optional[int] = None,
+        issue: Optional[int] = None,
+        pages: Optional[List[int]] = None,
         doi: str = "",
         issn: str = "",
         arxiv_id: str = "",
-        pmid: int = None,
+        pmid: Optional[int] = None,
         website: str = "",
         **kwargs,
     ):

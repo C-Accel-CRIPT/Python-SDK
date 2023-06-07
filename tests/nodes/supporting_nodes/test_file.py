@@ -29,7 +29,7 @@ def test_create_file_local_source(tmp_path) -> None:
     with open(file_path, "w") as temporary_file:
         temporary_file.write("hello world!")
 
-    assert cript.File(source=str(file_path), type="calibration")
+    assert cript.File(name="my file node with local source", source=str(file_path), type="calibration")
 
 
 @pytest.fixture(scope="session")
@@ -97,6 +97,7 @@ def test_serialize_file_to_json(complex_file_node) -> None:
 
     expected_file_node_dict = {
         "node": ["File"],
+        "name": "my complex file node fixture",
         "source": "https://criptapp.org",
         "type": "calibration",
         "extension": ".csv",

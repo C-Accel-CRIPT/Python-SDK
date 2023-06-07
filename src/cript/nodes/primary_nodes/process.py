@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List
+from typing import Any, List, Optional, Union
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -51,7 +51,7 @@ class Process(PrimaryBaseNode):
         prerequisite_process: List["Process"] = field(default_factory=list)
         condition: List[Any] = field(default_factory=list)
         property: List[Any] = field(default_factory=list)
-        keyword: List[str] = None
+        keyword: Optional[List[str]] = None
         citation: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -60,16 +60,16 @@ class Process(PrimaryBaseNode):
         self,
         name: str,
         type: str,
-        ingredient: List[Any] = None,
+        ingredient: Optional[List[Any]] = None,
         description: str = "",
-        equipment: List[Any] = None,
-        product: List[Any] = None,
-        waste: List[Any] = None,
-        prerequisite_process: List[Any] = None,
-        condition: List[Any] = None,
-        property: List[Any] = None,
-        keyword: List[str] = None,
-        citation: List[Any] = None,
+        equipment: Optional[List[Any]] = None,
+        product: Optional[List[Any]] = None,
+        waste: Optional[List[Any]] = None,
+        prerequisite_process: Optional[List[Any]] = None,
+        condition: Optional[List[Any]] = None,
+        property: Optional[List[Any]] = None,
+        keyword: Optional[List[str]] = None,
+        citation: Optional[List[Any]] = None,
         notes: str = "",
         **kwargs
     ) -> None:
@@ -441,7 +441,7 @@ class Process(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def keyword(self) -> List[str]:
+    def keyword(self) -> Union[List[str], None]:
         """
         List of keyword for this process
 

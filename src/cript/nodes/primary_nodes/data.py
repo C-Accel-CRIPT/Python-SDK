@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List, Union
+from typing import Any, List, Union, Optional
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -80,13 +80,13 @@ class Data(PrimaryBaseNode):
         self,
         name: str,
         type: str,
-        file: List[Any],
+        file: Optional[List[Any]],
         sample_preparation: Any = None,
-        computation: List[Any] = None,
+        computation: Optional[List[Any]] = None,
         computation_process: Any = None,
-        material: List[Any] = None,
-        process: List[Any] = None,
-        citation: List[Any] = None,
+        material: Optional[List[Any]] = None,
+        process: Optional[List[Any]] = None,
+        citation: Optional[List[Any]] = None,
         notes: str = "",
         **kwargs
     ):
@@ -127,7 +127,6 @@ class Data(PrimaryBaseNode):
 
         self.validate()
 
-    # ------------------ Properties ------------------
     @property
     def type(self) -> str:
         """

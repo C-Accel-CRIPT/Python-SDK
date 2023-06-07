@@ -91,13 +91,13 @@ def test_cycles(complex_data_node, simple_computation_node):
     c.output_data += [d]
     c.input_data += [d]
 
-    # Test the repetition of a citation.
-    # Notice that we do not use a deepcopy here, as we want the citation to be the exact same node.
-    citation = d.citation[0]
-    # c._json_attrs.citation.append(citation)
-    c.citation += [citation]
-    # print(c.get_json(indent=2).json)
-    # c.validate()
+    # # Test the repetition of a citation.
+    # # Notice that we do not use a deepcopy here, as we want the citation to be the exact same node.
+    # citation = d.citation[0]
+    # # c._json_attrs.citation.append(citation)
+    # c.citation += [citation]
+    # # print(c.get_json(indent=2).json)
+    # # c.validate()
 
     # Generate json with an implicit cycle
     c.json

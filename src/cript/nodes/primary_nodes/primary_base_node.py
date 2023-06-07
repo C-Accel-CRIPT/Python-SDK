@@ -1,5 +1,6 @@
 from abc import ABC
 from dataclasses import dataclass, replace
+from typing import Any
 
 from cript.nodes.uuid_base import UUIDBaseNode
 
@@ -18,8 +19,8 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
 
         locked: bool = False
         model_version: str = ""
-        updated_by = None
-        created_by = None
+        updated_by: Any = None
+        created_by: Any = None
         public: bool = False
         name: str = ""
         notes: str = ""

@@ -65,6 +65,12 @@
     "unwritable",
     "docstrings",
     "runtimes",
-    "timestep"
+    "timestep",
+    "TLDR",
+    "codeql",
+    "Autobuild",
+    "buildscript",
+    "markdownlint",
+    "Numpy"
   ]
 }

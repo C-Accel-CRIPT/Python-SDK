@@ -68,8 +68,12 @@ class BaseNode(ABC):
 
     def __init__(self, **kwargs):
         for kwarg in kwargs:
-            if kwarg not in tolerated_extra_json + list(self._json_attrs.__dataclass_fields__.keys()):
-                raise CRIPTExtraJsonAttributes(self.node_type, kwarg)
+            if kwarg not in tolerated_extra_json:
+                try:
+                    getattr(self._json_attrs, kwarg)
+                except KeyError:
+                    raise CRIPTExtraJsonAttributes(self.node_type, kwarg)
+
         uid = get_new_uid()
         self._json_attrs = replace(self._json_attrs, node=[self.node_type], uid=uid)
 
@@ -143,8 +147,13 @@ class BaseNode(ABC):
         # We create manually a dict that contains all elements from the send dict.
         # That eliminates additional fields and doesn't require asdict.
         arguments = {}
-        for field in cls.JsonAttributes().__dataclass_fields__:
-            if field in json_dict:
+        default_dataclass = cls.JsonAttributes()
+        for field in json_dict:
+            try:
+                getattr(default_dataclass, field)
+            except AttributeError:
+                pass
+            else:
                 arguments[field] = json_dict[field]
 
         # The call to the constructor might ignore fields that are usually not writable.
@@ -156,7 +165,10 @@ class BaseNode(ABC):
             print(cls, arguments)
             raise exc
 
-        attrs = cls.JsonAttributes(**arguments)
+        try:
+            attrs = cls.JsonAttributes(**arguments)
+        except TypeError:
+            help(cls.JsonAttributes)
         # Handle default attributes manually.
         for field in attrs.__dataclass_fields__:
             # Conserve newly assigned uid if uid is default (empty)

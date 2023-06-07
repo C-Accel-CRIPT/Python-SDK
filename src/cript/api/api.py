@@ -599,6 +599,10 @@ class API:
         ------
         FileNotFoundError
             In case the file could not be found because the file does not exist
+        PermissionError
+            In many cases if the user gives a path to a directory, but not the file, they will see this error
+            `PermissionError: [Errno 13] Permission denied: '/path/to/file'`
+            The `destination_path`, must include a file name
 
         Returns
         -------

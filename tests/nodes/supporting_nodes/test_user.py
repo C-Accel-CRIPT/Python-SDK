@@ -6,7 +6,7 @@ from util import strip_uid_from_dict
 import cript
 
 
-def test_user_serialization_and_deserialization():
+def test_user_serialization_and_deserialization(complex_user_dict, complex_user_node):
     """
     tests just to see if a user node can be correctly deserialized from json
     and serialized to json
@@ -19,13 +19,8 @@ def test_user_serialization_and_deserialization():
     * to check that the user node is created correctly
     """
 
-    user_node_dict = {
-        "node": ["User"],
-        "username": "my username",
-        "email": "user@email.com",
-        "orcid": "0000-0000-0000-0002",
-    }
-    user_node = cript.User(username="my username", email="user@email.com", orcid="0000-0000-0000-0002")
+    user_node_dict = complex_user_dict
+    user_node = complex_user_node
     assert user_node_dict == strip_uid_from_dict(json.loads(user_node.json))
 
     # deserialize node from JSON
@@ -60,7 +55,6 @@ def user_node() -> cript.User:
         username="my username",
         email="my_email@email.com",
         orcid="123456",
-        groups=["my group"],
     )
     # use user node in test
     yield my_user

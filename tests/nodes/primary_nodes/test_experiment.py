@@ -1,3 +1,4 @@
+import copy
 import json
 
 from util import strip_uid_from_dict
@@ -5,7 +6,7 @@ from util import strip_uid_from_dict
 import cript
 
 
-def test_create_simple_experiment(simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, complex_citation_node) -> None:
+def test_create_simple_experiment() -> None:
     """
     test just to see if a minimal experiment can be made without any issues
     """
@@ -24,14 +25,15 @@ def test_create_complex_experiment(simple_process_node, simple_computation_node,
     experiment_name = "my experiment name"
     experiment_funders = ["National Science Foundation", "IRIS", "NIST"]
 
+    citation = copy.deepcopy(complex_citation_node)
     my_experiment = cript.Experiment(
         name=experiment_name,
         process=[simple_process_node],
         computation=[simple_computation_node],
-        computational_process=[simple_computational_process_node],
+        computation_process=[simple_computational_process_node],
         data=[simple_data_node],
         funding=experiment_funders,
-        citation=[complex_citation_node],
+        citation=[citation],
     )
 
     # assertions
@@ -39,10 +41,10 @@ def test_create_complex_experiment(simple_process_node, simple_computation_node,
     assert my_experiment.name == experiment_name
     assert my_experiment.process == [simple_process_node]
     assert my_experiment.computation == [simple_computation_node]
-    assert my_experiment.computational_process == [simple_computational_process_node]
+    assert my_experiment.computation_process == [simple_computational_process_node]
     assert my_experiment.data == [simple_data_node]
     assert my_experiment.funding == experiment_funders
-    assert my_experiment.citation == [complex_citation_node]
+    assert my_experiment.citation[-1] == citation
 
 
 def test_all_getters_and_setters_for_experiment(
@@ -68,20 +70,21 @@ def test_all_getters_and_setters_for_experiment(
     simple_experiment_node.name = experiment_name
     simple_experiment_node.process = [simple_process_node]
     simple_experiment_node.computation = [simple_computation_node]
-    simple_experiment_node.computational_process = [simple_computational_process_node]
+    simple_experiment_node.computation_process = [simple_computational_process_node]
     simple_experiment_node.data = [simple_data_node]
     simple_experiment_node.funding = experiment_funders
-    simple_experiment_node.citation = [complex_citation_node]
+    citation = copy.deepcopy(complex_citation_node)
+    simple_experiment_node.citation = [citation]
 
     # assert getters and setters are equal
     assert isinstance(simple_experiment_node, cript.Experiment)
     assert simple_experiment_node.name == experiment_name
     assert simple_experiment_node.process == [simple_process_node]
     assert simple_experiment_node.computation == [simple_computation_node]
-    assert simple_experiment_node.computational_process == [simple_computational_process_node]
+    assert simple_experiment_node.computation_process == [simple_computational_process_node]
     assert simple_experiment_node.data == [simple_data_node]
     assert simple_experiment_node.funding == experiment_funders
-    assert simple_experiment_node.citation == [complex_citation_node]
+    assert simple_experiment_node.citation[-1] == citation
 
 
 def test_experiment_json(simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, complex_citation_node, complex_citation_dict) -> None:
@@ -101,77 +104,64 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
     experiment_name = "my experiment name"
     experiment_funders = ["National Science Foundation", "IRIS", "NIST"]
 
+    citation = copy.deepcopy(complex_citation_node)
     my_experiment = cript.Experiment(
         name=experiment_name,
         process=[simple_process_node],
         computation=[simple_computation_node],
-        computational_process=[simple_computational_process_node],
+        computation_process=[simple_computational_process_node],
         data=[simple_data_node],
         funding=experiment_funders,
-        citation=[complex_citation_node],
+        citation=[citation],
     )
 
     # adding notes to test base node attributes
     my_experiment.notes = "these are all of my notes for this experiment"
 
+    # TODO this is unmaintainable and we should figure out a strategy for a better way
     expected_experiment_dict = {
         "node": ["Experiment"],
         "name": "my experiment name",
         "notes": "these are all of my notes for this experiment",
-        "process": [{"node": ["Process"], "name": "my process name", "type": "affinity_pure", "keywords": []}],
-        "computation": [{"node": ["Computation"], "name": "my computation name", "type": "analysis", "citations": []}],
-        "computational_process": [
+        "process": [{"node": ["Process"], "name": "my process name", "type": "affinity_pure", "keyword": []}],
+        "computation": [{"node": ["Computation"], "name": "my computation name", "type": "analysis", "citation": []}],
+        "computation_process": [
             {
-                "node": ["ComputationalProcess"],
-                "name": "my computational process name",
+                "node": ["ComputationProcess"],
+                "name": "my computational process node name",
                 "type": "cross_linking",
-                "input_data": [
-                    {
-                        "node": ["Data"],
-                        "name": "my data name",
-                        "type": "afm_amp",
-                        "files": [
-                            {
-                                "node": ["File"],
-                                "source": "https://criptapp.org",
-                                "type": "calibration",
-                                "extension": ".csv",
-                                "data_dictionary": "my file's data dictionary",
-                            }
-                        ],
-                    }
-                ],
-                "ingredients": [
+                "input_data": [{"node": ["Data"], "name": "my data name", "type": "afm_amp", "file": [{"node": ["File"], "source": "https://criptapp.org", "type": "calibration", "extension": ".csv", "data_dictionary": "my file's data dictionary"}]}],
+                "ingredient": [
                     {
                         "node": ["Ingredient"],
-                        "material": {
-                            "node": ["Material"],
-                            "name": "my material",
-                            "identifiers": [{"alternative_names": "my material alternative name"}],
-                        },
-                        "quantities": [{"node": ["Quantity"], "key": "mass", "value": 1.23, "unit": "gram"}],
+                        "material": {},
+                        "quantity": [{"node": ["Quantity"], "key": "mass", "value": 11.2, "unit": "kg", "uncertainty": 0.2, "uncertainty_type": "stdev"}],
+                        "keyword": ["catalyst"],
                     }
                 ],
             }
         ],
-        "data": [
-            {
-                "node": ["Data"],
-                "name": "my data name",
-                "type": "afm_amp",
-                "files": [
-                    {
-                        "node": ["File"],
-                        "source": "https://criptapp.org",
-                        "type": "calibration",
-                        "extension": ".csv",
-                        "data_dictionary": "my file's data dictionary",
-                    }
-                ],
-            }
-        ],
+        "data": [{"node": ["Data"]}],
         "funding": ["National Science Foundation", "IRIS", "NIST"],
-        "citation": [complex_citation_dict],
+        "citation": [
+            {
+                "node": ["Citation"],
+                "type": "reference",
+                "reference": {
+                    "node": ["Reference"],
+                    "type": "journal_article",
+                    "title": "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)",
+                    "author": ["Ludwig Schneider", "Marcus M\u00fcller"],
+                    "journal": "Computer Physics Communications",
+                    "publisher": "Elsevier",
+                    "year": 2019,
+                    "pages": [463, 476],
+                    "doi": "10.1016/j.cpc.2018.08.011",
+                    "issn": "0010-4655",
+                    "website": "https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+                },
+            }
+        ],
     }
 
     ref_dict = json.loads(my_experiment.json)

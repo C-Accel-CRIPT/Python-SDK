@@ -5,14 +5,16 @@ repo_name: C-Accel-CRIPT/Python-SDK
 
 nav:
   - Home: index.md
+  #  - Crash Course: crash_course.md
   - API:
       - API: api/api.md
       - Search Modes: api/search_modes.md
       - Paginator: api/paginator.md
+      - Controlled Vocabulary Categories: api/controlled_vocabulary_categories.md
   - Primary Nodes:
       - Collection: nodes/primary_nodes/collection.md
       - Computation: nodes/primary_nodes/computation.md
-      - Computational Process: nodes/primary_nodes/computational_process.md
+      - Computation Process: nodes/primary_nodes/computation_process.md
       - Data: nodes/primary_nodes/data.md
       - Experiment: nodes/primary_nodes/experiment.md
       - Inventory: nodes/primary_nodes/inventory.md
@@ -27,7 +29,7 @@ nav:
       - Computational Forcefield: nodes/subobjects/computational_forcefield.md
       - Condition: nodes/subobjects/condition.md
       - Equipment: nodes/subobjects/equipment.md
-      - Identifier: nodes/subobjects/identifier.md
+      #      - Identifier: nodes/subobjects/identifier.md
       - Ingredient: nodes/subobjects/ingredient.md
       - Parameter: nodes/subobjects/parameter.md
       - Property: nodes/subobjects/property.md
@@ -35,11 +37,12 @@ nav:
       - Software Configuration: nodes/subobjects/software_configuration.md
   - Supporting Nodes:
       - User: nodes/supporting_nodes/user.md
-      - Group: nodes/supporting_nodes/group.md
+      #      - Group: nodes/supporting_nodes/group.md
       - File: nodes/supporting_nodes/file.md
   - Exceptions:
       - API Exceptions: exceptions/api_exceptions.md
       - Node Exceptions: exceptions/node_exceptions.md
+  - Utility Functions: utility_functions.md
   - FAQ: faq.md
 
 theme:

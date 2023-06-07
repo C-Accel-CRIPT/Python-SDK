@@ -165,10 +165,8 @@ class BaseNode(ABC):
             print(cls, arguments)
             raise exc
 
-        try:
-            attrs = cls.JsonAttributes(**arguments)
-        except TypeError:
-            help(cls.JsonAttributes)
+        attrs = cls.JsonAttributes(**arguments)
+
         # Handle default attributes manually.
         for field in attrs.__dataclass_fields__:
             # Conserve newly assigned uid if uid is default (empty)

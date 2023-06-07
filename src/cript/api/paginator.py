@@ -27,7 +27,7 @@ class Paginator:
     # and that is not added to the URL
     # by default the page_number and query are `None` and they can get filled in
     query: Union[str, None]
-    _current_page_number: [int, None]
+    _current_page_number: Union[int, None]
 
     current_page_results: List[dict]
 
@@ -35,8 +35,8 @@ class Paginator:
         self,
         http_headers: dict,
         api_endpoint: str,
-        query: [str, None] = None,
-        current_page_number: [int, None] = None,
+        query: Union[str, None] = None,
+        current_page_number: Union[int, None] = None,
     ):
         """
         create a paginator

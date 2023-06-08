@@ -135,8 +135,8 @@ class API:
             host = authentication_dict["host"]
             token = authentication_dict["token"]
 
-        self._host = self._prepare_host(host=host)
-        self._token = token
+        self._host = self._prepare_host(host=host)      # type: ignore
+        self._token = token     # type: ignore
 
         # assign headers
         # TODO might need to add Bearer to it or check for it

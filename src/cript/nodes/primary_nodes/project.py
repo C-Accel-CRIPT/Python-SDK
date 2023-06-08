@@ -31,7 +31,7 @@ class Project(PrimaryBaseNode):
         """
 
         member: List[User] = field(default_factory=list)
-        admin: User = None
+        admin: List[User] = field(default_factory=list)
         collection: List[Collection] = field(default_factory=list)
         material: List[Material] = field(default_factory=list)
 
@@ -119,7 +119,7 @@ class Project(PrimaryBaseNode):
         return self._json_attrs.member.copy()
 
     @property
-    def admin(self) -> User:
+    def admin(self) -> List[User]:
         return self._json_attrs.admin
 
     # Collection

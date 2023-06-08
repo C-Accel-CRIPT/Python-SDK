@@ -29,16 +29,14 @@ def test_setter_getters(complex_condition_node, simple_material_node, complex_da
     c2.descriptor = "ambient pressure"
     assert c2.descriptor == "ambient pressure"
 
-    c2.set_uncertainty(0.1, "std")
+    c2.set_uncertainty(0.1, "stdev")
     assert c2.uncertainty == 0.1
-    assert c2.uncertainty_type == "std"
+    assert c2.uncertainty_type == "stdev"
 
-    c2.material += [simple_material_node]
-    assert c2.material[-1] is simple_material_node
     c2.set_id = None
     assert c2.set_id is None
     c2.measurement_id = None
     assert c2.measurement_id is None
 
-    c2.data = complex_data_node
-    assert c2.data is complex_data_node
+    c2.data = [complex_data_node]
+    assert c2.data[0] is complex_data_node

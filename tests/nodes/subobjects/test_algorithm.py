@@ -19,5 +19,6 @@ def test_json(complex_algorithm_node, complex_algorithm_dict, complex_citation_n
     a = complex_algorithm_node
     a_dict = json.loads(a.json)
     assert strip_uid_from_dict(a_dict) == complex_algorithm_dict
+    print(a.get_json(indent=2).json)
     a2 = cript.load_nodes_from_json(a.json)
     assert strip_uid_from_dict(json.loads(a2.json)) == strip_uid_from_dict(a_dict)

@@ -1,3 +1,4 @@
+import copy
 import json
 
 import pytest
@@ -104,6 +105,21 @@ def test_serialize_file_to_json(complex_file_node) -> None:
 
     # compare dicts for more accurate comparison
     assert strip_uid_from_dict(json.loads(complex_file_node.json)) == expected_file_node_dict
+
+
+def test_uuid(complex_file_node):
+    file_node = complex_file_node
+
+    # Deep copies should not share uuid (or uids) or urls
+    file_node2 = copy.deepcopy(complex_file_node)
+    assert file_node.uuid != file_node2.uuid
+    assert file_node.uid != file_node2.uid
+    assert file_node.url != file_node2.url
+
+    # Loads from json have the same uuid and url
+    file_node3 = cript.load_nodes_from_json(file_node.json)
+    assert file_node3.uuid == file_node.uuid
+    assert file_node3.url == file_node.url
 
 
 # ---------- Integration tests ----------

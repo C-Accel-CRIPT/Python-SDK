@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import List
+from typing import List, Optional
 
 from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
@@ -37,7 +37,7 @@ class Project(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, collection: List[Collection] = None, material: List[Material] = None, notes: str = "", **kwargs):
+    def __init__(self, name: str, collection: Optional[List[Collection]] = None, material: Optional[List[Material]] = None, notes: str = "", **kwargs):
         """
         Create a Project node with Project name and Group
 

@@ -52,4 +52,3 @@ merge:
     - install (macos-latest, 3.11)
     - test-coverage (ubuntu-latest, 3.7)
     - test-coverage (ubuntu-latest, 3.11)
-    - dependency-review

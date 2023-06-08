@@ -160,7 +160,7 @@ class Parameter(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def unit(self) -> str:
+    def unit(self) -> Union[str, None]:
         """
         Parameter unit
 

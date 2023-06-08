@@ -1,7 +1,8 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from typing import Any, List
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.supporting_nodes import User
 
 
 class Collection(PrimaryBaseNode):
@@ -33,6 +34,8 @@ class Collection(PrimaryBaseNode):
         """
 
         # TODO add proper typing in future, using Any for now to avoid circular import error
+        member: List[User] = field(default_factory=list)
+        admin: List[User] = field(default_factory=list)
         experiment: List[Any] = None
         inventory: List[Any] = None
         doi: str = ""
@@ -86,6 +89,13 @@ class Collection(PrimaryBaseNode):
         self.validate()
 
     # ------------------ Properties ------------------
+    @property
+    def member(self) -> List[User]:
+        return self._json_attrs.member.copy()
+
+    @property
+    def admin(self) -> List[User]:
+        return self._json_attrs.admin
 
     @property
     def experiment(self) -> List[Any]:

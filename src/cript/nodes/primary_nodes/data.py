@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List, Union
+from typing import Any, List, Union, Optional
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -82,11 +82,11 @@ class Data(PrimaryBaseNode):
         type: str,
         file: List[Any],
         sample_preparation: Any = None,
-        computation: List[Any] = None,
-        computation_process: Any = None,
-        material: List[Any] = None,
-        process: List[Any] = None,
-        citation: List[Any] = None,
+        computation: Optional[List[Any]] = None,
+        computation_process: Optional[Any] = None,
+        material: Optional[List[Any]] = None,
+        process: Optional[List[Any]] = None,
+        citation: Optional[List[Any]] = None,
         notes: str = "",
         **kwargs
     ):

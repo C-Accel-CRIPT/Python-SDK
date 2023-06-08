@@ -1,6 +1,5 @@
 from abc import ABC
 from dataclasses import dataclass, replace
-from typing import Any
 
 from cript.nodes.uuid_base import UUIDBaseNode
 

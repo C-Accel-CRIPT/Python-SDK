@@ -62,7 +62,18 @@ class Experiment(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, process: Optional[List[Any]] = None, computation: Optional[List[Any]] = None, computation_process: Optional[List[Any]] = None, data: Optional[List[Any]] = None, funding: Optional[List[str]] = None, citation: Optional[List[Any]] = None, notes: str = "", **kwargs):
+    def __init__(
+        self,
+        name: str,
+        process: Optional[List[Any]] = None,
+        computation: Optional[List[Any]] = None,
+        computation_process: Optional[List[Any]] = None,
+        data: Optional[List[Any]] = None,
+        funding: Optional[List[str]] = None,
+        citation: Optional[List[Any]] = None,
+        notes: str = "",
+        **kwargs
+    ):
         """
         create an Experiment node
 

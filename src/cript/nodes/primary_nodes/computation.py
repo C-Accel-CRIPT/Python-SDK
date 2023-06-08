@@ -421,7 +421,7 @@ class Computation(PrimaryBaseNode):
          List[Citation]
              list of citations for this computation node
         """
-        return self._json_attrs.citation.copy()     # type: ignore
+        return self._json_attrs.citation.copy()  # type: ignore
 
     @citation.setter
     @beartype

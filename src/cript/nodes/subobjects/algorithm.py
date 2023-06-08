@@ -240,7 +240,7 @@ class Algorithm(BaseNode):
         citation node: Citation
             get the algorithm citation node
         """
-        return self._json_attrs.citation.copy()     # type: ignore
+        return self._json_attrs.citation.copy()  # type: ignore
 
     @citation.setter
     def citation(self, new_citation: Citation) -> None:

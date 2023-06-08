@@ -112,7 +112,7 @@ class Collection(PrimaryBaseNode):
         List[Experiment]
             list of all [experiment](../experiment) within this Collection
         """
-        return self._json_attrs.experiment.copy()   # type: ignore
+        return self._json_attrs.experiment.copy()  # type: ignore
 
     @experiment.setter
     def experiment(self, new_experiment: List[Any]) -> None:
@@ -161,7 +161,7 @@ class Collection(PrimaryBaseNode):
         inventory: List[Inventory]
             list of inventories in this collection
         """
-        return self._json_attrs.inventory.copy()    # type: ignore
+        return self._json_attrs.inventory.copy()  # type: ignore
 
     @inventory.setter
     def inventory(self, new_inventory: List[Any]) -> None:
@@ -230,7 +230,7 @@ class Collection(PrimaryBaseNode):
         citation: List[Citation]:
             list of Citations within this Collection
         """
-        return self._json_attrs.citation.copy()     # type: ignore
+        return self._json_attrs.citation.copy()  # type: ignore
 
     @citation.setter
     def citation(self, new_citation: List[Any]) -> None:

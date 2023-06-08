@@ -68,7 +68,7 @@ class Material(PrimaryBaseNode):
         """
 
         # identifier sub-object for the material
-        identifiers: List[dict[str, str]] = field(default_factory=dict) # type: ignore
+        identifiers: List[dict[str, str]] = field(default_factory=dict)  # type: ignore
         # TODO add proper typing in future, using Any for now to avoid circular import error
         component: List["Material"] = field(default_factory=list)
         property: List[Any] = field(default_factory=list)

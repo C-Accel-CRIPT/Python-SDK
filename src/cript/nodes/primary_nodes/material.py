@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List
+from typing import Any, List, Optional
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -68,7 +68,7 @@ class Material(PrimaryBaseNode):
         """
 
         # identifier sub-object for the material
-        identifiers: List[dict[str, str]] = field(default_factory=dict)
+        identifiers: List[dict[str, str]] = field(default_factory=dict) # type: ignore
         # TODO add proper typing in future, using Any for now to avoid circular import error
         component: List["Material"] = field(default_factory=list)
         property: List[Any] = field(default_factory=list)
@@ -82,11 +82,11 @@ class Material(PrimaryBaseNode):
         self,
         name: str,
         identifiers: List[dict[str, str]],
-        component: List["Material"] = None,
-        property: List[Any] = None,
-        parent_material: List["Material"] = None,
-        computational_forcefield: List[Any] = None,
-        keyword: List[str] = None,
+        component: Optional[List["Material"]] = None,
+        property: Optional[List[Any]] = None,
+        parent_material: Optional[List["Material"]] = None,
+        computational_forcefield: Optional[List[Any]] = None,
+        keyword: Optional[List[str]] = None,
         notes: str = "",
         **kwargs
     ):
@@ -142,7 +142,6 @@ class Material(PrimaryBaseNode):
             keyword=keyword,
         )
 
-    # ------------ Properties ------------
     @property
     def name(self) -> str:
         """

@@ -81,7 +81,7 @@ def test_collection_getters_and_setters(simple_experiment_node, simple_inventory
     assert my_collection.citation == [complex_citation_node]
 
 
-def test_serialize_collection_to_json(simple_collection_node) -> None:
+def test_serialize_collection_to_json(complex_user_node) -> None:
     """
     test that Collection node can be correctly serialized to JSON
 
@@ -100,12 +100,17 @@ def test_serialize_collection_to_json(simple_collection_node) -> None:
         "experiment": [{"node": ["Experiment"], "name": "my experiment name"}],
         "inventory": [],
         "citation": [],
+        "member": [json.loads(copy.deepcopy(complex_user_node).json)],
+        "admin": [json.loads(complex_user_node.json)],
     }
 
+    collection_node = cript.load_nodes_from_json(json.dumps(expected_collection_dict))
+    print(collection_node.get_json(indent=2).json)
     # assert
-    ref_dict = json.loads(simple_collection_node.json)
+    ref_dict = json.loads(collection_node.get_json(condense_to_uuid={}).json)
     ref_dict = strip_uid_from_dict(ref_dict)
-    assert ref_dict == expected_collection_dict
+
+    assert ref_dict == strip_uid_from_dict(expected_collection_dict)
 
 
 def test_uuid(complex_collection_node):

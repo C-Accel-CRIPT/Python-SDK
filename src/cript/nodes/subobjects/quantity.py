@@ -2,10 +2,10 @@ from dataclasses import dataclass, replace
 from numbers import Number
 from typing import Union
 
-from cript.nodes.core import BaseNode
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class Quantity(BaseNode):
+class Quantity(UUIDBaseNode):
     """
     ## Definition
     The [Quantity](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=22)
@@ -40,7 +40,7 @@ class Quantity(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         key: str = ""
         value: Union[Number, None] = None
         unit: str = ""

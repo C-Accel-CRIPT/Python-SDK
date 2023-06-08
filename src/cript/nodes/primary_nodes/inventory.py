@@ -19,7 +19,7 @@ class Inventory(PrimaryBaseNode):
 
     | Attribute  | Type                            | Example             | Description                               |
     |------------|---------------------------------|---------------------|-------------------------------------------|
-    | materials  | list[[Material](./material.md)] |                     | materials that you like to group together |
+    | material  | list[[Material](./material.md)] |                     | material that you like to group together |
 
 
 
@@ -31,11 +31,11 @@ class Inventory(PrimaryBaseNode):
         all Inventory attributes
         """
 
-        materials: List[Material] = field(default_factory=list)
+        material: List[Material] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, materials: List[Material], notes: str = "", **kwargs) -> None:
+    def __init__(self, name: str, material: List[Material], notes: str = "", **kwargs) -> None:
         """
         Instantiate an inventory node
 
@@ -54,13 +54,13 @@ class Inventory(PrimaryBaseNode):
 
         # instantiate inventory node
         my_inventory = cript.Inventory(
-            name="my inventory name", materials=[material_1, material_2]
+            name="my inventory name", material=[material_1, material_2]
         )
         ```
 
         Parameters
         ----------
-        materials: List[Material]
+        material: List[Material]
             list of materials in this inventory
 
         Returns
@@ -69,18 +69,18 @@ class Inventory(PrimaryBaseNode):
             instantiate an inventory node
         """
 
-        if materials is None:
-            materials = []
+        if material is None:
+            material = []
 
-        super().__init__(name=name, notes=notes)
+        super().__init__(name=name, notes=notes, **kwargs)
 
-        self._json_attrs = replace(self._json_attrs, materials=materials)
+        self._json_attrs = replace(self._json_attrs, material=material)
 
     # ------------------ Properties ------------------
     @property
-    def materials(self) -> List[Material]:
+    def material(self) -> List[Material]:
         """
-        List of [materials](../material) in this inventory
+        List of [material](../material) in this inventory
 
         Examples
         --------
@@ -90,29 +90,29 @@ class Inventory(PrimaryBaseNode):
             identifiers=[{"alternative_names": "new material 3 alternative name"}],
         )
 
-        my_inventory.materials = [my_material_3]
+        my_inventory.material = [my_material_3]
         ```
 
         Returns
         -------
         List[Material]
-            list of materials representing the inventory within the collection
+            list of material representing the inventory within the collection
         """
-        return self._json_attrs.materials.copy()
+        return self._json_attrs.material.copy()
 
-    @materials.setter
-    def materials(self, new_material_list: List[Material]):
+    @material.setter
+    def material(self, new_material_list: List[Material]):
         """
-        set the list of materials for this inventory node
+        set the list of material for this inventory node
 
         Parameters
         ----------
         new_material_list: List[Material]
-            new list of materials to replace the current list of material nodes for this inventory node
+            new list of material to replace the current list of material nodes for this inventory node
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, materials=new_material_list)
+        new_attrs = replace(self._json_attrs, material=new_material_list)
         self._update_json_attrs_if_valid(new_attrs)

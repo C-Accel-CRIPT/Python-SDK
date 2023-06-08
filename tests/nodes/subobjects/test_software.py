@@ -1,3 +1,4 @@
+import copy
 import json
 
 from util import strip_uid_from_dict
@@ -21,3 +22,18 @@ def test_setter_getter(complex_software_node):
     assert s2.version == "v0.3.0"
     s2.source = "https://github.com/SSAGESLabs/PySAGES"
     assert s2.source == "https://github.com/SSAGESLabs/PySAGES"
+
+
+def test_uuid(complex_software_node):
+    s = complex_software_node
+
+    # Deep copies should not share uuid (or uids) or urls
+    s2 = copy.deepcopy(complex_software_node)
+    assert s.uuid != s2.uuid
+    assert s.uid != s2.uid
+    assert s.url != s2.url
+
+    # Loads from json have the same uuid and url
+    s3 = cript.load_nodes_from_json(s.json)
+    assert s3.uuid == s.uuid
+    assert s3.url == s.url

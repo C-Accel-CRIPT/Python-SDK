@@ -208,6 +208,8 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
                 project.validate()
             except CRIPTOrphanedMaterialError as exc:
                 project._json_attrs.material.append(exc.orphaned_node)
+            except CRIPTOrphanedProcessError as exc:
+                project.collection[0].experiment[0]._json_attrs.process.append(exc.orphaned_node)
             else:
                 break
 

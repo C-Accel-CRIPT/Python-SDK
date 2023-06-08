@@ -1,5 +1,5 @@
 from dataclasses import dataclass, replace
-from typing import Union
+from typing import Union, Optional
 
 from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.reference import Reference
@@ -60,7 +60,7 @@ class Citation(BaseNode):
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
         type: str = ""
-        reference: Union[Reference, None] = None
+        reference: Optional[Reference] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -148,7 +148,7 @@ class Citation(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def reference(self) -> Reference:
+    def reference(self) -> Union[Reference, None]:
         """
         citation reference node
 

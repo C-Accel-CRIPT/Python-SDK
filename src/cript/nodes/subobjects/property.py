@@ -2,6 +2,8 @@ from dataclasses import dataclass, field, replace
 from numbers import Number
 from typing import List, Union
 
+from beartype import beartype
+
 from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.computation import Computation
 from cript.nodes.primary_nodes.data import Data
@@ -77,6 +79,7 @@ class Property(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(
         self,
         key: str,
@@ -179,6 +182,7 @@ class Property(BaseNode):
         self.validate()
 
     @property
+    @beartype
     def key(self) -> str:
         """
         Property key must come from [CRIPT Controlled Vocabulary]()
@@ -197,6 +201,7 @@ class Property(BaseNode):
         return self._json_attrs.key
 
     @key.setter
+    @beartype
     def key(self, new_key: str) -> None:
         """
         set the key for this Property sub-object
@@ -214,6 +219,7 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def type(self) -> str:
         """
         type of value for this Property sub-object
@@ -231,6 +237,7 @@ class Property(BaseNode):
         return self._json_attrs.type
 
     @type.setter
+    @beartype
     def type(self, new_type: str) -> None:
         """
         set the Property type for this subobject
@@ -248,6 +255,7 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def value(self) -> Union[Number, None]:
         """
         get the Property value
@@ -259,6 +267,7 @@ class Property(BaseNode):
         """
         return self._json_attrs.value
 
+    @beartype
     def set_value(self, new_value: Number, new_unit: str) -> None:
         """
         set the value attribute of the Property subobject
@@ -284,6 +293,7 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def unit(self) -> str:
         """
         get the Property unit for the value
@@ -296,6 +306,7 @@ class Property(BaseNode):
         return self._json_attrs.unit
 
     @property
+    @beartype
     def uncertainty(self) -> Union[Number, None]:
         """
         get the uncertainty value of the Property node
@@ -307,6 +318,7 @@ class Property(BaseNode):
         """
         return self._json_attrs.uncertainty
 
+    @beartype
     def set_uncertainty(self, new_uncertainty: Number, new_uncertainty_type: str) -> None:
         """
         set the uncertainty value and type
@@ -334,6 +346,7 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def uncertainty_type(self) -> str:
         """
         get the uncertainty_type for this Property subobject
@@ -348,6 +361,7 @@ class Property(BaseNode):
         return self._json_attrs.uncertainty_type
 
     @property
+    @beartype
     def component(self) -> List[Material]:
         """
         list of Materials that the Property relates to
@@ -371,6 +385,7 @@ class Property(BaseNode):
         return self._json_attrs.component.copy()
 
     @component.setter
+    @beartype
     def component(self, new_component: List[Material]) -> None:
         """
         set the list of Materials as components for the Property subobject
@@ -388,6 +403,7 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def structure(self) -> str:
         """
         specific chemical structure associate with the property with atom mappings
@@ -406,6 +422,7 @@ class Property(BaseNode):
         return self._json_attrs.structure
 
     @structure.setter
+    @beartype
     def structure(self, new_structure: str) -> None:
         """
         set the this Property's structure
@@ -423,6 +440,7 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def method(self) -> str:
         """
         approach or source of property data True sample_preparation Process sample preparation
@@ -443,6 +461,7 @@ class Property(BaseNode):
         return self._json_attrs.method
 
     @method.setter
+    @beartype
     def method(self, new_method: str) -> None:
         """
         set the Property method
@@ -462,6 +481,7 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def sample_preparation(self) -> Union[Process, None]:
         """
         sample_preparation
@@ -482,6 +502,7 @@ class Property(BaseNode):
         return self._json_attrs.sample_preparation
 
     @sample_preparation.setter
+    @beartype
     def sample_preparation(self, new_sample_preparation: Union[Process, None]) -> None:
         """
         set the sample_preparation for the Property subobject
@@ -499,6 +520,7 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def condition(self) -> List[Condition]:
         """
         list of Conditions under which the property was measured
@@ -519,6 +541,7 @@ class Property(BaseNode):
         return self._json_attrs.condition.copy()
 
     @condition.setter
+    @beartype
     def condition(self, new_condition: List[Condition]) -> None:
         """
         set the list of Conditions for this property subobject
@@ -536,6 +559,7 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def data(self) -> List[Data]:
         """
         List of Data nodes for this Property subobjects
@@ -566,6 +590,7 @@ class Property(BaseNode):
         return self._json_attrs.data.copy()
 
     @data.setter
+    @beartype
     def data(self, new_data: List[Data]) -> None:
         """
         set the Data node for the Property subobject
@@ -583,6 +608,7 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def computation(self) -> List[Computation]:
         """
         list of Computation nodes that produced this property
@@ -603,6 +629,7 @@ class Property(BaseNode):
         return self._json_attrs.computation.copy()
 
     @computation.setter
+    @beartype
     def computation(self, new_computation: List[Computation]) -> None:
         """
         set the list of Computation nodes that produced this property
@@ -620,6 +647,7 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def citation(self) -> List[Citation]:
         """
         list of Citation subobjects for this Property subobject
@@ -659,6 +687,7 @@ class Property(BaseNode):
         return self._json_attrs.citation.copy()
 
     @citation.setter
+    @beartype
     def citation(self, new_citation: List[Citation]) -> None:
         """
         set the list of Citation subobjects for the Property subobject
@@ -676,6 +705,7 @@ class Property(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def notes(self) -> str:
         """
         notes for this Property subobject
@@ -694,6 +724,7 @@ class Property(BaseNode):
         return self._json_attrs.notes
 
     @notes.setter
+    @beartype
     def notes(self, new_notes: str) -> None:
         """
         set the notes for this Property subobject

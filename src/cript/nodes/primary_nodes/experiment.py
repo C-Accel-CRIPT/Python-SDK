@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List
+from typing import Any, List, Optional
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -62,7 +62,7 @@ class Experiment(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, process: List[Any] = None, computation: List[Any] = None, computation_process: List[Any] = None, data: List[Any] = None, funding: List[str] = None, citation: List[Any] = None, notes: str = "", **kwargs):
+    def __init__(self, name: str, process: Optional[List[Any]] = None, computation: Optional[List[Any]] = None, computation_process: Optional[List[Any]] = None, data: Optional[List[Any]] = None, funding: Optional[List[str]] = None, citation: Optional[List[Any]] = None, notes: str = "", **kwargs):
         """
         create an Experiment node
 
@@ -128,7 +128,6 @@ class Experiment(PrimaryBaseNode):
         # check if the code is still valid
         self.validate()
 
-    # ------------------ Properties ------------------
     @property
     def process(self) -> List[Any]:
         """

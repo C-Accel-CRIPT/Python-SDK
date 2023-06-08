@@ -3,7 +3,16 @@
 
 name: Test Coverage
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - trunk-merge/**
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   test-coverage:

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, replace
 from numbers import Number
-from typing import Union
+from typing import Union, Optional
 
 from cript.nodes.core import BaseNode
 
@@ -42,14 +42,14 @@ class Quantity(BaseNode):
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
         key: str = ""
-        value: Union[Number, None] = None
+        value: Optional[Number] = None
         unit: str = ""
-        uncertainty: Union[Number, None] = None
+        uncertainty: Optional[Number] = None
         uncertainty_type: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, key: str, value: Number, unit: str, uncertainty: Union[Number, None] = None, uncertainty_type: str = "", **kwargs):
+    def __init__(self, key: str, value: Number, unit: str, uncertainty: Optional[Number] = None, uncertainty_type: str = "", **kwargs):
         """
         create Quantity sub-object
 

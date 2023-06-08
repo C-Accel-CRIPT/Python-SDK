@@ -8,7 +8,7 @@ def strip_uid_from_dict(node_dict):
     """
     node_dict_copy = copy.deepcopy(node_dict)
     for key in node_dict:
-        if key == "uid":
+        if key in ("uid", "uuid"):
             del node_dict_copy[key]
         if isinstance(node_dict, str):
             continue

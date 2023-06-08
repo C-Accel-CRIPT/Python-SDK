@@ -8,6 +8,7 @@ plugins:
       uri: https://github.com/trunk-io/plugins
 lint:
   enabled:
+    - cspell@6.31.1
     - actionlint@1.6.23
     - black@23.1.0
     - git-diff-check
@@ -34,3 +35,21 @@ actions:
     - trunk-check-pre-push
     - trunk-fmt-pre-commit
     - trunk-upgrade-available
+merge:
+  required_statuses:
+    - trunk
+    - Analyze (python)
+    - build
+    - install (ubuntu-latest, 3.7)
+    - install (ubuntu-latest, 3.8)
+    - install (ubuntu-latest, 3.9)
+    - install (ubuntu-latest, 3.1)
+    - install (ubuntu-latest, 3.11)
+    - install (macos-latest, 3.7)
+    - install (macos-latest, 3.8)
+    - install (macos-latest, 3.9)
+    - install (macos-latest, 3.1)
+    - install (macos-latest, 3.11)
+    - test-coverage (ubuntu-latest, 3.7)
+    - test-coverage (ubuntu-latest, 3.11)
+    - dependency-review

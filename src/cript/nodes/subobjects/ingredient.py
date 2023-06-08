@@ -84,7 +84,7 @@ class Ingredient(BaseNode):
         self.validate()
 
     @property
-    def material(self) -> Material:
+    def material(self) -> Union[Material, None]:
         """
         current material in this ingredient sub-object
 

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List
+from typing import Any, List, Optional
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.supporting_nodes import User
@@ -36,14 +36,14 @@ class Collection(PrimaryBaseNode):
         # TODO add proper typing in future, using Any for now to avoid circular import error
         member: List[User] = field(default_factory=list)
         admin: List[User] = field(default_factory=list)
-        experiment: List[Any] = None
-        inventory: List[Any] = None
+        experiment: Optional[List[Any]] = None
+        inventory: Optional[List[Any]] = None
         doi: str = ""
-        citation: List[Any] = None
+        citation: Optional[List[Any]] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, experiment: List[Any] = None, inventory: List[Any] = None, doi: str = "", citation: List[Any] = None, notes: str = "", **kwargs) -> None:
+    def __init__(self, name: str, experiment: Optional[List[Any]] = None, inventory: Optional[List[Any]] = None, doi: str = "", citation: Optional[List[Any]] = None, notes: str = "", **kwargs) -> None:
         """
         create a Collection with a name
         add list of experiment, inventory, citation, doi, and notes if available.
@@ -52,13 +52,13 @@ class Collection(PrimaryBaseNode):
         ----------
         name: str
             name of the Collection you want to make
-        experiment: List[Experiment], default=None
+        experiment: Optional[List[Experiment]], default=None
             list of experiment within the Collection
-        inventory: List[Inventory], default=None
+        inventory: Optional[List[Inventory]], default=None
             list of inventories within this collection
         doi: str = "", default=""
             cript doi
-        citation: List[Citation], default=None
+        citation: Optional[List[Citation]], default=None
             List of citations for this collection
 
         Returns
@@ -88,7 +88,6 @@ class Collection(PrimaryBaseNode):
 
         self.validate()
 
-    # ------------------ Properties ------------------
     @property
     def member(self) -> List[User]:
         return self._json_attrs.member.copy()
@@ -113,7 +112,7 @@ class Collection(PrimaryBaseNode):
         List[Experiment]
             list of all [experiment](../experiment) within this Collection
         """
-        return self._json_attrs.experiment.copy()
+        return self._json_attrs.experiment.copy()   # type: ignore
 
     @experiment.setter
     def experiment(self, new_experiment: List[Any]) -> None:
@@ -162,7 +161,7 @@ class Collection(PrimaryBaseNode):
         inventory: List[Inventory]
             list of inventories in this collection
         """
-        return self._json_attrs.inventory.copy()
+        return self._json_attrs.inventory.copy()    # type: ignore
 
     @inventory.setter
     def inventory(self, new_inventory: List[Any]) -> None:
@@ -231,7 +230,7 @@ class Collection(PrimaryBaseNode):
         citation: List[Citation]:
             list of Citations within this Collection
         """
-        return self._json_attrs.citation.copy()
+        return self._json_attrs.citation.copy()     # type: ignore
 
     @citation.setter
     def citation(self, new_citation: List[Any]) -> None:

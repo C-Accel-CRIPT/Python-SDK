@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List
+from typing import Any, List, Union
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.primary_nodes.process import Process
 
 
 class Material(PrimaryBaseNode):
@@ -71,6 +72,7 @@ class Material(PrimaryBaseNode):
         identifiers: List[dict[str, str]] = field(default_factory=dict)
         # TODO add proper typing in future, using Any for now to avoid circular import error
         component: List["Material"] = field(default_factory=list)
+        process: Union[Process, None] = None
         property: List[Any] = field(default_factory=list)
         parent_material: List["Material"] = field(default_factory=list)
         computational_forcefield: List[Any] = field(default_factory=list)
@@ -83,6 +85,7 @@ class Material(PrimaryBaseNode):
         name: str,
         identifiers: List[dict[str, str]],
         component: List["Material"] = None,
+        process: Union[Process, None] = None,
         property: List[Any] = None,
         parent_material: List["Material"] = None,
         computational_forcefield: List[Any] = None,
@@ -98,7 +101,7 @@ class Material(PrimaryBaseNode):
         name: str
         identifiers: List[dict[str, str]]
         component: List["Material"], default=None
-        property: List[Property], default=None
+        property: Union[Process, None], default=None
         process: List[Process], default=None
         parent_material: List["Material"], default=None
         computational_forcefield: List[ComputationalProcess], default=None
@@ -136,6 +139,7 @@ class Material(PrimaryBaseNode):
             name=name,
             identifiers=identifiers,
             component=component,
+            process=process,
             property=property,
             parent_material=parent_material,
             computational_forcefield=computational_forcefield,
@@ -406,6 +410,15 @@ class Material(PrimaryBaseNode):
                 # TODO validate keys here
                 # is_vocab_valid("material_identifiers", value)
                 pass
+
+    @property
+    def process(self) -> Process:
+        return self._json_attrs.process
+
+    @process.setter
+    def process(self, new_process: Process) -> None:
+        new_attrs = replace(self._json_attrs, process=new_process)
+        self._update_json_attrs_if_valid(new_attrs)
 
     @property
     def property(self) -> List[Any]:

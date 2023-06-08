@@ -1,12 +1,12 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
-from cript.nodes.core import BaseNode
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.parameter import Parameter
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class Algorithm(BaseNode):
+class Algorithm(UUIDBaseNode):
     """
     ## Definition
 
@@ -63,7 +63,7 @@ class Algorithm(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         key: str = ""
         type: str = ""
 

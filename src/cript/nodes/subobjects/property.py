@@ -2,16 +2,16 @@ from dataclasses import dataclass, field, replace
 from numbers import Number
 from typing import List, Union
 
-from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.computation import Computation
 from cript.nodes.primary_nodes.data import Data
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.process import Process
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.condition import Condition
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class Property(BaseNode):
+class Property(UUIDBaseNode):
     """
     ## Definition
     [Property](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=18) sub-objects
@@ -58,7 +58,7 @@ class Property(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         key: str = ""
         type: str = ""
         value: Union[Number, None] = None

@@ -1,6 +1,5 @@
 from abc import ABC
 from dataclasses import dataclass, replace
-from typing import Any
 
 from cript.nodes.uuid_base import UUIDBaseNode
 
@@ -19,8 +18,6 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
 
         locked: bool = False
         model_version: str = ""
-        updated_by: Any = None
-        created_by: Any = None
         public: bool = False
         name: str = ""
         notes: str = ""
@@ -44,8 +41,6 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
         {
         'locked': False,
         'model_version': '',
-        'updated_by': None,
-        'created_by': None,
         'public': False,
         'notes': ''
         }
@@ -65,14 +60,6 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
     @property
     def model_version(self):
         return self._json_attrs.model_version
-
-    @property
-    def updated_by(self):
-        return self._json_attrs.updated_by
-
-    @property
-    def created_by(self):
-        return self._json_attrs.created_by
 
     @property
     def public(self):

@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Optional
 from urllib.parse import quote
 
 import requests
@@ -27,7 +27,7 @@ class Paginator:
     # and that is not added to the URL
     # by default the page_number and query are `None` and they can get filled in
     query: Union[str, None]
-    _current_page_number: [int, None]
+    _current_page_number: int
 
     current_page_results: List[dict]
 
@@ -35,8 +35,8 @@ class Paginator:
         self,
         http_headers: dict,
         api_endpoint: str,
-        query: [str, None] = None,
-        current_page_number: [int, None] = None,
+        query: Optional[str] = None,
+        current_page_number: int = 0,
     ):
         """
         create a paginator

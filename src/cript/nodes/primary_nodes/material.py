@@ -71,7 +71,7 @@ class Material(PrimaryBaseNode):
         """
 
         # identifier sub-object for the material
-        identifiers: List[dict[str, str]] = field(default_factory=dict)  # type: ignore
+        identifiers: List[Dict[str, str]] = field(default_factory=dict)  # type: ignore
         # TODO add proper typing in future, using Any for now to avoid circular import error
         component: List["Material"] = field(default_factory=list)
         process: Optional[Process] = None
@@ -102,7 +102,7 @@ class Material(PrimaryBaseNode):
         Parameters
         ----------
         name: str
-        identifiers: List[dict[str, str]]
+        identifiers: List[Dict[str, str]]
         component: List["Material"], default=None
         property: Optional[Process], default=None
         process: List[Process], default=None
@@ -186,7 +186,7 @@ class Material(PrimaryBaseNode):
 
     @property
     @beartype
-    def identifiers(self) -> List[dict[str, str]]:
+    def identifiers(self) -> List[Dict[str, str]]:
         """
         get the identifiers for this material
 
@@ -196,14 +196,14 @@ class Material(PrimaryBaseNode):
 
         Returns
         -------
-        List[dict[str, str]]
+        List[Dict[str, str]]
             list of dictionary that has identifiers for this material
         """
         return self._json_attrs.identifiers.copy()
 
     @identifiers.setter
     @beartype
-    def identifiers(self, new_identifiers_list: List[dict[str, str]]) -> None:
+    def identifiers(self, new_identifiers_list: List[Dict[str, str]]) -> None:
         """
         set the list of identifiers for this material
 
@@ -212,7 +212,7 @@ class Material(PrimaryBaseNode):
 
         Parameters
         ----------
-        new_identifiers_list: List[dict[str, str]]
+        new_identifiers_list: List[Dict[str, str]]
 
         Returns
         -------
@@ -404,7 +404,7 @@ class Material(PrimaryBaseNode):
         pass
 
     # TODO this can be a function instead of a method
-    def _validate_identifiers(self, identifiers: List[dict[str, str]]) -> None:
+    def _validate_identifiers(self, identifiers: List[Dict[str, str]]) -> None:
         """
         takes a list of material identifiers and loops through validating every single one
 
@@ -412,7 +412,7 @@ class Material(PrimaryBaseNode):
 
         Parameters
         ----------
-        identifiers: List[dict[str, str]]
+        identifiers: List[Dict[str, str]]
 
         Returns
         -------
@@ -473,13 +473,13 @@ class Material(PrimaryBaseNode):
 
     @classmethod
     @beartype
-    def _from_json(cls, json_dict: dict):
+    def _from_json(cls, json_dict: Dict):
         """
         Create a new instance of a node from a JSON representation.
 
         Parameters
         ----------
-        json_dict : dict
+        json_dict : Dict
             A JSON dictionary representing a node
 
         Returns

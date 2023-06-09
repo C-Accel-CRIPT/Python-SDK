@@ -8,7 +8,7 @@
 [![Using Pytest](https://img.shields.io/badge/Dependencies-pytest-green?style=flat-square&logo=Pytest)](https://docs.pytest.org/en/7.2.x/)
 [![Using Pytest Doctest](https://img.shields.io/badge/Dependencies-pytest----doctest-green?style=flat-square&logo=Pytest)](https://docs.pytest.org/en/7.2.x/)
 [![Using Pytest-Cov](https://img.shields.io/badge/Dependencies-pytest--cov-green?style=flat-square&logo=Pytest)](https://pypi.org/project/pytest-cov/)
-[![Using Coverage.py](https://img.shields.io/badge/Dependencies-coverage.py-green?style=flat-square&logo=markdown)](https://coverage.readthedocs.io/en/7.2.3/)
+[![Using Coverage.py](https://img.shields.io/badge/Dependencies-coverage.py-green?style=flat-square&logo=python)](https://coverage.readthedocs.io/en/7.2.3/)
 [![Using mypy to test typings](https://img.shields.io/badge/Dependencies-mypy-blueviolet?style=flat-square&logo=python)](https://mypy.readthedocs.io/en/stable/)
 [![Using JSONSchema](https://img.shields.io/badge/Dependencies-jsonschema-blueviolet?style=flat-square&logo=json)](https://python-JSONSchema.readthedocs.io/en/stable/)
 [![Using Requests Library](https://img.shields.io/badge/Dependencies-Requests-blueviolet?style=flat-square&logo=python)](https://requests.readthedocs.io/en/latest/)

@@ -4,7 +4,6 @@ from typing import List, Union
 from beartype import beartype
 
 from cript.nodes.core import BaseNode
-
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.subobjects.quantity import Quantity
 from cript.nodes.uuid_base import UUIDBaseNode

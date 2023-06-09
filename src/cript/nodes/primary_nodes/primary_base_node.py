@@ -3,8 +3,6 @@ from dataclasses import dataclass, replace
 
 from beartype import beartype
 
-from beartype import beartype
-
 from cript.nodes.uuid_base import UUIDBaseNode
 
 

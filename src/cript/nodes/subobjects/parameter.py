@@ -3,7 +3,6 @@ from typing import Union
 
 from beartype import beartype
 
-from cript.nodes.core import BaseNode
 from cript.nodes.uuid_base import UUIDBaseNode
 
 

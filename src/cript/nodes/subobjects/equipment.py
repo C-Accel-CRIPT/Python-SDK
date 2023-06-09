@@ -3,7 +3,6 @@ from typing import List, Union
 
 from beartype import beartype
 
-from cript.nodes.core import BaseNode
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.condition import Condition
 from cript.nodes.supporting_nodes.file import File

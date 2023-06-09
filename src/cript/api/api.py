@@ -470,12 +470,9 @@ class API:
         None
             Just sends a `POST` or `Patch` request to the API
         """
-        # TODO work on this later to allow for PATCH as well
-        response = requests.post(url=f"{self._host}/{project.node_type.lower()}", headers=self._http_headers, data=project.json)
+        response: Dict = requests.post(url=f"{self._host}/{project.node_type.lower()}", headers=self._http_headers, data=project.json).json()
 
-        response = response.json()
-
-        # if htt response is not 200 then show the API error to the user
+        # if http response is not 200 then show the API error to the user
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
 

@@ -15,8 +15,9 @@ from cript.api.exceptions import (
     CRIPTAPIRequiredError,
     CRIPTAPISaveError,
     CRIPTConnectionError,
+    FileDownloadError,
     InvalidHostError,
-    InvalidVocabulary, FileDownloadError,
+    InvalidVocabulary,
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token

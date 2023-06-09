@@ -4,7 +4,7 @@ import json
 import uuid
 from abc import ABC
 from dataclasses import asdict, dataclass, replace
-from typing import List
+from typing import List, Optional, Set
 
 from cript.nodes.exceptions import (
     CRIPTAttributeModificationError,
@@ -209,7 +209,7 @@ class BaseNode(ABC):
 
     def get_json(
         self,
-        handled_ids: set = None,
+        handled_ids: Optional[Set[str]] = None,
         condense_to_uuid={
             "Material": ["parent_material", "component"],
             "Inventory": ["material"],
@@ -254,7 +254,7 @@ class BaseNode(ABC):
             # TODO this handling that doesn't tell the user what happened and how they can fix it
             #   this just tells the user that something is wrong
             #   this should be improved to tell the user what went wrong and where
-            raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc
+            raise CRIPTJsonSerializationError(str(type(self)), str(self._json_attrs)) from exc
         finally:
             NodeEncoder.handled_ids = previous_handled_nodes
             NodeEncoder.condense_to_uuid = previous_condense_to_uuid

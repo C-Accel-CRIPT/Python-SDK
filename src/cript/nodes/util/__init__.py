@@ -3,6 +3,7 @@ import inspect
 import json
 import uuid
 from dataclasses import asdict
+from typing import Set, Union
 
 import cript.nodes
 from cript.nodes.core import BaseNode
@@ -20,8 +21,8 @@ from cript.nodes.primary_nodes.project import Project
 
 
 class NodeEncoder(json.JSONEncoder):
-    handled_ids = set()
-    condense_to_uuid = list()
+    handled_ids: Set[str] = set()
+    condense_to_uuid: Set[str] = set()
 
     def default(self, obj):
         if isinstance(obj, uuid.UUID):
@@ -200,7 +201,7 @@ def _is_node_field_valid(node_type_list: list) -> bool:
         return False
 
 
-def _node_json_hook(node_str: str) -> dict:
+def _node_json_hook(node_str: Union[dict, str]) -> dict:
     """
     Internal function, used as a hook for json deserialization.
 
@@ -218,7 +219,7 @@ def _node_json_hook(node_str: str) -> dict:
 
     if the node field is present then continue and convert the JSON node into a Python object
     """
-    node_dict = dict(node_str)
+    node_dict = json.loads(str(node_str))
     try:
         node_type_list = node_dict["node"]
     except KeyError:  # Not a node, just a regular dictionary
@@ -228,7 +229,7 @@ def _node_json_hook(node_str: str) -> dict:
     if _is_node_field_valid(node_type_list):
         node_str = node_type_list[0]
     else:
-        raise CRIPTJsonNodeError(node_type_list, node_str)
+        raise CRIPTJsonNodeError(node_type_list, str(node_str))
 
     # Iterate over all nodes in cript to find the correct one here
     for key, pyclass in inspect.getmembers(cript.nodes, inspect.isclass):
@@ -238,7 +239,7 @@ def _node_json_hook(node_str: str) -> dict:
                     json = pyclass._from_json(node_dict)
                     return json
                 except Exception as exc:
-                    raise CRIPTJsonDeserializationError(key, node_str) from exc
+                    raise CRIPTJsonDeserializationError(key, str(node_str)) from exc
     # Fall back
     return node_dict
 

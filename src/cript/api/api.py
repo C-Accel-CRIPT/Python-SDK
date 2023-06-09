@@ -154,7 +154,7 @@ class API:
         # TODO might need to add Bearer to it or check for it
         self._http_headers = {"Authorization": f"{self._token}", "Content-Type": "application/json"}
 
-        self._s3_client = self._create_s3_client()
+        self._s3_client = self._get_s3_client()
 
         # check that api can connect to CRIPT with host and token
         self._check_initial_host_connection()
@@ -175,7 +175,7 @@ class API:
 
         return host
 
-    def _create_s3_client(self) -> boto3.client:
+    def _get_s3_client(self) -> boto3.client:
         """
         create a fully authenticated and ready s3 client
 

@@ -134,9 +134,10 @@ def test_serialize_data_to_json(simple_data_node) -> None:
         "name": "my data name",
         "file": [
             {
+                "node": ["File"],
+                "name": "my complex file node fixture",
                 "data_dictionary": "my file's data dictionary",
                 "extension": ".csv",
-                "node": ["File"],
                 "source": "https://criptapp.org",
                 "type": "calibration",
             }

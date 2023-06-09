@@ -93,6 +93,7 @@ def test_data_getters_and_setters(
     my_new_files = [
         complex_file_node,
         cript.File(
+            name="my data file node",
             source="https://bing.com",
             type="computation_config",
             extension=".pdf",

@@ -1,5 +1,7 @@
 from dataclasses import dataclass, replace
 
+from beartype import beartype
+
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -45,6 +47,7 @@ class Software(UUIDBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(self, name: str, version: str, source: str = "", **kwargs):
         """
         create Software node
@@ -77,6 +80,7 @@ class Software(UUIDBaseNode):
         self.validate()
 
     @property
+    @beartype
     def name(self) -> str:
         """
         Software name
@@ -95,6 +99,7 @@ class Software(UUIDBaseNode):
         return self._json_attrs.name
 
     @name.setter
+    @beartype
     def name(self, new_name: str) -> None:
         """
         set the name of the Software node
@@ -112,6 +117,7 @@ class Software(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attr)
 
     @property
+    @beartype
     def version(self) -> str:
         """
         Software version
@@ -126,6 +132,7 @@ class Software(UUIDBaseNode):
         return self._json_attrs.version
 
     @version.setter
+    @beartype
     def version(self, new_version: str) -> None:
         """
         set the Software version
@@ -143,6 +150,7 @@ class Software(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attr)
 
     @property
+    @beartype
     def source(self) -> str:
         """
         Software source
@@ -161,6 +169,7 @@ class Software(UUIDBaseNode):
         return self._json_attrs.source
 
     @source.setter
+    @beartype
     def source(self, new_source: str) -> None:
         """
         set the Software source

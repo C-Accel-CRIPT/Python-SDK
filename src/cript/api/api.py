@@ -5,6 +5,7 @@ from typing import Dict, List, Union
 
 import jsonschema
 import requests
+from beartype import beartype
 
 from cript.api.exceptions import (
     APIError,
@@ -51,6 +52,7 @@ class API:
     _api_handle: str = "api"
     _api_version: str = "v1"
 
+    @beartype
     def __init__(self, host: Union[str, None] = None, token: Union[str, None] = None, config_file_path: str = ""):
         """
         Initialize CRIPT API client with host and token.
@@ -135,8 +137,8 @@ class API:
             host = authentication_dict["host"]
             token = authentication_dict["token"]
 
-        self._host = self._prepare_host(host=host)      # type: ignore
-        self._token = token     # type: ignore
+        self._host = self._prepare_host(host=host)  # type: ignore
+        self._token = token  # type: ignore
 
         # assign headers
         # TODO might need to add Bearer to it or check for it
@@ -147,6 +149,7 @@ class API:
 
         self._get_db_schema()
 
+    @beartype
     def _prepare_host(self, host: str) -> str:
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
@@ -165,6 +168,7 @@ class API:
         self.connect()
         return self
 
+    @beartype
     def __exit__(self, type, value, traceback):
         self.disconnect()
 
@@ -275,6 +279,7 @@ class API:
 
         return self._vocabulary
 
+    @beartype
     def get_vocab_by_category(self, category: ControlledVocabularyCategories) -> List[dict]:
         """
         get the CRIPT controlled vocabulary by category
@@ -306,6 +311,7 @@ class API:
 
         return self._vocabulary[category.value]
 
+    @beartype
     def _is_vocab_valid(self, vocab_category: ControlledVocabularyCategories, vocab_word: str) -> bool:
         """
         checks if the vocabulary is valid within the CRIPT controlled vocabulary.
@@ -382,7 +388,7 @@ class API:
             self._db_schema = response["data"]
             return self._db_schema
 
-    # TODO this should later work with both POST and PATCH. Currently, just works for POST
+    @beartype
     def _is_node_schema_valid(self, node_json: str) -> bool:
         """
         checks a node JSON schema against the db schema to return if it is valid or not.
@@ -441,6 +447,7 @@ class API:
         # if validation goes through without any problems return True
         return True
 
+    @beartype
     def save(self, project: Project) -> None:
         """
         This method takes a project node, serializes the class into JSON
@@ -472,7 +479,7 @@ class API:
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
 
-    # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
+    @beartype
     def search(
         self,
         node_type: BaseNode,

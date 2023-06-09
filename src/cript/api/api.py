@@ -523,20 +523,22 @@ class API:
         # always putting a page parameter of 0 for all search URLs
         page_number = 0
 
+        api_endpoint: str = ""
         # requesting a page of some primary node
         if search_mode == SearchModes.NODE_TYPE:
-            api_endpoint: str = f"{self._host}/{node_type}"
+            api_endpoint = f"{self._host}/{node_type}"
 
         elif search_mode == SearchModes.CONTAINS_NAME:
-            api_endpoint: str = f"{self._host}/search/{node_type}"
+            api_endpoint = f"{self._host}/search/{node_type}"
 
         elif search_mode == SearchModes.EXACT_NAME:
-            api_endpoint: str = f"{self._host}/search/exact/{node_type}"
+            api_endpoint = f"{self._host}/search/exact/{node_type}"
 
         elif search_mode == SearchModes.UUID:
-            api_endpoint: str = f"{self._host}/{node_type}/{value_to_search}"
+            api_endpoint = f"{self._host}/{node_type}/{value_to_search}"
             # putting the value_to_search in the URL instead of a query
             value_to_search = None
 
+        assert api_endpoint != ""
         # TODO error handling if none of the API endpoints got hit
         return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, query=value_to_search, current_page_number=page_number)

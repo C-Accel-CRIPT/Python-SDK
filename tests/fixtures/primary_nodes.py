@@ -2,6 +2,7 @@ import copy
 import json
 
 import pytest
+from util import strip_uid_from_dict
 
 import cript
 
@@ -193,25 +194,37 @@ def simple_material_dict() -> dict:
 
 
 @pytest.fixture(scope="function")
+def complex_material_dict(simple_property_node, simple_process_node, complex_computational_forcefield_node, simple_material_node) -> cript.Material:
+    """
+    complex Material node with all possible attributes filled
+    """
+    my_material_keyword = ["acetylene"]
+
+    material_dict = {"node": ["Material"]}
+    material_dict["name"] = "my complex material"
+    material_dict["property"] = [json.loads(simple_property_node.json)]
+    material_dict["process"] = json.loads(simple_process_node.json)
+    material_dict["parent_material"] = json.loads(simple_material_node.json)
+    material_dict["computational_forcefield"] = json.loads(complex_computational_forcefield_node.json)
+    material_dict["bigsmiles"] = "my complex_material_node"
+    material_dict["keyword"] = my_material_keyword
+
+    return strip_uid_from_dict(material_dict)
+
+
+@pytest.fixture(scope="function")
 def complex_material_node(simple_property_node, simple_process_node, complex_computational_forcefield_node, simple_material_node) -> cript.Material:
     """
     complex Material node with all possible attributes filled
     """
     my_identifier = [{"bigsmiles": "my complex_material_node"}]
-
-    [
-        cript.Material(name="my component material 1", identifiers=[{"bigsmiles": "component 1 bigsmiles"}]),
-        cript.Material(name="my component material 2", identifiers=[{"bigsmiles": "component 2 bigsmiles"}]),
-    ]
-
     my_material_keyword = ["acetylene"]
 
     my_complex_material = cript.Material(
         name="my complex material",
         identifiers=my_identifier,
-        # component=my_component,
         property=[simple_property_node],
-        # process=copy.deepcopy(simple_process_node),
+        process=copy.deepcopy(simple_process_node),
         parent_material=simple_material_node,
         computational_forcefield=complex_computational_forcefield_node,
         keyword=my_material_keyword,

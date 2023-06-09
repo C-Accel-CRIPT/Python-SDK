@@ -3,11 +3,11 @@ from typing import Optional, Union
 
 from beartype import beartype
 
-from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.reference import Reference
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class Citation(BaseNode):
+class Citation(UUIDBaseNode):
     """
     ## Definition
     The [Citation sub-object](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=26)
@@ -60,7 +60,7 @@ class Citation(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         type: str = ""
         reference: Optional[Reference] = None
 

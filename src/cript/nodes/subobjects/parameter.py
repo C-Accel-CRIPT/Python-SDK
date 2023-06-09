@@ -4,9 +4,10 @@ from typing import Union
 from beartype import beartype
 
 from cript.nodes.core import BaseNode
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class Parameter(BaseNode):
+class Parameter(UUIDBaseNode):
     """
     ## Definition
 
@@ -47,7 +48,7 @@ class Parameter(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         key: str = ""
         value: Union[int, float, str] = ""
         # We explicitly allow None for unit here (instead of empty str),

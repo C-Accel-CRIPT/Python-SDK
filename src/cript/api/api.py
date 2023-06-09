@@ -56,6 +56,7 @@ class API:
     _api_handle: str = "api"
     _api_version: str = "v1"
 
+    # trunk-ignore-begin(cspell)
     # AWS S3 constants
     _REGION_NAME: str = "us-east-1"
     _IDENTITY_POOL_ID: str = "us-east-1:555e15fe-05c1-4f63-9f58-c84d8fd6dc99"
@@ -63,6 +64,7 @@ class API:
     _BUCKET_NAME: str = "cript-development-user-data"
     _BUCKET_DIRECTORY_NAME: str = "tests"
     _s3_client: boto3.client = None
+    # trunk-ignore-end(cspell)
 
     def __init__(self, host: Union[str, None] = None, token: Union[str, None] = None, config_file_path: str = ""):
         """
@@ -514,6 +516,7 @@ class API:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
 
     def upload_file(self, file_path: Union[Path, str]) -> str:
+        # trunk-ignore-begin(cspell)
         """
         uploads a file to AWS S3 bucket and returns a URL of the uploaded file in AWS S3
         The URL is has no expiration time limit and is available forever
@@ -560,6 +563,7 @@ class API:
         url: str
             url of the AWS S3 uploaded file to be put into the File node source attribute
         """
+        # trunk-ignore-end(cspell)
 
         # convert file path from whatever the user passed in to a pathlib object
         file_path = Path(file_path).resolve()

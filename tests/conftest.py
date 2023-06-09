@@ -15,6 +15,7 @@ import pytest
 from fixtures.primary_nodes import (
     complex_collection_node,
     complex_data_node,
+    complex_material_dict,
     complex_material_node,
     complex_project_dict,
     complex_project_node,

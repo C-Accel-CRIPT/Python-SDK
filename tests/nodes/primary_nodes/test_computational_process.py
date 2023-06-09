@@ -75,7 +75,14 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
         "node": ["ComputationProcess"],
         "name": "my computational process node name",
         "type": "cross_linking",
-        "input_data": [{"node": ["Data"], "name": "my data name", "type": "afm_amp", "file": [{"node": ["File"], "source": "https://criptapp.org", "type": "calibration", "extension": ".csv", "data_dictionary": "my file's data dictionary"}]}],
+        "input_data": [
+            {
+                "node": ["Data"],
+                "name": "my data name",
+                "type": "afm_amp",
+                "file": [{"node": ["File"], "name": "my complex file node fixture", "source": "https://criptapp.org", "type": "calibration", "extension": ".csv", "data_dictionary": "my file's data dictionary"}],
+            }
+        ],
         "ingredient": [
             {
                 "node": ["Ingredient"],

@@ -1,7 +1,6 @@
 from dataclasses import dataclass, replace
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
-from cript.nodes.uuid_base import UUIDBaseNode
 
 
 def _is_local_file(file_source: str) -> bool:
@@ -108,7 +107,7 @@ class File(PrimaryBaseNode):
             ```
         """
 
-        super().__init__(name=name,notes=notes, **kwargs)
+        super().__init__(name=name, notes=notes, **kwargs)
 
         # TODO check if vocabulary is valid or not
         # is_vocab_valid("file type", type)

@@ -428,7 +428,7 @@ class Material(PrimaryBaseNode):
     @property
     @beartype
     def process(self) -> Process:
-        return self._json_attrs.process
+        return self._json_attrs.process     # type: ignore
 
     @process.setter
     def process(self, new_process: Process) -> None:

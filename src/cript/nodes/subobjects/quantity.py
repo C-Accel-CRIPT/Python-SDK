@@ -145,7 +145,7 @@ class Quantity(UUIDBaseNode):
         Union[int, float, str]
             amount of Material
         """
-        return self._json_attrs.value
+        return self._json_attrs.value   # type: ignore
 
     @value.setter
     @beartype
@@ -189,7 +189,7 @@ class Quantity(UUIDBaseNode):
         Number
             uncertainty value
         """
-        return self._json_attrs.uncertainty
+        return self._json_attrs.uncertainty     # type: ignore
 
     @property
     @beartype

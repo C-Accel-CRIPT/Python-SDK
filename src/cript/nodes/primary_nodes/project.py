@@ -72,8 +72,7 @@ class Project(PrimaryBaseNode):
         self.validate()
 
     def validate(self):
-        from cript.nodes.exceptions import (CRIPTOrphanedMaterialError,
-                                            get_orphaned_experiment_exception)
+        from cript.nodes.exceptions import CRIPTOrphanedMaterialError, get_orphaned_experiment_exception
 
         # First validate like other nodes
         super().validate()

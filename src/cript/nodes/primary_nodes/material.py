@@ -428,7 +428,7 @@ class Material(PrimaryBaseNode):
     @property
     @beartype
     def process(self) -> Process:
-        return self._json_attrs.process     # type: ignore
+        return self._json_attrs.process  # type: ignore
 
     @process.setter
     def process(self, new_process: Process) -> None:
@@ -497,8 +497,7 @@ class Material(PrimaryBaseNode):
             * If the `identifiers` property is not present in the JSON dictionary,
             it will be set to an empty list.
         """
-        from cript.nodes.util.material_deserialization import \
-            _deserialize_flattened_material_identifiers
+        from cript.nodes.util.material_deserialization import _deserialize_flattened_material_identifiers
 
         json_dict = _deserialize_flattened_material_identifiers(json_dict)
 

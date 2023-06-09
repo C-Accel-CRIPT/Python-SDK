@@ -3,12 +3,12 @@ from typing import List, Optional
 
 from beartype import beartype
 
-from cript.nodes.core import BaseNode
 from cript.nodes.primary_nodes.data import Data
 from cript.nodes.subobjects.citation import Citation
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class ComputationalForcefield(BaseNode):
+class ComputationalForcefield(UUIDBaseNode):
     """
     ## Definition
     A [Computational Forcefield Subobject](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=23)
@@ -81,7 +81,7 @@ class ComputationalForcefield(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         key: str = ""
         building_block: str = ""
         coarse_grained_mapping: str = ""

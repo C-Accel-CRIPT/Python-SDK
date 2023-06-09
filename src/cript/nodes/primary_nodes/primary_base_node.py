@@ -1,6 +1,5 @@
 from abc import ABC
 from dataclasses import dataclass, replace
-from typing import Any
 
 from beartype import beartype
 
@@ -21,8 +20,6 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
 
         locked: bool = False
         model_version: str = ""
-        updated_by: Any = None
-        created_by: Any = None
         public: bool = False
         name: str = ""
         notes: str = ""
@@ -48,8 +45,6 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
         {
         'locked': False,
         'model_version': '',
-        'updated_by': None,
-        'created_by': None,
         'public': False,
         'notes': ''
         }

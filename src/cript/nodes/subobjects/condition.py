@@ -5,10 +5,12 @@ from typing import Union
 from beartype import beartype
 
 from cript.nodes.core import BaseNode
+
 from cript.nodes.primary_nodes.data import Data
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class Condition(BaseNode):
+class Condition(UUIDBaseNode):
     """
     ## Definition
 
@@ -76,7 +78,7 @@ class Condition(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         key: str = ""
         type: str = ""
         descriptor: str = ""

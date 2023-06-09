@@ -49,12 +49,10 @@ class User(UUIDBaseNode):
         all User attributes
         """
 
-        created_at: str = ""
         email: str = ""
         model_version: str = ""
         orcid: str = ""
         picture: str = ""
-        updated_at: str = ""
         username: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()

@@ -4,11 +4,13 @@ from typing import List, Union
 from beartype import beartype
 
 from cript.nodes.core import BaseNode
+
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.subobjects.quantity import Quantity
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class Ingredient(BaseNode):
+class Ingredient(UUIDBaseNode):
     """
     ## Definition
     An [Ingredient](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=22)
@@ -40,7 +42,7 @@ class Ingredient(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         material: Union[Material, None] = None
         quantity: List[Quantity] = field(default_factory=list)
         keyword: str = ""

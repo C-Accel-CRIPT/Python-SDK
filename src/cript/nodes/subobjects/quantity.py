@@ -1,6 +1,6 @@
 from dataclasses import dataclass, replace
 from numbers import Number
-from typing import Union, Optional
+from typing import Optional, Union
 
 from beartype import beartype
 

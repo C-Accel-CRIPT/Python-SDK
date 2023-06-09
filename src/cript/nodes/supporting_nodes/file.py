@@ -73,6 +73,8 @@ class File(PrimaryBaseNode):
 
         Parameters
         ----------
+        name: str
+            File node name
         source: str
             link or path to local file
         type: str
@@ -81,6 +83,8 @@ class File(PrimaryBaseNode):
             file extension
         data_dictionary:str
             extra information describing the file
+        notes: str
+            notes for the file node
         **kwargs:dict
             for internal use. Any extra data needed to create this file node
             when deserializing the JSON response from the API

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Dict
 
 from beartype import beartype
 
@@ -86,8 +86,9 @@ class Material(PrimaryBaseNode):
     def __init__(
         self,
         name: str,
-        identifiers: List[dict[str, str]],
+        identifiers: List[Dict[str, str]],
         component: Optional[List["Material"]] = None,
+        process: Optional[Process] = None,
         property: Optional[List[Any]] = None,
         parent_material: Optional[List["Material"]] = None,
         computational_forcefield: Optional[List[Any]] = None,

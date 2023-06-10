@@ -1,6 +1,6 @@
 from dataclasses import dataclass, replace
 
-from cript.nodes.uuid_base import UUIDBaseNode
+from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
 def _is_local_file(file_source: str) -> bool:
@@ -21,7 +21,7 @@ def _is_local_file(file_source: str) -> bool:
         return True
 
 
-class File(UUIDBaseNode):
+class File(PrimaryBaseNode):
     """
     ## Definition
 
@@ -55,7 +55,7 @@ class File(UUIDBaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(UUIDBaseNode.JsonAttributes):
+    class JsonAttributes(PrimaryBaseNode.JsonAttributes):
         """
         all file attributes
         """
@@ -67,12 +67,14 @@ class File(UUIDBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, source: str, type: str, extension: str = "", data_dictionary: str = "", **kwargs):
+    def __init__(self, name: str, source: str, type: str, extension: str = "", data_dictionary: str = "", notes: str = "", **kwargs):
         """
         create a File node
 
         Parameters
         ----------
+        name: str
+            File node name
         source: str
             link or path to local file
         type: str
@@ -81,6 +83,8 @@ class File(UUIDBaseNode):
             file extension
         data_dictionary:str
             extra information describing the file
+        notes: str
+            notes for the file node
         **kwargs:dict
             for internal use. Any extra data needed to create this file node
             when deserializing the JSON response from the API
@@ -107,7 +111,7 @@ class File(UUIDBaseNode):
             ```
         """
 
-        super().__init__(**kwargs)
+        super().__init__(name=name, notes=notes, **kwargs)
 
         # TODO check if vocabulary is valid or not
         # is_vocab_valid("file type", type)

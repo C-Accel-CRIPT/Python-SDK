@@ -1,7 +1,6 @@
 import copy
 import json
 
-import pytest
 from util import strip_uid_from_dict
 
 import cript
@@ -11,7 +10,7 @@ def test_create_file() -> None:
     """
     tests that a simple file with only required attributes can be created
     """
-    file_node = cript.File(source="https://google.com", type="calibration")
+    file_node = cript.File(name="my file name", source="https://google.com", type="calibration")
 
     assert isinstance(file_node, cript.File)
 
@@ -29,27 +28,7 @@ def test_create_file_local_source(tmp_path) -> None:
     with open(file_path, "w") as temporary_file:
         temporary_file.write("hello world!")
 
-    assert cript.File(source=str(file_path), type="calibration")
-
-
-@pytest.fixture(scope="session")
-def file_node() -> cript.File:
-    """
-    create a file node for other tests to use
-
-    Returns
-    -------
-    File
-    """
-
-    # create a File node with all fields
-    my_file = cript.File(source="https://criptapp.com", type="calibration", extension=".pdf", data_dictionary="my data dictionary")
-    # use the file node for tests
-    yield my_file
-
-    # clean up file node after each test, so the file test is always uniform
-    # set the file node to original state
-    my_file = cript.File(source="https://criptapp.com", type="calibration", extension=".pdf", data_dictionary="my data dictionary ")
+    assert cript.File(name="my file node with local source", source=str(file_path), type="calibration")
 
 
 def test_file_type_invalid_vocabulary() -> None:
@@ -97,6 +76,7 @@ def test_serialize_file_to_json(complex_file_node) -> None:
 
     expected_file_node_dict = {
         "node": ["File"],
+        "name": "my complex file node fixture",
         "source": "https://criptapp.org",
         "type": "calibration",
         "extension": ".csv",

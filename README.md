@@ -58,14 +58,11 @@ To learn more about the CRIPT Python SDK please check the [CRIPT-SDK documentati
 
 ---
 
-<!--
-
 ## Release Notes
-Please visit the [Python SDK Documentation Release Notes](#) or within the [GitHub Releases page](#)
+
+Please visit the [GitHub Releases page](https://github.com/C-Accel-CRIPT/Python-SDK/releases/latest) for a detailed release notes.
 
 ---
-
--->
 
 ## We Invite Contribution
 

@@ -13,8 +13,6 @@ from cript.nodes.exceptions import CRIPTNodeSchemaError
 # from datetime import datetime
 
 
-
-
 def test_create_api(cript_api: cript.API) -> None:
     """
     tests that an API object can be successfully created with host and token

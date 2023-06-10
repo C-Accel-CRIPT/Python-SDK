@@ -625,6 +625,7 @@ class API:
         """
 
         # TODO this needs testing
+        # download file if the source is a web URL
         if object_name.startswith("http"):
             try:
                 response: requests.Response = requests.get(url=object_name)

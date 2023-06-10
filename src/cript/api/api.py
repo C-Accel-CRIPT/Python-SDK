@@ -624,26 +624,28 @@ class API:
             just downloads the file to the specified path
         """
 
+        if object_name.startswith("http"):
+            response: requests.Response = requests.get(url=object_name)
+
+            # if the status of the response is other than HTTP 200, raise an error
+            if response.status_code != 200:
+                raise FileDownloadError(error_message=response.json())
+
+            file_contents: bytes = response.content
+
+            # convert str or Path object to Path object to be flexible in accepting user input
+            destination_file_path = Path(destination_path).resolve()
+
+            with open(destination_file_path, "wb") as file:
+                file.write(file_contents)
+            return
+
+        # file is stored in cloud storage and must be retrieved via object_name
         self._s3_client.download_file(
             Bucket=self._BUCKET_NAME,
             Key=object_name,
             Filename=destination_path
         )
-
-
-        # response = requests.get(url=file_url)
-        #
-        # # if the status of the response is other than HTTP 200, raise an error
-        # if response.status_code != 200:
-        #     raise FileDownloadError(error_message=response.json())
-        #
-        # file_contents: bytes = response.content
-        #
-        # # convert str or Path object to Path object to be flexible in accepting user input
-        # destination_file_path = Path(destination_path).resolve()
-        #
-        # with open(destination_file_path, "wb") as file:
-        #     file.write(file_contents)
 
     # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(

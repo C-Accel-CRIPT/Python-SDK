@@ -77,8 +77,10 @@ def cript_api():
     """
     Create an API instance for the rest of the tests to use.
 
-    Returns:
-        API: The created API instance.
+    Returns
+    -------
+    API: cript.API
+        The created CRIPT API instance.
     """
     host: str = "http://development.api.mycriptapp.org/"
     token = "123456"

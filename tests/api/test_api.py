@@ -1,8 +1,5 @@
 import json
 import tempfile
-# TODO both imports are needed for API file upload and download tests
-# import uuid
-# from datetime import datetime
 
 import pytest
 import requests
@@ -10,6 +7,12 @@ import requests
 import cript
 from cript.api.exceptions import InvalidVocabulary
 from cript.nodes.exceptions import CRIPTNodeSchemaError
+
+# TODO both imports are needed for API file upload and download tests
+# import uuid
+# from datetime import datetime
+
+
 
 
 def test_create_api(cript_api: cript.API) -> None:

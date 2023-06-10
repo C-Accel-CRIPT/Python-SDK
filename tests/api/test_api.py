@@ -1,7 +1,8 @@
 import json
 import tempfile
-import uuid
-from datetime import datetime
+# TODO both imports are needed for API file upload and download tests
+# import uuid
+# from datetime import datetime
 
 import pytest
 import requests

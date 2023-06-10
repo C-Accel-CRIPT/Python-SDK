@@ -522,7 +522,7 @@ class API:
         uploads a file to AWS S3 bucket and returns a URL of the uploaded file in AWS S3
         The URL is has no expiration time limit and is available forever
 
-        1. take an  file path of type path or str to the file on local storage
+        1. take a file path of type path or str to the file on local storage
             * see Example for more details
         1. convert the file path to pathlib object, so it is versatile and
             always uniform regardless if the user passes in a str or path object
@@ -533,6 +533,11 @@ class API:
         1. upload file to AWS S3
         1. get the link of the uploaded file and return it
 
+
+        Parameters
+        ----------
+        file_path: Union[str, Path]
+            file path as str or Path object. Path Object is recommended
 
         Examples
         --------
@@ -546,11 +551,6 @@ class API:
 
         my_file_s3_url = api.upload_file(absolute_file_path=my_file_path)
         ```
-
-        Parameters
-        ----------
-        file_path: Union[str, Path]
-            file path as str or Path object. Path Object is recommended
 
         Raises
         ------

@@ -1,5 +1,7 @@
 import copy
+import datetime
 import json
+import uuid
 
 from util import strip_uid_from_dict
 
@@ -14,6 +16,54 @@ def test_create_file() -> None:
 
     assert isinstance(file_node, cript.File)
 
+
+def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
+    """
+    upload a file and download it and be sure the contents are the same
+
+    1. create a temporary file and get its file path
+    1. create a unique string
+    1. write unique string to temporary file
+    1. create a file node with the source being the temporary file
+        1. the file should then be automatically uploaded to cloud storage
+        and the source should be replaced with cloud storage source beginning with `https://`
+    1. download the file to a temporary path
+        1. read that file text and assert that the string written and read are the same
+    """
+    file_text: str = (
+        f"This is an automated test from the Python SDK within "
+        f"`tests/nodes/supporting_nodes/test_file.py/test_local_file_source_upload_and_download()` "
+        f"checking that the file source is automatically and correctly uploaded to AWS S3. "
+        f"The test is conducted on UTC time of '{datetime.datetime.utcnow()}' "
+        f"with the unique UUID of '{str(uuid.uuid4())}'"
+    )
+
+    # create a temp file and write to it
+    upload_file_dir = tmp_path_factory.mktemp("file_test_upload_file_dir")
+    local_file_path = upload_file_dir / "my_upload_file.txt"
+    local_file_path.write_text(file_text)
+
+    # create a file node with a local file path
+    my_file = cript.File(source=str(local_file_path), type="data")
+
+    # check that the file source has been uploaded to cloud storage and source has changed to reflect that
+    assert my_file.source.startswith("https://cript-development-user-data.s3.amazonaws.com")
+
+    # Get the temporary directory path and clean up handled by pytest
+    download_file_dir = tmp_path_factory.mktemp("file_test_download_file_dir")
+    download_file_name = "my_downloaded_file.txt"
+
+    # download file
+    my_file.download(destination_directory_path=download_file_dir, file_name=download_file_name)
+
+    # the path the file was downloaded to and can be read from
+    downloaded_local_file_path = download_file_dir / download_file_name
+
+    # read file contents from where the file was downloaded
+    downloaded_file_contents = downloaded_local_file_path.read_text()
+
+    # assert file contents for upload and download are the same
+    assert downloaded_file_contents == file_text
 
 def test_create_file_local_source(tmp_path) -> None:
     """

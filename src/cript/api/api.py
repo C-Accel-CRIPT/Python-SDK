@@ -561,8 +561,8 @@ class API:
 
         Returns
         -------
-        url: str
-            url of the AWS S3 uploaded file to be put into the File node source attribute
+        object_name: str
+            object_name of the AWS S3 uploaded file to be put into the File node source attribute
         """
         # trunk-ignore-end(cspell)
 
@@ -584,15 +584,10 @@ class API:
         # upload file to AWS S3
         self._s3_client.upload_file(file_path, self._BUCKET_NAME, object_name)
 
-        # Generate a pre-signed URL to access the file from S3 that is available forever
-        s3_file_url = self._s3_client.generate_presigned_url(
-            "get_object",
-            Params={"Bucket": self._BUCKET_NAME, "Key": object_name},
-        )
+        # return the object_name within AWS S3 for easy retrieval
+        return object_name
 
-        return s3_file_url
-
-    def download_file(self, file_url: str, destination_path: str = ".") -> None:
+    def download_file(self, object_name: str, destination_path: str = ".") -> None:
         """
         download a file from AWS S3 and save it to the specified path on local storage
 
@@ -600,9 +595,11 @@ class API:
 
         Parameters
         ----------
-        file_url: str
-            AWS S3 file name with the extension e.g. "my_file_name.txt
+        object_name: str
+            object_name within AWS S3 the extension e.g. "my_file_name.txt
             the file is then searched within "Data/{file_name}" and saved to local storage
+            In case of the file source is a URL then it is the file source URL
+                starting with "https://"
         destination_path: str
             please provide a path with file name of where you would like the file to be saved
             on local storage after retrieved and downloaded from AWS S3
@@ -625,19 +622,19 @@ class API:
             just downloads the file to the specified path
         """
 
-        response = requests.get(url=file_url)
-
-        # if the status of the response is other than HTTP 200, raise an error
-        if response.status_code != 200:
-            raise FileDownloadError(error_message=response.json())
-
-        file_contents: bytes = response.content
-
-        # convert str or Path object to Path object to be flexible in accepting user input
-        destination_file_path = Path(destination_path).resolve()
-
-        with open(destination_file_path, "wb") as file:
-            file.write(file_contents)
+        # response = requests.get(url=file_url)
+        #
+        # # if the status of the response is other than HTTP 200, raise an error
+        # if response.status_code != 200:
+        #     raise FileDownloadError(error_message=response.json())
+        #
+        # file_contents: bytes = response.content
+        #
+        # # convert str or Path object to Path object to be flexible in accepting user input
+        # destination_file_path = Path(destination_path).resolve()
+        #
+        # with open(destination_file_path, "wb") as file:
+        #     file.write(file_contents)
 
     # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
     def search(

@@ -158,7 +158,7 @@ class API:
         self._http_headers = {"Authorization": f"{self._token}", "Content-Type": "application/json"}
 
         # TODO commenting this out for now because there is no GitHub API container, and all tests will fail
-        # self._s3_client = self._get_s3_client()
+        self._s3_client = self._get_s3_client()
 
         # check that api can connect to CRIPT with host and token
         self._check_initial_host_connection()
@@ -602,7 +602,9 @@ class API:
                 starting with "https://"
         destination_path: str
             please provide a path with file name of where you would like the file to be saved
-            on local storage after retrieved and downloaded from AWS S3
+            on local storage after retrieved and downloaded from AWS S3.
+            > The destination path must include a file name
+                Example: `~/Desktop/my_example_file_name.extension`
 
         Examples
         --------
@@ -621,6 +623,13 @@ class API:
         None
             just downloads the file to the specified path
         """
+
+        self._s3_client.download_file(
+            Bucket=self._BUCKET_NAME,
+            Key=object_name,
+            Filename=destination_path
+        )
+
 
         # response = requests.get(url=file_url)
         #

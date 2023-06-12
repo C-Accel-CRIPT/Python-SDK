@@ -267,7 +267,7 @@ class Material(PrimaryBaseNode):
 
     @property
     @beartype
-    def parent_material(self) -> "Material":
+    def parent_material(self) -> Optional["Material"]:
         """
         List of parent materials
 
@@ -280,20 +280,20 @@ class Material(PrimaryBaseNode):
 
     @parent_material.setter
     @beartype
-    def parent_material(self, new_parent_material_list: "Material") -> None:
+    def parent_material(self, new_parent_material: "Material") -> None:
         """
         set the [parent materials](./) for this material
 
         Parameters
         ----------
-        new_parent_material_list: List["Material"]
+        new_parent_material: "Material"
 
         Returns
         -------
         None
         """
 
-        new_attrs = replace(self._json_attrs, parent_material=new_parent_material_list)
+        new_attrs = replace(self._json_attrs, parent_material=new_parent_material)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -421,7 +421,7 @@ class Material(PrimaryBaseNode):
 
     @property
     @beartype
-    def process(self) -> Process:
+    def process(self) -> Optional[Process]:
         return self._json_attrs.process  # type: ignore
 
     @process.setter

@@ -1,6 +1,6 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from numbers import Number
-from typing import Union
+from typing import List, Optional, Union
 
 from beartype import beartype
 
@@ -42,7 +42,7 @@ class Condition(UUIDBaseNode):
     | uncertainty_type | str    | std                     | type of uncertainty                                                                    |          | True  |
     | set_id           | int    | 0                       | ID of set (used to link measurements in as series)                                     |          |       |
     | measurement _id  | int    | 0                       | ID for a single measurement (used to link multiple condition at a single instance)     |          |       |
-    | data             | Data   |                         | detailed data associated with the condition                                            |          |       |
+    | data             | List[Data] |                         | detailed data associated with the condition                                            |          |       |
 
     ## JSON Representation
     ```json
@@ -57,7 +57,7 @@ class Condition(UUIDBaseNode):
         "uncertainty_type": "stdev",
         "set_id": 0,
         "measurement_id": 2,
-        "data": {
+        "data": [{
             "node":["Data"],
             "name":"my data name",
             "type":"afm_amp",
@@ -70,7 +70,7 @@ class Condition(UUIDBaseNode):
                     "data_dictionary":"my file's data dictionary"
                 }
             ]
-        },
+        }],
     }
     ```
     """
@@ -86,7 +86,7 @@ class Condition(UUIDBaseNode):
         uncertainty_type: str = ""
         set_id: Union[int, None] = None
         measurement_id: Union[int, None] = None
-        data: Union[Data, None] = None
+        data: List[Data] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -102,7 +102,7 @@ class Condition(UUIDBaseNode):
         uncertainty_type: str = "",
         set_id: Union[int, None] = None,
         measurement_id: Union[int, None] = None,
-        data: Union[Data, None] = None,
+        data: Optional[List[Data]] = None,
         **kwargs
     ):
         """
@@ -128,7 +128,7 @@ class Condition(UUIDBaseNode):
             ID of set (used to link measurements in as series), by default None
         measurement_id : Union[int, None], optional
             ID for a single measurement (used to link multiple condition at a single instance), by default None
-        data : Union[Data, None], optional
+        data : List[Data], optional
             detailed data associated with the condition, by default None
 
 
@@ -149,6 +149,9 @@ class Condition(UUIDBaseNode):
         None
         """
         super().__init__(**kwargs)
+
+        if data is None:
+            data = []
 
         self._json_attrs = replace(
             self._json_attrs,
@@ -481,7 +484,7 @@ class Condition(UUIDBaseNode):
 
     @property
     @beartype
-    def data(self) -> Union[Data, None]:
+    def data(self) -> List[Data]:
         """
         detailed data associated with the condition
 
@@ -503,7 +506,7 @@ class Condition(UUIDBaseNode):
         )
 
         # add data node to Condition subobject
-        my_condition.data = my_data
+        my_condition.data = [my_data]
         ```
 
         Returns
@@ -511,17 +514,17 @@ class Condition(UUIDBaseNode):
         Condition: Union[Data, None]
             detailed data associated with the condition
         """
-        return self._json_attrs.data
+        return self._json_attrs.data.copy()
 
     @data.setter
     @beartype
-    def data(self, new_data: Data) -> None:
+    def data(self, new_data: List[Data]) -> None:
         """
         set the data node for this Condition Subobject
 
         Parameters
         ----------
-        new_data : Data
+        new_data : List[Data]
             new Data node
 
         Returns

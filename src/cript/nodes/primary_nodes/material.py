@@ -76,8 +76,8 @@ class Material(PrimaryBaseNode):
         component: List["Material"] = field(default_factory=list)
         process: Optional[Process] = None
         property: List[Any] = field(default_factory=list)
-        parent_material: List["Material"] = field(default_factory=list)
-        computational_forcefield: List[Any] = field(default_factory=list)
+        parent_material: Optional["Material"] = None
+        computational_forcefield: Optional[Any] = None
         keyword: List[str] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -90,8 +90,8 @@ class Material(PrimaryBaseNode):
         component: Optional[List["Material"]] = None,
         process: Optional[Process] = None,
         property: Optional[List[Any]] = None,
-        parent_material: Optional[List["Material"]] = None,
-        computational_forcefield: Optional[List[Any]] = None,
+        parent_material: Optional["Material"] = None,
+        computational_forcefield: Optional[Any] = None,
         keyword: Optional[List[str]] = None,
         notes: str = "",
         **kwargs
@@ -106,8 +106,8 @@ class Material(PrimaryBaseNode):
         component: List["Material"], default=None
         property: Optional[Process], default=None
         process: List[Process], default=None
-        parent_material: List["Material"], default=None
-        computational_forcefield: List[ComputationalProcess], default=None
+        parent_material: "Material", default=None
+        computational_forcefield: ComputationalForcefield, default=None
         keyword: List[str], default=None
 
         Returns
@@ -123,12 +123,6 @@ class Material(PrimaryBaseNode):
 
         if property is None:
             property = []
-
-        if parent_material is None:
-            parent_material = []
-
-        if computational_forcefield is None:
-            computational_forcefield = []
 
         if keyword is None:
             keyword = []
@@ -273,7 +267,7 @@ class Material(PrimaryBaseNode):
 
     @property
     @beartype
-    def parent_material(self) -> List["Material"]:
+    def parent_material(self) -> "Material":
         """
         List of parent materials
 
@@ -286,7 +280,7 @@ class Material(PrimaryBaseNode):
 
     @parent_material.setter
     @beartype
-    def parent_material(self, new_parent_material_list: List["Material"]) -> None:
+    def parent_material(self, new_parent_material_list: "Material") -> None:
         """
         set the [parent materials](./) for this material
 
@@ -304,7 +298,7 @@ class Material(PrimaryBaseNode):
 
     @property
     @beartype
-    def computational_forcefield(self) -> List[Any]:
+    def computational_forcefield(self) -> Any:
         """
         list of [computational_forcefield](../../subobjects/computational_forcefield) for this material node
 
@@ -317,7 +311,7 @@ class Material(PrimaryBaseNode):
 
     @computational_forcefield.setter
     @beartype
-    def computational_forcefield(self, new_computational_forcefield_list: List[Any]) -> None:
+    def computational_forcefield(self, new_computational_forcefield_list: Any) -> None:
         """
         sets the list of computational forcefields for this material
 

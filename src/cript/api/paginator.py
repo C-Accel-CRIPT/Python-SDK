@@ -1,7 +1,8 @@
-from typing import List, Union
+from typing import List, Optional, Union
 from urllib.parse import quote
 
 import requests
+from beartype import beartype
 
 
 class Paginator:
@@ -27,16 +28,17 @@ class Paginator:
     # and that is not added to the URL
     # by default the page_number and query are `None` and they can get filled in
     query: Union[str, None]
-    _current_page_number: [int, None]
+    _current_page_number: int
 
     current_page_results: List[dict]
 
+    @beartype
     def __init__(
         self,
         http_headers: dict,
         api_endpoint: str,
-        query: [str, None] = None,
-        current_page_number: [int, None] = None,
+        query: Optional[str] = None,
+        current_page_number: int = 0,
     ):
         """
         create a paginator
@@ -103,6 +105,7 @@ class Paginator:
         self.current_page_number -= 1
 
     @property
+    @beartype
     def current_page_number(self) -> int:
         """
         get the current page number that you are on.
@@ -123,6 +126,7 @@ class Paginator:
         return self._current_page_number
 
     @current_page_number.setter
+    @beartype
     def current_page_number(self, new_page_number: int) -> None:
         """
         flips to a specific page of data that has been requested
@@ -153,6 +157,7 @@ class Paginator:
             # when new page number is set, it is then fetched from the API
             self.fetch_page_from_api()
 
+    @beartype
     def fetch_page_from_api(self) -> List[dict]:
         """
         1. builds the URL from the query and page number

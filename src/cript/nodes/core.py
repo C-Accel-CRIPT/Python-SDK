@@ -6,6 +6,8 @@ from abc import ABC
 from dataclasses import asdict, dataclass, replace
 from typing import List, Optional, Set
 
+import beartype
+
 from cript.nodes.exceptions import (
     CRIPTAttributeModificationError,
     CRIPTExtraJsonAttributes,
@@ -150,6 +152,8 @@ class BaseNode(ABC):
 
     @classmethod
     def _from_json(cls, json_dict: dict):
+        # TODO find a way to handle uuid nodes only
+
         # Child nodes can inherit and overwrite this.
         # They should call super()._from_json first, and modified the returned object after if necessary
         # We create manually a dict that contains all elements from the send dict.
@@ -164,7 +168,6 @@ class BaseNode(ABC):
             else:
                 arguments[field] = json_dict[field]
 
-        # The call to the constructor might ignore fields that are usually not writable.
         try:
             node = cls(**arguments)
         # TODO we should not catch all exceptions if we are handling them, and instead let it fail

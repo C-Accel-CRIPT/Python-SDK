@@ -55,9 +55,6 @@ def test_serialize_project_to_json(complex_project_node, complex_project_dict) -
     serialized_project: dict = json.loads(complex_project_node.get_json(condense_to_uuid={}).json)
     serialized_project = strip_uid_from_dict(serialized_project)
 
-    print(serialized_project["material"])
-    print(expected_dict["material"])
-
     assert serialized_project == strip_uid_from_dict(expected_dict)
 
 

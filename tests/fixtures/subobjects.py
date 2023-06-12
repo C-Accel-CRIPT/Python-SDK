@@ -200,7 +200,7 @@ def complex_condition_dict(complex_data_node) -> dict:
         "uncertainty_type": "stdev",
         "set_id": 0,
         "measurement_id": 2,
-        "data": [json.loads(complex_data_node.json)],
+        "data": [json.loads(complex_data_node.get_json(condense_to_uuid={}).json)],
     }
     return ret_dict
 

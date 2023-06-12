@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field, replace
 from numbers import Number
-from typing import List, Union
+from typing import List, Optional, Union
 
 from beartype import beartype
 
@@ -65,12 +65,12 @@ class Property(UUIDBaseNode):
         type: str = ""
         value: Union[Number, None] = None
         unit: str = ""
-        uncertainty: Union[Number, None] = None
+        uncertainty: Optional[Number] = None
         uncertainty_type: str = ""
         component: List[Material] = field(default_factory=list)
         structure: str = ""
         method: str = ""
-        sample_preparation: Union[Process, None] = None
+        sample_preparation: Optional[Process] = None
         condition: List[Condition] = field(default_factory=list)
         data: List[Data] = field(default_factory=list)
         computation: List[Computation] = field(default_factory=list)
@@ -85,17 +85,17 @@ class Property(UUIDBaseNode):
         key: str,
         type: str,
         value: Union[Number, None],
-        unit: str,
-        uncertainty: Union[Number, None] = None,
+        unit: Union[str, None],
+        uncertainty: Optional[Number] = None,
         uncertainty_type: str = "",
-        component: Union[List[Material], None] = None,
+        component: Optional[List[Material]] = None,
         structure: str = "",
         method: str = "",
-        sample_preparation: Union[Process, None] = None,
-        condition: Union[List[Condition], None] = None,
-        data: Union[List[Data], None] = None,
-        computation: Union[List[Computation], None] = None,
-        citation: Union[List[Citation], None] = None,
+        sample_preparation: Optional[Process] = None,
+        condition: Optional[List[Condition]] = None,
+        data: Optional[List[Data]] = None,
+        computation: Optional[List[Computation]] = None,
+        citation: Optional[List[Citation]] = None,
         notes: str = "",
         **kwargs
     ):

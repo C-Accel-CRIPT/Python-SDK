@@ -3,5 +3,5 @@ black==23.3.0
 mypy==1.3.0
 pytest-cov==4.1.0
 coverage==7.2.7
-types-jsonschema>=4.17
-types-requests>=2.31
+types-jsonschema==4.17.0.8
+types-requests==2.31.0.1

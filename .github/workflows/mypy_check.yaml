@@ -2,10 +2,19 @@
 
 name: MyPy Check
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - trunk-merge/**
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
-  test:
+  mypy-test:
     strategy:
       matrix:
         python-version: [3.7, 3.11]

@@ -52,3 +52,5 @@ merge:
     - install (macos-latest, 3.11)
     - test-coverage (ubuntu-latest, 3.7)
     - test-coverage (ubuntu-latest, 3.11)
+    - mypy-test (3.7, ubuntu-latest)
+    - mypy-test (3.11, ubuntu-latest)

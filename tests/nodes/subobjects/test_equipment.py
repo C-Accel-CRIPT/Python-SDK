@@ -3,8 +3,6 @@ import json
 
 from util import strip_uid_from_dict
 
-import cript
-
 
 def test_json(complex_equipment_node, complex_equipment_dict):
     e = complex_equipment_node

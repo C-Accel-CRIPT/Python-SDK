@@ -85,6 +85,51 @@ class CRIPTJsonDeserializationError(CRIPTException):
         return f"JSON deserialization failed for node type {self.node_type} with JSON str: {self.json_str}"
 
 
+class CRIPTDeserializationUIDError(CRIPTException):
+    """
+    ## Definition
+    This exception is raised when converting a node from JSON to Python class fails,
+    because a node is specified with its UID only, but not part of the data graph elsewhere.
+
+    ### Error Example
+    Invalid JSON that cannot be deserialized to a CRIPT Python SDK Node
+
+    ```json
+    {
+    "node": ["Algorithm"],
+    "key": "mc_barostat",
+    "type": "barostat",
+    "parameter": {"node": ["Parameter"], "uid": "uid-string"}
+    }
+    ```
+    Here the algorithm has a parameter attribute, but the parameter is specified as uid only.
+
+    ### Valid Example
+    Valid JSON that can be deserialized to a CRIPT Python SDK Node
+
+    ```json
+    {
+    "node": ["Algorithm"],
+    "key": "mc_barostat",
+    "type": "barostat",
+    "parameter": {"node": ["Parameter"], "uid": "uid-string",
+                  "key": "update_frequency", "value":1, "unit": "1/second"}
+    }
+    ```
+    Now the node is fully specified.
+
+    ## How to Fix
+    Specify the full node instead. This error might appear if you try to partially load previously generated JSON.
+    """
+
+    def __init__(self, node_type: str, uid: str) -> None:
+        self.node_type = node_type
+        self.uid = uid
+
+    def __str__(self) -> str:
+        return f"JSON deserialization failed for node type {self.node_type} with unknown UID: {self.uid}"
+
+
 class CRIPTJsonNodeError(CRIPTJsonDeserializationError):
     """
     ## Definition

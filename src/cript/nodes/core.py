@@ -6,8 +6,6 @@ from abc import ABC
 from dataclasses import asdict, dataclass, replace
 from typing import List, Optional, Set
 
-import beartype
-
 from cript.nodes.exceptions import (
     CRIPTAttributeModificationError,
     CRIPTExtraJsonAttributes,

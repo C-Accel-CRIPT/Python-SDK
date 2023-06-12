@@ -28,6 +28,115 @@ def test_removing_nodes(complex_algorithm_node, complex_parameter_node, complex_
     assert strip_uid_from_dict(json.loads(a.json)) == complex_algorithm_dict
 
 
+def test_uid_deserialization(complex_algorithm_node, complex_parameter_node, complex_algorithm_dict):
+    identifiers = [{"bigsmiles": "123456"}]
+    material = cript.Material(name="my material", identifiers=identifiers)
+
+    computation = cript.Computation(name="my computation name", type="analysis")
+    property1 = cript.Property("modulus_shear", "value", 5.0, "GPa", computation=[computation])
+    property2 = cript.Property("modulus_loss", "value", 5.0, "GPa", computation=[computation])
+    material.property = [property1, property2]
+
+    material2 = cript.load_nodes_from_json(material.json)
+    assert json.loads(material.json) == json.loads(material2.json)
+
+    material3_dict = {
+        "node": ["Material"],
+        "uid": "_:f6d56fdc-9df7-49a1-a843-cf92681932ad",
+        "uuid": "f6d56fdc-9df7-49a1-a843-cf92681932ad",
+        "name": "my material",
+        "property": [
+            {
+                "node": ["Property"],
+                "uid": "_:82e7270e-9f35-4b35-80a2-faa6e7f670be",
+                "uuid": "82e7270e-9f35-4b35-80a2-faa6e7f670be",
+                "key": "modulus_shear",
+                "type": "value",
+                "value": 5.0,
+                "unit": "GPa",
+                "computation": [{"node": ["Computation"], "uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef"}],
+            },
+            {
+                "node": ["Property"],
+                "uid": "_:fc4dfa5e-742c-4d0b-bb66-2185461f4582",
+                "uuid": "fc4dfa5e-742c-4d0b-bb66-2185461f4582",
+                "key": "modulus_loss",
+                "type": "value",
+                "value": 5.0,
+                "unit": "GPa",
+                "computation": [
+                    {
+                        "node": ["Computation"],
+                        "uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef",
+                    }
+                ],
+            },
+        ],
+        "bigsmiles": "123456",
+    }
+
+    with pytest.raises(cript.nodes.exceptions.CRIPTDeserializationUIDError):
+        cript.load_nodes_from_json(json.dumps(material3_dict))
+
+    # TODO convince beartype to allow _ProxyUID as well
+    # material4_dict = {
+    #     "node": [
+    #         "Material"
+    #     ],
+    #     "uid": "_:f6d56fdc-9df7-49a1-a843-cf92681932ad",
+    #     "uuid": "f6d56fdc-9df7-49a1-a843-cf92681932ad",
+    #     "name": "my material",
+    #     "property": [
+    #         {
+    #             "node": [
+    #                 "Property"
+    #             ],
+    #             "uid": "_:82e7270e-9f35-4b35-80a2-faa6e7f670be",
+    #             "uuid": "82e7270e-9f35-4b35-80a2-faa6e7f670be",
+    #             "key": "modulus_shear",
+    #             "type": "value",
+    #             "value": 5.0,
+    #             "unit": "GPa",
+    #             "computation": [
+    #                 {
+    #                     "node": [
+    #                         "Computation"
+    #                     ],
+    #                     "uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef"
+    #                 }
+    #             ]
+    #         },
+    #         {
+    #             "node": [
+    #                 "Property"
+    #             ],
+    #             "uid": "_:fc4dfa5e-742c-4d0b-bb66-2185461f4582",
+    #             "uuid": "fc4dfa5e-742c-4d0b-bb66-2185461f4582",
+    #             "key": "modulus_loss",
+    #             "type": "value",
+    #             "value": 5.0,
+    #             "unit": "GPa",
+    #             "computation": [
+    #                 {
+    #                     "node": [
+    #                         "Computation"
+    #                     ],
+    #                     "uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef",
+    #                     "uuid": "9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef",
+    #                     "name": "my computation name",
+    #                     "type": "analysis",
+    #                     "citation": []
+    #                 }
+    #             ]
+    #         }
+    #     ],
+    #     "bigsmiles": "123456"
+    # }
+
+    # material4 = cript.load_nodes_from_json(json.dumps(material4_dict))
+    # assert json.loads(material.json) == json.loads(material4.json)
+
+
 def test_json_error(complex_parameter_node):
     parameter = complex_parameter_node
     # Let's break the node by violating the data model

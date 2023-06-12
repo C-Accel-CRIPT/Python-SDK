@@ -3,11 +3,12 @@ import inspect
 import json
 import uuid
 from dataclasses import asdict
-from typing import Set, Union
+from typing import Dict, Optional, Set, Union
 
 import cript.nodes
 from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import (
+    CRIPTDeserializationUIDError,
     CRIPTJsonDeserializationError,
     CRIPTJsonNodeError,
     CRIPTOrphanedComputationalProcessError,
@@ -122,6 +123,79 @@ class NodeEncoder(json.JSONEncoder):
         return serialize_dict, uid_of_condensed
 
 
+class _UIDProxy:
+    """
+    Proxy class for unresolvable UID nodes.
+    This is going to be replaced by actual nodes.
+
+    Report a bug if you find this class in production.
+    """
+
+    def __init__(self, uid: str):
+        self.uid = uid
+        print("proxy", uid)
+
+
+class _NodeDecoderHook:
+    def __init__(self, uid_cache: Optional[Dict] = None):
+        if uid_cache is None:
+            uid_cache = {}
+        self._uid_cache = uid_cache
+
+    def __call__(self, node_str: Union[dict, str]) -> dict:
+        """
+        Internal function, used as a hook for json deserialization.
+
+        This function is called recursively to convert every JSON of a node and it's children from node to JSON.
+
+        If given a JSON without a "node" field then it is assumed that it is not a node
+        and just a key value pair data, and the JSON string is then just converted from string to dict and returned
+        applicable for places where the data is something like
+
+        ```json
+        { "bigsmiles": "123456" }
+        ```
+
+        no serialization is needed in this case and just needs to be converted from str to dict
+
+        if the node field is present then continue and convert the JSON node into a Python object
+        """
+        node_dict = dict(node_str)  # type: ignore
+
+        # Handle UID objects.
+        if len(node_dict) == 2 and "uid" in node_dict and "node" in node_dict:
+            try:
+                return self._uid_cache[node_dict["uid"]]
+            except KeyError:
+                # TODO if we convince beartype to accept Proxy temporarily, enable return instead of raise
+                raise CRIPTDeserializationUIDError(node_dict["node"], node_dict["uid"])
+                # return _UIDProxy(node_dict["uid"])
+
+        try:
+            node_type_list = node_dict["node"]
+        except KeyError:  # Not a node, just a regular dictionary
+            return node_dict
+
+        # TODO consider putting this into the try because it might need error handling for the dict
+        if _is_node_field_valid(node_type_list):
+            node_type_str = node_type_list[0]
+        else:
+            raise CRIPTJsonNodeError(node_type_list, str(node_str))
+
+        # Iterate over all nodes in cript to find the correct one here
+        for key, pyclass in inspect.getmembers(cript.nodes, inspect.isclass):
+            if BaseNode in inspect.getmro(pyclass):
+                if key == node_type_str:
+                    try:
+                        json_node = pyclass._from_json(node_dict)
+                        self._uid_cache[json_node.uid] = json_node
+                        return json_node
+                    except Exception as exc:
+                        raise CRIPTJsonDeserializationError(key, str(node_type_str)) from exc
+        # Fall back
+        return node_dict
+
+
 def _material_identifiers_list_to_json_fields(serialize_dict: dict) -> dict:
     """
     input:
@@ -201,54 +275,38 @@ def _is_node_field_valid(node_type_list: list) -> bool:
         return False
 
 
-def _node_json_hook(node_str: Union[dict, str]) -> dict:
-    """
-    Internal function, used as a hook for json deserialization.
-
-    This function is called recursively to convert every JSON of a node and it's children from node to JSON.
-
-    If given a JSON without a "node" field then it is assumed that it is not a node
-    and just a key value pair data, and the JSON string is then just converted from string to dict and returned
-    applicable for places where the data is something like
-
-    ```json
-    { "bigsmiles": "123456" }
-    ```
-
-    no serialization is needed in this case and just needs to be converted from str to dict
-
-    if the node field is present then continue and convert the JSON node into a Python object
-    """
-    node_dict = dict(node_str)  # type: ignore
-    try:
-        node_type_list = node_dict["node"]
-    except KeyError:  # Not a node, just a regular dictionary
-        return node_dict
-
-    # TODO consider putting this into the try because it might need error handling for the dict
-    if _is_node_field_valid(node_type_list):
-        node_str = node_type_list[0]
-    else:
-        raise CRIPTJsonNodeError(node_type_list, str(node_str))
-
-    # Iterate over all nodes in cript to find the correct one here
-    for key, pyclass in inspect.getmembers(cript.nodes, inspect.isclass):
-        if BaseNode in inspect.getmro(pyclass):
-            if key == node_str:
-                try:
-                    json_text = pyclass._from_json(node_dict)
-                    return json_text
-                except Exception as exc:
-                    raise CRIPTJsonDeserializationError(key, str(node_str)) from exc
-    # Fall back
-    return node_dict
-
-
 def load_nodes_from_json(nodes_json: str):
     """
     User facing function, that return a node and all its children from a json input.
     """
-    return json.loads(nodes_json, object_hook=_node_json_hook)
+    node_json_hook = _NodeDecoderHook()
+    json_nodes = json.loads(nodes_json, object_hook=node_json_hook)
+
+    # TODO: enable this logic to replace proxies, once beartype is OK with that.
+    # def recursive_proxy_replacement(node, handled_nodes):
+    #     if isinstance(node, _UIDProxy):
+    #         try:
+    #             node = node_json_hook._uid_cache[node.uid]
+    #         except KeyError as exc:
+    #             raise CRIPTDeserializationUIDError(node.node_type, node.uid)
+    #         return node
+    #     handled_nodes.add(node.uid)
+    #     for field in node._json_attrs.__dict__:
+    #         child_node = getattr(node._json_attrs, field)
+    #         if not isinstance(child_node, list):
+    #             if hasattr(cn, "__bases__") and BaseNode in child_node.__bases__:
+    #                 child_node = recursive_proxy_replacement(child_node, handled_nodes)
+    #                 node._json_attrs = replace(node._json_attrs, field=child_node)
+    #         else:
+    #             for i, cn in enumerate(child_node):
+    #                 if hasattr(cn, "__bases__") and BaseNode in cn.__bases__:
+    #                     if cn.uid not in handled_nodes:
+    #                         child_node[i] = recursive_proxy_replacement(cn, handled_nodes)
+
+    #     return node
+    # handled_nodes = set()
+    # recursive_proxy_replacement(json_nodes, handled_nodes)
+    return json_nodes
 
 
 def add_orphaned_nodes_to_project(project: Project, active_experiment: Experiment, max_iteration: int = -1):

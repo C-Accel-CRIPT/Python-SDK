@@ -628,27 +628,6 @@ class API:
             just downloads the file to the specified path
         """
 
-        # TODO this needs testing
-        # download file if the source is a web URL
-        if object_name.startswith("http"):
-            try:
-                response: requests.Response = requests.get(url=object_name)
-
-                # Raises an HTTPError if the status code is not 200
-                response.raise_for_status()
-
-                file_contents: bytes = response.content
-
-                # convert str or Path object to Path object to be flexible in accepting user input
-                destination_file_path = Path(destination_path).resolve()
-
-                with open(destination_file_path, "wb") as file:
-                    file.write(file_contents)
-                return
-
-            except requests.exceptions.HTTPError as error:
-                raise FileDownloadError(error_message="Failed to download file. Error: {str(error)}")
-
         # file is stored in cloud storage and must be retrieved via object_name
         self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=object_name, Filename=destination_path)
 

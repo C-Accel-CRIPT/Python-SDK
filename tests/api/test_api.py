@@ -9,8 +9,8 @@ from cript.api.exceptions import InvalidVocabulary
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 # TODO both imports are needed for API file upload and download tests
-# import uuid
-# from datetime import datetime
+import uuid
+from datetime import datetime
 
 
 def test_create_api(cript_api: cript.API) -> None:
@@ -39,8 +39,8 @@ def test_api_with_invalid_host() -> None:
 
 # TODO commented out for now because it needs an API container
 def test_api_context(cript_api: cript.API) -> None:
-#     assert cript.api.api._global_cached_api is not None
-#     assert cript.api.api._get_global_cached_api() is not None
+    #     assert cript.api.api._global_cached_api is not None
+    #     assert cript.api.api._get_global_cached_api() is not None
     pass
 
 
@@ -194,6 +194,45 @@ def test_api_save_project(cript_api: cript.API, simple_project_node) -> None:
     """
     # cript_api.save(simple_project_node)
     pass
+
+
+def test_upload_and_download_file(cript_api, tmp_path_factory) -> None:
+    """
+    tests file upload to cloud storage
+    test by uploading a file and then downloading the same file and checking their contents are the same
+    proving that the file was uploaded and downloaded correctly
+
+    1. create a temporary file
+        1. write a unique string to the temporary file via UUID4 and date
+            so when downloading it later the downloaded file cannot possibly be a mistake and we know
+            for sure that it is the correct file uploaded and downloaded
+    1. upload to AWS S3 `tests/` directory
+    1. we can be sure that the file has been correctly uploaded to AWS S3 if we can download the same file
+        and assert that the file contents are the same as original
+    """
+
+    file_text: str = (
+        f"This is an automated test from the Python SDK within `tests/api/test_api.py` " f"within the `test_upload_file_to_aws_s3()` test function " f"on UTC time of '{datetime.utcnow()}' " f"with the unique UUID of '{str(uuid.uuid4())}'"
+    )
+
+    # Create a temporary file with unique contents
+    upload_test_file = tmp_path_factory.mktemp("test_api_file_upload") / "temp_upload_file.txt"
+    upload_test_file.write_text(file_text)
+
+    # upload file to AWS S3
+    my_file_cloud_storage_object_name = cript_api.upload_file(file_path=upload_test_file)
+
+    # temporary file path and new file to write the cloud storage file contents to
+    download_test_file = tmp_path_factory.mktemp("test_api_file_download") / "temp_download_file.txt"
+
+    # download file from cloud storage
+    cript_api.download_file(object_name=my_file_cloud_storage_object_name, destination_path=download_test_file)
+
+    # read file contents
+    downloaded_file_contents = download_test_file.read_text()
+
+    # assert download file contents are the same as uploaded file contents
+    assert downloaded_file_contents == file_text
 
 
 # TODO get the search tests to pass on GitHub

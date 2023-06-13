@@ -5,7 +5,7 @@ repo_name: C-Accel-CRIPT/Python-SDK
 
 nav:
   - Home: index.md
-  #  - Crash Course: crash_course.md
+  - Example Code Walkthrough: examples/synthesis.md
   - API:
       - API: api/api.md
       - Search Modes: api/search_modes.md

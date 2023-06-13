@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field, replace
-from typing import List, Union
+from typing import List, Optional, Union
+
+from beartype import beartype
 
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.subobjects.quantity import Quantity
@@ -29,7 +31,7 @@ class Ingredient(UUIDBaseNode):
     |------------|----------------|----------|------------------------|----------|-------|
     | material   | Material       |          | material               | True     |       |
     | quantity   | list[Quantity] |          | quantities             | True     |       |
-    | keyword    | str            | catalyst | keyword for ingredient |          | True  |
+    | keyword    | list(str)      | catalyst | keyword for ingredient |          | True  |
 
     ## JSON Representation
     ```json
@@ -39,13 +41,14 @@ class Ingredient(UUIDBaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(UUIDBaseNode.JsonAttributes):
-        material: Union[Material, None] = None
+        material: Optional[Material] = None
         quantity: List[Quantity] = field(default_factory=list)
-        keyword: str = ""
+        keyword: List[str] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, material: Material, quantity: List[Quantity], keyword: str = "", **kwargs):
+    @beartype
+    def __init__(self, material: Material, quantity: List[Quantity], keyword: Optional[List[str]] = None, **kwargs):
         """
         create an ingredient sub-object
 
@@ -71,7 +74,7 @@ class Ingredient(UUIDBaseNode):
             material node
         quantity : List[Quantity]
             list of quantity sub-objects
-        keyword : str, optional
+        keyword : List[str], optional
             ingredient keyword must come from [CRIPT Controlled Vocabulary](), by default ""
 
         Returns
@@ -80,11 +83,14 @@ class Ingredient(UUIDBaseNode):
             Create new Ingredient sub-object
         """
         super().__init__(**kwargs)
+        if keyword is None:
+            keyword = []
         self._json_attrs = replace(self._json_attrs, material=material, quantity=quantity, keyword=keyword)
         self.validate()
 
     @property
-    def material(self) -> Material:
+    @beartype
+    def material(self) -> Union[Material, None]:
         """
         current material in this ingredient sub-object
 
@@ -96,6 +102,7 @@ class Ingredient(UUIDBaseNode):
         return self._json_attrs.material
 
     @property
+    @beartype
     def quantity(self) -> List[Quantity]:
         """
         quantity for the ingredient sub-object
@@ -107,6 +114,7 @@ class Ingredient(UUIDBaseNode):
         """
         return self._json_attrs.quantity.copy()
 
+    @beartype
     def set_material(self, new_material: Material, new_quantity: List[Quantity]) -> None:
         """
         update ingredient sub-object with new material and new list of quantities
@@ -141,7 +149,8 @@ class Ingredient(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def keyword(self) -> str:
+    @beartype
+    def keyword(self) -> List[str]:
         """
         ingredient keyword must come from the [CRIPT controlled vocabulary]()
 
@@ -157,10 +166,11 @@ class Ingredient(UUIDBaseNode):
         str
             get the current ingredient keyword
         """
-        return self._json_attrs.keyword
+        return self._json_attrs.keyword.copy()
 
     @keyword.setter
-    def keyword(self, new_keyword: str) -> None:
+    @beartype
+    def keyword(self, new_keyword: List[str]) -> None:
         """
         set new ingredient keyword to replace the current
 

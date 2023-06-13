@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field, replace
 from typing import List
 
+from beartype import beartype
+
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -35,6 +37,7 @@ class Inventory(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(self, name: str, material: List[Material], notes: str = "", **kwargs) -> None:
         """
         Instantiate an inventory node
@@ -76,8 +79,8 @@ class Inventory(PrimaryBaseNode):
 
         self._json_attrs = replace(self._json_attrs, material=material)
 
-    # ------------------ Properties ------------------
     @property
+    @beartype
     def material(self) -> List[Material]:
         """
         List of [material](../material) in this inventory
@@ -101,6 +104,7 @@ class Inventory(PrimaryBaseNode):
         return self._json_attrs.material.copy()
 
     @material.setter
+    @beartype
     def material(self, new_material_list: List[Material]):
         """
         set the list of material for this inventory node

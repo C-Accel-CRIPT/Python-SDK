@@ -144,8 +144,8 @@ def test_deserialize_material_from_json() -> None:
     assert my_material.name == api_material["name"]
     assert my_material.component == []
     assert my_material.property == []
-    assert my_material.parent_material == []
-    assert my_material.computational_forcefield == []
+    assert my_material.parent_material is None
+    assert my_material.computational_forcefield is None
     assert my_material.keyword == []
     assert my_material.notes == api_material["notes"]
 

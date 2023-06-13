@@ -183,3 +183,19 @@ class APIError(CRIPTException):
         error_message: str = f"The API responded with {self.api_error}"
 
         return error_message
+
+
+class FileDownloadError(CRIPTException):
+    """
+    ## Definition
+    This error is raised when the API wants to download a file from an AWS S3 URL
+    via the `cript.API.download_file()` method, but the status is something other than 200.
+    """
+
+    error_message: str = ""
+
+    def __init__(self, error_message: str) -> None:
+        self.error_message = error_message
+
+    def __str__(self) -> str:
+        return self.error_message

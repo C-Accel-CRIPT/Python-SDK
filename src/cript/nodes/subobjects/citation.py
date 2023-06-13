@@ -1,5 +1,7 @@
 from dataclasses import dataclass, replace
-from typing import Union
+from typing import Optional, Union
+
+from beartype import beartype
 
 from cript.nodes.primary_nodes.reference import Reference
 from cript.nodes.uuid_base import UUIDBaseNode
@@ -60,10 +62,11 @@ class Citation(UUIDBaseNode):
     @dataclass(frozen=True)
     class JsonAttributes(UUIDBaseNode.JsonAttributes):
         type: str = ""
-        reference: Union[Reference, None] = None
+        reference: Optional[Reference] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(self, type: str, reference: Reference, **kwargs):
         """
         create a Citation subobject
@@ -109,6 +112,7 @@ class Citation(UUIDBaseNode):
         self.validate()
 
     @property
+    @beartype
     def type(self) -> str:
         """
         Citation type subobject
@@ -129,6 +133,7 @@ class Citation(UUIDBaseNode):
         return self._json_attrs.type
 
     @type.setter
+    @beartype
     def type(self, new_type: str) -> None:
         """
         set the citation subobject type
@@ -148,7 +153,8 @@ class Citation(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def reference(self) -> Reference:
+    @beartype
+    def reference(self) -> Union[Reference, None]:
         """
         citation reference node
 
@@ -180,6 +186,7 @@ class Citation(UUIDBaseNode):
         return self._json_attrs.reference
 
     @reference.setter
+    @beartype
     def reference(self, new_reference: Reference) -> None:
         """
         replace the current Reference node for the citation subobject

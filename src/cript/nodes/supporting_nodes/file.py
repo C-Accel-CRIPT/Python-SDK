@@ -2,6 +2,8 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Union
 
+from beartype import beartype
+
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
@@ -99,6 +101,7 @@ class File(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(self, name: str, source: str, type: str, extension: str = "", data_dictionary: str = "", notes: str = "", **kwargs):
         """
         create a File node
@@ -168,6 +171,7 @@ class File(PrimaryBaseNode):
 
     # --------------- Properties ---------------
     @property
+    @beartype
     def source(self) -> str:
         """
         The File node source can be set to be either a path to a local file on disk
@@ -193,6 +197,7 @@ class File(PrimaryBaseNode):
         return self._json_attrs.source
 
     @source.setter
+    @beartype
     def source(self, new_source: str) -> None:
         """
         sets the source of the file node
@@ -230,6 +235,7 @@ class File(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def type(self) -> str:
         """
         The [File type]() must come from [CRIPT controlled vocabulary]()
@@ -248,6 +254,7 @@ class File(PrimaryBaseNode):
         return self._json_attrs.type
 
     @type.setter
+    @beartype
     def type(self, new_type: str) -> None:
         """
         set the file type
@@ -274,6 +281,7 @@ class File(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def extension(self) -> str:
         """
         The file extension property explicitly states what is the file extension of the file node.
@@ -292,6 +300,7 @@ class File(PrimaryBaseNode):
         return self._json_attrs.extension
 
     @extension.setter
+    @beartype
     def extension(self, new_extension) -> None:
         """
         sets the new file extension
@@ -315,6 +324,7 @@ class File(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def data_dictionary(self) -> str:
         # TODO data dictionary needs documentation describing it and how to use it
         """
@@ -339,6 +349,7 @@ class File(PrimaryBaseNode):
         return self._json_attrs.data_dictionary
 
     @data_dictionary.setter
+    @beartype
     def data_dictionary(self, new_data_dictionary: str) -> None:
         """
         Sets the data dictionary for the file node.

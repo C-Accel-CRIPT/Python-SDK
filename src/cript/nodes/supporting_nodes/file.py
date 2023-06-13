@@ -226,8 +226,8 @@ class File(PrimaryBaseNode):
         """
 
         if _is_local_file(new_source):
-                object_name: str = _upload_file_and_get_object_name(source=new_source)
-                new_source = object
+            object_name: str = _upload_file_and_get_object_name(source=new_source)
+            new_source = object
 
         new_attrs = replace(self._json_attrs, source=new_source)
         self._update_json_attrs_if_valid(new_attrs)
@@ -363,7 +363,6 @@ class File(PrimaryBaseNode):
         """
         new_attrs = replace(self._json_attrs, data_dictionary=new_data_dictionary)
         self._update_json_attrs_if_valid(new_attrs)
-
 
     # TODO get file name from node itself as default and allow for customization as well optional
     def download(

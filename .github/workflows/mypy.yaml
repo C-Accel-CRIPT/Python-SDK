@@ -17,7 +17,7 @@ jobs:
   mypy-test:
     strategy:
       matrix:
-        python-version: [3.7, 3.11]
+        python-version: [3.11]
         os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}

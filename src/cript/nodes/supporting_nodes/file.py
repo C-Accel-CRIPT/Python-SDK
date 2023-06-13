@@ -48,11 +48,10 @@ def _upload_file_and_get_object_name(source: Union[str, Path]) -> str:
 
     if _is_local_file(file_source=source):
         api = _get_global_cached_api()
-        url_source = api.upload_file(file_path=source)
-        source = url_source
+        object_name = api.upload_file(file_path=source)
+        source = object_name
 
     return source
-
 
 
 class File(PrimaryBaseNode):
@@ -159,11 +158,10 @@ class File(PrimaryBaseNode):
         self._json_attrs = replace(
             self._json_attrs,
             type=type,
+            source=source,
             extension=extension,
             data_dictionary=data_dictionary,
         )
-
-        self.source = source
 
         self.validate()
 
@@ -400,4 +398,4 @@ class File(PrimaryBaseNode):
 
         absolute_file_path = str((existing_folder_path / file_name).resolve())
 
-        api.download_file(file_url=self.source, destination_path=absolute_file_path)
+        api.download_file(object_name=self.source, destination_path=absolute_file_path)

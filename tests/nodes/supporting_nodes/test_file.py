@@ -44,10 +44,10 @@ def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
     local_file_path.write_text(file_text)
 
     # create a file node with a local file path
-    my_file = cript.File(source=str(local_file_path), type="data")
+    my_file = cript.File(name="my local file source node", source=str(local_file_path), type="data")
 
     # check that the file source has been uploaded to cloud storage and source has changed to reflect that
-    assert my_file.source.startswith("https://cript-development-user-data.s3.amazonaws.com")
+    assert my_file.source.startswith("tests/")
 
     # Get the temporary directory path and clean up handled by pytest
     download_file_dir = tmp_path_factory.mktemp("file_test_download_file_dir")
@@ -64,6 +64,7 @@ def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
 
     # assert file contents for upload and download are the same
     assert downloaded_file_contents == file_text
+
 
 def test_create_file_local_source(tmp_path) -> None:
     """

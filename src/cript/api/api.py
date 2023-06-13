@@ -4,21 +4,16 @@ import os
 import uuid
 import warnings
 from pathlib import Path
-from typing import Dict, List, Union, Any
+from typing import Any, Dict, List, Union
 
 import boto3
 import jsonschema
 import requests
 from beartype import beartype
 
-from cript.api.exceptions import (
-    APIError,
-    CRIPTAPIRequiredError,
-    CRIPTAPISaveError,
-    CRIPTConnectionError,
-    InvalidHostError,
-    InvalidVocabulary,
-)
+from cript.api.exceptions import (APIError, CRIPTAPIRequiredError,
+                                  CRIPTAPISaveError, CRIPTConnectionError,
+                                  InvalidHostError, InvalidVocabulary)
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
 from cript.api.valid_search_modes import SearchModes

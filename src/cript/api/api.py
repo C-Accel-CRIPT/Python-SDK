@@ -159,7 +159,7 @@ class API:
         self._http_headers = {"Authorization": f"{self._token}", "Content-Type": "application/json"}
 
         # TODO commenting this out for now because there is no GitHub API container, and all tests will fail
-        # self._s3_client = self._get_s3_client()
+        self._s3_client = self._get_s3_client()
 
         # check that api can connect to CRIPT with host and token
         self._check_initial_host_connection()
@@ -585,7 +585,11 @@ class API:
         object_name = f"{self._BUCKET_DIRECTORY_NAME}/{new_file_name}"
 
         # upload file to AWS S3
-        self._s3_client.upload_file(file_path, self._BUCKET_NAME, object_name)  # type: ignore
+        self._s3_client.upload_file(
+            Filename=file_path,
+            Bucket=self._BUCKET_NAME,
+            Key=object_name
+        )  # type: ignore
 
         # return the object_name within AWS S3 for easy retrieval
         return object_name

@@ -650,11 +650,7 @@ class API:
                 raise FileDownloadError(error_message="Failed to download file. Error: {str(error)}")
 
         # file is stored in cloud storage and must be retrieved via object_name
-        self._s3_client.download_file(
-            Bucket=self._BUCKET_NAME,
-            Key=object_name,
-            Filename=destination_path
-        )
+        self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=object_name, Filename=destination_path)
 
     @beartype
     def search(

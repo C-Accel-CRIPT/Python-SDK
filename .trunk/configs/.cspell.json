@@ -72,8 +72,9 @@
     "buildscript",
     "markdownlint",
     "Numpy",
-    "boto"
+    "boto",
     "beartype",
-    "mypy"
+    "mypy",
+
   ]
 }

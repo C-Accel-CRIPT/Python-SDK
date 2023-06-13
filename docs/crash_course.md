@@ -2,6 +2,8 @@
 
 This Crash Course will guide you through some common commands of the CRIPT Python SDK.
 
+> It is essential to understand the CRIPT Data Model to easily use the CRIPT Python SDk
+
 ---
 
 ## Install CRIPT

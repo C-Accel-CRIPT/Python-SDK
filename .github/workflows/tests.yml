@@ -1,3 +1,5 @@
+# Runs all the Python SDK tests within the `tests/` directory to check our code
+
 name: Tests
 
 on:

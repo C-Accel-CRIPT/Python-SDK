@@ -63,7 +63,7 @@ class API:
     _IDENTITY_POOL_ID: str = "us-east-1:555e15fe-05c1-4f63-9f58-c84d8fd6dc99"
     _COGNITO_LOGIN_PROVIDER: str = "cognito-idp.us-east-1.amazonaws.com/us-east-1_VinmyZ0zW"
     _BUCKET_NAME: str = "cript-development-user-data"
-    _BUCKET_DIRECTORY_NAME: str = "tests"
+    _BUCKET_DIRECTORY_NAME: str = "user_files"
     _s3_client: boto3.client = None
     # trunk-ignore-end(cspell)
 

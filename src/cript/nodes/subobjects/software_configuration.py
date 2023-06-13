@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field, replace
 from typing import List, Union
 
+from beartype import beartype
+
 from cript.nodes.core import BaseNode
 from cript.nodes.subobjects.algorithm import Algorithm
 from cript.nodes.subobjects.citation import Citation
@@ -51,6 +53,7 @@ class SoftwareConfiguration(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(self, software: Software, algorithm: Union[List[Algorithm], None] = None, notes: str = "", citation: Union[List[Citation], None] = None, **kwargs):
         """
         Create Software_Configuration sub-object
@@ -91,6 +94,7 @@ class SoftwareConfiguration(BaseNode):
         self.validate()
 
     @property
+    @beartype
     def software(self) -> Union[Software, None]:
         """
         Software used
@@ -113,6 +117,7 @@ class SoftwareConfiguration(BaseNode):
         return self._json_attrs.software
 
     @software.setter
+    @beartype
     def software(self, new_software: Union[Software, None]) -> None:
         """
         set the Software used
@@ -130,6 +135,7 @@ class SoftwareConfiguration(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def algorithm(self) -> List[Algorithm]:
         """
         list of Algorithms used
@@ -150,6 +156,7 @@ class SoftwareConfiguration(BaseNode):
         return self._json_attrs.algorithm.copy()
 
     @algorithm.setter
+    @beartype
     def algorithm(self, new_algorithm: List[Algorithm]) -> None:
         """
         set the list of Algorithms
@@ -167,6 +174,7 @@ class SoftwareConfiguration(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def notes(self) -> str:
         """
         miscellaneous information, or custom data structure (e.g.; JSON). Notes can be written in plain text or JSON
@@ -191,6 +199,7 @@ class SoftwareConfiguration(BaseNode):
         return self._json_attrs.notes
 
     @notes.setter
+    @beartype
     def notes(self, new_notes: str) -> None:
         """
         set notes for Software_configuration
@@ -208,6 +217,7 @@ class SoftwareConfiguration(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def citation(self) -> List[Citation]:
         """
         list of Citation sub-objects for the Software_Configuration
@@ -247,6 +257,7 @@ class SoftwareConfiguration(BaseNode):
         return self._json_attrs.citation.copy()
 
     @citation.setter
+    @beartype
     def citation(self, new_citation: List[Citation]) -> None:
         """
         set the Citation sub-object

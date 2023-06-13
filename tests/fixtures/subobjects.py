@@ -136,12 +136,12 @@ def complex_property_dict(complex_material_node, complex_condition_dict, complex
         "uncertainty": 0.1,
         "uncertainty_type": "stdev",
         "structure": "structure",
-        "sample_preparation": json.loads(simple_process_node.json),
+        "sample_preparation": json.loads(simple_process_node.get_json(condense_to_uuid={}).json),
         "method": "comp",
         "condition": [complex_condition_dict],
-        "data": [json.loads(complex_data_node.json)],
+        "data": [json.loads(complex_data_node.get_json(condense_to_uuid={}).json)],
         "citation": [complex_citation_dict],
-        "computation": [json.loads(simple_computation_node.json)],
+        "computation": [json.loads(simple_computation_node.get_json(condense_to_uuid={}).json)],
         "notes": "notes",
     }
     return strip_uid_from_dict(ret_dict)
@@ -200,7 +200,7 @@ def complex_condition_dict(complex_data_node) -> dict:
         "uncertainty_type": "stdev",
         "set_id": 0,
         "measurement_id": 2,
-        "data": [json.loads(complex_data_node.json)],
+        "data": [json.loads(complex_data_node.get_json(condense_to_uuid={}).json)],
     }
     return ret_dict
 

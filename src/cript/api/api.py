@@ -9,6 +9,7 @@ from typing import Dict, List, Union
 import boto3
 import jsonschema
 import requests
+from beartype import beartype
 
 from cript.api.exceptions import (
     APIError,
@@ -66,6 +67,7 @@ class API:
     _s3_client: boto3.client = None
     # trunk-ignore-end(cspell)
 
+    @beartype
     def __init__(self, host: Union[str, None] = None, token: Union[str, None] = None, config_file_path: str = ""):
         """
         Initialize CRIPT API client with host and token.
@@ -150,8 +152,8 @@ class API:
             host = authentication_dict["host"]
             token = authentication_dict["token"]
 
-        self._host = self._prepare_host(host=host)
-        self._token = token
+        self._host = self._prepare_host(host=host)  # type: ignore
+        self._token = token  # type: ignore
 
         # assign headers
         # TODO might need to add Bearer to it or check for it
@@ -165,6 +167,7 @@ class API:
 
         self._get_db_schema()
 
+    @beartype
     def _prepare_host(self, host: str) -> str:
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
@@ -209,6 +212,7 @@ class API:
         self.connect()
         return self
 
+    @beartype
     def __exit__(self, type, value, traceback):
         self.disconnect()
 
@@ -319,6 +323,7 @@ class API:
 
         return self._vocabulary
 
+    @beartype
     def get_vocab_by_category(self, category: ControlledVocabularyCategories) -> List[dict]:
         """
         get the CRIPT controlled vocabulary by category
@@ -350,6 +355,7 @@ class API:
 
         return self._vocabulary[category.value]
 
+    @beartype
     def _is_vocab_valid(self, vocab_category: ControlledVocabularyCategories, vocab_word: str) -> bool:
         """
         checks if the vocabulary is valid within the CRIPT controlled vocabulary.
@@ -426,7 +432,7 @@ class API:
             self._db_schema = response["data"]
             return self._db_schema
 
-    # TODO this should later work with both POST and PATCH. Currently, just works for POST
+    @beartype
     def _is_node_schema_valid(self, node_json: str) -> bool:
         """
         checks a node JSON schema against the db schema to return if it is valid or not.
@@ -485,6 +491,7 @@ class API:
         # if validation goes through without any problems return True
         return True
 
+    @beartype
     def save(self, project: Project) -> None:
         """
         This method takes a project node, serializes the class into JSON
@@ -507,12 +514,9 @@ class API:
         None
             Just sends a `POST` or `Patch` request to the API
         """
-        # TODO work on this later to allow for PATCH as well
-        response = requests.post(url=f"{self._host}/{project.node_type.lower()}", headers=self._http_headers, data=project.json)
+        response: Dict = requests.post(url=f"{self._host}/{project.node_type.lower()}", headers=self._http_headers, data=project.json).json()
 
-        response = response.json()
-
-        # if htt response is not 200 then show the API error to the user
+        # if http response is not 200 then show the API error to the user
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
 
@@ -652,7 +656,7 @@ class API:
             Filename=destination_path
         )
 
-    # TODO reset to work with real nodes node_type.node and node_type to be PrimaryNode
+    @beartype
     def search(
         self,
         node_type: BaseNode,
@@ -696,20 +700,22 @@ class API:
         # always putting a page parameter of 0 for all search URLs
         page_number = 0
 
+        api_endpoint: str = ""
         # requesting a page of some primary node
         if search_mode == SearchModes.NODE_TYPE:
-            api_endpoint: str = f"{self._host}/{node_type}"
+            api_endpoint = f"{self._host}/{node_type}"
 
         elif search_mode == SearchModes.CONTAINS_NAME:
-            api_endpoint: str = f"{self._host}/search/{node_type}"
+            api_endpoint = f"{self._host}/search/{node_type}"
 
         elif search_mode == SearchModes.EXACT_NAME:
-            api_endpoint: str = f"{self._host}/search/exact/{node_type}"
+            api_endpoint = f"{self._host}/search/exact/{node_type}"
 
         elif search_mode == SearchModes.UUID:
-            api_endpoint: str = f"{self._host}/{node_type}/{value_to_search}"
+            api_endpoint = f"{self._host}/{node_type}/{value_to_search}"
             # putting the value_to_search in the URL instead of a query
             value_to_search = None
 
+        assert api_endpoint != ""
         # TODO error handling if none of the API endpoints got hit
         return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, query=value_to_search, current_page_number=page_number)

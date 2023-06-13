@@ -1,6 +1,8 @@
 from dataclasses import dataclass, replace
 
-from cript.nodes.uuid_base import UUIDBaseNode
+from beartype import beartype
+
+from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
 def _is_local_file(file_source: str) -> bool:
@@ -21,7 +23,7 @@ def _is_local_file(file_source: str) -> bool:
         return True
 
 
-class File(UUIDBaseNode):
+class File(PrimaryBaseNode):
     """
     ## Definition
 
@@ -55,7 +57,7 @@ class File(UUIDBaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(UUIDBaseNode.JsonAttributes):
+    class JsonAttributes(PrimaryBaseNode.JsonAttributes):
         """
         all file attributes
         """
@@ -67,12 +69,15 @@ class File(UUIDBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, source: str, type: str, extension: str = "", data_dictionary: str = "", **kwargs):
+    @beartype
+    def __init__(self, name: str, source: str, type: str, extension: str = "", data_dictionary: str = "", notes: str = "", **kwargs):
         """
         create a File node
 
         Parameters
         ----------
+        name: str
+            File node name
         source: str
             link or path to local file
         type: str
@@ -81,6 +86,8 @@ class File(UUIDBaseNode):
             file extension
         data_dictionary:str
             extra information describing the file
+        notes: str
+            notes for the file node
         **kwargs:dict
             for internal use. Any extra data needed to create this file node
             when deserializing the JSON response from the API
@@ -107,7 +114,7 @@ class File(UUIDBaseNode):
             ```
         """
 
-        super().__init__(**kwargs)
+        super().__init__(name=name, notes=notes, **kwargs)
 
         # TODO check if vocabulary is valid or not
         # is_vocab_valid("file type", type)
@@ -128,6 +135,7 @@ class File(UUIDBaseNode):
 
     # --------------- Properties ---------------
     @property
+    @beartype
     def source(self) -> str:
         """
         The File node source can be set to be either a path to a local file on disk
@@ -153,6 +161,7 @@ class File(UUIDBaseNode):
         return self._json_attrs.source
 
     @source.setter
+    @beartype
     def source(self, new_source: str) -> None:
         """
         sets the source of the file node
@@ -194,6 +203,7 @@ class File(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def type(self) -> str:
         """
         The [File type]() must come from [CRIPT controlled vocabulary]()
@@ -212,6 +222,7 @@ class File(UUIDBaseNode):
         return self._json_attrs.type
 
     @type.setter
+    @beartype
     def type(self, new_type: str) -> None:
         """
         set the file type
@@ -238,6 +249,7 @@ class File(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def extension(self) -> str:
         """
         The file extension property explicitly states what is the file extension of the file node.
@@ -256,6 +268,7 @@ class File(UUIDBaseNode):
         return self._json_attrs.extension
 
     @extension.setter
+    @beartype
     def extension(self, new_extension) -> None:
         """
         sets the new file extension
@@ -279,6 +292,7 @@ class File(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def data_dictionary(self) -> str:
         # TODO data dictionary needs documentation describing it and how to use it
         """
@@ -303,6 +317,7 @@ class File(UUIDBaseNode):
         return self._json_attrs.data_dictionary
 
     @data_dictionary.setter
+    @beartype
     def data_dictionary(self, new_data_dictionary: str) -> None:
         """
         Sets the data dictionary for the file node.

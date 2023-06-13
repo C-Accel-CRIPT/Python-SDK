@@ -73,5 +73,7 @@
     "markdownlint",
     "Numpy",
     "boto"
+    "beartype",
+    "mypy"
   ]
 }

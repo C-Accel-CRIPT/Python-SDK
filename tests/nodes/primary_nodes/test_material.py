@@ -5,7 +5,7 @@ from util import strip_uid_from_dict
 import cript
 
 
-def test_create_complex_material(simple_material_node, simple_computational_forcefield_node) -> None:
+def test_create_complex_material(simple_material_node, simple_computational_forcefield_node, simple_process_node) -> None:
     """
     tests that a simple material can be created with only the required arguments
     """
@@ -19,13 +19,14 @@ def test_create_complex_material(simple_material_node, simple_computational_forc
 
     my_property = [cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")]
 
-    my_material = cript.Material(name=material_name, identifiers=identifiers, keyword=keyword, component=component, property=my_property, computational_forcefield=forcefield)
+    my_material = cript.Material(name=material_name, identifiers=identifiers, keyword=keyword, component=component, process=simple_process_node, property=my_property, computational_forcefield=forcefield)
 
     assert isinstance(my_material, cript.Material)
     assert my_material.name == material_name
     assert my_material.identifiers == identifiers
     assert my_material.keyword == keyword
     assert my_material.component == component
+    assert my_material.process == simple_process_node
     assert my_material.property == my_property
     assert my_material.computational_forcefield == forcefield
 
@@ -88,21 +89,17 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     assert simple_material_node.component == new_components
 
 
-def test_serialize_material_to_json(simple_material_node) -> None:
+def test_serialize_material_to_json(complex_material_dict, complex_material_node) -> None:
     """
     tests that it can correctly turn the material node into its equivalent JSON
     """
     # the JSON that the material should serialize to
-    expected_dict = {
-        "node": ["Material"],
-        "name": "my material",
-        "bigsmiles": "123456",
-    }
 
     # compare dicts because that is more accurate
-    ref_dict = json.loads(simple_material_node.json)
+    ref_dict = json.loads(complex_material_node.get_json(condense_to_uuid={}).json)
     ref_dict = strip_uid_from_dict(ref_dict)
-    assert ref_dict == expected_dict
+
+    assert ref_dict == complex_material_dict
 
 
 # ---------- Integration Tests ----------
@@ -147,8 +144,8 @@ def test_deserialize_material_from_json() -> None:
     assert my_material.name == api_material["name"]
     assert my_material.component == []
     assert my_material.property == []
-    assert my_material.parent_material == []
-    assert my_material.computational_forcefield == []
+    assert my_material.parent_material is None
+    assert my_material.computational_forcefield is None
     assert my_material.keyword == []
     assert my_material.notes == api_material["notes"]
 

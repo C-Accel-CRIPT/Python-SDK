@@ -15,6 +15,7 @@ import pytest
 from fixtures.primary_nodes import (
     complex_collection_node,
     complex_data_node,
+    complex_material_dict,
     complex_material_node,
     complex_project_dict,
     complex_project_node,
@@ -87,7 +88,5 @@ def cript_api():
 
     assert cript.api.api._global_cached_api is None
     with cript.API(host=host, token=token) as api:
-        with open("db_schema.json", "w") as file_handle:
-            json.dump(api.schema, file_handle, indent=2)
         yield api
     assert cript.api.api._global_cached_api is None

@@ -16,7 +16,6 @@ from cript.api.exceptions import (
     CRIPTAPIRequiredError,
     CRIPTAPISaveError,
     CRIPTConnectionError,
-    FileDownloadError,
     InvalidHostError,
     InvalidVocabulary,
 )

@@ -74,7 +74,6 @@
     "Numpy",
     "boto",
     "beartype",
-    "mypy",
-
+    "mypy"
   ]
 }

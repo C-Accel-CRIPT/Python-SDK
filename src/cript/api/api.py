@@ -63,7 +63,7 @@ class API:
     _COGNITO_LOGIN_PROVIDER: str = "cognito-idp.us-east-1.amazonaws.com/us-east-1_VinmyZ0zW"
     _BUCKET_NAME: str = "cript-development-user-data"
     _BUCKET_DIRECTORY_NAME: str = "user_files"
-    _s3_client = None  # type: ignore
+    _s3_client: Any = None  # type: ignore
     # trunk-ignore-end(cspell)
 
     @beartype

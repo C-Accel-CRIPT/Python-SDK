@@ -63,7 +63,7 @@ class API:
     _COGNITO_LOGIN_PROVIDER: str = "cognito-idp.us-east-1.amazonaws.com/us-east-1_VinmyZ0zW"
     _BUCKET_NAME: str = "cript-development-user-data"
     _BUCKET_DIRECTORY_NAME: str = "user_files"
-    _s3_client: boto3.client = None
+    _s3_client = None  # type: ignore
     # trunk-ignore-end(cspell)
 
     @beartype
@@ -181,7 +181,7 @@ class API:
 
         return host
 
-    def _get_s3_client(self) -> boto3.client:
+    def _get_s3_client(self) -> boto3.client:  # type: ignore
         """
         create a fully authenticated and ready s3 client
 
@@ -585,7 +585,7 @@ class API:
         object_name = f"{self._BUCKET_DIRECTORY_NAME}/{new_file_name}"
 
         # upload file to AWS S3
-        self._s3_client.upload_file(file_path, self._BUCKET_NAME, object_name)
+        self._s3_client.upload_file(file_path, self._BUCKET_NAME, object_name)  # type: ignore
 
         # return the object_name within AWS S3 for easy retrieval
         return object_name
@@ -628,7 +628,7 @@ class API:
         """
 
         # file is stored in cloud storage and must be retrieved via object_name
-        self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=object_name, Filename=destination_path)
+        self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=object_name, Filename=destination_path)  # type: ignore
 
     @beartype
     def search(

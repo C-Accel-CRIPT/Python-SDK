@@ -5,3 +5,4 @@ pytest-cov==4.1.0
 coverage==7.2.7
 types-jsonschema==4.17.0.8
 types-requests==2.31.0.1
+boto3-stubs==1.26.152   # provide type annotations for boto library to use with mypy

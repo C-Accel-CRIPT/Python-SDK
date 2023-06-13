@@ -48,3 +48,4 @@ merge:
     - test-coverage (ubuntu-latest, 3.11)
     - mypy-test (3.7, ubuntu-latest)
     - mypy-test (3.11, ubuntu-latest)
+    - test-examples (ubuntu-latest, 3.11)

@@ -6,3 +6,4 @@ coverage==7.2.7
 types-jsonschema==4.17.0.8
 types-requests==2.31.0.1
 types-boto3==1.0.2
+jupytext==1.13.6

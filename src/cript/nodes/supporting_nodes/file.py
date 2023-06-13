@@ -46,11 +46,16 @@ def _upload_file_and_get_object_name(source: Union[str, Path]) -> str:
     """
     from cript.api.api import _get_global_cached_api
 
+    # convert source to str for `_is_local_file` and to return str
+    source = str(source)
+
     if _is_local_file(file_source=source):
         api = _get_global_cached_api()
         object_name = api.upload_file(file_path=source)
-        source = object_name
+        # always getting a string for object_name
+        source = str(object_name)
 
+    # always returning a string
     return source
 
 
@@ -147,7 +152,8 @@ class File(PrimaryBaseNode):
 
         super().__init__(name=name, notes=notes, **kwargs)
 
-        if _is_local_file(file_source=source):
+        # always giving the function the required str regardless if the input `Path` or `str`
+        if _is_local_file(file_source=str(source)):
             # upload file source if local file
             source = _upload_file_and_get_object_name(source=source)
 
@@ -227,7 +233,7 @@ class File(PrimaryBaseNode):
 
         if _is_local_file(new_source):
             object_name: str = _upload_file_and_get_object_name(source=new_source)
-            new_source = object
+            new_source = object_name
 
         new_attrs = replace(self._json_attrs, source=new_source)
         self._update_json_attrs_if_valid(new_attrs)

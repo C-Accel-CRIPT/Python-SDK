@@ -585,7 +585,7 @@ class API:
         object_name = f"{self._BUCKET_DIRECTORY_NAME}/{new_file_name}"
 
         # upload file to AWS S3
-        self._s3_client.upload_file(file_path, self._BUCKET_NAME, object_name)  # type: ignore
+        self._s3_client.upload_file(Filename=file_path, Bucket=self._BUCKET_NAME, Key=object_name)  # type: ignore
 
         # return the object_name within AWS S3 for easy retrieval
         return object_name

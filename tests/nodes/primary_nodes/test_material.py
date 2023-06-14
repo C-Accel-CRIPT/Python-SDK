@@ -103,10 +103,12 @@ def test_serialize_material_to_json(complex_material_dict, complex_material_node
 
 
 # ---------- Integration Tests ----------
-def test_save_material_to_api() -> None:
+def test_save_material_to_api(cript_api, simple_material_node, simple_project_node) -> None:
     """
     tests if the material can be saved to the API without errors and status code of 200
     """
+    simple_project_node.material = [simple_material_node]
+    cript_api.save(project=simple_project_node)
     pass
 
 

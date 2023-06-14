@@ -5,5 +5,3 @@
 - [Dylan Walsh](https://github.com/dylanwal/)
 - [Brilant Kasami](https://github.com/brili)
 - [Fatjon Ismailaj](https://github.com/fatjon95)
-
-

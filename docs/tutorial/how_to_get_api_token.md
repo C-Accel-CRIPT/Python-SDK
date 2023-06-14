@@ -1,9 +1,12 @@
-# How to Get an API Token
+!!! abstract
 
-This page shows the steps to acquiring an API Token to connect to the [CRIPT platform](https://criptapp.org)
+    This page shows the steps to acquiring an API Token to connect to the [CRIPT platform](https://criptapp.org)
+
+<br/>
 
 The token is needed because we need to authenticate the user before saving any of their data
 
+<!--
 <img class="screenshot-border" src="../../assets/images/tutorial/cript_login_screen_for_token.png" alt="Screenshot of CRIPT login screen">
 
 <img class="screenshot-border" src="../../assets/images/tutorial/api_token_page.png" alt="Screenshot of CRIPT security page where API token is found">
@@ -12,6 +15,8 @@ The token is needed because we need to authenticate the user before saving any o
    <a href="https://criptapp.org/security/" target="_blank">Security Settings</a> 
    under the profile icon dropdown
 </small>
+
+-->
 
 To get your token:
 
@@ -22,8 +27,6 @@ To get your token:
 3. Now you can paste it into the `API Token` field
 
 > Note: The "Token" in front of the random characters is part of the token as well
-
-<br>
 
 Example:
 

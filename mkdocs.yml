@@ -7,6 +7,7 @@ nav:
   - Home: index.md
   - Tutorial:
       - CRIPT Installation Guide: tutorial/cript_installation_guide.md
+      - CRIPT API Token: tutorial/how_to_get_api_token.md
   - API Client:
       - API: api/api.md
       - Search Modes: api/search_modes.md

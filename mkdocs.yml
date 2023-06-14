@@ -5,6 +5,8 @@ repo_name: C-Accel-CRIPT/Python-SDK
 
 nav:
   - Home: index.md
+  - Tutorial:
+      - CRIPT Installation Guide: tutorial/cript_installation_guide.md
   - API:
       - API: api/api.md
       - Search Modes: api/search_modes.md

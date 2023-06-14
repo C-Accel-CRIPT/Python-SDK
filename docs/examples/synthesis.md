@@ -16,7 +16,7 @@ jupyter:
 
 This tutorial guides you through an example material synthesis workflow using the CRIPT Python SDK.
 
-Before you start, make sure the [cript](https://pypi.org/project/cript/) python package is installed.
+Before you start, make sure the [cript python package](https://pypi.org/project/cript/) is installed.
 
 ## Installation
 
@@ -29,13 +29,14 @@ pip install cript
 To connect to CRIPT, you must enter a `host` and an `API Token`. For most users, `host` will be `https://criptapp.org`.
 
 !!! Warning "Keep API Token Secure"
-To ensure security, avoid storing sensitive information like tokens directly in your code.
-Instead, use environment variables.
-Storing tokens in code shared on platforms like GitHub can lead to security incidents.
-Anyone that possesses your token can impersonate you on the [CRIPT](https://criptapp.org/) platform.
-Consider [alternative methods for loading tokens with the CRIPT API Client](). <!--- trunk-ignore(markdownlint/MD042) -->
-In case your token is exposed be sure to immediately generate a new token to revoke the access of the old one
-and keep the new token safe.
+
+    To ensure security, avoid storing sensitive information like tokens directly in your code.
+    Instead, use environment variables.
+    Storing tokens in code shared on platforms like GitHub can lead to security incidents.
+    Anyone that possesses your token can impersonate you on the [CRIPT](https://criptapp.org/) platform.
+    Consider [alternative methods for loading tokens with the CRIPT API Client](). <!--- trunk-ignore(markdownlint/MD042) -->
+    In case your token is exposed be sure to immediately generate a new token to revoke the access of the old one
+    and keep the new token safe.
 
 ```python
 import cript
@@ -79,8 +80,9 @@ project.collection += [collection]
 ```
 
 !!! note "Viewing CRIPT JSON"
-Note, that if you are interested into the inner workings of CRIPT,
-you can obtain a JSON representation of your data graph at any time to see what is being sent to the API.
+    
+    Note, that if you are interested into the inner workings of CRIPT,
+    you can obtain a JSON representation of your data graph at any time to see what is being sent to the API.
 
 ```python
 print(project.json)

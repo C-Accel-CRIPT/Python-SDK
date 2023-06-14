@@ -1,4 +1,6 @@
 from dataclasses import dataclass, replace
+from pathlib import Path
+from typing import Union
 
 from beartype import beartype
 
@@ -21,6 +23,40 @@ def _is_local_file(file_source: str) -> bool:
         return False
     else:
         return True
+
+
+def _upload_file_and_get_object_name(source: Union[str, Path]) -> str:
+    """
+    uploads file to cloud storage and returns the file link
+
+    1.  checks if the source is a local file path and not a web url
+    1. if it is a local file path, then it uploads it to cloud storage
+        * returns the file link in cloud storage
+    1. else it returns the same file link because it is already on the web
+
+    Parameters
+    ----------
+    source: str
+        file source can be a relative or absolute file string or pathlib object
+
+    Returns
+    -------
+    str
+        file AWS S3 link
+    """
+    from cript.api.api import _get_global_cached_api
+
+    # convert source to str for `_is_local_file` and to return str
+    source = str(source)
+
+    if _is_local_file(file_source=source):
+        api = _get_global_cached_api()
+        object_name = api.upload_file(file_path=source)
+        # always getting a string for object_name
+        source = str(object_name)
+
+    # always returning a string
+    return source
 
 
 class File(PrimaryBaseNode):
@@ -116,6 +152,11 @@ class File(PrimaryBaseNode):
 
         super().__init__(name=name, notes=notes, **kwargs)
 
+        # always giving the function the required str regardless if the input `Path` or `str`
+        if _is_local_file(file_source=str(source)):
+            # upload file source if local file
+            source = _upload_file_and_get_object_name(source=source)
+
         # TODO check if vocabulary is valid or not
         # is_vocab_valid("file type", type)
 
@@ -123,11 +164,10 @@ class File(PrimaryBaseNode):
         self._json_attrs = replace(
             self._json_attrs,
             type=type,
+            source=source,
             extension=extension,
             data_dictionary=data_dictionary,
         )
-
-        self.source = source
 
         self.validate()
 
@@ -192,12 +232,8 @@ class File(PrimaryBaseNode):
         """
 
         if _is_local_file(new_source):
-            with open(new_source, "r") as file:
-                # TODO upload a file to Argonne Labs or directly to the backend
-                #   get the URL of the uploaded file
-                #   set the source to the URL just gotten from argonne
-                print(file)
-                pass
+            object_name: str = _upload_file_and_get_object_name(source=new_source)
+            new_source = object_name
 
         new_attrs = replace(self._json_attrs, source=new_source)
         self._update_json_attrs_if_valid(new_attrs)
@@ -333,3 +369,38 @@ class File(PrimaryBaseNode):
         """
         new_attrs = replace(self._json_attrs, data_dictionary=new_data_dictionary)
         self._update_json_attrs_if_valid(new_attrs)
+
+    # TODO get file name from node itself as default and allow for customization as well optional
+    def download(
+        self,
+        file_name: str,
+        destination_directory_path: Union[str, Path] = ".",
+    ) -> None:
+        """
+        download this file to current working directory or a specific destination
+
+        Parameters
+        ----------
+        file_name: str
+            what you want to name the file node on your computer
+        destination_directory_path: Union[str, Path]
+            where you want the file to be stored and what you want the name to be
+            by default it is the current working directory
+
+        Returns
+        -------
+        None
+        """
+        from cript.api.api import _get_global_cached_api
+
+        api = _get_global_cached_api()
+
+        existing_folder_path = Path(destination_directory_path)
+
+        # TODO automatically add the correct file extension to it from the node
+        #  and be sure that it is always `.csv` and never just `csv`
+        file_name = f"{file_name}"
+
+        absolute_file_path = str((existing_folder_path / file_name).resolve())
+
+        api.download_file(object_name=self.source, destination_path=absolute_file_path)

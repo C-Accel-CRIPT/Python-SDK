@@ -88,5 +88,7 @@ def cript_api():
 
     assert cript.api.api._global_cached_api is None
     with cript.API(host=host, token=token) as api:
+        # using the tests folder name within our cloud storage
+        api._BUCKET_DIRECTORY_NAME = "tests"
         yield api
     assert cript.api.api._global_cached_api is None

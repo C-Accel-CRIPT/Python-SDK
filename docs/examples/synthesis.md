@@ -34,7 +34,7 @@ To connect to CRIPT, you must enter a `host` and an `API Token`. For most users,
     Instead, use environment variables.
     Storing tokens in code shared on platforms like GitHub can lead to security incidents.
     Anyone that possesses your token can impersonate you on the [CRIPT](https://criptapp.org/) platform.
-    Consider [alternative methods for loading tokens with the CRIPT API Client](). <!--- trunk-ignore(markdownlint/MD042) -->
+    Consider [alternative methods for loading tokens with the CRIPT API Client]().
     In case your token is exposed be sure to immediately generate a new token to revoke the access of the old one
     and keep the new token safe.
 
@@ -80,7 +80,7 @@ project.collection += [collection]
 ```
 
 !!! note "Viewing CRIPT JSON"
-    
+
     Note, that if you are interested into the inner workings of CRIPT,
     you can obtain a JSON representation of your data graph at any time to see what is being sent to the API.
 

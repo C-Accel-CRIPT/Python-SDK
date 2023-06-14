@@ -74,6 +74,8 @@
     "Numpy",
     "boto",
     "beartype",
-    "mypy"
+    "mypy",
+    "fontawesome",
+    "venv"
   ]
 }

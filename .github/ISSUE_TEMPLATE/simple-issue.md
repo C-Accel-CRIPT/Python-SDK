@@ -1,10 +1,9 @@
 ---
 name: Simple Issue
 about: Describe the issue
-title: 
+title:
 labels: ""
 assignees: ""
 ---
 
-# Description
-
+## Description

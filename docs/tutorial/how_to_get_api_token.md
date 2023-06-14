@@ -12,7 +12,7 @@ The token is needed because we need to authenticate the user before saving any o
 <img class="screenshot-border" src="../../assets/images/tutorial/api_token_page.png" alt="Screenshot of CRIPT security page where API token is found">
 
 <small>
-   <a href="https://criptapp.org/security/" target="_blank">Security Settings</a> 
+   <a href="https://criptapp.org/security/" target="_blank">Security Settings</a>
    under the profile icon dropdown
 </small>
 
@@ -30,6 +30,6 @@ To get your token:
 
 Example:
 
-```yaml
+`yaml
 API Token: Token 4abc478b25e30766652f76103b978349c4c4b214
-```
+`

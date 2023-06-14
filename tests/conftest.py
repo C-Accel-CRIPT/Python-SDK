@@ -78,13 +78,17 @@ def cript_api():
     """
     Create an API instance for the rest of the tests to use.
 
-    Returns:
-        API: The created API instance.
+    Returns
+    -------
+    API: cript.API
+        The created CRIPT API instance.
     """
     host: str = "http://development.api.mycriptapp.org/"
     token = "123456"
 
     assert cript.api.api._global_cached_api is None
     with cript.API(host=host, token=token) as api:
+        # using the tests folder name within our cloud storage
+        api._BUCKET_DIRECTORY_NAME = "tests"
         yield api
     assert cript.api.api._global_cached_api is None

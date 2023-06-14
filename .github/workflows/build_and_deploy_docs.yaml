@@ -1,6 +1,6 @@
 # build docs from master branch and push to gh-pages branch to be deployed to repository GitHub pages
 
-name: Docs
+name: Build & Deploy Docs
 on:
   push:
     branches:

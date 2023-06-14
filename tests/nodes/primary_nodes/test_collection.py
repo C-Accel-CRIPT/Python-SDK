@@ -123,7 +123,7 @@ def test_uuid(complex_collection_node):
     assert collection_node.url != collection_node2.url
 
     # Loads from json have the same uuid and url
-    collection_node3 = cript.load_nodes_from_json(collection_node.json)
+    collection_node3 = cript.load_nodes_from_json(collection_node.get_json(condense_to_uuid={}).json)
     assert collection_node3.uuid == collection_node.uuid
     assert collection_node3.url == collection_node.url
 

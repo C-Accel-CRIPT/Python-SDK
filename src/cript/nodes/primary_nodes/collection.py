@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List
+from typing import Any, List, Optional
+
+from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.supporting_nodes import User
@@ -36,14 +38,15 @@ class Collection(PrimaryBaseNode):
         # TODO add proper typing in future, using Any for now to avoid circular import error
         member: List[User] = field(default_factory=list)
         admin: List[User] = field(default_factory=list)
-        experiment: List[Any] = None
-        inventory: List[Any] = None
+        experiment: Optional[List[Any]] = None
+        inventory: Optional[List[Any]] = None
         doi: str = ""
-        citation: List[Any] = None
+        citation: Optional[List[Any]] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, experiment: List[Any] = None, inventory: List[Any] = None, doi: str = "", citation: List[Any] = None, notes: str = "", **kwargs) -> None:
+    @beartype
+    def __init__(self, name: str, experiment: Optional[List[Any]] = None, inventory: Optional[List[Any]] = None, doi: str = "", citation: Optional[List[Any]] = None, notes: str = "", **kwargs) -> None:
         """
         create a Collection with a name
         add list of experiment, inventory, citation, doi, and notes if available.
@@ -52,13 +55,13 @@ class Collection(PrimaryBaseNode):
         ----------
         name: str
             name of the Collection you want to make
-        experiment: List[Experiment], default=None
+        experiment: Optional[List[Experiment]], default=None
             list of experiment within the Collection
-        inventory: List[Inventory], default=None
+        inventory: Optional[List[Inventory]], default=None
             list of inventories within this collection
         doi: str = "", default=""
             cript doi
-        citation: List[Citation], default=None
+        citation: Optional[List[Citation]], default=None
             List of citations for this collection
 
         Returns
@@ -88,16 +91,18 @@ class Collection(PrimaryBaseNode):
 
         self.validate()
 
-    # ------------------ Properties ------------------
     @property
+    @beartype
     def member(self) -> List[User]:
         return self._json_attrs.member.copy()
 
     @property
+    @beartype
     def admin(self) -> List[User]:
         return self._json_attrs.admin
 
     @property
+    @beartype
     def experiment(self) -> List[Any]:
         """
         List of all [experiment](../experiment) within this Collection
@@ -113,9 +118,10 @@ class Collection(PrimaryBaseNode):
         List[Experiment]
             list of all [experiment](../experiment) within this Collection
         """
-        return self._json_attrs.experiment.copy()
+        return self._json_attrs.experiment.copy()  # type: ignore
 
     @experiment.setter
+    @beartype
     def experiment(self, new_experiment: List[Any]) -> None:
         """
         sets the Experiment list within this collection
@@ -133,6 +139,7 @@ class Collection(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def inventory(self) -> List[Any]:
         """
         List of [inventory](../inventory) that belongs to this collection
@@ -162,9 +169,10 @@ class Collection(PrimaryBaseNode):
         inventory: List[Inventory]
             list of inventories in this collection
         """
-        return self._json_attrs.inventory.copy()
+        return self._json_attrs.inventory.copy()  # type: ignore
 
     @inventory.setter
+    @beartype
     def inventory(self, new_inventory: List[Any]) -> None:
         """
         Sets the List of inventories within this collection to a new list
@@ -182,6 +190,7 @@ class Collection(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def doi(self) -> str:
         """
         The CRIPT DOI for this collection
@@ -198,6 +207,7 @@ class Collection(PrimaryBaseNode):
         return self._json_attrs.doi
 
     @doi.setter
+    @beartype
     def doi(self, new_doi: str) -> None:
         """
         set the CRIPT DOI for this collection to new CRIPT DOI
@@ -214,6 +224,7 @@ class Collection(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def citation(self) -> List[Any]:
         """
         List of Citations within this Collection
@@ -231,9 +242,10 @@ class Collection(PrimaryBaseNode):
         citation: List[Citation]:
             list of Citations within this Collection
         """
-        return self._json_attrs.citation.copy()
+        return self._json_attrs.citation.copy()  # type: ignore
 
     @citation.setter
+    @beartype
     def citation(self, new_citation: List[Any]) -> None:
         """
         set the list of citations for this Collection

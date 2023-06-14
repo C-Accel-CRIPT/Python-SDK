@@ -71,6 +71,9 @@
     "Autobuild",
     "buildscript",
     "markdownlint",
-    "Numpy"
+    "Numpy",
+    "boto",
+    "beartype",
+    "mypy"
   ]
 }

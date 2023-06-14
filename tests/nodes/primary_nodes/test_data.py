@@ -93,6 +93,7 @@ def test_data_getters_and_setters(
     my_new_files = [
         complex_file_node,
         cript.File(
+            name="my data file node",
             source="https://bing.com",
             type="computation_config",
             extension=".pdf",
@@ -134,9 +135,10 @@ def test_serialize_data_to_json(simple_data_node) -> None:
         "name": "my data name",
         "file": [
             {
+                "node": ["File"],
+                "name": "my complex file node fixture",
                 "data_dictionary": "my file's data dictionary",
                 "extension": ".csv",
-                "node": ["File"],
                 "source": "https://criptapp.org",
                 "type": "calibration",
             }

@@ -627,7 +627,7 @@ class API:
             just downloads the file to the specified path
         """
 
-        # file is stored in cloud storage and must be retrieved via object_name
+        # the file is stored in cloud storage and must be retrieved via object_name
         self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=object_name, Filename=destination_path)  # type: ignore
 
     @beartype

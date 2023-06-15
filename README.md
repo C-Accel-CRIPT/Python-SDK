@@ -56,7 +56,7 @@ Please visit the [GitHub Releases page](https://github.com/C-Accel-CRIPT/Python-
 
 ---
 
-## We Invite Contribution!
+## We Invite Contribution
 
 To get started, feel free to take a look at our [Contribution Guidelines](CONTRIBUTING.md) for
 a detailed guide on how to contribute to our repository and become a part of our community.

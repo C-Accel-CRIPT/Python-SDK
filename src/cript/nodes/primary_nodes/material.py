@@ -16,15 +16,15 @@ class Material(PrimaryBaseNode):
     is just the materials used within an project/experiment.
 
     ## Attributes
-    | attribute               | type                                                | example                                           | description                                  | required    | vocab |
-    |-------------------------|-----------------------------------------------------|---------------------------------------------------|----------------------------------------------|-------------|-------|
-    | identifiers             | list[Identifier]                                    |                                                   | material identifiers                         | True        |       |
-    | component              | list[[Material](./)]                                |                                                   | list of component that make up the mixture  |             |       |
-    | property              | list[[Property](../subobjects/property)]            |                                                   | material properties                          |             |       |
-    | process                 | [Process](../process)                               |                                                   | process node that made this material         |             |       |
-    | parent_material         | [Material](./)                                      |                                                   | material node that this node was copied from |             |       |
+    | attribute                 | type                                                   | example                                           | description                                  | required    | vocab |
+    |---------------------------|--------------------------------------------------------|---------------------------------------------------|----------------------------------------------|-------------|-------|
+    | identifiers               | list[Identifier]                                       |                                                   | material identifiers                         | True        |       |
+    | component                 | list[[Material](./)]                                   |                                                   | list of component that make up the mixture   |             |       |
+    | property                  | list[[Property](../subobjects/property)]               |                                                   | material properties                          |             |       |
+    | process                   | [Process](../process)                                  |                                                   | process node that made this material         |             |       |
+    | parent_material           | [Material](./)                                         |                                                   | material node that this node was copied from |             |       |
     | computational_ forcefield | [Computation  Forcefield](../computational_forcefield) |                                                   | computation forcefield                       | Conditional |       |
-    | keyword                | list[str]                                           | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material             |             | True  |
+    | keyword                   | list[str]                                              | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material             |             | True  |
 
     ## Navigating to Material
     Materials can be easily found on the [CRIPT](https://criptapp.org) home screen in the
@@ -374,50 +374,6 @@ class Material(PrimaryBaseNode):
 
         new_attrs = replace(self._json_attrs, keyword=new_keyword_list)
         self._update_json_attrs_if_valid(new_attrs)
-
-    # ------------ validation ------------
-    # TODO this can be a function instead of a method
-    def _validate_keyword(self, keyword: List[str]) -> None:
-        """
-        takes a list of material keyword and loops through validating every single one
-
-        this is a simple loop that calls another method, but I thought it needs to be made into a method
-        since both constructor and keyword setter has the same code
-
-        Parameters
-        ----------
-        keyword: List[str]
-
-        Returns
-        -------
-        None
-        """
-        # TODO add this validation in the future
-        # for keyword in keyword:
-        #     is_vocab_valid(keywords)
-        pass
-
-    # TODO this can be a function instead of a method
-    def _validate_identifiers(self, identifiers: List[Dict[str, str]]) -> None:
-        """
-        takes a list of material identifiers and loops through validating every single one
-
-        since validation is needed in both constructor and the setter, this is a simple method for it
-
-        Parameters
-        ----------
-        identifiers: List[Dict[str, str]]
-
-        Returns
-        -------
-        None
-        """
-
-        for identifier_dictionary in identifiers:
-            for key, value in identifier_dictionary.items():
-                # TODO validate keys here
-                # is_vocab_valid("material_identifiers", value)
-                pass
 
     @property
     @beartype

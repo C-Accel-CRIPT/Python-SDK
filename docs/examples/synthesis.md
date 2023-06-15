@@ -14,17 +14,20 @@ jupyter:
     name: python3
 ---
 
-This tutorial guides you through an example material synthesis workflow using the CRIPT Python SDK.
+!!! abstract
+    This tutorial guides you through an example material synthesis workflow using the 
+    [CRIPT Python SDK](https://pypi.org/project/cript/).
 
-Before you start, make sure the [cript python package](https://pypi.org/project/cript/) is installed.
 
 ## Installation
+
+Before you start, be sure the [cript python package](https://pypi.org/project/cript/) is installed.
 
 ```bash
 pip install cript
 ```
 
-# Connect to CRIPT
+## Connect to CRIPT
 
 To connect to CRIPT, you must enter a `host` and an `API Token`. For most users, `host` will be `https://criptapp.org`.
 
@@ -54,7 +57,7 @@ api = cript.API("http://development.api.mycriptapp.org/", None)
 api = api.connect()
 ```
 
-# Create a Project
+## Create a Project
 
 All data uploaded to CRIPT must be associated with a [project](../../nodes/primary_nodes/project) node.
 [Project](../../nodes/primary_nodes/project) can be thought of as an overarching research goal.
@@ -65,7 +68,7 @@ For example, finding a replacement for an existing material from a sustainable f
 project = cript.Project(name="My first project.")
 ```
 
-# Create a Collection node
+## Create a Collection node
 
 For this project, you can create multiple collections, which represent a set of experiments.
 For example, you can create a collection for a specific manuscript,
@@ -90,7 +93,7 @@ print("\nOr more pretty\n")
 print(project.get_json(indent=2).json)
 ```
 
-# Create an Experiment node
+## Create an Experiment node
 
 The [collection node](../../nodes/primary_nodes/collection) holds a series of
 [Experiment nodes](../../nodes/primary_nodes/experiment) nodes.
@@ -102,7 +105,7 @@ experiment = cript.Experiment(name="Anionic Polymerization of Styrene with SecBu
 collection.experiment += [experiment]
 ```
 
-# Create an Inventory
+## Create an Inventory
 
 An [Inventory](../../nodes/primary_nodes/inventory) contains materials,
 that are well known and usually not of polymeric nature.
@@ -144,7 +147,7 @@ inventory = cript.Inventory(
 collection.inventory += [inventory]
 ```
 
-# Create a Process node
+## Create a Process node
 
 A [Process](../../nodes/primary_nodes/process) is a step in an experiment.
 You decide how many [Process](../../nodes/primary_nodes/process) are required for your experiment,
@@ -164,7 +167,7 @@ process = cript.Process(
 experiment.process += [process]
 ```
 
-# Add Ingredients to a Process
+## Add Ingredients to a Process
 
 From a chemistry standpoint, most experimental processes, regardless of whether they are carried out in the lab
 or simulated using computer code, consist of input ingredients that are transformed in some way.
@@ -214,7 +217,7 @@ Finally, we can add the `Ingredient` nodes to the `Process` node.
 process.ingredient += [initiator, solvent, monomer, quench, workup]
 ```
 
-# Add Conditions to the Process
+## Add Conditions to the Process
 
 Its possible that our `Process` was carried out under specific physical conditions. We can codify this by adding
 [Condition](../../nodes/subobjects/condition) nodes to the process.
@@ -225,7 +228,7 @@ time = cript.Condition(key="time_duration", type="value", value=60, unit="min")
 process.condition = [temp, time]
 ```
 
-# Add a Property to a Process
+## Add a Property to a Process
 
 We may also want to associate our process with certain properties. We can do this by adding
 [Property](../../nodes/subobjects/property) nodes to the process.
@@ -235,7 +238,7 @@ yield_mass = cript.Property(key="yield_mass", type="number", value=47e-5, unit="
 process.property += [yield_mass]
 ```
 
-# Create a Material node (process product)
+## Create a Material node (process product)
 
 Along with input [Ingredients](../../nodes/subobjects/ingredient), our [Process](../../nodes/primary_nodes/process)
 may also produce product materials.

@@ -4,6 +4,10 @@
 
 ## Tests
 
+<!-- Screenshots if applicable
+## Screenshots
+-->
+
 ## Known Issues
 
 ## Notes

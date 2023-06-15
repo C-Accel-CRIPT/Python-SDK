@@ -24,6 +24,7 @@ lint:
     - linters: [prettier]
       paths:
         - site/**
+        - docs/**
 runtimes:
   enabled:
     - go@1.19.5

@@ -570,19 +570,19 @@ class API:
         # trunk-ignore-end(cspell)
 
         # convert file path from whatever the user passed in to a pathlib object
-        file_path = Path(file_path).resolve()
+        file_path: Path = Path(file_path).resolve()
 
         # get file_name and file_extension from absolute file path
         # file_extension includes the dot, e.g. ".txt"
         file_name, file_extension = os.path.splitext(os.path.basename(file_path))
 
         # generate a UUID4 string without dashes, making a cleaner file name
-        uuid_str = str(uuid.uuid4().hex)
+        uuid_str: str = str(uuid.uuid4().hex)
 
         new_file_name: str = f"{file_name}_{uuid_str}{file_extension}"
 
         # e.g. "directory/file_name_uuid.extension"
-        object_name = f"{self._BUCKET_DIRECTORY_NAME}/{new_file_name}"
+        object_name: str = f"{self._BUCKET_DIRECTORY_NAME}/{new_file_name}"
 
         # upload file to AWS S3
         self._s3_client.upload_file(Filename=file_path, Bucket=self._BUCKET_NAME, Key=object_name)  # type: ignore

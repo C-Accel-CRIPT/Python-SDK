@@ -6,6 +6,7 @@ repo_name: C-Accel-CRIPT/Python-SDK
 nav:
   - Home: index.md
   - Tutorial:
+      - Example Code Walkthrough: examples/synthesis.md
       - CRIPT Installation Guide: tutorial/cript_installation_guide.md
       - CRIPT API Token: tutorial/how_to_get_api_token.md
   - API Client:

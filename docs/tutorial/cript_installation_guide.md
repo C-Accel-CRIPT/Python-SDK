@@ -1,46 +1,42 @@
 # How to Install CRIPT
 
 !!! abstract
-This page will give you a through guide on how to set up [CRIPT Python SDK](https://pypi.org/project/cript/) on your system.
+
+    This page will give you a through guide on how to install the 
+    [CRIPT Python SDK](https://pypi.org/project/cript/) on your system.
 
 ## Steps
 
 1.  Install [Python 3.7+](https://www.python.org/downloads/)
 2.  Create a virtual environment
 
-        > It is best practice to create a dedicated [python virtual environment](https://docs.python.org/3/library/venv.html) for each python project
+    > It is best practice to create a dedicated [python virtual environment](https://docs.python.org/3/library/venv.html) for each python project
 
-        === ":fontawesome-brands-windows: **_Windows:_**"
-        `bash
+    === ":fontawesome-brands-windows: **_Windows:_**"
+        ```bash 
+        python -m venv .\venv
+        ```
 
-    python -m venv .\venv
-    `
-
-        === ":fontawesome-brands-apple: **_Mac_** & :fontawesome-brands-linux: **_Linux:_**"
-        `bash
-
-    python3 -m venv ./venv
-    `
+    === ":fontawesome-brands-apple: **_Mac_** & :fontawesome-brands-linux: **_Linux:_**"
+        ```bash 
+        python3 -m venv ./venv
+        ```
 
 3.  Activate your virtual environment
 
-        === ":fontawesome-brands-windows: **_Windows:_**"
-        `bash
+    === ":fontawesome-brands-windows: **_Windows:_**"
+        ```bash 
+        .\venv\Scripts\activate
+        ```
 
-    .\venv\Scripts\activate
-    `
-
-        === ":fontawesome-brands-apple: **_Mac_** & :fontawesome-brands-linux: **_Linux:_**"
-        `bash
-
-    source venv/bin/activate
-    `
+    === ":fontawesome-brands-apple: **_Mac_** & :fontawesome-brands-linux: **_Linux:_**"
+        ```bash 
+        source venv/bin/activate
+        ```
 
 4.  Install [CRIPT from Python Package Index (PyPI)](https://pypi.org/project/cript/)
-
-        `bash
-
-    pip install cript
-    `
-
+    ```bash
+     pip install cript
+    ```
 5.  Create your CRIPT Script!
+

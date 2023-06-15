@@ -30,6 +30,6 @@ To get your token:
 
 Example:
 
-`yaml
+```yaml
 API Token: Token 4abc478b25e30766652f76103b978349c4c4b214
-`
+```

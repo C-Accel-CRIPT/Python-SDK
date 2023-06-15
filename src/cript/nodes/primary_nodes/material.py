@@ -127,10 +127,6 @@ class Material(PrimaryBaseNode):
         if keyword is None:
             keyword = []
 
-        # validate keyword if they exist
-        if keyword is not None:
-            self._validate_keyword(keyword=keyword)
-
         self._json_attrs = replace(
             self._json_attrs,
             name=name,
@@ -369,9 +365,6 @@ class Material(PrimaryBaseNode):
         -------
         None
         """
-        # TODO validate keyword before setting them
-        self._validate_keyword(keyword=new_keyword_list)
-
         new_attrs = replace(self._json_attrs, keyword=new_keyword_list)
         self._update_json_attrs_if_valid(new_attrs)
 

@@ -569,6 +569,8 @@ class API:
         """
         # trunk-ignore-end(cspell)
 
+        # TODO consider using a new variable when converting `file_path` from parameter
+        #  to a Path object with a new type
         # convert file path from whatever the user passed in to a pathlib object
         file_path = Path(file_path).resolve()
 
@@ -577,12 +579,12 @@ class API:
         file_name, file_extension = os.path.splitext(os.path.basename(file_path))
 
         # generate a UUID4 string without dashes, making a cleaner file name
-        uuid_str = str(uuid.uuid4().hex)
+        uuid_str: str = str(uuid.uuid4().hex)
 
         new_file_name: str = f"{file_name}_{uuid_str}{file_extension}"
 
         # e.g. "directory/file_name_uuid.extension"
-        object_name = f"{self._BUCKET_DIRECTORY_NAME}/{new_file_name}"
+        object_name: str = f"{self._BUCKET_DIRECTORY_NAME}/{new_file_name}"
 
         # upload file to AWS S3
         self._s3_client.upload_file(Filename=file_path, Bucket=self._BUCKET_NAME, Key=object_name)  # type: ignore
@@ -627,7 +629,7 @@ class API:
             just downloads the file to the specified path
         """
 
-        # file is stored in cloud storage and must be retrieved via object_name
+        # the file is stored in cloud storage and must be retrieved via object_name
         self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=object_name, Filename=destination_path)  # type: ignore
 
     @beartype

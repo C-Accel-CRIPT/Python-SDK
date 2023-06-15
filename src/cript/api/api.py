@@ -569,8 +569,10 @@ class API:
         """
         # trunk-ignore-end(cspell)
 
+        # TODO consider using a new variable when converting `file_path` from parameter
+        #  to a Path object with a new type
         # convert file path from whatever the user passed in to a pathlib object
-        file_path: Path = Path(file_path).resolve()
+        file_path = Path(file_path).resolve()
 
         # get file_name and file_extension from absolute file path
         # file_extension includes the dot, e.g. ".txt"

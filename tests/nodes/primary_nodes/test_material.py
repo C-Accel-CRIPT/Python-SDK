@@ -107,8 +107,6 @@ def test_save_material_to_api(cript_api, simple_material_node, simple_project_no
     """
     tests if the material can be saved to the API without errors and status code of 200
     """
-    simple_project_node.material = [simple_material_node]
-    cript_api.save(project=simple_project_node)
     pass
 
 

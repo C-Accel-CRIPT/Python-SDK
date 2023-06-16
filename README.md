@@ -1,6 +1,8 @@
 # CRIPT Python SDK
 
 [![License](./CRIPT_full_logo_colored_transparent.png)](https://github.com/C-Accel-CRIPT/Python-SDK/blob/develop/LICENSE.md)
+
+[![CRIPT Python SDK Latest version](https://img.shields.io/badge/CRIPT%20Python%20SDK%20Latest%20Version-2.0-blueviolet?style=flat-square&logo=python)](https://github.com/C-Accel-CRIPT/Python-SDK/releases/latest)]
 [![License](https://img.shields.io/github/license/C-Accel-CRIPT/cript?style=flat-square)](https://github.com/C-Accel-CRIPT/Python-SDK/blob/develop/LICENSE.md)
 [![Python](https://img.shields.io/badge/Language-Python%203.7+-blue?style=flat-square&logo=python)](https://www.python.org/)
 [![Code style is black](https://img.shields.io/badge/Code%20Style-black-000000.svg?style=flat-square&logo=python)](https://github.com/psf/black)
@@ -71,7 +73,7 @@ If you encounter any issues please let us know via
 
 To learn more about our great community and all the open source plugins made by our fantastic community available
 for the [CRIPT Python SDK](https://github.com/C-Accel-CRIPT/Python-SDK) please take a look at the
-[plugins section](https://github.com/C-Accel-CRIPT/Python-SDK/discussions/categories/plugins)
+[plugins section](https://github.com/C-Accel-CRIPT/Python-SDK/discussions/categories/plugins).
 
 We appreciate your interest in contributing to our project! Together, let's make it even better! 🚀
 

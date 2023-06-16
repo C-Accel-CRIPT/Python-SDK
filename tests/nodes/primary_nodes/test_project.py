@@ -62,6 +62,10 @@ def test_serialize_project_to_json(complex_project_node, complex_project_dict) -
 def test_integration_project(cript_api, simple_project_node):
     """
     integration test between Python SDK and API Client
+
+    1. POST to API
+    1. GET from API
+    1. assert they're both equal
     """
     simple_project_node.name = "test_integration_project_name"
 

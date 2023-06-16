@@ -1,4 +1,5 @@
 import json
+from typing import Dict
 
 from util import strip_uid_from_dict
 
@@ -117,27 +118,30 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
     1. deserialize the project
     1. compare the project node that was sent to API and the one API gave, that they are the same
     """
+    simple_material_node.name = "my_material_4"
     simple_project_node.material = [simple_material_node]
+
+    simple_project_node.name = "my_new_project_name_4"
 
     try:
         cript_api.save(project=simple_project_node)
-    except Exception:
-        # silencing exceptions of "the node already exists" for now,
-        # until a fresh docker container comes along
-        pass
+    except Exception as error:
+        # handling duplicate project name errors
+        print(error)
 
     my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=simple_project_node.name)
 
-    # the paginator should have only a single page, and the first result should be the only result
-    # for the query of this project
-    # take the JSON and translate it back to a node
-    my_project_json = my_paginator.current_page_results[0]
+    my_project_from_api_dict: Dict = my_paginator.current_page_results[0]
 
-    print("\n\n-----------------------------------------------------------------")
-    print(my_project_json)
-    print("\n\n-----------------------------------------------------------------")
+    print("\n\n------------------------------------------------------")
+    print(json.dumps(my_project_from_api_dict))
+    print("------------------------------------------------------")
 
-    my_project_from_api = cript.load_nodes_from_json(nodes_json=my_project_json)
+    print("\n\n------------------------------------------------------")
+    print(simple_project_node.json)
+    print("------------------------------------------------------")
+
+    my_project_from_api_node = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_api_dict))
 
     # check equivalent JSON dicts
-    assert my_project_from_api.json == simple_project_node.json
+    assert json.dumps(my_paginator.current_page_results[0]) == simple_project_node.json

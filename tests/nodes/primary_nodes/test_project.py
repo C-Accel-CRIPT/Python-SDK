@@ -59,7 +59,6 @@ def test_serialize_project_to_json(complex_project_node, complex_project_dict) -
     assert serialized_project == strip_uid_from_dict(expected_dict)
 
 
-# ---------- Integration tests ----------
 def test_integration_project(cript_api, simple_project_node):
     """
     integration test between Python SDK and API Client

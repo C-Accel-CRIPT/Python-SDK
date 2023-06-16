@@ -1,5 +1,7 @@
 from dataclasses import dataclass, replace
 
+from beartype import beartype
+
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -47,16 +49,15 @@ class User(UUIDBaseNode):
         all User attributes
         """
 
-        created_at: str = ""
         email: str = ""
         model_version: str = ""
         orcid: str = ""
         picture: str = ""
-        updated_at: str = ""
         username: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    @beartype
     def __init__(self, username: str, email: str, orcid: str, **kwargs):
         """
         Json from CRIPT API to be converted to a node
@@ -76,13 +77,13 @@ class User(UUIDBaseNode):
 
         self.validate()
 
-    # ------------------ properties ------------------
-
     @property
+    @beartype
     def created_at(self) -> str:
         return self._json_attrs.created_at
 
     @property
+    @beartype
     def email(self) -> str:
         """
         user's email
@@ -99,10 +100,12 @@ class User(UUIDBaseNode):
         return self._json_attrs.email
 
     @property
+    @beartype
     def model_version(self) -> str:
         return self._json_attrs.model_version
 
     @property
+    @beartype
     def orcid(self) -> str:
         """
         users [ORCID](https://orcid.org/)
@@ -119,14 +122,17 @@ class User(UUIDBaseNode):
         return self._json_attrs.orcid
 
     @property
+    @beartype
     def picture(self) -> str:
         return self._json_attrs.picture
 
     @property
+    @beartype
     def updated_at(self) -> str:
         return self._json_attrs.updated_at
 
     @property
+    @beartype
     def username(self) -> str:
         """
         username of the User node

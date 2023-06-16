@@ -1,6 +1,7 @@
 import uuid
 from abc import ABC
 from dataclasses import dataclass, replace
+from typing import Any
 
 from cript.nodes.core import BaseNode
 
@@ -21,6 +22,10 @@ class UUIDBaseNode(BaseNode, ABC):
         """
 
         uuid: str = ""
+        updated_by: Any = None
+        created_by: Any = None
+        created_at: str = ""
+        updated_at: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -47,3 +52,19 @@ class UUIDBaseNode(BaseNode, ABC):
         node = super().__deepcopy__(memo)
         node._json_attrs = replace(node._json_attrs, uuid=get_uuid_from_uid(node.uid))
         return node
+
+    @property
+    def updated_by(self):
+        return self._json_attrs.updated_by
+
+    @property
+    def created_by(self):
+        return self._json_attrs.created_by
+
+    @property
+    def updated_at(self):
+        return self._json_attrs.updated_at
+
+    @property
+    def created_at(self):
+        return self._json_attrs.created_at

@@ -1,10 +1,12 @@
 from dataclasses import dataclass, replace
 from typing import Union
 
-from cript.nodes.core import BaseNode
+from beartype import beartype
+
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class Parameter(BaseNode):
+class Parameter(UUIDBaseNode):
     """
     ## Definition
 
@@ -45,7 +47,7 @@ class Parameter(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         key: str = ""
         value: Union[int, float, str] = ""
         # We explicitly allow None for unit here (instead of empty str),
@@ -57,6 +59,7 @@ class Parameter(BaseNode):
 
     # Note that the key word args are ignored.
     # They are just here, such that we can feed more kwargs in that we get from the back end.
+    @beartype
     def __init__(self, key: str, value: Union[int, float], unit: Union[str, None] = None, **kwargs):
         """
         create new Parameter sub-object
@@ -88,6 +91,7 @@ class Parameter(BaseNode):
         self.validate()
 
     @property
+    @beartype
     def key(self) -> str:
         """
         Parameter key must come from the [CRIPT Controlled Vocabulary]()
@@ -106,6 +110,7 @@ class Parameter(BaseNode):
         return self._json_attrs.key
 
     @key.setter
+    @beartype
     def key(self, new_key: str) -> None:
         """
         set new key for the Parameter sub-object
@@ -125,6 +130,7 @@ class Parameter(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def value(self) -> Union[int, float, str]:
         """
         Parameter value
@@ -143,6 +149,7 @@ class Parameter(BaseNode):
         return self._json_attrs.value
 
     @value.setter
+    @beartype
     def value(self, new_value: Union[int, float, str]) -> None:
         """
         set the Parameter value
@@ -160,7 +167,8 @@ class Parameter(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def unit(self) -> str:
+    @beartype
+    def unit(self) -> Union[str, None]:
         """
         Parameter unit
 
@@ -178,6 +186,7 @@ class Parameter(BaseNode):
         return self._json_attrs.unit
 
     @unit.setter
+    @beartype
     def unit(self, new_unit: str) -> None:
         """
         set the unit attribute for the Parameter sub-object

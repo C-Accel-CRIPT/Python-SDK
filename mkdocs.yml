@@ -5,8 +5,11 @@ repo_name: C-Accel-CRIPT/Python-SDK
 
 nav:
   - Home: index.md
-  #  - Crash Course: crash_course.md
-  - API:
+  - Tutorial:
+      - Example Code Walkthrough: examples/synthesis.md
+      - CRIPT Installation Guide: tutorial/cript_installation_guide.md
+      - CRIPT API Token: tutorial/how_to_get_api_token.md
+  - API Client:
       - API: api/api.md
       - Search Modes: api/search_modes.md
       - Paginator: api/paginator.md
@@ -39,10 +42,10 @@ nav:
       - User: nodes/supporting_nodes/user.md
       #      - Group: nodes/supporting_nodes/group.md
       - File: nodes/supporting_nodes/file.md
+  - Utility Functions: utility_functions.md
   - Exceptions:
       - API Exceptions: exceptions/api_exceptions.md
       - Node Exceptions: exceptions/node_exceptions.md
-  - Utility Functions: utility_functions.md
   - FAQ: faq.md
 
 theme:

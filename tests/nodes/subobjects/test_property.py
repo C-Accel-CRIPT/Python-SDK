@@ -8,10 +8,10 @@ import cript
 
 def test_json(complex_property_node, complex_property_dict):
     p = complex_property_node
-    p_dict = strip_uid_from_dict(json.loads(p.json))
+    p_dict = strip_uid_from_dict(json.loads(p.get_json(condense_to_uuid={}).json))
     assert p_dict == complex_property_dict
-    p2 = cript.load_nodes_from_json(p.json)
-    assert strip_uid_from_dict(json.loads(p2.json)) == strip_uid_from_dict(json.loads(p.json))
+    p2 = cript.load_nodes_from_json(p.get_json(condense_to_uuid={}).json)
+    assert strip_uid_from_dict(json.loads(p2.get_json(condense_to_uuid={}).json)) == strip_uid_from_dict(json.loads(p.get_json(condense_to_uuid={}).json))
 
 
 def test_setter_getter(complex_property_node, simple_material_node, simple_process_node, complex_condition_node, simple_data_node, simple_computation_node, complex_citation_node):

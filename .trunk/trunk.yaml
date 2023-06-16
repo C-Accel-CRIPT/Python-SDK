@@ -24,6 +24,7 @@ lint:
     - linters: [prettier]
       paths:
         - site/**
+        - docs/**
 runtimes:
   enabled:
     - go@1.19.5
@@ -41,14 +42,11 @@ merge:
     - Analyze (python)
     - build
     - install (ubuntu-latest, 3.7)
-    - install (ubuntu-latest, 3.8)
-    - install (ubuntu-latest, 3.9)
-    - install (ubuntu-latest, 3.1)
     - install (ubuntu-latest, 3.11)
     - install (macos-latest, 3.7)
-    - install (macos-latest, 3.8)
-    - install (macos-latest, 3.9)
-    - install (macos-latest, 3.1)
     - install (macos-latest, 3.11)
     - test-coverage (ubuntu-latest, 3.7)
     - test-coverage (ubuntu-latest, 3.11)
+    - mypy-test (3.7, ubuntu-latest)
+    - mypy-test (3.11, ubuntu-latest)
+    - test-examples (ubuntu-latest, 3.11)

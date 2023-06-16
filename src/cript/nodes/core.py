@@ -4,7 +4,7 @@ import json
 import uuid
 from abc import ABC
 from dataclasses import asdict, dataclass, replace
-from typing import List
+from typing import List, Optional, Set
 
 from cript.nodes.exceptions import (
     CRIPTAttributeModificationError,
@@ -12,7 +12,7 @@ from cript.nodes.exceptions import (
     CRIPTJsonSerializationError,
 )
 
-tolerated_extra_json = ["component_count", "computational_forcefield_count", "property_count"]
+tolerated_extra_json = []
 
 
 def add_tolerated_extra_json(additional_tolerated_json: str):
@@ -69,10 +69,18 @@ class BaseNode(ABC):
     def __init__(self, **kwargs):
         for kwarg in kwargs:
             if kwarg not in tolerated_extra_json:
-                try:
-                    getattr(self._json_attrs, kwarg)
-                except KeyError:
-                    raise CRIPTExtraJsonAttributes(self.node_type, kwarg)
+                if kwarg.endswith("_count"):
+                    try:
+                        possible_array = getattr(self._json_attrs.kwarg[: -len("_count")])
+                        if not isinstance(possible_array, list):
+                            raise CRIPTExtraJsonAttributes(self.node_type, kwarg)
+                    except KeyError:
+                        raise CRIPTExtraJsonAttributes(self.node_type, kwarg)
+                else:
+                    try:
+                        getattr(self._json_attrs, kwarg)
+                    except KeyError:
+                        raise CRIPTExtraJsonAttributes(self.node_type, kwarg)
 
         uid = get_new_uid()
         self._json_attrs = replace(self._json_attrs, node=[self.node_type], uid=uid)
@@ -142,6 +150,8 @@ class BaseNode(ABC):
 
     @classmethod
     def _from_json(cls, json_dict: dict):
+        # TODO find a way to handle uuid nodes only
+
         # Child nodes can inherit and overwrite this.
         # They should call super()._from_json first, and modified the returned object after if necessary
         # We create manually a dict that contains all elements from the send dict.
@@ -156,7 +166,6 @@ class BaseNode(ABC):
             else:
                 arguments[field] = json_dict[field]
 
-        # The call to the constructor might ignore fields that are usually not writable.
         try:
             node = cls(**arguments)
         # TODO we should not catch all exceptions if we are handling them, and instead let it fail
@@ -209,7 +218,7 @@ class BaseNode(ABC):
 
     def get_json(
         self,
-        handled_ids: set = None,
+        handled_ids: Optional[Set[str]] = None,
         condense_to_uuid={
             "Material": ["parent_material", "component"],
             "Inventory": ["material"],
@@ -254,7 +263,7 @@ class BaseNode(ABC):
             # TODO this handling that doesn't tell the user what happened and how they can fix it
             #   this just tells the user that something is wrong
             #   this should be improved to tell the user what went wrong and where
-            raise CRIPTJsonSerializationError(str(type(self)), self._json_attrs) from exc
+            raise CRIPTJsonSerializationError(str(type(self)), str(self._json_attrs)) from exc
         finally:
             NodeEncoder.handled_ids = previous_handled_nodes
             NodeEncoder.condense_to_uuid = previous_condense_to_uuid

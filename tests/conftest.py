@@ -15,6 +15,7 @@ import pytest
 from fixtures.primary_nodes import (
     complex_collection_node,
     complex_data_node,
+    complex_material_dict,
     complex_material_node,
     complex_project_dict,
     complex_project_node,
@@ -77,15 +78,17 @@ def cript_api():
     """
     Create an API instance for the rest of the tests to use.
 
-    Returns:
-        API: The created API instance.
+    Returns
+    -------
+    API: cript.API
+        The created CRIPT API instance.
     """
     host: str = "http://development.api.mycriptapp.org/"
     token = "123456"
 
     assert cript.api.api._global_cached_api is None
     with cript.API(host=host, token=token) as api:
-        with open("db_schema.json", "w") as file_handle:
-            json.dump(api.schema, file_handle, indent=2)
+        # using the tests folder name within our cloud storage
+        api._BUCKET_DIRECTORY_NAME = "tests"
         yield api
     assert cript.api.api._global_cached_api is None

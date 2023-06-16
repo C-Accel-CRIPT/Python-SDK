@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field, replace
-from typing import List
+from typing import List, Optional
+
+from beartype import beartype
 
 from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
@@ -37,7 +39,8 @@ class Project(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, name: str, collection: List[Collection] = None, material: List[Material] = None, notes: str = "", **kwargs):
+    @beartype
+    def __init__(self, name: str, collection: Optional[List[Collection]] = None, material: Optional[List[Material]] = None, notes: str = "", **kwargs):
         """
         Create a Project node with Project name and Group
 
@@ -112,18 +115,18 @@ class Project(PrimaryBaseNode):
                 if node not in experiment_nodes:
                     raise get_orphaned_experiment_exception(node)
 
-    # ------------------ Properties ------------------
-
     @property
+    @beartype
     def member(self) -> List[User]:
         return self._json_attrs.member.copy()
 
     @property
+    @beartype
     def admin(self) -> List[User]:
         return self._json_attrs.admin
 
-    # Collection
     @property
+    @beartype
     def collection(self) -> List[Collection]:
         """
         Collection is a Project node's property that can be set during creation in the constructor
@@ -146,8 +149,8 @@ class Project(PrimaryBaseNode):
         """
         return self._json_attrs.collection
 
-    # Collection
     @collection.setter
+    @beartype
     def collection(self, new_collection: List[Collection]) -> None:
         """
         set list of collections for the project node
@@ -163,8 +166,8 @@ class Project(PrimaryBaseNode):
         new_attrs = replace(self._json_attrs, collection=new_collection)
         self._update_json_attrs_if_valid(new_attrs)
 
-    # Material
     @property
+    @beartype
     def material(self) -> List[Material]:
         """
         List of Materials that belong to this Project.
@@ -186,6 +189,7 @@ class Project(PrimaryBaseNode):
         return self._json_attrs.material
 
     @material.setter
+    @beartype
     def material(self, new_materials: List[Material]) -> None:
         """
         set the list of materials for this project

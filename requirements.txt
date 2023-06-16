@@ -1,2 +1,4 @@
 requests==2.31.0
 jsonschema==4.17.3
+boto3==1.26.151
+beartype==0.14.1

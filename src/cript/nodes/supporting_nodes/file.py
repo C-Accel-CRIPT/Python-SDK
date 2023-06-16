@@ -1,6 +1,10 @@
 from dataclasses import dataclass, replace
+from pathlib import Path
+from typing import Union
 
-from cript.nodes.uuid_base import UUIDBaseNode
+from beartype import beartype
+
+from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
 
 def _is_local_file(file_source: str) -> bool:
@@ -21,7 +25,41 @@ def _is_local_file(file_source: str) -> bool:
         return True
 
 
-class File(UUIDBaseNode):
+def _upload_file_and_get_object_name(source: Union[str, Path]) -> str:
+    """
+    uploads file to cloud storage and returns the file link
+
+    1.  checks if the source is a local file path and not a web url
+    1. if it is a local file path, then it uploads it to cloud storage
+        * returns the file link in cloud storage
+    1. else it returns the same file link because it is already on the web
+
+    Parameters
+    ----------
+    source: str
+        file source can be a relative or absolute file string or pathlib object
+
+    Returns
+    -------
+    str
+        file AWS S3 link
+    """
+    from cript.api.api import _get_global_cached_api
+
+    # convert source to str for `_is_local_file` and to return str
+    source = str(source)
+
+    if _is_local_file(file_source=source):
+        api = _get_global_cached_api()
+        object_name = api.upload_file(file_path=source)
+        # always getting a string for object_name
+        source = str(object_name)
+
+    # always returning a string
+    return source
+
+
+class File(PrimaryBaseNode):
     """
     ## Definition
 
@@ -55,7 +93,7 @@ class File(UUIDBaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(UUIDBaseNode.JsonAttributes):
+    class JsonAttributes(PrimaryBaseNode.JsonAttributes):
         """
         all file attributes
         """
@@ -67,12 +105,15 @@ class File(UUIDBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, source: str, type: str, extension: str = "", data_dictionary: str = "", **kwargs):
+    @beartype
+    def __init__(self, name: str, source: str, type: str, extension: str = "", data_dictionary: str = "", notes: str = "", **kwargs):
         """
         create a File node
 
         Parameters
         ----------
+        name: str
+            File node name
         source: str
             link or path to local file
         type: str
@@ -81,6 +122,8 @@ class File(UUIDBaseNode):
             file extension
         data_dictionary:str
             extra information describing the file
+        notes: str
+            notes for the file node
         **kwargs:dict
             for internal use. Any extra data needed to create this file node
             when deserializing the JSON response from the API
@@ -107,7 +150,12 @@ class File(UUIDBaseNode):
             ```
         """
 
-        super().__init__(**kwargs)
+        super().__init__(name=name, notes=notes, **kwargs)
+
+        # always giving the function the required str regardless if the input `Path` or `str`
+        if _is_local_file(file_source=str(source)):
+            # upload file source if local file
+            source = _upload_file_and_get_object_name(source=source)
 
         # TODO check if vocabulary is valid or not
         # is_vocab_valid("file type", type)
@@ -116,11 +164,10 @@ class File(UUIDBaseNode):
         self._json_attrs = replace(
             self._json_attrs,
             type=type,
+            source=source,
             extension=extension,
             data_dictionary=data_dictionary,
         )
-
-        self.source = source
 
         self.validate()
 
@@ -128,6 +175,7 @@ class File(UUIDBaseNode):
 
     # --------------- Properties ---------------
     @property
+    @beartype
     def source(self) -> str:
         """
         The File node source can be set to be either a path to a local file on disk
@@ -153,6 +201,7 @@ class File(UUIDBaseNode):
         return self._json_attrs.source
 
     @source.setter
+    @beartype
     def source(self, new_source: str) -> None:
         """
         sets the source of the file node
@@ -183,17 +232,14 @@ class File(UUIDBaseNode):
         """
 
         if _is_local_file(new_source):
-            with open(new_source, "r") as file:
-                # TODO upload a file to Argonne Labs or directly to the backend
-                #   get the URL of the uploaded file
-                #   set the source to the URL just gotten from argonne
-                print(file)
-                pass
+            object_name: str = _upload_file_and_get_object_name(source=new_source)
+            new_source = object_name
 
         new_attrs = replace(self._json_attrs, source=new_source)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def type(self) -> str:
         """
         The [File type]() must come from [CRIPT controlled vocabulary]()
@@ -212,6 +258,7 @@ class File(UUIDBaseNode):
         return self._json_attrs.type
 
     @type.setter
+    @beartype
     def type(self, new_type: str) -> None:
         """
         set the file type
@@ -238,6 +285,7 @@ class File(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def extension(self) -> str:
         """
         The file extension property explicitly states what is the file extension of the file node.
@@ -256,6 +304,7 @@ class File(UUIDBaseNode):
         return self._json_attrs.extension
 
     @extension.setter
+    @beartype
     def extension(self, new_extension) -> None:
         """
         sets the new file extension
@@ -279,6 +328,7 @@ class File(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def data_dictionary(self) -> str:
         # TODO data dictionary needs documentation describing it and how to use it
         """
@@ -303,6 +353,7 @@ class File(UUIDBaseNode):
         return self._json_attrs.data_dictionary
 
     @data_dictionary.setter
+    @beartype
     def data_dictionary(self, new_data_dictionary: str) -> None:
         """
         Sets the data dictionary for the file node.
@@ -318,3 +369,38 @@ class File(UUIDBaseNode):
         """
         new_attrs = replace(self._json_attrs, data_dictionary=new_data_dictionary)
         self._update_json_attrs_if_valid(new_attrs)
+
+    # TODO get file name from node itself as default and allow for customization as well optional
+    def download(
+        self,
+        file_name: str,
+        destination_directory_path: Union[str, Path] = ".",
+    ) -> None:
+        """
+        download this file to current working directory or a specific destination
+
+        Parameters
+        ----------
+        file_name: str
+            what you want to name the file node on your computer
+        destination_directory_path: Union[str, Path]
+            where you want the file to be stored and what you want the name to be
+            by default it is the current working directory
+
+        Returns
+        -------
+        None
+        """
+        from cript.api.api import _get_global_cached_api
+
+        api = _get_global_cached_api()
+
+        existing_folder_path = Path(destination_directory_path)
+
+        # TODO automatically add the correct file extension to it from the node
+        #  and be sure that it is always `.csv` and never just `csv`
+        file_name = f"{file_name}"
+
+        absolute_file_path = str((existing_folder_path / file_name).resolve())
+
+        api.download_file(object_name=self.source, destination_path=absolute_file_path)

@@ -12,10 +12,10 @@ def test_json(complex_ingredient_node, complex_ingredient_dict):
     j_dict = strip_uid_from_dict(complex_ingredient_dict)
     j_dict["material"] = {}
     assert strip_uid_from_dict(i_dict) == j_dict
-    i2 = cript.load_nodes_from_json(i.json)
-    ref_dict = strip_uid_from_dict(json.loads(i.json))
+    i2 = cript.load_nodes_from_json(i.get_json(condense_to_uuid={}).json)
+    ref_dict = strip_uid_from_dict(json.loads(i.get_json(condense_to_uuid={}).json))
     ref_dict["material"] = {}
-    ref_dictB = strip_uid_from_dict(json.loads(i2.json))
+    ref_dictB = strip_uid_from_dict(json.loads(i2.get_json(condense_to_uuid={}).json))
     ref_dictB["material"] = {}
     assert ref_dict == ref_dictB
 

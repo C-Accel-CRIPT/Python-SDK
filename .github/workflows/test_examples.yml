@@ -1,0 +1,35 @@
+name: Test Jupyter Notebook
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - trunk-merge/**
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test-examples:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.11]
+    env:
+      CRIPT_HOST: http://development.api.mycriptapp.org/
+      CRIPT_TOKEN: 125433546
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: install test dependency
+        run: python3 -m pip install -r requirements_dev.txt
+      - name: install module
+        run: python3 -m pip install .
+      - name: prepare notebook
+        run: jupytext --to py docs/examples/synthesis.md
+      - name: Run script
+        run: python3 docs/examples/synthesis.py

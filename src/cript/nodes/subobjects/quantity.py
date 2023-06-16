@@ -1,11 +1,13 @@
 from dataclasses import dataclass, replace
 from numbers import Number
-from typing import Union
+from typing import Optional, Union
 
-from cript.nodes.core import BaseNode
+from beartype import beartype
+
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class Quantity(BaseNode):
+class Quantity(UUIDBaseNode):
     """
     ## Definition
     The [Quantity](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=22)
@@ -40,16 +42,17 @@ class Quantity(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         key: str = ""
-        value: Union[Number, None] = None
+        value: Optional[Number] = None
         unit: str = ""
-        uncertainty: Union[Number, None] = None
+        uncertainty: Optional[Number] = None
         uncertainty_type: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, key: str, value: Number, unit: str, uncertainty: Union[Number, None] = None, uncertainty_type: str = "", **kwargs):
+    @beartype
+    def __init__(self, key: str, value: Number, unit: str, uncertainty: Optional[Number] = None, uncertainty_type: str = "", **kwargs):
         """
         create Quantity sub-object
 
@@ -85,6 +88,7 @@ class Quantity(BaseNode):
         self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit, uncertainty=uncertainty, uncertainty_type=uncertainty_type)
         self.validate()
 
+    @beartype
     def set_key_unit(self, new_key: str, new_unit: str) -> None:
         """
         set the Quantity key and unit attributes
@@ -112,6 +116,7 @@ class Quantity(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def key(self) -> str:
         """
         get the Quantity sub-object key attribute
@@ -124,6 +129,7 @@ class Quantity(BaseNode):
         return self._json_attrs.key
 
     @property
+    @beartype
     def value(self) -> Union[int, float, str]:
         """
         amount of Material
@@ -139,9 +145,10 @@ class Quantity(BaseNode):
         Union[int, float, str]
             amount of Material
         """
-        return self._json_attrs.value
+        return self._json_attrs.value  # type: ignore
 
     @value.setter
+    @beartype
     def value(self, new_value: Union[int, float, str]) -> None:
         """
         set the amount of Material
@@ -159,6 +166,7 @@ class Quantity(BaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
+    @beartype
     def unit(self) -> str:
         """
         get the Quantity unit attribute
@@ -171,6 +179,7 @@ class Quantity(BaseNode):
         return self._json_attrs.unit
 
     @property
+    @beartype
     def uncertainty(self) -> Number:
         """
         get the uncertainty value
@@ -180,9 +189,10 @@ class Quantity(BaseNode):
         Number
             uncertainty value
         """
-        return self._json_attrs.uncertainty
+        return self._json_attrs.uncertainty  # type: ignore
 
     @property
+    @beartype
     def uncertainty_type(self) -> str:
         """
         get the uncertainty type attribute for the Quantity sub-object
@@ -196,6 +206,7 @@ class Quantity(BaseNode):
         """
         return self._json_attrs.uncertainty_type
 
+    @beartype
     def set_uncertainty(self, uncertainty: Number, type: str) -> None:
         """
         set the `uncertainty value` and `uncertainty_type`

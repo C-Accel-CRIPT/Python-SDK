@@ -1,12 +1,12 @@
 from dataclasses import dataclass, field, replace
-from typing import List
+from typing import List, Optional
 
-from cript.nodes.core import BaseNode
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.parameter import Parameter
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class Algorithm(BaseNode):
+class Algorithm(UUIDBaseNode):
     """
     ## Definition
 
@@ -63,7 +63,7 @@ class Algorithm(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         key: str = ""
         type: str = ""
 
@@ -72,7 +72,7 @@ class Algorithm(BaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, key: str, type: str, parameter: List[Parameter] = None, citation: List[Citation] = None, **kwargs):  # ignored
+    def __init__(self, key: str, type: str, parameter: Optional[List[Parameter]] = None, citation: Optional[List[Citation]] = None, **kwargs):  # ignored
         """
         create algorithm sub-object
 
@@ -240,7 +240,7 @@ class Algorithm(BaseNode):
         citation node: Citation
             get the algorithm citation node
         """
-        return self._json_attrs.citation.copy()
+        return self._json_attrs.citation.copy()  # type: ignore
 
     @citation.setter
     def citation(self, new_citation: Citation) -> None:

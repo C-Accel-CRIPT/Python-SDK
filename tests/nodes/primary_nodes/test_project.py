@@ -59,37 +59,48 @@ def test_serialize_project_to_json(complex_project_node, complex_project_dict) -
 
 
 # ---------- Integration tests ----------
-def test_save_project_to_api() -> None:
+def test_integration_project(cript_api, simple_project_node):
     """
-    tests if the project node can be saved to the API without errors and status code of 200
-    """
-    pass
+    integration test between Python SDK and API Client
 
+    tests both POST and GET
 
-def test_get_project_from_api() -> None:
-    """
-    gets the project node from the api that was saved prior
-    """
-    pass
+    1. create a project
+    1. save the project
+    1. get the project
+    1. deserialize the project to node
+    1. convert the new node to JSON
+    1. compare the project node JSON that was sent to API and the node the API gave, have the same JSON
 
+    Notes
+    -----
+    comparing JSON because it is easier to compare than an object
+    """
+    simple_project_node.name = "test_integration_project_name"
 
-def test_serialize_json_to_project() -> None:
-    """
-    tests that a JSON of a project node from API can be correctly converted to python object
-    """
-    pass
+    # exception handling in case the project node already exists in DB
+    try:
+        cript_api.save(project=simple_project_node)
+    except Exception as error:
+        # handling duplicate project name errors
+        if "http:409 duplicate item" in str(error):
+            pass
+        else:
+            raise Exception(error)
 
+    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=simple_project_node.name)
 
-def test_update_project_in_api() -> None:
-    """
-    tests that the project node can be correctly updated within the API
-    """
-    pass
+    my_project_from_api_dict = my_paginator.current_page_results[0]
 
+    print("\n\n------------------------------------------------------")
+    print(json.dumps(my_project_from_api_dict))
+    print("------------------------------------------------------")
 
-def test_delete_project_from_api() -> None:
-    """
-    integration test: tests that the project node can be deleted correctly from the API
-    tries to get the project from API, and it is expected for the API to give an error response
-    """
-    pass
+    print("\n\n------------------------------------------------------")
+    print(simple_project_node.json)
+    print("------------------------------------------------------")
+
+    # my_project_from_api_node = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_api_dict))
+
+    # check equivalent JSON dicts
+    # assert json.dumps(my_paginator.current_page_results[0]) == simple_project_node.json

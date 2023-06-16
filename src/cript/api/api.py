@@ -5,6 +5,7 @@ import uuid
 import warnings
 from pathlib import Path
 from typing import Any, Dict, List, Union
+from urllib.parse import quote
 
 import boto3
 import jsonschema
@@ -633,7 +634,7 @@ class API:
     @beartype
     def search(
         self,
-        node_type: BaseNode,
+        node_type,
         search_mode: SearchModes,
         value_to_search: Union[None, str],
     ) -> Paginator:
@@ -675,6 +676,7 @@ class API:
         page_number = 0
 
         api_endpoint: str = ""
+
         # requesting a page of some primary node
         if search_mode == SearchModes.NODE_TYPE:
             api_endpoint = f"{self._host}/{node_type}"
@@ -691,5 +693,6 @@ class API:
             value_to_search = None
 
         assert api_endpoint != ""
+
         # TODO error handling if none of the API endpoints got hit
         return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, query=value_to_search, current_page_number=page_number)

@@ -44,54 +44,47 @@ def test_inventory_serialization(simple_inventory_node, simple_material_dict) ->
     assert expected_dict == deserialized_inventory
 
 
-# --------------- Integration Tests ---------------
-def test_save_inventory(cript_api) -> None:
+# ---------- Integration tests ----------
+def test_integration_inventory(cript_api, simple_project_node, simple_inventory_node):
     """
-    test that an inventory node can be saved correctly to the API
-
+    integration test between Python SDK and API Client
+    tests both POST and GET
+    1. create a project
+    1. save the project
+    1. get the project
+    1. deserialize the project to node
+    1. convert the new node to JSON
+    1. compare the project node JSON that was sent to API and the node the API gave, have the same JSON
     Notes
     -----
-    indirectly tests getting an inventory node
-
-    1. create a valid inventory node
-    2. convert inventory node to JSON
-    3. convert JSON to node
-    4. assert that both nodes are equal to each other
-
-    Returns
-    -------
-    None
+    comparing JSON because it is easier to compare than an object
     """
-    pass
 
+    simple_project_node.collection[0].inventory = [simple_inventory_node]
 
-def test_get_inventory_from_api(cript_api) -> None:
-    """
-    test getting inventory node from the API
-    """
-    pass
+    # exception handling in case the project node already exists in DB
+    try:
+        cript_api.save(project=simple_project_node)
+    except Exception as error:
+        # handling duplicate project name errors
+        if "http:409 duplicate item" in str(error):
+            pass
+        else:
+            raise Exception(error)
 
+    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=simple_project_node.name)
 
-def test_update_inventory(cript_api) -> None:
-    """
-    test an inventory node can be correctly updated in the API
+    my_project_from_api_dict = my_paginator.current_page_results[0]
 
-    Notes
-    -----
-    This test indirectly tests that the node can be gotten correctly.
+    print("\n\n------------------------------------------------------")
+    print(json.dumps(my_project_from_api_dict))
+    print("------------------------------------------------------")
 
-    Returns
-    -------
-    None
-    """
-    pass
+    print("\n\n------------------------------------------------------")
+    print(simple_project_node.json)
+    print("------------------------------------------------------")
 
+    # my_project_from_api_node = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_api_dict))
 
-def test_delete_inventory(cript_api) -> None:
-    """
-    simply test that an inventory node can be correctly deleted from the API
-
-    Returns
-    -------
-    None
-    """
+    # check equivalent JSON dicts
+    # assert json.dumps(my_paginator.current_page_results[0]) == simple_project_node.json

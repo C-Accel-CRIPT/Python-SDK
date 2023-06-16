@@ -1,5 +1,6 @@
 import copy
 import json
+import uuid
 
 from util import strip_uid_from_dict
 
@@ -139,8 +140,8 @@ def test_integration_collection(cript_api, simple_project_node, simple_collectio
     """
 
     # rename project and collection to not bump into duplicate issues
-    simple_project_node.name = "test_integration_collection_project_name"
-    simple_collection_node.name = "test_integration_collection_collection_name"
+    simple_project_node.name = f"test_integration_collection_project_name_{uuid.uuid4().hex}"
+    simple_collection_node.name = f"test_integration_collection_collection_name_{uuid.uuid4().hex}"
 
     simple_project_node.collection = [simple_collection_node]
 

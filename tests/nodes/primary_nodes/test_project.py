@@ -1,4 +1,5 @@
 import json
+import uuid
 
 from util import strip_uid_from_dict
 
@@ -67,6 +68,6 @@ def test_integration_project(cript_api, simple_project_node):
     1. GET from API
     1. assert they're both equal
     """
-    simple_project_node.name = "test_integration_project_name"
+    simple_project_node.name = f"test_integration_project_name_{uuid.uuid4().hex}"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

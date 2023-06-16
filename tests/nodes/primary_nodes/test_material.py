@@ -103,65 +103,36 @@ def test_serialize_material_to_json(complex_material_dict, complex_material_node
 
 
 # ---------- Integration Tests ----------
-def test_save_material_to_api(cript_api, simple_material_node, simple_project_node) -> None:
+def test_integration_material(cript_api, simple_project_node, simple_material_node):
     """
-    tests if the material can be saved to the API without errors and status code of 200
+    integration test between Python SDK and API Client
+
+    tests both POST and GET
+
+    1. create a project
+    1. create a material
+    1. add a material to project
+    1. save the project
+    1. get the project
+    1. deserialize the project
+    1. compare the project node that was sent to API and the one API gave, that they are the same
     """
     simple_project_node.material = [simple_material_node]
+
     cript_api.save(project=simple_project_node)
-    pass
 
+    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=simple_project_node.name)
 
-def test_get_material_from_api() -> None:
-    """
-    integration test: gets the material from the api that was saved prior
-    """
-    pass
+    # the paginator should have only a single page, and the first result should be the only result
+    # for the query of this project
+    # take the JSON and translate it back to a node
+    my_project_json = my_paginator.current_page_results[0]
 
+    print("\n\n-----------------------------------------------------------------")
+    print(my_project_json)
+    print("\n\n-----------------------------------------------------------------")
 
-def test_deserialize_material_from_json() -> None:
-    """
-    tests that a JSON of a material node can be correctly converted to python object
-    """
-    api_material = {
-        "name": "my cool material",
-        "component_count": 0,
-        "computational_forcefield_count": 0,
-        "created_at": "2023-03-14T00:45:02.196297Z",
-        "model_version": "1.0.0",
-        "node": ["Material"],
-        "notes": "",
-        "property_count": 0,
-        "uid": "_:0x24a08",
-        "updated_at": "2023-03-14T00:45:02.196276Z",
-        "uuid": "403fa02c-9a84-4f9e-903c-35e535151b08",
-        "smiles": "CCC",
-    }
+    my_project_from_api = cript.load_nodes_from_json(nodes_json=my_project_json)
 
-    material_string = json.dumps(api_material)
-    my_material = cript.load_nodes_from_json(nodes_json=material_string)
-
-    # assertions
-    assert isinstance(my_material, cript.Material)
-    assert my_material.name == api_material["name"]
-    assert my_material.component == []
-    assert my_material.property == []
-    assert my_material.parent_material is None
-    assert my_material.computational_forcefield is None
-    assert my_material.keyword == []
-    assert my_material.notes == api_material["notes"]
-
-
-def test_update_material_to_api() -> None:
-    """
-    tests that the material can be correctly updated within the API
-    """
-    pass
-
-
-def test_delete_material_from_api() -> None:
-    """
-    integration test: tests that the material can be deleted correctly from the API
-    tries to get the material from API, and it is expected for the API to give an error response
-    """
-    pass
+    # check equivalent JSON dicts
+    assert my_project_from_api.json == simple_project_node.json

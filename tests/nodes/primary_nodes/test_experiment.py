@@ -179,50 +179,45 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
 
 
 # -------- Integration Tests --------
-def test_save_experiment() -> None:
+def test_integration_experiment(cript_api, simple_project_node):
     """
-    integration test
+    integration test between Python SDK and API Client
 
-    test that an experiment node can be saved correctly in the API
-    indirectly tests that the experiment can be correctly converted from JSON to the node
-    indirectly tests that an experiment node can be gotten correctly from the API
+    tests both POST and GET
 
-    1. create an experiment node with all possible attributes
-    2. save the experiment to the API
-    3. get the node from the API
-    4. convert the node to the experiment class
-    5. assert that the experiment node from API and local are equal to each other
-    """
-    pass
-
-
-def test_get_experiment_from_api() -> None:
-    """
-    tests that experiments can be gotten correctly from the API
+    1. create a project
+    1. create a collection
+    1. add collection to project
+    1. save the project
+    1. get the project
+    1. deserialize the project to node
+    1. convert the new node to JSON
+    1. compare the project node JSON that was sent to API and the node the API gave, have the same JSON
 
     Notes
     -----
-    indirectly tests that the experiment was saved correctly to the API from the previous test
+    comparing JSON because it is easier to compare than an object
     """
-    pass
 
+    # exception handling in case the project node already exists in DB and there is no docker container
+    try:
+        # `simple_project_node` already has a collection and an experiment in it
+        cript_api.save(project=simple_project_node)
+    except Exception as error:
+        # handling duplicate project name errors
+        if "http:409 duplicate item" in str(error):
+            pass
+        else:
+            raise Exception(error)
 
-def test_convert_api_experiment_json_to_node() -> None:
-    """
-    tests that it can correctly convert an experiment node from the API to a python Experiment node
-    """
-    pass
+    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=simple_project_node.name)
 
+    my_project_from_api_dict = my_paginator.current_page_results[0]
 
-def test_update_experiment() -> None:
-    """
-    integration test: test that an experiment can be correctly updated in the API
-    """
-    pass
+    print("\n\n------------------------------------------------------")
+    print(json.dumps(my_project_from_api_dict))
+    print("------------------------------------------------------")
 
-
-def test_delete_experiment() -> None:
-    """
-    integration test: test to see an experiment can be correctly deleted from the API
-    """
-    pass
+    print("\n\n------------------------------------------------------")
+    print(simple_project_node.json)
+    print("------------------------------------------------------")

@@ -127,7 +127,10 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
         cript_api.save(project=simple_project_node)
     except Exception as error:
         # handling duplicate project name errors
-        print(error)
+        if "http:409 duplicate item" in str(error):
+            pass
+        else:
+            raise Exception(error)
 
     my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=simple_project_node.name)
 

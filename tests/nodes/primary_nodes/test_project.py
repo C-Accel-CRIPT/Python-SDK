@@ -3,6 +3,7 @@ import json
 from util import strip_uid_from_dict
 
 import cript
+from tests.test_integration import integrate_nodes_helper
 
 
 def test_create_simple_project(simple_collection_node) -> None:
@@ -62,45 +63,7 @@ def test_serialize_project_to_json(complex_project_node, complex_project_dict) -
 def test_integration_project(cript_api, simple_project_node):
     """
     integration test between Python SDK and API Client
-
-    tests both POST and GET
-
-    1. create a project
-    1. save the project
-    1. get the project
-    1. deserialize the project to node
-    1. convert the new node to JSON
-    1. compare the project node JSON that was sent to API and the node the API gave, have the same JSON
-
-    Notes
-    -----
-    comparing JSON because it is easier to compare than an object
     """
     simple_project_node.name = "test_integration_project_name"
 
-    # exception handling in case the project node already exists in DB
-    try:
-        cript_api.save(project=simple_project_node)
-    except Exception as error:
-        # handling duplicate project name errors
-        if "http:409 duplicate item" in str(error):
-            pass
-        else:
-            raise Exception(error)
-
-    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=simple_project_node.name)
-
-    my_project_from_api_dict = my_paginator.current_page_results[0]
-
-    print("\n\n------------------------------------------------------")
-    print(json.dumps(my_project_from_api_dict))
-    print("------------------------------------------------------")
-
-    print("\n\n------------------------------------------------------")
-    print(simple_project_node.json)
-    print("------------------------------------------------------")
-
-    # my_project_from_api_node = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_api_dict))
-
-    # check equivalent JSON dicts
-    # assert json.dumps(my_paginator.current_page_results[0]) == simple_project_node.json
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

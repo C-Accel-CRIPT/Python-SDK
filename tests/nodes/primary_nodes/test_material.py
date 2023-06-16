@@ -118,10 +118,7 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
     1. deserialize the project
     1. compare the project node that was sent to API and the one API gave, that they are the same
     """
-    simple_material_node.name = "my_material_4"
     simple_project_node.material = [simple_material_node]
-
-    simple_project_node.name = "my_new_project_name_4"
 
     try:
         cript_api.save(project=simple_project_node)

@@ -1,9 +1,11 @@
 import copy
 import json
+import uuid
 
 from util import strip_uid_from_dict
 
 import cript
+from tests.test_integration import integrate_nodes_helper
 
 
 def test_create_file() -> None:
@@ -156,38 +158,20 @@ def test_uuid(complex_file_node):
     assert file_node3.url == file_node.url
 
 
-# ---------- Integration tests ----------
-def test_save_file_to_api() -> None:
+def test_integration_file(cript_api, simple_project_node, simple_data_node):
     """
-    tests if the file node can be saved to the API without errors and status code of 200
-    """
-    pass
+    integration test between Python SDK and API Client
 
+    1. POST to API
+    1. GET from API
+    1. assert they're both equal
 
-def test_get_file_from_api() -> None:
+    Notes
+    -----
+    indirectly tests data node as well because every file node must be in a data node
     """
-    integration test: gets the file node from the api that was saved prior
-    """
-    pass
+    simple_project_node.name = f"test_integration_file_{uuid.uuid4().hex}"
 
+    simple_project_node.collection[0].experiment[0].data = [simple_data_node]
 
-def test_serialize_json_to_file() -> None:
-    """
-    tests that a JSON of a file node can be correctly converted to python object
-    """
-    pass
-
-
-def test_update_file_in_api() -> None:
-    """
-    tests that the file node can be correctly updated within the API
-    """
-    pass
-
-
-def test_delete_file_from_api() -> None:
-    """
-    integration test: tests that the file node can be deleted correctly from the API
-    tries to get the file from API, and it is expected for the API to give an error response
-    """
-    pass
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

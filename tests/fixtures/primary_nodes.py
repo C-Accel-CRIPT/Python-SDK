@@ -162,6 +162,51 @@ def simple_process_node() -> cript.Process:
 
 
 @pytest.fixture(scope="function")
+def complex_process_node(complex_ingredient_node, simple_equipment_node, complex_citation_node, simple_property_node, simple_condition_node, simple_material_node, simple_process_node, complex_equipment_node, complex_condition_node) -> None:
+    """
+    create a process node with all possible arguments
+
+    Notes
+    -----
+    * indirectly tests the vocabulary as well, as it gives it valid vocabulary
+    """
+    # TODO clean up this test and use fixtures from conftest.py
+
+    my_process_name = "my complex process node name"
+    my_process_type = "affinity_pure"
+    my_process_description = "my simple material description"
+
+    process_waste = [
+        cript.Material(name="my process waste material 1", identifiers=[{"bigsmiles": "process waste bigsmiles"}]),
+    ]
+
+    my_process_keywords = [
+        "anionic",
+        "annealing_sol",
+    ]
+
+    # create complex process
+    citation = copy.deepcopy(complex_citation_node)
+    prop = cript.Property("n_neighbor", "value", 2.0, None)
+
+    my_complex_process = cript.Process(
+        name=my_process_name,
+        type=my_process_type,
+        ingredient=[complex_ingredient_node],
+        description=my_process_description,
+        equipment=[complex_equipment_node],
+        product=[simple_material_node],
+        waste=process_waste,
+        prerequisite_process=[simple_process_node],
+        condition=[complex_condition_node],
+        property=[prop],
+        keyword=my_process_keywords,
+        citation=[citation],
+    )
+
+
+
+@pytest.fixture(scope="function")
 def simple_computation_node() -> cript.Computation:
     """
     simple computation node to use between tests

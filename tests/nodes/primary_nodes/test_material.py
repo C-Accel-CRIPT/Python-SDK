@@ -1,9 +1,11 @@
 import json
+import uuid
 from typing import Dict
 
 from util import strip_uid_from_dict
 
 import cript
+from tests.test_integration import integrate_nodes_helper
 
 
 def test_create_complex_material(simple_material_node, simple_computational_forcefield_node, simple_process_node) -> None:
@@ -103,7 +105,6 @@ def test_serialize_material_to_json(complex_material_dict, complex_material_node
     assert ref_dict == complex_material_dict
 
 
-# ---------- Integration Tests ----------
 def test_integration_material(cript_api, simple_project_node, simple_material_node):
     """
     integration test between Python SDK and API Client
@@ -118,30 +119,10 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
     1. deserialize the project
     1. compare the project node that was sent to API and the one API gave, that they are the same
     """
+    # creating unique name to not bump into unique errors
+    simple_project_node.name = f"test_integration_project_name_{uuid.uuid4().hex}"
+    simple_material_node.name = f"test_integration_material_name_{uuid.uuid4().hex}"
+
     simple_project_node.material = [simple_material_node]
 
-    try:
-        cript_api.save(project=simple_project_node)
-    except Exception as error:
-        # handling duplicate project name errors
-        if "http:409 duplicate item" in str(error):
-            pass
-        else:
-            raise Exception(error)
-
-    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=simple_project_node.name)
-
-    my_project_from_api_dict: Dict = my_paginator.current_page_results[0]
-
-    print("\n\n------------------------------------------------------")
-    print(json.dumps(my_project_from_api_dict))
-    print("------------------------------------------------------")
-
-    print("\n\n------------------------------------------------------")
-    print(simple_project_node.json)
-    print("------------------------------------------------------")
-
-    my_project_from_api_node = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_api_dict))
-
-    # check equivalent JSON dicts
-    assert json.dumps(my_paginator.current_page_results[0]) == simple_project_node.json
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

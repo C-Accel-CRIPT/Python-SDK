@@ -149,7 +149,7 @@ def test_serialize_process_to_json(simple_process_node) -> None:
     assert ref_dict == expected_process_dict
 
 
-def test_integration_process(cript_api, simple_project_node, simple_process_node):
+def test_integration_simple_process(cript_api, simple_project_node, simple_process_node):
     """
     integration test between Python SDK and API Client
 
@@ -160,5 +160,20 @@ def test_integration_process(cript_api, simple_project_node, simple_process_node
     simple_project_node.name = f"test_integration_process_name_{uuid.uuid4().hex}"
 
     simple_project_node.collection[0].experiment[0].process = [simple_process_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+
+def test_integration_complex_process(cript_api, simple_project_node, complex_process_node):
+    """
+    integration test between Python SDK and API Client
+
+    1. POST to API
+    1. GET from API
+    1. assert JSON sent and JSON recieved are the same
+    """
+    simple_project_node.name = f"test_integration_process_name_{uuid.uuid4().hex}"
+
+    simple_project_node.collection[0].experiment[0].process = [complex_process_node]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

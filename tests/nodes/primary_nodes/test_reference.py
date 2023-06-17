@@ -1,8 +1,10 @@
 import json
+import uuid
 
 from util import strip_uid_from_dict
 
 import cript
+from tests.test_integration import integrate_nodes_helper
 
 
 def test_create_simple_reference() -> None:
@@ -161,49 +163,22 @@ def test_serialize_reference_to_json(complex_reference_node, complex_reference_d
     assert reference_dict == complex_reference_dict
 
 
-# ---------- Integration tests ----------
-def test_save_reference_to_api() -> None:
+def test_integration_reference(cript_api, simple_project_node, complex_citation_node):
     """
-    tests if the reference node can be saved to the API without errors and status code of 200
-    """
-    pass
+    integration test between Python SDK and API Client
 
+    1. POST to API
+    1. GET from API
+    1. assert they're both equal
 
-def test_get_reference_from_api() -> None:
+    Notes
+    -----
+    indirectly tests citation node along with reference node
     """
-    integration test: gets the reference node from the api that was saved prior
-    """
-    pass
+    simple_project_node.name = f"test_integration_reference_name_{uuid.uuid4().hex}"
 
+    simple_project_node.collection[0].citation = [complex_citation_node]
 
-def test_serialize_json_to_data() -> None:
-    """
-    tests that a JSON of a reference node can be correctly converted to python object
-    """
-    pass
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 
-
-def test_update_data_in_api() -> None:
-    """
-    reference nodes are immutable
-    attempting to update a reference node should return an error from the API
-    """
-    pass
-
-
-def test_delete_reference_from_api() -> None:
-    """
-    reference nodes are immutable, attempting to delete a reference node should return an error from the API
-    """
-    pass
-
-
-def test_reference_url() -> None:
-    """
-    tests that the reference URL is correctly made using the UUID
-
-    Returns
-    -------
-    None
-    """
-    pass
+    raise Exception("Citation is missing from collection node from API")

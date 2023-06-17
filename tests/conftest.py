@@ -19,6 +19,7 @@ from fixtures.primary_nodes import (
     complex_material_node,
     complex_project_dict,
     complex_project_node,
+    complex_process_node,
     simple_collection_node,
     simple_computation_node,
     simple_computation_process_node,

@@ -114,7 +114,7 @@ def complex_property_node(complex_material_node, complex_condition_node, complex
         type="value",
         value=5.0,
         unit="GPa",
-        uncertainty=0.1,
+        uncertainty=.1,
         uncertainty_type="stdev",
         structure="structure",
         method="comp",
@@ -261,17 +261,20 @@ def complex_equipment_dict(complex_condition_dict, complex_citation_dict) -> dic
 
 @pytest.fixture(scope="function")
 def complex_computational_forcefield_node(simple_data_node, complex_citation_node) -> cript.ComputationalForcefield:
-    cf = cript.ComputationalForcefield(
-        "opls_aa",
-        "atom",
-        "atom -> atom",
-        "no implicit solvent",
-        "local LigParGen installation",
-        "this is a test forcefield",
-        [simple_data_node],
-        [complex_citation_node],
+    """
+    maximal computational_forcefield sub-object with all possible arguments included in it
+    """
+    my_complex_computational_forcefield_node = cript.ComputationalForcefield(
+        key="opls_aa",
+        building_block="atom",
+        coarse_grained_mapping="atom -> atom",
+        implicit_solvent="no implicit solvent",
+        source="local LigParGen installation",
+        description="this is a test forcefield for complex_computational_forcefield_node",
+        data=[simple_data_node],
+        citation=[complex_citation_node],
     )
-    return cf
+    return my_complex_computational_forcefield_node
 
 
 @pytest.fixture(scope="function")

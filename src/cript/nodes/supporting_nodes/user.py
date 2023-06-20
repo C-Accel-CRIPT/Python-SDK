@@ -1,5 +1,5 @@
 from dataclasses import dataclass, replace
-from typing import Optional
+from typing import Optional, Union
 
 from beartype import beartype
 
@@ -85,7 +85,7 @@ class User(UUIDBaseNode):
 
     @property
     @beartype
-    def email(self) -> str:
+    def email(self) -> Union[str, None]:
         """
         user's email
 
@@ -107,7 +107,7 @@ class User(UUIDBaseNode):
 
     @property
     @beartype
-    def orcid(self) -> str:
+    def orcid(self) -> Union[str, None]:
         """
         users [ORCID](https://orcid.org/)
 

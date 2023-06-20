@@ -106,13 +106,16 @@ def complex_software_dict() -> dict:
 
 @pytest.fixture(scope="function")
 def complex_property_node(complex_material_node, complex_condition_node, complex_citation_node, complex_data_node, simple_process_node, simple_computation_node):
-    p = cript.Property(
-        "modulus_shear",
-        "value",
-        5.0,
-        "GPa",
-        0.1,
-        "stdev",
+    """
+    a maximal property sub-object with all possible fields filled
+    """
+    my_complex_property = cript.Property(
+        key="modulus_shear",
+        type="value",
+        value=5.0,
+        unit="GPa",
+        uncertainty=.1,
+        uncertainty_type="stdev",
         structure="structure",
         method="comp",
         sample_preparation=copy.deepcopy(simple_process_node),
@@ -120,9 +123,9 @@ def complex_property_node(complex_material_node, complex_condition_node, complex
         computation=[copy.deepcopy(simple_computation_node)],
         data=[copy.deepcopy(complex_data_node)],
         citation=[complex_citation_node],
-        notes="notes",
+        notes="my complex_property_node notes",
     )
-    return p
+    return my_complex_property
 
 
 @pytest.fixture(scope="function")

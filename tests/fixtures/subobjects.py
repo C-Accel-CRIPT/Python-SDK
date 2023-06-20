@@ -114,7 +114,7 @@ def complex_property_node(complex_material_node, complex_condition_node, complex
         type="value",
         value=5.0,
         unit="GPa",
-        uncertainty=.1,
+        uncertainty=0.1,
         uncertainty_type="stdev",
         structure="structure",
         method="comp",

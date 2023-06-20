@@ -51,4 +51,3 @@ def test_integration_material_ingredient(cript_api, simple_project_node, simple_
     simple_project_node.material = [simple_material_node, complex_material_node]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
-

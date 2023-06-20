@@ -59,4 +59,3 @@ def test_integration_process_condition(cript_api, simple_project_node, simple_pr
 
     # TODO getting CRIPTOrphanedMaterialError
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
-

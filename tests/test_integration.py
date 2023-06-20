@@ -7,7 +7,7 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     """
     integration test between Python SDK and API Client
     tests both POST and GET
-    
+
     Parameters
     ----------
     cript_api: cript.API
@@ -26,9 +26,9 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     Notes
     -----
     comparing JSON because it is easier to compare than an object
-    
+
     test both the project node:
-        * node serialization 
+        * node serialization
         * POST to API
         * GET from API
         * deserialization from API JSON to node JSON
@@ -45,8 +45,7 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
             raise Exception(error)
 
     # get the project that was just saved
-    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME,
-                                    value_to_search=project_node.name)
+    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=project_node.name)
 
     # get the project from paginator
     my_project_from_api_dict = my_paginator.current_page_results[0]

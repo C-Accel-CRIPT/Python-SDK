@@ -56,4 +56,3 @@ def test_integration_process_equipment(cript_api, simple_project_node, complex_p
     simple_project_node.material = [complex_material_node]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
-

@@ -181,6 +181,12 @@ class BaseNode(ABC):
             # Conserve newly assigned uid if uid is default (empty)
             if getattr(attrs, field) == getattr(default_dataclass, field):
                 attrs = replace(attrs, **{str(field): getattr(node, field)})
+
+        try:
+            if not attrs.uid.startswith("_:"):
+                attrs = replace(attrs, uid=get_new_uid())
+        except AttributeError:
+            pass
         # But here we force even usually unwritable fields to be set.
         node._update_json_attrs_if_valid(attrs)
 

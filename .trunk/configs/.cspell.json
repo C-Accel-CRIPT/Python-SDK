@@ -90,6 +90,12 @@
     "Butyric",
     "Methylolpropane",
     "fontawesome",
-    "venv"
+    "venv",
+    "rdkit",
+    "packmol",
+    "Packmol",
+    "openmm",
+    "equi",
+    "Navid"
   ]
 }

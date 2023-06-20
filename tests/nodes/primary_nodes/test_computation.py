@@ -122,4 +122,3 @@ def test_integration_computation(cript_api, simple_project_node, simple_computat
     simple_project_node.collection[0].experiment[0].computation = [simple_computation_node]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
-

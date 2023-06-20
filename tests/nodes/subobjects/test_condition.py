@@ -58,4 +58,3 @@ def test_integration_condition(cript_api, simple_project_node, simple_process_no
     simple_project_node.collection[0].experiment[0].process = [simple_process_node]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
-

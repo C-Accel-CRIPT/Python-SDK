@@ -205,7 +205,6 @@ def complex_process_node(complex_ingredient_node, simple_equipment_node, complex
     )
 
 
-
 @pytest.fixture(scope="function")
 def simple_computation_node() -> cript.Computation:
     """

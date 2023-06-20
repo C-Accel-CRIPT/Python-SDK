@@ -46,7 +46,7 @@ def test_integration_software_configuration(cript_api, simple_project_node, simp
     1. GET from API
     1. assert JSON sent and JSON received are the same
     """
-    simple_project_node.name = f"test_integration_material_computational_forcefield{uuid.uuid4().hex}"
+    simple_project_node.name = f"test_integration_material_computational_forcefield_{uuid.uuid4().hex}"
 
     simple_project_node.collection = [simple_collection_node]
 

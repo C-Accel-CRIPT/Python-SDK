@@ -1,8 +1,10 @@
 import json
+import uuid
 
 from util import strip_uid_from_dict
 
 import cript
+from tests.test_integration import integrate_nodes_helper
 
 
 def test_setter_getter(complex_algorithm_node, complex_citation_node):
@@ -22,3 +24,24 @@ def test_json(complex_algorithm_node, complex_algorithm_dict, complex_citation_n
     print(a.get_json(indent=2).json)
     a2 = cript.load_nodes_from_json(a.json)
     assert strip_uid_from_dict(json.loads(a2.json)) == strip_uid_from_dict(a_dict)
+
+
+def test_integration_algorithm(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_computation_node, complex_software_configuration_node):
+    """
+    integration test between Python SDK and API Client
+
+    1. POST to API
+    1. GET from API
+    1. assert JSON sent and JSON received are the same
+    """
+    simple_project_node.name = f"test_integration_algorithm_{uuid.uuid4().hex}"
+
+    simple_project_node.collection = [simple_collection_node]
+
+    simple_project_node.collection[0].experiment = [simple_experiment_node]
+
+    simple_project_node.collection[0].experiment[0].computation = [simple_computation_node]
+
+    simple_project_node.collection[0].experiment[0].computation[0].software_configuration = [complex_software_configuration_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

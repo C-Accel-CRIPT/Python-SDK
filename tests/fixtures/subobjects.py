@@ -226,13 +226,16 @@ def complex_ingredient_dict(complex_material_node, complex_quantity_dict) -> dic
 
 @pytest.fixture(scope="function")
 def complex_equipment_node(complex_condition_node, complex_citation_node) -> cript.Equipment:
-    e = cript.Equipment(
-        "hot_plate",
-        "fancy hot plate",
+    """
+    maximal equipment node with all possible attributes
+    """
+    my_complex_equipment = cript.Equipment(
+        key="hot_plate",
+        description="fancy hot plate for complex_equipment_node",
         condition=[complex_condition_node],
         citation=[complex_citation_node],
     )
-    return e
+    return my_complex_equipment
 
 
 @pytest.fixture(scope="function")

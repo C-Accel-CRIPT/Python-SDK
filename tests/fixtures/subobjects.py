@@ -80,7 +80,10 @@ def complex_reference_dict() -> dict:
 
 @pytest.fixture(scope="function")
 def complex_citation_node(complex_reference_node) -> cript.Citation:
-    citation = cript.Citation("reference", complex_reference_node)
+    """
+    maximal citation sub-object with all possible node attributes
+    """
+    citation = cript.Citation(type="reference", reference=complex_reference_node)
     return citation
 
 

@@ -4,6 +4,7 @@ import json
 from util import strip_uid_from_dict
 
 import cript
+from tests.test_integration import integrate_nodes_helper
 
 
 def test_create_simple_experiment() -> None:
@@ -179,7 +180,7 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
 
 
 # -------- Integration Tests --------
-def test_integration_experiment(cript_api, simple_project_node):
+def test_integration_experiment(cript_api, simple_project_node, simple_collection_node, simple_experiment_node):
     """
     integration test between Python SDK and API Client
 
@@ -199,25 +200,7 @@ def test_integration_experiment(cript_api, simple_project_node):
     comparing JSON because it is easier to compare than an object
     """
 
-    # exception handling in case the project node already exists in DB and there is no docker container
-    try:
-        # `simple_project_node` already has a collection and an experiment in it
-        cript_api.save(project=simple_project_node)
-    except Exception as error:
-        # handling duplicate project name errors
-        if "http:409 duplicate item" in str(error):
-            pass
-        else:
-            raise Exception(error)
+    simple_project_node.collection = [simple_collection_node]
+    simple_project_node.collection[0].experiment = [simple_experiment_node]
 
-    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=simple_project_node.name)
-
-    my_project_from_api_dict = my_paginator.current_page_results[0]
-
-    print("\n\n------------------------------------------------------")
-    print(json.dumps(my_project_from_api_dict))
-    print("------------------------------------------------------")
-
-    print("\n\n------------------------------------------------------")
-    print(simple_project_node.json)
-    print("------------------------------------------------------")
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

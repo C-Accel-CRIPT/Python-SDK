@@ -295,8 +295,16 @@ def complex_computational_forcefield_dict(simple_data_node, complex_citation_dic
 
 @pytest.fixture(scope="function")
 def complex_software_configuration_node(complex_software_node, complex_algorithm_node, complex_citation_node) -> cript.SoftwareConfiguration:
-    sc = cript.SoftwareConfiguration(complex_software_node, [complex_algorithm_node], "my_notes", [complex_citation_node])
-    return sc
+    """
+    maximal software_configuration sub-object with all possible attributes
+    """
+    my_complex_software_configuration_node = cript.SoftwareConfiguration(
+        software=complex_software_node,
+        algorithm=[complex_algorithm_node],
+        notes="my_complex_software_configuration_node notes",
+        citation=[complex_citation_node]
+    )
+    return my_complex_software_configuration_node
 
 
 @pytest.fixture(scope="function")

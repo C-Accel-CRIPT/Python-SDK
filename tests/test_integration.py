@@ -53,12 +53,12 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     # try to convert api JSON project to node
     my_project_from_api = cript.load_nodes_from_json(json.dumps(my_project_from_api_dict))
 
-    print("\n\n----------------- API JSON to Python Node -------------------------------")
-    print(my_project_from_api.json)
-    print("------------------------------------------------------")
-
     print("\n\n----------------- API JSON RECEIVED -------------------------------")
     print(json.dumps(my_project_from_api_dict))
+    print("------------------------------------------------------")
+
+    print("\n\n----------------- API JSON to Python Node -------------------------------")
+    print(my_project_from_api.json)
     print("------------------------------------------------------")
 
     print("\n\n-----------------JSON SENT TO API -------------------------------")

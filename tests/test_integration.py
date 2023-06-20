@@ -7,7 +7,7 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     """
     integration test between Python SDK and API Client
     tests both POST and GET
-
+    
     Parameters
     ----------
     cript_api: cript.API
@@ -26,9 +26,9 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     Notes
     -----
     comparing JSON because it is easier to compare than an object
-
+    
     test both the project node:
-        * node serialization
+        * node serialization 
         * POST to API
         * GET from API
         * deserialization from API JSON to node JSON
@@ -44,20 +44,29 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
         else:
             raise Exception(error)
 
-    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=project_node.name)
+    # get the project that was just saved
+    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME,
+                                    value_to_search=project_node.name)
 
+    # get the project from paginator
     my_project_from_api_dict = my_paginator.current_page_results[0]
 
-    print("\n\n------------------------------------------------------")
+    # try to convert api JSON project to node
+    my_project_from_api = cript.load_nodes_from_json(json.dumps(my_project_from_api_dict))
+
+    print("\n\n----------------- API JSON to Python Node -------------------------------")
+    print(my_project_from_api.json)
+    print("------------------------------------------------------")
+
+    print("\n\n----------------- API JSON RECEIVED -------------------------------")
     print(json.dumps(my_project_from_api_dict))
     print("------------------------------------------------------")
 
-    print("\n\n------------------------------------------------------")
-    print(project_node.get_json(indent=2).json)
+    print("\n\n-----------------JSON SENT TO API -------------------------------")
+    print(project_node.json)
     print("------------------------------------------------------")
 
-    my_project_from_api_node = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_api_dict))
+    # my_project_from_api_node = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_api_dict))
 
-    print(my_project_from_api_dict.get_json(indent=2).json)
-
-    # assert json.dumps(my_paginator.current_page_results[0]) == simple_project_node.json
+    # check equivalent JSON dicts
+    assert json.dumps(my_paginator.current_page_results[0]) == project_node.json

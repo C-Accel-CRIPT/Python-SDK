@@ -1,9 +1,11 @@
 import copy
 import json
+import uuid
 
 from util import strip_uid_from_dict
 
 import cript
+from tests.test_integration import integrate_nodes_helper
 
 
 def test_computational_forcefield(complex_computational_forcefield_node, complex_computational_forcefield_dict):
@@ -39,3 +41,20 @@ def test_setter_getter(complex_computational_forcefield_node, complex_citation_n
     citation2 = copy.deepcopy(complex_citation_node)
     cf2.citation += [citation2]
     assert cf2.citation[1] == citation2
+
+
+def test_integration_material_computational_forcefield(cript_api, simple_project_node, simple_material_node, complex_computational_forcefield_node):
+    """
+    integration test between Python SDK and API Client
+
+    1. POST to API
+    1. GET from API
+    1. assert JSON sent and JSON received are the same
+    """
+    simple_project_node.name = f"test_integration_material_computational_forcefield{uuid.uuid4().hex}"
+
+    simple_material_node.computational_forcefield = complex_computational_forcefield_node
+
+    simple_project_node.material = [simple_material_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

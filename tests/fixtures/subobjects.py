@@ -9,7 +9,11 @@ import cript
 
 @pytest.fixture(scope="function")
 def complex_parameter_node() -> cript.Parameter:
-    parameter = cript.Parameter("update_frequency", 1000.0, "1/second")
+    """
+    maximal parameter sub-object that has all possible node attributes
+    """
+    parameter = cript.Parameter(key="update_frequency", value=1000.0, unit="1/second")
+
     return parameter
 
 

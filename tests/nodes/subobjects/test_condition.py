@@ -43,7 +43,7 @@ def test_setter_getters(complex_condition_node, complex_data_node):
     assert c2.data[0] is complex_data_node
 
 
-def test_integration_condition(cript_api, simple_project_node, simple_process_node, complex_condition_node):
+def test_integration_process_condition(cript_api, simple_project_node, simple_process_node, complex_condition_node):
     """
     integration test between Python SDK and API Client
 
@@ -57,4 +57,6 @@ def test_integration_condition(cript_api, simple_project_node, simple_process_no
 
     simple_project_node.collection[0].experiment[0].process = [simple_process_node]
 
+    # TODO getting CRIPTOrphanedMaterialError
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+

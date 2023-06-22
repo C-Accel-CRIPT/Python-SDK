@@ -152,11 +152,6 @@ class File(PrimaryBaseNode):
 
         super().__init__(name=name, notes=notes, **kwargs)
 
-        # always giving the function the required str regardless if the input `Path` or `str`
-        if _is_local_file(file_source=str(source)):
-            # upload file source if local file
-            source = _upload_file_and_get_object_name(source=source)
-
         # TODO check if vocabulary is valid or not
         # is_vocab_valid("file type", type)
 
@@ -164,12 +159,18 @@ class File(PrimaryBaseNode):
         self._json_attrs = replace(
             self._json_attrs,
             type=type,
-            source=source,
+            # always giving the function the required str regardless if the input `Path` or `str`
+            source=str(source),
             extension=extension,
             data_dictionary=data_dictionary,
         )
 
         self.validate()
+
+    def ensure_uploaded(self):
+        if _is_local_file(file_source=self.source):
+            # upload file source if local file
+            self.source = _upload_file_and_get_object_name(source=self.source)
 
     # TODO can be made into a function
 
@@ -230,11 +231,6 @@ class File(PrimaryBaseNode):
         -------
         None
         """
-
-        if _is_local_file(new_source):
-            object_name: str = _upload_file_and_get_object_name(source=new_source)
-            new_source = object_name
-
         new_attrs = replace(self._json_attrs, source=new_source)
         self._update_json_attrs_if_valid(new_attrs)
 

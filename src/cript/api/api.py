@@ -63,7 +63,7 @@ class API:
     _COGNITO_LOGIN_PROVIDER: str = "cognito-idp.us-east-1.amazonaws.com/us-east-1_VinmyZ0zW"
     _BUCKET_NAME: str = "cript-development-user-data"
     _BUCKET_DIRECTORY_NAME: str = "python_sdk_files"
-    _s3_client: Any = None  # type: ignore
+    __s3_client: Any = None  # type: ignore
     # trunk-ignore-end(cspell)
 
     @beartype
@@ -158,9 +158,6 @@ class API:
         # TODO might need to add Bearer to it or check for it
         self._http_headers = {"Authorization": f"{self._token}", "Content-Type": "application/json"}
 
-        # TODO commenting this out for now because there is no GitHub API container, and all tests will fail
-        # self._s3_client = self._get_s3_client()
-
         # check that api can connect to CRIPT with host and token
         self._check_initial_host_connection()
 
@@ -194,7 +191,11 @@ class API:
 
         identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
 
-        aws_credentials = auth.get_credentials_for_identity(IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
+        aws_token = self._token
+        if len(aws_token.split()) > 1:
+            # Remove ID prefix like 'Bearer'
+            aws_token = aws_token.split()[-1]
+        aws_credentials = auth.get_credentials_for_identity(IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: aws_token})
 
         aws_credentials = aws_credentials["Credentials"]
 
@@ -206,6 +207,12 @@ class API:
         )
 
         return s3_client
+
+    @property
+    def _s3_client(self):
+        if self.__s3_client is None:
+            self.__s3_client = self._get_s3_client()
+        return self.__s3_client
 
     def __enter__(self):
         self.connect()
@@ -513,6 +520,11 @@ class API:
         None
             Just sends a `POST` or `Patch` request to the API
         """
+
+        # Ensure that all file nodes have uploaded there payload before actual save.
+        for file_node in project.find_children({"node": ["File"]}):
+            file_node.ensure_uploaded()
+
         response: Dict = requests.post(url=f"{self._host}/{project.node_type.lower()}", headers=self._http_headers, data=project.json).json()
 
         # if http response is not 200 then show the API error to the user

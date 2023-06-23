@@ -179,7 +179,7 @@ class File(PrimaryBaseNode):
         -----------
 
         api: cript.API, optional
-           API obejct that performs the upload.
+           API object that performs the upload.
            If None, the globally cached object is being used.
 
         Examples

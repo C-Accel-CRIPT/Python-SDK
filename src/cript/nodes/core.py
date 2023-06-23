@@ -324,7 +324,7 @@ class BaseNode(ABC):
                     # we can verify that this condition is met if it finds the node itself with `find_children`.
                     if isinstance(attr, BaseNode) and isinstance(v, dict):
                         # Since we only want to test the node itself and not any of its children, we set recursion to 0.
-                        # Runtime contrbution: recursive call, with depth search depth of the search dictionary O(h)
+                        # Runtime contribution: recursive call, with depth search depth of the search dictionary O(h)
                         if len(attr.find_children(v, 0)) > 0:
                             number_values_found += 1
                             # Since this an OR condition, we abort early.
@@ -362,14 +362,14 @@ class BaseNode(ABC):
                 # To save code paths, I convert non-lists into lists with one element.
                 if not isinstance(value, list):
                     value = [value]
-                # Run time contribution: number of elements in the atttribute list.
+                # Run time contribution: number of elements in the attribute list.
                 for v in value:
                     try:  # Try every attribute for recursion (duck-typing)
                         found_children += v.find_children(search_attr, search_depth - 1, handled_nodes=handled_nodes)
                     except AttributeError:
                         pass
         # Total runtime, of non-recursive call: O(m*h) + O(k) where k is the number of children for this node,
-        #   h being the depth of the search dictionay, m being the number of nodes in the attribute list.
+        #   h being the depth of the search dictionary, m being the number of nodes in the attribute list.
         # Total runtime, with recursion: O(n*(k+m*h). A full graph traversal O(n) with a cost per node, that scales with the number of children per node and the search depth of the search dictionary.
         return found_children
 

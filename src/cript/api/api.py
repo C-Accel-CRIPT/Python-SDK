@@ -63,7 +63,7 @@ class API:
     _COGNITO_LOGIN_PROVIDER: str = "cognito-idp.us-east-1.amazonaws.com/us-east-1_VinmyZ0zW"
     _BUCKET_NAME: str = "cript-development-user-data"
     _BUCKET_DIRECTORY_NAME: str = "python_sdk_files"
-    __s3_client: Any = None  # type: ignore
+    _internal_s3_client: Any = None  # type: ignore
     # trunk-ignore-end(cspell)
 
     @beartype
@@ -208,11 +208,12 @@ class API:
 
         return s3_client
 
+    # Use a property to ensure delayed init of s3_client
     @property
     def _s3_client(self):
-        if self.__s3_client is None:
-            self.__s3_client = self._get_s3_client()
-        return self.__s3_client
+        if self._internal_s3_client is None:
+            self._internal_s3_client = self._get_s3_client()
+        return self._internal_s3_client
 
     def __enter__(self):
         self.connect()

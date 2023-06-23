@@ -524,7 +524,7 @@ class API:
 
         # Ensure that all file nodes have uploaded there payload before actual save.
         for file_node in project.find_children({"node": ["File"]}):
-            file_node.ensure_uploaded()
+            file_node.ensure_uploaded(api=self)
 
         response: Dict = requests.post(url=f"{self._host}/{project.node_type.lower()}", headers=self._http_headers, data=project.json).json()
 

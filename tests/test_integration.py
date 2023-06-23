@@ -1,5 +1,7 @@
 import json
 
+from deepdiff import DeepDiff
+
 import cript
 
 
@@ -45,7 +47,8 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
             raise Exception(error)
 
     # get the project that was just saved
-    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=project_node.name)
+    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME,
+                                    value_to_search=project_node.name)
 
     # get the project from paginator
     my_project_from_api_dict = my_paginator.current_page_results[0]
@@ -65,7 +68,28 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     print(project_node.json)
     print("------------------------------------------------------")
 
-    # my_project_from_api_node = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_api_dict))
+    # # Ignore all fields except for uuid and name
+    # path_attrs = ['uuid', 'name']
+    #
+    # # Compare the JSONs
+    # diff = DeepDiff(project_node.json, my_project_from_api.json, ignore_order=True)
+    #
+    # print("\n\n----------------- Deep Diff -------------------------------\n\n")
+    # print(diff)
+    # print("\n\n----------------- Deep Diff -------------------------------")
 
-    # check the project node sent and the one it deserialized from API to be sure they are equal
-    # assert project_node.json == my_project_from_api.json
+    # Check if there are any differences in the common values
+    are_jsons_equal(json.loads(project_node.json), json.loads(my_project_from_api_dict))
+    return True
+
+
+def are_jsons_equal(json1, json2):
+    if json1["node"] == json2["node"]:
+        assert json1["uuid"] == json2["uuid"]
+
+        for key in json1.keys():
+            if isinstance(json1[key], dict) and isinstance(json2[key], dict):
+                are_jsons_equal(json1[key], json2[key])
+
+    return True
+

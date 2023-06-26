@@ -79,15 +79,31 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     # print("\n\n----------------- Deep Diff -------------------------------")
 
     # Check if there are any differences in the common values
-    are_jsons_equal(json.loads(project_node.json), json.loads(my_project_from_api_dict))
+    project_node = json.loads(project_node.json)
+    my_project_from_api_dict = my_project_from_api_dict
+
+    are_jsons_equal(project_node, my_project_from_api_dict)
+
     return True
 
 
 def are_jsons_equal(json1, json2):
+
+    # if same types of node, then just check that they have the same UUID
+    # and if they do we can consider that they are the same
     if json1["node"] == json2["node"]:
         assert json1["uuid"] == json2["uuid"]
 
+        # TODO bad code, must fix the nesting
         for key in json1.keys():
+            # in case it is an array of objects
+            if isinstance(json1[key], list) and isinstance(json2[key], list):
+                # check that inside the array there is an object
+                if isinstance(json1[key][0], dict) and isinstance(json2[key][0], dict):
+                    # TODO check that the object is a node and not something else
+                    are_jsons_equal(json1[key], json2[key])
+
+            # in case it is just an object
             if isinstance(json1[key], dict) and isinstance(json2[key], dict):
                 are_jsons_equal(json1[key], json2[key])
 

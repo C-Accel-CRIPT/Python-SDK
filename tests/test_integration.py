@@ -36,15 +36,7 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
         * deserialization from API JSON to node JSON
     """
 
-    # exception handling in case the project node already exists in DB
-    try:
-        cript_api.save(project=project_node)
-    except Exception as error:
-        # handling duplicate project name errors
-        if "http:409 duplicate item" in str(error):
-            pass
-        else:
-            raise Exception(error)
+    cript_api.save(project=project_node)
 
     # get the project that was just saved
     my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME,

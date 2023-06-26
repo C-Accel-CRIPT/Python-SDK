@@ -48,36 +48,34 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     # try to convert api JSON project to node
     my_project_from_api = cript.load_nodes_from_json(json.dumps(my_project_from_api_dict))
 
-    print("\n\n----------------- API JSON RECEIVED -------------------------------")
-    print(json.dumps(my_project_from_api_dict))
-    print("------------------------------------------------------")
+    # print("\n\n----------------- API JSON RECEIVED -------------------------------")
+    # print(json.dumps(my_project_from_api_dict))
+    # print("------------------------------------------------------")
 
-    print("\n\n----------------- API JSON to Python Node -------------------------------")
-    print(my_project_from_api.json)
-    print("------------------------------------------------------")
-
-    print("\n\n-----------------JSON SENT TO API -------------------------------")
-    print(project_node.json)
-    print("------------------------------------------------------")
+    # print("\n\n----------------- API JSON to Python Node -------------------------------")
+    # print(my_project_from_api.json)
+    # print("------------------------------------------------------")
+    #
+    # print("\n\n-----------------JSON SENT TO API -------------------------------")
+    # print(project_node.json)
+    # print("------------------------------------------------------")
 
     # Configure keys and blocks to be ignored by deepdiff using exclude_regex_path
     exclude_regex_paths = [
-        r"root\['.*'\]\['created_at'\]",
-        r"root\['.*'\]\['updated_at'\]",
-        r"root\['.*'\]\['model_version'\]",
-        r"root\['.*'\]\['admin'\]",
-        r"root\['.*'\]\['uuid'\]",
-        r"root\['.*'\]\['uid'\]"
+        r"root(\[.*\])?\['uid'\]"
     ]
 
     # Compare the JSONs
-    diff = DeepDiff(project_node.json, my_project_from_api.json, exclude_regex_paths=exclude_regex_paths)
+    diff = DeepDiff(json.loads(project_node.json), json.loads(my_project_from_api.json),
+                    exclude_regex_paths=exclude_regex_paths)
 
     print("\n\n----------------- Deep Diff -------------------------------\n\n")
-    print(diff.get("values_changed"))
-    print("\n\n----------------- Deep Diff -------------------------------")
+    print(diff.get("values_changed", {}))
+    print("\n\n----------------- End Deep Diff -------------------------------")
 
-    assert len(diff['values_changed']) == 0
+    assert len(diff.get("values_changed", {})) == 0
+
+    # assert are_jsons_equal(json.loads(project_node.json), json.loads(my_project_from_api.json))
 
 
 def are_jsons_equal(json1, json2):

@@ -60,23 +60,24 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     print(project_node.json)
     print("------------------------------------------------------")
 
-    # # Ignore all fields except for uuid and name
-    # path_attrs = ['uuid', 'name']
-    #
-    # # Compare the JSONs
-    # diff = DeepDiff(project_node.json, my_project_from_api.json, ignore_order=True)
-    #
-    # print("\n\n----------------- Deep Diff -------------------------------\n\n")
-    # print(diff)
-    # print("\n\n----------------- Deep Diff -------------------------------")
+    # Configure keys and blocks to be ignored by deepdiff using exclude_regex_path
+    exclude_regex_paths = [
+        r"root\['.*'\]\['created_at'\]",
+        r"root\['.*'\]\['updated_at'\]",
+        r"root\['.*'\]\['model_version'\]",
+        r"root\['.*'\]\['admin'\]",
+        r"root\['.*'\]\['uuid'\]",
+        r"root\['.*'\]\['uid'\]"
+    ]
 
-    # Check if there are any differences in the common values
-    project_node = json.loads(project_node.json)
-    my_project_from_api_dict = my_project_from_api_dict
+    # Compare the JSONs
+    diff = DeepDiff(project_node.json, my_project_from_api.json, exclude_regex_paths=exclude_regex_paths)
 
-    are_jsons_equal(project_node, my_project_from_api_dict)
+    print("\n\n----------------- Deep Diff -------------------------------\n\n")
+    print(diff.get("values_changed"))
+    print("\n\n----------------- Deep Diff -------------------------------")
 
-    return True
+    assert len(diff['values_changed']) == 0
 
 
 def are_jsons_equal(json1, json2):

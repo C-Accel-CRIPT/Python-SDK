@@ -178,41 +178,33 @@ class API:
 
         return host
 
-    def _get_s3_client(self) -> boto3.client:  # type: ignore
+    # Use a property to ensure delayed init of s3_client
+    @property
+    def _s3_client(self) -> boto3.client:  # type: ignore:
         """
-        create a fully authenticated and ready s3 client
+        creates or returns a fully authenticated and ready s3 client
 
         Returns
         -------
         s3_client: boto3.client
             fully prepared and authenticated s3 client ready to be used throughout the script
         """
-        auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
 
-        identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
-
-        aws_token = self._token
-        if len(aws_token.split()) > 1:
-            # Remove ID prefix like 'Bearer'
-            aws_token = aws_token.split()[-1]
-        aws_credentials = auth.get_credentials_for_identity(IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: aws_token})
-
-        aws_credentials = aws_credentials["Credentials"]
-
-        s3_client = boto3.client(
-            "s3",
-            aws_access_key_id=aws_credentials["AccessKeyId"],
-            aws_secret_access_key=aws_credentials["SecretKey"],
-            aws_session_token=aws_credentials["SessionToken"],
-        )
-
-        return s3_client
-
-    # Use a property to ensure delayed init of s3_client
-    @property
-    def _s3_client(self):
         if self._internal_s3_client is None:
-            self._internal_s3_client = self._get_s3_client()
+            auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
+            identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
+            # TODO remove this temporary fix to the token, by getting is from back end.
+            aws_token = self._token.lstrip("Bearer ")
+
+            aws_credentials = auth.get_credentials_for_identity(IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: aws_token})
+            aws_credentials = aws_credentials["Credentials"]
+            s3_client = boto3.client(
+                "s3",
+                aws_access_key_id=aws_credentials["AccessKeyId"],
+                aws_secret_access_key=aws_credentials["SecretKey"],
+                aws_session_token=aws_credentials["SessionToken"],
+            )
+            self._internal_s3_client = s3_client
         return self._internal_s3_client
 
     def __enter__(self):
@@ -521,6 +513,8 @@ class API:
         None
             Just sends a `POST` or `Patch` request to the API
         """
+
+        project.validate()
 
         # Ensure that all file nodes have uploaded there payload before actual save.
         for file_node in project.find_children({"node": ["File"]}):

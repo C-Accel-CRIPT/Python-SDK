@@ -326,7 +326,7 @@ def add_orphaned_nodes_to_project(project: Project, active_experiment: Experimen
         if counter > max_iteration >= 0:
             break  # Emergency stop
         try:
-            project.validate()
+            project.validate(sloppy=False)
         except CRIPTOrphanedMaterialError as exc:
             # because calling the setter calls `validate` we have to force add the material.
             project._json_attrs.material.append(exc.orphaned_node)

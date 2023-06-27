@@ -254,7 +254,7 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
     # Invalid graph
     project.collection[0].experiment[0].process += [process]
     with pytest.raises(CRIPTOrphanedMaterialError):
-        project.validate()
+        project.validate(sloppy=False)
 
     # First fix add material to inventory
     project.collection[0].inventory += [cript.Inventory("test_inventory", material=[material])]
@@ -262,18 +262,18 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
     # Reverse this fix
     project.collection[0].inventory = []
     with pytest.raises(CRIPTOrphanedMaterialError):
-        project.validate()
+        project.validate(sloppy=False)
 
     # Fix by add to the materials list instead.
     # Using the util helper function for this.
     cript.add_orphaned_nodes_to_project(project, active_experiment=None, max_iteration=10)
-    project.validate()
+    project.validate(sloppy=False)
 
     # Now add an orphan process to the graph
     process2 = copy.deepcopy(simple_process_node)
     process.prerequisite_process += [process2]
     with pytest.raises(CRIPTOrphanedProcessError):
-        project.validate()
+        project.validate(sloppy=False)
 
     # Wrong fix it helper node
     dummy_experiment = copy.deepcopy(project.collection[0].experiment[0])
@@ -281,10 +281,10 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
         cript.add_orphaned_nodes_to_project(project, dummy_experiment)
     # Problem still persists
     with pytest.raises(CRIPTOrphanedProcessError):
-        project.validate()
+        project.validate(sloppy=False)
     # Fix by using the helper function correctly
     cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
-    project.validate()
+    project.validate(sloppy=False)
 
     # We add property to the material, because that adds the opportunity for orphaned data and computation
     property = copy.deepcopy(simple_property_node)
@@ -294,19 +294,19 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
     data = copy.deepcopy(simple_data_node)
     property.data = [data]
     with pytest.raises(CRIPTOrphanedDataError):
-        project.validate()
+        project.validate(sloppy=False)
     # Fix with the helper function
     cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
-    project.validate()
+    project.validate(sloppy=False)
 
     # Add an orphan Computation
     computation = copy.deepcopy(simple_computation_node)
     property.computation += [computation]
     with pytest.raises(CRIPTOrphanedComputationError):
-        project.validate()
+        project.validate(sloppy=False)
     # Fix with the helper function
     cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
-    project.validate()
+    project.validate(sloppy=False)
 
     # Add orphan computational process
     comp_proc = copy.deepcopy(simple_computation_process_node)
@@ -314,7 +314,7 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
     with pytest.raises(CRIPTOrphanedComputationalProcessError):
         while True:
             try:  # Do trigger not orphan materials
-                project.validate()
+                project.validate(sloppy=False)
             except CRIPTOrphanedMaterialError as exc:
                 project._json_attrs.material.append(exc.orphaned_node)
             except CRIPTOrphanedProcessError as exc:
@@ -323,4 +323,4 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
                 break
 
     cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
-    project.validate()
+    project.validate(sloppy=False)

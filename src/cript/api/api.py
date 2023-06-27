@@ -180,7 +180,7 @@ class API:
 
     # Use a property to ensure delayed init of s3_client
     @property
-    def _s3_client(self) -> boto3.client:  # type: ignore:
+    def _s3_client(self) -> boto3.client:  # type: ignore
         """
         creates or returns a fully authenticated and ready s3 client
 

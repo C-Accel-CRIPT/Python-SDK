@@ -4,7 +4,7 @@ import json
 import uuid
 from abc import ABC
 from dataclasses import dataclass, replace
-from typing import List, Optional, Set
+from typing import Any, List, Optional, Set
 
 from cript.nodes.exceptions import (
     CRIPTAttributeModificationError,
@@ -135,9 +135,9 @@ class BaseNode(ABC):
             raise exc
 
     # Store validated JSON attributes by hash, to accelerate verification.
-    _validated_hashes = set()
+    _validated_hashes: Set = set()
 
-    def validate(self, api=None, sloppy=True) -> None:
+    def validate(self, api: Optional[Any] = None, sloppy: bool = True) -> None:
         """
         Validate this node (and all its children) against the schema provided by the data bank.
 
@@ -426,7 +426,7 @@ class BaseNode(ABC):
         self._update_json_attrs_if_valid(new_attrs)
         return True
 
-    def _string_hash(self):
+    def _string_hash(self) -> int:
         """
         Calculate a hash value for the current JSON attributes.
 

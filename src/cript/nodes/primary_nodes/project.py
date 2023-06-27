@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from beartype import beartype
 
@@ -71,14 +71,17 @@ class Project(PrimaryBaseNode):
         self._json_attrs = replace(self._json_attrs, name=name, collection=collection, material=material)
         self.validate()
 
-    def validate(self, api=None):
+    def validate(self, api: Optional[Any] = None, sloppy: bool = True) -> None:
         from cript.nodes.exceptions import (
             CRIPTOrphanedMaterialError,
             get_orphaned_experiment_exception,
         )
 
         # First validate like other nodes
-        super().validate(api=api)
+        super().validate(api=api, sloppy=sloppy)
+        # In sloppy validate mode, we can skip further evaluations
+        if sloppy:
+            return
 
         # Check graph for orphaned nodes, that should be listed in project
         # Project.materials should contain all material nodes
@@ -205,7 +208,7 @@ class Project(PrimaryBaseNode):
         new_attrs = replace(self._json_attrs, material=new_materials)
         self._update_json_attrs_if_valid(new_attrs)
 
-    def _string_hash(self):
+    def _string_hash(self) -> int:
         """
         Contrary to all other nodes is the validity of projects only possible to determine with a full graph traversal.
         Hence, we have to use the full JSON for validity checks to include the full graph.

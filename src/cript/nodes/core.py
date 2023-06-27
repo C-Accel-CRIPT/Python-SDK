@@ -3,7 +3,7 @@ import dataclasses
 import json
 import uuid
 from abc import ABC
-from dataclasses import asdict, dataclass, replace
+from dataclasses import dataclass, replace
 from typing import List, Optional, Set
 
 from cript.nodes.exceptions import (
@@ -94,7 +94,7 @@ class BaseNode(ABC):
         str
             A string representation of the node.
         """
-        return str(asdict(self._json_attrs))
+        return str(self._json_attrs)
 
     @property
     def uid(self):
@@ -134,9 +134,24 @@ class BaseNode(ABC):
             self._json_attrs = old_json_attrs
             raise exc
 
-    def validate(self, api=None) -> None:
+    # Store validated JSON attributes by hash, to accelerate verification.
+    _validated_hashes = set()
+
+    def validate(self, api=None, sloppy=True) -> None:
         """
         Validate this node (and all its children) against the schema provided by the data bank.
+
+        Parameters:
+        -----------
+
+        api: cript.API optional
+          API, from which the data bank schema is used for the node validation.
+          If not provided, the current active API is used.
+
+        sloppy: boolean, default=True
+          If sloppy is active, a temporary hash is calculated, and it is checked first,
+          if this has been validated before. A slight chance exist,
+          that deep graph changes are missed during the validation.
 
         Raises:
         -------
@@ -144,9 +159,14 @@ class BaseNode(ABC):
         """
         from cript.api.api import _get_global_cached_api
 
+        my_hash = self._string_hash()
+        if sloppy and my_hash in BaseNode._validated_hashes:
+            return
+
         if api is None:
             api = _get_global_cached_api()
         api._is_node_schema_valid(self.get_json().json)
+        BaseNode._validated_hashes.add(my_hash)
 
     @classmethod
     def _from_json(cls, json_dict: dict):
@@ -405,3 +425,19 @@ class BaseNode(ABC):
             return False
         self._update_json_attrs_if_valid(new_attrs)
         return True
+
+    def _string_hash(self):
+        """
+        Calculate a hash value for the current JSON attributes.
+
+        The JSON attributes, are by default not hashable, since they may contain non-hashable lists.
+        However, for this purpose we are interested in creating a collision free hash, that automatically changes, if anything (including members of the lists) change.
+        So, we do not provide a full __hash__ implementation, but a reduce version of a hash values for node.
+        This has value is also not sensitive to changes to the data graph, that occur deeper then the immediate children.
+        We sacrifice this accuracy for the benefit of speed, since no traversal is necessary.
+
+        The intent purpose it to keep track of valid node instance, without re-evaluating the DB schema every time.
+        """
+
+        # As a trick to avoid graph traversal, we convert the node to a string, and hash the string.
+        return hash(str(self._json_attrs))

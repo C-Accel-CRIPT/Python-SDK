@@ -513,6 +513,10 @@ class API:
         None
             Just sends a `POST` or `Patch` request to the API
         """
+
+        # Ensure, that the project is valid with this API.
+        project.validate(api=self, sloppy=False)
+
         response: Dict = requests.post(url=f"{self._host}/{project.node_type.lower()}", headers=self._http_headers, data=project.json).json()
 
         # if http response is not 200 then show the API error to the user

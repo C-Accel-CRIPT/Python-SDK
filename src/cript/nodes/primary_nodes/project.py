@@ -71,14 +71,14 @@ class Project(PrimaryBaseNode):
         self._json_attrs = replace(self._json_attrs, name=name, collection=collection, material=material)
         self.validate()
 
-    def validate(self):
+    def validate(self, api=None):
         from cript.nodes.exceptions import (
             CRIPTOrphanedMaterialError,
             get_orphaned_experiment_exception,
         )
 
         # First validate like other nodes
-        super().validate()
+        super().validate(api=api)
 
         # Check graph for orphaned nodes, that should be listed in project
         # Project.materials should contain all material nodes
@@ -204,3 +204,10 @@ class Project(PrimaryBaseNode):
         """
         new_attrs = replace(self._json_attrs, material=new_materials)
         self._update_json_attrs_if_valid(new_attrs)
+
+    def _string_hash(self):
+        """
+        Contrary to all other nodes is the validity of projects only possible to determine with a full graph traversal.
+        Hence, we have to use the full JSON for validity checks to include the full graph.
+        """
+        return hash(self.get_json(condense_to_uuid={}).json)

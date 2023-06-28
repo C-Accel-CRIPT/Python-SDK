@@ -177,6 +177,7 @@ def test_integration_complex_process(cript_api, simple_project_node, simple_proc
     # rename material to not get duplicate error
     simple_material_node.name += f"{simple_material_node.name} {uuid.uuid4().hex}"
 
+    # add material to the project to not get OrphanedNodeError
     simple_project_node.material += [simple_material_node]
 
     simple_project_node.collection[0].experiment[0].process = [simple_process_node]

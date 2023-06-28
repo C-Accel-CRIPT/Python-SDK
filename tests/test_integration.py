@@ -10,6 +10,16 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     integration test between Python SDK and API Client
     tests both POST and GET
 
+    comparing JSON because it is easier to compare than an object
+
+    test both the project node:
+        * node serialization
+        * POST to API
+        * GET from API
+        * deserialization from API JSON to node JSON
+        * compare the JSON of what was sent and what was deserialized from the API
+            * the fields they have in common should be the same
+
     Parameters
     ----------
     cript_api: cript.API
@@ -27,15 +37,8 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
 
     Notes
     -----
-    comparing JSON because it is easier to compare than an object
-
-    test both the project node:
-        * node serialization
-        * POST to API
-        * GET from API
-        * deserialization from API JSON to node JSON
-
-    # TODO needs more explanation of the deepDiff and how it works
+    * using deepdiff library to do the nested JSON comparisons
+    * ignoring the UID field through all the JSON because those the API changes when responding
     """
 
     cript_api.save(project=project_node)

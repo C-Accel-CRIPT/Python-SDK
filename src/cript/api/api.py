@@ -63,7 +63,7 @@ class API:
     _COGNITO_LOGIN_PROVIDER: str = "cognito-idp.us-east-1.amazonaws.com/us-east-1_VinmyZ0zW"
     _BUCKET_NAME: str = "cript-development-user-data"
     _BUCKET_DIRECTORY_NAME: str = "python_sdk_files"
-    _s3_client: Any = None  # type: ignore
+    _internal_s3_client: Any = None  # type: ignore
     # trunk-ignore-end(cspell)
 
     @beartype
@@ -158,9 +158,6 @@ class API:
         # TODO might need to add Bearer to it or check for it
         self._http_headers = {"Authorization": f"{self._token}", "Content-Type": "application/json"}
 
-        # TODO commenting this out for now because there is no GitHub API container, and all tests will fail
-        # self._s3_client = self._get_s3_client()
-
         # check that api can connect to CRIPT with host and token
         self._check_initial_host_connection()
 
@@ -181,31 +178,34 @@ class API:
 
         return host
 
-    def _get_s3_client(self) -> boto3.client:  # type: ignore
+    # Use a property to ensure delayed init of s3_client
+    @property
+    def _s3_client(self) -> boto3.client:  # type: ignore
         """
-        create a fully authenticated and ready s3 client
+        creates or returns a fully authenticated and ready s3 client
 
         Returns
         -------
         s3_client: boto3.client
             fully prepared and authenticated s3 client ready to be used throughout the script
         """
-        auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
 
-        identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
+        if self._internal_s3_client is None:
+            auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
+            identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
+            # TODO remove this temporary fix to the token, by getting is from back end.
+            aws_token = self._token.lstrip("Bearer ")
 
-        aws_credentials = auth.get_credentials_for_identity(IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
-
-        aws_credentials = aws_credentials["Credentials"]
-
-        s3_client = boto3.client(
-            "s3",
-            aws_access_key_id=aws_credentials["AccessKeyId"],
-            aws_secret_access_key=aws_credentials["SecretKey"],
-            aws_session_token=aws_credentials["SessionToken"],
-        )
-
-        return s3_client
+            aws_credentials = auth.get_credentials_for_identity(IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: aws_token})
+            aws_credentials = aws_credentials["Credentials"]
+            s3_client = boto3.client(
+                "s3",
+                aws_access_key_id=aws_credentials["AccessKeyId"],
+                aws_secret_access_key=aws_credentials["SecretKey"],
+                aws_session_token=aws_credentials["SessionToken"],
+            )
+            self._internal_s3_client = s3_client
+        return self._internal_s3_client
 
     def __enter__(self):
         self.connect()
@@ -516,6 +516,10 @@ class API:
 
         # Ensure, that the project is valid with this API.
         project.validate(api=self, sloppy=False)
+
+        # Ensure that all file nodes have uploaded there payload before actual save.
+        for file_node in project.find_children({"node": ["File"]}):
+            file_node.ensure_uploaded(api=self)
 
         response: Dict = requests.post(url=f"{self._host}/{project.node_type.lower()}", headers=self._http_headers, data=project.json).json()
 

@@ -25,7 +25,7 @@ def _is_local_file(file_source: str) -> bool:
         return True
 
 
-def _upload_file_and_get_object_name(source: Union[str, Path]) -> str:
+def _upload_file_and_get_object_name(source: Union[str, Path], api=None) -> str:
     """
     uploads file to cloud storage and returns the file link
 
@@ -50,7 +50,8 @@ def _upload_file_and_get_object_name(source: Union[str, Path]) -> str:
     source = str(source)
 
     if _is_local_file(file_source=source):
-        api = _get_global_cached_api()
+        if api is None:
+            api = _get_global_cached_api()
         object_name = api.upload_file(file_path=source)
         # always getting a string for object_name
         source = str(object_name)
@@ -152,11 +153,6 @@ class File(PrimaryBaseNode):
 
         super().__init__(name=name, notes=notes, **kwargs)
 
-        # always giving the function the required str regardless if the input `Path` or `str`
-        if _is_local_file(file_source=str(source)):
-            # upload file source if local file
-            source = _upload_file_and_get_object_name(source=source)
-
         # TODO check if vocabulary is valid or not
         # is_vocab_valid("file type", type)
 
@@ -164,12 +160,42 @@ class File(PrimaryBaseNode):
         self._json_attrs = replace(
             self._json_attrs,
             type=type,
-            source=source,
+            # always giving the function the required str regardless if the input `Path` or `str`
+            source=str(source),
             extension=extension,
             data_dictionary=data_dictionary,
         )
 
         self.validate()
+
+    def ensure_uploaded(self, api=None):
+        """
+        Ensure that a local file is being uploaded into CRIPT accessible cloud storage.
+        After this call, non-local files (file names that do not start with `http`) are uploaded.
+        It is not necessary to call this function manually.
+        A saved project automatically ensures uploaded files, it is recommend to rely on the automatic upload.
+
+        Parameters:
+        -----------
+
+        api: cript.API, optional
+           API object that performs the upload.
+           If None, the globally cached object is being used.
+
+        Examples
+        --------
+        ??? Example "Minimal File Node"
+            ```python
+            my_file = cript.File(source="/local/path/to/file", type="calibration")
+            my_file.ensure_uploaded()
+            my_file.source # Starts with http now
+            ```
+
+        """
+
+        if _is_local_file(file_source=self.source):
+            # upload file source if local file
+            self.source = _upload_file_and_get_object_name(source=self.source)
 
     # TODO can be made into a function
 
@@ -230,11 +256,6 @@ class File(PrimaryBaseNode):
         -------
         None
         """
-
-        if _is_local_file(new_source):
-            object_name: str = _upload_file_and_get_object_name(source=new_source)
-            new_source = object_name
-
         new_attrs = replace(self._json_attrs, source=new_source)
         self._update_json_attrs_if_valid(new_attrs)
 

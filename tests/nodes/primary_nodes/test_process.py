@@ -164,7 +164,7 @@ def test_integration_simple_process(cript_api, simple_project_node, simple_proce
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 
 
-def test_integration_complex_process(cript_api, simple_project_node, complex_process_node):
+def test_integration_complex_process(cript_api, simple_project_node, simple_process_node, simple_material_node):
     """
     integration test between Python SDK and API Client
 
@@ -174,6 +174,15 @@ def test_integration_complex_process(cript_api, simple_project_node, complex_pro
     """
     simple_project_node.name = f"test_integration_process_name_{uuid.uuid4().hex}"
 
-    simple_project_node.collection[0].experiment[0].process = [complex_process_node]
+    # rename material to not get duplicate error
+    simple_material_node.name += f"{simple_material_node.name} {uuid.uuid4().hex}"
+
+    simple_project_node.material += [simple_material_node]
+
+    simple_project_node.collection[0].experiment[0].process = [simple_process_node]
+
+    print("\n\n------------------------------------------------------------------")
+    print(simple_project_node.json)
+    print("\n\n------------------------------------------------------------------")
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

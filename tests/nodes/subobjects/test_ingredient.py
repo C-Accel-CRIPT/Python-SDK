@@ -45,7 +45,7 @@ def test_integration_material_ingredient(cript_api, simple_project_node, simple_
 
     simple_process_node.ingredient = [complex_ingredient_node]
 
-    simple_project_node.collection[0].experiment[0].process = [simple_process_node]
+    simple_project_node.collection[0].experiment[0].process += [simple_process_node]
 
     # TODO getting CRIPTOrphanedProcessError
     simple_project_node.material = [simple_material_node, complex_material_node]

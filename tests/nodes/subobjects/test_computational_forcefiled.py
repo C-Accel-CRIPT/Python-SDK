@@ -55,6 +55,13 @@ def test_integration_material_computational_forcefield(cript_api, simple_project
 
     simple_material_node.computational_forcefield = complex_computational_forcefield_node
 
+    # adding OrphanedNode
+    simple_project_node.collection[0].experiment[0].data = complex_computational_forcefield_node.find_children({"node": ["Data"]})
+
+    # solving duplicate node error
+    simple_material_node.name = f"{simple_material_node} {uuid.uuid4().hex}"
+
     simple_project_node.material = [simple_material_node]
 
+    # TODO fix NodeSchemaError
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

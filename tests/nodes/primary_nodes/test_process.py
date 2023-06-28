@@ -182,8 +182,4 @@ def test_integration_complex_process(cript_api, simple_project_node, simple_proc
 
     simple_project_node.collection[0].experiment[0].process = [simple_process_node]
 
-    print("\n\n------------------------------------------------------------------")
-    print(simple_project_node.json)
-    print("\n\n------------------------------------------------------------------")
-
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

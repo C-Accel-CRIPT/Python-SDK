@@ -63,6 +63,7 @@ from fixtures.subobjects import (
     simple_equipment_node,
     simple_property_dict,
     simple_property_node,
+    simple_ingredient_node,
 )
 from fixtures.supporting_nodes import (
     complex_file_node,

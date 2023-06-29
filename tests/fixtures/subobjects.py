@@ -246,6 +246,21 @@ def complex_ingredient_dict(complex_material_node, complex_quantity_dict) -> dic
 
 
 @pytest.fixture(scope="function")
+def simple_ingredient_node(simple_material_node, complex_quantity_node) -> cript.Ingredient:
+    """
+    minimal ingredient sub-object used for testing
+
+    Notes
+    ----
+    The main difference is that this uses a simple material with less chance of getting any errors
+    """
+    my_simple_ingredient = cript.Ingredient(material=simple_material_node, quantity=[complex_quantity_node], keyword=["mass"])
+
+    return my_simple_ingredient
+
+
+
+@pytest.fixture(scope="function")
 def complex_equipment_node(complex_condition_node, complex_citation_node) -> cript.Equipment:
     """
     maximal equipment node with all possible attributes

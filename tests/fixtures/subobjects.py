@@ -1,5 +1,6 @@
 import copy
 import json
+import uuid
 
 import pytest
 from util import strip_uid_from_dict
@@ -254,6 +255,9 @@ def simple_ingredient_node(simple_material_node, complex_quantity_node) -> cript
     ----
     The main difference is that this uses a simple material with less chance of getting any errors
     """
+
+    simple_material_node.name = f"{simple_material_node.name}_{uuid.uuid4().hex}"
+
     my_simple_ingredient = cript.Ingredient(material=simple_material_node, quantity=[complex_quantity_node], keyword=["catalyst"])
 
     return my_simple_ingredient

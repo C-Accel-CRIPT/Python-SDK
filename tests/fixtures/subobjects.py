@@ -254,7 +254,7 @@ def simple_ingredient_node(simple_material_node, complex_quantity_node) -> cript
     ----
     The main difference is that this uses a simple material with less chance of getting any errors
     """
-    my_simple_ingredient = cript.Ingredient(material=simple_material_node, quantity=[complex_quantity_node], keyword=["mass"])
+    my_simple_ingredient = cript.Ingredient(material=simple_material_node, quantity=[complex_quantity_node], keyword=["catalyst"])
 
     return my_simple_ingredient
 

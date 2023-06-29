@@ -1,4 +1,5 @@
 import json
+import uuid
 
 from util import strip_uid_from_dict
 
@@ -32,7 +33,7 @@ def test_getter_setter(complex_ingredient_node, complex_quantity_node, simple_ma
     assert i2.keyword == ["monomer"]
 
 
-def test_integration_material_ingredient(cript_api, simple_project_node, simple_material_node, complex_material_node, simple_process_node, complex_ingredient_node):
+def test_integration_material_ingredient(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_process_node, simple_ingredient_node, simple_material_node):
     """
     integration test between Python SDK and API Client
 
@@ -43,11 +44,20 @@ def test_integration_material_ingredient(cript_api, simple_project_node, simple_
     1. check their fields equal
     """
 
-    simple_process_node.ingredient = [complex_ingredient_node]
+    simple_project_node.name = f"test_integration_ingredient_{uuid.uuid4().hex}"
 
-    simple_project_node.collection[0].experiment[0].process += [simple_process_node]
+    # assemble needed nodes
+    simple_project_node.collection = [simple_collection_node]
 
-    # TODO getting CRIPTOrphanedProcessError
-    simple_project_node.material = [simple_material_node, complex_material_node]
+    simple_project_node.collection[0].experiment = [simple_experiment_node]
+
+    # add ingredient to process
+    simple_process_node.ingredient = [simple_ingredient_node]
+
+    # continue assembling
+    simple_project_node.collection[0].experiment[0].process = [simple_process_node]
+
+    # add orphaned material node to project
+    simple_project_node.material = [simple_material_node]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

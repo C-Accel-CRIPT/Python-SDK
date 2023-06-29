@@ -187,19 +187,19 @@ def simple_property_dict() -> dict:
 
 @pytest.fixture(scope="function")
 def complex_condition_node(complex_data_node) -> cript.Condition:
-    c = cript.Condition(
-        "temperature",
-        "value",
-        22,
-        "C",
-        "room temperature of lab",
+    my_complex_condition = cript.Condition(
+        key="temperature",
+        type="value",
+        value=22,
+        unit="C",
+        descriptor="room temperature of lab",
         uncertainty=5,
         uncertainty_type="stdev",
         set_id=0,
         measurement_id=2,
         data=[copy.deepcopy(complex_data_node)],
     )
-    return c
+    return my_complex_condition
 
 
 @pytest.fixture(scope="function")

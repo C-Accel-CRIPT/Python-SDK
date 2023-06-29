@@ -33,7 +33,7 @@ def test_getter_setter(complex_ingredient_node, complex_quantity_node, simple_ma
     assert i2.keyword == ["monomer"]
 
 
-def test_integration_material_ingredient(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_process_node, simple_ingredient_node, simple_material_node):
+def test_integration_ingredient(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_process_node, simple_ingredient_node, simple_material_node):
     """
     integration test between Python SDK and API Client
 
@@ -42,6 +42,10 @@ def test_integration_material_ingredient(cript_api, simple_project_node, simple_
             Material has ingredient sub-object
     1. GET JSON from API
     1. check their fields equal
+
+    Notes
+    ----
+    since `ingredient` requires a `quantity` this test also indirectly tests `quantity`
     """
 
     simple_project_node.name = f"test_integration_ingredient_{uuid.uuid4().hex}"

@@ -221,6 +221,15 @@ def complex_condition_dict(complex_data_node) -> dict:
 
 
 @pytest.fixture(scope="function")
+def simple_condition_node():
+    """
+    minimal condition sub-object that can be used for tests
+    """
+    my_simple_condition = cript.Condition(key="temperature", type="value", value=10)
+    return my_simple_condition
+
+
+@pytest.fixture(scope="function")
 def complex_ingredient_node(complex_material_node, complex_quantity_node) -> cript.Ingredient:
     """
     complex ingredient node with all possible parameters filled

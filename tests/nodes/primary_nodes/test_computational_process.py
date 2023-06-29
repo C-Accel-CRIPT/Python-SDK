@@ -100,7 +100,7 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
     assert ref_dict == expected_dict
 
 
-def test_integration_computational_process(cript_api, simple_project_node, simple_computational_process_node, complex_material_node, simple_material_node, simple_process_node, complex_process_node):
+def test_integration_computational_process(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simplest_computational_process_node, simple_material_node, simple_data_node):
     """
     integration test between Python SDK and API Client
 
@@ -108,19 +108,20 @@ def test_integration_computational_process(cript_api, simple_project_node, simpl
     1. GET from API
     1. assert they're both equal
     """
+    # renaming to avoid duplicate node errors
     simple_project_node.name = f"test_integration_computation_process_name_{uuid.uuid4().hex}"
 
-    simple_project_node.collection[0].experiment[0].computation_process = [simple_computational_process_node]
+    simple_material_node.name = f"{simple_material_node.name}_{uuid.uuid4().hex}"
 
-    # adding all orphaned children. They are deep_copy so they have to be found within the tree and added
-    simple_project_node.collection[0].experiment[0].process += complex_material_node.find_children({"node": ["Process"]})
-    simple_project_node.collection[0].experiment[0].data += simple_project_node.find_children({"node": ["Data"]})
+    simple_project_node.material = [simple_material_node]
 
-    # renaming material to avoid duplicate material issue
-    complex_material_node.name = f"{complex_material_node.name} {uuid.uuid4().hex}"
-    simple_material_node.name = f"{simple_material_node.name} {uuid.uuid4().hex}"
+    simple_project_node.collection = [simple_collection_node]
 
-    simple_project_node.material += [complex_material_node, simple_material_node]
+    simple_project_node.collection[0].experiment = [simple_experiment_node]
 
-    # TODO getting `Bad uuid` API Error
+    # fixing orphanedDataNodeError
+    simple_project_node.collection[0].experiment[0].data = [simple_data_node]
+
+    simple_project_node.collection[0].experiment[0].computation_process = [simplest_computational_process_node]
+
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

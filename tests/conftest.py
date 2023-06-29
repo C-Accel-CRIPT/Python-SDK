@@ -31,7 +31,6 @@ from fixtures.primary_nodes import (
     simple_material_node,
     simple_process_node,
     simple_project_node,
-    simple_software_configuration,
 )
 from fixtures.subobjects import (
     complex_algorithm_dict,
@@ -64,6 +63,7 @@ from fixtures.subobjects import (
     simple_property_dict,
     simple_property_node,
     simple_ingredient_node,
+    simple_software_configuration,
 )
 from fixtures.supporting_nodes import (
     complex_file_node,

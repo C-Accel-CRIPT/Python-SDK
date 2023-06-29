@@ -263,7 +263,6 @@ def simple_ingredient_node(simple_material_node, complex_quantity_node) -> cript
     return my_simple_ingredient
 
 
-
 @pytest.fixture(scope="function")
 def complex_equipment_node(complex_condition_node, complex_citation_node) -> cript.Equipment:
     """
@@ -283,7 +282,7 @@ def simple_equipment_node() -> cript.Equipment:
     """
     simple and minimal equipment
     """
-    my_equipment = cript.Equipment(key="burner")
+    my_equipment = cript.Equipment(key="burner", description="my simple equipment fixture description")
     return my_equipment
 
 

@@ -307,3 +307,18 @@ def simple_computational_process_node(simple_data_node, complex_ingredient_node)
     )
 
     return my_computational_process
+
+
+@pytest.fixture(scope="function")
+def simplest_computational_process_node(simple_data_node, simple_ingredient_node) -> cript.ComputationProcess:
+    """
+    minimal computational_process node
+    """
+    my_simplest_computational_process = cript.ComputationProcess(
+        name="my computational process node name",
+        type="cross_linking",
+        input_data=[simple_data_node],
+        ingredient=[simple_ingredient_node],
+    )
+
+    return my_simplest_computational_process

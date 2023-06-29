@@ -31,6 +31,7 @@ from fixtures.primary_nodes import (
     simple_material_node,
     simple_process_node,
     simple_project_node,
+    simplest_computational_process_node,
 )
 from fixtures.subobjects import (
     complex_algorithm_dict,

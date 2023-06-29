@@ -9,7 +9,7 @@ jupyter:
       format_version: '1.3'
       jupytext_version: 1.13.6
   kernelspec:
-    display_name: Python 3
+    display_name: Python 3 (ipykernel)
     language: python
     name: python3
 ---
@@ -113,11 +113,11 @@ In general `Software` nodes can be shared between project, and it is encouraged 
 If They are not, you can create them as follows:
 
 ```python
-python = cript.Software(name = "python", version = "3.9")
-rdkit = cript.Software(name = "rdkit", version = "2020.9")
-stage = cript.Software(name = "stage", source = "https://doi.org/10.1021/jp505332p", version= "N/A")
-packmol = cript.Software(name = "Packmol", source = "http://m3g.iqm.unicamp.br/packmol", version = "N/A")
-openmm = cript.Software(name = "openmm", version = "7.5")
+python = cript.Software(name="python", version="3.9")
+rdkit = cript.Software(name="rdkit", version="2020.9")
+stage = cript.Software(name="stage", source="https://doi.org/10.1021/jp505332p", version="N/A")
+packmol = cript.Software(name="Packmol", source="http://m3g.iqm.unicamp.br/packmol", version="N/A")
+openmm = cript.Software(name="openmm", version="7.5")
 ```
 
 Generally, provide as much information about the software as possible this helps to make your results reproducible.
@@ -145,15 +145,15 @@ stage_config = cript.SoftwareConfiguration(software=stage)
 
 # create a software configuration node with a child Algorithm node
 openmm_config = cript.SoftwareConfiguration(
-    software = openmm,
-    algorithm = [
+    software=openmm,
+    algorithm=[
         cript.Algorithm(
             key="energy_minimization",
             type="initialization",
         ),
-    ]
+    ],
 )
-packmol_config = cript.SoftwareConfiguration(software = packmol)
+packmol_config = cript.SoftwareConfiguration(software=packmol)
 ```
 
 !!! note "Algorithm keys"
@@ -172,49 +172,49 @@ In some cases, we may also want to add <a href="../../subobjects/condition" targ
 ```python
 # create a Computation node
 init = cript.Computation(
-    name = "Initial snapshot and force-field generation",
-    type = "initialization",
-    software_configuration = [
+    name="Initial snapshot and force-field generation",
+    type="initialization",
+    software_configuration=[
         python_config,
         rdkit_config,
         stage_config,
         packmol_config,
         openmm_config,
-    ]
+    ],
 )
 
 # create a computation node with Condition nodes
 equi = cript.Computation(
-    name = "Equilibrate data prior to measurement",
-    type = "MD",
-    software_configuration = [python_config, openmm_config],
-    condition = [
-        cript.Condition(key="time_duration",type="value", value=100.0, unit="ns"),
+    name="Equilibrate data prior to measurement",
+    type="MD",
+    software_configuration=[python_config, openmm_config],
+    condition=[
+        cript.Condition(key="time_duration", type="value", value=100.0, unit="ns"),
         cript.Condition(key="temperature", type="value", value=450.0, unit="K"),
         cript.Condition(key="pressure", type="value", value=1.0, unit="bar"),
         cript.Condition(key="number", type="value", value=31),
     ],
-    prerequisite_computation = init,
+    prerequisite_computation=init,
 )
 
 bulk = cript.Computation(
-    name = "Bulk simulation for measurement",
-    type = "MD",
-    software_configuration = [python_config, openmm_config],
-    condition = [
+    name="Bulk simulation for measurement",
+    type="MD",
+    software_configuration=[python_config, openmm_config],
+    condition=[
         cript.Condition(key="time_duration", type="value", value=50.0, unit="ns"),
         cript.Condition(key="temperature", type="value", value=450.0, unit="K"),
         cript.Condition(key="pressure", type="value", value=1.0, unit="bar"),
         cript.Condition(key="number", type="value", value=31),
     ],
-    prerequisite_computation = equi,
+    prerequisite_computation=equi,
 )
 
 ana = cript.Computation(
-        name = "Density analysis",
-        type = "analysis",
-        software_configuration = [python_config],
-        prerequisite_computation = bulk,
+    name="Density analysis",
+    type="analysis",
+    software_configuration=[python_config],
+    prerequisite_computation=bulk,
 )
 
 # Add all these computations to the experiment.
@@ -234,10 +234,10 @@ experiment.computation += [init, equi, bulk, ana]
 New we'd like to upload files associated with our simulation. First, we'll instantiate our File nodes under a specific project.
 
 ```python
-packing_file = cript.File("Initial simulation box snapshot with roughly packed molecules", type="snapshot", source="path/to/local/file")
+packing_file = cript.File("Initial simulation box snapshot with roughly packed molecules", type="computation_snapshot", source="path/to/local/file")
 forcefield_file = cript.File(name="Forcefield definition file", type="data", source="path/to/local/file")
-snap_file = cript.File("Bulk measurement initial system snap shot", type="snapshot", source="path/to/local/file")
-final_file = cript.File("Final snapshot of the system at the end the simulations", type="snapshot", source="path/to/local/file")
+snap_file = cript.File("Bulk measurement initial system snap shot", type="computation_snapshot", source="path/to/local/file")
+final_file = cript.File("Final snapshot of the system at the end the simulations", type="computation_snapshot", source="path/to/local/file")
 ```
 
 !!! note
@@ -246,11 +246,8 @@ The `source` field should point to any file on your local filesystem.
 !!! info
 Depending on the file size, there could be a delay while the checksum is generated.
 
-Next, we'll upload the local files by saving the File nodes.
+Note, that we haven't uploaded the files to CRIPT yet, this is automatically performed, when the project is uploaded via `api.save(project)`.
 
-```python
-# @ Navid, add code of how to upload the files.
-```
 
 # Create Data
 
@@ -258,63 +255,55 @@ Next, we'll create a <a href="../../nodes/data" target="_blank">`Data`</a> node 
 
 ```python
 packing_data = cript.Data(
-    name = "Loosely packed chains",
-    type = "computation_config",
-    file = [packing_file],
-    computations = [init],
-    notes = "PDB file without topology describing an initial system.",
+    name="Loosely packed chains",
+    type="computation_config",
+    file=[packing_file],
+    computation=[init],
+    notes="PDB file without topology describing an initial system.",
 )
 
 forcefield_data = cript.Data(
-    name = "OpenMM forcefield",
-    type = "computation_forcefield",
-    file = [forcefield_file],
-    computation = [init],
-    notes = "Full forcefield definition and topology.",
+    name="OpenMM forcefield",
+    type="computation_forcefield",
+    file=[forcefield_file],
+    computation=[init],
+    notes="Full forcefield definition and topology.",
 )
 
-equi_snap = cript.Data.create(
-    name = "Equilibrated simulation snapshot",
-    type = "computation_config",
-    file = [snap_file],
-    computation = [equi],
+equi_snap = cript.Data(
+    name="Equilibrated simulation snapshot",
+    type="computation_config",
+    file=[snap_file],
+    computation=[equi],
 )
 
-final_data = cript.Data.create(
-    name = "Logged volume during simulation",
-    type = "+raw_data",
-    file = [final_file],
-    computation = [bulk],)
+final_data = cript.Data(
+    name="Logged volume during simulation",
+    type="computation_trajectory",
+    file=[final_file],
+    computation=[bulk],
+)
 ```
 
 !!! note "Data types"
     The allowed `Data` types are listed under the <a href="https://criptapp.org/keys/data-type/" target="_blank">data types</a> in the CRIPT controlled vocabulary.
-
-
+    
 Next, we'll link these <a href="../../nodes/data" target="_blank">`Data`</a> nodes to the appropriate <a href="../../nodes/computation" target="_blank">`Computation`</a> nodes.
 
-```py
-init.update(output_data=[packing_data, forcefield_data])
-equi.update(
-    input_data=[packing_data, forcefield_data],
-    output_data=[equi_snap]
-)
-ana.update(input_data=[final_data])
-bulk.update(output_data=[final_data])
+```python
+init.output_data = [packing_data, forcefield_data]
+equi.input_data = [packing_data, forcefield_data]
+equi.output_data = [equi_snap]
+ana.input_data = [final_data]
+bulk.output_data = [final_data]
 ```
-
-!!! note
-    Notice the use of `update()` here, which updates and saves the object in one go.
 
 # Create a virtual Material
 
 Finally, we'll create a virtual material and link it to the <a href="../../nodes/computation" target="_blank">`Computation`</a> nodes that we've built.
 
 ```py
-polystyrene = cript.Material(
-    project=proj,
-    name="virtual polystyrene",
-)
+
 ```
 
 Next, let's add some [`Identifier`](../subobjects/identifier.md) nodes to the material to make it easier to identify and search.
@@ -356,24 +345,45 @@ polystyrene.add_property(color)
 !!! note "Material property keys"
     The allowed material `Property` keys are listed in the <a href="https://criptapp.org/keys/material-property-key/" target="_blank">material property keys</a> in the CRIPT controlled vocabulary.
 
+```python
+identifiers = [{"names": ["poly(styrene)", "poly(vinylbenzene)"]}]
+identifiers += [{"bigsmiles": "[H]{[>][<]C(C[>])c1ccccc1[<]}C(C)CC"}]
+identifiers += [{"chem_repeat": ["C8H8"]}]
+
+polystyrene = cript.Material(name="virtual polystyrene", identifiers=identifiers)
+```
 
 Finally, we'll create a [`ComputationalForcefield`](../subobjects/computational_forcefield.md) node and link it to the Material.
 
-```py
+
+```python
 forcefield = cript.ComputationalForcefield(
     key="opls_aa",
     building_block="atom",
     source="Custom determination via STAGE",
-    data=forcefield_data,
+    data=[forcefield_data],
 )
 
 polystyrene.computational_forcefield = forcefield
-polystyrene.save()
 ```
 
 !!! note "Computational forcefield keys"
     The allowed `ComputationalForcefield` keys are listed under the <a href="https://criptapp.org/keys/computational-forcefield-key/" target="_blank">computational forcefield keys</a> in the CRIPT controlled vocabulary.
+    
+Now we can save the project to CRIPT (and upload the files) or inspect the JSON output
 
+```python
+# Before we can save it, we should add all the orphaned nodes to the experiments.
+# It is important to do this for every experiment separately, but here we only have one.
+cript.add_orphaned_nodes_to_project(project, active_experiment=experiment)
+project.validate()
+
+# api.save(project)
+print(project.get_json(indent=2).json)
+
+# Let's not forget to close the API connection after everything is done.
+api.disconnect()
+```
 
 # Conclusion
 

@@ -96,6 +96,7 @@
     "Packmol",
     "openmm",
     "equi",
-    "Navid"
+    "Navid",
+    "ipykernel"
   ]
 }

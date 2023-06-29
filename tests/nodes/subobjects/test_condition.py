@@ -43,7 +43,7 @@ def test_setter_getters(complex_condition_node, complex_data_node):
     assert c2.data[0] is complex_data_node
 
 
-def test_integration_process_condition(cript_api, simple_project_node, simple_process_node, complex_condition_node):
+def test_integration_process_condition(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_computation_node, simple_condition_node):
     """
     integration test between Python SDK and API Client
 
@@ -51,11 +51,23 @@ def test_integration_process_condition(cript_api, simple_project_node, simple_pr
     1. GET from API
     1. assert they're both equal
     """
-    simple_project_node.name = f"test_integration_condition_{uuid.uuid4().hex}"
 
-    simple_process_node.condition = [complex_condition_node]
+    # TODO use fixtures to make code clean and DRY
+    # writing it manually because was getting OrphanedNodeError and Schema errors were very frustrating
+    # will wipe out this tech debt later
 
-    simple_project_node.collection[0].experiment[0].process = [simple_process_node]
+    # renamed project node to avoid duplicate project node API error
+    simple_project_node.name = f"{simple_project_node.name}_{uuid.uuid4().hex}"
 
-    # TODO getting CRIPTOrphanedMaterialError
+    simple_project_node.collection = [simple_collection_node]
+
+    simple_project_node.collection[0].experiment = [simple_experiment_node]
+
+    simple_project_node.collection[0].experiment[0].computation = [simple_computation_node]
+
+    simple_project_node.collection[0].experiment[0].computation[0].condition = [simple_condition_node]
+
+    print(simple_project_node.json)
+
+    # TODO getting `CRIPTJsonDeserializationError`
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

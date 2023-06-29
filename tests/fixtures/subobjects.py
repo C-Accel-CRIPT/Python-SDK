@@ -164,6 +164,14 @@ def complex_property_dict(complex_material_node, complex_condition_dict, complex
 
 
 @pytest.fixture(scope="function")
+def simple_property_node() -> cript.Property:
+    """
+    minimal property sub-object used for tests
+    """
+    my_simple_property = cript.Property(key="air_flow", type="min", value=10, unit="CFM")
+
+
+@pytest.fixture(scope="function")
 def simple_property_node():
     p = cript.Property(
         "modulus_shear",

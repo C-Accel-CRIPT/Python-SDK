@@ -1,5 +1,6 @@
 import copy
 import json
+import uuid
 
 from util import strip_uid_from_dict
 
@@ -57,7 +58,7 @@ def test_setter_getter(complex_property_node, simple_material_node, simple_proce
     assert p2.notes == "notes2"
 
 
-def test_integration_material_property(cript_api, simple_project_node, simple_material_node, complex_property_node):
+def test_integration_material_property(cript_api, simple_project_node, simple_material_node, simple_property_node):
     """
     integration test between Python SDK and API Client
 
@@ -68,12 +69,12 @@ def test_integration_material_property(cript_api, simple_project_node, simple_ma
     1. check their fields equal
     """
 
-    # add `complex property sub-object` to material node
-    simple_material_node.property = [complex_property_node]
+    # rename property and material to avoid duplicate node API error
+    simple_project_node.name = f"test_integration_material_property_{uuid.uuid4().hex}"
+
+    simple_material_node.name = f"{simple_material_node.name}_{uuid.uuid4().hex}"
 
     simple_project_node.material = [simple_material_node]
+    simple_project_node.material[0].property = [simple_property_node]
 
-    cript.add_orphaned_nodes_to_project(project=simple_project_node, active_experiment=simple_project_node.collection[0].experiment[0])
-
-    # TODO getting CRIPTOrphanedMaterialError
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

@@ -37,7 +37,7 @@ def test_setter_getter(complex_equipment_node, complex_condition_node, complex_f
     assert e2.citation[1] == cit2
 
 
-def test_integration_process_equipment(cript_api, simple_project_node, complex_process_node, complex_equipment_node, complex_material_node):
+def test_integration_equipment(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_process_node, simple_equipment_node):
     """
     integration test between Python SDK and API Client
 
@@ -45,14 +45,11 @@ def test_integration_process_equipment(cript_api, simple_project_node, complex_p
     1. GET from API
     1. assert JSON sent and JSON received are the same
     """
-    simple_project_node.name = f"test_integration_process_equipment_{uuid.uuid4().hex}"
+    simple_project_node.name = f"test_integration_equipment_{uuid.uuid4().hex}"
 
-    complex_process_node.equipment = [complex_equipment_node]
-
-    simple_project_node.collection[0].experiment[0].process = [complex_process_node]
-
-    # adding orphaned material node to project, to avoid `CRIPTOrphanedNodeError`
-    # TODO getting CRIPTNodeSchemaError
-    simple_project_node.material = [complex_material_node]
+    simple_project_node.collection = [simple_collection_node]
+    simple_project_node.collection[0].experiment = [simple_experiment_node]
+    simple_project_node.collection[0].experiment[0].process = [simple_process_node]
+    simple_project_node.collection[0].experiment[0].process[0].equipment = [simple_equipment_node]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

@@ -50,8 +50,20 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     # get the project from paginator
     my_project_from_api_dict = my_paginator.current_page_results[0]
 
+    print("\n\n----------------- Project Node ----------------------------")
+    print(project_node.json)
+    print("--------------------------------------------------------------")
+
+    print("\n\n----------------- API Response Node ----------------------------")
+    print(json.dumps(my_project_from_api_dict))
+    print("--------------------------------------------------------------")
+
     # try to convert api JSON project to node
     my_project_from_api = cript.load_nodes_from_json(json.dumps(my_project_from_api_dict))
+
+    print("\n\n------------------- Project Node Deserialized -------------------------")
+    print(my_project_from_api.json)
+    print("--------------------------------------------------------------")
 
     # Configure keys and blocks to be ignored by deepdiff using exclude_regex_path
     exclude_regex_paths = [

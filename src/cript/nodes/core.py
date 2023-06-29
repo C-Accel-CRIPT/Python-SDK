@@ -317,17 +317,20 @@ class BaseNode(ABC):
             # The definition of search is, that all values in a list have to be present.
             # To fulfill this AND condition, we count the number of occurrences of that value condition
             number_values_found = 0
+            # Runtime contribution: O(m), where is is the number of search keys
             for v in value:
                 # Test for simple values (not-nodes)
                 if v in attr_key:
                     number_values_found += 1
 
                 # Test if value is present in one of the specified attributes (OR condition)
+                # Runtime contribution: O(m), where m is the number of nodes in the attribute list.
                 for attr in attr_key:
                     # if the attribute is a node and the search value is a dictionary,
                     # we can verify that this condition is met if it finds the node itself with `find_children`.
                     if isinstance(attr, BaseNode) and isinstance(v, dict):
                         # Since we only want to test the node itself and not any of its children, we set recursion to 0.
+                        # Runtime contribution: recursive call, with depth search depth of the search dictionary O(h)
                         if len(attr.find_children(v, 0)) > 0:
                             number_values_found += 1
                             # Since this an OR condition, we abort early.
@@ -359,16 +362,21 @@ class BaseNode(ABC):
 
         # Recursion according to the recursion depth for all node children.
         if search_depth != 0:
+            # Loop over all attributes, runtime contribution (none, or constant (max number of attributes of a node)
             for field in self._json_attrs.__dataclass_fields__:
                 value = getattr(self._json_attrs, field)
                 # To save code paths, I convert non-lists into lists with one element.
                 if not isinstance(value, list):
                     value = [value]
+                # Run time contribution: number of elements in the attribute list.
                 for v in value:
                     try:  # Try every attribute for recursion (duck-typing)
                         found_children += v.find_children(search_attr, search_depth - 1, handled_nodes=handled_nodes)
                     except AttributeError:
                         pass
+        # Total runtime, of non-recursive call: O(m*h) + O(k) where k is the number of children for this node,
+        #   h being the depth of the search dictionary, m being the number of nodes in the attribute list.
+        # Total runtime, with recursion: O(n*(k+m*h). A full graph traversal O(n) with a cost per node, that scales with the number of children per node and the search depth of the search dictionary.
         return found_children
 
     def remove_child(self, child) -> bool:

@@ -63,8 +63,8 @@ class API:
     _IDENTITY_POOL_ID: str = "us-east-1:555e15fe-05c1-4f63-9f58-c84d8fd6dc99"
     _COGNITO_LOGIN_PROVIDER: str = "cognito-idp.us-east-1.amazonaws.com/us-east-1_VinmyZ0zW"
     _BUCKET_NAME: str = "cript-development-user-data"
-    _BUCKET_DIRECTORY_NAME: str = "user_files"
-    _s3_client: Any = None  # type: ignore
+    _BUCKET_DIRECTORY_NAME: str = "python_sdk_files"
+    _internal_s3_client: Any = None  # type: ignore
     # trunk-ignore-end(cspell)
 
     @beartype
@@ -159,9 +159,6 @@ class API:
         # TODO might need to add Bearer to it or check for it
         self._http_headers = {"Authorization": f"{self._token}", "Content-Type": "application/json"}
 
-        # TODO commenting this out for now because there is no GitHub API container, and all tests will fail
-        # self._s3_client = self._get_s3_client()
-
         # check that api can connect to CRIPT with host and token
         self._check_initial_host_connection()
 
@@ -182,31 +179,34 @@ class API:
 
         return host
 
-    def _get_s3_client(self) -> boto3.client:  # type: ignore
+    # Use a property to ensure delayed init of s3_client
+    @property
+    def _s3_client(self) -> boto3.client:  # type: ignore
         """
-        create a fully authenticated and ready s3 client
+        creates or returns a fully authenticated and ready s3 client
 
         Returns
         -------
         s3_client: boto3.client
             fully prepared and authenticated s3 client ready to be used throughout the script
         """
-        auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
 
-        identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
+        if self._internal_s3_client is None:
+            auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
+            identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
+            # TODO remove this temporary fix to the token, by getting is from back end.
+            aws_token = self._token.lstrip("Bearer ")
 
-        aws_credentials = auth.get_credentials_for_identity(IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
-
-        aws_credentials = aws_credentials["Credentials"]
-
-        s3_client = boto3.client(
-            "s3",
-            aws_access_key_id=aws_credentials["AccessKeyId"],
-            aws_secret_access_key=aws_credentials["SecretKey"],
-            aws_session_token=aws_credentials["SessionToken"],
-        )
-
-        return s3_client
+            aws_credentials = auth.get_credentials_for_identity(IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: aws_token})
+            aws_credentials = aws_credentials["Credentials"]
+            s3_client = boto3.client(
+                "s3",
+                aws_access_key_id=aws_credentials["AccessKeyId"],
+                aws_secret_access_key=aws_credentials["SecretKey"],
+                aws_session_token=aws_credentials["SessionToken"],
+            )
+            self._internal_s3_client = s3_client
+        return self._internal_s3_client
 
     def __enter__(self):
         self.connect()
@@ -514,6 +514,13 @@ class API:
         None
             Just sends a `POST` or `Patch` request to the API
         """
+
+        project.validate()
+
+        # Ensure that all file nodes have uploaded there payload before actual save.
+        for file_node in project.find_children({"node": ["File"]}):
+            file_node.ensure_uploaded(api=self)
+
         response: Dict = requests.post(url=f"{self._host}/{project.node_type.lower()}", headers=self._http_headers, data=project.json).json()
 
         # if http response is not 200 then show the API error to the user
@@ -570,6 +577,8 @@ class API:
         """
         # trunk-ignore-end(cspell)
 
+        # TODO consider using a new variable when converting `file_path` from parameter
+        #  to a Path object with a new type
         # convert file path from whatever the user passed in to a pathlib object
         file_path = Path(file_path).resolve()
 
@@ -578,12 +587,12 @@ class API:
         file_name, file_extension = os.path.splitext(os.path.basename(file_path))
 
         # generate a UUID4 string without dashes, making a cleaner file name
-        uuid_str = str(uuid.uuid4().hex)
+        uuid_str: str = str(uuid.uuid4().hex)
 
         new_file_name: str = f"{file_name}_{uuid_str}{file_extension}"
 
         # e.g. "directory/file_name_uuid.extension"
-        object_name = f"{self._BUCKET_DIRECTORY_NAME}/{new_file_name}"
+        object_name: str = f"{self._BUCKET_DIRECTORY_NAME}/{new_file_name}"
 
         # upload file to AWS S3
         self._s3_client.upload_file(Filename=file_path, Bucket=self._BUCKET_NAME, Key=object_name)  # type: ignore
@@ -628,7 +637,7 @@ class API:
             just downloads the file to the specified path
         """
 
-        # file is stored in cloud storage and must be retrieved via object_name
+        # the file is stored in cloud storage and must be retrieved via object_name
         self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=object_name, Filename=destination_path)  # type: ignore
 
     @beartype

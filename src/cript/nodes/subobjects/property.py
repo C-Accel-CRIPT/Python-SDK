@@ -63,7 +63,7 @@ class Property(UUIDBaseNode):
     class JsonAttributes(UUIDBaseNode.JsonAttributes):
         key: str = ""
         type: str = ""
-        value: Union[Number, None] = None
+        value: Union[Number, str, None] = None
         unit: str = ""
         uncertainty: Optional[Number] = None
         uncertainty_type: str = ""
@@ -84,7 +84,7 @@ class Property(UUIDBaseNode):
         self,
         key: str,
         type: str,
-        value: Union[Number, None],
+        value: Union[Number, str, None],
         unit: Union[str, None],
         uncertainty: Optional[Number] = None,
         uncertainty_type: str = "",
@@ -256,7 +256,7 @@ class Property(UUIDBaseNode):
 
     @property
     @beartype
-    def value(self) -> Union[Number, None]:
+    def value(self) -> Union[Number, str, None]:
         """
         get the Property value
 
@@ -268,7 +268,7 @@ class Property(UUIDBaseNode):
         return self._json_attrs.value
 
     @beartype
-    def set_value(self, new_value: Number, new_unit: str) -> None:
+    def set_value(self, new_value: Union[Number, str], new_unit: str) -> None:
         """
         set the value attribute of the Property subobject
 

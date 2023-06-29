@@ -360,6 +360,16 @@ def complex_software_configuration_dict(complex_software_dict, complex_algorithm
 
 
 @pytest.fixture(scope="function")
+def simple_software_configuration(complex_software_node) -> cript.SoftwareConfiguration:
+    """
+    minimal software configuration node with only required arguments
+    """
+    my_software_configuration = cript.SoftwareConfiguration(software=complex_software_node)
+
+    return my_software_configuration
+
+
+@pytest.fixture(scope="function")
 def simple_computational_forcefield_node():
     """
     simple minimal computational forcefield node

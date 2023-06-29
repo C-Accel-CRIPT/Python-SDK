@@ -280,16 +280,6 @@ def complex_material_node(simple_property_node, simple_process_node, complex_com
 
 
 @pytest.fixture(scope="function")
-def simple_software_configuration(simple_software_node) -> cript.SoftwareConfiguration:
-    """
-    minimal software configuration node with only required arguments
-    """
-    my_software_configuration = cript.SoftwareConfiguration(software=simple_software_node)
-
-    return my_software_configuration
-
-
-@pytest.fixture(scope="function")
 def simple_inventory_node(simple_material_node) -> None:
     """
     minimal inventory node to use for other tests

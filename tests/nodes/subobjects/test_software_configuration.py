@@ -38,7 +38,7 @@ def test_setter_getter(complex_software_configuration_node, complex_algorithm_no
     # assert sc2.citation[1] == cit2
 
 
-def test_integration_software_configuration(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_computation_node):
+def test_integration_software_configuration(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_computation_node, simple_software_configuration):
     """
     integration test between Python SDK and API Client
 
@@ -46,7 +46,7 @@ def test_integration_software_configuration(cript_api, simple_project_node, simp
     1. GET from API
     1. assert JSON sent and JSON received are the same
     """
-    simple_project_node.name = f"test_integration_material_computational_forcefield_{uuid.uuid4().hex}"
+    simple_project_node.name = f"test_integration_software_configuration_{uuid.uuid4().hex}"
 
     simple_project_node.collection = [simple_collection_node]
 
@@ -54,7 +54,7 @@ def test_integration_software_configuration(cript_api, simple_project_node, simp
 
     simple_project_node.collection[0].experiment[0].computation = [simple_computation_node]
 
-    simple_project_node.collection[0].experiment[0].computation[0] = [simple_computation_node]
+    simple_project_node.collection[0].experiment[0].computation[0].software_configuration = [simple_software_configuration]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 

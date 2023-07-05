@@ -41,6 +41,10 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     * ignoring the UID field through all the JSON because those the API changes when responding
     """
 
+    print("\n\n----------------- Project Node ----------------------------")
+    print(project_node.json)
+    print("--------------------------------------------------------------")
+
     cript_api.save(project=project_node)
 
     # get the project that was just saved
@@ -49,10 +53,6 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
 
     # get the project from paginator
     my_project_from_api_dict = my_paginator.current_page_results[0]
-
-    print("\n\n----------------- Project Node ----------------------------")
-    print(project_node.json)
-    print("--------------------------------------------------------------")
 
     print("\n\n----------------- API Response Node ----------------------------")
     print(json.dumps(my_project_from_api_dict))

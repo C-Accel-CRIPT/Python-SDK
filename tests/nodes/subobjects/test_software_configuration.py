@@ -13,6 +13,7 @@ def test_json(complex_software_configuration_node, complex_software_configuratio
     sc_dict = strip_uid_from_dict(json.loads(sc.json))
     assert sc_dict == complex_software_configuration_dict
     sc2 = cript.load_nodes_from_json(sc.json)
+
     assert strip_uid_from_dict(json.loads(sc2.json)) == strip_uid_from_dict(json.loads(sc.json))
 
 

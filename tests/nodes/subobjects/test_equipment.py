@@ -12,6 +12,7 @@ def test_json(complex_equipment_node, complex_equipment_dict):
     e_dict = strip_uid_from_dict(json.loads(e.get_json(condense_to_uuid={}).json))
     assert strip_uid_from_dict(e_dict) == strip_uid_from_dict(complex_equipment_dict)
     e2 = copy.deepcopy(e)
+
     assert strip_uid_from_dict(json.loads(e.get_json(condense_to_uuid={}).json)) == strip_uid_from_dict(json.loads(e2.get_json(condense_to_uuid={}).json))
 
 

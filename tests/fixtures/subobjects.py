@@ -299,7 +299,7 @@ def complex_equipment_dict(complex_condition_dict, complex_citation_dict) -> dic
     ret_dict = {
         "node": ["Equipment"],
         "key": "hot_plate",
-        "description": "fancy hot plate",
+        "description": "fancy hot plate for complex_equipment_node",
         "condition": [complex_condition_dict],
         "citation": [complex_citation_dict],
     }

@@ -333,7 +333,7 @@ def complex_computational_forcefield_dict(simple_data_node, complex_citation_dic
         "coarse_grained_mapping": "atom -> atom",
         "implicit_solvent": "no implicit solvent",
         "source": "local LigParGen installation",
-        "description": "this is a test forcefield",
+        "description": "this is a test forcefield for complex_computational_forcefield_node",
         "citation": [complex_citation_dict],
         "data": [json.loads(simple_data_node.json)],
     }

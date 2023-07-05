@@ -67,7 +67,5 @@ def test_integration_process_condition(cript_api, simple_project_node, simple_co
 
     simple_project_node.collection[0].experiment[0].computation[0].condition = [simple_condition_node]
 
-    print(simple_project_node.json)
-
     # TODO getting `CRIPTJsonDeserializationError`
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

@@ -158,7 +158,7 @@ def complex_property_dict(complex_material_node, complex_condition_dict, complex
         "data": [json.loads(complex_data_node.get_json(condense_to_uuid={}).json)],
         "citation": [complex_citation_dict],
         "computation": [json.loads(simple_computation_node.get_json(condense_to_uuid={}).json)],
-        "notes": "notes",
+        "notes": "my complex_property_node notes",
     }
     return strip_uid_from_dict(ret_dict)
 
@@ -360,7 +360,7 @@ def complex_software_configuration_dict(complex_software_dict, complex_algorithm
         "node": ["SoftwareConfiguration"],
         "software": complex_software_dict,
         "algorithm": [complex_algorithm_dict],
-        "notes": "my_notes",
+        "notes": "my_complex_software_configuration_node notes",
         "citation": [complex_citation_dict],
     }
     return ret_dict

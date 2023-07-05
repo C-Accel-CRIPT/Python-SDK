@@ -13,6 +13,7 @@ def test_json(complex_property_node, complex_property_dict):
     p_dict = strip_uid_from_dict(json.loads(p.get_json(condense_to_uuid={}).json))
     assert p_dict == complex_property_dict
     p2 = cript.load_nodes_from_json(p.get_json(condense_to_uuid={}).json)
+
     assert strip_uid_from_dict(json.loads(p2.get_json(condense_to_uuid={}).json)) == strip_uid_from_dict(json.loads(p.get_json(condense_to_uuid={}).json))
 
 

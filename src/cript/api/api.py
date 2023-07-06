@@ -517,6 +517,7 @@ class API:
 
         project.validate()
 
+        # saves all the local files to cloud storage right before saving the Project node
         # Ensure that all file nodes have uploaded there payload before actual save.
         for file_node in project.find_children({"node": ["File"]}):
             file_node.ensure_uploaded(api=self)

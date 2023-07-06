@@ -1,5 +1,6 @@
 import copy
 import json
+import uuid
 
 import pytest
 from util import strip_uid_from_dict
@@ -223,7 +224,8 @@ def simple_material_node() -> cript.Material:
     simple material node to use between tests
     """
     identifiers = [{"bigsmiles": "123456"}]
-    my_material = cript.Material(name="my material", identifiers=identifiers)
+    # Use a unique name
+    my_material = cript.Material(name="my test material " + str(uuid.uuid4()), identifiers=identifiers)
 
     return my_material
 

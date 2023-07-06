@@ -571,7 +571,7 @@ class API:
             known_uuid.add(missing_uuid)
             # Recursive call.
             # Since we should have fixed the "Bad UUID" now, we can try to save the node again
-            return self.save(node, known_uuid)
+            return self._internal_save(node, known_uuid)
 
         # if http response is not 200 then show the API error to the user
         if response["code"] != 200:

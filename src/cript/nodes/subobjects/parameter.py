@@ -1,5 +1,6 @@
 from dataclasses import dataclass, replace
-from typing import Union
+from numbers import Number
+from typing import Optional, Union
 
 from beartype import beartype
 
@@ -49,7 +50,7 @@ class Parameter(UUIDBaseNode):
     @dataclass(frozen=True)
     class JsonAttributes(UUIDBaseNode.JsonAttributes):
         key: str = ""
-        value: Union[int, float, str] = ""
+        value: Optional[Number] = None
         # We explicitly allow None for unit here (instead of empty str),
         # this presents number without physical unit, like counting
         # particles or dimensionless numbers.
@@ -60,7 +61,7 @@ class Parameter(UUIDBaseNode):
     # Note that the key word args are ignored.
     # They are just here, such that we can feed more kwargs in that we get from the back end.
     @beartype
-    def __init__(self, key: str, value: Union[int, float], unit: Union[str, None] = None, **kwargs):
+    def __init__(self, key: str, value: Number, unit: Optional[str] = None, **kwargs):
         """
         create new Parameter sub-object
 
@@ -89,6 +90,15 @@ class Parameter(UUIDBaseNode):
         super().__init__(**kwargs)
         self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit)
         self.validate()
+
+    @classmethod
+    def _from_json(cls, json_dict: dict):
+        # TODO: remove this temporary fix, once back end is working correctly
+        try:
+            json_dict["value"] = float(json_dict["value"])
+        except KeyError:
+            pass
+        return super(Parameter, cls)._from_json(json_dict)
 
     @property
     @beartype
@@ -131,7 +141,7 @@ class Parameter(UUIDBaseNode):
 
     @property
     @beartype
-    def value(self) -> Union[int, float, str]:
+    def value(self) -> Optional[Number]:
         """
         Parameter value
 
@@ -150,7 +160,7 @@ class Parameter(UUIDBaseNode):
 
     @value.setter
     @beartype
-    def value(self, new_value: Union[int, float, str]) -> None:
+    def value(self, new_value: Number) -> None:
         """
         set the Parameter value
 

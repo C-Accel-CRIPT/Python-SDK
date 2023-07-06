@@ -491,7 +491,7 @@ class API:
         # if validation goes through without any problems return True
         return True
 
-    def save(self, node, known_uuid: Optional[Set[str]] = None) -> Optional(Set[str]):
+    def save(self, node, known_uuid: Optional[Set[str]] = None) -> Optional[Set[str]]:
         """
         This method takes a project node, serializes the class into JSON
         and then sends the JSON to be saved to the API.
@@ -541,7 +541,6 @@ class API:
             # Recursive call to finish the post
             return self.save(node, known_uuid)
 
-        print("asdf", response)
         # if http response is not 200 then show the API error to the user
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])

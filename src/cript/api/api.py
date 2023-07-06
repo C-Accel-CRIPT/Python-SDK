@@ -22,7 +22,7 @@ from cript.api.exceptions import (
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
-from cript.api.utils.save_helper import brute_force_save
+from cript.api.utils.save_helper import brute_force_save, get_bad_uuid_from_error_message
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import ControlledVocabularyCategories
 from cript.nodes.core import BaseNode
@@ -530,10 +530,7 @@ class API:
 
             # TODO this is a bit hardcoded and checking it with just `is Bad UUID` in the error might be better
             if error_message.startswith("API responded with 'http:400 Bad uuid: "):
-
-                # stripping UUID from error message
-                bad_uuid = error_message.lstrip("API responded with 'http:400 Bad uuid: ")
-                bad_uuid = bad_uuid.rstrip(" provided'")
+                bad_uuid = get_bad_uuid_from_error_message(error_message=error_message)
 
                 brute_force_save(project=project, bad_uuid=bad_uuid)
 

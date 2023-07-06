@@ -2,10 +2,10 @@ import copy
 import json
 import uuid
 
+from test_integration import integrate_nodes_helper
 from util import strip_uid_from_dict
 
 import cript
-from tests.test_integration import integrate_nodes_helper
 
 
 def test_json(complex_property_node, complex_property_dict):

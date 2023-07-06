@@ -1,9 +1,8 @@
 import json
 import uuid
 
+from test_integration import integrate_nodes_helper
 from util import strip_uid_from_dict
-
-from tests.test_integration import integrate_nodes_helper
 
 
 def test_json(complex_condition_node, complex_condition_dict):

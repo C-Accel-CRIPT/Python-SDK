@@ -2,10 +2,10 @@ import json
 import uuid
 from typing import Dict
 
+from test_integration import integrate_nodes_helper
 from util import strip_uid_from_dict
 
 import cript
-from tests.test_integration import integrate_nodes_helper
 
 
 def test_create_complex_material(simple_material_node, simple_computational_forcefield_node, simple_process_node) -> None:

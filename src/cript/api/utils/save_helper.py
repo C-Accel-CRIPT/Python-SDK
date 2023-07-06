@@ -1,4 +1,4 @@
-def save_main(project_node):
+def brute_force_save(project, bad_uuid):
     """
     the main function that essentially coordinates the whole POST or PATCH requests to the API
     and brute forces it to save
@@ -9,46 +9,18 @@ def save_main(project_node):
                 posts that material
                 and strip all material nodes and replace them with the posted UUID
     """
-    pass
 
-
-def send_post_request_to_api(node):
-    """
-    simply send POST request to the API
-
-    raise error if not 200 from API
-
-    Parameters
-    ----------
-    node
-
-    Returns
-    -------
-
-    Notes
-    -----
-    Gets the host from cript.API property
-    """
-    pass
 
 
 def find_node_by_uuid(project_node, uuid: str):
-    """
-    traverses the project JSON to find a full node from UUID
+    all_materials = project_node.find_children({"node": ["Material"]})
 
-    Parameters
-    ----------
-    project_node
-        project node that we want to save
-    uuid: str
-        uuid that the API says is bad
+    for material in all_materials:
+        if material.uuid == uuid:
+            return material
 
-    Returns
-    -------
-    node: dict
-        the full node dict from the uuid string
-    """
-    pass
+    # TODO This should not be triggered and should be handled better
+    raise Exception("could not find any material with that UUID")
 
 
 def replace_node_with_saved_uuid(project_node, saved_uuid):

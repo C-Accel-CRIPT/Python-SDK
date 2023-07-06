@@ -1,21 +1,46 @@
+from cript.api.api import _get_global_cached_api
 from cript.api.exceptions import CRIPTAPISaveError
 
 
-def brute_force_save(project, bad_uuid):
+def brute_force_save(project, bad_uuid: str) -> None:
     """
-    the main function that essentially coordinates the whole POST or PATCH requests to the API
-    and brute forces it to save
+    the API class tries to save the project, if the API gives a `Bad UUID` error
+    then it will try to brute_force_save it
 
     try to save project
         if `Bad UUID error`
-            find the material that has that error
-                posts that material
-                and strip all material nodes and replace them with the posted UUID
+            find the node that has to be saved first before being referred to as just UUID in JSON
+                save that material
+                strip that node and replace them with the saved UUID only throughout the whole JSON
     """
-    try:
-        node_to_save_first = find_node_by_uuid(project_node=project, uuid=bad_uuid)
-    except CRIPTAPISaveError as error:
-        pass
+    while True:
+        try:
+            # find the node that has bad UUID error
+            node_to_save_first = find_node_by_uuid(project_node=project, uuid=bad_uuid)
+
+            # save the node that was unsaved to the API
+            api = _get_global_cached_api()
+            api.send_post_request(node=node_to_save_first)
+
+            # try to save the whole project again and see if it'll work this time
+            api.save(project=project)
+
+            # if everything went successfully and everything saved well, then exist
+            break
+
+        except CRIPTAPISaveError as error:
+            # if there is a bad UUID error then it will catch it here
+            # get the bad UUID, set the bad UUID, and try brute force saving again
+
+            error_message = str(error)
+            if error_message.startswith("API responded with 'http:400 Bad uuid: "):
+                bad_uuid = get_bad_uuid_from_error_message(error_message=error_message)
+
+            # there was an error with the save, so loop over again and try again
+
+            # if we are not handling the error then raise it
+            else:
+                raise error
 
 
 def get_bad_uuid_from_error_message(error_message: str) -> str:

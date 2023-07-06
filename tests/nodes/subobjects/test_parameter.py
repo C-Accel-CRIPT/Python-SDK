@@ -50,4 +50,3 @@ def test_integration_parameter(cript_api, simple_project_node, simple_collection
 
     # TODO getting CRIPTJsonDeserializationError
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
-

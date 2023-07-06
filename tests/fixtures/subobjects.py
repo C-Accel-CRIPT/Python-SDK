@@ -127,7 +127,7 @@ def complex_property_node(complex_material_node, complex_condition_node, complex
         type="value",
         value=5.0,
         unit="GPa",
-        uncertainty=.1,
+        uncertainty=0.1,
         uncertainty_type="stdev",
         structure="structure",
         method="comp",
@@ -345,12 +345,7 @@ def complex_software_configuration_node(complex_software_node, complex_algorithm
     """
     maximal software_configuration sub-object with all possible attributes
     """
-    my_complex_software_configuration_node = cript.SoftwareConfiguration(
-        software=complex_software_node,
-        algorithm=[complex_algorithm_node],
-        notes="my_complex_software_configuration_node notes",
-        citation=[complex_citation_node]
-    )
+    my_complex_software_configuration_node = cript.SoftwareConfiguration(software=complex_software_node, algorithm=[complex_algorithm_node], notes="my_complex_software_configuration_node notes", citation=[complex_citation_node])
     return my_complex_software_configuration_node
 
 

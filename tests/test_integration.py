@@ -48,8 +48,7 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     cript_api.save(project=project_node)
 
     # get the project that was just saved
-    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME,
-                                    value_to_search=project_node.name)
+    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=project_node.name)
 
     # get the project from paginator
     my_project_from_api_dict = my_paginator.current_page_results[0]
@@ -66,12 +65,9 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     print("--------------------------------------------------------------")
 
     # Configure keys and blocks to be ignored by deepdiff using exclude_regex_path
-    exclude_regex_paths = [
-        r"root(\[.*\])?\['uid'\]"
-    ]
+    exclude_regex_paths = [r"root(\[.*\])?\['uid'\]"]
 
     # Compare the JSONs
-    diff = DeepDiff(json.loads(project_node.json), json.loads(my_project_from_api.json),
-                    exclude_regex_paths=exclude_regex_paths)
+    diff = DeepDiff(json.loads(project_node.json), json.loads(my_project_from_api.json), exclude_regex_paths=exclude_regex_paths)
 
     assert len(diff.get("values_changed", {})) == 0

@@ -61,9 +61,9 @@ from fixtures.subobjects import (
     simple_computational_forcefield_node,
     simple_condition_node,
     simple_equipment_node,
+    simple_ingredient_node,
     simple_property_dict,
     simple_property_node,
-    simple_ingredient_node,
     simple_software_configuration,
 )
 from fixtures.supporting_nodes import (

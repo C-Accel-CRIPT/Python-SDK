@@ -58,4 +58,3 @@ def test_integration_software_configuration(cript_api, simple_project_node, simp
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration = [simple_software_configuration]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
-

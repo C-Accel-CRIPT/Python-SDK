@@ -28,8 +28,7 @@ def test_getter_setter(complex_quantity_node):
     assert q.unit == "m**3"
 
 
-def test_integration_quantity(cript_api, simple_project_node, simple_collection_node, simple_experiment_node,
-                                simple_process_node, simple_ingredient_node, simple_material_node):
+def test_integration_quantity(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_process_node, simple_ingredient_node, simple_material_node):
     """
     integration test between Python SDK and API Client
 

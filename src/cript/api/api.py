@@ -4,7 +4,7 @@ import os
 import uuid
 import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, Set, Union
 from urllib.parse import quote
 
 import boto3
@@ -491,7 +491,7 @@ class API:
         # if validation goes through without any problems return True
         return True
 
-    def save(self, node) -> None:
+    def save(self, node, known_uuid: Optional[Set[str]] = None) -> Optional(Set[str]):
         """
         This method takes a project node, serializes the class into JSON
         and then sends the JSON to be saved to the API.
@@ -510,26 +510,42 @@ class API:
 
         Returns
         -------
-        None
+        A set of extra saved node UUIDs.
             Just sends a `POST` or `Patch` request to the API
         """
+        if known_uuid is None:
+            known_uuid = set()
 
         node.validate()
-
         # saves all the local files to cloud storage right before saving the Project node
         # Ensure that all file nodes have uploaded there payload before actual save.
         for file_node in node.find_children({"node": ["File"]}):
             file_node.ensure_uploaded(api=self)
 
-        node_known = len(self.search(type(node), SearchModes.UUID, str(node.uuid)).current_page_results) != 1
-        if node_known:
-            response: Dict = requests.patch(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=node.json).json()
-        else:
-            response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=node.json).json()
+        node_known = len(self.search(type(node), SearchModes.UUID, str(node.uuid)).current_page_results) == 1
 
+        json_data = node.get_json(known_uuid=known_uuid).json
+        if node_known:
+            response: Dict = requests.patch(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()
+        else:
+            response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()
+
+        if response["code"] == 400 and response["error"].startswith("Bad uuid:"):
+            missing_uuid = response["error"].lstrip("Bad uuid: ").rstrip(" provided")
+            # We can have multiple occurrences of the node,
+            # but it doesn't matter which one we save
+            # TODO some error handling, for the BUG case of not finding the UUID
+            missing_node = node.find_children({"uuid": missing_uuid})[0]
+            known_uuid = self.save(missing_node, known_uuid)
+            known_uuid.add(missing_uuid)
+            # Recursive call to finish the post
+            return self.save(node, known_uuid)
+
+        print("asdf", response)
         # if http response is not 200 then show the API error to the user
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
+        return known_uuid
 
     def upload_file(self, file_path: Union[Path, str]) -> str:
         # trunk-ignore-begin(cspell)

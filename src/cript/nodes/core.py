@@ -261,6 +261,8 @@ class BaseNode(ABC):
         previous_handled_nodes = copy.deepcopy(NodeEncoder.handled_ids)
         if handled_ids is not None:
             NodeEncoder.handled_ids = handled_ids
+
+        # Similar to uid, we handle pre-saved known uuid such that they are UUID edges only
         previous_known_uuid = copy.deepcopy(NodeEncoder.known_uuid)
         if known_uuid is not None:
             NodeEncoder.known_uuid = known_uuid

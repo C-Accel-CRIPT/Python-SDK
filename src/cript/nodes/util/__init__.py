@@ -38,6 +38,8 @@ class NodeEncoder(json.JSONEncoder):
                 if uid in NodeEncoder.handled_ids:
                     return {"node": obj._json_attrs.node, "uid": uid}
 
+            # When saving graphs, some nodes can be pre-saved.
+            # If that happens, we want to represent them as a UUID edge only
             try:
                 uuid_str = str(obj.uuid)
             except AttributeError:

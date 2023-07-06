@@ -491,7 +491,7 @@ class API:
         # if validation goes through without any problems return True
         return True
 
-    def save(self, node, known_uuid: Optional[Set[str]] = None) -> Optional[Set[str]]:
+    def save(self, project: Project) -> None:
         """
         This method takes a project node, serializes the class into JSON
         and then sends the JSON to be saved to the API.
@@ -513,6 +513,24 @@ class API:
         A set of extra saved node UUIDs.
             Just sends a `POST` or `Patch` request to the API
         """
+        try:
+            prehandled_uuid = self._internal_save(project)
+        except Exception as exc:
+            # TODO remove all prehandled nodes.
+            raise exc
+
+    def _internal_save(self, node, known_uuid: Optional[Set[str]] = None) -> Optional[Set[str]]:
+        """
+        Internal helper function that handles the saving of different nodes (not just project).
+
+        If a "Bad UUID" error happens, we find that node with the UUID and save it first.
+        Then we recursively call the _internal_save again.
+        Because it is recursive, this repeats until no "Bad UUID" error happen anymore.
+        This works, because we keep track of "Bad UUID" handled nodes, and represent them in the JSON only as the UUID.
+        """
+
+        # known_uuid are node, that we have saved to the back end before.
+        # We keep track of it, so that we can condense them to UUID only in the JSON.
         if known_uuid is None:
             known_uuid = set()
 
@@ -522,23 +540,37 @@ class API:
         for file_node in node.find_children({"node": ["File"]}):
             file_node.ensure_uploaded(api=self)
 
-        node_known = len(self.search(type(node), SearchModes.UUID, str(node.uuid)).current_page_results) == 1
-
+        # We assemble the JSON to be saved to back end.
+        # Note how we exclude pre-saved uuid nodes.
         json_data = node.get_json(known_uuid=known_uuid).json
+
+        # This checks if the current node exists on the back end.
+        # if it does exist we use `patch` if it doesn't `post`.
+        node_known = len(self.search(type(node), SearchModes.UUID, str(node.uuid)).current_page_results) == 1
         if node_known:
             response: Dict = requests.patch(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()
         else:
             response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()
 
+        # If we get a Bad UUID we need to handle this extra and save the Bad node first.
         if response["code"] == 400 and response["error"].startswith("Bad uuid:"):
+            # We extract the
             missing_uuid = response["error"].lstrip("Bad uuid: ").rstrip(" provided")
+
+            # Use the find_children functionality to find that node in our current tree
             # We can have multiple occurrences of the node,
             # but it doesn't matter which one we save
             # TODO some error handling, for the BUG case of not finding the UUID
             missing_node = node.find_children({"uuid": missing_uuid})[0]
-            known_uuid = self.save(missing_node, known_uuid)
+
+            # Now we save the bad node extra.
+            # So it will be known when we attempt to save the graph again.
+            known_uuid = self._internal_save(missing_node, known_uuid)
+            # Since we pre-saved this node, we want it to be UUID edge only the next JSON.
+            # So we add it to the list of known nodes
             known_uuid.add(missing_uuid)
-            # Recursive call to finish the post
+            # Recursive call.
+            # Since we should have fixed the "Bad UUID" now, we can try to save the node again
             return self.save(node, known_uuid)
 
         # if http response is not 200 then show the API error to the user

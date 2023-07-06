@@ -491,8 +491,7 @@ class API:
         # if validation goes through without any problems return True
         return True
 
-    @beartype
-    def save(self, project: Project) -> None:
+    def save(self, node) -> None:
         """
         This method takes a project node, serializes the class into JSON
         and then sends the JSON to be saved to the API.
@@ -515,14 +514,18 @@ class API:
             Just sends a `POST` or `Patch` request to the API
         """
 
-        project.validate()
+        node.validate()
 
         # saves all the local files to cloud storage right before saving the Project node
         # Ensure that all file nodes have uploaded there payload before actual save.
-        for file_node in project.find_children({"node": ["File"]}):
+        for file_node in node.find_children({"node": ["File"]}):
             file_node.ensure_uploaded(api=self)
 
-        response: Dict = requests.post(url=f"{self._host}/{project.node_type.lower()}", headers=self._http_headers, data=project.json).json()
+        node_known = len(self.search(type(node), SearchModes.UUID, str(node.uuid)).current_page_results) != 1
+        if node_known:
+            response: Dict = requests.patch(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=node.json).json()
+        else:
+            response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=node.json).json()
 
         # if http response is not 200 then show the API error to the user
         if response["code"] != 200:

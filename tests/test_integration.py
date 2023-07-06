@@ -45,7 +45,7 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     print(project_node.json)
     print("--------------------------------------------------------------")
 
-    cript_api.save(project=project_node)
+    cript_api.save(project_node)
 
     # get the project that was just saved
     my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=project_node.name)

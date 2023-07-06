@@ -22,6 +22,7 @@ from cript.api.exceptions import (
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
+from cript.api.utils.save_helper import brute_force_save
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import ControlledVocabularyCategories
 from cript.nodes.core import BaseNode
@@ -522,11 +523,37 @@ class API:
         for file_node in project.find_children({"node": ["File"]}):
             file_node.ensure_uploaded(api=self)
 
-        response: Dict = requests.post(url=f"{self._host}/{project.node_type.lower()}", headers=self._http_headers, data=project.json).json()
+        try:
+            self.send_post_request(node=project)
+        except CRIPTAPISaveError as error:
+            error_message = str(error)
 
+            # TODO this is a bit hardcoded and checking it with just `is Bad UUID` in the error might be better
+            if error_message.startswith("API responded with 'http:400 Bad uuid: "):
+
+                # stripping UUID from error message
+                bad_uuid = error_message.lstrip("API responded with 'http:400 Bad uuid: ")
+                bad_uuid = bad_uuid.rstrip(" provided'")
+
+                brute_force_save(project=project, bad_uuid=bad_uuid)
+
+
+    def send_post_request(self, node):
+        """
+        just sends a POST request to API
+        """
+        # schema check on the node before posting it
+        self._is_node_schema_valid(node_json=node.json)
+
+        response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers,
+                                       data=node.json).json()
+
+        # TODO use `response.raise_for_status()`
         # if http response is not 200 then show the API error to the user
         if response["code"] != 200:
-            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
+            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"],
+                                    api_response=response["error"])
+
 
     def upload_file(self, file_path: Union[Path, str]) -> str:
         # trunk-ignore-begin(cspell)

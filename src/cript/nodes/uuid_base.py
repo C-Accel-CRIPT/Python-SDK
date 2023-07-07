@@ -41,7 +41,6 @@ class UUIDBaseNode(BaseNode, ABC):
         self._json_attrs = replace(self._json_attrs, uuid=uuid)
 
         # Place successfully created node in the UUID cache
-        assert uuid not in self._uuid_cache
         self._uuid_cache[uuid] = self
 
     @property

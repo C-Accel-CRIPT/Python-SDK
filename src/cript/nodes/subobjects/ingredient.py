@@ -88,6 +88,14 @@ class Ingredient(UUIDBaseNode):
         self._json_attrs = replace(self._json_attrs, material=material, quantity=quantity, keyword=keyword)
         self.validate()
 
+    @classmethod
+    def _from_json(cls, json_dict: dict):
+        # TODO: remove this temporary fix, once back end is working correctly
+        if isinstance(json_dict["material"], list):
+            assert len(json_dict["material"]) == 1
+            json_dict["material"] = json_dict["material"][0]
+        return super(Ingredient, cls)._from_json(json_dict)
+
     @property
     @beartype
     def material(self) -> Union[Material, None]:

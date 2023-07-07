@@ -166,13 +166,20 @@ class BaseNode(ABC):
             else:
                 arguments[field] = json_dict[field]
 
-        try:
-            node = cls(**arguments)
-        # TODO we should not catch all exceptions if we are handling them, and instead let it fail
-        #  to create a good error message that points to the correct place that it failed to make debugging easier
-        except Exception as exc:
-            print(cls, arguments)
-            raise exc
+        # If a node with this UUID already exists, we don't create a new node.
+        # Instead we use the existing node from the cache and just update it.
+        from cript.nodes.uuid_base import UUIDBaseNode
+
+        if "uuid" in json_dict and json_dict["uuid"] in UUIDBaseNode._uuid_cache:
+            node = UUIDBaseNode._uuid_cache[json_dict["uuid"]]
+        else:  # Create a new node
+            try:
+                node = cls(**arguments)
+            # TODO we should not catch all exceptions if we are handling them, and instead let it fail
+            #  to create a good error message that points to the correct place that it failed to make debugging easier
+            except Exception as exc:
+                print(cls, arguments)
+                raise exc
 
         attrs = cls.JsonAttributes(**arguments)
 

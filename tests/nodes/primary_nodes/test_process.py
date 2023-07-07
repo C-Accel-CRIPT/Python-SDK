@@ -170,7 +170,7 @@ def test_integration_complex_process(cript_api, simple_project_node, simple_proc
 
     1. POST to API
     1. GET from API
-    1. assert JSON sent and JSON recieved are the same
+    1. assert JSON sent and JSON received are the same
     """
     simple_project_node.name = f"test_integration_process_name_{uuid.uuid4().hex}"
 

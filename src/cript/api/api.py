@@ -548,7 +548,7 @@ class API:
         if node_known:
             response: Dict = requests.patch(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()
         else:
-            response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()
+            response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()  # type: ignore
 
         # If we get a Bad UUID we need to handle this extra and save the Bad node first.
         if response["code"] == 400 and response["error"].startswith("Bad uuid:"):
@@ -563,7 +563,7 @@ class API:
 
             # Now we save the bad node extra.
             # So it will be known when we attempt to save the graph again.
-            known_uuid.union(self._internal_save(missing_node, known_uuid))
+            known_uuid.union(self._internal_save(missing_node, known_uuid))  # type: ignore
             # Since we pre-saved this node, we want it to be UUID edge only the next JSON.
             # So we add it to the list of known nodes
             known_uuid.add(missing_uuid)

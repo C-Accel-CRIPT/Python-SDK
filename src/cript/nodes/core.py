@@ -184,7 +184,7 @@ class BaseNode(ABC):
 
         try:
             if not attrs.uid.startswith("_:"):
-                attrs = replace(attrs, uid=get_new_uid())
+                attrs = replace(attrs, uid="_:" + attrs.uid)
         except AttributeError:
             pass
         # But here we force even usually unwritable fields to be set.

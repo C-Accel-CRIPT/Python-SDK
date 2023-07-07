@@ -168,7 +168,7 @@ def simple_property_node() -> cript.Property:
     """
     minimal property sub-object used for tests
     """
-    my_simple_property = cript.Property(key="air_flow", type="min", value=10, unit="CFM")
+    cript.Property(key="air_flow", type="min", value=10, unit="CFM")
 
 
 @pytest.fixture(scope="function")

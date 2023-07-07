@@ -90,6 +90,7 @@
     "Butyric",
     "Methylolpropane",
     "fontawesome",
-    "venv"
+    "venv",
+    "deepdiff"
   ]
 }

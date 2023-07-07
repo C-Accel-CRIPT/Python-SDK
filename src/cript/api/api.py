@@ -5,7 +5,6 @@ import uuid
 import warnings
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Union
-from urllib.parse import quote
 
 import boto3
 import jsonschema
@@ -22,13 +21,8 @@ from cript.api.exceptions import (
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
-from cript.api.utils.save_helper import (
-    brute_force_save,
-    get_bad_uuid_from_error_message,
-)
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import ControlledVocabularyCategories
-from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.project import Project
 
@@ -518,9 +512,9 @@ class API:
             Just sends a `POST` or `Patch` request to the API
         """
         try:
-            prehandled_uuid = self._internal_save(project)
+            self._internal_save(project)
         except Exception as exc:
-            # TODO remove all prehandled nodes.
+            # TODO remove all pre-handled nodes.
             raise exc
 
     def _internal_save(self, node, known_uuid: Optional[Set[str]] = None) -> Optional[Set[str]]:

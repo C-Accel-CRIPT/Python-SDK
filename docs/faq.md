@@ -68,6 +68,12 @@ A GitHub account is required._
 
 ---
 
+**Q:** How can I report security issues?
+
+**A:** _Please visit the [CRIPT Python SDK GitHub repository security tab](https://github.com/C-Accel-CRIPT/Python-SDK/security) for any security issues._
+
+---
+
 **Q:** Besides the user documentation are there any developer documentation that I can read through on how
 the code is written to get a better grasp of it?
 

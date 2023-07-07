@@ -4,8 +4,7 @@ import os
 import uuid
 import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Union
-from urllib.parse import quote
+from typing import Any, Dict, List, Optional, Set, Union
 
 import boto3
 import jsonschema
@@ -22,10 +21,8 @@ from cript.api.exceptions import (
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
-from cript.api.utils.save_helper import brute_force_save, get_bad_uuid_from_error_message
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import ControlledVocabularyCategories
-from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.project import Project
 
@@ -492,7 +489,6 @@ class API:
         # if validation goes through without any problems return True
         return True
 
-    @beartype
     def save(self, project: Project) -> None:
         """
         This method takes a project node, serializes the class into JSON
@@ -512,45 +508,72 @@ class API:
 
         Returns
         -------
-        None
+        A set of extra saved node UUIDs.
             Just sends a `POST` or `Patch` request to the API
         """
+        try:
+            self._internal_save(project)
+        except Exception as exc:
+            # TODO remove all pre-handled nodes.
+            raise exc
 
-        project.validate()
+    def _internal_save(self, node, known_uuid: Optional[Set[str]] = None) -> Optional[Set[str]]:
+        """
+        Internal helper function that handles the saving of different nodes (not just project).
 
+        If a "Bad UUID" error happens, we find that node with the UUID and save it first.
+        Then we recursively call the _internal_save again.
+        Because it is recursive, this repeats until no "Bad UUID" error happen anymore.
+        This works, because we keep track of "Bad UUID" handled nodes, and represent them in the JSON only as the UUID.
+        """
+
+        # known_uuid are node, that we have saved to the back end before.
+        # We keep track of it, so that we can condense them to UUID only in the JSON.
+        if known_uuid is None:
+            known_uuid = set()
+
+        node.validate()
         # saves all the local files to cloud storage right before saving the Project node
         # Ensure that all file nodes have uploaded there payload before actual save.
-        for file_node in project.find_children({"node": ["File"]}):
+        for file_node in node.find_children({"node": ["File"]}):
             file_node.ensure_uploaded(api=self)
 
-        try:
-            self.send_post_request(node=project)
-        except CRIPTAPISaveError as error:
-            error_message = str(error)
+        # We assemble the JSON to be saved to back end.
+        # Note how we exclude pre-saved uuid nodes.
+        json_data = node.get_json(known_uuid=known_uuid).json
 
-            # TODO this is a bit hardcoded and checking it with just `is Bad UUID` in the error might be better
-            if error_message.startswith("API responded with 'http:400 Bad uuid: "):
-                bad_uuid = get_bad_uuid_from_error_message(error_message=error_message)
+        # This checks if the current node exists on the back end.
+        # if it does exist we use `patch` if it doesn't `post`.
+        node_known = len(self.search(type(node), SearchModes.UUID, str(node.uuid)).current_page_results) == 1
+        if node_known:
+            response: Dict = requests.patch(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()
+        else:
+            response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()  # type: ignore
 
-                brute_force_save(project=project, bad_uuid=bad_uuid)
+        # If we get a Bad UUID we need to handle this extra and save the Bad node first.
+        if response["code"] == 400 and response["error"].startswith("Bad uuid:"):
+            # We extract the
+            missing_uuid = response["error"][len("Bad uuid: ") : -len(" provided")]
 
+            # Use the find_children functionality to find that node in our current tree
+            # We can have multiple occurrences of the node,
+            # but it doesn't matter which one we save
+            # TODO some error handling, for the BUG case of not finding the UUID
+            missing_node = node.find_children({"uuid": missing_uuid})[0]
 
-    def send_post_request(self, node):
-        """
-        just sends a POST request to API
-        """
-        # schema check on the node before posting it
-        self._is_node_schema_valid(node_json=node.json)
-
-        response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers,
-                                       data=node.json).json()
-
-        # TODO use `response.raise_for_status()`
-        # if http response is not 200 then show the API error to the user
+            # Now we save the bad node extra.
+            # So it will be known when we attempt to save the graph again.
+            known_uuid.union(self._internal_save(missing_node, known_uuid))  # type: ignore
+            # Since we pre-saved this node, we want it to be UUID edge only the next JSON.
+            # So we add it to the list of known nodes
+            known_uuid.add(missing_uuid)
+            # Recursive call.
+            # Since we should have fixed the "Bad UUID" now, we can try to save the node again
+            return self._internal_save(node, known_uuid)
         if response["code"] != 200:
-            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"],
-                                    api_response=response["error"])
+            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
 
+        return known_uuid
 
     def upload_file(self, file_path: Union[Path, str]) -> str:
         # trunk-ignore-begin(cspell)

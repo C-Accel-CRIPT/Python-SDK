@@ -42,6 +42,8 @@ def test_inventory_serialization(simple_inventory_node, simple_material_dict) ->
     # force not condensing to edge uuid during json serialization
     deserialized_inventory: dict = json.loads(simple_inventory_node.get_json(condense_to_uuid={}).json)
     deserialized_inventory = strip_uid_from_dict(deserialized_inventory)
+    deserialized_inventory["material"][0]["name"] = "my material"
+    deserialized_inventory["material"][1]["name"] = "material 2"
 
     assert expected_dict == deserialized_inventory
 

@@ -23,6 +23,7 @@ from cript.nodes.primary_nodes.project import Project
 
 class NodeEncoder(json.JSONEncoder):
     handled_ids: Set[str] = set()
+    known_uuid: Set[str] = set()
     condense_to_uuid: Set[str] = set()
 
     def default(self, obj):
@@ -36,6 +37,16 @@ class NodeEncoder(json.JSONEncoder):
             else:
                 if uid in NodeEncoder.handled_ids:
                     return {"node": obj._json_attrs.node, "uid": uid}
+
+            # When saving graphs, some nodes can be pre-saved.
+            # If that happens, we want to represent them as a UUID edge only
+            try:
+                uuid_str = str(obj.uuid)
+            except AttributeError:
+                pass
+            else:
+                if uuid_str in NodeEncoder.known_uuid:
+                    return {"uuid": uuid_str}
 
             default_values = asdict(obj.JsonAttributes())
             serialize_dict = {}

@@ -42,10 +42,10 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     """
 
     print("\n\n----------------- Project Node ----------------------------")
-    print(project_node.json)
+    print(project_node.get_json(indent=2, sort_keys=True, condense_to_uuid={}).json)
     print("--------------------------------------------------------------")
 
-    cript_api.save(project=project_node)
+    cript_api.save(project_node)
 
     # get the project that was just saved
     my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=project_node.name)
@@ -54,14 +54,14 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     my_project_from_api_dict = my_paginator.current_page_results[0]
 
     print("\n\n----------------- API Response Node ----------------------------")
-    print(json.dumps(my_project_from_api_dict))
+    print(json.dumps(my_project_from_api_dict, indent=2, sort_keys=True))
     print("--------------------------------------------------------------")
 
     # try to convert api JSON project to node
     my_project_from_api = cript.load_nodes_from_json(json.dumps(my_project_from_api_dict))
 
     print("\n\n------------------- Project Node Deserialized -------------------------")
-    print(my_project_from_api.json)
+    print(my_project_from_api.get_json(indent=2, sort_keys=True, condense_to_uuid={}).json)
     print("--------------------------------------------------------------")
 
     # Configure keys and blocks to be ignored by deepdiff using exclude_regex_path

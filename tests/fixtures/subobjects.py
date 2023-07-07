@@ -165,14 +165,6 @@ def complex_property_dict(complex_material_node, complex_condition_dict, complex
 
 @pytest.fixture(scope="function")
 def simple_property_node() -> cript.Property:
-    """
-    minimal property sub-object used for tests
-    """
-    my_simple_property = cript.Property(key="air_flow", type="min", value=10, unit="CFM")
-
-
-@pytest.fixture(scope="function")
-def simple_property_node():
     p = cript.Property(
         "modulus_shear",
         "value",
@@ -227,15 +219,6 @@ def complex_condition_dict(complex_data_node) -> dict:
         "data": [json.loads(complex_data_node.get_json(condense_to_uuid={}).json)],
     }
     return ret_dict
-
-
-@pytest.fixture(scope="function")
-def simple_condition_node():
-    """
-    minimal condition sub-object that can be used for tests
-    """
-    my_simple_condition = cript.Condition(key="temperature", type="value", value=10)
-    return my_simple_condition
 
 
 @pytest.fixture(scope="function")

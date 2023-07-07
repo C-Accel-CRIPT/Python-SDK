@@ -40,7 +40,7 @@ class UUIDBaseNode(BaseNode, ABC):
         # replace name and notes within PrimaryBase
         self._json_attrs = replace(self._json_attrs, uuid=uuid)
 
-        # Place sucessfully created node in the UUID cache
+        # Place successfully created node in the UUID cache
         self._uuid_cache[uuid] = self
 
     @property

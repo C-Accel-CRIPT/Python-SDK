@@ -15,7 +15,7 @@ jupyter:
 ---
 
 !!! abstract
-    This tutorial guides you through an example material synthesis workflow using the 
+    This tutorial guides you through an example material synthesis workflow using the
     [CRIPT Python SDK](https://pypi.org/project/cript/).
 
 
@@ -37,23 +37,25 @@ To connect to CRIPT, you must enter a `host` and an `API Token`. For most users,
     Instead, use environment variables.
     Storing tokens in code shared on platforms like GitHub can lead to security incidents.
     Anyone that possesses your token can impersonate you on the [CRIPT](https://criptapp.org/) platform.
-    Consider [alternative methods for loading tokens with the CRIPT API Client]().
+    Consider [alternative methods for loading tokens with the CRIPT API Client](https://c-accel-cript.github.io/Python-SDK/api/api/#cript.api.api.API.__init__).
     In case your token is exposed be sure to immediately generate a new token to revoke the access of the old one
     and keep the new token safe.
 
 ```python
 import cript
 
-with cript.API(host="http://development.api.mycriptapp.org/", token="123456"):
+with cript.API(host="http://development.api.mycriptapp.org/", token="123456") as api:
     pass
 ```
 
-You may notice, that we are not executing any code inside the context manager block.
-If you were to write a python script, compared to a jupyter notebook, you would add all the following code inside that block.
-Here in a jupyter notebook, we need to connect manually. We just have to remember to disconnect at the end.
+!!! note
+
+    You may notice, that we are not executing any code inside the context manager block.
+    If you were to write a python script, compared to a jupyter notebook, you would add all the following code inside that block.
+    Here in a jupyter notebook, we need to connect manually. We just have to remember to disconnect at the end.
 
 ```python
-api = cript.API("http://development.api.mycriptapp.org/", None)
+api = cript.API(host="http://development.api.mycriptapp.org/", token=None)
 api = api.connect()
 ```
 
@@ -107,7 +109,7 @@ collection.experiment += [experiment]
 
 # Create relevant Software nodes
 
-<a href="../../nodes/software" target="_blank">`Software`</a> nodes refer to software that you use during your simulation experiment. 
+[Software](../../nodes/subobjects/software) nodes refer to software that you use during your simulation experiment.
 In general `Software` nodes can be shared between project, and it is encouraged to do so if the software you are using is already present in the CRIPT project use it.
 
 If They are not, you can create them as follows:
@@ -129,7 +131,7 @@ If a version is not available, consider using git-hashes.
 # Create Software Configurations
 
 Now that we have our <a href="../../nodes/software" target="_blank">`Software`</a> nodes, we can create <a href="../../subobjects/software_configuration" target="_blank">`SoftwareConfiguration`</a> nodes.
-`SoftwareConfiguration` nodes are designed to let you specify details, about which algorithms from the software package you are using and log parameters for these algorithms. 
+`SoftwareConfiguration` nodes are designed to let you specify details, about which algorithms from the software package you are using and log parameters for these algorithms.
 
 The `SoftwareConfigurations` are then used for constructing our <a href="../../nodes/computation" target="_blank">`Computation`</a> node, which describe the actual computation you are performing.
 
@@ -165,12 +167,14 @@ packmol_config = cript.SoftwareConfiguration(software=packmol)
 
 # Create Computations
 
-Now that we've created some <a href="../../subobjects/software_configuration" target="_blank">`SoftwareConfiguration`</a> nodes, we can used them to build full <a href="../../nodes/computation" target="_blank">`Computation`</a> nodes. 
+Now that we've created some <a href="../../subobjects/software_configuration" target="_blank">`SoftwareConfiguration`</a> nodes, we can used them to build full <a href="../../nodes/computation" target="_blank">`Computation`</a> nodes.
 In some cases, we may also want to add <a href="../../subobjects/condition" target="_blank">`Condition`</a> nodes to our computation, to specify the conditions at which the computation was carried out. An example of this is shown below.
 
 
 ```python
-# create a Computation node
+# Create a ComputationNode
+# This block of code represents the computation involved in generating forces.
+# It also details the initial placement of molecules within a simulation box.
 init = cript.Computation(
     name="Initial snapshot and force-field generation",
     type="initialization",
@@ -183,8 +187,10 @@ init = cript.Computation(
     ],
 )
 
-# create a computation node with Condition nodes
-equi = cript.Computation(
+# Initiate the simulation equilibration using a separate node.
+# The equilibration process is governed by specific conditions and a set equilibration time.
+# Given this is an NPT (Number of particles, Pressure, Temperature) simulation, conditions such as the number of chains, temperature, and pressure are specified.
+equilibration = cript.Computation(
     name="Equilibrate data prior to measurement",
     type="MD",
     software_configuration=[python_config, openmm_config],
@@ -197,6 +203,8 @@ equi = cript.Computation(
     prerequisite_computation=init,
 )
 
+# This section involves the actual data measurement.
+# Note that we use the previously computed data as a prerequisite. Additionally, we incorporate the input data at a later stage.
 bulk = cript.Computation(
     name="Bulk simulation for measurement",
     type="MD",
@@ -207,9 +215,10 @@ bulk = cript.Computation(
         cript.Condition(key="pressure", type="value", value=1.0, unit="bar"),
         cript.Condition(key="number", type="value", value=31),
     ],
-    prerequisite_computation=equi,
+    prerequisite_computation=equilibration,
 )
 
+# The following step involves analyzing the data from the measurement run to ascertain a specific property.
 ana = cript.Computation(
     name="Density analysis",
     type="analysis",
@@ -218,7 +227,7 @@ ana = cript.Computation(
 )
 
 # Add all these computations to the experiment.
-experiment.computation += [init, equi, bulk, ana]
+experiment.computation += [init, equilibration, bulk, ana]
 ```
 
 
@@ -270,11 +279,11 @@ forcefield_data = cript.Data(
     notes="Full forcefield definition and topology.",
 )
 
-equi_snap = cript.Data(
+equilibration_snap = cript.Data(
     name="Equilibrated simulation snapshot",
     type="computation_config",
     file=[snap_file],
-    computation=[equi],
+    computation=[equilibration],
 )
 
 final_data = cript.Data(
@@ -287,13 +296,16 @@ final_data = cript.Data(
 
 !!! note "Data types"
     The allowed `Data` types are listed under the <a href="https://criptapp.org/keys/data-type/" target="_blank">data types</a> in the CRIPT controlled vocabulary.
-    
+
 Next, we'll link these <a href="../../nodes/data" target="_blank">`Data`</a> nodes to the appropriate <a href="../../nodes/computation" target="_blank">`Computation`</a> nodes.
 
 ```python
+
+# Observe how this step also forms a continuous graph, enabling data to flow from one computation to the next.
+# The sequence initiates with the computation process and culminates with the determination of the material property.
 init.output_data = [packing_data, forcefield_data]
-equi.input_data = [packing_data, forcefield_data]
-equi.output_data = [equi_snap]
+equilibration.input_data = [packing_data, forcefield_data]
+equilibration.output_data = [equilibration_snap]
 ana.input_data = [final_data]
 bulk.output_data = [final_data]
 ```
@@ -369,7 +381,7 @@ polystyrene.computational_forcefield = forcefield
 
 !!! note "Computational forcefield keys"
     The allowed `ComputationalForcefield` keys are listed under the <a href="https://criptapp.org/keys/computational-forcefield-key/" target="_blank">computational forcefield keys</a> in the CRIPT controlled vocabulary.
-    
+
 Now we can save the project to CRIPT (and upload the files) or inspect the JSON output
 
 ```python
@@ -390,3 +402,5 @@ api.disconnect()
 You made it! We hope this tutorial has been helpful.
 
 Please let us know how you think it could be improved.
+Feel free to reach out to us on our [CRIPT Python SDK GitHub](https://github.com/C-Accel-CRIPT/Python-SDK).
+We'd love your inputs and contributions!

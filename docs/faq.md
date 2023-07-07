@@ -83,3 +83,5 @@ There you will find documentation on everything from how our code is structure,
 how we aim to write our documentation, CI/CD, and more._
 
 _We try to also have type hinting, comments, and docstrings for all the code that we work on so it is clear and easy for anyone reading it to easily understand._
+
+_if all else fails, contact us on our [GitHub Repository](https://github.com/C-Accel-CRIPT/Python-SDK)._

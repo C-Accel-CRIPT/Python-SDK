@@ -22,7 +22,10 @@ from cript.api.exceptions import (
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
-from cript.api.utils.save_helper import brute_force_save, get_bad_uuid_from_error_message
+from cript.api.utils.save_helper import (
+    brute_force_save,
+    get_bad_uuid_from_error_message,
+)
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import ControlledVocabularyCategories
 from cript.nodes.core import BaseNode
@@ -556,7 +559,7 @@ class API:
         # If we get a Bad UUID we need to handle this extra and save the Bad node first.
         if response["code"] == 400 and response["error"].startswith("Bad uuid:"):
             # We extract the
-            missing_uuid = response["error"].lstrip("Bad uuid: ").rstrip(" provided")
+            missing_uuid = response["error"][len("Bad uuid: ") : -len(" provided")]
 
             # Use the find_children functionality to find that node in our current tree
             # We can have multiple occurrences of the node,
@@ -566,29 +569,16 @@ class API:
 
             # Now we save the bad node extra.
             # So it will be known when we attempt to save the graph again.
-            known_uuid = self._internal_save(missing_node, known_uuid)
+            known_uuid.union(self._internal_save(missing_node, known_uuid))
             # Since we pre-saved this node, we want it to be UUID edge only the next JSON.
             # So we add it to the list of known nodes
             known_uuid.add(missing_uuid)
             # Recursive call.
             # Since we should have fixed the "Bad UUID" now, we can try to save the node again
             return self._internal_save(node, known_uuid)
-
-
-    def send_post_request(self, node):
-        """
-        just sends a POST request to API
-        """
-        # schema check on the node before posting it
-        self._is_node_schema_valid(node_json=node.json)
-
-        response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers,
-                                       data=node.json).json()
-
-        # TODO use `response.raise_for_status()`
-        # if http response is not 200 then show the API error to the user
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
+
         return known_uuid
 
     def upload_file(self, file_path: Union[Path, str]) -> str:

@@ -1,4 +1,3 @@
-from cript.api.api import _get_global_cached_api
 from cript.api.exceptions import CRIPTAPISaveError
 
 
@@ -13,6 +12,8 @@ def brute_force_save(project, bad_uuid: str) -> None:
                 save that material
                 strip that node and replace them with the saved UUID only throughout the whole JSON
     """
+    from cript.api.api import _get_global_cached_api
+
     while True:
         try:
             # find the node that has bad UUID error

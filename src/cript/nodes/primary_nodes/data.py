@@ -48,15 +48,27 @@ class Data(PrimaryBaseNode):
     my_data = cript.Data(name="my data name", type="afm_amp", file=[simple_file_node])
     ```
 
-    ## JSON
+    ## JSON Representation
     ```json
-    "data": [
-        {
-        "node": "Data",
-        "name": "WPI unheated film FTIR",
-        "type": "null"
-        }
-    ]
+    {
+       "name":"my data name",
+       "node":["Data"],
+       "type":"afm_amp",
+       "uid":"_:80b02470-73d0-416e-8d93-12fdf69e481a",
+       "uuid":"80b02470-73d0-416e-8d93-12fdf69e481a"
+       "file":[
+          {
+            "node":["File"],
+            "name":"my big complex file",
+             "uid":"_:535779ea-0d1f-4b23-b3e8-60052f717307",
+             "uuid":"535779ea-0d1f-4b23-b3e8-60052f717307"
+             "type":"calibration",
+             "source":"https://criptapp.org",
+             "extension":".csv",
+             "data_dictionary":"my file's data dictionary",
+          }
+       ]
+    }
     ```
     """
 

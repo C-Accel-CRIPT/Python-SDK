@@ -38,6 +38,16 @@ class Quantity(UUIDBaseNode):
 
     ## JSON Representation
     ```json
+    {
+     "node":["Quantity"],
+     "key":"mass",
+     "value":11.2
+     "uncertainty":0.2,
+     "uncertainty_type":"stdev",
+     "unit":"kg",
+     "uid":"_:c95ee781-923b-4699-ba3b-923ce186ac5d",
+     "uuid":"c95ee781-923b-4699-ba3b-923ce186ac5d",
+    }
     ```
     """
 

@@ -46,7 +46,16 @@ class Experiment(PrimaryBaseNode):
 
     ---
 
-    <!-- TODO consider adding a JSON of an experiment node -->
+    ## JSON Representation
+    ```json
+    {
+       "name":"my experiment name",
+       "node":["Experiment"],
+       "uid":"_:886c4deb-2186-4f11-8134-a37111200b83",
+       "uuid":"886c4deb-2186-4f11-8134-a37111200b83"
+    }
+    ```
+
     """
 
     @dataclass(frozen=True)

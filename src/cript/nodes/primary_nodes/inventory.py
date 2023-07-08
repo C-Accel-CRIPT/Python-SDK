@@ -24,6 +24,32 @@ class Inventory(PrimaryBaseNode):
     | material  | list[[Material](./material.md)] |                     | material that you like to group together |
 
 
+    ## JSON Representation
+    ```json
+    {
+       "name":"my inventory name",
+       "node":["Inventory"],
+       "uid":"_:90f45778-b7c9-4b77-8b83-a6ea9671a937",
+       "uuid":"90f45778-b7c9-4b77-8b83-a6ea9671a937",
+       "material":[
+          {
+             "node":["Material"],
+             "name":"my material 1",
+             "uid":"_:9679ff12-f9b4-41f4-be95-080b78fa71fd",
+             "uuid":"9679ff12-f9b4-41f4-be95-080b78fa71fd"
+             "bigsmiles":"123456",
+          },
+          {
+             "node":["Material"],
+             "name":"my material 2",
+             "uid":"_:1ee41708-3531-43eb-8049-4bb91ad73df6",
+             "uuid":"1ee41708-3531-43eb-8049-4bb91ad73df6"
+             "bigsmiles":"654321",
+          }
+       ]
+    }
+    ```
+
 
     """
 

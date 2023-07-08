@@ -43,6 +43,7 @@ class ComputationProcess(PrimaryBaseNode):
     * [condition](../../subobjects/condition)
     * [citation](../../subobjects/citation)
 
+    ## JSON Representation
     ```json
     {
        "name":"my computational process node name",

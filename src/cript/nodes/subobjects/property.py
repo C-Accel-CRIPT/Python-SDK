@@ -55,7 +55,15 @@ class Property(UUIDBaseNode):
 
     ## JSON Representation
     ```json
-
+    {
+       "key":"modulus_shear",
+       "node":["Property"],
+       "type":"value",
+       "unit":"GPa",
+       "value":5.0
+       "uid":"_:bc3abb68-25b5-4144-aa1b-85d82b7c77e1",
+       "uuid":"bc3abb68-25b5-4144-aa1b-85d82b7c77e1",
+    }
     ```
     """
 

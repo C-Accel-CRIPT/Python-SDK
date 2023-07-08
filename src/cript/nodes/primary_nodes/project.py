@@ -23,7 +23,33 @@ class Project(PrimaryBaseNode):
     | collection | List[Collection] | collections that relate to the project |
     | materials   | List[Materials]  | materials owned by the project         |
 
-    <!-- TODO consider adding JSON section -->
+    ## JSON Representation
+    ```json
+    {
+       "name":"test_integration_project_name_6b487512f52b47d59987d4e0980463aa",
+       "node":["Project"],
+       "uid":"_:270168b7-fc29-4c37-aa93-334212e1d962",
+       "uuid":"270168b7-fc29-4c37-aa93-334212e1d962",
+       "collection":[
+          {
+            "name":"my collection name",
+             "node":["Collection"],
+             "uid":"_:c60955a5-4de0-4da5-b2c8-77952b1d9bfa",
+             "uuid":"c60955a5-4de0-4da5-b2c8-77952b1d9bfa",
+             "experiment":[
+                {
+                   "name":"my experiment name",
+                   "node":["Experiment"],
+                   "uid":"_:a8cbc083-506e-45ce-bb8f-5e50917ab361",
+                   "uuid":"a8cbc083-506e-45ce-bb8f-5e50917ab361"
+                }
+             ],
+             "inventory":[],
+             "citation":[]
+          }
+       ]
+    }
+    ```
     """
 
     @dataclass(frozen=True)

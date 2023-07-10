@@ -15,7 +15,7 @@ jupyter:
 ---
 
 !!! abstract
-    This tutorial guides you through an example material synthesis workflow using the 
+    This tutorial guides you through an example material synthesis workflow using the
     [CRIPT Python SDK](https://pypi.org/project/cript/).
 
 
@@ -44,13 +44,15 @@ To connect to CRIPT, you must enter a `host` and an `API Token`. For most users,
 ```python
 import cript
 
-with cript.API(host="http://development.api.mycriptapp.org/", token="123456"):
+with cript.API(host="http://development.api.mycriptapp.org/", token="123456") as api:
     pass
 ```
 
-You may notice, that we are not executing any code inside the context manager block.
-If you were to write a python script, compared to a jupyter notebook, you would add all the following code inside that block.
-Here in a jupyter notebook, we need to connect manually. We just have to remember to disconnect at the end.
+!!! note
+
+    You may notice, that we are not executing any code inside the context manager block.
+    If you were to write a python script, compared to a jupyter notebook, you would add all the following code inside that block.
+    Here in a jupyter notebook, we need to connect manually. We just have to remember to disconnect at the end.
 
 ```python
 api = cript.API("http://development.api.mycriptapp.org/", None)

@@ -92,5 +92,12 @@
     "fontawesome",
     "venv",
     "deepdiff"
+    "rdkit",
+    "packmol",
+    "Packmol",
+    "openmm",
+    "equi",
+    "Navid",
+    "ipykernel"
   ]
 }

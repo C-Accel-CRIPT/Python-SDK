@@ -26,7 +26,7 @@ class Project(PrimaryBaseNode):
     ## JSON Representation
     ```json
     {
-       "name":"test_integration_project_name_6b487512f52b47d59987d4e0980463aa",
+       "name":"my project name",
        "node":["Project"],
        "uid":"_:270168b7-fc29-4c37-aa93-334212e1d962",
        "uuid":"270168b7-fc29-4c37-aa93-334212e1d962",

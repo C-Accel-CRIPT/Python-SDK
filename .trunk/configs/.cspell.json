@@ -91,6 +91,13 @@
     "Methylolpropane",
     "fontawesome",
     "venv",
-    "deepdiff"
+    "deepdiff",
+    "rdkit",
+    "packmol",
+    "Packmol",
+    "openmm",
+    "equi",
+    "Navid",
+    "ipykernel"
   ]
 }

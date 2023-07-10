@@ -30,6 +30,10 @@ jobs:
       - name: install module
         run: python3 -m pip install .
       - name: prepare notebook
-        run: jupytext --to py docs/examples/synthesis.md
+        run: |
+          jupytext --to py docs/examples/synthesis.md
+          jupytext --to py docs/examples/simulation.md
       - name: Run script
-        run: python3 docs/examples/synthesis.py
+        run: |
+          python3 docs/examples/synthesis.py
+          python3 docs/examples/simulation.py

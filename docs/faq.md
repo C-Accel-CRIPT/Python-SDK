@@ -60,6 +60,20 @@ and ask your question within the
 
 ---
 
+**Q:** Where is the best place where I can contact the CRIPT Python SDK team for questions or support?
+
+**A:** _We would love to hear from you! Please visit our [CRIPT Python SDK Repository GitHub Discussions](https://github.com/C-Accel-CRIPT/cript-excel-uploader/discussions) to easily send us questions.
+Our [repository's issue page](https://github.com/C-Accel-CRIPT/Python-SDK/issues) is also another good way to let us know about any issues or suggestions you might have.
+A GitHub account is required._
+
+---
+
+**Q:** How can I report security issues?
+
+**A:** _Please visit the [CRIPT Python SDK GitHub repository security tab](https://github.com/C-Accel-CRIPT/Python-SDK/security) for any security issues._
+
+---
+
 **Q:** Besides the user documentation are there any developer documentation that I can read through on how
 the code is written to get a better grasp of it?
 
@@ -69,3 +83,5 @@ There you will find documentation on everything from how our code is structure,
 how we aim to write our documentation, CI/CD, and more._
 
 _We try to also have type hinting, comments, and docstrings for all the code that we work on so it is clear and easy for anyone reading it to easily understand._
+
+_if all else fails, contact us on our [GitHub Repository](https://github.com/C-Accel-CRIPT/Python-SDK)._

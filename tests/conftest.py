@@ -86,7 +86,6 @@ def cript_api():
     API: cript.API
         The created CRIPT API instance.
     """
-
     assert cript.api.api._global_cached_api is None
     with cript.API(host=None, token=None) as api:
         # using the tests folder name within our cloud storage

@@ -62,7 +62,7 @@ class ComputationProcess(PrimaryBaseNode):
                 "node":["Material"],
                 "uid":"_:3b12f92c-2121-4520-920e-b4c5622de34a",
                 "uuid":"3b12f92c-2121-4520-920e-b4c5622de34a",
-                "bigsmiles":"CC(C)C1=CC=CC=C1",
+                "bigsmiles":"[H]{[>][<]C(C[>])c1ccccc1[]}",
              },
 
              "quantity":[

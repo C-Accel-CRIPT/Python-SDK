@@ -37,7 +37,7 @@ class Inventory(PrimaryBaseNode):
              "name":"my material 1",
              "uid":"_:9679ff12-f9b4-41f4-be95-080b78fa71fd",
              "uuid":"9679ff12-f9b4-41f4-be95-080b78fa71fd"
-             "bigsmiles":"CC(C)C1=CC=CC=C1",
+             "bigsmiles":"[H]{[>][<]C(C[>])c1ccccc1[]}",
           },
           {
              "node":["Material"],

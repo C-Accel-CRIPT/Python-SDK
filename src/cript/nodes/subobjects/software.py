@@ -35,7 +35,14 @@ class Software(UUIDBaseNode):
 
     ## JSON Representation
     ```json
-
+    {
+       "name":"SOMA",
+       "node":["Software"],
+       "version":"0.7.0"
+       "source":"https://gitlab.com/InnocentBug/SOMA",
+       "uid":"_:f2ec4bf2-96aa-48a3-bfbc-d1d3f090583b",
+       "uuid":"f2ec4bf2-96aa-48a3-bfbc-d1d3f090583b",
+    }
     ```
     """
 

@@ -1,9 +1,11 @@
 import copy
 import json
+import uuid
 
 from util import strip_uid_from_dict
 
 import cript
+from tests.test_integration import integrate_nodes_helper
 
 
 def test_json(complex_software_node, complex_software_dict):
@@ -37,3 +39,26 @@ def test_uuid(complex_software_node):
     s3 = cript.load_nodes_from_json(s.json)
     assert s3.uuid == s.uuid
     assert s3.url == s.url
+
+
+def test_integration_software(cript_api, simple_project_node, simple_computation_node, simple_software_configuration, complex_software_node):
+    """
+    integration test between Python SDK and API Client
+
+    1. POST to API
+    1. GET from API
+    1. assert they're both equal
+
+    Notes
+    -----
+    indirectly tests citation node along with reference node
+    """
+    simple_project_node.name = f"test_integration_software_name_{uuid.uuid4().hex}"
+
+    simple_project_node.collection[0].experiment[0].computation = [simple_computation_node]
+
+    simple_project_node.collection[0].experiment[0].computation[0].software_configuration = [simple_software_configuration]
+
+    simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].software = complex_software_node
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

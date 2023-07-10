@@ -40,7 +40,7 @@ class Equipment(UUIDBaseNode):
     ```json
     {
        "node":["Equipment"],
-       "description": "my simple equipment fixture description",
+       "description": "my equipment description",
        "key":"burner",
        "uid":"_:19708284-1bd7-42e4-b8b2-da7ea0bc2ac9",
        "uuid":"19708284-1bd7-42e4-b8b2-da7ea0bc2ac9"

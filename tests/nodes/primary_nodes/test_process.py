@@ -164,7 +164,7 @@ def test_integration_simple_process(cript_api, simple_project_node, simple_proce
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 
 
-def test_integration_complex_process(cript_api, simple_project_node, simple_process_node, simple_material_node):
+def test_integration_process(cript_api, simple_project_node, simple_process_node, simple_material_node):
     """
     integration test between Python SDK and API Client
 

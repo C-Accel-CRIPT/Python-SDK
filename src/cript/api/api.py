@@ -21,7 +21,7 @@ from cript.api.exceptions import (
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
-from cript.api.utils.save_helper import fix_node_save
+from cript.api.utils.save_helper import _fix_node_save
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import ControlledVocabularyCategories
 from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTNodeSchemaError
@@ -514,8 +514,11 @@ class API:
         """
         try:
             self._internal_save(project)
-        except Exception as exc:
-            # TODO remove all pre-handled nodes.
+        except CRIPTAPISaveError as exc:
+            if exc.pre_saved_nodes:
+                for node_uuid in exc.pre_saved_nodes:
+                    # TODO remove all pre-saved nodes by their uuid.
+                    pass
             raise exc from exc
 
     def _internal_save(self, node, known_uuid: Optional[Set[str]] = None) -> Optional[Set[str]]:
@@ -554,14 +557,14 @@ class API:
         # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
         # Errors with this code, may be fixable
         if response["code"] in (400, 409):
-            nodes_fixed = fix_node_save(self, node, response, known_uuid)
+            nodes_fixed = _fix_node_save(self, node, response, known_uuid)
             # In case of a success, we return the know uuid
             if nodes_fixed is not False:
                 return nodes_fixed
             # if not successful, we escalate the problem further
 
         if response["code"] != 200:
-            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
+            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], pre_saved_nodes=known_uuid)
 
         return known_uuid
 

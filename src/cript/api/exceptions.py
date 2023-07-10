@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional, Set
 
 from cript.exceptions import CRIPTException
 
@@ -110,10 +110,11 @@ class CRIPTAPISaveError(CRIPTException):
     http_code: str
     api_response: str
 
-    def __init__(self, api_host_domain: str, http_code: str, api_response: str):
+    def __init__(self, api_host_domain: str, http_code: str, api_response: str, pre_saved_nodes: Optional[Set[str]] = None):
         self.api_host_domain = api_host_domain
         self.http_code = http_code
         self.api_response = api_response
+        self.pre_saved_nodes = pre_saved_nodes
 
     def __str__(self) -> str:
         error_message = f"API responded with 'http:{self.http_code} {self.api_response}'"

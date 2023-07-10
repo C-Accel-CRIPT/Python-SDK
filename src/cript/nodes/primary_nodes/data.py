@@ -59,7 +59,7 @@ class Data(PrimaryBaseNode):
        "file":[
           {
             "node":["File"],
-            "name":"my big complex file",
+            "name":"my file node name",
              "uid":"_:535779ea-0d1f-4b23-b3e8-60052f717307",
              "uuid":"535779ea-0d1f-4b23-b3e8-60052f717307"
              "type":"calibration",

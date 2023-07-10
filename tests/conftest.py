@@ -86,6 +86,8 @@ def cript_api():
     API: cript.API
         The created CRIPT API instance.
     """
+    host: str = "http://development.api.mycriptapp.org/"
+    token = "MY TOKEN"
 
     assert cript.api.api._global_cached_api is None
     with cript.API(host=None, token=None) as api:

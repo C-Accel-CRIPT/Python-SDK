@@ -58,7 +58,7 @@ class ComputationProcess(PrimaryBaseNode):
              "uuid":"f68d6fff-9327-48b1-9249-33ce498005e8"
              "keyword":["catalyst"],
              "material":{
-                "name":"my test material a4f73479-7fc5-40ec-85c2-7764c067acca_cdf5c86745ea4537860e92356368b83b_5c11dc85a3c744e0980caec002021b4d",
+                "name":"my material name",
                 "node":["Material"],
                 "uid":"_:3b12f92c-2121-4520-920e-b4c5622de34a",
                 "uuid":"3b12f92c-2121-4520-920e-b4c5622de34a",
@@ -88,7 +88,7 @@ class ComputationProcess(PrimaryBaseNode):
              "uuid":"3c16bb05-ded1-4f52-9d02-c88c1a1de915"
              "file":[
                 {
-                   "name":"my complex file node fixture",
+                   "name":"my file node name",
                    "node":["File"],
                    "source":"https://criptapp.org",
                    "type":"calibration",

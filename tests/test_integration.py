@@ -1,6 +1,7 @@
 # import json
 
 # from deepdiff import DeepDiff
+import warnings
 
 import cript
 
@@ -71,4 +72,6 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     # diff = DeepDiff(json.loads(project_node.json), json.loads(my_project_from_api.json), exclude_regex_paths=exclude_regex_paths)
     #
     # assert len(diff.get("values_changed", {})) == 0
+
+    warnings.warn("Please uncomment the integration tests to test with the API")
     pass

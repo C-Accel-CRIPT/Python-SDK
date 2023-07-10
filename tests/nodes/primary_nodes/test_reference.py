@@ -1,5 +1,6 @@
 import json
 import uuid
+import warnings
 
 from test_integration import integrate_nodes_helper
 from util import strip_uid_from_dict
@@ -183,3 +184,4 @@ def test_integration_reference(cript_api, simple_project_node, complex_citation_
 
     # TODO deserialization with citation in collection is wrong
     # raise Exception("Citation is missing from collection node from API")
+    warnings.warn("Please uncomment the integration test Exception and check the API response has citation on collection")

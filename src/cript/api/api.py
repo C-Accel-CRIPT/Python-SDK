@@ -21,7 +21,7 @@ from cript.api.exceptions import (
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
-from cript.api.utils.save_helper import _fix_node_save
+from cript.api.utils.save_helper import _fix_node_save, _identify_suppress_attributes
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import ControlledVocabularyCategories
 from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTNodeSchemaError
@@ -521,7 +521,7 @@ class API:
                     pass
             raise exc from exc
 
-    def _internal_save(self, node, known_uuid: Optional[Set[str]] = None) -> Optional[Set[str]]:
+    def _internal_save(self, node, known_uuid: Optional[Set[str]] = None, suppress_attributes: Optional[Dict[str, Set[str]]] = None) -> Optional[Set[str]]:
         """
         Internal helper function that handles the saving of different nodes (not just project).
 
@@ -544,7 +544,7 @@ class API:
 
         # We assemble the JSON to be saved to back end.
         # Note how we exclude pre-saved uuid nodes.
-        json_data = node.get_json(known_uuid=known_uuid).json
+        json_data = node.get_json(known_uuid=known_uuid, suppress_attributes=suppress_attributes).json
 
         # This checks if the current node exists on the back end.
         # if it does exist we use `patch` if it doesn't `post`.
@@ -562,6 +562,11 @@ class API:
             if nodes_fixed is not False:
                 return nodes_fixed
             # if not successful, we escalate the problem further
+
+        # Handle errors from patching with too many attributes
+        if node_known and suppress_attributes is None and response["code"] in (400,):
+            suppress_attributes = _identify_suppress_attributes(node, response)
+            return self._internal_save(node, known_uuid, suppress_attributes)
 
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], pre_saved_nodes=known_uuid)

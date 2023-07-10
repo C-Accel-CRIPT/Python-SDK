@@ -1,3 +1,7 @@
+import re
+from typing import Dict, Optional, Set
+
+
 def _fix_node_save(api, node, response, known_uuid):
     """
     Helper function, that attempts to fix a bad node.
@@ -58,3 +62,18 @@ def find_node_by_uuid(node, uuid: str):
     missing_node = node.find_children({"uuid": uuid})[0]
 
     return missing_node
+
+
+def _identify_suppress_attributes(node, response: Dict) -> Optional[Dict[str, Set[str]]]:
+    suppress_attributes = {}
+    if response["error"].startswith("Additional properties are not allowed"):
+        # Find all the attributes, that are listed in the error message with regex
+        attributes = set(re.findall(r"'(.*?)'", response["error"]))
+        path = response["error"][response["error"].rfind("path:") + len("path:") :].strip()
+
+        if path != "/":
+            # TODO find the UUID this belongs to
+            raise NotImplementedError("Fixing non-root objects for patch, not implemented yet")
+
+        suppress_attributes[str(node.uuid)] = attributes
+    return suppress_attributes

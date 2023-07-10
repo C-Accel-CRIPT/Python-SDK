@@ -184,4 +184,4 @@ def test_integration_reference(cript_api, simple_project_node, complex_citation_
 
     # TODO deserialization with citation in collection is wrong
     # raise Exception("Citation is missing from collection node from API")
-    warnings.warn("Please uncomment the integration test Exception and check the API response has citation on collection")
+    warnings.warn("Uncomment the Reference integration test Exception and check the API response has citation on collection")

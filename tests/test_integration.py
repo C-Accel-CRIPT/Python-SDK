@@ -73,5 +73,5 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     #
     # assert len(diff.get("values_changed", {})) == 0
 
-    warnings.warn("Please uncomment the integration tests to test with the API")
+    warnings.warn("Please uncomment `integrate_nodes_helper` to test with the API")
     pass

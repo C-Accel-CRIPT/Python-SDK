@@ -21,6 +21,7 @@ from cript.api.exceptions import (
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
+from cript.api.utils.save_helper import fix_node_save
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import ControlledVocabularyCategories
 from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTNodeSchemaError
@@ -515,7 +516,7 @@ class API:
             self._internal_save(project)
         except Exception as exc:
             # TODO remove all pre-handled nodes.
-            raise exc
+            raise exc from exc
 
     def _internal_save(self, node, known_uuid: Optional[Set[str]] = None) -> Optional[Set[str]]:
         """
@@ -546,30 +547,19 @@ class API:
         # if it does exist we use `patch` if it doesn't `post`.
         node_known = len(self.search(type(node), SearchModes.UUID, str(node.uuid)).current_page_results) == 1
         if node_known:
-            response: Dict = requests.patch(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()
+            response: Dict = requests.patch(url=f"{self._host}/{node.node_type.lower()}/{str(node.uuid)}", headers=self._http_headers, data=json_data).json()
         else:
             response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()  # type: ignore
 
-        # If we get a Bad UUID we need to handle this extra and save the Bad node first.
-        if response["code"] == 400 and response["error"].startswith("Bad uuid:"):
-            # We extract the
-            missing_uuid = response["error"][len("Bad uuid: ") : -len(" provided")]
+        # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
+        # Errors with this code, may be fixable
+        if response["code"] in (400, 409):
+            nodes_fixed = fix_node_save(self, node, response, known_uuid)
+            # In case of a success, we return the know uuid
+            if nodes_fixed is not False:
+                return nodes_fixed
+            # if not successful, we escalate the problem further
 
-            # Use the find_children functionality to find that node in our current tree
-            # We can have multiple occurrences of the node,
-            # but it doesn't matter which one we save
-            # TODO some error handling, for the BUG case of not finding the UUID
-            missing_node = node.find_children({"uuid": missing_uuid})[0]
-
-            # Now we save the bad node extra.
-            # So it will be known when we attempt to save the graph again.
-            known_uuid.union(self._internal_save(missing_node, known_uuid))  # type: ignore
-            # Since we pre-saved this node, we want it to be UUID edge only the next JSON.
-            # So we add it to the list of known nodes
-            known_uuid.add(missing_uuid)
-            # Recursive call.
-            # Since we should have fixed the "Bad UUID" now, we can try to save the node again
-            return self._internal_save(node, known_uuid)
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"])
 

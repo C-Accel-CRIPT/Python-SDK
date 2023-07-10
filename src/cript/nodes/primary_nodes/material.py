@@ -51,7 +51,7 @@ class Material(PrimaryBaseNode):
          "name":"my unique material name",
          "uid":"_:9679ff12-f9b4-41f4-be95-080b78fa71fd",
          "uuid":"9679ff12-f9b4-41f4-be95-080b78fa71fd"
-         "bigsmiles":"123456",
+         "bigsmiles":"CC(C)C1=CC=CC=C1",
       }
     ```
     """

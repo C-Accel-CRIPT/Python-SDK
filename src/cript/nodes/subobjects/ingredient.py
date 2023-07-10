@@ -43,7 +43,7 @@ class Ingredient(UUIDBaseNode):
        "material":{
           "name":"my material 1",
           "node":["Material"],
-          "bigsmiles":"123456",
+          "bigsmiles":"CC(C)C1=CC=CC=C1",
           "uid":"_:029367a8-aee7-493a-bc08-991e0f6939ae",
           "uuid":"029367a8-aee7-493a-bc08-991e0f6939ae"
        },

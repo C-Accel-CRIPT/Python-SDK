@@ -75,7 +75,7 @@ def _fix_node_save(api, node, response, save_values: _InternalSaveValues) -> _In
                 try:
                     save_values.suppress_attributes[str(duplicate_node.uuid)] = set(search_dict.keys())
                 except KeyError:
-                    save_values.suppress_attributes[str(duplicate_node.uuid)].add(set(search_dict.keys()))
+                    save_values.suppress_attributes[str(duplicate_node.uuid)].add(set(search_dict.keys()))  # type: ignore
 
                 # Attempts to save the duplicate items element.
                 save_values += api._internal_save(duplicate_node, save_values)

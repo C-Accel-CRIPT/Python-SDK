@@ -1,5 +1,6 @@
 import json
 import re
+import uuid
 from dataclasses import dataclass, field
 from typing import Dict, Set
 
@@ -23,13 +24,13 @@ class _InternalSaveValues:
         return_value = _InternalSaveValues(self.saved_uuid.union(other.saved_uuid), self.suppress_attributes)
 
         # Union the dictionary.
-        for uuid in other.suppress_attributes:
+        for uuid_str in other.suppress_attributes:
             try:
                 # If the uuid exists in both `suppress_attributes` union the value sets
-                return_value.suppress_attributes[uuid] = return_value.suppress_attributes[uuid].union(other.suppress_attributes[uuid])
+                return_value.suppress_attributes[uuid_str] = return_value.suppress_attributes[uuid_str].union(other.suppress_attributes[uuid_str])
             except KeyError:
                 # If it only exists in one, just copy the set into the new one.
-                return_value.suppress_attributes[uuid] = other.suppress_attributes[uuid]
+                return_value.suppress_attributes[uuid_str] = other.suppress_attributes[uuid_str]
         return return_value
 
     def __gt__(self, other):
@@ -120,18 +121,18 @@ def _get_uuid_from_error_message(error_message: str) -> str:
         bad_uuid = error_message[len("Bad uuid: ") : -len(" provided")].strip()
     if error_message.strip().startswith("Duplicate uuid:"):
         bad_uuid = error_message[len(" Duplicate uuid:") : -len("provided")].strip()
-    if bad_uuid is None or len(bad_uuid) != 36:
+    if bad_uuid is None or len(bad_uuid) != len(str(uuid.uuid4())):  # Ensure we found a full UUID describing string (here tested against a random new uuid length.)
         raise RuntimeError(f"The internal helper function `_get_uuid_from_error_message` has been called for an error message that is not yet implemented to be handled. error message {error_message}, found uuid {bad_uuid}.")
 
     return bad_uuid
 
 
-def find_node_by_uuid(node, uuid: str):
+def find_node_by_uuid(node, uuid_str: str):
     # Use the find_children functionality to find that node in our current tree
     # We can have multiple occurrences of the node,
     # but it doesn't matter which one we save
     # TODO some error handling, for the BUG case of not finding the UUID
-    missing_node = node.find_children({"uuid": uuid})[0]
+    missing_node = node.find_children({"uuid": uuid_str})[0]
 
     return missing_node
 
@@ -140,7 +141,10 @@ def _identify_suppress_attributes(node, response: Dict) -> Dict[str, Set[str]]:
     suppress_attributes = {}
     if response["error"].startswith("Additional properties are not allowed"):
         # Find all the attributes, that are listed in the error message with regex
-        attributes = set(re.findall(r"'(.*?)'", response["error"]))  # regex finds all attribures in enclosing `'`. This is how the error message lists them.
+        attributes = set(re.findall(r"'(.*?)'", response["error"]))  # regex finds all attributes in enclosing `'`. This is how the error message lists them.
+
+        # At the end of the error message the offending path is given.
+        # The structure of the error message is such, that is is after `path:`, so we find and strip the path out of the message.
         path = response["error"][response["error"].rfind("path:") + len("path:") :].strip()
 
         if path != "/":

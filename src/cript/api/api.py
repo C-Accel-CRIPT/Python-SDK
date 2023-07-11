@@ -540,33 +540,40 @@ class API:
         for file_node in node.find_children({"node": ["File"]}):
             file_node.ensure_uploaded(api=self)
 
-        # We assemble the JSON to be saved to back end.
-        # Note how we exclude pre-saved uuid nodes.
-        json_data = node.get_json(known_uuid=save_values.saved_uuid, suppress_attributes=save_values.suppress_attributes).json
+        # Dummy response to have a virtual do-while loop, instead of while loop.
+        response = {"code": -1}
 
-        # This checks if the current node exists on the back end.
-        # if it does exist we use `patch` if it doesn't `post`.
-        node_known = len(self.search(type(node), SearchModes.UUID, str(node.uuid)).current_page_results) == 1
-        if node_known:
-            response: Dict = requests.patch(url=f"{self._host}/{node.node_type.lower()}/{str(node.uuid)}", headers=self._http_headers, data=json_data).json()
-        else:
-            response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()  # type: ignore
+        while response["code"] != 200:
+            # Keep a record of how the state was before the loop
+            old_save_values = copy.deepcopy(save_values)
+            # We assemble the JSON to be saved to back end.
+            # Note how we exclude pre-saved uuid nodes.
+            json_data = node.get_json(known_uuid=save_values.saved_uuid, suppress_attributes=save_values.suppress_attributes).json
 
-        # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
-        # Errors with this code, may be fixable
-        if response["code"] in (400, 409):
-            returned_save_values = _fix_node_save(self, node, response, save_values)
-            # Here, the error can only be considered as fixed, if more uuid are saved then before
-            if len(returned_save_values.saved_uuid) > len(save_values.saved_uuid):
-                return returned_save_values
-            # if not successful, we escalate the problem further
+            # This checks if the current node exists on the back end.
+            # if it does exist we use `patch` if it doesn't `post`.
+            node_known = len(self.search(type(node), SearchModes.UUID, str(node.uuid)).current_page_results) == 1
+            if node_known:
+                response: Dict = requests.patch(url=f"{self._host}/{node.node_type.lower()}/{str(node.uuid)}", headers=self._http_headers, data=json_data).json()
+            else:
+                response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()  # type: ignore
 
-        # Handle errors from patching with too many attributes
-        if node_known and response["code"] in (400,):
-            suppress_attributes = _identify_suppress_attributes(node, response)
-            new_save_values = _InternalSaveValues(save_values.saved_uuid, suppress_attributes)
-            save_values += new_save_values
-            return self._internal_save(node, save_values)
+            # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
+            # Errors with this code, may be fixable
+            if response["code"] in (400, 409):
+                returned_save_values = _fix_node_save(self, node, response, save_values)
+                save_values += returned_save_values
+
+            # Handle errors from patching with too many attributes
+            if node_known and response["code"] in (400,):
+                suppress_attributes = _identify_suppress_attributes(node, response)
+                new_save_values = _InternalSaveValues(save_values.saved_uuid, suppress_attributes)
+                save_values += new_save_values
+
+            # It is only worthwhile repeating the attempted save loop if our state has improved.
+            # Aka we did something to fix the occurring error
+            if not save_values > old_save_values:
+                break
 
         if response["code"] != 200:
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], pre_saved_nodes=save_values.saved_uuid)

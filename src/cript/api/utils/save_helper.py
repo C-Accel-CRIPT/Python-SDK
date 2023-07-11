@@ -32,6 +32,25 @@ class _InternalSaveValues:
                 return_value.suppress_attributes[uuid] = other.suppress_attributes[uuid]
         return return_value
 
+    def __gt__(self, other):
+        """
+        A greater comparison to see if something was added to the info.
+        """
+        if len(self.saved_uuid) > len(other.saved_uuid):
+            return True
+        if len(self.suppress_attributes) > len(other.suppress_attributes):
+            return True
+        # If the two dicts have the same key, make sure at least one key has more suppressed attributes
+        if self.suppress_attributes.keys() == other.suppress_attributes.keys():
+            longer_set_found = False
+            for key in other.suppress_attributes:
+                if len(self.suppress_attributes[key]) < len(other.suppress_attributes[key]):
+                    return False
+                if self.suppress_attributes[key] > other.suppress_attributes[key]:
+                    longer_set_found = True
+            return longer_set_found
+        return False
+
 
 def _fix_node_save(api, node, response, save_values: _InternalSaveValues) -> _InternalSaveValues:
     """
@@ -55,9 +74,6 @@ def _fix_node_save(api, node, response, save_values: _InternalSaveValues) -> _In
         save_values += returned_save_values
         # The missing node, is now known to the API
         save_values.saved_uuid.add(missing_uuid)
-        # Recursive call.
-        # Since we should have fixed the "Bad UUID" now, we can try to save the node again
-        return api._internal_save(node, save_values)
 
     # Handle all duplicate items warnings if possible
     if response["error"].startswith("duplicate item"):
@@ -81,8 +97,6 @@ def _fix_node_save(api, node, response, save_values: _InternalSaveValues) -> _In
                 save_values += api._internal_save(duplicate_node, save_values)
                 # After the save, we can reduce it to just a UUID edge in the graph (avoiding the duplicate issues).
                 save_values.saved_uuid.add(str(duplicate_node.uuid))
-
-        return api._internal_save(node, save_values)
 
     return save_values
 

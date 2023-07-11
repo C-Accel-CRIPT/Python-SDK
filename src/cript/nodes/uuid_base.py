@@ -1,7 +1,7 @@
 import uuid
 from abc import ABC
 from dataclasses import dataclass, replace
-from typing import Any
+from typing import Any, Dict
 
 from cript.nodes.core import BaseNode
 
@@ -14,6 +14,9 @@ class UUIDBaseNode(BaseNode, ABC):
     """
     Base node that handles UUIDs and URLs.
     """
+
+    # Class attribute that caches all nodes created
+    _uuid_cache: Dict = {}
 
     @dataclass(frozen=True)
     class JsonAttributes(BaseNode.JsonAttributes):
@@ -36,6 +39,9 @@ class UUIDBaseNode(BaseNode, ABC):
         uuid = kwargs.get("uuid", get_uuid_from_uid(self.uid))
         # replace name and notes within PrimaryBase
         self._json_attrs = replace(self._json_attrs, uuid=uuid)
+
+        # Place successfully created node in the UUID cache
+        self._uuid_cache[uuid] = self
 
     @property
     def uuid(self) -> uuid.UUID:

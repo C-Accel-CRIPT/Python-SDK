@@ -1,5 +1,6 @@
 import copy
 import json
+import uuid
 
 import pytest
 from util import strip_uid_from_dict
@@ -162,6 +163,52 @@ def simple_process_node() -> cript.Process:
 
 
 @pytest.fixture(scope="function")
+def complex_process_node(complex_ingredient_node, simple_equipment_node, complex_citation_node, simple_property_node, simple_condition_node, simple_material_node, simple_process_node, complex_equipment_node, complex_condition_node) -> None:
+    """
+    create a process node with all possible arguments
+
+    Notes
+    -----
+    * indirectly tests the vocabulary as well, as it gives it valid vocabulary
+    """
+    # TODO clean up this test and use fixtures from conftest.py
+
+    my_process_name = "my complex process node name"
+    my_process_type = "affinity_pure"
+    my_process_description = "my simple material description"
+
+    process_waste = [
+        cript.Material(name="my process waste material 1", identifiers=[{"bigsmiles": "process waste bigsmiles"}]),
+    ]
+
+    my_process_keywords = [
+        "anionic",
+        "annealing_sol",
+    ]
+
+    # create complex process
+    citation = copy.deepcopy(complex_citation_node)
+    prop = cript.Property("n_neighbor", "value", 2.0, None)
+
+    my_complex_process = cript.Process(
+        name=my_process_name,
+        type=my_process_type,
+        ingredient=[complex_ingredient_node],
+        description=my_process_description,
+        equipment=[complex_equipment_node],
+        product=[simple_material_node],
+        waste=process_waste,
+        prerequisite_process=[simple_process_node],
+        condition=[complex_condition_node],
+        property=[prop],
+        keyword=my_process_keywords,
+        citation=[citation],
+    )
+
+    return my_complex_process
+
+
+@pytest.fixture(scope="function")
 def simple_computation_node() -> cript.Computation:
     """
     simple computation node to use between tests
@@ -177,7 +224,8 @@ def simple_material_node() -> cript.Material:
     simple material node to use between tests
     """
     identifiers = [{"bigsmiles": "123456"}]
-    my_material = cript.Material(name="my material", identifiers=identifiers)
+    # Use a unique name
+    my_material = cript.Material(name="my test material " + str(uuid.uuid4()), identifiers=identifiers)
 
     return my_material
 
@@ -234,23 +282,13 @@ def complex_material_node(simple_property_node, simple_process_node, complex_com
 
 
 @pytest.fixture(scope="function")
-def simple_software_configuration(simple_software_node) -> cript.SoftwareConfiguration:
-    """
-    minimal software configuration node with only required arguments
-    """
-    my_software_configuration = cript.SoftwareConfiguration(software=simple_software_node)
-
-    return my_software_configuration
-
-
-@pytest.fixture(scope="function")
 def simple_inventory_node(simple_material_node) -> None:
     """
     minimal inventory node to use for other tests
     """
     # set up inventory node
 
-    material_2 = cript.Material(name="material 2", identifiers=[{"bigsmiles": "my big smiles"}])
+    material_2 = cript.Material(name="material 2 " + str(uuid.uuid4()), identifiers=[{"bigsmiles": "my big smiles"}])
 
     my_inventory = cript.Inventory(name="my inventory name", material=[simple_material_node, material_2])
 
@@ -271,3 +309,18 @@ def simple_computational_process_node(simple_data_node, complex_ingredient_node)
     )
 
     return my_computational_process
+
+
+@pytest.fixture(scope="function")
+def simplest_computational_process_node(simple_data_node, simple_ingredient_node) -> cript.ComputationProcess:
+    """
+    minimal computational_process node
+    """
+    my_simplest_computational_process = cript.ComputationProcess(
+        name="my computational process node name",
+        type="cross_linking",
+        input_data=[simple_data_node],
+        ingredient=[simple_ingredient_node],
+    )
+
+    return my_simplest_computational_process

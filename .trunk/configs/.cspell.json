@@ -91,6 +91,7 @@
     "Methylolpropane",
     "fontawesome",
     "venv",
+    "deepdiff",
     "rdkit",
     "packmol",
     "Packmol",

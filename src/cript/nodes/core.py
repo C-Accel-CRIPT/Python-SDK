@@ -166,13 +166,20 @@ class BaseNode(ABC):
             else:
                 arguments[field] = json_dict[field]
 
-        try:
-            node = cls(**arguments)
-        # TODO we should not catch all exceptions if we are handling them, and instead let it fail
-        #  to create a good error message that points to the correct place that it failed to make debugging easier
-        except Exception as exc:
-            print(cls, arguments)
-            raise exc
+        # If a node with this UUID already exists, we don't create a new node.
+        # Instead we use the existing node from the cache and just update it.
+        from cript.nodes.uuid_base import UUIDBaseNode
+
+        if "uuid" in json_dict and json_dict["uuid"] in UUIDBaseNode._uuid_cache:
+            node = UUIDBaseNode._uuid_cache[json_dict["uuid"]]
+        else:  # Create a new node
+            try:
+                node = cls(**arguments)
+            # TODO we should not catch all exceptions if we are handling them, and instead let it fail
+            #  to create a good error message that points to the correct place that it failed to make debugging easier
+            except Exception as exc:
+                print(cls, arguments)
+                raise exc
 
         attrs = cls.JsonAttributes(**arguments)
 
@@ -181,6 +188,12 @@ class BaseNode(ABC):
             # Conserve newly assigned uid if uid is default (empty)
             if getattr(attrs, field) == getattr(default_dataclass, field):
                 attrs = replace(attrs, **{str(field): getattr(node, field)})
+
+        try:
+            if not attrs.uid.startswith("_:"):
+                attrs = replace(attrs, uid="_:" + attrs.uid)
+        except AttributeError:
+            pass
         # But here we force even usually unwritable fields to be set.
         node._update_json_attrs_if_valid(attrs)
 
@@ -219,6 +232,7 @@ class BaseNode(ABC):
     def get_json(
         self,
         handled_ids: Optional[Set[str]] = None,
+        known_uuid: Optional[Set[str]] = None,
         condense_to_uuid={
             "Material": ["parent_material", "component"],
             "Inventory": ["material"],
@@ -254,6 +268,11 @@ class BaseNode(ABC):
         previous_handled_nodes = copy.deepcopy(NodeEncoder.handled_ids)
         if handled_ids is not None:
             NodeEncoder.handled_ids = handled_ids
+
+        # Similar to uid, we handle pre-saved known uuid such that they are UUID edges only
+        previous_known_uuid = copy.deepcopy(NodeEncoder.known_uuid)
+        if known_uuid is not None:
+            NodeEncoder.known_uuid = known_uuid
         previous_condense_to_uuid = copy.deepcopy(NodeEncoder.condense_to_uuid)
         NodeEncoder.condense_to_uuid = condense_to_uuid
 
@@ -266,6 +285,7 @@ class BaseNode(ABC):
             raise CRIPTJsonSerializationError(str(type(self)), str(self._json_attrs)) from exc
         finally:
             NodeEncoder.handled_ids = previous_handled_nodes
+            NodeEncoder.known_uuid = previous_known_uuid
             NodeEncoder.condense_to_uuid = previous_condense_to_uuid
 
     def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes=None) -> List:

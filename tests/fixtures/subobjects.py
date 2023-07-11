@@ -1,5 +1,6 @@
 import copy
 import json
+import uuid
 
 import pytest
 from util import strip_uid_from_dict
@@ -9,7 +10,11 @@ import cript
 
 @pytest.fixture(scope="function")
 def complex_parameter_node() -> cript.Parameter:
-    parameter = cript.Parameter("update_frequency", 1000.0, "1/second")
+    """
+    maximal parameter sub-object that has all possible node attributes
+    """
+    parameter = cript.Parameter(key="update_frequency", value=1000.0, unit="1/second")
+
     return parameter
 
 
@@ -19,9 +24,14 @@ def complex_parameter_dict() -> dict:
     return ret_dict
 
 
+# TODO this fixture should be renamed because it is simple_algorithm_subobject not complex
 @pytest.fixture(scope="function")
 def complex_algorithm_node() -> cript.Algorithm:
-    algorithm = cript.Algorithm("mc_barostat", "barostat")
+    """
+    minimal algorithm sub-object
+    """
+    algorithm = cript.Algorithm(key="mc_barostat", type="barostat")
+
     return algorithm
 
 
@@ -71,7 +81,10 @@ def complex_reference_dict() -> dict:
 
 @pytest.fixture(scope="function")
 def complex_citation_node(complex_reference_node) -> cript.Citation:
-    citation = cript.Citation("reference", complex_reference_node)
+    """
+    maximal citation sub-object with all possible node attributes
+    """
+    citation = cript.Citation(type="reference", reference=complex_reference_node)
     return citation
 
 
@@ -106,13 +119,16 @@ def complex_software_dict() -> dict:
 
 @pytest.fixture(scope="function")
 def complex_property_node(complex_material_node, complex_condition_node, complex_citation_node, complex_data_node, simple_process_node, simple_computation_node):
-    p = cript.Property(
-        "modulus_shear",
-        "value",
-        5.0,
-        "GPa",
-        0.1,
-        "stdev",
+    """
+    a maximal property sub-object with all possible fields filled
+    """
+    my_complex_property = cript.Property(
+        key="modulus_shear",
+        type="value",
+        value=5.0,
+        unit="GPa",
+        uncertainty=0.1,
+        uncertainty_type="stdev",
         structure="structure",
         method="comp",
         sample_preparation=copy.deepcopy(simple_process_node),
@@ -120,9 +136,9 @@ def complex_property_node(complex_material_node, complex_condition_node, complex
         computation=[copy.deepcopy(simple_computation_node)],
         data=[copy.deepcopy(complex_data_node)],
         citation=[complex_citation_node],
-        notes="notes",
+        notes="my complex_property_node notes",
     )
-    return p
+    return my_complex_property
 
 
 @pytest.fixture(scope="function")
@@ -142,13 +158,13 @@ def complex_property_dict(complex_material_node, complex_condition_dict, complex
         "data": [json.loads(complex_data_node.get_json(condense_to_uuid={}).json)],
         "citation": [complex_citation_dict],
         "computation": [json.loads(simple_computation_node.get_json(condense_to_uuid={}).json)],
-        "notes": "notes",
+        "notes": "my complex_property_node notes",
     }
     return strip_uid_from_dict(ret_dict)
 
 
 @pytest.fixture(scope="function")
-def simple_property_node():
+def simple_property_node() -> cript.Property:
     p = cript.Property(
         "modulus_shear",
         "value",
@@ -172,19 +188,19 @@ def simple_property_dict() -> dict:
 
 @pytest.fixture(scope="function")
 def complex_condition_node(complex_data_node) -> cript.Condition:
-    c = cript.Condition(
-        "temperature",
-        "value",
-        22,
-        "C",
-        "room temperature of lab",
+    my_complex_condition = cript.Condition(
+        key="temperature",
+        type="value",
+        value=22,
+        unit="C",
+        descriptor="room temperature of lab",
         uncertainty=5,
         uncertainty_type="stdev",
         set_id=0,
         measurement_id=2,
         data=[copy.deepcopy(complex_data_node)],
     )
-    return c
+    return my_complex_condition
 
 
 @pytest.fixture(scope="function")
@@ -222,14 +238,34 @@ def complex_ingredient_dict(complex_material_node, complex_quantity_dict) -> dic
 
 
 @pytest.fixture(scope="function")
+def simple_ingredient_node(simple_material_node, complex_quantity_node) -> cript.Ingredient:
+    """
+    minimal ingredient sub-object used for testing
+
+    Notes
+    ----
+    The main difference is that this uses a simple material with less chance of getting any errors
+    """
+
+    simple_material_node.name = f"{simple_material_node.name}_{uuid.uuid4().hex}"
+
+    my_simple_ingredient = cript.Ingredient(material=simple_material_node, quantity=[complex_quantity_node], keyword=["catalyst"])
+
+    return my_simple_ingredient
+
+
+@pytest.fixture(scope="function")
 def complex_equipment_node(complex_condition_node, complex_citation_node) -> cript.Equipment:
-    e = cript.Equipment(
-        "hot_plate",
-        "fancy hot plate",
+    """
+    maximal equipment node with all possible attributes
+    """
+    my_complex_equipment = cript.Equipment(
+        key="hot_plate",
+        description="fancy hot plate for complex_equipment_node",
         condition=[complex_condition_node],
         citation=[complex_citation_node],
     )
-    return e
+    return my_complex_equipment
 
 
 @pytest.fixture(scope="function")
@@ -237,7 +273,7 @@ def simple_equipment_node() -> cript.Equipment:
     """
     simple and minimal equipment
     """
-    my_equipment = cript.Equipment(key="burner")
+    my_equipment = cript.Equipment(key="burner", description="my simple equipment fixture description")
     return my_equipment
 
 
@@ -246,7 +282,7 @@ def complex_equipment_dict(complex_condition_dict, complex_citation_dict) -> dic
     ret_dict = {
         "node": ["Equipment"],
         "key": "hot_plate",
-        "description": "fancy hot plate",
+        "description": "fancy hot plate for complex_equipment_node",
         "condition": [complex_condition_dict],
         "citation": [complex_citation_dict],
     }
@@ -255,17 +291,20 @@ def complex_equipment_dict(complex_condition_dict, complex_citation_dict) -> dic
 
 @pytest.fixture(scope="function")
 def complex_computational_forcefield_node(simple_data_node, complex_citation_node) -> cript.ComputationalForcefield:
-    cf = cript.ComputationalForcefield(
-        "opls_aa",
-        "atom",
-        "atom -> atom",
-        "no implicit solvent",
-        "local LigParGen installation",
-        "this is a test forcefield",
-        [simple_data_node],
-        [complex_citation_node],
+    """
+    maximal computational_forcefield sub-object with all possible arguments included in it
+    """
+    my_complex_computational_forcefield_node = cript.ComputationalForcefield(
+        key="opls_aa",
+        building_block="atom",
+        coarse_grained_mapping="atom -> atom",
+        implicit_solvent="no implicit solvent",
+        source="local LigParGen installation",
+        description="this is a test forcefield for complex_computational_forcefield_node",
+        data=[simple_data_node],
+        citation=[complex_citation_node],
     )
-    return cf
+    return my_complex_computational_forcefield_node
 
 
 @pytest.fixture(scope="function")
@@ -277,7 +316,7 @@ def complex_computational_forcefield_dict(simple_data_node, complex_citation_dic
         "coarse_grained_mapping": "atom -> atom",
         "implicit_solvent": "no implicit solvent",
         "source": "local LigParGen installation",
-        "description": "this is a test forcefield",
+        "description": "this is a test forcefield for complex_computational_forcefield_node",
         "citation": [complex_citation_dict],
         "data": [json.loads(simple_data_node.json)],
     }
@@ -286,8 +325,11 @@ def complex_computational_forcefield_dict(simple_data_node, complex_citation_dic
 
 @pytest.fixture(scope="function")
 def complex_software_configuration_node(complex_software_node, complex_algorithm_node, complex_citation_node) -> cript.SoftwareConfiguration:
-    sc = cript.SoftwareConfiguration(complex_software_node, [complex_algorithm_node], "my_notes", [complex_citation_node])
-    return sc
+    """
+    maximal software_configuration sub-object with all possible attributes
+    """
+    my_complex_software_configuration_node = cript.SoftwareConfiguration(software=complex_software_node, algorithm=[complex_algorithm_node], notes="my_complex_software_configuration_node notes", citation=[complex_citation_node])
+    return my_complex_software_configuration_node
 
 
 @pytest.fixture(scope="function")
@@ -296,10 +338,20 @@ def complex_software_configuration_dict(complex_software_dict, complex_algorithm
         "node": ["SoftwareConfiguration"],
         "software": complex_software_dict,
         "algorithm": [complex_algorithm_dict],
-        "notes": "my_notes",
+        "notes": "my_complex_software_configuration_node notes",
         "citation": [complex_citation_dict],
     }
     return ret_dict
+
+
+@pytest.fixture(scope="function")
+def simple_software_configuration(complex_software_node) -> cript.SoftwareConfiguration:
+    """
+    minimal software configuration node with only required arguments
+    """
+    my_software_configuration = cript.SoftwareConfiguration(software=complex_software_node)
+
+    return my_software_configuration
 
 
 @pytest.fixture(scope="function")

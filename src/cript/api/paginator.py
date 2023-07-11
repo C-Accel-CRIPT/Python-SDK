@@ -193,10 +193,16 @@ class Paginator:
         ).json()
 
         # handling both cases in case there is result inside of data or just data
-        if "result" in response["data"]:
+        try:
             self.current_page_results = response["data"]["result"]
-        else:
+        except KeyError:
             self.current_page_results = response["data"]
+        except TypeError:
+            self.current_page_results = response["data"]
+
+        if response["code"] == 404 and response["error"] == "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.":
+            self.current_page_results = []
+            return self.current_page_results
 
         # TODO give a CRIPT error if HTTP response is anything other than 200
         if response["code"] != 200:

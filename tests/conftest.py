@@ -17,6 +17,7 @@ from fixtures.primary_nodes import (
     complex_data_node,
     complex_material_dict,
     complex_material_node,
+    complex_process_node,
     complex_project_dict,
     complex_project_node,
     simple_collection_node,
@@ -30,7 +31,7 @@ from fixtures.primary_nodes import (
     simple_material_node,
     simple_process_node,
     simple_project_node,
-    simple_software_configuration,
+    simplest_computational_process_node,
 )
 from fixtures.subobjects import (
     complex_algorithm_dict,
@@ -60,8 +61,10 @@ from fixtures.subobjects import (
     simple_computational_forcefield_node,
     simple_condition_node,
     simple_equipment_node,
+    simple_ingredient_node,
     simple_property_dict,
     simple_property_node,
+    simple_software_configuration,
 )
 from fixtures.supporting_nodes import (
     complex_file_node,
@@ -83,11 +86,8 @@ def cript_api():
     API: cript.API
         The created CRIPT API instance.
     """
-    host: str = "http://development.api.mycriptapp.org/"
-    token = "123456"
-
     assert cript.api.api._global_cached_api is None
-    with cript.API(host=host, token=token) as api:
+    with cript.API(host=None, token=None) as api:
         # using the tests folder name within our cloud storage
         api._BUCKET_DIRECTORY_NAME = "tests"
         yield api

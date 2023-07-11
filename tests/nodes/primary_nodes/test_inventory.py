@@ -1,5 +1,7 @@
 import json
+import uuid
 
+from test_integration import integrate_nodes_helper
 from util import strip_uid_from_dict
 
 import cript
@@ -40,58 +42,25 @@ def test_inventory_serialization(simple_inventory_node, simple_material_dict) ->
     # force not condensing to edge uuid during json serialization
     deserialized_inventory: dict = json.loads(simple_inventory_node.get_json(condense_to_uuid={}).json)
     deserialized_inventory = strip_uid_from_dict(deserialized_inventory)
+    deserialized_inventory["material"][0]["name"] = "my material"
+    deserialized_inventory["material"][1]["name"] = "material 2"
 
     assert expected_dict == deserialized_inventory
 
 
-# --------------- Integration Tests ---------------
-def test_save_inventory(cript_api) -> None:
+def test_integration_inventory(cript_api, simple_project_node, simple_inventory_node):
     """
-    test that an inventory node can be saved correctly to the API
+    integration test between Python SDK and API Client
 
-    Notes
-    -----
-    indirectly tests getting an inventory node
-
-    1. create a valid inventory node
-    2. convert inventory node to JSON
-    3. convert JSON to node
-    4. assert that both nodes are equal to each other
-
-    Returns
-    -------
-    None
+    1. POST to API
+    1. GET from API
+    1. assert they're both equal
     """
-    pass
+    # putting UUID in name so it doesn't bump into uniqueness errors
+    simple_project_node.name = f"project_name_{uuid.uuid4().hex}"
+    simple_project_node.collection[0].name = f"collection_name_{uuid.uuid4().hex}"
+    simple_inventory_node.name = f"inventory_name_{uuid.uuid4().hex}"
 
+    simple_project_node.collection[0].inventory = [simple_inventory_node]
 
-def test_get_inventory_from_api(cript_api) -> None:
-    """
-    test getting inventory node from the API
-    """
-    pass
-
-
-def test_update_inventory(cript_api) -> None:
-    """
-    test an inventory node can be correctly updated in the API
-
-    Notes
-    -----
-    This test indirectly tests that the node can be gotten correctly.
-
-    Returns
-    -------
-    None
-    """
-    pass
-
-
-def test_delete_inventory(cript_api) -> None:
-    """
-    simply test that an inventory node can be correctly deleted from the API
-
-    Returns
-    -------
-    None
-    """
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

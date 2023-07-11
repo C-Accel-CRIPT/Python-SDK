@@ -98,6 +98,16 @@ class Quantity(UUIDBaseNode):
         self._json_attrs = replace(self._json_attrs, key=key, value=value, unit=unit, uncertainty=uncertainty, uncertainty_type=uncertainty_type)
         self.validate()
 
+    @classmethod
+    def _from_json(cls, json_dict: dict):
+        # TODO: remove this temporary fix, once back end is working correctly
+        for key in ["value", "uncertainty"]:
+            try:
+                json_dict[key] = float(json_dict[key])
+            except KeyError:
+                pass
+        return super(Quantity, cls)._from_json(json_dict)
+
     @beartype
     def set_key_unit(self, new_key: str, new_unit: str) -> None:
         """

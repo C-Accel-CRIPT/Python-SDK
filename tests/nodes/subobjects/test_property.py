@@ -1,6 +1,8 @@
 import copy
 import json
+import uuid
 
+from test_integration import integrate_nodes_helper
 from util import strip_uid_from_dict
 
 import cript
@@ -11,6 +13,7 @@ def test_json(complex_property_node, complex_property_dict):
     p_dict = strip_uid_from_dict(json.loads(p.get_json(condense_to_uuid={}).json))
     assert p_dict == complex_property_dict
     p2 = cript.load_nodes_from_json(p.get_json(condense_to_uuid={}).json)
+
     assert strip_uid_from_dict(json.loads(p2.get_json(condense_to_uuid={}).json)) == strip_uid_from_dict(json.loads(p.get_json(condense_to_uuid={}).json))
 
 
@@ -54,3 +57,25 @@ def test_setter_getter(complex_property_node, simple_material_node, simple_proce
     assert p2.citation[-1] == cit2
     p2.notes = "notes2"
     assert p2.notes == "notes2"
+
+
+def test_integration_material_property(cript_api, simple_project_node, simple_material_node, simple_property_node):
+    """
+    integration test between Python SDK and API Client
+
+    1. POST to API
+        Project with material
+            Material has property sub-object
+    1. GET JSON from API
+    1. check their fields equal
+    """
+
+    # rename property and material to avoid duplicate node API error
+    simple_project_node.name = f"test_integration_material_property_{uuid.uuid4().hex}"
+
+    simple_material_node.name = f"{simple_material_node.name}_{uuid.uuid4().hex}"
+
+    simple_project_node.material = [simple_material_node]
+    simple_project_node.material[0].property = [simple_property_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

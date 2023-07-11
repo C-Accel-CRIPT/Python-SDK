@@ -1,6 +1,8 @@
 import copy
 import json
+import uuid
 
+from test_integration import integrate_nodes_helper
 from util import strip_uid_from_dict
 
 
@@ -9,6 +11,7 @@ def test_json(complex_equipment_node, complex_equipment_dict):
     e_dict = strip_uid_from_dict(json.loads(e.get_json(condense_to_uuid={}).json))
     assert strip_uid_from_dict(e_dict) == strip_uid_from_dict(complex_equipment_dict)
     e2 = copy.deepcopy(e)
+
     assert strip_uid_from_dict(json.loads(e.get_json(condense_to_uuid={}).json)) == strip_uid_from_dict(json.loads(e2.get_json(condense_to_uuid={}).json))
 
 
@@ -32,3 +35,21 @@ def test_setter_getter(complex_equipment_node, complex_condition_node, complex_f
     assert len(e2.citation) == 1
     e2.citation += [cit2]
     assert e2.citation[1] == cit2
+
+
+def test_integration_equipment(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_process_node, simple_equipment_node):
+    """
+    integration test between Python SDK and API Client
+
+    1. POST to API
+    1. GET from API
+    1. assert JSON sent and JSON received are the same
+    """
+    simple_project_node.name = f"test_integration_equipment_{uuid.uuid4().hex}"
+
+    simple_project_node.collection = [simple_collection_node]
+    simple_project_node.collection[0].experiment = [simple_experiment_node]
+    simple_project_node.collection[0].experiment[0].process = [simple_process_node]
+    simple_project_node.collection[0].experiment[0].process[0].equipment = [simple_equipment_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

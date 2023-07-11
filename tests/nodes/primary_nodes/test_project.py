@@ -1,5 +1,7 @@
 import json
+import uuid
 
+from test_integration import integrate_nodes_helper
 from util import strip_uid_from_dict
 
 import cript
@@ -58,38 +60,14 @@ def test_serialize_project_to_json(complex_project_node, complex_project_dict) -
     assert serialized_project == strip_uid_from_dict(expected_dict)
 
 
-# ---------- Integration tests ----------
-def test_save_project_to_api() -> None:
+def test_integration_project(cript_api, simple_project_node):
     """
-    tests if the project node can be saved to the API without errors and status code of 200
-    """
-    pass
+    integration test between Python SDK and API Client
 
+    1. POST to API
+    1. GET from API
+    1. assert they're both equal
+    """
+    simple_project_node.name = f"test_integration_project_name_{uuid.uuid4().hex}"
 
-def test_get_project_from_api() -> None:
-    """
-    gets the project node from the api that was saved prior
-    """
-    pass
-
-
-def test_serialize_json_to_project() -> None:
-    """
-    tests that a JSON of a project node from API can be correctly converted to python object
-    """
-    pass
-
-
-def test_update_project_in_api() -> None:
-    """
-    tests that the project node can be correctly updated within the API
-    """
-    pass
-
-
-def test_delete_project_from_api() -> None:
-    """
-    integration test: tests that the project node can be deleted correctly from the API
-    tries to get the project from API, and it is expected for the API to give an error response
-    """
-    pass
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

@@ -1,4 +1,5 @@
 from dataclasses import dataclass, replace
+from typing import Optional, Union
 
 from beartype import beartype
 
@@ -49,16 +50,16 @@ class User(UUIDBaseNode):
         all User attributes
         """
 
-        email: str = ""
+        email: Optional[str] = ""
         model_version: str = ""
-        orcid: str = ""
+        orcid: Optional[str] = ""
         picture: str = ""
         username: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, username: str, email: str, orcid: str, **kwargs):
+    def __init__(self, username: str, email: Optional[str] = "", orcid: Optional[str] = "", **kwargs):
         """
         Json from CRIPT API to be converted to a node
         optionally the group can be None if the user doesn't have a group
@@ -84,7 +85,7 @@ class User(UUIDBaseNode):
 
     @property
     @beartype
-    def email(self) -> str:
+    def email(self) -> Union[str, None]:
         """
         user's email
 
@@ -106,7 +107,7 @@ class User(UUIDBaseNode):
 
     @property
     @beartype
-    def orcid(self) -> str:
+    def orcid(self) -> Union[str, None]:
         """
         users [ORCID](https://orcid.org/)
 

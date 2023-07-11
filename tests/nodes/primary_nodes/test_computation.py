@@ -1,6 +1,8 @@
 import copy
 import json
+import uuid
 
+from test_integration import integrate_nodes_helper
 from util import strip_uid_from_dict
 
 import cript
@@ -107,38 +109,16 @@ def test_serialize_computation_to_json(simple_computation_node) -> None:
     assert ref_dict == expected_dict
 
 
-# ---------- Integration tests ----------
-def test_save_computation_to_api() -> None:
+def test_integration_computation(cript_api, simple_project_node, simple_computation_node):
     """
-    tests if the computation node can be saved to the API without errors and status code of 200
-    """
-    pass
+    integration test between Python SDK and API Client
 
+    1. POST to API
+    1. GET from API
+    1. assert they're both equal
+    """
+    simple_project_node.name = f"test_integration_computation_name_{uuid.uuid4().hex}"
 
-def test_get_computation_from_api() -> None:
-    """
-    integration test: gets the computation node from the api that was saved prior
-    """
-    pass
+    simple_project_node.collection[0].experiment[0].computation = [simple_computation_node]
 
-
-def test_serialize_json_to_computation() -> None:
-    """
-    tests that a JSON of a computation node can be correctly converted to python object
-    """
-    pass
-
-
-def test_update_computation_in_api() -> None:
-    """
-    tests that the computation node can be correctly updated within the API
-    """
-    pass
-
-
-def test_delete_computation_from_api() -> None:
-    """
-    integration test: tests that the computation node can be deleted correctly from the API
-    tries to get the computation from API, and it is expected for the API to give an error response
-    """
-    pass
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

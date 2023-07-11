@@ -1,6 +1,8 @@
 import copy
 import json
+import uuid
 
+from test_integration import integrate_nodes_helper
 from util import strip_uid_from_dict
 
 import cript
@@ -98,38 +100,28 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
     assert ref_dict == expected_dict
 
 
-# ---------- Integration tests ----------
-def test_save_computational_process_to_api() -> None:
+def test_integration_computational_process(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simplest_computational_process_node, simple_material_node, simple_data_node):
     """
-    tests if the computational_process node can be saved to the API without errors and status code of 200
-    """
-    pass
+    integration test between Python SDK and API Client
 
+    1. POST to API
+    1. GET from API
+    1. assert they're both equal
+    """
+    # renaming to avoid duplicate node errors
+    simple_project_node.name = f"test_integration_computation_process_name_{uuid.uuid4().hex}"
 
-def test_get_computational_process_from_api() -> None:
-    """
-    integration test: gets the computational_process node from the api that was saved prior
-    """
-    pass
+    simple_material_node.name = f"{simple_material_node.name}_{uuid.uuid4().hex}"
 
+    simple_project_node.material = [simple_material_node]
 
-def test_serialize_json_to_computational_process() -> None:
-    """
-    tests that a JSON of a computational_process node can be correctly converted to python object
-    """
-    pass
+    simple_project_node.collection = [simple_collection_node]
 
+    simple_project_node.collection[0].experiment = [simple_experiment_node]
 
-def test_update_computational_process_in_api() -> None:
-    """
-    tests that the computational_process node can be correctly updated within the API
-    """
-    pass
+    # fixing orphanedDataNodeError
+    simple_project_node.collection[0].experiment[0].data = [simple_data_node]
 
+    simple_project_node.collection[0].experiment[0].computation_process = [simplest_computational_process_node]
 
-def test_delete_computational_process_from_api() -> None:
-    """
-    integration test: tests that the computational_process node can be deleted correctly from the API
-    tries to get the computational_process from API, and it is expected for the API to give an error response
-    """
-    pass
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

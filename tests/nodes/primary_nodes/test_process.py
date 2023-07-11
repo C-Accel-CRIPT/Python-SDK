@@ -1,6 +1,8 @@
 import copy
 import json
+import uuid
 
+from test_integration import integrate_nodes_helper
 from util import strip_uid_from_dict
 
 import cript
@@ -147,4 +149,37 @@ def test_serialize_process_to_json(simple_process_node) -> None:
     assert ref_dict == expected_process_dict
 
 
-# TODO add integration tests
+def test_integration_simple_process(cript_api, simple_project_node, simple_process_node):
+    """
+    integration test between Python SDK and API Client
+
+    1. POST to API
+    1. GET from API
+    1. assert JSON sent and JSON received are the same
+    """
+    simple_project_node.name = f"test_integration_process_name_{uuid.uuid4().hex}"
+
+    simple_project_node.collection[0].experiment[0].process = [simple_process_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+
+def test_integration_complex_process(cript_api, simple_project_node, simple_process_node, simple_material_node):
+    """
+    integration test between Python SDK and API Client
+
+    1. POST to API
+    1. GET from API
+    1. assert JSON sent and JSON received are the same
+    """
+    simple_project_node.name = f"test_integration_process_name_{uuid.uuid4().hex}"
+
+    # rename material to not get duplicate error
+    simple_material_node.name += f"{simple_material_node.name} {uuid.uuid4().hex}"
+
+    # add material to the project to not get OrphanedNodeError
+    simple_project_node.material += [simple_material_node]
+
+    simple_project_node.collection[0].experiment[0].process = [simple_process_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

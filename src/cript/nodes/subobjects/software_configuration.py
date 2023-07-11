@@ -3,13 +3,13 @@ from typing import List, Union
 
 from beartype import beartype
 
-from cript.nodes.core import BaseNode
 from cript.nodes.subobjects.algorithm import Algorithm
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.software import Software
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
-class SoftwareConfiguration(BaseNode):
+class SoftwareConfiguration(UUIDBaseNode):
     """
     ## Definition
 
@@ -45,7 +45,7 @@ class SoftwareConfiguration(BaseNode):
     """
 
     @dataclass(frozen=True)
-    class JsonAttributes(BaseNode.JsonAttributes):
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
         software: Union[Software, None] = None
         algorithm: List[Algorithm] = field(default_factory=list)
         notes: str = ""

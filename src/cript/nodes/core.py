@@ -189,7 +189,7 @@ class BaseNode(ABC):
             if getattr(attrs, field) == getattr(default_dataclass, field):
                 attrs = replace(attrs, **{str(field): getattr(node, field)})
 
-        try:
+        try:  # TODO remove this temporary solution
             if not attrs.uid.startswith("_:"):
                 attrs = replace(attrs, uid="_:" + attrs.uid)
         except AttributeError:

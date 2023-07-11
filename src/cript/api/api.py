@@ -4,7 +4,7 @@ import os
 import uuid
 import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Union
+from typing import Any, Dict, List, Union
 
 import boto3
 import jsonschema
@@ -21,7 +21,11 @@ from cript.api.exceptions import (
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
-from cript.api.utils.save_helper import _fix_node_save, _identify_suppress_attributes
+from cript.api.utils.save_helper import (
+    _fix_node_save,
+    _identify_suppress_attributes,
+    _InternalSaveValues,
+)
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import ControlledVocabularyCategories
 from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTNodeSchemaError
@@ -521,7 +525,7 @@ class API:
                     pass
             raise exc from exc
 
-    def _internal_save(self, node, known_uuid: Optional[Set[str]] = None, suppress_attributes: Optional[Dict[str, Set[str]]] = None) -> Optional[Set[str]]:
+    def _internal_save(self, node, save_values: _InternalSaveValues = _InternalSaveValues()) -> _InternalSaveValues:
         """
         Internal helper function that handles the saving of different nodes (not just project).
 
@@ -531,11 +535,6 @@ class API:
         This works, because we keep track of "Bad UUID" handled nodes, and represent them in the JSON only as the UUID.
         """
 
-        # known_uuid are node, that we have saved to the back end before.
-        # We keep track of it, so that we can condense them to UUID only in the JSON.
-        if known_uuid is None:
-            known_uuid = set()
-
         node.validate()
         # saves all the local files to cloud storage right before saving the Project node
         # Ensure that all file nodes have uploaded there payload before actual save.
@@ -544,7 +543,7 @@ class API:
 
         # We assemble the JSON to be saved to back end.
         # Note how we exclude pre-saved uuid nodes.
-        json_data = node.get_json(known_uuid=known_uuid, suppress_attributes=suppress_attributes).json
+        json_data = node.get_json(known_uuid=save_values.saved_uuid, suppress_attributes=save_values.suppress_attributes).json
 
         # This checks if the current node exists on the back end.
         # if it does exist we use `patch` if it doesn't `post`.
@@ -557,21 +556,23 @@ class API:
         # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
         # Errors with this code, may be fixable
         if response["code"] in (400, 409):
-            nodes_fixed = _fix_node_save(self, node, response, known_uuid)
-            # In case of a success, we return the know uuid
-            if nodes_fixed is not False:
-                return nodes_fixed
+            returned_save_values = _fix_node_save(self, node, response, save_values)
+            # Here, the error can only be considered as fixed, if more uuid are saved then before
+            if len(returned_save_values.saved_uuid) > len(save_values.saved_uuid):
+                return returned_save_values
             # if not successful, we escalate the problem further
 
         # Handle errors from patching with too many attributes
-        if node_known and suppress_attributes is None and response["code"] in (400,):
+        if node_known and response["code"] in (400,):
             suppress_attributes = _identify_suppress_attributes(node, response)
-            return self._internal_save(node, known_uuid, suppress_attributes)
+            save_values.suppress_attributes.add(suppress_attributes)
+            return self._internal_save(node, save_values)
 
         if response["code"] != 200:
-            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], pre_saved_nodes=known_uuid)
+            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], pre_saved_nodes=save_values.saved_uuid)
 
-        return known_uuid
+        save_values.saved_uuid.add(str(node.uuid))
+        return save_values
 
     def upload_file(self, file_path: Union[Path, str]) -> str:
         # trunk-ignore-begin(cspell)

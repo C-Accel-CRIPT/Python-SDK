@@ -22,7 +22,7 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
             * the fields they have in common should be the same
 
     Parameters
-    ----------
+    ==========
     cript_api: cript.API
          pass in the cript_api client that is already available as a fixture
     project_node: cript.Project
@@ -37,14 +37,14 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     1. compare the project node JSON that was sent to API and the node the API gave, have the same JSON
 
     Notes
-    -----
+    =====
     * using deepdiff library to do the nested JSON comparisons
     * ignoring the UID field through all the JSON because those the API changes when responding
     """
 
-    print("\n\n----------------- Project Node ----------------------------")
-    print(project_node.get_json(indent=2, sort_keys=True, condense_to_uuid={}).json)
-    print("--------------------------------------------------------------")
+    print("\n\n=================== Project Node ============================")
+    print(project_node.get_json(indent=2, sort_keys=False, condense_to_uuid={}).json)
+    print("==============================================================")
 
     cript_api.save(project_node)
 
@@ -55,16 +55,16 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     # get the project from paginator
     my_project_from_api_dict = my_paginator.current_page_results[0]
 
-    print("\n\n----------------- API Response Node ----------------------------")
-    print(json.dumps(my_project_from_api_dict, indent=2, sort_keys=True))
-    print("--------------------------------------------------------------")
+    print("\n\n================= API Response Node ============================")
+    print(json.dumps(my_project_from_api_dict, indent=2, sort_keys=False))
+    print("==============================================================")
 
     # try to convert api JSON project to node
     my_project_from_api = cript.load_nodes_from_json(json.dumps(my_project_from_api_dict))
 
-    print("\n\n------------------- Project Node Deserialized -------------------------")
-    print(my_project_from_api.get_json(indent=2, sort_keys=True, condense_to_uuid={}).json)
-    print("--------------------------------------------------------------")
+    print("\n\n=================== Project Node Deserialized =========================")
+    print(my_project_from_api.get_json(indent=2, sort_keys=False, condense_to_uuid={}).json)
+    print("==============================================================")
 
     # Configure keys and blocks to be ignored by deepdiff using exclude_regex_path
     # ignores all UID within the JSON because those will always be different

@@ -77,7 +77,7 @@ def _fix_node_save(api, node, response, save_values: _InternalSaveValues) -> _In
 
     # Handle all duplicate items warnings if possible
     if response["error"].startswith("duplicate item"):
-        for search_dict_str in re.findall(r"\{(.*?)\}", response["error"]):
+        for search_dict_str in re.findall(r"\{(.*?)\}", response["error"]):  # Regular expression finds all text elements enclosed in `{}`. In the error message this is the dictionary describing the duplicated item.
             # The error message contains a description of the offending elements.
             search_dict_str = "{" + search_dict_str + "}"
             search_dict_str = search_dict_str.replace("'", '"')
@@ -140,7 +140,7 @@ def _identify_suppress_attributes(node, response: Dict) -> Dict[str, Set[str]]:
     suppress_attributes = {}
     if response["error"].startswith("Additional properties are not allowed"):
         # Find all the attributes, that are listed in the error message with regex
-        attributes = set(re.findall(r"'(.*?)'", response["error"]))
+        attributes = set(re.findall(r"'(.*?)'", response["error"]))  # regex finds all attribures in enclosing `'`. This is how the error message lists them.
         path = response["error"][response["error"].rfind("path:") + len("path:") :].strip()
 
         if path != "/":

@@ -1,5 +1,5 @@
 # import json
-
+import uuid
 # from deepdiff import DeepDiff
 import warnings
 
@@ -75,3 +75,32 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
 
     warnings.warn("Please uncomment `integrate_nodes_helper` to test with the API")
     pass
+
+
+def everything_project(cript_api, simple_project_node, complex_collection_node, simple_experiment_node, simple_data_node, complex_citation_node):
+    """
+    A project that has every possible node in its graph and every attribute set.
+    * Validating it against DB schema
+    * uploading it to the API
+    * search for it,
+    * get the JSON from API
+    * convert it back to the Python node
+    """
+    # everything project
+    simple_project_node.name = f"everything_project_{uuid.uuid4().hex}"
+
+    # everything collection
+    simple_project_node.collection = complex_collection_node
+    simple_project_node.collection.name = f"everything_collection_{uuid.uuid4().hex}"
+
+    # everything experiment
+    simple_project_node.collection[0].experiment = simple_experiment_node
+    simple_project_node.collection[0].experiment[0].name = f"everything_experiment_{uuid.uuid4().hex}"
+    simple_project_node.collection[0].experiment[0].process = []
+    simple_project_node.collection[0].experiment[0].data = [simple_data_node]
+    simple_project_node.collection[0].experiment[0].computation = []
+    simple_project_node.collection[0].experiment[0].computation_process = []
+    simple_project_node.collection[0].experiment[0].funding = ["NSF", "NIH", "DOE", "ERC", "Wellcome Trust"]
+    simple_project_node.collection[0].experiment[0].citation = [complex_citation_node]
+
+

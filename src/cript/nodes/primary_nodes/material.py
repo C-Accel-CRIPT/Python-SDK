@@ -46,21 +46,13 @@ class Material(PrimaryBaseNode):
         Material names Must be unique within a [Project](../project)
 
     ```json
-    {
-        "name": "my unique material",
-        "component_count": 0,
-        "computational_forcefield_count": 0,
-        "created_at": "2023-03-14T00:45:02.196297Z",
-        "identifier_count": 0,
-        "identifiers": [],
-        "model_version": "1.0.0",
-        "node": "Material",
-        "notes": "",
-        "property_count": 0,
-        "uid": "0x24a08",
-        "updated_at": "2023-03-14T00:45:02.196276Z",
-        "uuid": "403fa02c-9a84-4f9e-903c-35e535151b08",
-    }
+      {
+         "node":["Material"],
+         "name":"my unique material name",
+         "uid":"_:9679ff12-f9b4-41f4-be95-080b78fa71fd",
+         "uuid":"9679ff12-f9b4-41f4-be95-080b78fa71fd"
+         "bigsmiles":"[H]{[>][<]C(C[>])c1ccccc1[]}",
+      }
     ```
     """
 

@@ -40,7 +40,18 @@ class SoftwareConfiguration(BaseNode):
 
     ## JSON Representation
     ```json
-
+    {
+       "node":["SoftwareConfiguration"],
+       "uid":"_:f0dc3415-635d-4590-8b1f-cd65ad8ab3fe"
+       "software":{
+          "name":"SOMA",
+          "node":["Software"],
+          "source":"https://gitlab.com/InnocentBug/SOMA",
+          "uid":"_:5bf9cb33-f029-4d1b-ba53-3602036e4f75",
+          "uuid":"5bf9cb33-f029-4d1b-ba53-3602036e4f75",
+          "version":"0.7.0"
+       }
+    }
     ```
     """
 

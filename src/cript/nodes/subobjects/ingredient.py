@@ -35,7 +35,31 @@ class Ingredient(UUIDBaseNode):
 
     ## JSON Representation
     ```json
-
+    {
+        "node":["Ingredient"],
+        "keyword":["catalyst"],
+        "uid":"_:32f173ab-a98a-449b-a528-1b656f652dd3",
+        "uuid":"32f173ab-a98a-449b-a528-1b656f652dd3"
+       "material":{
+          "name":"my material 1",
+          "node":["Material"],
+          "bigsmiles":"[H]{[>][<]C(C[>])c1ccccc1[]}",
+          "uid":"_:029367a8-aee7-493a-bc08-991e0f6939ae",
+          "uuid":"029367a8-aee7-493a-bc08-991e0f6939ae"
+       },
+       "quantity":[
+          {
+             "node":["Quantity"],
+             "key":"mass",
+             "value":11.2
+             "uncertainty":0.2,
+             "uncertainty_type":"stdev",
+             "unit":"kg",
+             "uid":"_:c95ee781-923b-4699-ba3b-923ce186ac5d",
+             "uuid":"c95ee781-923b-4699-ba3b-923ce186ac5d",
+          }
+       ]
+    }
     ```
     """
 

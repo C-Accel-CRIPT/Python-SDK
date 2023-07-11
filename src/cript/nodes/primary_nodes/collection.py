@@ -26,7 +26,30 @@ class Collection(PrimaryBaseNode):
     | citation   | list[Citation]   |                     | reference to a book, paper, or scholarly work                                  |
 
 
-    <!-- TODO consider adding JSON of a collection -->
+    ## JSON Representation
+    ```json
+    {
+    "name": "my collection JSON",
+     "node":["Collection"],
+     "uid":"_:fccd3549-07cb-4e23-ba79-323597ec9bfd",
+     "uuid":"fccd3549-07cb-4e23-ba79-323597ec9bfd"
+
+     "experiment":[
+        {
+           "name":"my experiment name",
+           "node":[
+              "Experiment"
+           ],
+           "uid":"_:8256b75b-1f4e-4f69-9fe6-3bcb2298e470",
+           "uuid":"8256b75b-1f4e-4f69-9fe6-3bcb2298e470"
+        }
+     ],
+     "inventory":[],
+     "citation":[],
+    }
+    ```
+
+
     """
 
     @dataclass(frozen=True)

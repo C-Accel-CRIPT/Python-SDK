@@ -42,7 +42,14 @@ class Parameter(UUIDBaseNode):
 
     ## JSON Representation
     ```json
-
+    {
+       "key":"update_frequency",
+       "node":["Parameter"],
+       "unit":"1/second",
+       "value":1000.0
+       "uid":"_:6af3b3aa-1dbc-4ce7-be8b-1896b375001c",
+       "uuid":"6af3b3aa-1dbc-4ce7-be8b-1896b375001c",
+    }
     ```
     """
 

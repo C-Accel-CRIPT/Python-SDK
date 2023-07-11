@@ -554,7 +554,7 @@ class API:
             # if it does exist we use `patch` if it doesn't `post`.
             node_known = len(self.search(type(node), SearchModes.UUID, str(node.uuid)).current_page_results) == 1
             if node_known:
-                response: Dict = requests.patch(url=f"{self._host}/{node.node_type.lower()}/{str(node.uuid)}", headers=self._http_headers, data=json_data).json()
+                response: Dict = requests.patch(url=f"{self._host}/{node.node_type.lower()}/{str(node.uuid)}", headers=self._http_headers, data=json_data).json()  # type: ignore
             else:
                 response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()  # type: ignore
 
@@ -576,7 +576,7 @@ class API:
                 break
 
         if response["code"] != 200:
-            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], pre_saved_nodes=save_values.saved_uuid)
+            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], pre_saved_nodes=save_values.saved_uuid)  # type: ignore
 
         save_values.saved_uuid.add(str(node.uuid))
         return save_values

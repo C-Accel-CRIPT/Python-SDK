@@ -565,7 +565,8 @@ class API:
         # Handle errors from patching with too many attributes
         if node_known and response["code"] in (400,):
             suppress_attributes = _identify_suppress_attributes(node, response)
-            save_values.suppress_attributes.add(suppress_attributes)
+            new_save_values = _InternalSaveValues(save_values.saved_uuid, suppress_attributes)
+            save_values += new_save_values
             return self._internal_save(node, save_values)
 
         if response["code"] != 200:

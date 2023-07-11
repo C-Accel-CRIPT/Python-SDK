@@ -180,7 +180,18 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
 
     # valid vocab category but invalid vocab word
     with pytest.raises(InvalidVocabulary):
-        cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.FILE_TYPE, vocab_word="some_invalid_word")
+        cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.FILE_TYPE,
+                                  vocab_word="some_invalid_word")
+
+
+def test_download_file_from_url(cript_api: cript.API) -> None:
+    """
+    downloads the file from a URL and writes it to disk
+    """
+    cript_api.download_file(
+        object_name="https://criptscripts.org/cript_graph/graph_ppt/CRIPT_Data_Structure_Template.pptx",
+        destination_path=r"C:\Users\navid\Downloads\download_file_test"
+        )
 
 
 # -------------- Start: Must be tested with API Container --------------------
@@ -351,6 +362,5 @@ def test_get_my_projects_from_api(cript_api: cript.API) -> None:
     get a page of project nodes that is associated with the API token
     """
     pass
-
 
 # -------------- End: Must be tested with API Container --------------------

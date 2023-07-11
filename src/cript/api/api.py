@@ -4,7 +4,7 @@ import os
 import uuid
 import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Union
+from typing import Any, Dict, List, Union
 
 import boto3
 import jsonschema

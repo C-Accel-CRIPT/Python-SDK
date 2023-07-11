@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import List, Union
+from typing import List, Optional, Union
 
 from beartype import beartype
 
@@ -40,7 +40,18 @@ class SoftwareConfiguration(UUIDBaseNode):
 
     ## JSON Representation
     ```json
-
+    {
+       "node":["SoftwareConfiguration"],
+       "uid":"_:f0dc3415-635d-4590-8b1f-cd65ad8ab3fe"
+       "software":{
+          "name":"SOMA",
+          "node":["Software"],
+          "source":"https://gitlab.com/InnocentBug/SOMA",
+          "uid":"_:5bf9cb33-f029-4d1b-ba53-3602036e4f75",
+          "uuid":"5bf9cb33-f029-4d1b-ba53-3602036e4f75",
+          "version":"0.7.0"
+       }
+    }
     ```
     """
 
@@ -54,7 +65,7 @@ class SoftwareConfiguration(UUIDBaseNode):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, software: Software, algorithm: Union[List[Algorithm], None] = None, notes: str = "", citation: Union[List[Citation], None] = None, **kwargs):
+    def __init__(self, software: Software, algorithm: Optional[List[Algorithm]] = None, notes: str = "", citation: Union[List[Citation], None] = None, **kwargs):
         """
         Create Software_Configuration sub-object
 

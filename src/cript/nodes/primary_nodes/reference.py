@@ -43,6 +43,25 @@ class Reference(UUIDBaseNode):
 
     !!! warning "Reference will always be public"
         Reference node is meant to always be public and static to allow globally link data to the reference
+
+    ## JSON Representation
+    ```json
+    {
+       "node":["Reference"],
+       "uid":"_:c681a947-0554-4acd-a01c-06ad76e34b87",
+       "uuid":"c681a947-0554-4acd-a01c-06ad76e34b87",
+       "author":["Ludwig Schneider","Marcus Müller"],
+       "doi":"10.1016/j.cpc.2018.08.011",
+       "issn":"0010-4655",
+       "journal":"Computer Physics Communications",
+       "pages":[463,476],
+       "publisher":"Elsevier",
+       "title":"Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)",
+       "type":"journal_article",
+       "website":"https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+       "year":2019
+    }
+    ```
     """
 
     @dataclass(frozen=True)

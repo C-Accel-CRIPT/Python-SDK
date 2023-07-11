@@ -40,7 +40,6 @@ def _fix_node_save(api, node, response, save_values: _InternalSaveValues) -> _In
 
     Returns set of known uuids, if fixable, otherwise False.
     """
-
     if response["code"] not in (400, 409):
         raise RuntimeError(f"The internal helper function `_fix_node_save` has been called for an error that is not yet implemented to be handled {response}.")
 

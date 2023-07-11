@@ -1,5 +1,6 @@
 import json
 import tempfile
+import warnings
 
 import pytest
 import requests
@@ -189,6 +190,7 @@ def test_api_save_project(cript_api: cript.API, simple_project_node) -> None:
     Tests if API object can successfully save a node
     """
     # cript_api.save(simple_project_node)
+    warnings.warn("Please uncomment the `test_api_save_project` integration test to test with API")
     pass
 
 
@@ -231,6 +233,7 @@ def test_upload_and_download_file(cript_api, tmp_path_factory) -> None:
     #
     # # assert download file contents are the same as uploaded file contents
     # assert downloaded_file_contents == file_text
+    warnings.warn("Please uncomment the `test_upload_and_download_file` integration test to test with API")
     pass
 
 
@@ -264,6 +267,7 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
     # materials_paginator.previous_page()
     # assert len(materials_paginator.current_page_results) > 5
     # assert materials_paginator.current_page_results[0]["name"] == "(2-Chlorophenyl) 2,4-dichlorobenzoate"
+    warnings.warn("Please uncomment the `test_api_search_node_type` integration test to test with API")
     pass
 
 
@@ -277,6 +281,7 @@ def test_api_search_contains_name(cript_api: cript.API) -> None:
     # assert isinstance(contains_name_paginator, Paginator)
     # assert len(contains_name_paginator.current_page_results) > 5
     # assert contains_name_paginator.current_page_results[0]["name"] == "Pilocarpine polyacrylate"
+    warnings.warn("Please uncomment the `test_api_search_contains_name` integration test to test with API")
     pass
 
 
@@ -290,6 +295,7 @@ def test_api_search_exact_name(cript_api: cript.API) -> None:
     # assert isinstance(exact_name_paginator, Paginator)
     # assert len(exact_name_paginator.current_page_results) == 1
     # assert exact_name_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
+    warnings.warn("Please uncomment the `test_api_search_exact_name` integration test to test with API")
     pass
 
 
@@ -306,6 +312,7 @@ def test_api_search_uuid(cript_api: cript.API) -> None:
     # assert len(uuid_paginator.current_page_results) == 1
     # assert uuid_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
     # assert uuid_paginator.current_page_results[0]["uuid"] == uuid_to_search
+    warnings.warn("Please uncomment the `test_api_search_uuid` integration test to test with API")
     pass
 
 

@@ -4,7 +4,7 @@ import os
 import uuid
 import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, Set, Union
 
 import boto3
 import jsonschema
@@ -534,7 +534,6 @@ class API:
         Because it is recursive, this repeats until no "Bad UUID" error happen anymore.
         This works, because we keep track of "Bad UUID" handled nodes, and represent them in the JSON only as the UUID.
         """
-
         node.validate()
         # saves all the local files to cloud storage right before saving the Project node
         # Ensure that all file nodes have uploaded there payload before actual save.

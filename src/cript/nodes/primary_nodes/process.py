@@ -17,16 +17,16 @@ class Process(PrimaryBaseNode):
     | attribute               | type             | example                                                                         | description                                                         | required | vocab |
     |-------------------------|------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------|----------|-------|
     | type                    | str              | mix                                                                             | type of process                                                     | True     | True  |
-    | ingredient             | list[Ingredient] |                                                                                 | ingredients                                                         |          |       |
+    | ingredient              | list[Ingredient] |                                                                                 | ingredients                                                         |          |       |
     | description             | str              | To oven-dried 20 mL glass vial, 5 mL of styrene and 10 ml of toluene was added. | explanation of the process                                          |          |       |
     | equipment               | list[Equipment]  |                                                                                 | equipment used in the process                                       |          |       |
-    | product                | list[Material]   |                                                                                 | desired material produced from the process                          |          |       |
+    | product                 | list[Material]   |                                                                                 | desired material produced from the process                          |          |       |
     | waste                   | list[Material]   |                                                                                 | material sent to waste                                              |          |       |
     | prerequisite_ processes | list[Process]    |                                                                                 | processes that must be completed prior to the start of this process |          |       |
-    | condition              | list[Condition]  |                                                                                 | global process condition                                           |          |       |
-    | property              | list[Property]   |                                                                                 | process properties                                                  |          |       |
-    | keyword                | list[str]        |                                                                                 | words that classify the process                                     |          | True  |
-    | citation               | list[Citation]   |                                                                                 | reference to a book, paper, or scholarly work                       |          |       |
+    | condition               | list[Condition]  |                                                                                 | global process condition                                            |          |       |
+    | property                | list[Property]   |                                                                                 | process properties                                                  |          |       |
+    | keyword                 | list[str]        |                                                                                 | words that classify the process                                     |          | True  |
+    | citation                | list[Citation]   |                                                                                 | reference to a book, paper, or scholarly work                       |          |       |
 
     ## Available Subobjects
     * [Ingredient](../../subobjects/ingredient)
@@ -34,6 +34,18 @@ class Process(PrimaryBaseNode):
     * [Property](../../subobjects/property)
     * [Condition](../../subobjects/condition)
     * [Citation](../../subobjects/citation)
+
+    ## JSON Representation
+    ```json
+    {
+       "name":"my minimal process name",
+       "node":["Process"],
+       "type":"affinity_pure",
+       "keyword":[],
+       "uid":"_:f8ef33f3-677a-40f3-b24e-65ab2c99d796",
+       "uuid":"f8ef33f3-677a-40f3-b24e-65ab2c99d796"
+    }
+    ```
 
     """
 

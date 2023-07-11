@@ -36,6 +36,19 @@ class Computation(PrimaryBaseNode):
     | citation                | list[Citation]                |                                       | reference to a book, paper, or scholarly work |          |       |
     | notes                    | str                           |                                       | additional description of the step            |          |       |
 
+    ## JSON Representation
+    ```json
+    {
+       "name":"my computation name",
+       "node":["Computation"],
+       "type":"analysis",
+       "uid":"_:69f29bec-e30a-4932-b78d-2e4585b37d74",
+       "uuid":"69f29bec-e30a-4932-b78d-2e4585b37d74"
+       "citation":[],
+    }
+    ```
+
+
     ## Available Subobjects
     * [Software Configuration](../../subobjects/software_configuration)
     * [Condition](../../subobjects/condition)

@@ -43,6 +43,66 @@ class ComputationProcess(PrimaryBaseNode):
     * [condition](../../subobjects/condition)
     * [citation](../../subobjects/citation)
 
+    ## JSON Representation
+    ```json
+    {
+       "name":"my computational process node name",
+       "node":["ComputationProcess"],
+       "type":"cross_linking",
+       "uid":"_:b88ac0a5-b5c0-4197-a63d-b37e1fe8c6c6",
+       "uuid":"b88ac0a5-b5c0-4197-a63d-b37e1fe8c6c6"
+       "ingredient":[
+          {
+            "node":["Ingredient"],
+            "uid":"_:f68d6fff-9327-48b1-9249-33ce498005e8",
+             "uuid":"f68d6fff-9327-48b1-9249-33ce498005e8"
+             "keyword":["catalyst"],
+             "material":{
+                "name":"my material name",
+                "node":["Material"],
+                "uid":"_:3b12f92c-2121-4520-920e-b4c5622de34a",
+                "uuid":"3b12f92c-2121-4520-920e-b4c5622de34a",
+                "bigsmiles":"[H]{[>][<]C(C[>])c1ccccc1[]}",
+             },
+
+             "quantity":[
+                {
+                   "key":"mass",
+                   "node":["Quantity"],
+                   "uid":"_:07c4a6a9-9385-4505-a30a-ca3549cedcd8",
+                   "uuid":"07c4a6a9-9385-4505-a30a-ca3549cedcd8",
+                   "uncertainty":0.2,
+                   "uncertainty_type":"stdev",
+                   "unit":"kg",
+                   "value":11.2
+                }
+             ]
+          }
+       ],
+       "input_data":[
+          {
+            "name":"my data name",
+             "node":["Data"],
+             "type":"afm_amp",
+             "uid":"_:3c16bb05-ded1-4f52-9d02-c88c1a1de915",
+             "uuid":"3c16bb05-ded1-4f52-9d02-c88c1a1de915"
+             "file":[
+                {
+                   "name":"my file node name",
+                   "node":["File"],
+                   "source":"https://criptapp.org",
+                   "type":"calibration",
+                    "data_dictionary":"my file's data dictionary",
+                   "extension":".csv",
+                   "uid":"_:ee8153db-4108-49e4-8c5b-ffc26d4e6f71",
+                   "uuid":"ee8153db-4108-49e4-8c5b-ffc26d4e6f71"
+                }
+             ],
+          }
+       ],
+    }
+    ```
+
     """
 
     @dataclass(frozen=True)

@@ -170,8 +170,18 @@ def test_integration_file(cript_api, simple_project_node, simple_data_node):
     -----
     indirectly tests data node as well because every file node must be in a data node
     """
+    # ========= test create =========
     simple_project_node.name = f"test_integration_file_{uuid.uuid4().hex}"
 
     simple_project_node.collection[0].experiment[0].data = [simple_data_node]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    # change simple attribute to trigger update
+    simple_project_node.collection[0].experiment[0].data[0].file[0].notes = "file notes UPDATED"
+    # TODO enable later
+    # simple_project_node.collection[0].experiment[0].data[0].file[0].data_dictionary = "file data_dictionary UPDATED"
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+

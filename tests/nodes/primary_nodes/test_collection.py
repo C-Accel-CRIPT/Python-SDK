@@ -161,11 +161,10 @@ def test_integration_collection(cript_api, simple_project_node, simple_collectio
 
     simple_project_node.collection = [simple_collection_node]
 
-    # test create
+    # ========= test create =========
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 
-    # test update
-    simple_collection_node.name = f"test_integration_collection_name_UPDATED_{uuid.uuid4().hex}"
-    simple_project_node.collection = [simple_collection_node]
+    # ========= test update =========
+    simple_project_node.collection[0].doi = "my doi UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

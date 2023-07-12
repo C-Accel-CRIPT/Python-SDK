@@ -51,11 +51,19 @@ def test_integration_computational_forcefield(cript_api, simple_project_node, si
     1. GET from API
     1. assert JSON sent and JSON received are the same
     """
+    # ========= test create =========
     simple_project_node.name = f"test_integration_computational_forcefield_{uuid.uuid4().hex}"
 
     # renaming to avoid API duplicate node error
     simple_material_node.name = f"{simple_material_node.name}_{uuid.uuid4().hex}"
 
-    simple_material_node.computational_forcefield = simple_computational_forcefield_node
+    simple_project_node.material = [simple_material_node]
 
+    simple_project_node.material[0].computational_forcefield = simple_computational_forcefield_node
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    # change simple attribute to trigger update
+    simple_project_node.material[0].computational_forcefield.description = "material computational_forcefield description UPDATED"
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

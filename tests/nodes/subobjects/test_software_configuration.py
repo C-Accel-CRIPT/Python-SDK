@@ -60,3 +60,6 @@ def test_integration_software_configuration(cript_api, simple_project_node, simp
     # ========= test update =========
     # change simple attribute to trigger update
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].notes = "software configuration integration test UPDATED"
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+

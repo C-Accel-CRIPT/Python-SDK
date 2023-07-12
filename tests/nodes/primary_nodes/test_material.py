@@ -130,5 +130,6 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
     # ========= test update =========
     # update material attribute to trigger update
     simple_project_node.material[0].identifiers = [{"bigsmiles": "my updated bigsmiles"}]
+    simple_project_node.material[0].notes = "my material notes UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

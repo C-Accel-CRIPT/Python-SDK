@@ -104,7 +104,7 @@ def test_serialize_material_to_json(complex_material_dict, complex_material_node
     assert ref_dict == complex_material_dict
 
 
-def test_integration_material(cript_api, simple_project_node, simple_material_node):
+def test_integration_material(cript_api, simple_project_node, simple_material_node) -> None:
     """
     integration test between Python SDK and API Client
 
@@ -118,10 +118,17 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
     1. deserialize the project
     1. compare the project node that was sent to API and the one API gave, that they are the same
     """
+    # ========= test create =========
     # creating unique name to not bump into unique errors
     simple_project_node.name = f"test_integration_project_name_{uuid.uuid4().hex}"
     simple_material_node.name = f"test_integration_material_name_{uuid.uuid4().hex}"
 
     simple_project_node.material = [simple_material_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    # update material attribute to trigger update
+    simple_project_node.material[0].identifiers = [{"bigsmiles": "my updated bigsmiles"}]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

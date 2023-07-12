@@ -56,11 +56,17 @@ def test_integration_inventory(cript_api, simple_project_node, simple_inventory_
     1. GET from API
     1. assert they're both equal
     """
+    # ========= test create =========
     # putting UUID in name so it doesn't bump into uniqueness errors
     simple_project_node.name = f"project_name_{uuid.uuid4().hex}"
     simple_project_node.collection[0].name = f"collection_name_{uuid.uuid4().hex}"
     simple_inventory_node.name = f"inventory_name_{uuid.uuid4().hex}"
 
     simple_project_node.collection[0].inventory = [simple_inventory_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    simple_project_node.collection[0].inventory[0].name = "inventory name UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

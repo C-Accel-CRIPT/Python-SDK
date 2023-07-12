@@ -79,5 +79,5 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
 
     print("\n\n\n########################### TEST Passed ########################################\n\n\n")
 
-    warnings.warn("Please uncomment `integrate_nodes_helper` to test with the API")
+    # warnings.warn("Please uncomment `integrate_nodes_helper` to test with the API")
     pass

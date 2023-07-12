@@ -134,9 +134,25 @@ def test_integration_collection(cript_api, simple_project_node, simple_collectio
     """
     integration test between Python SDK and API Client
 
+    ## Create
+    1. Serialize SDK Nodes to JSON
     1. POST to API
     1. GET from API
+    1. Deserialize API JSON to SDK Nodes
     1. assert they're both equal
+
+    ## Update
+    1. Change JSON
+    1. POST/PATCH to API
+    1. GET from API
+    1. Deserialize API JSON to SDK Nodes
+    1. assert they're both equal
+
+    Notes
+    -----
+    - [x] Create
+    - [x] Read
+    - [x] Update
     """
 
     # rename project and collection to not bump into duplicate issues
@@ -148,6 +164,7 @@ def test_integration_collection(cript_api, simple_project_node, simple_collectio
     # test create
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 
+    # test update
     simple_collection_node.name = f"test_integration_collection_name_UPDATED_{uuid.uuid4().hex}"
     simple_project_node.collection = [simple_collection_node]
 

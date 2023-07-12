@@ -47,7 +47,8 @@ def test_integration_ingredient(cript_api, simple_project_node, simple_collectio
     ----
     since `ingredient` requires a `quantity` this test also indirectly tests `quantity`
     """
-
+    # ========= test create =========
+    # TODO change the way this is assembled to be cleaner like others
     simple_project_node.name = f"test_integration_ingredient_{uuid.uuid4().hex}"
 
     # assemble needed nodes
@@ -63,5 +64,11 @@ def test_integration_ingredient(cript_api, simple_project_node, simple_collectio
 
     # add orphaned material node to project
     simple_project_node.material = [simple_material_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    # change simple attribute to trigger update
+    simple_project_node.collection[0].experiment[0].process[0].ingredient[0].keyword = ["polymer"]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

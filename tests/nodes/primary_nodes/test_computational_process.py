@@ -129,7 +129,7 @@ def test_integration_computational_process(cript_api, simple_project_node, simpl
 
     # ========= test update =========
     # change computational_process to trigger update
-    simple_project_node.collection[0].experiment[0].computation_process[0].name = "computational_process_node_name_UPDATED"
+    simple_project_node.collection[0].experiment[0].computation_process[0].type = "DPD"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 

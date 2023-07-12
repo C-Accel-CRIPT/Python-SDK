@@ -1,9 +1,10 @@
 import json
-# import warnings
 
 from deepdiff import DeepDiff
 
 import cript
+
+# import warnings
 
 
 def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):

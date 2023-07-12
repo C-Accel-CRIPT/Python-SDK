@@ -66,7 +66,10 @@ def _fix_node_save(api, node, response, save_values: _InternalSaveValues) -> _In
     if response["error"].startswith("Bad uuid:") or response["error"].strip().startswith("Duplicate uuid:"):
         missing_uuid = _get_uuid_from_error_message(response["error"])
         missing_node = find_node_by_uuid(node, missing_uuid)
-
+        # If the missing node, is the same as the one we are trying to save, this not working.
+        # We end the infinite loop here.
+        if missing_uuid == str(node.uuid):
+            return save_values
         # Now we save the bad node extra.
         # So it will be known when we attempt to save the graph again.
         # Since we pre-saved this node, we want it to be UUID edge only the next JSON.

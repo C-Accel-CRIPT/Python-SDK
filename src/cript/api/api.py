@@ -576,11 +576,11 @@ class API:
 
             # It is only worthwhile repeating the attempted save loop if our state has improved.
             # Aka we did something to fix the occurring error
-            print(f"{self._host}/{node.node_type_snake_case}", save_values, old_save_values, not save_values > old_save_values)
             if not save_values > old_save_values:
                 break
 
         if response["code"] != 200:
+            print(node_known, node.get_json(known_uuid=save_values.saved_uuid, suppress_attributes=save_values.suppress_attributes, indent=2).json)
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], pre_saved_nodes=save_values.saved_uuid)  # type: ignore
 
         save_values.saved_uuid.add(str(node.uuid))

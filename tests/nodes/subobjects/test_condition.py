@@ -50,11 +50,7 @@ def test_integration_process_condition(cript_api, simple_project_node, simple_co
     1. GET from API
     1. assert they're both equal
     """
-
-    # TODO use fixtures to make code clean and DRY
-    # writing it manually because was getting OrphanedNodeError and Schema errors were very frustrating
-    # will wipe out this tech debt later
-
+    # ========= test create =========
     # renamed project node to avoid duplicate project node API error
     simple_project_node.name = f"{simple_project_node.name}_{uuid.uuid4().hex}"
 
@@ -66,5 +62,9 @@ def test_integration_process_condition(cript_api, simple_project_node, simple_co
 
     simple_project_node.collection[0].experiment[0].computation[0].condition = [simple_condition_node]
 
-    # TODO getting `CRIPTJsonDeserializationError`
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    simple_project_node.collection[0].experiment[0].computation[0].condition[0].descriptor = "condition descriptor UPDATED"
+
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

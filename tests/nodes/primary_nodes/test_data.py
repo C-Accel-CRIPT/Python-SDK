@@ -164,8 +164,14 @@ def test_integration_data(cript_api, simple_project_node, simple_data_node):
     -----
     indirectly tests complex file as well because every data node must have a file node
     """
+    # ========= test create =========
     simple_project_node.name = f"test_integration_project_name_{uuid.uuid4().hex}"
 
     simple_project_node.collection[0].experiment[0].data = [simple_data_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    simple_project_node.collection[0].experiment[0].data[0].name = "data node name UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

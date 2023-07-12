@@ -200,10 +200,14 @@ def test_integration_experiment(cript_api, simple_project_node, simple_collectio
     -----
     comparing JSON because it is easier to compare than an object
     """
-
+    # ========= test create =========
     # rename project and collection to not bump into duplicate issues
     simple_project_node.name = f"test_integration_experiment_project_name_{uuid.uuid4().hex}"
     simple_project_node.collection = [simple_collection_node]
     simple_project_node.collection[0].experiment = [simple_experiment_node]
 
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    simple_project_node.collection[0].experiment[0].name = "experiment name UPDATED"
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

@@ -132,5 +132,3 @@ def test_integration_computational_process(cript_api, simple_project_node, simpl
     simple_project_node.collection[0].experiment[0].computation_process[0].type = "DPD"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
-
-

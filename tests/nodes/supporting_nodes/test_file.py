@@ -184,4 +184,3 @@ def test_integration_file(cript_api, simple_project_node, simple_data_node):
     # simple_project_node.collection[0].experiment[0].data[0].file[0].data_dictionary = "file data_dictionary UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
-

@@ -48,4 +48,3 @@ def test_integration_citation(cript_api, simple_project_node, simple_collection_
     simple_project_node.collection[0].citation[0].type = "extracted_by_human"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
-

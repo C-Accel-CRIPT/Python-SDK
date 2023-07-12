@@ -22,7 +22,7 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
             * the fields they have in common should be the same
 
     Parameters
-    ==========
+    ----------
     cript_api: cript.API
          pass in the cript_api client that is already available as a fixture
     project_node: cript.Project
@@ -37,7 +37,7 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     1. compare the project node JSON that was sent to API and the node the API gave, have the same JSON
 
     Notes
-    =====
+    -----
     * using deepdiff library to do the nested JSON comparisons
     * ignoring the UID field through all the JSON because those the API changes when responding
     """

@@ -164,7 +164,7 @@ def test_serialize_reference_to_json(complex_reference_node, complex_reference_d
     assert reference_dict == complex_reference_dict
 
 
-def test_integration_reference(cript_api, simple_project_node, complex_citation_node):
+def test_integration_reference(cript_api, simple_project_node, complex_citation_node, complex_reference_node):
     """
     integration test between Python SDK and API Client
 
@@ -176,6 +176,7 @@ def test_integration_reference(cript_api, simple_project_node, complex_citation_
     -----
     indirectly tests citation node along with reference node
     """
+    # ========= test create =========
     simple_project_node.name = f"test_integration_reference_name_{uuid.uuid4().hex}"
 
     simple_project_node.collection[0].citation = [complex_citation_node]
@@ -185,3 +186,12 @@ def test_integration_reference(cript_api, simple_project_node, complex_citation_
     # TODO deserialization with citation in collection is wrong
     # raise Exception("Citation is missing from collection node from API")
     warnings.warn("Uncomment the Reference integration test Exception and check the API response has citation on collection")
+
+    # ========= test update =========
+    # change simple attribute to trigger update
+    #   TODO can enable this later
+    #  complex_reference_node.type = "book"
+    complex_reference_node.title = "reference title UPDATED"
+    simple_project_node.collection[0].citation[0].reference = complex_reference_node
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

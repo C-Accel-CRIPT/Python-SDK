@@ -63,6 +63,6 @@ def test_integration_ingredient(cript_api, simple_project_node, simple_collectio
 
     # ========= test update =========
     # change simple attribute to trigger update
-    # simple_project_node.collection[0].experiment[0].process[0].ingredient[0].keyword = ["polymer"]
-    #
-    # integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    simple_project_node.collection[0].experiment[0].process[0].ingredient[0].keyword = ["polymer"]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

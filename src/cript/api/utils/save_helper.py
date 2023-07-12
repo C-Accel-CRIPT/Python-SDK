@@ -90,8 +90,11 @@ def _fix_node_save(api, node, response, save_values: _InternalSaveValues) -> _In
                 # So we remove the offending element from the JSON
                 # TODO IF THIS IS A TRUE DUPLICATE NAME ERROR, IT WILL ERROR AS THE NAME ATTRIBUTE IS MISSING.
                 try:
+                    # the search_dict convenient list all the attributes that are offending in the keys.
+                    # So if we haven't listed the current node in the suppress attribute dict, we add the node with the offending attributes to suppress.
                     save_values.suppress_attributes[str(duplicate_node.uuid)] = set(search_dict.keys())
                 except KeyError:
+                    # If we have the current node in the dict, we just add the new elements to the list of suppressed attributes for it.
                     save_values.suppress_attributes[str(duplicate_node.uuid)].add(set(search_dict.keys()))  # type: ignore
 
                 # Attempts to save the duplicate items element.

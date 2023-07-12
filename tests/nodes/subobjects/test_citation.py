@@ -34,6 +34,7 @@ def test_integration_citation(cript_api, simple_project_node, simple_collection_
     1. GET from API
     1. assert JSON sent and JSON received are the same
     """
+    # ========= test create =========
     simple_project_node.name = f"test_integration_citation_{uuid.uuid4().hex}"
 
     simple_project_node.collection = [simple_collection_node]
@@ -41,3 +42,10 @@ def test_integration_citation(cript_api, simple_project_node, simple_collection_
     simple_project_node.collection[0].citation = [complex_citation_node]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    # change simple attribute to trigger update
+    simple_project_node.collection[0].citation[0].type = "extracted_by_human"
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+

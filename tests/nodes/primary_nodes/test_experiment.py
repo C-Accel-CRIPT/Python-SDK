@@ -209,5 +209,6 @@ def test_integration_experiment(cript_api, simple_project_node, simple_collectio
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
-    simple_project_node.collection[0].experiment[0].name = "experiment name UPDATED"
+    # update simple attribute to trigger update
+    simple_project_node.collection[0].experiment[0].funding = ["update1", "update2", "update3"]
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

@@ -166,5 +166,6 @@ def test_integration_collection(cript_api, simple_project_node, simple_collectio
 
     # ========= test update =========
     simple_project_node.collection[0].doi = "my doi UPDATED"
+    simple_project_node.collection[0].notes = "my collection notes UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

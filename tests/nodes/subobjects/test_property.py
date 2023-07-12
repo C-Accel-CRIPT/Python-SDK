@@ -69,13 +69,17 @@ def test_integration_material_property(cript_api, simple_project_node, simple_ma
     1. GET JSON from API
     1. check their fields equal
     """
-
+    # ========= test create =========
     # rename property and material to avoid duplicate node API error
     simple_project_node.name = f"test_integration_material_property_{uuid.uuid4().hex}"
-
     simple_material_node.name = f"{simple_material_node.name}_{uuid.uuid4().hex}"
 
     simple_project_node.material = [simple_material_node]
     simple_project_node.material[0].property = [simple_property_node]
 
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    # change simple attribute to trigger update
+    simple_project_node.material[0].property[0].notes = "property sub-object notes UPDATED"
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

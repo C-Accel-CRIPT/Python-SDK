@@ -172,6 +172,7 @@ def test_integration_complex_process(cript_api, simple_project_node, simple_proc
     1. GET from API
     1. assert JSON sent and JSON received are the same
     """
+    # ========= test create =========
     simple_project_node.name = f"test_integration_process_name_{uuid.uuid4().hex}"
 
     # rename material to not get duplicate error
@@ -181,5 +182,11 @@ def test_integration_complex_process(cript_api, simple_project_node, simple_proc
     simple_project_node.material += [simple_material_node]
 
     simple_project_node.collection[0].experiment[0].process = [simple_process_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    # change simple attribute to trigger update
+    simple_project_node.collection[0].experiment[0].process[0].description = "process description UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

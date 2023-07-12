@@ -58,7 +58,6 @@ def test_integration_computational_forcefield(cript_api, simple_project_node, si
     simple_material_node.name = f"{simple_material_node.name}_{uuid.uuid4().hex}"
 
     simple_project_node.material = [simple_material_node]
-
     simple_project_node.material[0].computational_forcefield = simple_computational_forcefield_node
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

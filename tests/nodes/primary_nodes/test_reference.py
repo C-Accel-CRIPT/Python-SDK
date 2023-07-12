@@ -191,7 +191,6 @@ def test_integration_reference(cript_api, simple_project_node, complex_citation_
     # change simple attribute to trigger update
     #   TODO can enable this later
     #  complex_reference_node.type = "book"
-    complex_reference_node.title = "reference title UPDATED"
-    simple_project_node.collection[0].citation[0].reference = complex_reference_node
+    simple_project_node.collection[0].citation[0].reference.title = "reference title UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

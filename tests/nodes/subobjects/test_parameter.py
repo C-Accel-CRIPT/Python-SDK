@@ -38,15 +38,10 @@ def test_integration_parameter(cript_api, simple_project_node, simple_collection
     simple_project_node.name = f"test_integration_parameter_{uuid.uuid4().hex}"
 
     simple_project_node.collection = [simple_collection_node]
-
     simple_project_node.collection[0].experiment = [simple_experiment_node]
-
     simple_project_node.collection[0].experiment[0].computation = [simple_computation_node]
-
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration = [simple_software_configuration]
-
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].algorithm = [complex_algorithm_node]
-
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].algorithm[0].parameter = [complex_parameter_node]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

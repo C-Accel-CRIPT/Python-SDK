@@ -172,6 +172,7 @@ def test_integration_data(cript_api, simple_project_node, simple_data_node):
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
-    simple_project_node.collection[0].experiment[0].data[0].name = "data node name UPDATED"
+    # update a simple attribute of data to trigger update
+    simple_project_node.collection[0].experiment[0].data[0].type = "afm_height"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

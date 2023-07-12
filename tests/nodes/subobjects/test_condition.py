@@ -65,6 +65,7 @@ def test_integration_process_condition(cript_api, simple_project_node, simple_co
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
+    # change simple attribute to trigger update
     simple_project_node.collection[0].experiment[0].computation[0].condition[0].descriptor = "condition descriptor UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

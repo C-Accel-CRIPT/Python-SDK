@@ -56,6 +56,7 @@ def test_integration_equipment(cript_api, simple_project_node, simple_collection
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
+    # change simple attribute to trigger update
     simple_project_node.collection[0].experiment[0].process[0].equipment[0].description = "equipment description UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

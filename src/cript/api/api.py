@@ -4,7 +4,7 @@ import os
 import uuid
 import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, Union
 
 import boto3
 import jsonschema
@@ -525,7 +525,7 @@ class API:
                     pass
             raise exc from exc
 
-    def _internal_save(self, node, save_values: _InternalSaveValues = _InternalSaveValues()) -> _InternalSaveValues:
+    def _internal_save(self, node, save_values: Optional[_InternalSaveValues] = None) -> _InternalSaveValues:
         """
         Internal helper function that handles the saving of different nodes (not just project).
 
@@ -534,6 +534,10 @@ class API:
         Because it is recursive, this repeats until no "Bad UUID" error happen anymore.
         This works, because we keep track of "Bad UUID" handled nodes, and represent them in the JSON only as the UUID.
         """
+
+        if save_values is None:
+            save_values = _InternalSaveValues()
+
         node.validate()
         # saves all the local files to cloud storage right before saving the Project node
         # Ensure that all file nodes have uploaded there payload before actual save.
@@ -554,9 +558,9 @@ class API:
             # if it does exist we use `patch` if it doesn't `post`.
             node_known = len(self.search(type(node), SearchModes.UUID, str(node.uuid)).current_page_results) == 1
             if node_known:
-                response: Dict = requests.patch(url=f"{self._host}/{node.node_type.lower()}/{str(node.uuid)}", headers=self._http_headers, data=json_data).json()  # type: ignore
+                response: Dict = requests.patch(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers, data=json_data).json()  # type: ignore
             else:
-                response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()  # type: ignore
+                response: Dict = requests.post(url=f"{self._host}/{node.node_type_snake_case}", headers=self._http_headers, data=json_data).json()  # type: ignore
 
             # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
             # Errors with this code, may be fixable
@@ -572,6 +576,7 @@ class API:
 
             # It is only worthwhile repeating the attempted save loop if our state has improved.
             # Aka we did something to fix the occurring error
+            print(f"{self._host}/{node.node_type_snake_case}", save_values, old_save_values, not save_values > old_save_values)
             if not save_values > old_save_values:
                 break
 

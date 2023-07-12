@@ -57,9 +57,7 @@ def test_integration_software(cript_api, simple_project_node, simple_computation
     simple_project_node.name = f"test_integration_software_name_{uuid.uuid4().hex}"
 
     simple_project_node.collection[0].experiment[0].computation = [simple_computation_node]
-
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration = [simple_software_configuration]
-
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].software = complex_software_node
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

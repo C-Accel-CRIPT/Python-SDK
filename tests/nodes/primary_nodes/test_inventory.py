@@ -67,6 +67,6 @@ def test_integration_inventory(cript_api, simple_project_node, simple_inventory_
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
-    simple_project_node.collection[0].inventory[0].name = "inventory name UPDATED"
+    simple_project_node.collection[0].inventory[0].notes = "inventory notes UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

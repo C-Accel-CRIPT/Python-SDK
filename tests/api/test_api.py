@@ -228,7 +228,6 @@ def test_upload_and_download_file(cript_api, tmp_path_factory) -> None:
     pass
 
 
-# TODO get the search tests to pass on GitHub
 def test_api_search_node_type(cript_api: cript.API) -> None:
     """
     tests the api.search() method with just a node type material search

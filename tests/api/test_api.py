@@ -1,6 +1,8 @@
 import json
 import tempfile
 import warnings
+from pathlib import Path
+from typing import Dict
 
 import pytest
 import requests
@@ -184,14 +186,30 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
                                   vocab_word="some_invalid_word")
 
 
-def test_download_file_from_url(cript_api: cript.API) -> None:
+def test_download_file_from_url(cript_api: cript.API, tmp_path) -> None:
     """
     downloads the file from a URL and writes it to disk
+    then opens, reads, and compares that the file was gotten and written correctly
     """
-    cript_api.download_file(
-        object_name="https://criptscripts.org/cript_graph/graph_ppt/CRIPT_Data_Structure_Template.pptx",
-        destination_path=r"C:\Users\navid\Downloads\download_file_test"
-        )
+    url_to_download_file: str = "https://criptscripts.org/cript_graph_json/JSON/cao_protein.json"
+
+    # `download_file()` will get the file extension from the end of the URL and add it onto the name
+    # the path it will save it to will be `tmp_path/downloaded_file_name.json`
+    path_to_save_file: Path = tmp_path / "downloaded_file_name"
+
+    cript_api.download_file(object_name=url_to_download_file, destination_path=str(path_to_save_file))
+
+    # add file extension to file path and convert it to file path object
+    path_to_read_file = Path(str(path_to_save_file) + ".json").resolve()
+
+    # open the file that was just saved and read the contents
+    saved_file_contents = json.loads(path_to_read_file.read_text())
+
+    # make a request manually to get the contents and check that the contents are the same
+    response: Dict = requests.get(url=url_to_download_file).json()
+
+    # assert that the file I've save and the one on the web are the same
+    assert response == saved_file_contents
 
 
 # -------------- Start: Must be tested with API Container --------------------
@@ -205,6 +223,7 @@ def test_api_save_project(cript_api: cript.API, simple_project_node) -> None:
     pass
 
 
+# TODO change the name to reflect that this is only for files uploaded and downloaded to AWS S3 cloud storage
 def test_upload_and_download_file(cript_api, tmp_path_factory) -> None:
     """
     tests file upload to cloud storage

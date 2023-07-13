@@ -580,7 +580,6 @@ class API:
                 break
 
         if response["code"] != 200:
-            print(node_known, node.get_json(known_uuid=save_values.saved_uuid, suppress_attributes=save_values.suppress_attributes, indent=2).json)
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], pre_saved_nodes=save_values.saved_uuid, json_data=json_data)  # type: ignore
 
         save_values.saved_uuid.add(str(node.uuid))

@@ -252,7 +252,6 @@ class BaseNode(ABC):
             "Process": ["product", "waste"],
             "Project": ["member", "admin"],
             "Collection": ["member", "admin"],
-            "Citation": ["reference"],
         },
         **kwargs
     ):

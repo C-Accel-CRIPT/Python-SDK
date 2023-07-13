@@ -185,15 +185,6 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
 
 # -------------- Start: Must be tested with API Container --------------------
 # TODO get save to work with the API
-def test_api_save_project(cript_api: cript.API, simple_project_node) -> None:
-    """
-    Tests if API object can successfully save a node
-    """
-    # cript_api.save(simple_project_node)
-    warnings.warn("Please uncomment the `test_api_save_project` integration test to test with API")
-    pass
-
-
 def test_upload_and_download_file(cript_api, tmp_path_factory) -> None:
     """
     tests file upload to cloud storage

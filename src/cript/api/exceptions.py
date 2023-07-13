@@ -110,14 +110,17 @@ class CRIPTAPISaveError(CRIPTException):
     http_code: str
     api_response: str
 
-    def __init__(self, api_host_domain: str, http_code: str, api_response: str, pre_saved_nodes: Optional[Set[str]] = None):
+    def __init__(self, api_host_domain: str, http_code: str, api_response: str, pre_saved_nodes: Optional[Set[str]] = None, json_data: Optional[str] = None):
         self.api_host_domain = api_host_domain
         self.http_code = http_code
         self.api_response = api_response
         self.pre_saved_nodes = pre_saved_nodes
+        self.json_data = json_data
 
     def __str__(self) -> str:
         error_message = f"API responded with 'http:{self.http_code} {self.api_response}'"
+        if self.json_data:
+            error_message += f" {self.json_data}"
 
         return error_message
 

@@ -88,7 +88,7 @@ def write_file_to_disk(destination_path: [str, Path], file_contents: bytes) -> N
     Raises
     ------
     FileNotFoundError
-        In case the destination given does not exist
+        In case the destination given to write the file to was not found or does not exist
     """
     # convert any type of path to a Path object
     destination_path = Path(destination_path)

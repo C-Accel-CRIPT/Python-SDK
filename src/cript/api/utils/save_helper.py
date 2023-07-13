@@ -157,5 +157,8 @@ def _identify_suppress_attributes(node, response: Dict) -> Dict[str, Set[str]]:
             # TODO find the UUID this belongs to
             raise RuntimeError("Fixing non-root objects for patch, not implemented yet. This is a bug, please report it on https://github.com/C-Accel-CRIPT/Python-SDK/ .")
 
-        suppress_attributes[str(node.uuid)] = attributes
+        try:
+            suppress_attributes[str(node.uuid)].add(attributes)
+        except KeyError:
+            suppress_attributes[str(node.uuid)] = attributes
     return suppress_attributes

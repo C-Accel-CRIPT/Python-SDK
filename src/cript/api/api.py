@@ -583,6 +583,7 @@ class API:
             # It is only worthwhile repeating the attempted save loop if our state has improved.
             # Aka we did something to fix the occurring error
             if not save_values > old_save_values:
+                print(node_known, save_values, old_save_values)
                 break
 
         if response["code"] != 200:

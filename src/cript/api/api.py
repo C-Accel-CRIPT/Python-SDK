@@ -556,14 +556,15 @@ class API:
 
             # This checks if the current node exists on the back end.
             # if it does exist we use `patch` if it doesn't `post`.
-            node_known = len(self.search(type(node), SearchModes.UUID, str(node.uuid)).current_page_results) == 1
+            test_get_response: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers).json()
+            patch_request = test_get_response["code"] == 200
 
             # If all that is left is a UUID, we don't need to save it, we can just exit the loop.
-            if node_known and len(json.loads(json_data)) == 1:
+            if patch_request and len(json.loads(json_data)) == 1:
                 response = {"code": 200}
                 break
 
-            if node_known:
+            if patch_request:
                 response: Dict = requests.patch(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers, data=json_data).json()  # type: ignore
             else:
                 response: Dict = requests.post(url=f"{self._host}/{node.node_type_snake_case}", headers=self._http_headers, data=json_data).json()  # type: ignore
@@ -575,7 +576,7 @@ class API:
                 save_values += returned_save_values
 
             # Handle errors from patching with too many attributes
-            if node_known and response["code"] in (400,):
+            if patch_request and response["code"] in (400,):
                 suppress_attributes = _identify_suppress_attributes(node, response)
                 new_save_values = _InternalSaveValues(save_values.saved_uuid, suppress_attributes)
                 save_values += new_save_values
@@ -583,11 +584,10 @@ class API:
             # It is only worthwhile repeating the attempted save loop if our state has improved.
             # Aka we did something to fix the occurring error
             if not save_values > old_save_values:
-                print(node_known, save_values, old_save_values)
                 break
 
         if response["code"] != 200:
-            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], pre_saved_nodes=save_values.saved_uuid, json_data=json_data)  # type: ignore
+            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], patch_request=patch_request, pre_saved_nodes=save_values.saved_uuid, json_data=json_data)  # type: ignore
 
         save_values.saved_uuid.add(str(node.uuid))
         return save_values

@@ -679,7 +679,7 @@ class API:
 
         # if the file source is a URL
         if object_name.startswith("http"):
-            download_file_from_url(url=object_name, destination_path=destination_path)
+            download_file_from_url(url=object_name, destination_path=Path(destination_path).resolve())
             return
 
         # the file is stored in cloud storage and must be retrieved via object_name

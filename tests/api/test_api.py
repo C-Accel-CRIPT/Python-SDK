@@ -316,22 +316,6 @@ def test_api_search_uuid(cript_api: cript.API) -> None:
     pass
 
 
-def test_api_update_material(cript_api: cript.API) -> None:
-    """
-    Tests if the API can get a material and then update it and save it in the database,
-    and after save it gets the material again and checks if the update was done successfully.
-    """
-    pass
-
-
-def test_api_delete_material(cript_api: cript.API) -> None:
-    """
-    Tests if API can successfully delete a material.
-    After deleting it from the backend, it tries to get it, and it should not be able to
-    """
-    pass
-
-
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:
     """
     tests that the Python SDK can successfully get the user node associated with the API Token

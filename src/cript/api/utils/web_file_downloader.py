@@ -95,4 +95,3 @@ def write_file_to_disk(destination_path: [str, Path], file_contents: bytes) -> N
 
     with open(file=destination_path, mode="wb") as file_handle:
         file_handle.write(file_contents)
-

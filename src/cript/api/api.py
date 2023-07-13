@@ -557,6 +557,12 @@ class API:
             # This checks if the current node exists on the back end.
             # if it does exist we use `patch` if it doesn't `post`.
             node_known = len(self.search(type(node), SearchModes.UUID, str(node.uuid)).current_page_results) == 1
+
+            # If all that is left is a UUID, we don't need to save it, we can just exit the loop.
+            if node_known and len(json.loads(json_data)) == 1:
+                response = {"code": 200}
+                break
+
             if node_known:
                 response: Dict = requests.patch(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers, data=json_data).json()  # type: ignore
             else:

@@ -14,8 +14,9 @@
 [![trunk CI](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/trunk.yml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/trunk.yml)
 [![Tests](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/tests.yml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/tests.yml)
 [![CodeQL](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/codeql.yml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/codeql.yml)
-[![Safe Dependencies](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/dependency-review.yml)
 [![mypy](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/mypy.yaml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/mypy_check.yaml)
+
+<!-- [![Safe Dependencies](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/dependency-review.yml) -->
 
 <!-- just shows pass/fail instead of percentage
 [![Test Coverage](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/test_coverage.yaml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/test_coverage.yaml)

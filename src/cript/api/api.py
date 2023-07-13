@@ -639,6 +639,7 @@ class API:
         # return the object_name within AWS S3 for easy retrieval
         return object_name
 
+    @beartype
     def download_file(self, object_name: str, destination_path: str = ".") -> None:
         """
         download a file from AWS S3 and save it to the specified path on local storage

@@ -39,7 +39,7 @@ def download_file_from_url(url: str, destination_path: Union[str, Path]) -> None
     # get extension from URL
     file_extension = get_file_extension_from_url(url=url)
 
-    # add file extension to file path and file name
+    # add the file extension to file path and file name
     destination_path = str(destination_path) + file_extension
 
     destination_path = Path(destination_path)

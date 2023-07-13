@@ -185,15 +185,6 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
 
 # -------------- Start: Must be tested with API Container --------------------
 # TODO get save to work with the API
-def test_api_save_project(cript_api: cript.API, simple_project_node) -> None:
-    """
-    Tests if API object can successfully save a node
-    """
-    # cript_api.save(simple_project_node)
-    warnings.warn("Please uncomment the `test_api_save_project` integration test to test with API")
-    pass
-
-
 def test_upload_and_download_file(cript_api, tmp_path_factory) -> None:
     """
     tests file upload to cloud storage
@@ -237,7 +228,6 @@ def test_upload_and_download_file(cript_api, tmp_path_factory) -> None:
     pass
 
 
-# TODO get the search tests to pass on GitHub
 def test_api_search_node_type(cript_api: cript.API) -> None:
     """
     tests the api.search() method with just a node type material search
@@ -313,22 +303,6 @@ def test_api_search_uuid(cript_api: cript.API) -> None:
     # assert uuid_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
     # assert uuid_paginator.current_page_results[0]["uuid"] == uuid_to_search
     warnings.warn("Please uncomment the `test_api_search_uuid` integration test to test with API")
-    pass
-
-
-def test_api_update_material(cript_api: cript.API) -> None:
-    """
-    Tests if the API can get a material and then update it and save it in the database,
-    and after save it gets the material again and checks if the update was done successfully.
-    """
-    pass
-
-
-def test_api_delete_material(cript_api: cript.API) -> None:
-    """
-    Tests if API can successfully delete a material.
-    After deleting it from the backend, it tries to get it, and it should not be able to
-    """
     pass
 
 

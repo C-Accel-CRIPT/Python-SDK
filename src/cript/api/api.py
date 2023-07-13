@@ -23,6 +23,7 @@ from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
 from cript.api.utils.save_helper import (
     _fix_node_save,
+    _get_uuid_from_error_message,
     _identify_suppress_attributes,
     _InternalSaveValues,
 )
@@ -584,6 +585,9 @@ class API:
             # It is only worthwhile repeating the attempted save loop if our state has improved.
             # Aka we did something to fix the occurring error
             if not save_values > old_save_values:
+                if not patch_request and response["code"] != 200 and response["error"].startswith("Duplicate uuid:"):
+                    if str(node.uuid) == _get_uuid_from_error_message(response["error"]) and requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers).json()["code"] == 200:
+                        continue
                 break
 
         if response["code"] != 200:
@@ -745,6 +749,7 @@ class API:
 
         # get node typ from class
         node_type = node_type.node_type_snake_case
+        print(node_type)
 
         # always putting a page parameter of 0 for all search URLs
         page_number = 0

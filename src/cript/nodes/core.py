@@ -60,7 +60,7 @@ class BaseNode(ABC):
             name = self.__name__
         return name
 
-    @property
+    @classproperty
     def node_type_snake_case(self):
         camel_case = self.node_type
         # Regex to convert camel case to snake case.

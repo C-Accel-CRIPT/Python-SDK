@@ -69,7 +69,7 @@ def get_file_extension_from_url(url: str) -> str:
     return file_extension
 
 
-def write_file_to_disk(destination_path: [str, Path], file_contents: bytes) -> None:
+def write_file_to_disk(destination_path: Union[str, Path], file_contents: bytes) -> None:
     """
     simply writes the file to the given destination
 

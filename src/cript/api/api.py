@@ -585,9 +585,9 @@ class API:
             # It is only worthwhile repeating the attempted save loop if our state has improved.
             # Aka we did something to fix the occurring error
             if not save_values > old_save_values:
-                if not patch_request and response["code"] != 200 and response["error"].startswith("Duplicate uuid:"):
-                    if str(node.uuid) == _get_uuid_from_error_message(response["error"]) and requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers).json()["code"] == 200:
-                        continue
+                print(patch_request, node.uuid, requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers).json())
+                if not patch_request and requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers).json()["code"] == 200:
+                    continue
                 break
 
         if response["code"] != 200:

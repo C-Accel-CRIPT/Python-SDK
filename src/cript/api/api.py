@@ -744,7 +744,7 @@ class API:
         """
 
         # get node typ from class
-        node_type = node_type.node_type.lower()
+        node_type = node_type.node_type_snake_case
 
         # always putting a page parameter of 0 for all search URLs
         page_number = 0

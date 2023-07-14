@@ -156,8 +156,8 @@ class API:
         self._token = token  # type: ignore
 
         # assign headers
-        # TODO might need to add Bearer to it or check for it
-        self._http_headers = {"Authorization": f"{self._token}", "Content-Type": "application/json"}
+        # add Bearer to token for HTTP, but keep it bare for AWS S3 file uploads and downloads
+        self._http_headers = {"Authorization": f"Bearer {self._token}", "Content-Type": "application/json"}
 
         # check that api can connect to CRIPT with host and token
         self._check_initial_host_connection()

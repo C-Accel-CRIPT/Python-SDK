@@ -66,7 +66,10 @@ def _fix_node_save(api, node, response, save_values: _InternalSaveValues) -> _In
     if response["error"].startswith("Bad uuid:") or response["error"].strip().startswith("Duplicate uuid:"):
         missing_uuid = _get_uuid_from_error_message(response["error"])
         missing_node = find_node_by_uuid(node, missing_uuid)
-
+        # If the missing node, is the same as the one we are trying to save, this not working.
+        # We end the infinite loop here.
+        if missing_uuid == str(node.uuid):
+            return save_values
         # Now we save the bad node extra.
         # So it will be known when we attempt to save the graph again.
         # Since we pre-saved this node, we want it to be UUID edge only the next JSON.
@@ -154,5 +157,8 @@ def _identify_suppress_attributes(node, response: Dict) -> Dict[str, Set[str]]:
             # TODO find the UUID this belongs to
             raise RuntimeError("Fixing non-root objects for patch, not implemented yet. This is a bug, please report it on https://github.com/C-Accel-CRIPT/Python-SDK/ .")
 
-        suppress_attributes[str(node.uuid)] = attributes
+        try:
+            suppress_attributes[str(node.uuid)].add(attributes)
+        except KeyError:
+            suppress_attributes[str(node.uuid)] = attributes
     return suppress_attributes

@@ -1,6 +1,7 @@
 import copy
 import dataclasses
 import json
+import re
 import uuid
 from abc import ABC
 from dataclasses import asdict, dataclass, replace
@@ -58,6 +59,13 @@ class BaseNode(ABC):
         if name == "ABCMeta":
             name = self.__name__
         return name
+
+    @classproperty
+    def node_type_snake_case(self):
+        camel_case = self.node_type
+        # Regex to convert camel case to snake case.
+        snake_case = re.sub(r"(?<!^)(?=[A-Z])", "_", camel_case).lower()
+        return snake_case
 
     # Prevent new attributes being set.
     # This might just be temporary, but for now, I don't want to accidentally add new attributes, when I mean to modify one.

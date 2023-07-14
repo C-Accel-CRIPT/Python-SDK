@@ -4,7 +4,7 @@ import os
 import uuid
 import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, Union
 
 import boto3
 import jsonschema
@@ -23,6 +23,7 @@ from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
 from cript.api.utils.save_helper import (
     _fix_node_save,
+    _get_uuid_from_error_message,
     _identify_suppress_attributes,
     _InternalSaveValues,
 )
@@ -525,7 +526,7 @@ class API:
                     pass
             raise exc from exc
 
-    def _internal_save(self, node, save_values: _InternalSaveValues = _InternalSaveValues()) -> _InternalSaveValues:
+    def _internal_save(self, node, save_values: Optional[_InternalSaveValues] = None) -> _InternalSaveValues:
         """
         Internal helper function that handles the saving of different nodes (not just project).
 
@@ -534,6 +535,10 @@ class API:
         Because it is recursive, this repeats until no "Bad UUID" error happen anymore.
         This works, because we keep track of "Bad UUID" handled nodes, and represent them in the JSON only as the UUID.
         """
+
+        if save_values is None:
+            save_values = _InternalSaveValues()
+
         node.validate()
         # saves all the local files to cloud storage right before saving the Project node
         # Ensure that all file nodes have uploaded there payload before actual save.
@@ -552,11 +557,18 @@ class API:
 
             # This checks if the current node exists on the back end.
             # if it does exist we use `patch` if it doesn't `post`.
-            node_known = len(self.search(type(node), SearchModes.UUID, str(node.uuid)).current_page_results) == 1
-            if node_known:
-                response: Dict = requests.patch(url=f"{self._host}/{node.node_type.lower()}/{str(node.uuid)}", headers=self._http_headers, data=json_data).json()  # type: ignore
+            test_get_response: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers).json()
+            patch_request = test_get_response["code"] == 200
+
+            # If all that is left is a UUID, we don't need to save it, we can just exit the loop.
+            if patch_request and len(json.loads(json_data)) == 1:
+                response = {"code": 200}
+                break
+
+            if patch_request:
+                response: Dict = requests.patch(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers, data=json_data).json()  # type: ignore
             else:
-                response: Dict = requests.post(url=f"{self._host}/{node.node_type.lower()}", headers=self._http_headers, data=json_data).json()  # type: ignore
+                response: Dict = requests.post(url=f"{self._host}/{node.node_type_snake_case}", headers=self._http_headers, data=json_data).json()  # type: ignore
 
             # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
             # Errors with this code, may be fixable
@@ -565,7 +577,7 @@ class API:
                 save_values += returned_save_values
 
             # Handle errors from patching with too many attributes
-            if node_known and response["code"] in (400,):
+            if patch_request and response["code"] in (400,):
                 suppress_attributes = _identify_suppress_attributes(node, response)
                 new_save_values = _InternalSaveValues(save_values.saved_uuid, suppress_attributes)
                 save_values += new_save_values
@@ -573,10 +585,13 @@ class API:
             # It is only worthwhile repeating the attempted save loop if our state has improved.
             # Aka we did something to fix the occurring error
             if not save_values > old_save_values:
+                print(patch_request, node.uuid, requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers).json())
+                if not patch_request and requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers).json()["code"] == 200:
+                    continue
                 break
 
         if response["code"] != 200:
-            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], pre_saved_nodes=save_values.saved_uuid)  # type: ignore
+            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], patch_request=patch_request, pre_saved_nodes=save_values.saved_uuid, json_data=json_data)  # type: ignore
 
         save_values.saved_uuid.add(str(node.uuid))
         return save_values
@@ -733,7 +748,8 @@ class API:
         """
 
         # get node typ from class
-        node_type = node_type.node_type.lower()
+        node_type = node_type.node_type_snake_case
+        print(node_type)
 
         # always putting a page parameter of 0 for all search URLs
         page_number = 0

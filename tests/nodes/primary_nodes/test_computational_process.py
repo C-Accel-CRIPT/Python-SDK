@@ -108,6 +108,7 @@ def test_integration_computational_process(cript_api, simple_project_node, simpl
     1. GET from API
     1. assert they're both equal
     """
+    # ========= test create =========
     # renaming to avoid duplicate node errors
     simple_project_node.name = f"test_integration_computation_process_name_{uuid.uuid4().hex}"
 
@@ -123,5 +124,11 @@ def test_integration_computational_process(cript_api, simple_project_node, simpl
     simple_project_node.collection[0].experiment[0].data = [simple_data_node]
 
     simple_project_node.collection[0].experiment[0].computation_process = [simplest_computational_process_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    # change computational_process to trigger update
+    simple_project_node.collection[0].experiment[0].computation_process[0].type = "DPD"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

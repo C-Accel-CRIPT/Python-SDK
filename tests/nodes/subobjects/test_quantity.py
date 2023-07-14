@@ -38,21 +38,21 @@ def test_integration_quantity(cript_api, simple_project_node, simple_collection_
     1. GET JSON from API
     1. check their fields equal
     """
-
+    # ========= test create =========
     simple_project_node.name = f"test_integration_quantity_{uuid.uuid4().hex}"
 
     # assemble needed nodes
     simple_project_node.collection = [simple_collection_node]
-
     simple_project_node.collection[0].experiment = [simple_experiment_node]
-
-    # add ingredient to process
-    simple_process_node.ingredient = [simple_ingredient_node]
-
-    # continue assembling
     simple_project_node.collection[0].experiment[0].process = [simple_process_node]
+    simple_project_node.collection[0].experiment[0].process[0].ingredient = [simple_ingredient_node]
 
     # add orphaned material node to project
     simple_project_node.material = [simple_material_node]
 
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    # change simple attribute to trigger update
+    simple_project_node.collection[0].experiment[0].process[0].ingredient[0].quantity[0].value = 123456789
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

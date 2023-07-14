@@ -45,11 +45,18 @@ def test_integration_equipment(cript_api, simple_project_node, simple_collection
     1. GET from API
     1. assert JSON sent and JSON received are the same
     """
+    # ========= test create =========
     simple_project_node.name = f"test_integration_equipment_{uuid.uuid4().hex}"
 
     simple_project_node.collection = [simple_collection_node]
     simple_project_node.collection[0].experiment = [simple_experiment_node]
     simple_project_node.collection[0].experiment[0].process = [simple_process_node]
     simple_project_node.collection[0].experiment[0].process[0].equipment = [simple_equipment_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    # change simple attribute to trigger update
+    simple_project_node.collection[0].experiment[0].process[0].equipment[0].description = "equipment description UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

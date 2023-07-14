@@ -188,7 +188,8 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
 def test_upload_and_download_local_file(cript_api, tmp_path_factory) -> None:
     """
     tests file upload to cloud storage
-    test by uploading a local file and then downloading the same file and checking their contents are the same
+    test by uploading a local file to AWS S3 using cognito mode
+    and then downloading the same file and checking their contents are the same
     proving that the file was uploaded and downloaded correctly
 
     1. create a temporary file

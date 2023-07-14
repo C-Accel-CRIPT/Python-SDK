@@ -547,6 +547,8 @@ class API:
 
         # Dummy response to have a virtual do-while loop, instead of while loop.
         response = {"code": -1}
+        # TODO remove once get works properly
+        force_patch = False
 
         while response["code"] != 200:
             # Keep a record of how the state was before the loop
@@ -559,6 +561,11 @@ class API:
             # if it does exist we use `patch` if it doesn't `post`.
             test_get_response: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers).json()
             patch_request = test_get_response["code"] == 200
+
+            # TODO remove once get works properly
+            if not patch_request and force_patch:
+                patch_request = True
+                force_patch = False
 
             # If all that is left is a UUID, we don't need to save it, we can just exit the loop.
             if patch_request and len(json.loads(json_data)) == 1:
@@ -585,9 +592,14 @@ class API:
             # It is only worthwhile repeating the attempted save loop if our state has improved.
             # Aka we did something to fix the occurring error
             if not save_values > old_save_values:
-                print(patch_request, node.uuid, requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers).json())
-                if not patch_request and requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers).json()["code"] == 200:
-                    continue
+                # TODO remove once get works properly
+                if not patch_request and response["code"] == 409 and response["error"].strip().startswith("Duplicate uuid:"):
+                    duplicate_uuid = _get_uuid_from_error_message(response["error"])
+                    if str(node.uuid) == duplicate_uuid:
+                        print("force_patch", node.uuid)
+                        force_patch = True
+                        continue
+
                 break
 
         if response["code"] != 200:

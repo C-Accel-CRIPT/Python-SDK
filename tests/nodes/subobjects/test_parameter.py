@@ -48,6 +48,6 @@ def test_integration_parameter(cript_api, simple_project_node, simple_collection
 
     # ========= test update =========
     # update simple attribute to trigger update
-    simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].algorithm[0].parameter[0].value = "132456789"
+    simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].algorithm[0].parameter[0].value = 132456789
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

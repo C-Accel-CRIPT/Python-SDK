@@ -22,6 +22,7 @@ from cript.api.exceptions import (
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
 from cript.api.utils.save_helper import fix_node_save
+from cript.api.utils.web_file_downloader import download_file_from_url
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import ControlledVocabularyCategories
 from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTNodeSchemaError
@@ -638,6 +639,7 @@ class API:
         # return the object_name within AWS S3 for easy retrieval
         return object_name
 
+    @beartype
     def download_file(self, object_name: str, destination_path: str = ".") -> None:
         """
         download a file from AWS S3 and save it to the specified path on local storage
@@ -674,6 +676,11 @@ class API:
         None
             just downloads the file to the specified path
         """
+
+        # if the file source is a URL
+        if object_name.startswith("http"):
+            download_file_from_url(url=object_name, destination_path=Path(destination_path).resolve())
+            return
 
         # the file is stored in cloud storage and must be retrieved via object_name
         self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=object_name, Filename=destination_path)  # type: ignore

@@ -144,7 +144,7 @@ def find_node_by_uuid(node, uuid_str: str):
 
 
 def _identify_suppress_attributes(node, response: Dict) -> Dict[str, Set[str]]:
-    suppress_attributes = {}
+    suppress_attributes: Dict[str, Set[str]] = {}
     if response["error"].startswith("Additional properties are not allowed"):
         # Find all the attributes, that are listed in the error message with regex
         attributes = set(re.findall(r"'(.*?)'", response["error"]))  # regex finds all attributes in enclosing `'`. This is how the error message lists them.
@@ -158,7 +158,7 @@ def _identify_suppress_attributes(node, response: Dict) -> Dict[str, Set[str]]:
             raise RuntimeError("Fixing non-root objects for patch, not implemented yet. This is a bug, please report it on https://github.com/C-Accel-CRIPT/Python-SDK/ .")
 
         try:
-            suppress_attributes[str(node.uuid)].add(attributes)
+            suppress_attributes[str(node.uuid)].add(attributes)  # type: ignore
         except KeyError:
             suppress_attributes[str(node.uuid)] = attributes
     return suppress_attributes

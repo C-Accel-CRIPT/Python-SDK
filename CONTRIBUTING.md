@@ -39,6 +39,7 @@ Unfortunately, we are not able to investigate/fix bugs without a minimal reprodu
 back from you, we may close the issue.
 
 ## Submitting PR
+
 Search GitHub for an open or closed PR that relates to your submission. You
 don't want to duplicate effort. If you do not find a related issue or PR,
 go ahead.

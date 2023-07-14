@@ -72,7 +72,7 @@
     "buildscript",
     "markdownlint",
     "Numpy",
-    "ipynb"
+    "ipynb",
     "boto",
     "beartype",
     "mypy",

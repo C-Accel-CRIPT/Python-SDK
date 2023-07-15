@@ -15,6 +15,15 @@ This documentation shows how to [quickly get started](./quickstart/) with the SD
 - [CRIPT Data Model](https://chemrxiv.org/engage/api-gateway/chemrxiv/assets/orp/resource/item/6322994103e27d9176d5b10c/original/main-supporting-information.pdf)
     - The CRIPT Data Model is the back bone of the whole CRIPT project. Understanding it will make it a lot easier to use any part of the system
 - [CRIPT Manual](https://criptapp.org/docs/manual/)
-    -  Full in depth and complete tutorial of the everything CRIPT has to offer
+    -  Full in depth and complete tutorial of everything CRIPT has to offer
+- [CRIPT Scripts Research paper](https://pubs.acs.org/doi/10.1021/acscentsci.3c00011)
+    - Learn about the CRIPT platform
 - [CRIPTScripts](https://criptscripts.org/)
     - CRIPT Scripts is a curated list of examples and tools for interacting with the CRIPT platform.
+- [CRIPT Python SDK Internal Documentation](https://github.com/C-Accel-CRIPT/Python-SDK/wiki)
+    - Learn more about the internal workings of the CRIPT Python SDK
+- [CRIPT Python SDK Discussions Tab](https://github.com/C-Accel-CRIPT/Python-SDK/discussions)
+    - Communicate with the CRIPT Python SDK team
+- [CRIPT Python SDK Contributing Guidelines](https://github.com/C-Accel-CRIPT/Python-SDK/blob/develop/CONTRIBUTING.md)
+    - Learn how to contribute to the CRIPT Python SDK open-source project
+- [CRIPT Python SDK Contributors](https://github.com/C-Accel-CRIPT/Python-SDK/blob/develop/CONTRIBUTORS.md)

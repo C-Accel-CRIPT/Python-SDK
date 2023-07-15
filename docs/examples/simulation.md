@@ -35,7 +35,7 @@ To connect to CRIPT, you must enter a `host` and an `API Token`. For most users,
 
     To ensure security, avoid storing sensitive information like tokens directly in your code.
     Instead, use environment variables.
-    Storring tokens in code shared on platforms like GitHub can lead to security incidents.
+    Storing tokens in code shared on platforms like GitHub can lead to security incidents.
     Anyone that possesses your token can impersonate you on the [CRIPT](https://criptapp.org/) platform.
     Consider [alternative methods for loading tokens with the CRIPT API Client](https://c-accel-cript.github.io/Python-SDK/api/api/#cript.api.api.API.__init__).
     In case your token is exposed be sure to immediately generate a new token to revoke the access of the old one

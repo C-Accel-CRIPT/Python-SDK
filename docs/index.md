@@ -12,7 +12,7 @@ This documentation shows how to [quickly get started](./quickstart/) with the SD
 
 ## Resources
 
-??? info "List of CRIPT Resources"
+??? info "CRIPT Resources"
 
     - [CRIPT Data Model](https://chemrxiv.org/engage/api-gateway/chemrxiv/assets/orp/resource/item/6322994103e27d9176d5b10c/original/main-supporting-information.pdf)
         - The CRIPT Data Model is the back bone of the whole CRIPT project. Understanding it will make it a lot easier to use any part of the system

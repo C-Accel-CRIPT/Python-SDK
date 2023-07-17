@@ -61,8 +61,8 @@ api = api.connect()
 
 ## Create a Project
 
-All data uploaded to CRIPT must be associated with a [project](../../nodes/primary_nodes/project) node.
-[Project](../../nodes/primary_nodes/project) can be thought of as an overarching research goal.
+All data uploaded to CRIPT must be associated with a [`Project`](../../nodes/primary_nodes/project) node.
+[`Project`](../../nodes/primary_nodes/project) can be thought of as an overarching research goal.
 For example, finding a replacement for an existing material from a sustainable feedstock.
 
 ```python
@@ -97,7 +97,7 @@ print(project.get_json(indent=2).json)
 
 ## Create an Experiment node
 
-The [collection node](../../nodes/primary_nodes/collection) holds a series of
+The [Collection node](../../nodes/primary_nodes/collection) holds a series of
 [Experiment nodes](../../nodes/primary_nodes/experiment) nodes.
 
 And we can add this experiment to the collection of the project.
@@ -109,8 +109,8 @@ collection.experiment += [experiment]
 
 # Create relevant Software nodes
 
-[Software](../../nodes/subobjects/software) nodes refer to software that you use during your simulation experiment.
-In general `Software` nodes can be shared between project, and it is encouraged to do so if the software you are using is already present in the CRIPT project use it.
+[`Software`](../../nodes/primary_nodes/software) nodes refer to software that you use during your simulation experiment.
+In general [`Software`](../../nodes/primary_nodes/software) nodes can be shared between project, and it is encouraged to do so if the software you are using is already present in the CRIPT project use it.
 
 If They are not, you can create them as follows:
 
@@ -130,12 +130,13 @@ If a version is not available, consider using git-hashes.
 
 # Create Software Configurations
 
-Now that we have our <a href="../../nodes/software" target="_blank">`Software`</a> nodes, we can create <a href="../../subobjects/software_configuration" target="_blank">`SoftwareConfiguration`</a> nodes.
-`SoftwareConfiguration` nodes are designed to let you specify details, about which algorithms from the software package you are using and log parameters for these algorithms.
+Now that we have our [`Software`](../../nodes/primary_nodes/software) nodes, we can create 
+[`SoftwareConfiguration`](../../nodes/subobjects/software_configuration/) nodes. [`SoftwareConfigurations`](../../nodes/subobjects/software_configuration/) nodes are designed to let you specify details, about which algorithms from the software package you are using and log parameters for these algorithms.
 
-The `SoftwareConfigurations` are then used for constructing our <a href="../../nodes/computation" target="_blank">`Computation`</a> node, which describe the actual computation you are performing.
+The [`SoftwareConfigurations`](../../nodes/subobjects/software_configuration/) are then used for constructing our [`Computation`](../../nodes/primary_nodes/computation/) node, which describe the actual computation you are performing.
 
-We can also attach <a href="../../subobjects/algorithm" target="_blank">`Algorithm`</a> nodes to a <a href="../../subobjects/software_configuration" target="_blank">`SoftwareConfiguration`</a> node. The <a href="../../subobjects/algorithm" target="_blank">`Algorithm`</a> nodes may contain nested <a href="../../subobjects/parameter" target="_blank">`Parameter`</a> nodes, as shown in the example below.
+We can also attach [`Algorithm`](../../nodes/subobjects/algorithm) nodes to a [`SoftwareConfiguration`](../../nodes/subobjects/software_configuration) 
+node. The [`Algorithm`](../../nodes/subobjects/algorithm) nodes may contain nested [`Parameter`](../../nodes/subobjects/parameter) nodes, as shown in the example below.
 
 
 
@@ -159,16 +160,16 @@ packmol_config = cript.SoftwareConfiguration(software=packmol)
 ```
 
 !!! note "Algorithm keys"
-    The allowed `Algorithm` keys are listed under <a href="https://criptapp.org/keys/algorithm-key/" target="_blank">algorithm keys</a> in the CRIPT controlled vocabulary.
+    The allowed [`Algorithm`](../../nodes/subobjects/algorithm/) keys are listed under [algorithm keys](https://criptapp.org/keys/algorithm-key/) in the CRIPT controlled vocabulary.
 
 !!! note "Parameter keys"
-    The allowed `Parameter` keys are listed under <a href="https://criptapp.org/keys/parameter-key/" target="_blank">parameter keys</a> in the CRIPT controlled vocabulary.
+    The allowed [`Parameter`](../../nodes/subobjects/property/) keys are listed under [parameter keys](https://criptapp.org/keys/parameter-key/) in the CRIPT controlled vocabulary.
 
 
 # Create Computations
 
-Now that we've created some <a href="../../subobjects/software_configuration" target="_blank">`SoftwareConfiguration`</a> nodes, we can used them to build full <a href="../../nodes/computation" target="_blank">`Computation`</a> nodes.
-In some cases, we may also want to add <a href="../../subobjects/condition" target="_blank">`Condition`</a> nodes to our computation, to specify the conditions at which the computation was carried out. An example of this is shown below.
+Now that we've created some [`SoftwareConfiguration`](../../nodes/subobjects/software_configuration) nodes, we can used them to build full [`Computation`](../../nodes/primary_nodes/computation) nodes.
+In some cases, we may also want to add [`Condition`](../../nodes/subobjects/condition) nodes to our computation, to specify the conditions at which the computation was carried out. An example of this is shown below.
 
 
 ```python
@@ -232,10 +233,10 @@ experiment.computation += [init, equilibration, bulk, ana]
 
 
 !!! note "Computation types"
-    The allowed `Computation` types are listed under <a href="https://criptapp.org/keys/computation-type/" target="_blank">computation types</a> in the CRIPT controlled vocabulary.
+    The allowed [`Computation`](../../nodes/primary_nodes/computation) types are listed under [computation types](https://criptapp.org/keys/computation-type/) in the CRIPT controlled vocabulary.
 
 !!! note "Condition keys"
-    The allowed `Condition` keys are listed under <a href="https://criptapp.org/keys/condition-key/" target="_blank">condition keys</a> in the CRIPT controlled vocabulary.
+    The allowed [`Condition`](../../nodes/subobjects/condition) keys are listed under [condition keys](https://criptapp.org/keys/condition-key/) in the CRIPT controlled vocabulary.
 
 
 # Create and Upload Files
@@ -250,17 +251,17 @@ final_file = cript.File("Final snapshot of the system at the end the simulations
 ```
 
 !!! note
-The `source` field should point to any file on your local filesystem.
+    The [source field](field should point to any ) should point to any file on your local filesystem.
 
 !!! info
-Depending on the file size, there could be a delay while the checksum is generated.
+    Depending on the file size, there could be a delay while the checksum is generated.
 
 Note, that we haven't uploaded the files to CRIPT yet, this is automatically performed, when the project is uploaded via `api.save(project)`.
 
 
 # Create Data
 
-Next, we'll create a <a href="../../nodes/data" target="_blank">`Data`</a> node which helps organize our <a href="../../nodes/file" target="_blank">`File`</a> nodes and links back to our <a href="../../nodes/computation" target="_blank">`Computation`</a> objects.
+Next, we'll create a [`Data`](../../nodes/primary_nodes/data) node which helps organize our [`File`](../../nodes/supporting_nodes/file) nodes and links back to our [`Computation`](../../nodes/primary_nodes/computation) objects.
 
 ```python
 packing_data = cript.Data(
@@ -295,9 +296,9 @@ final_data = cript.Data(
 ```
 
 !!! note "Data types"
-    The allowed `Data` types are listed under the <a href="https://criptapp.org/keys/data-type/" target="_blank">data types</a> in the CRIPT controlled vocabulary.
+    The allowed [`Data`](../../nodes/primary_nodes/data) types are listed under the [data types](https://criptapp.org/keys/data-type/) in the CRIPT controlled vocabulary.
 
-Next, we'll link these <a href="../../nodes/data" target="_blank">`Data`</a> nodes to the appropriate <a href="../../nodes/computation" target="_blank">`Computation`</a> nodes.
+Next, we'll link these [`Data`](../../nodes/primary_nodes/data) nodes to the appropriate [`Computation`](../../nodes/primary_nodes/computation) nodes.
 
 ```python
 
@@ -312,13 +313,13 @@ bulk.output_data = [final_data]
 
 # Create a virtual Material
 
-Finally, we'll create a virtual material and link it to the <a href="../../nodes/computation" target="_blank">`Computation`</a> nodes that we've built.
+Finally, we'll create a virtual material and link it to the [`Computation`](../../nodes/primary_nodes/computation) nodes that we've built.
 
 ```py
 
 ```
 
-Next, let's add some [`Identifier`](../subobjects/identifier.md) nodes to the material to make it easier to identify and search.
+Next, let's add some [`Identifiers`](../../nodes/primary_nodes/material/#cript.nodes.primary_nodes.material.Material.identifiers) nodes to the material to make it easier to identify and search.
 
 ```py
 names = cript.Identifier(
@@ -342,9 +343,9 @@ polystyrene.add_identifier(bigsmiles)
 ```
 
 !!! note "Identifier keys"
-    The allowed `Identifier` keys are listed in the <a href="https://criptapp.org/keys/material-identifier-key/" target="_blank">material identifier keys</a> in the CRIPT controlled vocabulary.
+    The allowed [`Identifiers`](../../nodes/primary_nodes/material/#cript.nodes.primary_nodes.material.Material.identifiers) keys are listed in the [material identifier keys](https://criptapp.org/keys/material-identifier-key/) in the CRIPT controlled vocabulary.
 
-Let's also add some [`Property`](../subobjects/property.md) nodes to the `Material`, which represent its physical or virtual (in the case of a simulated material) properties.
+Let's also add some [`Property`](../../nodes/subobjects/property) nodes to the [`Material`](../../nodes/primary_nodes/material), which represent its physical or virtual (in the case of a simulated material) properties.
 
 ```py
 phase = cript.Property(key="phase", value="solid")
@@ -355,7 +356,7 @@ polystyrene.add_property(color)
 ```
 
 !!! note "Material property keys"
-    The allowed material `Property` keys are listed in the <a href="https://criptapp.org/keys/material-property-key/" target="_blank">material property keys</a> in the CRIPT controlled vocabulary.
+    The allowed material [`Property`](../../nodes/subobjects/property) keys are listed in the [material property keys](https://criptapp.org/keys/material-property-key/) in the CRIPT controlled vocabulary.
 
 ```python
 identifiers = [{"names": ["poly(styrene)", "poly(vinylbenzene)"]}]
@@ -365,7 +366,7 @@ identifiers += [{"chem_repeat": ["C8H8"]}]
 polystyrene = cript.Material(name="virtual polystyrene", identifiers=identifiers)
 ```
 
-Finally, we'll create a [`ComputationalForcefield`](../subobjects/computational_forcefield.md) node and link it to the Material.
+Finally, we'll create a [`ComputationalForcefield`](../../nodes/subobjects/computational_forcefield) node and link it to the Material.
 
 
 ```python
@@ -380,7 +381,7 @@ polystyrene.computational_forcefield = forcefield
 ```
 
 !!! note "Computational forcefield keys"
-    The allowed `ComputationalForcefield` keys are listed under the <a href="https://criptapp.org/keys/computational-forcefield-key/" target="_blank">computational forcefield keys</a> in the CRIPT controlled vocabulary.
+    The allowed [`ComputationalForcefield`](../../subobjects/computational_forcefield/) keys are listed under the [computational forcefield keys](https://criptapp.org/keys/computational-forcefield-key/) in the CRIPT controlled vocabulary.
 
 Now we can save the project to CRIPT (and upload the files) or inspect the JSON output
 

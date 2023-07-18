@@ -384,4 +384,3 @@ def test_get_my_projects_from_api(cript_api: cript.API) -> None:
     get a page of project nodes that is associated with the API token
     """
     pass
-

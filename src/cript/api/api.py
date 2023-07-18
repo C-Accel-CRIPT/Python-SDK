@@ -50,7 +50,8 @@ class API:
     """
 
     _host: str = ""
-    _token: str = ""
+    _http_token: str = ""
+    _storage_token: str = ""
     _http_headers: dict = {}
     _vocabulary: dict = {}
     _db_schema: dict = {}
@@ -145,18 +146,19 @@ class API:
         """
 
         if config_file_path or (host is None and http_token is None and storage_token is None):
-            authentication_dict: Dict[str, str] = resolve_host_and_token(host, http_token, config_file_path)
+            authentication_dict: Dict[str, str] = resolve_host_and_token(host, http_token=http_token, storage_token=storage_token, config_file_path=config_file_path)
 
             host: str = authentication_dict["host"]
             http_token: str = authentication_dict["http_token"]
             storage_token: str = authentication_dict["storage_token"]
 
-        self._host = self._prepare_host(host=host)  # type: ignore
-        self._token = http_token  # type: ignore
+        self._host = self._prepare_host(host=host)
+        self._http_token = http_token
+        self._storage_token = storage_token
 
         # assign headers
         # add Bearer to token for HTTP, but keep it bare for AWS S3 file uploads and downloads
-        self._http_headers = {"Authorization": f"Bearer {self._token}", "Content-Type": "application/json"}
+        self._http_headers = {"Authorization": f"Bearer {self._http_token}", "Content-Type": "application/json"}
 
         # check that api can connect to CRIPT with host and token
         self._check_initial_host_connection()
@@ -192,9 +194,9 @@ class API:
 
         if self._internal_s3_client is None:
             auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
-            identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
+            identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._storage_token})
             # TODO remove this temporary fix to the token, by getting is from back end.
-            aws_token = self._token.lstrip("Bearer ")
+            aws_token = self._storage_token
 
             aws_credentials = auth.get_credentials_for_identity(IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: aws_token})
             aws_credentials = aws_credentials["Credentials"]
@@ -286,7 +288,7 @@ class API:
         try:
             pass
         except Exception as exc:
-            raise CRIPTConnectionError(self.host, self._token) from exc
+            raise CRIPTConnectionError(self.host, self._http_token) from exc
 
     def _get_vocab(self) -> dict:
         """

@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict
 
 
-def resolve_host_and_token(host, http_token, config_file_path) -> Dict[str, str]:
+def resolve_host_and_token(host, http_token, storage_token, config_file_path) -> Dict[str, str]:
     """
     resolves the host and token after passed into the constructor if it comes from env vars or config file
 
@@ -27,9 +27,9 @@ def resolve_host_and_token(host, http_token, config_file_path) -> Dict[str, str]
         with open(config_file_path, "r") as file_handle:
             config_file: Dict[str, str] = json.loads(file_handle.read())
             # set api host and token
-            host: str = config_file["host"]
-            http_token: str = config_file["http_token"]
-            storage_token: str = config_file["storage_token"]
+            host = config_file["host"]
+            http_token = config_file["http_token"]
+            storage_token = config_file["storage_token"]
 
             return {"host": host, "http_token": http_token, "storage_token": storage_token}
 
@@ -40,7 +40,7 @@ def resolve_host_and_token(host, http_token, config_file_path) -> Dict[str, str]
     if http_token is None:
         http_token = _read_env_var(env_var_name="CRIPT_TOKEN")
  
-    if http_token is None:
+    if storage_token is None:
         storage_token = _read_env_var(env_var_name="CRIPT_STORAGE_TOKEN")
 
     return {"host": host, "http_token": http_token, "storage_token": storage_token}
@@ -54,7 +54,7 @@ def _read_env_var(env_var_name: str) -> str:
     -------
     str
     """
-    env_var: str = os.environ.get(env_var_name)
+    env_var = os.environ.get(env_var_name)
 
     if env_var is None:
         raise RuntimeError(f"API initialized with `host=None` and `token=None` but environment variable `{env_var_name}` " f"was not found.")

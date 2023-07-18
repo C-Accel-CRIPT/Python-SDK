@@ -30,7 +30,7 @@ def test_api_with_invalid_host() -> None:
     * giving a host that does not start with http such as "criptapp.org" should throw an InvalidHostError
     """
     with pytest.raises((requests.ConnectionError, cript.api.exceptions.CRIPTConnectionError)):
-        cript.API("https://some_invalid_host", "123456789")
+        cript.API(host="https://some_invalid_host", http_token="123456789", storage_token="123456")
 
     with pytest.raises(cript.api.exceptions.InvalidHostError):
         cript.API("no_http_host.org", "123456789")

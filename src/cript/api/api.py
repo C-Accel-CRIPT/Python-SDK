@@ -117,7 +117,7 @@ class API:
             If `None` is specified, the host is inferred from the environment variable `CRIPT_HOST`.
         http_token : str, None
             CRIPT API Token used to connect to CRIPT and upload all data with the exception to file upload that needs
-            a different token
+            a different token.
             You can find your personal token on the cript website at User > Security Settings.
             The user icon is in the top right.
             If `None` is specified, the token is inferred from the environment variable `CRIPT_TOKEN`.

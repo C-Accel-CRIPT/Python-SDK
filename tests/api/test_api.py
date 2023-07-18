@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 import warnings
 from pathlib import Path
@@ -45,6 +46,28 @@ def test_api_context(cript_api: cript.API) -> None:
     pass
 
 
+def test_api_cript_env_vars() -> None:
+    """
+    tests that when the cript.API is given None for host, http_token, storage_token that it can correctly
+    retrieve things from the env variable
+    """
+    host_value = "my cript host value"
+    api_token_value = "my cript API token value"
+    storage_token_value = "my cript storage token value"
+
+    # set env vars
+    os.environ["CRIPT_HOST"] = host_value
+    os.environ["CRIPT_TOKEN"] = api_token_value
+    os.environ["CRIPT_STORAGE_Token"] = storage_token_value
+
+    api = cript.API(host=None, http_token=None, storage_token=None)
+
+    assert api._host == host_value
+    assert api._http_token == api_token_value
+    assert api._storage_token == storage_token_value
+
+
+
 def test_config_file(cript_api: cript.API) -> None:
     """
     test if the api can read configurations from `config.json`
@@ -66,6 +89,14 @@ def test_config_file(cript_api: cript.API) -> None:
 
         assert api._host == config_file_texts["host"] + "/api/v1"
         assert api._http_token == config_file_texts["http_token"]
+
+
+def test_api_initialization_stress() -> None:
+    """
+    tries to put the API configuration under as much stress as it possibly can
+    it tries to give it mixed options and try to trip it up and create issues for it
+    """
+    pass
 
 
 def test_get_db_schema_from_api(cript_api: cript.API) -> None:

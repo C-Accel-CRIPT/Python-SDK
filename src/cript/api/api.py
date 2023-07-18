@@ -642,39 +642,59 @@ class API:
     @beartype
     def download_file(self, object_name: str, destination_path: str = ".") -> None:
         """
-        download a file from AWS S3 and save it to the specified path on local storage
+        Download a file from CRIPT Cloud Storage (AWS S3) and save it to the specified path.
 
-        making a simple GET request to the URL that would download the file
+        ??? Info "Cloud Storage vs Web URL File Download"
+
+            If the `object_name` does not starts with `http` then the program assumes the file is in AWS S3 storage,
+            and attempts to retrieve it via
+            [boto3 client](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html).
+
+            If the `object_name` starts with `http` then the program knows that
+            it is a file stored on the web. The program makes a simple
+            [GET](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/GET) request to get the file,
+            then writes the contents of it to the specified destination.
+
+            > Note: The current version of the program is designed to download files from the web in a straightforward
+            manner. However, please be aware that the program may encounter limitations when dealing with URLs that
+            require JavaScript or a session to be enabled. In such cases, the download method may fail.
+
+            > We acknowledge these limitations and plan to enhance the method in future versions to ensure compatibility
+            with a wider range of web file URLs. Our goal is to develop a robust solution capable of handling any and
+            all web file URLs.
 
         Parameters
         ----------
         object_name: str
-            object_name within AWS S3 the extension e.g. "my_file_name.txt
-            the file is then searched within "Data/{file_name}" and saved to local storage
-            In case of the file source is a URL then it is the file source URL
-                starting with "https://"
+            The `object_name` within AWS S3 e.g. `my_directory/my_file_name.txt`
+            or web file URL e.g. `https://criptscripts.org/cript_graph_json/JSON/cao_protein.json`
         destination_path: str
             please provide a path with file name of where you would like the file to be saved
-            on local storage after retrieved and downloaded from AWS S3.
-            > The destination path must include a file name
-                Example: `~/Desktop/my_example_file_name.extension`
+            on local storage.
+            > If no path is specified, then by default it will download the file
+            to the current working directory.
+
+            > The destination path must include a file name and file extension
+                e.g.: `~/Desktop/my_example_file_name.extension`
 
         Examples
         --------
         ```python
-        desktop_path = (Path(__file__) / Path("../../../../../test_file_upload/my_downloaded_file.txt")).resolve()
-        cript_api.download_file(file_url=my_file_url, destination_path=desktop_path)
+        from pathlib import Path
+
+        desktop_path = (Path(__file__).parent / "cript_downloads" / "my_downloaded_file.txt").resolve()
+        cript_api.download_file(file_url=my_file_source, destination_path=desktop_path)
         ```
 
         Raises
         ------
         FileNotFoundError
-            In case the file could not be found because the file does not exist
+            In case the file could not be found because the file does not exist or the path given is incorrect
 
         Returns
         -------
         None
-            just downloads the file to the specified path
+            Simply downloads the file
         """
 
         # if the file source is a URL
@@ -682,7 +702,7 @@ class API:
             download_file_from_url(url=object_name, destination_path=Path(destination_path).resolve())
             return
 
-        # the file is stored in cloud storage and must be retrieved via object_name
+        # the file is stored in cloud storage and must be retrieved via object_name e.g. "python_sdk_files/{file_name}"
         self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=object_name, Filename=destination_path)  # type: ignore
 
     @beartype

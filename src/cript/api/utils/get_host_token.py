@@ -27,10 +27,11 @@ def resolve_host_and_token(host, http_token, config_file_path) -> Dict[str, str]
         with open(config_file_path, "r") as file_handle:
             config_file: Dict[str, str] = json.loads(file_handle.read())
             # set api host and token
-            host = config_file["host"]
-            http_token = config_file["token"]
+            host: str = config_file["host"]
+            http_token: str = config_file["http_token"]
+            file_upload_token: str = config_file["file_upload_token"]
 
-            return {"host": host, "token": http_token}
+            return {"host": host, "http_token": http_token, "file_upload_token": file_upload_token}
 
     # if host and token is none then it will grab host and token from user's environment variables
     if host is None:
@@ -39,7 +40,7 @@ def resolve_host_and_token(host, http_token, config_file_path) -> Dict[str, str]
     if http_token is None:
         http_token = _read_env_var(env_var_name="CRIPT_TOKEN")
 
-    return {"host": host, "token": http_token}
+    return {"host": host, "http_token": http_token}
 
 
 def _read_env_var(env_var_name: str) -> str:
@@ -50,7 +51,7 @@ def _read_env_var(env_var_name: str) -> str:
     -------
     str
     """
-    env_var = os.environ.get(env_var_name)
+    env_var: str = os.environ.get(env_var_name)
 
     if env_var is None:
         raise RuntimeError(f"API initialized with `host=None` and `token=None` but environment variable `{env_var_name}` " f"was not found.")

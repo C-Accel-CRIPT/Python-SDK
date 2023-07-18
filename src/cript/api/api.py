@@ -147,8 +147,9 @@ class API:
         if config_file_path or (host is None and http_token is None):
             authentication_dict: Dict[str, str] = resolve_host_and_token(host, http_token, config_file_path)
 
-            host = authentication_dict["host"]
-            http_token = authentication_dict["token"]
+            host: str = authentication_dict["host"]
+            http_token: str = authentication_dict["http_token"]
+            file_upload_token: str = authentication_dict["file_upload_token"]
 
         self._host = self._prepare_host(host=host)  # type: ignore
         self._token = http_token  # type: ignore

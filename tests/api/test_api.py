@@ -1,7 +1,8 @@
+import datetime
 import json
 import os
 import tempfile
-import warnings
+import uuid
 from pathlib import Path
 from typing import Dict
 
@@ -10,6 +11,7 @@ import requests
 
 import cript
 from cript.api.exceptions import InvalidVocabulary
+from cript.api.paginator import Paginator
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 
 
@@ -68,7 +70,7 @@ def test_api_cript_env_vars() -> None:
     assert api._storage_token == storage_token_value
 
 
-def test_config_file(cript_api: cript.API) -> None:
+def test_config_file() -> None:
     """
     test if the api can read configurations from `config.json`
     """
@@ -91,10 +93,16 @@ def test_config_file(cript_api: cript.API) -> None:
         assert api._http_token == config_file_texts["http_token"]
 
 
+@pytest.mark.skip(reason="too early to write as there are higher priority tasks currently")
 def test_api_initialization_stress() -> None:
     """
     tries to put the API configuration under as much stress as it possibly can
     it tries to give it mixed options and try to trip it up and create issues for it
+
+    ## scenarios
+    1. if there is a config file and other inputs, then config file wins
+    1. if config file, but is missing an attribute, and it is labeled as None, then should get it from env var
+    1. if there is half from input and half from env var, then both should work happily
     """
     pass
 
@@ -244,7 +252,7 @@ def test_download_file_from_url(cript_api: cript.API, tmp_path) -> None:
     assert response == saved_file_contents
 
 
-# -------------- Start: Must be tested with API Container --------------------
+@pytest.mark.skip(reason="this test requires a real storage_token from a real frontend, and this cannot be done via CI")
 def test_upload_and_download_local_file(cript_api, tmp_path_factory) -> None:
     """
     tests file upload to cloud storage
@@ -260,35 +268,31 @@ def test_upload_and_download_local_file(cript_api, tmp_path_factory) -> None:
     1. we can be sure that the file has been correctly uploaded to AWS S3 if we can download the same file
         and assert that the file contents are the same as original
     """
-    # import uuid
-    # import datetime
-    #
-    # file_text: str = (
-    #     f"This is an automated test from the Python SDK within `tests/api/test_api.py` " f"within the `test_upload_file_to_aws_s3()` test function " f"on UTC time of '{datetime.datetime.utcnow()}' " f"with the unique UUID of '{str(uuid.uuid4())}'"
-    # )
-    #
-    # # Create a temporary file with unique contents
-    # upload_test_file = tmp_path_factory.mktemp("test_api_file_upload") / "temp_upload_file.txt"
-    # upload_test_file.write_text(file_text)
-    #
-    # # upload file to AWS S3
-    # my_file_cloud_storage_object_name = cript_api.upload_file(file_path=upload_test_file)
-    #
-    # # temporary file path and new file to write the cloud storage file contents to
-    # download_test_file = tmp_path_factory.mktemp("test_api_file_download") / "temp_download_file.txt"
-    #
-    # # download file from cloud storage
-    # cript_api.download_file(object_name=my_file_cloud_storage_object_name, destination_path=str(download_test_file))
-    #
-    # # read file contents
-    # downloaded_file_contents = download_test_file.read_text()
-    #
-    # # assert download file contents are the same as uploaded file contents
-    # assert downloaded_file_contents == file_text
-    warnings.warn("Please uncomment the `test_upload_and_download_file` integration test to test with API")
-    pass
+    file_text: str = (
+        f"This is an automated test from the Python SDK within `tests/api/test_api.py` " f"within the `test_upload_file_to_aws_s3()` test function " f"on UTC time of '{datetime.datetime.utcnow()}' " f"with the unique UUID of '{str(uuid.uuid4())}'"
+    )
+
+    # Create a temporary file with unique contents
+    upload_test_file = tmp_path_factory.mktemp("test_api_file_upload") / "temp_upload_file.txt"
+    upload_test_file.write_text(file_text)
+
+    # upload file to AWS S3
+    my_file_cloud_storage_object_name = cript_api.upload_file(file_path=upload_test_file)
+
+    # temporary file path and new file to write the cloud storage file contents to
+    download_test_file = tmp_path_factory.mktemp("test_api_file_download") / "temp_download_file.txt"
+
+    # download file from cloud storage
+    cript_api.download_file(object_name=my_file_cloud_storage_object_name, destination_path=str(download_test_file))
+
+    # read file contents
+    downloaded_file_contents = download_test_file.read_text()
+
+    # assert download file contents are the same as uploaded file contents
+    assert downloaded_file_contents == file_text
 
 
+@pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
 def test_api_search_node_type(cript_api: cript.API) -> None:
     """
     tests the api.search() method with just a node type material search
@@ -301,76 +305,64 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
         *  each page should have a max of 10 results and there should be close to 5k materials in db,
         * more than enough to at least have 5 in the paginator
     """
-    # from cript.api.paginator import Paginator
-    #
-    # materials_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
-    #
-    # # test search results
-    # assert isinstance(materials_paginator, Paginator)
-    # assert len(materials_paginator.current_page_results) > 5
-    # assert materials_paginator.current_page_results[0]["name"] == "(2-Chlorophenyl) 2,4-dichlorobenzoate"
-    #
-    # # tests that it can correctly go to the next page
-    # materials_paginator.next_page()
-    # assert len(materials_paginator.current_page_results) > 5
-    # assert materials_paginator.current_page_results[0]["name"] == "2,4-Dichloro-N-(1-methylbutyl)benzamide"
-    #
-    # # tests that it can correctly go to the previous page
-    # materials_paginator.previous_page()
-    # assert len(materials_paginator.current_page_results) > 5
-    # assert materials_paginator.current_page_results[0]["name"] == "(2-Chlorophenyl) 2,4-dichlorobenzoate"
-    warnings.warn("Please uncomment the `test_api_search_node_type` integration test to test with API")
-    pass
+    materials_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
+
+    # test search results
+    assert isinstance(materials_paginator, Paginator)
+    assert len(materials_paginator.current_page_results) > 5
+    assert materials_paginator.current_page_results[0]["name"] == "(2-Chlorophenyl) 2,4-dichlorobenzoate"
+
+    # tests that it can correctly go to the next page
+    materials_paginator.next_page()
+    assert len(materials_paginator.current_page_results) > 5
+    assert materials_paginator.current_page_results[0]["name"] == "2,4-Dichloro-N-(1-methylbutyl)benzamide"
+
+    # tests that it can correctly go to the previous page
+    materials_paginator.previous_page()
+    assert len(materials_paginator.current_page_results) > 5
+    assert materials_paginator.current_page_results[0]["name"] == "(2-Chlorophenyl) 2,4-dichlorobenzoate"
 
 
+@pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
 def test_api_search_contains_name(cript_api: cript.API) -> None:
     """
     tests that it can correctly search with contains name mode
     searches for a material that contains the name "poly"
     """
-    # from cript.api.paginator import Paginator
-    # contains_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.CONTAINS_NAME, value_to_search="poly")
-    #
-    # assert isinstance(contains_name_paginator, Paginator)
-    # assert len(contains_name_paginator.current_page_results) > 5
-    # assert contains_name_paginator.current_page_results[0]["name"] == "Pilocarpine polyacrylate"
-    warnings.warn("Please uncomment the `test_api_search_contains_name` integration test to test with API")
-    pass
+    contains_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.CONTAINS_NAME, value_to_search="poly")
+
+    assert isinstance(contains_name_paginator, Paginator)
+    assert len(contains_name_paginator.current_page_results) > 5
+    assert contains_name_paginator.current_page_results[0]["name"] == "Pilocarpine polyacrylate"
 
 
+@pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
 def test_api_search_exact_name(cript_api: cript.API) -> None:
     """
     tests search method with exact name search
     searches for material "Sodium polystyrene sulfonate"
     """
-    # from cript.api.paginator import Paginator
-    #
-    # exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME, value_to_search="Sodium polystyrene sulfonate")
-    #
-    # assert isinstance(exact_name_paginator, Paginator)
-    # assert len(exact_name_paginator.current_page_results) == 1
-    # assert exact_name_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
-    warnings.warn("Please uncomment the `test_api_search_exact_name` integration test to test with API")
-    pass
+    exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME, value_to_search="Sodium polystyrene sulfonate")
+
+    assert isinstance(exact_name_paginator, Paginator)
+    assert len(exact_name_paginator.current_page_results) == 1
+    assert exact_name_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
 
 
+@pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
 def test_api_search_uuid(cript_api: cript.API) -> None:
     """
     tests search with UUID
     searches for Sodium polystyrene sulfonate material that has a UUID of "fcc6ed9d-22a8-4c21-bcc6-25a88a06c5ad"
     """
-    # from cript.api.paginator import Paginator
-    #
-    # uuid_to_search = "fcc6ed9d-22a8-4c21-bcc6-25a88a06c5ad"
-    #
-    # uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=uuid_to_search)
-    #
-    # assert isinstance(uuid_paginator, Paginator)
-    # assert len(uuid_paginator.current_page_results) == 1
-    # assert uuid_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
-    # assert uuid_paginator.current_page_results[0]["uuid"] == uuid_to_search
-    warnings.warn("Please uncomment the `test_api_search_uuid` integration test to test with API")
-    pass
+    uuid_to_search = "fcc6ed9d-22a8-4c21-bcc6-25a88a06c5ad"
+
+    uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=uuid_to_search)
+
+    assert isinstance(uuid_paginator, Paginator)
+    assert len(uuid_paginator.current_page_results) == 1
+    assert uuid_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
+    assert uuid_paginator.current_page_results[0]["uuid"] == uuid_to_search
 
 
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:

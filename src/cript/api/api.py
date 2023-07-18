@@ -106,9 +106,6 @@ class API:
             # node creation, api.save(), etc.
         ```
 
-        Notes
-        -----
-
         Parameters
         ----------
         host : str, None

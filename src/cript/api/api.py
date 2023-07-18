@@ -154,9 +154,9 @@ class API:
             http_token = authentication_dict["http_token"]
             storage_token = authentication_dict["storage_token"]
 
-        self._host = self._prepare_host(host=host)      # type: ignore
-        self._http_token = http_token                   # type: ignore
-        self._storage_token = storage_token             # type: ignore
+        self._host = self._prepare_host(host=host)  # type: ignore
+        self._http_token = http_token  # type: ignore
+        self._storage_token = storage_token  # type: ignore
 
         # assign headers
         # add Bearer to token for HTTP, but keep it bare for AWS S3 file uploads and downloads

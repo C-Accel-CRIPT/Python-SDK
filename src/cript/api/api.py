@@ -68,7 +68,7 @@ class API:
     # trunk-ignore-end(cspell)
 
     @beartype
-    def __init__(self, host: Union[str, None] = None, http_token: Union[str, None] = None, config_file_path: str = ""):
+    def __init__(self, host: Union[str, None] = None, http_token: Union[str, None] = None, storage_token: str = None, config_file_path: str = ""):
         """
         Initialize CRIPT API client with host and token.
         Additionally, you can  use a config.json file and specify the file path.
@@ -144,12 +144,12 @@ class API:
             Instantiate a new CRIPT API object
         """
 
-        if config_file_path or (host is None and http_token is None):
+        if config_file_path or (host is None and http_token is None and storage_token is None):
             authentication_dict: Dict[str, str] = resolve_host_and_token(host, http_token, config_file_path)
 
             host: str = authentication_dict["host"]
             http_token: str = authentication_dict["http_token"]
-            file_upload_token: str = authentication_dict["file_upload_token"]
+            storage_token: str = authentication_dict["storage_token"]
 
         self._host = self._prepare_host(host=host)  # type: ignore
         self._token = http_token  # type: ignore

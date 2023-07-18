@@ -29,9 +29,9 @@ def resolve_host_and_token(host, http_token, config_file_path) -> Dict[str, str]
             # set api host and token
             host: str = config_file["host"]
             http_token: str = config_file["http_token"]
-            file_upload_token: str = config_file["file_upload_token"]
+            storage_token: str = config_file["storage_token"]
 
-            return {"host": host, "http_token": http_token, "file_upload_token": file_upload_token}
+            return {"host": host, "http_token": http_token, "storage_token": storage_token}
 
     # if host and token is none then it will grab host and token from user's environment variables
     if host is None:
@@ -39,8 +39,11 @@ def resolve_host_and_token(host, http_token, config_file_path) -> Dict[str, str]
 
     if http_token is None:
         http_token = _read_env_var(env_var_name="CRIPT_TOKEN")
+ 
+    if http_token is None:
+        storage_token = _read_env_var(env_var_name="CRIPT_STORAGE_TOKEN")
 
-    return {"host": host, "http_token": http_token}
+    return {"host": host, "http_token": http_token, "storage_token": storage_token}
 
 
 def _read_env_var(env_var_name: str) -> str:

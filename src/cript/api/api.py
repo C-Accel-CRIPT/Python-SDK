@@ -50,7 +50,7 @@ class API:
     """
 
     _host: str = ""
-    _http_token: str = ""
+    _api_token: str = ""
     _storage_token: str = ""
     _http_headers: dict = {}
     _vocabulary: dict = {}
@@ -69,7 +69,7 @@ class API:
     # trunk-ignore-end(cspell)
 
     @beartype
-    def __init__(self, host: Union[str, None] = None, http_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: str = ""):
+    def __init__(self, host: Union[str, None] = None, api_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: str = ""):
         """
         Initialize CRIPT API client with host and token.
         Additionally, you can  use a config.json file and specify the file path.
@@ -113,7 +113,7 @@ class API:
             CRIPT host for the Python SDK to connect to such as `https://criptapp.org`
             This host address is the same address used to login to cript website.
             If `None` is specified, the host is inferred from the environment variable `CRIPT_HOST`.
-        http_token : str, None
+        api_token : str, None
             CRIPT API Token used to connect to CRIPT and upload all data with the exception to file upload that needs
             a different token.
             You can find your personal token on the cript website at User > Security Settings.
@@ -148,20 +148,20 @@ class API:
         """
 
         # if there is a config.json file or any of the parameters are None, then get the variables from file or env vars
-        if config_file_path or (host is None or http_token is None or storage_token is None):
-            authentication_dict: Dict[str, str] = resolve_host_and_token(host, http_token=http_token, storage_token=storage_token, config_file_path=config_file_path)
+        if config_file_path or (host is None or api_token is None or storage_token is None):
+            authentication_dict: Dict[str, str] = resolve_host_and_token(host, api_token=api_token, storage_token=storage_token, config_file_path=config_file_path)
 
             host = authentication_dict["host"]
-            http_token = authentication_dict["http_token"]
+            api_token = authentication_dict["api_token"]
             storage_token = authentication_dict["storage_token"]
 
         self._host = self._prepare_host(host=host)  # type: ignore
-        self._http_token = http_token  # type: ignore
+        self._api_token = api_token  # type: ignore
         self._storage_token = storage_token  # type: ignore
 
         # assign headers
         # add Bearer to token for HTTP, but keep it bare for AWS S3 file uploads and downloads
-        self._http_headers = {"Authorization": f"Bearer {self._http_token}", "Content-Type": "application/json"}
+        self._http_headers = {"Authorization": f"Bearer {self._api_token}", "Content-Type": "application/json"}
 
         # check that api can connect to CRIPT with host and token
         self._check_initial_host_connection()
@@ -291,7 +291,7 @@ class API:
         try:
             pass
         except Exception as exc:
-            raise CRIPTConnectionError(self.host, self._http_token) from exc
+            raise CRIPTConnectionError(self.host, self._api_token) from exc
 
     def _get_vocab(self) -> dict:
         """

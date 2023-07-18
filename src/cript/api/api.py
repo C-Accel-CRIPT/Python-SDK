@@ -68,7 +68,7 @@ class API:
     # trunk-ignore-end(cspell)
 
     @beartype
-    def __init__(self, host: Union[str, None] = None, token: Union[str, None] = None, config_file_path: str = ""):
+    def __init__(self, host: Union[str, None] = None, http_token: Union[str, None] = None, config_file_path: str = ""):
         """
         Initialize CRIPT API client with host and token.
         Additionally, you can  use a config.json file and specify the file path.
@@ -115,8 +115,9 @@ class API:
             CRIPT host for the Python SDK to connect to such as `https://criptapp.org`
             This host address is the same address used to login to cript website.
             If `None` is specified, the host is inferred from the environment variable `CRIPT_HOST`.
-        token : str, None
-            CRIPT API Token used to connect to CRIPT
+        http_token : str, None
+            CRIPT API Token used to connect to CRIPT and upload all data with the exception to file upload that needs
+            a different token
             You can find your personal token on the cript website at User > Security Settings.
             The user icon is in the top right.
             If `None` is specified, the token is inferred from the environment variable `CRIPT_TOKEN`.
@@ -146,14 +147,14 @@ class API:
             Instantiate a new CRIPT API object
         """
 
-        if config_file_path or (host is None and token is None):
-            authentication_dict: Dict[str, str] = resolve_host_and_token(host, token, config_file_path)
+        if config_file_path or (host is None and http_token is None):
+            authentication_dict: Dict[str, str] = resolve_host_and_token(host, http_token, config_file_path)
 
             host = authentication_dict["host"]
-            token = authentication_dict["token"]
+            http_token = authentication_dict["token"]
 
         self._host = self._prepare_host(host=host)  # type: ignore
-        self._token = token  # type: ignore
+        self._token = http_token  # type: ignore
 
         # assign headers
         # add Bearer to token for HTTP, but keep it bare for AWS S3 file uploads and downloads

@@ -39,7 +39,7 @@ def resolve_host_and_token(host, http_token, storage_token, config_file_path) ->
 
     if http_token is None:
         http_token = _read_env_var(env_var_name="CRIPT_TOKEN")
- 
+
     if storage_token is None:
         storage_token = _read_env_var(env_var_name="CRIPT_STORAGE_TOKEN")
 

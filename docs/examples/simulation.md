@@ -44,7 +44,7 @@ To connect to CRIPT, you must enter a `host` and an `API Token`. For most users,
 ```python
 import cript
 
-with cript.API(host="http://development.api.mycriptapp.org/", token="123456") as api:
+with cript.API(host="http://development.api.mycriptapp.org/", http_token="123456", storage_token="987654") as api:
     pass
 ```
 

@@ -147,7 +147,8 @@ class API:
             Instantiate a new CRIPT API object
         """
 
-        if config_file_path or (host is None and http_token is None and storage_token is None):
+        # if there is a config.json file or any of the parameters are None, then get the variables from file or env vars
+        if config_file_path or (host is None or http_token is None or storage_token is None):
             authentication_dict: Dict[str, str] = resolve_host_and_token(host, http_token=http_token, storage_token=storage_token, config_file_path=config_file_path)
 
             host = authentication_dict["host"]

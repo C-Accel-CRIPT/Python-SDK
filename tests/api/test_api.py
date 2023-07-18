@@ -51,7 +51,7 @@ def test_api_cript_env_vars() -> None:
     tests that when the cript.API is given None for host, http_token, storage_token that it can correctly
     retrieve things from the env variable
     """
-    host_value = "my cript host value"
+    host_value = "http://development.api.mycriptapp.org/"
     api_token_value = "my cript API token value"
     storage_token_value = "my cript storage token value"
 
@@ -62,10 +62,10 @@ def test_api_cript_env_vars() -> None:
 
     api = cript.API(host=None, http_token=None, storage_token=None)
 
-    assert api._host == host_value
+    # host/api/v1
+    assert api._host == f"{host_value}api/v1"
     assert api._http_token == api_token_value
     assert api._storage_token == storage_token_value
-
 
 
 def test_config_file(cript_api: cript.API) -> None:

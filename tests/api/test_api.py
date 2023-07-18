@@ -38,7 +38,7 @@ def test_api_with_invalid_host() -> None:
         cript.API(host="https://some_invalid_host", http_token="123456789", storage_token="123456")
 
     with pytest.raises(cript.api.exceptions.InvalidHostError):
-        cript.API("no_http_host.org", "123456789")
+        cript.API(host="no_http_host.org", http_token="123456789", storage_token="987654321")
 
 
 # TODO commented out for now because it needs an API container

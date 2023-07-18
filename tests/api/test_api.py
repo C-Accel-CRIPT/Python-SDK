@@ -19,7 +19,7 @@ def test_create_api(cript_api: cript.API) -> None:
     """
     tests that an API object can be successfully created with host and token
     """
-    # api = cript.API(host=None, http_token=None)
+    # api = cript.API(host=None, api_token=None)
     #
     # # assertions
     # assert api is not None
@@ -35,10 +35,10 @@ def test_api_with_invalid_host() -> None:
     * giving a host that does not start with http such as "criptapp.org" should throw an InvalidHostError
     """
     with pytest.raises((requests.ConnectionError, cript.api.exceptions.CRIPTConnectionError)):
-        cript.API(host="https://some_invalid_host", http_token="123456789", storage_token="123456")
+        cript.API(host="https://some_invalid_host", api_token="123456789", storage_token="123456")
 
     with pytest.raises(cript.api.exceptions.InvalidHostError):
-        cript.API(host="no_http_host.org", http_token="123456789", storage_token="987654321")
+        cript.API(host="no_http_host.org", api_token="123456789", storage_token="987654321")
 
 
 # TODO commented out for now because it needs an API container
@@ -50,7 +50,7 @@ def test_api_context(cript_api: cript.API) -> None:
 
 def test_api_cript_env_vars() -> None:
     """
-    tests that when the cript.API is given None for host, http_token, storage_token that it can correctly
+    tests that when the cript.API is given None for host, api_token, storage_token that it can correctly
     retrieve things from the env variable
     """
     host_value = "http://development.api.mycriptapp.org/"
@@ -62,11 +62,11 @@ def test_api_cript_env_vars() -> None:
     os.environ["CRIPT_TOKEN"] = api_token_value
     os.environ["CRIPT_STORAGE_Token"] = storage_token_value
 
-    api = cript.API(host=None, http_token=None, storage_token=None)
+    api = cript.API(host=None, api_token=None, storage_token=None)
 
     # host/api/v1
     assert api._host == f"{host_value}api/v1"
-    assert api._http_token == api_token_value
+    assert api._api_token == api_token_value
     assert api._storage_token == storage_token_value
 
 
@@ -75,7 +75,7 @@ def test_config_file() -> None:
     test if the api can read configurations from `config.json`
     """
 
-    config_file_texts = {"host": "https://development.api.mycriptapp.org", "http_token": "I am token", "storage_token": "I am storage token"}
+    config_file_texts = {"host": "https://development.api.mycriptapp.org", "api_token": "I am token", "storage_token": "I am storage token"}
 
     with tempfile.NamedTemporaryFile(mode="w+t", suffix=".json", delete=False) as temp_file:
         # absolute file path
@@ -90,7 +90,7 @@ def test_config_file() -> None:
         api = cript.API(config_file_path=config_file_path)
 
         assert api._host == config_file_texts["host"] + "/api/v1"
-        assert api._http_token == config_file_texts["http_token"]
+        assert api._api_token == config_file_texts["api_token"]
 
 
 @pytest.mark.skip(reason="too early to write as there are higher priority tasks currently")
@@ -252,7 +252,7 @@ def test_download_file_from_url(cript_api: cript.API, tmp_path) -> None:
     assert response == saved_file_contents
 
 
-@pytest.mark.skip(reason="this test requires a real storage_token from a real frontend, and this cannot be done via CI")
+# @pytest.mark.skip(reason="this test requires a real storage_token from a real frontend, and this cannot be done via CI")
 def test_upload_and_download_local_file(cript_api, tmp_path_factory) -> None:
     """
     tests file upload to cloud storage
@@ -292,7 +292,7 @@ def test_upload_and_download_local_file(cript_api, tmp_path_factory) -> None:
     assert downloaded_file_contents == file_text
 
 
-@pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
+# @pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
 def test_api_search_node_type(cript_api: cript.API) -> None:
     """
     tests the api.search() method with just a node type material search
@@ -323,7 +323,7 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
     assert materials_paginator.current_page_results[0]["name"] == "(2-Chlorophenyl) 2,4-dichlorobenzoate"
 
 
-@pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
+# @pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
 def test_api_search_contains_name(cript_api: cript.API) -> None:
     """
     tests that it can correctly search with contains name mode
@@ -336,7 +336,7 @@ def test_api_search_contains_name(cript_api: cript.API) -> None:
     assert contains_name_paginator.current_page_results[0]["name"] == "Pilocarpine polyacrylate"
 
 
-@pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
+# @pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
 def test_api_search_exact_name(cript_api: cript.API) -> None:
     """
     tests search method with exact name search
@@ -349,7 +349,7 @@ def test_api_search_exact_name(cript_api: cript.API) -> None:
     assert exact_name_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
 
 
-@pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
+# @pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
 def test_api_search_uuid(cript_api: cript.API) -> None:
     """
     tests search with UUID

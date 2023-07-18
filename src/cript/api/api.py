@@ -69,7 +69,7 @@ class API:
     # trunk-ignore-end(cspell)
 
     @beartype
-    def __init__(self, host: Union[str, None] = None, http_token: Union[str, None] = None, storage_token: str = None, config_file_path: str = ""):
+    def __init__(self, host: Union[str, None] = None, http_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: str = ""):
         """
         Initialize CRIPT API client with host and token.
         Additionally, you can  use a config.json file and specify the file path.
@@ -150,13 +150,13 @@ class API:
         if config_file_path or (host is None and http_token is None and storage_token is None):
             authentication_dict: Dict[str, str] = resolve_host_and_token(host, http_token=http_token, storage_token=storage_token, config_file_path=config_file_path)
 
-            host: str = authentication_dict["host"]
-            http_token: str = authentication_dict["http_token"]
-            storage_token: str = authentication_dict["storage_token"]
+            host = authentication_dict["host"]
+            http_token = authentication_dict["http_token"]
+            storage_token = authentication_dict["storage_token"]
 
-        self._host = self._prepare_host(host=host)
-        self._http_token = http_token
-        self._storage_token = storage_token
+        self._host = self._prepare_host(host=host)      # type: ignore
+        self._http_token = http_token                   # type: ignore
+        self._storage_token = storage_token             # type: ignore
 
         # assign headers
         # add Bearer to token for HTTP, but keep it bare for AWS S3 file uploads and downloads

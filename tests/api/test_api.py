@@ -385,5 +385,3 @@ def test_get_my_projects_from_api(cript_api: cript.API) -> None:
     """
     pass
 
-
-# -------------- End: Must be tested with API Container --------------------

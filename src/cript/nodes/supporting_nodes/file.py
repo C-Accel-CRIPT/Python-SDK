@@ -125,7 +125,7 @@ class File(PrimaryBaseNode):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, name: str, source: str, type: str, extension: str = "", data_dictionary: str = "", notes: str = "", **kwargs):
+    def __init__(self, name: str, source: str, type: str, extension: str, data_dictionary: str = "", notes: str = "", **kwargs):
         """
         create a File node
 

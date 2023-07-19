@@ -55,7 +55,7 @@ with cript.API(host="http://development.api.mycriptapp.org/", api_token="123456"
     Here in a jupyter notebook, we need to connect manually. We just have to remember to disconnect at the end.
 
 ```python
-api = cript.API(host="http://development.api.mycriptapp.org/", api_token=None, storage_token=None)
+api = cript.API(host="http://development.api.mycriptapp.org/", api_token=None, storage_token="123456")
 api = api.connect()
 ```
 

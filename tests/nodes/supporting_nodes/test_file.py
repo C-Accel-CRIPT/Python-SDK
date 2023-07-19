@@ -1,8 +1,10 @@
 import copy
+import datetime
 import json
 import os
 import uuid
 
+import pytest
 from test_integration import integrate_nodes_helper
 from util import strip_uid_from_dict
 
@@ -55,6 +57,7 @@ def test_source_is_local(tmp_path, tmp_path_factory) -> None:
     assert _is_local_file(file_source=relative_file_path) is True
 
 
+@pytest.mark.skip(reason="test needs to be updated to be uploaded on api.save() instead")
 def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
     """
     upload a file and download it and be sure the contents are the same
@@ -68,8 +71,6 @@ def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
     1. download the file to a temporary path
         1. read that file text and assert that the string written and read are the same
     """
-    # import uuid
-    # import datetime
     # file_text: str = (
     #     f"This is an automated test from the Python SDK within "
     #     f"`tests/nodes/supporting_nodes/test_file.py/test_local_file_source_upload_and_download()` "
@@ -107,32 +108,29 @@ def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
     pass
 
 
-def test_create_file_local_source(tmp_path) -> None:
+@pytest.mark.skip(reason="test needs to be updated to be uploaded on api.save() instead")
+def test_create_file_local_source(tmp_path, cript_api, simple_project_node, simple_data_node) -> None:
     """
     tests that a simple file with only required attributes can be created
     with source pointing to a local file on storage
 
     create a temporary directory with temporary file
     """
-
-    # TODO since no S3 client token for GitHub CI this test will always fail. Commenting it out so tests run well
     # create a temporary file in the temporary directory to test with
+    # TODO files are now processed on save
     # file_path = tmp_path / "test.txt"
     # with open(file_path, "w") as temporary_file:
     #     temporary_file.write("hello world!")
     #
-    # assert cript.File(name="my file node with local source", source=str(file_path), type="calibration")
-    pass
-
-
-def test_file_type_invalid_vocabulary() -> None:
-    """
-    tests that setting the file type to an invalid vocabulary word gives the expected error
-
-    Returns
-    -------
-    None
-    """
+    # my_local_file = cript.File(name="my file node with local source", source=str(file_path), type="calibration")
+    #
+    # simple_project_node.name = f"test_integration_file_{uuid.uuid4().hex}"
+    #
+    # simple_project_node.collection[0].experiment[0].data = [simple_data_node]
+    #
+    # simple_project_node.collection[0].experiment[0].data[0].file = [my_local_file]
+    #
+    # cript_api.save(simple_project_node)
     pass
 
 

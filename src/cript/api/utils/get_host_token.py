@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict
 
 
-def resolve_host_and_token(host, token, config_file_path) -> Dict[str, str]:
+def resolve_host_and_token(host, api_token, storage_token, config_file_path) -> Dict[str, str]:
     """
     resolves the host and token after passed into the constructor if it comes from env vars or config file
 
@@ -28,18 +28,22 @@ def resolve_host_and_token(host, token, config_file_path) -> Dict[str, str]:
             config_file: Dict[str, str] = json.loads(file_handle.read())
             # set api host and token
             host = config_file["host"]
-            token = config_file["token"]
+            api_token = config_file["api_token"]
+            storage_token = config_file["storage_token"]
 
-            return {"host": host, "token": token}
+            return {"host": host, "api_token": api_token, "storage_token": storage_token}
 
     # if host and token is none then it will grab host and token from user's environment variables
     if host is None:
         host = _read_env_var(env_var_name="CRIPT_HOST")
 
-    if token is None:
-        token = _read_env_var(env_var_name="CRIPT_TOKEN")
+    if api_token is None:
+        api_token = _read_env_var(env_var_name="CRIPT_TOKEN")
 
-    return {"host": host, "token": token}
+    if storage_token is None:
+        storage_token = _read_env_var(env_var_name="CRIPT_STORAGE_TOKEN")
+
+    return {"host": host, "api_token": api_token, "storage_token": storage_token}
 
 
 def _read_env_var(env_var_name: str) -> str:

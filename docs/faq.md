@@ -23,13 +23,13 @@ _We are always looking for ways to improve and create software that is a joy to 
 
 ---
 
-**Q:** Where can I find more CRIPT examples?
+**Q:** Where can I find more examples overall CRIPT?
 
 **A:** _Please visit [CRIPT Scripts](https://criptscripts.org) where there are many CRIPT examples ranging from CRIPT graphs drawn out from research papers, Python scripts, TypeScript scripts, and more!_
 
 ---
 
-**Q:** Where can I find more example code?
+**Q:** Where can I find more example CRIPT Python SDK code?
 
 **A:** _We have written a lot of tests for our software, and if needed, those tests can be referred to as example code to work with the Python SDK software. The Python SDK tests are located within the [GitHub repository/tests](https://github.com/C-Accel-CRIPT/Python-SDK/tree/main/tests), and there they are broken down to different kinds of tests_
 
@@ -38,7 +38,7 @@ _We are always looking for ways to improve and create software that is a joy to 
 **Q:** How can I contribute to this project?
 
 **A:** _We would love to have you contribute.
-Please read the[GitHub repository wiki](https://github.com/C-Accel-CRIPT/Python-SDK/wiki)
+Please read the [GitHub repository wiki](https://github.com/C-Accel-CRIPT/Python-SDK/wiki)
 to understand more and get started. Feel free to contribute to any bugs you find, any issues within the
 [GitHub repository](https://github.com/C-Accel-CRIPT/Python-SDK/issues), or any features you want._
 
@@ -49,14 +49,6 @@ to understand more and get started. Feel free to contribute to any bugs you find
 **A:** _We have built this code with plugins in mind! Please visit the
 [CRIPT Python SDK GitHub repository Wiki](https://github.com/C-Accel-CRIPT/Python-SDK/wiki)
 tab for developer documentation._
-
----
-
-**Q:** I have this question that is not covered anywhere, where can I ask it?
-
-**A:** _Please visit the [CRIPT Python SDK repository](https://github.com/C-Accel-CRIPT/Python-SDK)
-and ask your question within the
-[discussions tab Q/A section](https://github.com/C-Accel-CRIPT/Python-SDK/discussions/categories/q-a)_
 
 ---
 
@@ -74,7 +66,13 @@ A GitHub account is required._
 
 ---
 
-**Q:** Besides the user documentation are there any developer documentation that I can read through on how
+**Q:** How can I use the CRIPT Python SDK without creating an account?
+
+**A:** You can simply specify the host and for the token put a dummy token or blank string because the SDK will only verify the token when calling [`api.save()`](../api/api/#cript.api.api.API.save) or [`api.search`](../api/api/#cript.api.api.API.search)
+
+---
+
+**Q:** Besides the user documentation, is there any developer documentation that I can read through on how
 the code is written to get a better grasp of it?
 
 **A:** _You bet! There are documentation for developers within the

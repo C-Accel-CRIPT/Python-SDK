@@ -252,7 +252,7 @@ def test_download_file_from_url(cript_api: cript.API, tmp_path) -> None:
     assert response == saved_file_contents
 
 
-# @pytest.mark.skip(reason="this test requires a real storage_token from a real frontend, and this cannot be done via CI")
+@pytest.mark.skip(reason="this test requires a real storage_token from a real frontend, and this cannot be done via CI")
 def test_upload_and_download_local_file(cript_api, tmp_path_factory) -> None:
     """
     tests file upload to cloud storage
@@ -292,7 +292,7 @@ def test_upload_and_download_local_file(cript_api, tmp_path_factory) -> None:
     assert downloaded_file_contents == file_text
 
 
-# @pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
+@pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
 def test_api_search_node_type(cript_api: cript.API) -> None:
     """
     tests the api.search() method with just a node type material search
@@ -323,7 +323,7 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
     assert materials_paginator.current_page_results[0]["name"] == "(2-Chlorophenyl) 2,4-dichlorobenzoate"
 
 
-# @pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
+@pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
 def test_api_search_contains_name(cript_api: cript.API) -> None:
     """
     tests that it can correctly search with contains name mode
@@ -336,7 +336,7 @@ def test_api_search_contains_name(cript_api: cript.API) -> None:
     assert contains_name_paginator.current_page_results[0]["name"] == "Pilocarpine polyacrylate"
 
 
-# @pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
+@pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
 def test_api_search_exact_name(cript_api: cript.API) -> None:
     """
     tests search method with exact name search
@@ -349,7 +349,7 @@ def test_api_search_exact_name(cript_api: cript.API) -> None:
     assert exact_name_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
 
 
-# @pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
+@pytest.mark.skip(reason="requires a real cript_api_token and not currently available on CI")
 def test_api_search_uuid(cript_api: cript.API) -> None:
     """
     tests search with UUID

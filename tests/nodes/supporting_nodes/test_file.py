@@ -58,7 +58,7 @@ def test_source_is_local(tmp_path, tmp_path_factory) -> None:
 
 
 @pytest.mark.skip(reason="test needs to be updated to be uploaded on api.save() instead")
-def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
+def test_local_file_source_upload_and_download(tmp_path_factory, cript_api, simple_project_node, simple_data_node) -> None:
     """
     upload a file and download it and be sure the contents are the same
 
@@ -85,17 +85,24 @@ def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
     # local_file_path.write_text(file_text)
     #
     # # create a file node with a local file path
-    # my_file = cript.File(name="my local file source node", source=str(local_file_path), type="data")
+    # my_local_file_node = cript.File(name="my local file source node", source=str(local_file_path), type="data")
+    #
+    # # assemble project to upload
+    # simple_project_node.name = f"test_file_upload_download_{uuid.uuid4().hex}"
+    #
+    # simple_project_node.collection[0].experiment[0].data = [simple_data_node]
+    #
+    # simple_project_node.collection[0].experiment[0].data[0].file = [my_local_file_node]
     #
     # # check that the file source has been uploaded to cloud storage and source has changed to reflect that
-    # assert my_file.source.startswith("tests/")
+    # assert my_local_file_node.source.startswith("tests/")
     #
     # # Get the temporary directory path and clean up handled by pytest
     # download_file_dir = tmp_path_factory.mktemp("file_test_download_file_dir")
     # download_file_name = "my_downloaded_file.txt"
     #
     # # download file
-    # my_file.download(destination_directory_path=download_file_dir, file_name=download_file_name)
+    # my_local_file_node.download(destination_directory_path=download_file_dir, file_name=download_file_name)
     #
     # # the path the file was downloaded to and can be read from
     # downloaded_local_file_path = download_file_dir / download_file_name
@@ -105,7 +112,6 @@ def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
     #
     # # assert file contents for upload and download are the same
     # assert downloaded_file_contents == file_text
-    pass
 
 
 @pytest.mark.skip(reason="test needs to be updated to be uploaded on api.save() instead")
@@ -131,7 +137,6 @@ def test_create_file_local_source(tmp_path, cript_api, simple_project_node, simp
     # simple_project_node.collection[0].experiment[0].data[0].file = [my_local_file]
     #
     # cript_api.save(simple_project_node)
-    pass
 
 
 def test_file_getters_and_setters(complex_file_node) -> None:

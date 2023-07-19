@@ -60,7 +60,7 @@ def test_api_cript_env_vars() -> None:
     # set env vars
     os.environ["CRIPT_HOST"] = host_value
     os.environ["CRIPT_TOKEN"] = api_token_value
-    os.environ["CRIPT_STORAGE_Token"] = storage_token_value
+    os.environ["CRIPT_STORAGE_TOKEN"] = storage_token_value
 
     api = cript.API(host=None, api_token=None, storage_token=None)
 

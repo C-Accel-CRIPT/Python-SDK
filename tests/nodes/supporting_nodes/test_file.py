@@ -15,7 +15,7 @@ def test_create_file() -> None:
     """
     tests that a simple file with only required attributes can be created
     """
-    file_node = cript.File(name="my file name", source="https://google.com", type="calibration")
+    file_node = cript.File(name="my file name", source="https://google.com", type="calibration", extension=".csv")
 
     assert isinstance(file_node, cript.File)
 

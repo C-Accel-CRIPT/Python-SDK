@@ -442,7 +442,7 @@ class API:
             return self._db_schema
 
     @beartype
-    def _is_node_schema_valid(self, node_json: str) -> bool:
+    def _is_node_schema_valid(self, node_json: str, is_patch: bool = False) -> bool:
         """
         checks a node JSON schema against the db schema to return if it is valid or not.
 
@@ -457,6 +457,8 @@ class API:
         ----------
         node_json: str
             a node in JSON form string
+        is_patch: bool
+            a boolean flag checking if it needs to validate against `NodePost` or `NodePatch`
 
         Notes
         -----
@@ -489,8 +491,16 @@ class API:
         else:
             raise CRIPTJsonNodeError(node_list, str(node_list))
 
+        # set the schema to test against http POST or PATCH of DB Schema
+        schema_http_method: str
+
+        if is_patch:
+            schema_http_method = "Patch"
+        else:
+            schema_http_method = "Post"
+
         # set which node you are using schema validation for
-        db_schema["$ref"] = f"#/$defs/{node_type}Post"
+        db_schema["$ref"] = f"#/$defs/{node_type}{schema_http_method}"
 
         try:
             jsonschema.validate(instance=node_dict, schema=db_schema)

@@ -1,6 +1,6 @@
-import cript
-
 import warnings
+
+import cript
 
 
 def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):

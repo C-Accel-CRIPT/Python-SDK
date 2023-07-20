@@ -559,6 +559,8 @@ class API:
         for file_node in node.find_children({"node": ["File"]}):
             file_node.ensure_uploaded(api=self)
 
+        node.validate()
+
         # Dummy response to have a virtual do-while loop, instead of while loop.
         response = {"code": -1}
         # TODO remove once get works properly
@@ -580,7 +582,8 @@ class API:
             if not patch_request and force_patch:
                 patch_request = True
                 force_patch = False
-            node.validate(is_patch=patch_request)
+            # TODO activate patch validation
+            # node.validate(is_patch=patch_request)
 
             # If all that is left is a UUID, we don't need to save it, we can just exit the loop.
             if patch_request and len(json.loads(json_data)) == 1:

@@ -142,7 +142,7 @@ class BaseNode(ABC):
             self._json_attrs = old_json_attrs
             raise exc
 
-    def validate(self, api=None) -> None:
+    def validate(self, api=None, is_patch=False) -> None:
         """
         Validate this node (and all its children) against the schema provided by the data bank.
 
@@ -154,7 +154,7 @@ class BaseNode(ABC):
 
         if api is None:
             api = _get_global_cached_api()
-        api._is_node_schema_valid(self.get_json().json)
+        api._is_node_schema_valid(self.get_json(is_patch=is_patch).json, is_patch=is_patch)
 
     @classmethod
     def _from_json(cls, json_dict: dict):
@@ -242,6 +242,7 @@ class BaseNode(ABC):
         handled_ids: Optional[Set[str]] = None,
         known_uuid: Optional[Set[str]] = None,
         suppress_attributes: Optional[Dict[str, Set[str]]] = None,
+        is_patch=False,
         condense_to_uuid={
             "Material": ["parent_material", "component"],
             "Inventory": ["material"],

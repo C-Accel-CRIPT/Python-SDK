@@ -554,7 +554,6 @@ class API:
         if save_values is None:
             save_values = _InternalSaveValues()
 
-        node.validate()
         # saves all the local files to cloud storage right before saving the Project node
         # Ensure that all file nodes have uploaded there payload before actual save.
         for file_node in node.find_children({"node": ["File"]}):
@@ -581,6 +580,7 @@ class API:
             if not patch_request and force_patch:
                 patch_request = True
                 force_patch = False
+            node.validate(is_patch=patch_request)
 
             # If all that is left is a UUID, we don't need to save it, we can just exit the loop.
             if patch_request and len(json.loads(json_data)) == 1:

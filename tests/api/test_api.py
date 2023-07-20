@@ -134,20 +134,22 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     -----
     * does not test if serialization/deserialization works correctly,
     just tests if the node schema can work correctly if serialization was correct
+
+    # TODO the tests here only test POST db schema and not PATCH yet, those tests must be added
     """
 
     # ------ invalid node schema------
     invalid_schema = {"invalid key": "invalid value", "node": ["Material"]}
 
     with pytest.raises(CRIPTNodeSchemaError):
-        cript_api._is_node_schema_valid(node_json=json.dumps(invalid_schema))
+        cript_api._is_node_schema_valid(node_json=json.dumps(invalid_schema), is_patch=False)
 
     # ------ valid material schema ------
     # valid material node
     valid_material_dict = {"node": ["Material"], "name": "0.053 volume fraction CM gel", "uid": "_:0.053 volume fraction CM gel"}
 
     # convert dict to JSON string because method expects JSON string
-    assert cript_api._is_node_schema_valid(node_json=json.dumps(valid_material_dict)) is True
+    assert cript_api._is_node_schema_valid(node_json=json.dumps(valid_material_dict), is_patch=False) is True
     # ------ valid file schema ------
     valid_file_dict = {
         "node": ["File"],
@@ -158,7 +160,7 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     }
 
     # convert dict to JSON string because method expects JSON string
-    assert cript_api._is_node_schema_valid(node_json=json.dumps(valid_file_dict)) is True
+    assert cript_api._is_node_schema_valid(node_json=json.dumps(valid_file_dict), is_patch=False) is True
 
 
 def test_get_vocabulary_by_category(cript_api: cript.API) -> None:

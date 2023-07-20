@@ -28,8 +28,8 @@ class SearchModes(Enum):
     ```
     """
 
-    NODE_TYPE = ""
-    EXACT_NAME = "exact_name"
-    CONTAINS_NAME = "contains_name"
-    UUID = "uuid"
+    NODE_TYPE: str = ""
+    EXACT_NAME: str = "exact_name"
+    CONTAINS_NAME: str = "contains_name"
+    UUID: str = "uuid"
     # UUID_CHILDREN = "uuid_children"

@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Union
@@ -11,18 +12,35 @@ def _is_local_file(file_source: str) -> bool:
     """
     Determines if the file the user is uploading is a local file or a link.
 
-    Args:
-        file_source (str): The source of the file.
+    It basically tests if the path exists, and it is specifically a file
+    on the local storage and not just a valid directory
 
-    Returns:
-        bool: True if the file is local, False if it's a link.
+    Notes
+    -----
+    since checking for URL is very easy because it has to start with HTTP it checks that as well
+    if it starts with http then it makes the work easy, and it is automatically web URL
+
+    Parameters
+    ----------
+    file_source: str
+        The source of the file.
+
+    Returns
+    -------
+    bool
+        True if the file is local, False if it's a link or s3 object_name.
     """
 
+    # convert local or relative file path str into a path object and resolve it to always get an absolute path
+    file_source_abs_path: str = str(Path(file_source).resolve())
+
+    # if it doesn't start with HTTP and exists on disk
     # checking "http" so it works with both "https://" and "http://"
-    if file_source.startswith("http"):
-        return False
-    else:
+    if not file_source.startswith("http") and os.path.isfile(file_source_abs_path):
         return True
+
+    else:
+        return False
 
 
 def _upload_file_and_get_object_name(source: Union[str, Path], api=None) -> str:

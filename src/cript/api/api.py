@@ -27,6 +27,8 @@ from cript.api.utils.save_helper import (
     _identify_suppress_attributes,
     _InternalSaveValues,
 )
+from cript.api.utils.save_helper import fix_node_save
+from cript.api.utils.web_file_downloader import download_file_from_url
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import ControlledVocabularyCategories
 from cript.nodes.exceptions import CRIPTJsonNodeError, CRIPTNodeSchemaError
@@ -54,7 +56,8 @@ class API:
     """
 
     _host: str = ""
-    _token: str = ""
+    _api_token: str = ""
+    _storage_token: str = ""
     _http_headers: dict = {}
     _vocabulary: dict = {}
     _db_schema: dict = {}
@@ -72,7 +75,7 @@ class API:
     # trunk-ignore-end(cspell)
 
     @beartype
-    def __init__(self, host: Union[str, None] = None, token: Union[str, None] = None, config_file_path: str = ""):
+    def __init__(self, host: Union[str, None] = None, api_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: str = ""):
         """
         Initialize CRIPT API client with host and token.
         Additionally, you can  use a config.json file and specify the file path.
@@ -110,20 +113,20 @@ class API:
             # node creation, api.save(), etc.
         ```
 
-        Notes
-        -----
-
         Parameters
         ----------
         host : str, None
             CRIPT host for the Python SDK to connect to such as `https://criptapp.org`
             This host address is the same address used to login to cript website.
             If `None` is specified, the host is inferred from the environment variable `CRIPT_HOST`.
-        token : str, None
-            CRIPT API Token used to connect to CRIPT
+        api_token : str, None
+            CRIPT API Token used to connect to CRIPT and upload all data with the exception to file upload that needs
+            a different token.
             You can find your personal token on the cript website at User > Security Settings.
             The user icon is in the top right.
             If `None` is specified, the token is inferred from the environment variable `CRIPT_TOKEN`.
+        storage_token: str
+            This token is used to upload local files to CRIPT cloud storage when needed
         config_file_path: str
             the file path to the config.json file where the token and host can be found
 
@@ -150,18 +153,21 @@ class API:
             Instantiate a new CRIPT API object
         """
 
-        if config_file_path or (host is None and token is None):
-            authentication_dict: Dict[str, str] = resolve_host_and_token(host, token, config_file_path)
+        # if there is a config.json file or any of the parameters are None, then get the variables from file or env vars
+        if config_file_path or (host is None or api_token is None or storage_token is None):
+            authentication_dict: Dict[str, str] = resolve_host_and_token(host, api_token=api_token, storage_token=storage_token, config_file_path=config_file_path)
 
             host = authentication_dict["host"]
-            token = authentication_dict["token"]
+            api_token = authentication_dict["api_token"]
+            storage_token = authentication_dict["storage_token"]
 
         self._host = self._prepare_host(host=host)  # type: ignore
-        self._token = token  # type: ignore
+        self._api_token = api_token  # type: ignore
+        self._storage_token = storage_token  # type: ignore
 
         # assign headers
-        # TODO might need to add Bearer to it or check for it
-        self._http_headers = {"Authorization": f"{self._token}", "Content-Type": "application/json"}
+        # add Bearer to token for HTTP, but keep it bare for AWS S3 file uploads and downloads
+        self._http_headers = {"Authorization": f"Bearer {self._api_token}", "Content-Type": "application/json"}
 
         # check that api can connect to CRIPT with host and token
         self._check_initial_host_connection()
@@ -197,9 +203,9 @@ class API:
 
         if self._internal_s3_client is None:
             auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
-            identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._token})
+            identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._storage_token})
             # TODO remove this temporary fix to the token, by getting is from back end.
-            aws_token = self._token.lstrip("Bearer ")
+            aws_token = self._storage_token
 
             aws_credentials = auth.get_credentials_for_identity(IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: aws_token})
             aws_credentials = aws_credentials["Credentials"]
@@ -291,7 +297,7 @@ class API:
         try:
             pass
         except Exception as exc:
-            raise CRIPTConnectionError(self.host, self._token) from exc
+            raise CRIPTConnectionError(self.host, self._api_token) from exc
 
     def _get_vocab(self) -> dict:
         """
@@ -681,6 +687,7 @@ class API:
         # return the object_name within AWS S3 for easy retrieval
         return object_name
 
+    @beartype
     def download_file(self, object_name: str, destination_path: str = ".") -> None:
         """
         download a file from AWS S3 and save it to the specified path on local storage
@@ -717,6 +724,11 @@ class API:
         None
             just downloads the file to the specified path
         """
+
+        # if the file source is a URL
+        if object_name.startswith("http"):
+            download_file_from_url(url=object_name, destination_path=Path(destination_path).resolve())
+            return
 
         # the file is stored in cloud storage and must be retrieved via object_name
         self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=object_name, Filename=destination_path)  # type: ignore

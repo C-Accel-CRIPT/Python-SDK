@@ -6,21 +6,17 @@
 
 The token is needed because we need to authenticate the user before saving any of their data
 
-<!--
-<img class="screenshot-border" src="../../assets/images/tutorial/cript_login_screen_for_token.png" alt="Screenshot of CRIPT login screen">
-
-<img class="screenshot-border" src="../../assets/images/tutorial/api_token_page.png" alt="Screenshot of CRIPT security page where API token is found">
+<img class="screenshot-border" src="../../images/cript_api_token_page.png" alt="Screenshot of CRIPT security page where API token is found">
 
 <small>
-   <a href="https://criptapp.org/security/" target="_blank">Security Settings</a>
+   [Security Settings](https://criptapp.org/security/)
    under the profile icon dropdown
 </small>
 
--->
 
 To get your token:
 
-1. please visit your <a href="https://criptapp.org/security/" target="_blank">Security Settings</a> under the profile
+1. please visit your [Security Settings](https://criptapp.org/security/) under the profile
    icon dropdown on
    the top right
 2. Click on the **copy** button next to the API Token to copy it to clipboard

@@ -1,5 +1,6 @@
 import copy
 import json
+import os
 import uuid
 
 from test_integration import integrate_nodes_helper
@@ -15,6 +16,43 @@ def test_create_file() -> None:
     file_node = cript.File(name="my file name", source="https://google.com", type="calibration")
 
     assert isinstance(file_node, cript.File)
+
+
+def test_source_is_local(tmp_path, tmp_path_factory) -> None:
+    """
+    tests that the `_is_local_file()` function is working well
+    and it can correctly tell the difference between local file, URL, cloud storage object_name correctly
+
+    ## test cases
+        ### web sources
+            * AWS S3 cloud storage object_name
+            * web URL file source
+                example: `https://my-website/my-file-name.pdf`
+        ## local file sources
+       * local file path
+            * absolute file path
+            * relative file path
+    """
+    from cript.nodes.supporting_nodes.file import _is_local_file
+
+    # URL
+    assert _is_local_file(file_source="https://my-website/my-uploaded-file.pdf") is False
+
+    # S3 object_name
+    assert _is_local_file(file_source="s3_directory/s3_uploaded_file.txt") is False
+
+    # create temporary file
+    temp_file = tmp_path_factory.mktemp("test_source_is_local") / "temp_file.txt"
+    temp_file.write_text("hello world")  # write something to the file to force creation
+
+    # Absolute file path
+    absolute_file_path: str = str(temp_file.resolve())
+    assert _is_local_file(file_source=absolute_file_path) is True
+
+    # Relative file path from cwd
+    #   get relative file path to temp_file from cwd
+    relative_file_path: str = os.path.relpath(absolute_file_path, os.getcwd())
+    assert _is_local_file(file_source=relative_file_path) is True
 
 
 def test_local_file_source_upload_and_download(tmp_path_factory) -> None:

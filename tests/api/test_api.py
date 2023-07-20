@@ -237,7 +237,7 @@ def test_download_file_from_url(cript_api: cript.API, tmp_path) -> None:
     # the path it will save it to will be `tmp_path/downloaded_file_name.json`
     path_to_save_file: Path = tmp_path / "downloaded_file_name"
 
-    cript_api.download_file(object_name=url_to_download_file, destination_path=str(path_to_save_file))
+    cript_api.download_file(file_source=url_to_download_file, destination_path=str(path_to_save_file))
 
     # add file extension to file path and convert it to file path object
     path_to_read_file = Path(str(path_to_save_file) + ".json").resolve()
@@ -283,7 +283,7 @@ def test_upload_and_download_local_file(cript_api, tmp_path_factory) -> None:
     download_test_file = tmp_path_factory.mktemp("test_api_file_download") / "temp_download_file.txt"
 
     # download file from cloud storage
-    cript_api.download_file(object_name=my_file_cloud_storage_object_name, destination_path=str(download_test_file))
+    cript_api.download_file(file_source=my_file_cloud_storage_object_name, destination_path=str(download_test_file))
 
     # read file contents
     downloaded_file_contents = download_test_file.read_text()

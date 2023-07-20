@@ -452,6 +452,8 @@ class API:
         ----------
         node_json: str
             a node in JSON form string
+        is_patch: bool
+            a boolean flag checking if it needs to validate against `NodePost` or `NodePatch`
 
         Notes
         -----

@@ -97,14 +97,14 @@ class Project(PrimaryBaseNode):
         self._json_attrs = replace(self._json_attrs, name=name, collection=collection, material=material)
         self.validate()
 
-    def validate(self):
+    def validate(self, api=None, is_patch=False):
         from cript.nodes.exceptions import (
             CRIPTOrphanedMaterialError,
             get_orphaned_experiment_exception,
         )
 
         # First validate like other nodes
-        super().validate()
+        super().validate(api=api, is_patch=is_patch)
 
         # Check graph for orphaned nodes, that should be listed in project
         # Project.materials should contain all material nodes

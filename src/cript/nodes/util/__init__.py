@@ -25,6 +25,7 @@ class NodeEncoder(json.JSONEncoder):
     handled_ids: Set[str] = set()
     known_uuid: Set[str] = set()
     condense_to_uuid: Set[str] = set()
+    suppress_attributes: Optional[Dict[str, Set[str]]] = None
 
     def default(self, obj):
         if isinstance(obj, uuid.UUID):
@@ -61,6 +62,11 @@ class NodeEncoder(json.JSONEncoder):
             serialize_dict, condensed_uid = self._apply_modifications(serialize_dict)
             if uid not in condensed_uid:  # We can uid (node) as handled if we don't condense it to uuid
                 NodeEncoder.handled_ids.add(uid)
+
+            # Remove suppressed attributes
+            if NodeEncoder.suppress_attributes is not None and str(obj.uuid) in NodeEncoder.suppress_attributes:
+                for attr in NodeEncoder.suppress_attributes[str(obj.uuid)]:
+                    del serialize_dict[attr]
 
             return serialize_dict
         return json.JSONEncoder.default(self, obj)

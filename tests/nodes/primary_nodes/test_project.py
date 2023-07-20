@@ -68,6 +68,12 @@ def test_integration_project(cript_api, simple_project_node):
     1. GET from API
     1. assert they're both equal
     """
+    # ========= test create =========
     simple_project_node.name = f"test_integration_project_name_{uuid.uuid4().hex}"
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test update =========
+    simple_project_node.notes = "project notes UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

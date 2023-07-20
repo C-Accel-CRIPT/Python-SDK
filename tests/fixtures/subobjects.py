@@ -47,7 +47,7 @@ def complex_reference_node() -> cript.Reference:
     title += "SOft coarse grained Monte-Carlo Acceleration (SOMA)"
 
     reference = cript.Reference(
-        "journal_article",
+        type="journal_article",
         title=title,
         author=["Ludwig Schneider", "Marcus Müller"],
         journal="Computer Physics Communications",

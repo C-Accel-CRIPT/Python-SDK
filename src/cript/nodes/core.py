@@ -1,10 +1,11 @@
 import copy
 import dataclasses
 import json
+import re
 import uuid
 from abc import ABC
 from dataclasses import asdict, dataclass, replace
-from typing import List, Optional, Set
+from typing import Dict, List, Optional, Set
 
 from cript.nodes.exceptions import (
     CRIPTAttributeModificationError,
@@ -58,6 +59,13 @@ class BaseNode(ABC):
         if name == "ABCMeta":
             name = self.__name__
         return name
+
+    @classproperty
+    def node_type_snake_case(self):
+        camel_case = self.node_type
+        # Regex to convert camel case to snake case.
+        snake_case = re.sub(r"(?<!^)(?=[A-Z])", "_", camel_case).lower()
+        return snake_case
 
     # Prevent new attributes being set.
     # This might just be temporary, but for now, I don't want to accidentally add new attributes, when I mean to modify one.
@@ -134,7 +142,7 @@ class BaseNode(ABC):
             self._json_attrs = old_json_attrs
             raise exc
 
-    def validate(self, api=None) -> None:
+    def validate(self, api=None, is_patch=False) -> None:
         """
         Validate this node (and all its children) against the schema provided by the data bank.
 
@@ -146,7 +154,7 @@ class BaseNode(ABC):
 
         if api is None:
             api = _get_global_cached_api()
-        api._is_node_schema_valid(self.get_json().json)
+        api._is_node_schema_valid(self.get_json(is_patch=is_patch).json, is_patch=is_patch)
 
     @classmethod
     def _from_json(cls, json_dict: dict):
@@ -189,7 +197,7 @@ class BaseNode(ABC):
             if getattr(attrs, field) == getattr(default_dataclass, field):
                 attrs = replace(attrs, **{str(field): getattr(node, field)})
 
-        try:
+        try:  # TODO remove this temporary solution
             if not attrs.uid.startswith("_:"):
                 attrs = replace(attrs, uid="_:" + attrs.uid)
         except AttributeError:
@@ -233,6 +241,8 @@ class BaseNode(ABC):
         self,
         handled_ids: Optional[Set[str]] = None,
         known_uuid: Optional[Set[str]] = None,
+        suppress_attributes: Optional[Dict[str, Set[str]]] = None,
+        is_patch=False,
         condense_to_uuid={
             "Material": ["parent_material", "component"],
             "Inventory": ["material"],
@@ -265,14 +275,18 @@ class BaseNode(ABC):
         # Delayed import to avoid circular imports
         from cript.nodes.util import NodeEncoder
 
+        if handled_ids is None:
+            handled_ids = set()
         previous_handled_nodes = copy.deepcopy(NodeEncoder.handled_ids)
-        if handled_ids is not None:
-            NodeEncoder.handled_ids = handled_ids
+        NodeEncoder.handled_ids = handled_ids
 
         # Similar to uid, we handle pre-saved known uuid such that they are UUID edges only
+        if known_uuid is None:
+            known_uuid = set()
         previous_known_uuid = copy.deepcopy(NodeEncoder.known_uuid)
-        if known_uuid is not None:
-            NodeEncoder.known_uuid = known_uuid
+        NodeEncoder.known_uuid = known_uuid
+        previous_suppress_attributes = copy.deepcopy(NodeEncoder.suppress_attributes)
+        NodeEncoder.suppress_attributes = suppress_attributes
         previous_condense_to_uuid = copy.deepcopy(NodeEncoder.condense_to_uuid)
         NodeEncoder.condense_to_uuid = condense_to_uuid
 
@@ -286,6 +300,7 @@ class BaseNode(ABC):
         finally:
             NodeEncoder.handled_ids = previous_handled_nodes
             NodeEncoder.known_uuid = previous_known_uuid
+            NodeEncoder.suppress_attributes = previous_suppress_attributes
             NodeEncoder.condense_to_uuid = previous_condense_to_uuid
 
     def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes=None) -> List:

@@ -117,8 +117,14 @@ def test_integration_computation(cript_api, simple_project_node, simple_computat
     1. GET from API
     1. assert they're both equal
     """
+    # --------- test create ---------
     simple_project_node.name = f"test_integration_computation_name_{uuid.uuid4().hex}"
-
     simple_project_node.collection[0].experiment[0].computation = [simple_computation_node]
+
+    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # --------- test update ---------
+    # change simple computation attribute to trigger update
+    simple_project_node.collection[0].experiment[0].computation[0].type = "data_fit"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

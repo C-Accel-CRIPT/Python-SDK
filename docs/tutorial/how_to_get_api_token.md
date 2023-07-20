@@ -23,10 +23,12 @@ To get your token:
 
 Example:
 
-# trunk-ignore-begin(cspell, gitleaks)
+<!-- trunk-ignore-begin(cspell, gitleaks) -->
+
 ```yaml
 API Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 
 Storage Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gU21pdGgiLCJpYXQiOjE1MTYyMzkwMjJ9.Q_w2AVguPRU2KskCXwR7ZHl09TQXEntfEA8Jj2_Jyew
 ```
-# trunk-ignore-begin(cspell)
+
+<!--  trunk-ignore-begin(cspell) -->

@@ -644,7 +644,7 @@ class API:
         return object_name
 
     @beartype
-    def download_file(self, object_name: str, destination_path: str = ".") -> None:
+    def download_file(self, file_source: str, destination_path: str = ".") -> None:
         """
         download a file from AWS S3 and save it to the specified path on local storage
 
@@ -652,10 +652,10 @@ class API:
 
         Parameters
         ----------
-        object_name: str
-            object_name within AWS S3 the extension e.g. "my_file_name.txt
+        file_source: str
+            object_name: within AWS S3 the extension e.g. "my_file_name.txt
             the file is then searched within "Data/{file_name}" and saved to local storage
-            In case of the file source is a URL then it is the file source URL
+            URL file source: In case of the file source is a URL then it is the file source URL
                 starting with "https://"
         destination_path: str
             please provide a path with file name of where you would like the file to be saved
@@ -682,12 +682,12 @@ class API:
         """
 
         # if the file source is a URL
-        if object_name.startswith("http"):
-            download_file_from_url(url=object_name, destination_path=Path(destination_path).resolve())
+        if file_source.startswith("http"):
+            download_file_from_url(url=file_source, destination_path=Path(destination_path).resolve())
             return
 
         # the file is stored in cloud storage and must be retrieved via object_name
-        self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=object_name, Filename=destination_path)  # type: ignore
+        self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=file_source, Filename=destination_path)  # type: ignore
 
     @beartype
     def search(

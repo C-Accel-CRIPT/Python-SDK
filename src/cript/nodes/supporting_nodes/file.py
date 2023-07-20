@@ -442,4 +442,4 @@ class File(PrimaryBaseNode):
 
         absolute_file_path = str((existing_folder_path / file_name).resolve())
 
-        api.download_file(object_name=self.source, destination_path=absolute_file_path)
+        api.download_file(file_source=self.source, destination_path=absolute_file_path)

@@ -412,16 +412,18 @@ class File(PrimaryBaseNode):
     # TODO get file name from node itself as default and allow for customization as well optional
     def download(
         self,
-        file_name: str,
         destination_directory_path: Union[str, Path] = ".",
     ) -> None:
         """
-        download this file to current working directory or a specific destination
+        download this file to current working directory or a specific destination.
+        The file name will come from the file_node.name and the extension will come from file_node.extension
+
+        Notes
+        -----
+        Whether the file extension is written like `.csv` or `csv` the program will work correctly
 
         Parameters
         ----------
-        file_name: str
-            what you want to name the file node on your computer
         destination_directory_path: Union[str, Path]
             where you want the file to be stored and what you want the name to be
             by default it is the current working directory
@@ -434,11 +436,11 @@ class File(PrimaryBaseNode):
 
         api = _get_global_cached_api()
 
-        existing_folder_path = Path(destination_directory_path)
+        # convert the path from str to Path in case it was given as a str and resolve it to get the absolute path
+        existing_folder_path = Path(destination_directory_path).resolve()
 
-        # TODO automatically add the correct file extension to it from the node
-        #  and be sure that it is always `.csv` and never just `csv`
-        file_name = f"{file_name}"
+        # stripping dot from extension to make all extensions uniform, in case a user puts `.csv` or `csv` it will work
+        file_name = f"{self.name}.{self.extension.lstrip('.')}"
 
         absolute_file_path = str((existing_folder_path / file_name).resolve())
 

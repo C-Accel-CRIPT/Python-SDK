@@ -18,7 +18,7 @@ For more detailed information, please refer to our wiki section.
 5. Commit your changes with a clear and concise commit message.
 6. Push the changes to your forked repository.
 7. Open a pull request (PR) in our repository to propose your changes.
-   > Please be sure to merge all incoming changes to the
+   > Please be sure to merge all of your incoming changes to the
    > [develop branch](https://github.com/C-Accel-CRIPT/Python-SDK/tree/develop), we only update the
    > [main branch](https://github.com/C-Accel-CRIPT/Python-SDK/tree/main) when going to make a release by
    > merging [develop branch](https://github.com/C-Accel-CRIPT/Python-SDK/tree/develop) into main.

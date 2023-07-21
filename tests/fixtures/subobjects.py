@@ -165,13 +165,13 @@ def complex_property_dict(complex_material_node, complex_condition_dict, complex
 
 @pytest.fixture(scope="function")
 def simple_property_node() -> cript.Property:
-    p = cript.Property(
-        "modulus_shear",
-        "value",
-        5.0,
-        "GPa",
+    my_property = cript.Property(
+        key="modulus_shear",
+        type="value",
+        value=5.0,
+        unit="GPa",
     )
-    return p
+    return my_property
 
 
 @pytest.fixture(scope="function")

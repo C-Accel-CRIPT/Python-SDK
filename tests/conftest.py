@@ -10,7 +10,6 @@ The fixtures are all functional fixtures that stay consistent between all tests.
 """
 
 import pytest
-
 from fixtures.primary_nodes import *
 from fixtures.subobjects import *
 from fixtures.supporting_nodes import *

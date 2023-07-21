@@ -23,7 +23,8 @@ To get your token:
 
 Example:
 
-<!-- trunk-ignore-begin(cspell/error, gitleaks/jwt) -->
+<!-- trunk-ignore-begin(cspell/error) -->
+<!-- trunk-ignore-begin(gitleaks/jwt) -->
 
 ```yaml
 API Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
@@ -31,4 +32,5 @@ API Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFt
 Storage Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gU21pdGgiLCJpYXQiOjE1MTYyMzkwMjJ9.Q_w2AVguPRU2KskCXwR7ZHl09TQXEntfEA8Jj2_Jyew
 ```
 
-<!--  trunk-ignore-end(cspell/error, gitleaks/jwt) -->
+<!--  trunk-ignore-end(gitleaks/jwt) -->
+<!--  trunk-ignore-end(cspell/error) -->

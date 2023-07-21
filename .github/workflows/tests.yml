@@ -42,5 +42,5 @@ jobs:
       - name: pip install requirements_dev.txt
         run: python3 -m pip install -r requirements_dev.txt
 
-      - name: Run PyTests in tests/
+      - name: Run pytest on tests/
         run: pytest ./tests/

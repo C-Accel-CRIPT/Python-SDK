@@ -1,3 +1,4 @@
+# trunk-ignore-all(ruff/F403)
 """
 This conftest file contains simple nodes (nodes with minimal required arguments)
 and complex node (nodes that have all possible arguments), to use for testing.

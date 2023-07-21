@@ -17,14 +17,14 @@ def test_json(complex_software_configuration_node, complex_software_configuratio
     assert strip_uid_from_dict(json.loads(sc2.json)) == strip_uid_from_dict(json.loads(sc.json))
 
 
-def test_setter_getter(complex_software_configuration_node, complex_algorithm_node, complex_citation_node):
+def test_setter_getter(complex_software_configuration_node, simple_algorithm_node, complex_citation_node):
     sc2 = complex_software_configuration_node
     software2 = copy.deepcopy(sc2.software)
     sc2.software = software2
     assert sc2.software is software2
 
     # assert len(sc2.algorithm) == 1
-    # al2 = complex_algorithm_node
+    # al2 = simple_algorithm_node
     # print(sc2.get_json(indent=2,sortkeys=False).json)
     # print(al2.get_json(indent=2,sortkeys=False).json)
     # sc2.algorithm += [al2]

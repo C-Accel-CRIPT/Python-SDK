@@ -26,7 +26,7 @@ def complex_parameter_dict() -> dict:
 
 # TODO this fixture should be renamed because it is simple_algorithm_subobject not complex
 @pytest.fixture(scope="function")
-def complex_algorithm_node() -> cript.Algorithm:
+def simple_algorithm_node() -> cript.Algorithm:
     """
     minimal algorithm sub-object
     """
@@ -36,7 +36,7 @@ def complex_algorithm_node() -> cript.Algorithm:
 
 
 @pytest.fixture(scope="function")
-def complex_algorithm_dict() -> dict:
+def simple_algorithm_dict() -> dict:
     ret_dict = {"node": ["Algorithm"], "key": "mc_barostat", "type": "barostat"}
     return ret_dict
 
@@ -165,11 +165,13 @@ def complex_property_dict(complex_material_node, complex_condition_dict, complex
 
 @pytest.fixture(scope="function")
 def simple_property_node() -> cript.Property:
-    """
-    minimalist property node that only has the required attributes
-    """
-    my_property = cript.Property(key="modulus_shear", type="value", value=5.0, unit="GPa")
-    return my_property
+    p = cript.Property(
+        "modulus_shear",
+        "value",
+        5.0,
+        "GPa",
+    )
+    return p
 
 
 @pytest.fixture(scope="function")
@@ -322,20 +324,20 @@ def complex_computational_forcefield_dict(simple_data_node, complex_citation_dic
 
 
 @pytest.fixture(scope="function")
-def complex_software_configuration_node(complex_software_node, complex_algorithm_node, complex_citation_node) -> cript.SoftwareConfiguration:
+def complex_software_configuration_node(complex_software_node, simple_algorithm_node, complex_citation_node) -> cript.SoftwareConfiguration:
     """
     maximal software_configuration sub-object with all possible attributes
     """
-    my_complex_software_configuration_node = cript.SoftwareConfiguration(software=complex_software_node, algorithm=[complex_algorithm_node], notes="my_complex_software_configuration_node notes", citation=[complex_citation_node])
+    my_complex_software_configuration_node = cript.SoftwareConfiguration(software=complex_software_node, algorithm=[simple_algorithm_node], notes="my_complex_software_configuration_node notes", citation=[complex_citation_node])
     return my_complex_software_configuration_node
 
 
 @pytest.fixture(scope="function")
-def complex_software_configuration_dict(complex_software_dict, complex_algorithm_dict, complex_citation_dict) -> dict:
+def complex_software_configuration_dict(complex_software_dict, simple_algorithm_dict, complex_citation_dict) -> dict:
     ret_dict = {
         "node": ["SoftwareConfiguration"],
         "software": complex_software_dict,
-        "algorithm": [complex_algorithm_dict],
+        "algorithm": [simple_algorithm_dict],
         "notes": "my_complex_software_configuration_node notes",
         "citation": [complex_citation_dict],
     }

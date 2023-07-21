@@ -159,7 +159,7 @@ def simple_process_node() -> cript.Process:
     """
     my_process = cript.Process(name="my process name", type="affinity_pure")
 
-    return copy.deepcopy(my_process)
+    return my_process
 
 
 @pytest.fixture(scope="function")

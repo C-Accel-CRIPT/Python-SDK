@@ -165,13 +165,11 @@ def complex_property_dict(complex_material_node, complex_condition_dict, complex
 
 @pytest.fixture(scope="function")
 def simple_property_node() -> cript.Property:
-    p = cript.Property(
-        "modulus_shear",
-        "value",
-        5.0,
-        "GPa",
-    )
-    return p
+    """
+    minimalist property node that only has the required attributes
+    """
+    my_property = cript.Property(key="modulus_shear", type="value", value=5.0, unit="GPa")
+    return my_property
 
 
 @pytest.fixture(scope="function")

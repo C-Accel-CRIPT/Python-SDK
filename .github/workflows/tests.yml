@@ -18,7 +18,6 @@ on:
 jobs:
   install:
     runs-on: ${{ matrix.os }}
-
     strategy:
       fail-fast: false
 

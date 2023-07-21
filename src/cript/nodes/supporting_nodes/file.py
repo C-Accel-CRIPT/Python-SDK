@@ -409,7 +409,7 @@ class File(PrimaryBaseNode):
         new_attrs = replace(self._json_attrs, data_dictionary=new_data_dictionary)
         self._update_json_attrs_if_valid(new_attrs)
 
-    # TODO get file name from node itself as default and allow for customization as well optional
+    @beartype
     def download(
         self,
         destination_directory_path: Union[str, Path] = ".",

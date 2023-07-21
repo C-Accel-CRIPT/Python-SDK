@@ -3,6 +3,7 @@
 name: Tests
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -17,25 +18,27 @@ on:
 jobs:
   install:
     runs-on: ${{ matrix.os }}
+
     strategy:
       fail-fast: false
+
       matrix:
         os: [ubuntu-latest, macos-latest]
         python-version: [3.7, 3.11]
+
+    env:
+      CRIPT_HOST: http://development.api.mycriptapp.org/
+      CRIPT_TOKEN: 123456789
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install via Pip
+
+      - name: pip install CRIPT Python SDK local package
         run: python3 -m pip install .
 
-      - name: Check installation
-        run: |
-          export CRIPT_TOKEN="125433546"
-          export CRIPT_HOST="http://development.api.mycriptapp.org/"
-          python3 -m pip install pytest
-          python3 -m pip install -r requirements.txt 
-          python3 -m pip install -r requirements_dev.txt 
-          python3 -c "import cript"
-          export CRIPT_TOKEN="125433546"
-          export CRIPT_HOST="http://development.api.mycriptapp.org/"
-          python3 -m pytest
+      - name: pip install requirements_dev.txt
+        run: pip install -r requirements_dev.txt
+
+      - name: Run PyTests in tests/
+        run: pytest ./tests/

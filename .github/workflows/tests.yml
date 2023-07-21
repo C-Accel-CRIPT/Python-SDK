@@ -3,6 +3,9 @@
 name: Tests
 
 on:
+  # trunk-ignore(yamllint/empty-values)
+  workflow_dispatch:
+
   push:
     branches:
       - main
@@ -13,7 +16,6 @@ on:
       - main
       - develop
       - "*"
-  workflow_dispatch:
 
 jobs:
   install:

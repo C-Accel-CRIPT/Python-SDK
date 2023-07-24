@@ -159,11 +159,11 @@ def simple_process_node() -> cript.Process:
     """
     my_process = cript.Process(name="my process name", type="affinity_pure")
 
-    return copy.deepcopy(my_process)
+    return my_process
 
 
 @pytest.fixture(scope="function")
-def complex_process_node(complex_ingredient_node, simple_equipment_node, complex_citation_node, simple_property_node, simple_condition_node, simple_material_node, simple_process_node, complex_equipment_node, complex_condition_node) -> None:
+def complex_process_node(complex_ingredient_node, simple_equipment_node, complex_citation_node, simple_property_node, simple_condition_node, simple_material_node, simple_process_node) -> None:
     """
     create a process node with all possible arguments
 
@@ -171,7 +171,6 @@ def complex_process_node(complex_ingredient_node, simple_equipment_node, complex
     -----
     * indirectly tests the vocabulary as well, as it gives it valid vocabulary
     """
-    # TODO clean up this test and use fixtures from conftest.py
 
     my_process_name = "my complex process node name"
     my_process_type = "affinity_pure"
@@ -186,23 +185,19 @@ def complex_process_node(complex_ingredient_node, simple_equipment_node, complex
         "annealing_sol",
     ]
 
-    # create complex process
-    citation = copy.deepcopy(complex_citation_node)
-    prop = cript.Property("n_neighbor", "value", 2.0, None)
-
     my_complex_process = cript.Process(
         name=my_process_name,
         type=my_process_type,
         ingredient=[complex_ingredient_node],
         description=my_process_description,
-        equipment=[complex_equipment_node],
+        equipment=[simple_equipment_node],
         product=[simple_material_node],
         waste=process_waste,
         prerequisite_process=[simple_process_node],
-        condition=[complex_condition_node],
-        property=[prop],
+        condition=[simple_condition_node],
+        property=[simple_property_node],
         keyword=my_process_keywords,
-        citation=[citation],
+        citation=[complex_citation_node],
     )
 
     return my_complex_process

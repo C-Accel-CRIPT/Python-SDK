@@ -26,7 +26,7 @@ def test_parameter_json_serialization(complex_parameter_node, complex_parameter_
     assert p2.json == p.json
 
 
-def test_integration_parameter(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_computation_node, simple_software_configuration, complex_algorithm_node, complex_parameter_node):
+def test_integration_parameter(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_computation_node, simple_software_configuration, simple_algorithm_node, complex_parameter_node):
     """
     integration test between Python SDK and API Client
 
@@ -41,7 +41,7 @@ def test_integration_parameter(cript_api, simple_project_node, simple_collection
     simple_project_node.collection[0].experiment = [simple_experiment_node]
     simple_project_node.collection[0].experiment[0].computation = [simple_computation_node]
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration = [simple_software_configuration]
-    simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].algorithm = [complex_algorithm_node]
+    simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].algorithm = [simple_algorithm_node]
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].algorithm[0].parameter = [complex_parameter_node]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

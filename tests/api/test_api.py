@@ -41,11 +41,10 @@ def test_api_with_invalid_host() -> None:
         cript.API(host="no_http_host.org", api_token="123456789", storage_token="987654321")
 
 
-# TODO commented out for now because it needs an API container
+@pytest.mark.skip(reason="skipping for now because it needs an API container")
 def test_api_context(cript_api: cript.API) -> None:
-    #     assert cript.api.api._global_cached_api is not None
-    #     assert cript.api.api._get_global_cached_api() is not None
-    pass
+    assert cript.api.api._global_cached_api is not None
+    assert cript.api.api._get_global_cached_api() is not None
 
 
 def test_api_cript_env_vars() -> None:
@@ -116,9 +115,8 @@ def test_get_db_schema_from_api(cript_api: cript.API) -> None:
     assert bool(db_schema)
     assert isinstance(db_schema, dict)
 
-    # TODO this is constantly changing, so we can't check it for now.
-    # total_fields_in_db_schema = 69
-    # assert len(db_schema["$defs"]) == total_fields_in_db_schema
+    # db schema should have at least 30 fields
+    assert len(db_schema["$defs"]) > 30
 
 
 def test_is_node_schema_valid(cript_api: cript.API) -> None:

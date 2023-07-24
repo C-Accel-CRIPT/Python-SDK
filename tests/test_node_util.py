@@ -19,16 +19,16 @@ from cript.nodes.exceptions import (
 )
 
 
-def test_removing_nodes(complex_algorithm_node, complex_parameter_node, complex_algorithm_dict):
-    a = complex_algorithm_node
+def test_removing_nodes(simple_algorithm_node, complex_parameter_node, simple_algorithm_dict):
+    a = simple_algorithm_node
     p = complex_parameter_node
     a.parameter += [p]
-    assert strip_uid_from_dict(json.loads(a.json)) != complex_algorithm_dict
+    assert strip_uid_from_dict(json.loads(a.json)) != simple_algorithm_dict
     a.remove_child(p)
-    assert strip_uid_from_dict(json.loads(a.json)) == complex_algorithm_dict
+    assert strip_uid_from_dict(json.loads(a.json)) == simple_algorithm_dict
 
 
-def test_uid_deserialization(complex_algorithm_node, complex_parameter_node, complex_algorithm_dict):
+def test_uid_deserialization(simple_algorithm_node, complex_parameter_node, simple_algorithm_dict):
     identifiers = [{"bigsmiles": "123456"}]
     material = cript.Material(name="my material", identifiers=identifiers)
 
@@ -149,8 +149,8 @@ def test_json_error(complex_parameter_node):
         parameter.json
 
 
-def test_local_search(complex_algorithm_node, complex_parameter_node):
-    a = complex_algorithm_node
+def test_local_search(simple_algorithm_node, complex_parameter_node):
+    a = simple_algorithm_node
     # Check if we can use search to find the algorithm node, but specifying node and key
     find_algorithms = a.find_children({"node": "Algorithm", "key": "mc_barostat"})
     assert find_algorithms == [a]

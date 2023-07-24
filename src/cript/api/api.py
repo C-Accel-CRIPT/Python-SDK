@@ -74,7 +74,7 @@ class API:
     # trunk-ignore-end(cspell)
 
     @beartype
-    def __init__(self, host: Union[str, None] = None, api_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: str = ""):
+    def __init__(self, host: Union[str, None] = None, api_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: Union[str, Path] = ""):
         """
         Initialize CRIPT API client with host and token.
         Additionally, you can  use a config.json file and specify the file path.
@@ -164,8 +164,7 @@ class API:
         self._api_token = api_token  # type: ignore
         self._storage_token = storage_token  # type: ignore
 
-        # assign headers
-        # add Bearer to token for HTTP, but keep it bare for AWS S3 file uploads and downloads
+        # add Bearer to token for HTTP requests
         self._http_headers = {"Authorization": f"Bearer {self._api_token}", "Content-Type": "application/json"}
 
         # check that api can connect to CRIPT with host and token

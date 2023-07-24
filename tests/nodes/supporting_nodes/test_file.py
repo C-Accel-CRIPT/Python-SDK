@@ -13,7 +13,7 @@ def test_create_file() -> None:
     """
     tests that a simple file with only required attributes can be created
     """
-    file_node = cript.File(name="my file name", source="https://google.com", type="calibration")
+    file_node = cript.File(name="my file name", source="https://google.com", type="calibration", is_local_file=False)
 
     assert isinstance(file_node, cript.File)
 
@@ -151,7 +151,7 @@ def test_file_getters_and_setters(complex_file_node) -> None:
     new_data_dictionary = "new data dictionary"
 
     # ------- set properties -------
-    complex_file_node.source = new_source
+    complex_file_node.source_setter(new_source=new_source, is_local_file=False)
     complex_file_node.type = new_file_type
     complex_file_node.extension = new_file_extension
     complex_file_node.data_dictionary = new_data_dictionary

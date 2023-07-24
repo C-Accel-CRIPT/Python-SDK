@@ -43,7 +43,7 @@ def _is_local_file(file_source: str) -> bool:
         return False
 
 
-def _upload_file_and_get_object_name(source: Union[str, Path], api=None) -> str:
+def _upload_file_and_get_object_name(source: Union[str, Path], is_local_file: bool, api=None) -> str:
     """
     uploads file to cloud storage and returns the file link
 
@@ -67,7 +67,7 @@ def _upload_file_and_get_object_name(source: Union[str, Path], api=None) -> str:
     # convert source to str for `_is_local_file` and to return str
     source = str(source)
 
-    if _is_local_file(file_source=source):
+    if is_local_file:
         if api is None:
             api = _get_global_cached_api()
         object_name = api.upload_file(file_path=source)
@@ -111,6 +111,9 @@ class File(PrimaryBaseNode):
 
     """
 
+    # a flag that user specifies if the file source they are inputting is local or on the web
+    _is_local_file: bool = False
+
     @dataclass(frozen=True)
     class JsonAttributes(PrimaryBaseNode.JsonAttributes):
         """
@@ -125,7 +128,7 @@ class File(PrimaryBaseNode):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, name: str, source: str, type: str, extension: str = "", data_dictionary: str = "", notes: str = "", **kwargs):
+    def __init__(self, name: str, source: str, type: str, is_local_file: bool, extension: str = "", data_dictionary: str = "", notes: str = "", **kwargs):
         """
         create a File node
 
@@ -169,6 +172,8 @@ class File(PrimaryBaseNode):
             ```
         """
 
+        self._is_local_file = is_local_file
+
         super().__init__(name=name, notes=notes, **kwargs)
 
         # TODO check if vocabulary is valid or not
@@ -211,7 +216,7 @@ class File(PrimaryBaseNode):
 
         """
 
-        if _is_local_file(file_source=self.source):
+        if self._is_local_file:
             # upload file source if local file
             self.source = _upload_file_and_get_object_name(source=self.source)
 
@@ -244,9 +249,8 @@ class File(PrimaryBaseNode):
         """
         return self._json_attrs.source
 
-    @source.setter
     @beartype
-    def source(self, new_source: str) -> None:
+    def source_setter(self, new_source: str, is_local_file: bool) -> None:
         """
         sets the source of the file node
         the source can either be a path to a file on local storage or a link to a file
@@ -263,6 +267,9 @@ class File(PrimaryBaseNode):
         Parameters
         ----------
         new_source: str
+            new file source
+        is_local_file: bool
+            flag to tell the SDK if the file should be uploaded to CRIPT Storage or not
 
         Example
         -------
@@ -274,6 +281,8 @@ class File(PrimaryBaseNode):
         -------
         None
         """
+        self._is_local_file = is_local_file
+
         new_attrs = replace(self._json_attrs, source=new_source)
         self._update_json_attrs_if_valid(new_attrs)
 

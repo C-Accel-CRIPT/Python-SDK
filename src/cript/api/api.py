@@ -475,6 +475,8 @@ class API:
             whether the node JSON is valid or not
         """
 
+        print("validating nodes")
+
         db_schema = self._get_db_schema()
 
         node_dict = json.loads(node_json)

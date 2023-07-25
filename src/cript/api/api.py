@@ -53,6 +53,23 @@ class API:
     """
     ## Definition
     API Client class to communicate with the CRIPT API
+
+    Attributes
+    ----------
+    verbose : bool
+        A boolean flag that controls whether verbose logging is enabled or not.
+
+        When `verbose` is set to `True`, the class will provide additional detailed logging
+        to the terminal. This can be useful for debugging and understanding the internal
+        workings of the class.
+
+        When `verbose` is set to `False`, the class will only provide essential and concise
+        logging information, making the terminal output less cluttered and more user-friendly.
+
+        ```python
+        # turn off the terminal logs
+        api.verbose = False
+        ```
     """
 
     # dictates whether the user wants to see terminal log statements or not

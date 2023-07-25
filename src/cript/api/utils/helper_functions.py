@@ -28,12 +28,11 @@ def _get_node_type_from_json(node_json: Union[Dict, str]) -> str:
     """
     # convert all JSON node strings to dict for easier handling
     if isinstance(node_json, str):
-        node_json: Dict = json.loads(node_json)
-
+        node_json = json.loads(node_json)
     try:
-        node_type_list: List[str] = node_json["node"]
+        node_type_list: List[str] = node_json["node"]   # type: ignore
     except KeyError:
-        raise CRIPTJsonNodeError(node_list=node_json["node"], json_str=json.dumps(node_json))
+        raise CRIPTJsonNodeError(node_list=node_json["node"], json_str=json.dumps(node_json))   # type: ignore
 
     # check to be sure the node list has a single type "node": ["Material"]
     if _is_node_field_valid(node_type_list=node_type_list):

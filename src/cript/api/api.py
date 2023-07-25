@@ -55,6 +55,8 @@ class API:
     API Client class to communicate with the CRIPT API
     """
 
+    verbose: bool = True
+
     _host: str = ""
     _api_token: str = ""
     _storage_token: str = ""
@@ -491,9 +493,11 @@ class API:
         else:
             raise CRIPTJsonNodeError(node_list, str(node_list))
 
-        # logging out info to the terminal for the user feedback (improve UX because the program is currently slow)
-        logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
-        logging.info(f"Validating {node_type} graph...")
+        if self.verbose:
+            # logging out info to the terminal for the user feedback
+            # (improve UX because the program is currently slow)
+            logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
+            logging.info(f"Validating {node_type} graph...")
 
         # set the schema to test against http POST or PATCH of DB Schema
         schema_http_method: str

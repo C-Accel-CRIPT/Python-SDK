@@ -497,7 +497,7 @@ class API:
         if self.verbose:
             # logging out info to the terminal for the user feedback
             # (improve UX because the program is currently slow)
-            logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
+            logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
             logging.info(f"Validating {node_type} graph...")
 
         # set the schema to test against http POST or PATCH of DB Schema

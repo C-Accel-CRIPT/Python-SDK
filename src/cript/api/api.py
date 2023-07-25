@@ -21,6 +21,7 @@ from cript.api.exceptions import (
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
+from cript.api.utils.helper_functions import _get_node_type_from_json
 from cript.api.utils.save_helper import (
     _fix_node_save,
     _get_uuid_from_error_message,
@@ -477,18 +478,9 @@ class API:
 
         db_schema = self._get_db_schema()
 
-        node_dict = json.loads(node_json)
-        try:
-            node_list = node_dict["node"]
-        except KeyError:
-            raise CRIPTJsonNodeError(node_list=node_dict["node"], json_str=json.dumps(node_dict))
+        node_type: str = _get_node_type_from_json(node_json=node_json)
 
-        # TODO should use the `_is_node_field_valid()` function from utils.py to keep the code DRY
-        # checking the node field "node": "Material"
-        if isinstance(node_list, list) and len(node_list) == 1 and isinstance(node_list[0], str):
-            node_type = node_list[0]
-        else:
-            raise CRIPTJsonNodeError(node_list, str(node_list))
+        node_dict = json.loads(node_json)
 
         # set the schema to test against http POST or PATCH of DB Schema
         schema_http_method: str

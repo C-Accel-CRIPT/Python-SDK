@@ -55,6 +55,7 @@ class API:
     API Client class to communicate with the CRIPT API
     """
 
+    # dictates whether the user wants to see terminal log statements or not
     verbose: bool = True
 
     _host: str = ""

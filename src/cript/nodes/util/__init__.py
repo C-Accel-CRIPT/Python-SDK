@@ -286,7 +286,7 @@ def _is_node_field_valid(node_type_list: list) -> bool:
     """
 
     # TODO consider having exception handling for the dict
-    if isinstance(node_type_list, list) and len(node_type_list) == 1 and isinstance(node_type_list[0], str):
+    if isinstance(node_type_list, list) and len(node_type_list) == 1 and isinstance(node_type_list[0], str) and node_type_list[0]:
         return True
     else:
         return False

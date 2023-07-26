@@ -37,7 +37,7 @@ To connect to CRIPT, you must enter a `host` and an `API Token`. For most users,
     Instead, use environment variables.
     Storing tokens in code shared on platforms like GitHub can lead to security incidents.
     Anyone that possesses your token can impersonate you on the [CRIPT](https://criptapp.org/) platform.
-    Consider [alternative methods for loading tokens with the CRIPT API Client]().
+    Consider [alternative methods for loading tokens with the CRIPT API Client](https://c-accel-cript.github.io/Python-SDK/api/api/#cript.api.api.API.__init__).
     In case your token is exposed be sure to immediately generate a new token to revoke the access of the old one
     and keep the new token safe.
 
@@ -188,7 +188,7 @@ workup_qty = cript.Quantity(key="volume", value=0.1, unit="m**3")
 
 Now we can create an [Ingredient](../../nodes/subobjects/ingredient)
 node for each ingredient using the [Material](../../nodes/primary_nodes/material)
-and [quantities](../../nodes/subobjects/quantity) attributes.
+and [quantities](../../nodes/subobjects/quantities) attributes.
 
 ```python
 initiator = cript.Ingredient(

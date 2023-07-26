@@ -212,7 +212,7 @@ class Process(PrimaryBaseNode):
     @beartype
     def ingredient(self) -> List[Any]:
         """
-        List of [ingredient](../../subobjects/ingredients) for this process
+        List of [ingredient](../../subobjects/ingredient) for this process
 
         Examples
         ---------

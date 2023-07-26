@@ -33,10 +33,10 @@ class Experiment(PrimaryBaseNode):
 
     * [Process](../process)
     * [Computations](../computation)
-    * [Computation_Process](../computational_process)
+    * [Computation_Process](../computation_process)
     * [Data](../data)
-    * [Funding](../funding)
-    * [Citation](../citation)
+    * [Funding](./#cript.nodes.primary_nodes.experiment.Experiment.funding)
+    * [Citation](../../subobjects/citation)
 
 
     Warnings

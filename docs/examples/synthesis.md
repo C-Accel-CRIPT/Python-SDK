@@ -188,7 +188,7 @@ workup_qty = cript.Quantity(key="volume", value=0.1, unit="m**3")
 
 Now we can create an [Ingredient](../../nodes/subobjects/ingredient)
 node for each ingredient using the [Material](../../nodes/primary_nodes/material)
-and [quantities](../../nodes/subobjects/quantities) attributes.
+and [quantities](../../nodes/subobjects/quantity) attributes.
 
 ```python
 initiator = cript.Ingredient(

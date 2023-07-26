@@ -114,6 +114,47 @@ class API:
 
         ---
 
+        ### Creating API Client
+        !!! Warning "Token Security"
+            It is **highly** recommended that you store your API tokens in a safe location and read it into your code
+            Hard-coding API tokens directly into the code can pose security risks,
+            as the token might be exposed if the code is shared or stored in a version control system.
+            Anyone that has access to your tokens can impersonate you on the CRIPT platform
+
+        ### Create API Client with [Environment Variables](https://www.atatus.com/blog/python-environment-variables/)
+        Another great way to keep sensitive information secure is by using
+        [environment variables](https://www.atatus.com/blog/python-environment-variables/).
+        Sensitive information can be securely stored in environment variables and loaded into the code using
+        [os.getenv()](https://docs.python.org/3/library/os.html#os.getenv).
+
+        #### Example
+
+        ```python
+        import os
+
+        # securely load sensitive data into the script
+        cript_host = os.getenv("cript_host")
+        cript_api_token = os.getenv("cript_api_token")
+        cript_storage_token = os.getenv("cript_storage_token")
+
+        with cript.API(host=cript_host, api_token=cript_api_token, storage_token=cript_storage_token) as api:
+            # write your script
+            pass
+        ```
+
+        ### Create API Client with `None`
+        Alternatively you can configure your system to have an environment variable of
+        `CRIPT_TOKEN` for the API token and `CRIPT_STORAGE_TOKEN` for the storage token, then
+        initialize `cript.API` `api_token` and `storage_token` with `None`.
+
+        The CRIPT Python SDK will try to read the API Token and Storage token from your system's environment variables.
+
+        ```python
+        with cript.API(host=cript_host, api_token=None, storage_token=None) as api:
+            # write your script
+            pass
+        ```
+
         ### Create API client with config.json
         `config.json`
         ```json

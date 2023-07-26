@@ -6,6 +6,13 @@
 
 The token is needed because we need to authenticate the user before saving any of their data
 
+!!! Warning "Token Security"
+      It is **highly** recommended that you store your API tokens in a safe location and read it into your code
+      Hard-coding API tokens directly into the code can pose security risks,
+      as the token might be exposed if the code is shared or stored in a version control system.
+
+      Anyone that has access to your tokens can impersonate you on the [CRIPT platform](https://criptapp.org)
+
 <img class="screenshot-border" src="../../images/cript_token_page.png" alt="Screenshot of CRIPT security page where API token is found">
 
 <small>

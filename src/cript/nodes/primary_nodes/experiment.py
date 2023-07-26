@@ -364,7 +364,7 @@ class Experiment(PrimaryBaseNode):
     @beartype
     def citation(self) -> List[Any]:
         """
-        List of [citation](../citation) for this experiment
+        List of [citation](../../subobjects/citation) for this experiment
 
         Examples
         --------

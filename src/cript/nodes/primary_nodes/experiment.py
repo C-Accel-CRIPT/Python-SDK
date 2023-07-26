@@ -15,15 +15,15 @@ class Experiment(PrimaryBaseNode):
 
     ## Attributes
 
-    | attribute                | type                         | description                                               | required |
-    |--------------------------|------------------------------|-----------------------------------------------------------|----------|
-    | collection               | Collection                   | collection associated with the experiment                 | True     |
-    | process                | List[Process]                | process nodes associated with this experiment             | False     |
-    | computations             | List[Computation]            | computation method nodes associated with this experiment  | False     |
-    | computation_process | List[Computational  Process] | computation process nodes associated with this experiment | False     |
-    | data                     | List[Data]                   | data nodes associated with this experiment                | False     |
-    | funding                  | List[str]                    | funding source for experiment                             | False     |
-    | citation                | List[Citation]               | reference to a book, paper, or scholarly work             | False     |
+    | attribute           | type                         | description                                               | required |
+    |---------------------|------------------------------|-----------------------------------------------------------|----------|
+    | collection          | Collection                   | collection associated with the experiment                 | True     |
+    | process             | List[Process]                | process nodes associated with this experiment             | False    |
+    | computations        | List[Computation]            | computation method nodes associated with this experiment  | False    |
+    | computation_process | List[Computational  Process] | computation process nodes associated with this experiment | False    |
+    | data                | List[Data]                   | data nodes associated with this experiment                | False    |
+    | funding             | List[str]                    | funding source for experiment                             | False    |
+    | citation            | List[Citation]               | reference to a book, paper, or scholarly work             | False    |
 
 
     ## Subobjects

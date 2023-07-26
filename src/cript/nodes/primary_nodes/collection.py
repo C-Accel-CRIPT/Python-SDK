@@ -18,11 +18,11 @@ class Collection(PrimaryBaseNode):
     A Collection node can be thought as a folder/bucket that can hold [experiment](../experiment)
     or [Inventories](../inventory) node.
 
-    | attribute   | type             | example             | description                                                                    |
-    |-------------|------------------|---------------------|--------------------------------------------------------------------------------|
-    | experiment | list[Experiment] |                     | experiment that relate to the collection                                      |
-    | inventory | list[Inventory]  |                     | inventory owned by the collection                                              |
-    | doi       | str              | `10.1038/1781168a0` | DOI: digital object identifier for a published collection; CRIPT generated DOI |
+    | attribute  | type             | example             | description                                                                    |
+    |------------|------------------|---------------------|--------------------------------------------------------------------------------|
+    | experiment | list[Experiment] |                     | experiment that relate to the collection                                       |
+    | inventory  | list[Inventory]  |                     | inventory owned by the collection                                              |
+    | doi        | str              | `10.1038/1781168a0` | DOI: digital object identifier for a published collection; CRIPT generated DOI |
     | citation   | list[Citation]   |                     | reference to a book, paper, or scholarly work                                  |
 
 
@@ -37,9 +37,7 @@ class Collection(PrimaryBaseNode):
      "experiment":[
         {
            "name":"my experiment name",
-           "node":[
-              "Experiment"
-           ],
+           "node":["Experiment"],
            "uid":"_:8256b75b-1f4e-4f69-9fe6-3bcb2298e470",
            "uuid":"8256b75b-1f4e-4f69-9fe6-3bcb2298e470"
         }

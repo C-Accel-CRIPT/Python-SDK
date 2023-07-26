@@ -251,7 +251,7 @@ final_file = cript.File("Final snapshot of the system at the end the simulations
 ```
 
 !!! note
-    The [source field](field should point to any ) should point to any file on your local filesystem.
+    The [source field](../../nodes/supporting_nodes/file/#cript.nodes.supporting_nodes.file.File.source) should point to any file on your local filesystem.
 
 !!! info
     Depending on the file size, there could be a delay while the checksum is generated.
@@ -381,7 +381,7 @@ polystyrene.computational_forcefield = forcefield
 ```
 
 !!! note "Computational forcefield keys"
-    The allowed [`ComputationalForcefield`](../../subobjects/computational_forcefield/) keys are listed under the [computational forcefield keys](https://criptapp.org/keys/computational-forcefield-key/) in the CRIPT controlled vocabulary.
+    The allowed [`ComputationalForcefield`](../../nodes/subobjects/computational_forcefield/) keys are listed under the [computational forcefield keys](https://criptapp.org/keys/computational-forcefield-key/) in the CRIPT controlled vocabulary.
 
 Now we can save the project to CRIPT (and upload the files) or inspect the JSON output
 

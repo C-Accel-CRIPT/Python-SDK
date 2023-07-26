@@ -6,8 +6,6 @@ CRIPT offers multiple options to upload data, and scientists can pick the method
 
 Another great option can be the [Excel Uploader](https://c-accel-cript.github.io/cript-excel-uploader/) for scientists that do not have past Python experience or would rather easily input their data into the CRIPT Excel Template.
 
-This documentation shows how to [quickly get started](./quickstart/) with the SDK, describes the various Python methods for interacting with the [API](./api/), and provides definitions and source code for [Nodes](./data_model/nodes/) and [Subobjects](./data_model/subobjects/) from the CRIPT Data Model.
-
 ---
 
 ## Resources
@@ -16,8 +14,6 @@ This documentation shows how to [quickly get started](./quickstart/) with the SD
 
     - [CRIPT Data Model](https://chemrxiv.org/engage/api-gateway/chemrxiv/assets/orp/resource/item/6322994103e27d9176d5b10c/original/main-supporting-information.pdf)
         - The CRIPT Data Model is the back bone of the whole CRIPT project. Understanding it will make it a lot easier to use any part of the system
-    - [CRIPT Manual](https://criptapp.org/docs/manual/)
-        -  Full in depth and complete tutorial of everything CRIPT has to offer
     - [CRIPT Scripts Research paper](https://pubs.acs.org/doi/10.1021/acscentsci.3c00011)
         - Learn about the CRIPT platform
     - [CRIPTScripts](https://criptscripts.org/)

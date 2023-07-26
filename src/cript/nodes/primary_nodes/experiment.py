@@ -15,15 +15,15 @@ class Experiment(PrimaryBaseNode):
 
     ## Attributes
 
-    | attribute                | type                         | description                                               | required |
-    |--------------------------|------------------------------|-----------------------------------------------------------|----------|
-    | collection               | Collection                   | collection associated with the experiment                 | True     |
-    | process                | List[Process]                | process nodes associated with this experiment             | False     |
-    | computations             | List[Computation]            | computation method nodes associated with this experiment  | False     |
-    | computation_process | List[Computational  Process] | computation process nodes associated with this experiment | False     |
-    | data                     | List[Data]                   | data nodes associated with this experiment                | False     |
-    | funding                  | List[str]                    | funding source for experiment                             | False     |
-    | citation                | List[Citation]               | reference to a book, paper, or scholarly work             | False     |
+    | attribute           | type                         | description                                               | required |
+    |---------------------|------------------------------|-----------------------------------------------------------|----------|
+    | collection          | Collection                   | collection associated with the experiment                 | True     |
+    | process             | List[Process]                | process nodes associated with this experiment             | False    |
+    | computations        | List[Computation]            | computation method nodes associated with this experiment  | False    |
+    | computation_process | List[Computational  Process] | computation process nodes associated with this experiment | False    |
+    | data                | List[Data]                   | data nodes associated with this experiment                | False    |
+    | funding             | List[str]                    | funding source for experiment                             | False    |
+    | citation            | List[Citation]               | reference to a book, paper, or scholarly work             | False    |
 
 
     ## Subobjects
@@ -33,10 +33,10 @@ class Experiment(PrimaryBaseNode):
 
     * [Process](../process)
     * [Computations](../computation)
-    * [Computation_Process](../computational_process)
+    * [Computation_Process](../computation_process)
     * [Data](../data)
-    * [Funding](../funding)
-    * [Citation](../citation)
+    * [Funding](./#cript.nodes.primary_nodes.experiment.Experiment.funding)
+    * [Citation](../../subobjects/citation)
 
 
     Warnings
@@ -234,7 +234,7 @@ class Experiment(PrimaryBaseNode):
     @beartype
     def computation_process(self) -> List[Any]:
         """
-        List of [computation_process](../computational_process) for this experiment
+        List of [computation_process](../computation_process) for this experiment
 
         Examples
         --------
@@ -364,7 +364,7 @@ class Experiment(PrimaryBaseNode):
     @beartype
     def citation(self) -> List[Any]:
         """
-        List of [citation](../citation) for this experiment
+        List of [citation](../../subobjects/citation) for this experiment
 
         Examples
         --------

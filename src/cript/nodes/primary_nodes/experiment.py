@@ -234,7 +234,7 @@ class Experiment(PrimaryBaseNode):
     @beartype
     def computation_process(self) -> List[Any]:
         """
-        List of [computation_process](../computational_process) for this experiment
+        List of [computation_process](../computation_process) for this experiment
 
         Examples
         --------

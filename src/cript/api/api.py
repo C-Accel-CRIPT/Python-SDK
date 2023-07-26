@@ -850,7 +850,7 @@ class API:
 
         Parameters
         ----------
-        node_type : PrimaryBaseNode
+        node_type : UUIDBaseNode
             Type of node that you are searching for.
         search_mode : SearchModes
             Type of search you want to do. You can search by name, `UUID`, `EXACT_NAME`, etc.

@@ -40,3 +40,16 @@
     ```
 5.  Create your CRIPT Script!
 
+
+??? info "Install Package From our [GitHub](https://github.com/C-Accel-CRIPT/Python-SDK)"
+    Please note that it is also possible to install this package from our 
+    [GitHub](https://github.com/C-Accel-CRIPT/Python-SDK).
+
+    Formula: `pip install git+[repository URL]@[branch or tag]`
+
+    Install from [Main](https://github.com/C-Accel-CRIPT/Python-SDK/tree/main): 
+    `pip install git+https://github.com/C-Accel-CRIPT/Python-SDK@main`
+    
+    or to download the latest in [development code](https://github.com/C-Accel-CRIPT/Python-SDK/tree/develop)
+    `pip install git+https://github.com/C-Accel-CRIPT/Python-SDK@develop`
+

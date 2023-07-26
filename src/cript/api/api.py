@@ -77,7 +77,7 @@ class API:
     def __init__(self, host: Union[str, None] = None, api_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: Union[str, Path] = ""):
         """
         Initialize CRIPT API client with host and token.
-        Additionally, you can  use a config.json file and specify the file path.
+        Additionally, you can use a config.json file and specify the file path.
 
         !!! note "api client context manager"
             It is necessary to use a `with` context manager for the API
@@ -92,7 +92,38 @@ class API:
 
         ---
 
-        ### Create API client with config.json
+        ### Creating API Client
+
+        !!! Warning "Token Security"
+            It is **highly** recommended that you store your API tokens in a safe location and read it into your code
+            Hard-coding API tokens directly into the code can pose security risks,
+            as the token might be exposed if the code is shared or stored in a version control system.
+
+            Anyone that has access to your tokens can impersonate you on the CRIPT platform
+
+
+        ### Create API Client with [Environment Variables](https://www.atatus.com/blog/python-environment-variables/)
+        Another great way to keep sensitive information secure is by using
+        [environment variables](https://www.atatus.com/blog/python-environment-variables/).
+        Sensitive information can be securely stored in environment variables and loaded into the code using
+        [os.getenv()](https://docs.python.org/3/library/os.html#os.getenv).
+
+        #### Example
+        ```python
+        import os
+
+        # securely load sensitive data into the script
+        cript_host = os.getenv("cript_host")
+        cript_api_token = os.getenv("cript_api_token")
+        cript_storage_token = os.getenv("cript_storage_token")
+
+        with cript.API(host=cript_host, api_token=cript_api_token, storage_token=cript_storage_token) as api:
+            # write your script
+            pass
+        ```
+
+
+        ### Create API client with `config.json`
         `config.json`
         ```json
         {
@@ -100,6 +131,14 @@ class API:
             "token": "I am token"
         }
         ```
+
+        #### Example
+        Getting the file path can be achieved through various methods like using the
+        [os module](https://docs.python.org/3/library/os.path.html#module-os.path),
+        relative path string, absolute path string, or Path object.
+        However, it is recommended to use [Path objects](https://docs.python.org/3/library/pathlib.html)
+        due to their feature-rich nature and overall utility.
+
 
         `my_script.py`
         ```python

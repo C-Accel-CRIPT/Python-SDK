@@ -99,6 +99,7 @@
     "openmm",
     "equi",
     "Navid",
-    "ipykernel"
+    "ipykernel",
+    "levelname"
   ]
 }

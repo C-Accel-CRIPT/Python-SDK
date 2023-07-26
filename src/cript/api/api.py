@@ -1,5 +1,6 @@
 import copy
 import json
+import logging
 import os
 import uuid
 import warnings
@@ -52,7 +53,27 @@ class API:
     """
     ## Definition
     API Client class to communicate with the CRIPT API
+
+    Attributes
+    ----------
+    verbose : bool
+        A boolean flag that controls whether verbose logging is enabled or not.
+
+        When `verbose` is set to `True`, the class will provide additional detailed logging
+        to the terminal. This can be useful for debugging and understanding the internal
+        workings of the class.
+
+        When `verbose` is set to `False`, the class will only provide essential and concise
+        logging information, making the terminal output less cluttered and more user-friendly.
+
+        ```python
+        # turn off the terminal logs
+        api.verbose = False
+        ```
     """
+
+    # dictates whether the user wants to see terminal log statements or not
+    verbose: bool = True
 
     _host: str = ""
     _api_token: str = ""
@@ -489,6 +510,12 @@ class API:
             node_type = node_list[0]
         else:
             raise CRIPTJsonNodeError(node_list, str(node_list))
+
+        if self.verbose:
+            # logging out info to the terminal for the user feedback
+            # (improve UX because the program is currently slow)
+            logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
+            logging.info(f"Validating {node_type} graph...")
 
         # set the schema to test against http POST or PATCH of DB Schema
         schema_http_method: str

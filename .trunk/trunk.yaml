@@ -1,25 +1,26 @@
 version: 0.1
 cli:
-  version: 1.6.1
+  version: 1.13.0
 plugins:
   sources:
     - id: trunk
-      ref: v0.0.13
+      ref: v1.0.0
       uri: https://github.com/trunk-io/plugins
 lint:
   enabled:
-    - cspell@6.31.1
-    - actionlint@1.6.23
-    - black@23.1.0
+    - svgo@3.0.2
+    - cspell@6.31.2
+    - actionlint@1.6.25
+    - black@23.7.0
     - git-diff-check
-    - gitleaks@8.16.1
+    - gitleaks@8.17.0
     - isort@5.12.0
-    - markdownlint@0.33.0
+    - markdownlint@0.35.0
     - oxipng@8.0.0
-    - prettier@2.8.5
-    - ruff@0.0.257
-    - taplo@0.7.0
-    - yamllint@1.29.0
+    - prettier@3.0.0
+    - ruff@0.0.280
+    - taplo@0.8.1
+    - yamllint@1.32.0
   ignore:
     - linters: [prettier]
       paths:

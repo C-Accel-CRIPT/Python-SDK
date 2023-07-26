@@ -24,7 +24,7 @@ class Property(UUIDBaseNode):
     ## Can Be Added To:
     * [Material](../../primary_nodes/material)
     * [Process](../../primary_nodes/process)
-    * [Computation_Process](../../primary_nodes/Computation_Process)
+    * [Computation_Process](../../primary_nodes/computation_process)
 
     ## Available sub-objects:
     * [Condition](../condition)

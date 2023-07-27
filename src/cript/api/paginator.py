@@ -7,7 +7,8 @@ from beartype import beartype
 
 class Paginator:
     """
-    Paginator is used to flip through different pages of data that the API returns when searching
+    Paginator is used to flip through different pages of data that the API returns when searching.
+    > Instead of the user manipulating the URL and parameters, this object handles all of that for them.
 
     When conducting any kind of search the API returns pages of data and each page contains 10 results.
     This is equivalent to conducting a Google search when Google returns a limited number of links on the first page
@@ -18,6 +19,15 @@ class Paginator:
     !!! Warning "Do not create paginator objects"
         Please note that you are not required or advised to create a paginator object, and instead the
         Python SDK API object will create a paginator for you, return it, and let you simply use it
+
+
+    Attributes
+    ----------
+    current_page_results: List[dict]
+        List of JSON dictionary results returned from the API
+        ```python
+        [{result 1}, {result 2}, {result 3}, ...]
+        ```
     """
 
     _http_headers: dict

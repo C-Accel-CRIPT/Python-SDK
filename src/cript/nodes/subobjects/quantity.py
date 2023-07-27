@@ -200,7 +200,7 @@ class Quantity(UUIDBaseNode):
 
     @property
     @beartype
-    def uncertainty(self) -> Number:
+    def uncertainty(self) -> Optional[Number]:
         """
         get the uncertainty value
 

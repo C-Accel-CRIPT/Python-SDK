@@ -101,7 +101,7 @@ class File(PrimaryBaseNode):
     ## JSON
     ``` json
     {
-        "node": "File",
+        "node": ["File"],
         "source": "https://criptapp.org",
         "type": "calibration",
         "extension": ".csv",

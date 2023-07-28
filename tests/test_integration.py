@@ -90,9 +90,9 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     # with open("la", "a") as file_handle:
     #     file_handle.write(str(diff) + "\n")
 
-    assert len(diff.get("values_changed", {})) == 0
-    assert len(diff.get("dictionary_item_removed")) == 0
-    assert len(diff.get("dictionary_item_added")) == 0
+    assert not list(diff.get("values_changed", []))
+    assert not list(diff.get("dictionary_item_removed", []))
+    assert not list(diff.get("dictionary_item_added", []))
 
     # try to convert api JSON project to node
     my_project_from_api = cript.load_nodes_from_json(json.dumps(my_project_from_api_dict))

@@ -29,11 +29,11 @@ class Process(PrimaryBaseNode):
     | citation                | list[Citation]   |                                                                                 | reference to a book, paper, or scholarly work                       |          |       |
 
     ## Can be added to
-    * [Experiment](./experiment)
+    * [Experiment](../experiment)
 
     ## Available Subobjects
     * [Ingredient](../../subobjects/ingredient)
-    * [equipment](../../subobjects/equipment)
+    * [Equipment](../../subobjects/equipment)
     * [Property](../../subobjects/property)
     * [Condition](../../subobjects/condition)
     * [Citation](../../subobjects/citation)

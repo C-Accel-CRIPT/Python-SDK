@@ -160,7 +160,7 @@ class API:
         ```json
         {
             "host": "https://criptapp.org",
-            "api_token": "I am API token"
+            "api_token": "I am API token",
             "storage_token": "I am storage token"
         }
         ```

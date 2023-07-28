@@ -229,8 +229,7 @@ class File(PrimaryBaseNode):
         --------
         URL File Source
         ```python
-        url_source = "https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf"
-        my_file.source = url_source
+        my_file.source = "https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf"
         ```
         Local File Path
         ```python

@@ -33,16 +33,14 @@ class Data(PrimaryBaseNode):
     Example
     --------
     ```python
-    # list of file nodes
-    my_files_list = [
-        # create file node
-        cript.File(
-            source="https://criptapp.org",
-            type="calibration",
-            extension=".csv",
-            data_dictionary="my file's data dictionary"
-        )
-    ]
+    # create file node
+    cript.File(
+        source="https://criptapp.org",
+        type="calibration",
+        extension=".csv",
+        data_dictionary="my file's data dictionary"
+    )
+
 
     # create data node with required arguments
     my_data = cript.Data(name="my data name", type="afm_amp", file=[simple_file_node])

@@ -1,9 +1,11 @@
 import json
 import warnings
 
+import pytest
 from deepdiff import DeepDiff
 
 import cript
+from conftest import HAS_INTEGRATION_TESTS_ENABLED
 
 
 def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
@@ -42,8 +44,10 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     * ignoring the UID field through all the JSON because those the API changes when responding
     """
 
-    # TODO remove skip test
-    return
+    if not HAS_INTEGRATION_TESTS_ENABLED:
+        pytest.skip("Integration tests with API requires real API and Storage token")
+        return
+
     print("\n\n=================== Project Node ============================")
     print(project_node.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json)
     print("==============================================================")

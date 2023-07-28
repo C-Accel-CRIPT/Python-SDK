@@ -11,9 +11,7 @@ class Material(PrimaryBaseNode):
     """
     ## Definition
     A [Material node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=10)
-    is nested inside a [Project](../project).
-    A [Material node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=10)
-    is just the materials used within an project/experiment.
+    is a collection of the identifiers and properties of a chemical, mixture, or substance.
 
     ## Attributes
     | attribute                 | type                                                                 | example                                           | description                                  | required    | vocab |

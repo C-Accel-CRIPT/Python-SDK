@@ -49,6 +49,8 @@ nav:
       - API Exceptions: exceptions/api_exceptions.md
       - Node Exceptions: exceptions/node_exceptions.md
   - FAQ: faq.md
+  - Internal Wiki Documentation: https://github.com/C-Accel-CRIPT/Python-SDK/wiki
+  - CRIPT Python SDK Discussions: https://github.com/C-Accel-CRIPT/Python-SDK/discussions
 
 theme:
   name: material

@@ -2,10 +2,10 @@ import json
 import warnings
 
 import pytest
+from conftest import HAS_INTEGRATION_TESTS_ENABLED
 from deepdiff import DeepDiff
 
 import cript
-from conftest import HAS_INTEGRATION_TESTS_ENABLED
 
 
 def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):

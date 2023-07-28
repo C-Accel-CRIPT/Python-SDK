@@ -70,8 +70,9 @@ def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
     1. download the file to a temporary path
         1. read that file text and assert that the string written and read are the same
     """
-    import uuid
     import datetime
+    import uuid
+
     file_text: str = (
         f"This is an automated test from the Python SDK within "
         f"`tests/nodes/supporting_nodes/test_file.py/test_local_file_source_upload_and_download()` "

@@ -1,4 +1,7 @@
+import json
 import warnings
+
+from deepdiff import DeepDiff
 
 import cript
 
@@ -44,38 +47,53 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     # from deepdiff import DeepDiff
 
     # print("\n\n=================== Project Node ============================")
-    # print(project_node.get_json(sort_keys=False, condense_to_uuid={}).json)
+    # print(project_node.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json)
     # print("==============================================================")
-    #
-    # cript_api.save(project_node)
-    #
-    # # get the project that was just saved
-    # my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=project_node.name)
-    #
-    # # get the project from paginator
-    # my_project_from_api_dict = my_paginator.current_page_results[0]
-    #
+
+    cript_api.save(project_node)
+
+    # get the project that was just saved
+    my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=project_node.name)
+
+    # get the project from paginator
+    my_project_from_api_dict = my_paginator.current_page_results[0]
+
     # print("\n\n================= API Response Node ============================")
-    # print(json.dumps(my_project_from_api_dict, sort_keys=False))
+    # print(json.dumps(my_project_from_api_dict, sort_keys=False, indent=2))
     # print("==============================================================")
-    #
-    # # try to convert api JSON project to node
-    # my_project_from_api = cript.load_nodes_from_json(json.dumps(my_project_from_api_dict))
-    #
+
     # print("\n\n=================== Project Node Deserialized =========================")
-    # print(my_project_from_api.get_json(sort_keys=False, condense_to_uuid={}).json)
+    # print(my_project_from_api.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json)
     # print("==============================================================")
-    #
-    # # Configure keys and blocks to be ignored by deepdiff using exclude_regex_path
-    # # ignores all UID within the JSON because those will always be different
-    # exclude_regex_paths = [r"root(\[.*\])?\['uid'\]"]
-    #
-    # # Compare the JSONs
-    # diff = DeepDiff(json.loads(project_node.json), json.loads(my_project_from_api.json), exclude_regex_paths=exclude_regex_paths)
-    #
-    # assert len(diff.get("values_changed", {})) == 0
-    #
-    # print("\n\n\n######################################## TEST Passed ########################################\n\n\n")
+
+    # Configure keys and blocks to be ignored by deepdiff using exclude_regex_path
+    # ignores all UID within the JSON because those will always be different
+
+    # Define a list of regular expressions to exclude paths
+
+    exclude_regex_paths = [
+        r"root(\[.*\])?\['uid'\]",
+        r"root\['\w+_count'\]",  # All the attributes that end with _count
+        r"root(\[.*\])?\['\w+_count'\]",  # All the attributes that end with _count
+        r"root(\[.*\])?\['locked'\]",
+        r"root(\[.*\])?\['admin'\]",
+        r"root(\[.*\])?\['created_at'\]",
+        r"root(\[.*\])?\['public'\]",
+        r"root(\[.*\])?\['notes'\]",
+    ]
+    # Compare the JSONs
+    diff = DeepDiff(json.loads(project_node.json), my_project_from_api_dict, exclude_regex_paths=exclude_regex_paths)
+    print(diff)
+
+    assert len(diff.get("values_changed", {})) == 0
+    assert len(diff.get("dictionary_item_removed")) == 0
+    assert len(diff.get("dictionary_item_added")) == 0
+
+    # try to convert api JSON project to node
+    my_project_from_api = cript.load_nodes_from_json(json.dumps(my_project_from_api_dict))
+    assert my_project_from_api
+
+    print("\n\n\n######################################## TEST Passed ########################################\n\n\n")
 
     warnings.warn("Please uncomment `integrate_nodes_helper` to test with the API")
     pass

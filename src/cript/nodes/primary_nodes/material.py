@@ -205,17 +205,20 @@ class Material(PrimaryBaseNode):
     @beartype
     def component(self) -> List["Material"]:
         """
-        list of component ([material nodes](./)) that make up this material
+        list of components ([material nodes](./)) that make up this material
 
         Examples
         --------
         ```python
         # material component
         my_component = [
+            # create material node
             cript.Material(
                 name="my component material 1",
                 identifiers=[{"alternative_names": "component 1 alternative name"}],
             ),
+
+            # create material node
             cript.Material(
                 name="my component material 2",
                 identifiers=[{"alternative_names": "component 2 alternative name"}],

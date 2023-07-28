@@ -17,7 +17,7 @@ from fixtures.supporting_nodes import *
 import cript
 
 
-HAS_INTEGRATION_TESTS_ENABLED: bool = False
+HAS_INTEGRATION_TESTS_ENABLED: bool = True
 
 
 @pytest.fixture(scope="session", autouse=True)

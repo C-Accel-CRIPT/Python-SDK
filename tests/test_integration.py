@@ -87,8 +87,8 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     ]
     # Compare the JSONs
     diff = DeepDiff(json.loads(project_node.json), my_project_from_api_dict, exclude_regex_paths=exclude_regex_paths)
-    with open("la", "a") as file_handle:
-        file_handle.write(str(diff) + "\n")
+    # with open("la", "a") as file_handle:
+    #     file_handle.write(str(diff) + "\n")
 
     assert len(diff.get("values_changed", {})) == 0
     assert len(diff.get("dictionary_item_removed")) == 0

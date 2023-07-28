@@ -20,13 +20,11 @@ class Citation(UUIDBaseNode):
     | reference | Reference |              | reference to a book, paper, or scholarly work | True     |       |
 
     ## Can Be Added To
-    ### Primary Nodes
     * [Collection node](../../primary_nodes/collection)
     * [Computation node](../../primary_nodes/computation)
     * [Computation Process Node](../../primary_nodes/computation_process)
     * [Data node](../../primary_nodes/data)
 
-    ### Subobjects
     * [Computational Forcefield subobjects](../computational_forcefield)
     * [Property subobject](../property)
     * [Algorithm subobject](../algorithm)

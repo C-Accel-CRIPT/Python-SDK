@@ -33,7 +33,7 @@ class Computation(PrimaryBaseNode):
     | software_ configurations | list[Software  Configuration] |                                       | software and algorithms used                  |          |       |
     | condition                | list[Condition]               |                                       | setup information                             |          |       |
     | prerequisite_computation | Computation                   |                                       | prior computation method in chain             |          |       |
-    | citation                | list[Citation]                |                                       | reference to a book, paper, or scholarly work |          |       |
+    | citation                 | list[Citation]                |                                       | reference to a book, paper, or scholarly work |          |       |
     | notes                    | str                           |                                       | additional description of the step            |          |       |
 
     ## JSON Representation
@@ -168,7 +168,7 @@ class Computation(PrimaryBaseNode):
         Examples
         --------
         ```python
-        my_computation.type = "type="analysis"
+        my_computation.type = type="analysis"
         ```
 
         Returns

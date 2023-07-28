@@ -28,9 +28,12 @@ class Process(PrimaryBaseNode):
     | keyword                 | list[str]        |                                                                                 | words that classify the process                                     |          | True  |
     | citation                | list[Citation]   |                                                                                 | reference to a book, paper, or scholarly work                       |          |       |
 
+    ## Can be added to
+    * [Experiment](../experiment)
+
     ## Available Subobjects
     * [Ingredient](../../subobjects/ingredient)
-    * [equipment](../../subobjects/equipment)
+    * [Equipment](../../subobjects/equipment)
     * [Property](../../subobjects/property)
     * [Condition](../../subobjects/condition)
     * [Citation](../../subobjects/citation)

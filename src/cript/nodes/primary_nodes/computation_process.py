@@ -395,12 +395,12 @@ class ComputationProcess(PrimaryBaseNode):
         --------
         ```python
         # create ingredient node
-        ingredient = cript.Ingredient(
+        my_ingredient = cript.Ingredient(
             material=simple_material_node,
             quantities=[simple_quantity_node],
         )
 
-        my_computational_process.ingredient =
+        my_computational_process.ingredient = my_ingredient
         ```
 
         Returns

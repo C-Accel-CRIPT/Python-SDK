@@ -24,6 +24,8 @@ class Algorithm(UUIDBaseNode):
     | parameter | list[Parameter] |                                              | setup associated parameters                            |          |       |
     | citation  | Citation        |                                              | reference to a book, paper, or scholarly work          |          |       |
 
+    ## Can be Added To
+    * [SoftwareConfiguration](../software_configuration)
 
     ## Available sub-objects
     * [Parameter](../parameter)

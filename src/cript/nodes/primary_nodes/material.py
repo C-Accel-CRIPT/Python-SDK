@@ -11,9 +11,7 @@ class Material(PrimaryBaseNode):
     """
     ## Definition
     A [Material node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=10)
-    is nested inside a [Project](../project).
-    A [Material node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=10)
-    is just the materials used within an project/experiment.
+    is a collection of the identifiers and properties of a chemical, mixture, or substance.
 
     ## Attributes
     | attribute                 | type                                                                 | example                                           | description                                  | required    | vocab |
@@ -207,17 +205,20 @@ class Material(PrimaryBaseNode):
     @beartype
     def component(self) -> List["Material"]:
         """
-        list of component ([material nodes](./)) that make up this material
+        list of components ([material nodes](./)) that make up this material
 
         Examples
         --------
         ```python
         # material component
         my_component = [
+            # create material node
             cript.Material(
                 name="my component material 1",
                 identifiers=[{"alternative_names": "component 1 alternative name"}],
             ),
+
+            # create material node
             cript.Material(
                 name="my component material 2",
                 identifiers=[{"alternative_names": "component 2 alternative name"}],

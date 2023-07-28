@@ -38,6 +38,9 @@ class Reference(UUIDBaseNode):
     | website   | str       | https://www.nature.com/artic les/1781168a0 | website where the publication can be accessed |               |       |
 
 
+    ## Can be added to
+    * [Citation](../../subobjects/citation)
+
     ## Available Subobjects
     * None
 

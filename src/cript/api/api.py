@@ -674,7 +674,6 @@ class API:
                 if not patch_request and response["code"] == 409 and response["error"].strip().startswith("Duplicate uuid:"):  # type: ignore
                     duplicate_uuid = _get_uuid_from_error_message(response["error"])  # type: ignore
                     if str(node.uuid) == duplicate_uuid:
-                        print("force_patch", node.uuid)
                         force_patch = True
                         continue
 

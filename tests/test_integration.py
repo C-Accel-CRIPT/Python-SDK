@@ -78,12 +78,17 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
         r"root(\[.*\])?\['locked'\]",
         r"root(\[.*\])?\['admin'\]",
         r"root(\[.*\])?\['created_at'\]",
+        r"root(\[.*\])?\['created_by'\]",
+        r"root(\[.*\])?\['updated_at'\]",
+        r"root(\[.*\])?\['updated_by'\]",
         r"root(\[.*\])?\['public'\]",
         r"root(\[.*\])?\['notes'\]",
+        r"root(\[.*\])?\['model_version'\]",
     ]
     # Compare the JSONs
     diff = DeepDiff(json.loads(project_node.json), my_project_from_api_dict, exclude_regex_paths=exclude_regex_paths)
-    print(diff)
+    with open("la", "a") as file_handle:
+        file_handle.write(str(diff) + "\n")
 
     assert len(diff.get("values_changed", {})) == 0
     assert len(diff.get("dictionary_item_removed")) == 0

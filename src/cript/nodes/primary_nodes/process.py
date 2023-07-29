@@ -178,7 +178,7 @@ class Process(PrimaryBaseNode):
     @beartype
     def type(self) -> str:
         """
-        Process type must come from the [CRIPT controlled vocabulary](https://criptapp.org/keys/process-type/)
+        [Process type](https://www.mycriptapp.org/vocab/process_type) must come from the CRIPT controlled vocabulary
 
         Examples
         --------

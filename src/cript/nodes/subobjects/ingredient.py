@@ -184,7 +184,8 @@ class Ingredient(UUIDBaseNode):
     @beartype
     def keyword(self) -> List[str]:
         """
-        ingredient keyword must come from the [CRIPT controlled vocabulary]()
+        ingredient keyword must come from the
+        [CRIPT controlled vocabulary](https://www.mycriptapp.org/vocab/ingredient_keyword)
 
         Examples
         --------

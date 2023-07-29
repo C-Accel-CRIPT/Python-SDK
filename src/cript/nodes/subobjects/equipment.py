@@ -104,7 +104,7 @@ class Equipment(UUIDBaseNode):
         """
         scientific instrument
 
-        > Equipment key must come from [CRIPT Controlled Vocabulary]()
+        Equipment key must come from [CRIPT Controlled Vocabulary](https://www.mycriptapp.org/vocab/equipment_key)
 
         Examples
         --------

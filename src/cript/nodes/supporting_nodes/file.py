@@ -280,7 +280,7 @@ class File(PrimaryBaseNode):
     @beartype
     def type(self) -> str:
         """
-        The [File type]() must come from [CRIPT controlled vocabulary]()
+        The [File type](https://www.mycriptapp.org/vocab/file_type) must come from CRIPT controlled vocabulary
 
         Example
         -------

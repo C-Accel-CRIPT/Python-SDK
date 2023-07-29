@@ -114,7 +114,7 @@ class Algorithm(UUIDBaseNode):
         """
         Algorithm key
 
-        > Algorithm key must come from [CRIPT controlled vocabulary]()
+        Algorithm key must come from [CRIPT controlled vocabulary](https://www.mycriptapp.org/vocab/algorithm_key)
 
         Examples
         --------

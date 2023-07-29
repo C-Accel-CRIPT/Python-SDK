@@ -322,7 +322,7 @@ class Material(PrimaryBaseNode):
         List of keyword for this material
 
         the material keyword must come from the
-        [CRIPT controlled vocabulary](https://criptapp.org/keys/material-keyword/)
+        [CRIPT controlled vocabulary](https://www.mycriptapp.org/vocab/material_keyword)
 
         ```python
         identifiers = [{"alternative_names": "my material alternative name"}]

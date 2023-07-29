@@ -174,6 +174,9 @@ class Material(PrimaryBaseNode):
         my_material.identifier = {"alternative_names": "my material alternative name"}
         ```
 
+        [material identifier key](https://www.mycriptapp.org/vocab/material_identifier_key)
+        must come from CRIPT controlled vocabulary
+
         Returns
         -------
         List[Dict[str, str]]

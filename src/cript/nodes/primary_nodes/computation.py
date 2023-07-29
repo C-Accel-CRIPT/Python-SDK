@@ -163,7 +163,8 @@ class Computation(PrimaryBaseNode):
         """
         The type of computation
 
-        the computation type must come from CRIPT controlled vocabulary
+        The [computation type](https://www.mycriptapp.org/vocab/computation_type)
+        must come from CRIPT controlled vocabulary
 
         Examples
         --------

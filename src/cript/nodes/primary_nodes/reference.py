@@ -178,7 +178,10 @@ class Reference(UUIDBaseNode):
     @beartype
     def type(self) -> str:
         """
-        type of reference. The reference type must come from the CRIPT controlled vocabulary
+        Type of reference.
+
+        The [reference type](https://www.mycriptapp.org/vocab/reference_type)
+        must come from the CRIPT controlled vocabulary
 
         Examples
         --------

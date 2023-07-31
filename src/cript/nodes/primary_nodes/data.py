@@ -144,7 +144,7 @@ class Data(PrimaryBaseNode):
     @beartype
     def type(self) -> str:
         """
-        Type of data node. The data type must come from [CRIPT data type vocabulary]()
+        The data type must come from [CRIPT data type vocabulary](https://www.mycriptapp.org/vocab/data_type)
 
         Example
         -------

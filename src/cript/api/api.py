@@ -785,11 +785,12 @@ class API:
         Parameters
         ----------
         file_source: str
-            object_name: within AWS S3 the extension e.g. "my_file_name.txt
-            the file is then searched within "Data/{file_name}" and saved to local storage
-            URL file source: In case of the file source is a URL then it is the file source URL
-                starting with "https://"
-                example: `https://criptscripts.org/cript_graph_json/JSON/cao_protein.json`
+            `object_name`: file downloaded via object_name from cloud storage and saved to local storage
+            object_name e.g. `"Data/{file_name}"`
+            ---
+            `URL file source`: If the file source starts with `http` then it is downloaded via `GET` request and
+            saved to local storage
+           URL file source e.g. `https://criptscripts.org/cript_graph_json/JSON/cao_protein.json`
         destination_path: str
             please provide a path with file name of where you would like the file to be saved
             on local storage.

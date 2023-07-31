@@ -3,6 +3,7 @@ import json
 import os
 import uuid
 
+import pytest
 from test_integration import integrate_nodes_helper
 from util import strip_uid_from_dict
 
@@ -55,6 +56,7 @@ def test_source_is_local(tmp_path, tmp_path_factory) -> None:
     assert _is_local_file(file_source=relative_file_path) is True
 
 
+@pytest.mark.skip(reason="test is outdated because files now upload on api.save()")
 def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
     """
     upload a file and download it and be sure the contents are the same
@@ -68,70 +70,64 @@ def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
     1. download the file to a temporary path
         1. read that file text and assert that the string written and read are the same
     """
-    # import uuid
-    # import datetime
-    # file_text: str = (
-    #     f"This is an automated test from the Python SDK within "
-    #     f"`tests/nodes/supporting_nodes/test_file.py/test_local_file_source_upload_and_download()` "
-    #     f"checking that the file source is automatically and correctly uploaded to AWS S3. "
-    #     f"The test is conducted on UTC time of '{datetime.datetime.utcnow()}' "
-    #     f"with the unique UUID of '{str(uuid.uuid4())}'"
-    # )
-    #
-    # # create a temp file and write to it
-    # upload_file_dir = tmp_path_factory.mktemp("file_test_upload_file_dir")
-    # local_file_path = upload_file_dir / "my_upload_file.txt"
-    # local_file_path.write_text(file_text)
-    #
-    # # create a file node with a local file path
-    # my_file = cript.File(name="my local file source node", source=str(local_file_path), type="data")
-    #
-    # # check that the file source has been uploaded to cloud storage and source has changed to reflect that
-    # assert my_file.source.startswith("tests/")
-    #
-    # # Get the temporary directory path and clean up handled by pytest
-    # download_file_dir = tmp_path_factory.mktemp("file_test_download_file_dir")
-    # download_file_name = "my_downloaded_file.txt"
-    #
-    # # download file
-    # my_file.download(destination_directory_path=download_file_dir, file_name=download_file_name)
-    #
-    # # the path the file was downloaded to and can be read from
-    # downloaded_local_file_path = download_file_dir / download_file_name
-    #
-    # # read file contents from where the file was downloaded
-    # downloaded_file_contents = downloaded_local_file_path.read_text()
-    #
-    # # assert file contents for upload and download are the same
-    # assert downloaded_file_contents == file_text
-    pass
+    import datetime
+    import uuid
+
+    file_text: str = (
+        f"This is an automated test from the Python SDK within "
+        f"`tests/nodes/supporting_nodes/test_file.py/test_local_file_source_upload_and_download()` "
+        f"checking that the file source is automatically and correctly uploaded to AWS S3. "
+        f"The test is conducted on UTC time of '{datetime.datetime.utcnow()}' "
+        f"with the unique UUID of '{str(uuid.uuid4())}'"
+    )
+
+    # create a temp file and write to it
+    upload_file_dir = tmp_path_factory.mktemp("file_test_upload_file_dir")
+    local_file_path = upload_file_dir / "my_upload_file.txt"
+    local_file_path.write_text(file_text)
+
+    # create a file node with a local file path
+    my_file = cript.File(name="my local file source node", source=str(local_file_path), type="data")
+
+    # check that the file source has been uploaded to cloud storage and source has changed to reflect that
+    assert my_file.source.startswith("tests/")
+
+    # Get the temporary directory path and clean up handled by pytest
+    download_file_dir = tmp_path_factory.mktemp("file_test_download_file_dir")
+    download_file_name = "my_downloaded_file.txt"
+
+    # download file
+    my_file.download(destination_directory_path=download_file_dir, file_name=download_file_name)
+
+    # the path the file was downloaded to and can be read from
+    downloaded_local_file_path = download_file_dir / download_file_name
+
+    # read file contents from where the file was downloaded
+    downloaded_file_contents = downloaded_local_file_path.read_text()
+
+    # assert file contents for upload and download are the same
+    assert downloaded_file_contents == file_text
 
 
-def test_create_file_local_source(tmp_path) -> None:
+def test_create_file_with_local_source(tmp_path) -> None:
     """
     tests that a simple file with only required attributes can be created
     with source pointing to a local file on storage
 
     create a temporary directory with temporary file
     """
-
-    # TODO since no S3 client token for GitHub CI this test will always fail. Commenting it out so tests run well
     # create a temporary file in the temporary directory to test with
-    # file_path = tmp_path / "test.txt"
-    # with open(file_path, "w") as temporary_file:
-    #     temporary_file.write("hello world!")
-    #
-    # assert cript.File(name="my file node with local source", source=str(file_path), type="calibration")
-    pass
+    file_path = tmp_path / "test.txt"
+    with open(file_path, "w") as temporary_file:
+        temporary_file.write("hello world!")
+
+    assert cript.File(name="my file node with local source", source=str(file_path), type="calibration")
 
 
+@pytest.mark.skip(reason="validating file type automatically with DB schema and test not currently needed")
 def test_file_type_invalid_vocabulary() -> None:
     """
     tests that setting the file type to an invalid vocabulary word gives the expected error
-
-    Returns
-    -------
-    None
     """
     pass
 

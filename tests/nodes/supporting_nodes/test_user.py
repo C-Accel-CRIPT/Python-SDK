@@ -36,47 +36,20 @@ def test_user_serialization_and_deserialization(complex_user_dict, complex_user_
     assert strip_uid_from_dict(json.loads(user_node.json)) == user_node_dict
 
 
-@pytest.fixture(scope="session")
-def user_node() -> cript.User:
-    """
-    create a user node for other tests to use
-
-    Notes
-    -----
-    User node should only be created from JSON and not from instantiation
-
-    Returns
-    -------
-    User
-    """
-    # TODO create this user node from JSON instead of instantiation
-    # create User node
-    my_user = cript.User(
-        username="my username",
-        email="my_email@email.com",
-        orcid="123456",
-    )
-    # use user node in test
-    yield my_user
-
-    # reset user node
-    my_user = my_user
-
-
-def test_set_user_properties(user_node):
+def test_set_user_properties(complex_user_node):
     """
     tests that setting any user property throws an AttributeError
     """
     with pytest.raises(AttributeError):
-        user_node.username = "my new username"
+        complex_user_node.username = "my new username"
 
     with pytest.raises(AttributeError):
-        user_node.email = "my new email"
+        complex_user_node.email = "my new email"
 
     with pytest.raises(AttributeError):
-        user_node.orcid = "my new orcid"
+        complex_user_node.orcid = "my new orcid"
 
     with pytest.raises(AttributeError):
         # TODO try setting it via a group node
         #   either way it should give the same error
-        user_node.orcid = ["my new group"]
+        complex_user_node.orcid = ["my new group"]

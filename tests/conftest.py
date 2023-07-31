@@ -16,6 +16,8 @@ from fixtures.supporting_nodes import *
 
 import cript
 
+HAS_INTEGRATION_TESTS_ENABLED: bool = False
+
 
 @pytest.fixture(scope="session", autouse=True)
 def cript_api():

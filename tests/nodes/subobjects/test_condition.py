@@ -1,7 +1,7 @@
 import json
 import uuid
 
-from test_integration import integrate_nodes_helper
+from integration_test_helper import integrate_nodes_helper
 from util import strip_uid_from_dict
 
 

@@ -3,7 +3,7 @@ from enum import Enum
 
 class ControlledVocabularyCategories(Enum):
     """
-    All available CRIPT controlled vocabulary categories
+    All available [CRIPT controlled vocabulary categories](https://www.mycriptapp.org/vocab/)
 
     Controlled vocabulary categories are used to classify data.
 
@@ -66,7 +66,7 @@ class ControlledVocabularyCategories(Enum):
     --------
     ```python
     algorithm_vocabulary = api.get_vocabulary_by_category(
-        ControlledVocabularyCategories.ALGORITHM_KEY
+        cript.ControlledVocabularyCategories.ALGORITHM_KEY
         )
     ```
     """

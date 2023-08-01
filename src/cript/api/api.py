@@ -31,7 +31,7 @@ from cript.api.utils.save_helper import (
 )
 from cript.api.utils.web_file_downloader import download_file_from_url
 from cript.api.valid_search_modes import SearchModes
-from cript.api.vocabulary_categories import ControlledVocabularyCategories
+from cript.api.vocabulary_categories import VocabCategories
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.project import Project
 
@@ -387,7 +387,7 @@ class API:
 
         # loop through all vocabulary categories and make a request to each vocabulary category
         # and put them all inside of self._vocab with the keys being the vocab category name
-        for category in ControlledVocabularyCategories:
+        for category in VocabCategories:
             if category in self._vocabulary:
                 continue
 
@@ -396,7 +396,7 @@ class API:
         return self._vocabulary
 
     @beartype
-    def get_vocab_by_category(self, category: ControlledVocabularyCategories) -> List[dict]:
+    def get_vocab_by_category(self, category: VocabCategories) -> List[dict]:
         """
         get the CRIPT controlled vocabulary by category
 
@@ -428,7 +428,7 @@ class API:
         return self._vocabulary[category.value]
 
     @beartype
-    def _is_vocab_valid(self, vocab_category: ControlledVocabularyCategories, vocab_word: str) -> bool:
+    def _is_vocab_valid(self, vocab_category: VocabCategories, vocab_word: str) -> bool:
         """
         checks if the vocabulary is valid within the CRIPT controlled vocabulary.
         Either returns True or InvalidVocabulary Exception
@@ -440,7 +440,7 @@ class API:
 
         Parameters
         ----------
-        vocab_category: ControlledVocabularyCategories
+        vocab_category: VocabCategories
             ControlledVocabularyCategories enums
         vocab_word: str
             the vocabulary word e.g. "CAS", "SMILES", "BigSmiles", "+my_custom_key"

@@ -70,7 +70,7 @@ For example, finding a replacement for an existing material from a sustainable f
 project = cript.Project(name="My simulation project.")
 ```
 
-## Create a Collection node
+## Create a [Collection node](../../nodes/primary_nodes/collection)
 
 For this project, you can create multiple collections, which represent a set of experiments.
 For example, you can create a collection for a specific manuscript,
@@ -100,7 +100,7 @@ print(project.json)
     print(project.get_json(indent=2).json)
     ```
 
-## Create an Experiment node
+## Create an [Experiment node](../../nodes/primary_nodes/experiment)
 
 The [Collection node](../../nodes/primary_nodes/collection) holds a series of
 [Experiment nodes](../../nodes/primary_nodes/experiment) nodes.
@@ -112,7 +112,7 @@ experiment = cript.Experiment(name="Simulation for the first candidate")
 collection.experiment += [experiment]
 ```
 
-# Create relevant Software nodes
+## Create relevant [Software nodes](../../nodes/primary_nodes/software)
 
 [`Software`](../../nodes/primary_nodes/software) nodes refer to software that you use during your simulation experiment.
 In general [`Software`](../../nodes/primary_nodes/software) nodes can be shared between project, and it is encouraged to do so if the software you are using is already present in the CRIPT project use it.
@@ -133,7 +133,7 @@ If a version is not available, consider using git-hashes.
 
 
 
-# Create Software Configurations
+## Create [Software Configuration sub-object](../../nodes/subobjects/software_configuration/)
 
 Now that we have our [`Software`](../../nodes/primary_nodes/software) nodes, we can create 
 [`SoftwareConfiguration`](../../nodes/subobjects/software_configuration/) nodes. [`SoftwareConfigurations`](../../nodes/subobjects/software_configuration/) nodes are designed to let you specify details, about which algorithms from the software package you are using and log parameters for these algorithms.
@@ -171,7 +171,7 @@ packmol_config = cript.SoftwareConfiguration(software=packmol)
     The allowed [`Parameter`](../../nodes/subobjects/property/) keys are listed under [parameter keys](https://criptapp.org/keys/parameter-key/) in the CRIPT controlled vocabulary.
 
 
-# Create Computations
+## Create [Computations](../../nodes/primary_nodes/computation)
 
 Now that we've created some [`SoftwareConfiguration`](../../nodes/subobjects/software_configuration) nodes, we can used them to build full [`Computation`](../../nodes/primary_nodes/computation) nodes.
 In some cases, we may also want to add [`Condition`](../../nodes/subobjects/condition) nodes to our computation, to specify the conditions at which the computation was carried out. An example of this is shown below.
@@ -244,7 +244,7 @@ experiment.computation += [init, equilibration, bulk, ana]
     The allowed [`Condition`](../../nodes/subobjects/condition) keys are listed under [condition keys](https://criptapp.org/keys/condition-key/) in the CRIPT controlled vocabulary.
 
 
-## Create and Upload Files
+## Create and Upload [Files nodes](../../nodes/supporting_nodes/file)
 
 New we'd like to upload files associated with our simulation. First, we'll instantiate our File nodes under a specific project.
 
@@ -317,7 +317,7 @@ ana.input_data = [final_data]
 bulk.output_data = [final_data]
 ```
 
-# Create a virtual Material
+## Create a virtual Material
 
 First, we'll create a virtual material and add some
 [`Identifiers`](../../nodes/primary_nodes/material/#cript.nodes.primary_nodes.material.Material.identifiers)

@@ -133,7 +133,7 @@ If a version is not available, consider using git-hashes.
 
 
 
-## Create [Software Configuration sub-object](../../nodes/subobjects/software_configuration/)
+## Create [Software Configuration](../../nodes/subobjects/software_configuration/)
 
 Now that we have our [`Software`](../../nodes/primary_nodes/software) nodes, we can create 
 [`SoftwareConfiguration`](../../nodes/subobjects/software_configuration/) nodes. [`SoftwareConfigurations`](../../nodes/subobjects/software_configuration/) nodes are designed to let you specify details, about which algorithms from the software package you are using and log parameters for these algorithms.

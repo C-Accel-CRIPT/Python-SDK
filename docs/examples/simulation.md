@@ -323,7 +323,7 @@ First, we'll create a virtual material and add some
 [`Identifiers`](../../nodes/primary_nodes/material/#cript.nodes.primary_nodes.material.Material.identifiers)
 to the material to make it easier to identify and search.
 
-```py
+```python
 # create identifier dictionaries and put it in `identifiers` variable
 identifiers = [{"names": ["poly(styrene)", "poly(vinylbenzene)"]}]
 identifiers += [{"bigsmiles": "[H]{[>][<]C(C[>])c1ccccc1[<]}C(C)CC"}]
@@ -339,12 +339,12 @@ polystyrene = cript.Material(name="virtual polystyrene", identifiers=identifiers
 ## Add [`Property`](../../nodes/subobjects/property) sub-objects
 Let's also add some [`Property`](../../nodes/subobjects/property) nodes to the [`Material`](../../nodes/primary_nodes/material), which represent its physical or virtual (in the case of a simulated material) properties.
 
-```py
-# phase = cript.Property(key="phase", value="solid")
-# color = cript.Property(key="color", value="white")
-# 
-# polystyrene.property += [phase]
-# polystyrene.property += [color]
+```python
+phase = cript.Property(key="phase", value="solid")
+color = cript.Property(key="color", value="white")
+
+polystyrene.property += [phase]
+polystyrene.property += [color]
 ```
 
 !!! note "Material property keys"

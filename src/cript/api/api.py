@@ -121,9 +121,10 @@ class API:
             as the token might be exposed if the code is shared or stored in a version control system.
             Anyone that has access to your tokens can impersonate you on the CRIPT platform
 
-        ### Create API Client with [Environment Variables](https://www.atatus.com/blog/python-environment-variables/)
+        ### Create API Client with
+        [Environment Variables](https://www.freecodecamp.org/news/python-env-vars-how-to-get-an-environment-variable-in-python/)
         Another great way to keep sensitive information secure is by using
-        [environment variables](https://www.atatus.com/blog/python-environment-variables/).
+        [environment variables](https://www.freecodecamp.org/news/python-env-vars-how-to-get-an-environment-variable-in-python/).
         Sensitive information can be securely stored in environment variables and loaded into the code using
         [os.getenv()](https://docs.python.org/3/library/os.html#os.getenv).
 

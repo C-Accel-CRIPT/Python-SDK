@@ -1,1 +1,1 @@
-::: cript.ControlledVocabularyCategories
+::: cript.VocabCategories

@@ -175,7 +175,7 @@ def test_get_vocabulary_by_category(cript_api: cript.API) -> None:
     CRIPT controlled vocabulary
     """
 
-    material_identifier_vocab_list = cript_api.get_vocab_by_category(cript.ControlledVocabularyCategories.MATERIAL_IDENTIFIER_KEY)
+    material_identifier_vocab_list = cript_api.get_vocab_by_category(cript.VocabCategories.MATERIAL_IDENTIFIER_KEY)
 
     # test response is a list of dicts
     assert isinstance(material_identifier_vocab_list, list)
@@ -215,16 +215,16 @@ def test_is_vocab_valid(cript_api: cript.API) -> None:
     tests invalid category and invalid vocabulary word
     """
     # custom vocab
-    assert cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.ALGORITHM_KEY, vocab_word="+my_custom_key") is True
+    assert cript_api._is_vocab_valid(vocab_category=cript.VocabCategories.ALGORITHM_KEY, vocab_word="+my_custom_key") is True
 
     # valid vocab category and valid word
-    assert cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.FILE_TYPE, vocab_word="calibration") is True
-    assert cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.QUANTITY_KEY, vocab_word="mass") is True
-    assert cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.UNCERTAINTY_TYPE, vocab_word="fwhm") is True
+    assert cript_api._is_vocab_valid(vocab_category=cript.VocabCategories.FILE_TYPE, vocab_word="calibration") is True
+    assert cript_api._is_vocab_valid(vocab_category=cript.VocabCategories.QUANTITY_KEY, vocab_word="mass") is True
+    assert cript_api._is_vocab_valid(vocab_category=cript.VocabCategories.UNCERTAINTY_TYPE, vocab_word="fwhm") is True
 
     # valid vocab category but invalid vocab word
     with pytest.raises(InvalidVocabulary):
-        cript_api._is_vocab_valid(vocab_category=cript.ControlledVocabularyCategories.FILE_TYPE, vocab_word="some_invalid_word")
+        cript_api._is_vocab_valid(vocab_category=cript.VocabCategories.FILE_TYPE, vocab_word="some_invalid_word")
 
 
 def test_download_file_from_url(cript_api: cript.API, tmp_path) -> None:

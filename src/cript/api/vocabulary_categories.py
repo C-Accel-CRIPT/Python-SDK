@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class ControlledVocabularyCategories(Enum):
+class VocabCategories(Enum):
     """
     All available [CRIPT controlled vocabulary categories](https://www.mycriptapp.org/vocab/)
 
@@ -66,7 +66,7 @@ class ControlledVocabularyCategories(Enum):
     --------
     ```python
     algorithm_vocabulary = api.get_vocabulary_by_category(
-        cript.ControlledVocabularyCategories.ALGORITHM_KEY
+        cript.VocabCategories.ALGORITHM_KEY
         )
     ```
     """

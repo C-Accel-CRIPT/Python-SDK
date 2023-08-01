@@ -21,6 +21,8 @@ import cript
 # automatically gets value env vars to run integration tests, and casts string value to bool for comparison
 HAS_INTEGRATION_TESTS_ENABLED: bool = bool(os.getenv("CRIPT_TESTS"))
 
+print(f"\n\n CRIPT Tests value {HAS_INTEGRATION_TESTS_ENABLED} {os.getenv('CRIPT_TESTS')} \n\n")
+
 
 @pytest.fixture(scope="session", autouse=True)
 def cript_api():

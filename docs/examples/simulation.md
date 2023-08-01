@@ -340,11 +340,11 @@ polystyrene = cript.Material(name="virtual polystyrene", identifiers=identifiers
 Let's also add some [`Property`](../../nodes/subobjects/property) nodes to the [`Material`](../../nodes/primary_nodes/material), which represent its physical or virtual (in the case of a simulated material) properties.
 
 ```py
-phase = cript.Property(key="phase", value="solid")
-color = cript.Property(key="color", value="white")
-
-polystyrene.property += [phase]
-polystyrene.property += [color]
+# phase = cript.Property(key="phase", value="solid")
+# color = cript.Property(key="color", value="white")
+# 
+# polystyrene.property += [phase]
+# polystyrene.property += [color]
 ```
 
 !!! note "Material property keys"

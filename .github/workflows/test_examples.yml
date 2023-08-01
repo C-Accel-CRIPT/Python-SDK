@@ -21,7 +21,7 @@ jobs:
         python-version: [3.11]
     env:
       CRIPT_HOST: http://development.api.mycriptapp.org/
-      CRIPT_TOKEN: 125433546
+      CRIPT_TOKEN: 123456789
     steps:
       - name: Checkout
         uses: actions/checkout@v3

@@ -18,8 +18,8 @@ from fixtures.supporting_nodes import *
 import cript
 
 # flip integration tests ON or OFF with this boolean
-# automatically gets value env vars to run integration tests, and casts string value to bool for comparison
-HAS_INTEGRATION_TESTS_ENABLED: bool = bool(os.getenv("CRIPT_TESTS"))
+# automatically gets value env vars to run integration tests
+HAS_INTEGRATION_TESTS_ENABLED: bool = os.getenv("CRIPT_TESTS").title() == "True"
 
 
 @pytest.fixture(scope="session", autouse=True)

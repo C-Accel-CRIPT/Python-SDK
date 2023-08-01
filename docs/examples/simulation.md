@@ -343,8 +343,8 @@ Let's also add some [`Property`](../../nodes/subobjects/property) nodes to the [
 phase = cript.Property(key="phase", value="solid")
 color = cript.Property(key="color", value="white")
 
-polystyrene.add_property(phase)
-polystyrene.add_property(color)
+polystyrene.property += [phase]
+polystyrene.property += [color]
 ```
 
 !!! note "Material property keys"

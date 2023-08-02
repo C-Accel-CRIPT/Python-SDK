@@ -23,6 +23,7 @@ jobs:
     env:
       CRIPT_HOST: http://development.api.mycriptapp.org/
       CRIPT_TOKEN: 123456789
+      CRIPT_STORAGE_TOKEN: 987654321
 
     steps:
       - name: Checkout

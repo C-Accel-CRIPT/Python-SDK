@@ -76,7 +76,7 @@ class NodeEncoder(json.JSONEncoder):
 
         Returns
         -------
-        Union[str, dict, Any]
+        dict
             The JSON representation of the input object, which can be a string, a dictionary, or any other JSON-serializable type.
 
         Raises

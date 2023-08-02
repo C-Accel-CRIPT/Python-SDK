@@ -8,6 +8,7 @@ and keeping all nodes in one file makes it easier/cleaner to create tests.
 
 The fixtures are all functional fixtures that stay consistent between all tests.
 """
+import os
 
 import pytest
 from fixtures.primary_nodes import *
@@ -16,7 +17,9 @@ from fixtures.supporting_nodes import *
 
 import cript
 
-HAS_INTEGRATION_TESTS_ENABLED: bool = False
+# flip integration tests ON or OFF with this boolean
+# automatically gets value env vars to run integration tests
+HAS_INTEGRATION_TESTS_ENABLED: bool = os.getenv("CRIPT_TESTS").title() == "True"
 
 
 @pytest.fixture(scope="session", autouse=True)

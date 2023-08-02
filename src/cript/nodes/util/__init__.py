@@ -42,12 +42,17 @@ class NodeEncoder(json.JSONEncoder):
 
     Methods
     -------
+    ```python
     default(self, obj: Any) -> Any:
-        Convert CRIPT nodes and other objects to their JSON representation.
+        # Convert CRIPT nodes and other objects to their JSON representation.
+    ```
 
+    ```python
     _apply_modifications(self, serialize_dict: dict) -> Tuple[dict, List[str]]:
-        Apply modifications to the serialized dictionary based on node types and attributes to be condensed.
-        This internal function handles node condensation and attribute suppression during serialization.
+        # Apply modifications to the serialized dictionary based on node types
+        # and attributes to be condensed. This internal function handles node
+        # condensation and attribute suppression during serialization.
+    ```
     """
     handled_ids: Set[str] = set()
     known_uuid: Set[str] = set()

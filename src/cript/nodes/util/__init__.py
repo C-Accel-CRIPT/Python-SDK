@@ -194,7 +194,7 @@ class NodeEncoder(json.JSONEncoder):
         nodes_to_condense = serialize_dict["node"]
         for node_type in nodes_to_condense:
             if node_type in self.condense_to_uuid:
-                attributes_to_process = self.condense_to_uuid[node_type]
+                attributes_to_process = self.condense_to_uuid[node_type]    # type: ignore
                 for attribute in attributes_to_process:
                     if attribute in serialize_dict:
                         attribute_to_condense = serialize_dict[attribute]

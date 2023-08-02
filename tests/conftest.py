@@ -26,7 +26,7 @@ def _get_cript_tests_env() -> bool:
     try:
         has_integration_tests_enabled = os.getenv("CRIPT_TESTS").title().strip() == "True"
     except AttributeError:
-        has_integration_tests_enabled = False
+        has_integration_tests_enabled = True
 
     return has_integration_tests_enabled
 

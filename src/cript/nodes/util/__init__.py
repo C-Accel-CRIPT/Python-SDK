@@ -19,6 +19,7 @@ from cript.nodes.exceptions import (
 )
 from cript.nodes.primary_nodes.experiment import Experiment
 from cript.nodes.primary_nodes.project import Project
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
 class NodeEncoder(json.JSONEncoder):
@@ -338,7 +339,7 @@ def load_nodes_from_json(nodes_json: str) -> UUIDBaseNode:
 
     Returns
     -------
-    CRIPT Node: UUIDBaseNode
+    UUIDBaseNode
         CRIPT Python SDK node object
     """
     node_json_hook = _NodeDecoderHook()

@@ -138,7 +138,7 @@ class NodeEncoder(json.JSONEncoder):
             return serialize_dict
         return json.JSONEncoder.default(self, obj)
 
-    def _apply_modifications(self, serialize_dict):
+    def _apply_modifications(self, serialize_dict: Dict):
         """
         Checks the serialize_dict to see if any other operations are required before it
         can be considered done. If other operations are required, then it passes it to the other operations

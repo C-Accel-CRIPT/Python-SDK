@@ -292,7 +292,7 @@ def _is_node_field_valid(node_type_list: list) -> bool:
         return False
 
 
-def load_nodes_from_json(nodes_json: str):
+def load_nodes_from_json(nodes_json: str) -> UUIDBaseNode:
     """
     User facing function, that return a node and all its children from a json string input.
 

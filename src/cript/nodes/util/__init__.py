@@ -54,6 +54,7 @@ class NodeEncoder(json.JSONEncoder):
         # condensation and attribute suppression during serialization.
     ```
     """
+
     handled_ids: Set[str] = set()
     known_uuid: Set[str] = set()
     condense_to_uuid: Set[str] = set()

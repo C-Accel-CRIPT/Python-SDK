@@ -294,7 +294,7 @@ def _is_node_field_valid(node_type_list: list) -> bool:
 
 def load_nodes_from_json(nodes_json: str):
     """
-    User facing function, that return a node and all its children from a json input.
+    User facing function, that return a node and all its children from a json string input.
 
     Parameters
     ----------

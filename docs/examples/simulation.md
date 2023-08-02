@@ -6,7 +6,7 @@ jupyter:
     text_representation:
       extension: .md
       format_name: markdown
-      format_version: '1.3'
+      format_version: "1.3"
       jupytext_version: 1.13.6
   kernelspec:
     display_name: Python 3 (ipykernel)
@@ -70,7 +70,7 @@ For example, finding a replacement for an existing material from a sustainable f
 project = cript.Project(name="My simulation project.")
 ```
 
-## Create a Collection node
+## Create a [Collection node](../../nodes/primary_nodes/collection)
 
 For this project, you can create multiple collections, which represent a set of experiments.
 For example, you can create a collection for a specific manuscript,
@@ -87,15 +87,20 @@ project.collection += [collection]
 !!! note "Viewing CRIPT JSON"
 
     Note, that if you are interested into the inner workings of CRIPT,
-    you can obtain a JSON representation of your data graph at any time to see what is being sent to the API.
+    you can obtain a JSON representation of your data at any time to see what is being sent to the API
+    through HTTP JSON requests.
 
 ```python
 print(project.json)
-print("\nOr more pretty\n")
-print(project.get_json(indent=2).json)
 ```
 
-## Create an Experiment node
+!!! info "Format JSON in terminal"
+    Format the JSON within the terminal for easier reading
+    ```python
+    print(project.get_json(indent=2).json)
+    ```
+
+## Create an [Experiment node](../../nodes/primary_nodes/experiment)
 
 The [Collection node](../../nodes/primary_nodes/collection) holds a series of
 [Experiment nodes](../../nodes/primary_nodes/experiment) nodes.
@@ -107,7 +112,7 @@ experiment = cript.Experiment(name="Simulation for the first candidate")
 collection.experiment += [experiment]
 ```
 
-# Create relevant Software nodes
+## Create relevant [Software nodes](../../nodes/primary_nodes/software)
 
 [`Software`](../../nodes/primary_nodes/software) nodes refer to software that you use during your simulation experiment.
 In general [`Software`](../../nodes/primary_nodes/software) nodes can be shared between project, and it is encouraged to do so if the software you are using is already present in the CRIPT project use it.
@@ -128,7 +133,7 @@ If a version is not available, consider using git-hashes.
 
 
 
-# Create Software Configurations
+## Create [Software Configuration](../../nodes/subobjects/software_configuration/)
 
 Now that we have our [`Software`](../../nodes/primary_nodes/software) nodes, we can create 
 [`SoftwareConfiguration`](../../nodes/subobjects/software_configuration/) nodes. [`SoftwareConfigurations`](../../nodes/subobjects/software_configuration/) nodes are designed to let you specify details, about which algorithms from the software package you are using and log parameters for these algorithms.
@@ -166,7 +171,7 @@ packmol_config = cript.SoftwareConfiguration(software=packmol)
     The allowed [`Parameter`](../../nodes/subobjects/property/) keys are listed under [parameter keys](https://criptapp.org/keys/parameter-key/) in the CRIPT controlled vocabulary.
 
 
-# Create Computations
+## Create [Computations](../../nodes/primary_nodes/computation)
 
 Now that we've created some [`SoftwareConfiguration`](../../nodes/subobjects/software_configuration) nodes, we can used them to build full [`Computation`](../../nodes/primary_nodes/computation) nodes.
 In some cases, we may also want to add [`Condition`](../../nodes/subobjects/condition) nodes to our computation, to specify the conditions at which the computation was carried out. An example of this is shown below.
@@ -239,27 +244,28 @@ experiment.computation += [init, equilibration, bulk, ana]
     The allowed [`Condition`](../../nodes/subobjects/condition) keys are listed under [condition keys](https://criptapp.org/keys/condition-key/) in the CRIPT controlled vocabulary.
 
 
-# Create and Upload Files
+## Create and Upload [Files nodes](../../nodes/supporting_nodes/file)
 
 New we'd like to upload files associated with our simulation. First, we'll instantiate our File nodes under a specific project.
 
 ```python
-packing_file = cript.File("Initial simulation box snapshot with roughly packed molecules", type="computation_snapshot", source="path/to/local/file")
+packing_file = cript.File(name="Initial simulation box snapshot with roughly packed molecules", type="computation_snapshot", source="path/to/local/file")
 forcefield_file = cript.File(name="Forcefield definition file", type="data", source="path/to/local/file")
-snap_file = cript.File("Bulk measurement initial system snap shot", type="computation_snapshot", source="path/to/local/file")
-final_file = cript.File("Final snapshot of the system at the end the simulations", type="computation_snapshot", source="path/to/local/file")
+snap_file = cript.File(name="Bulk measurement initial system snap shot", type="computation_snapshot", source="path/to/local/file")
+final_file = cript.File(name="Final snapshot of the system at the end the simulations", type="computation_snapshot", source="path/to/local/file")
 ```
 
 !!! note
-    The [source field](../../nodes/supporting_nodes/file/#cript.nodes.supporting_nodes.file.File.source) should point to any file on your local filesystem.
+    The [source field](../../nodes/supporting_nodes/file/#cript.nodes.supporting_nodes.file.File.source) should point to any file on your local filesystem
+    or a web URL to where the file can be found. 
 
-!!! info
-    Depending on the file size, there could be a delay while the checksum is generated.
+    > For example, 
+    > [CRIPT protein JSON file on CRIPTScripts](https://criptscripts.org/cript_graph_json/JSON/cao_protein.json) 
 
 Note, that we haven't uploaded the files to CRIPT yet, this is automatically performed, when the project is uploaded via `api.save(project)`.
 
 
-# Create Data
+## Create Data
 
 Next, we'll create a [`Data`](../../nodes/primary_nodes/data) node which helps organize our [`File`](../../nodes/supporting_nodes/file) nodes and links back to our [`Computation`](../../nodes/primary_nodes/computation) objects.
 
@@ -311,61 +317,40 @@ ana.input_data = [final_data]
 bulk.output_data = [final_data]
 ```
 
-# Create a virtual Material
+## Create a virtual Material
 
-Finally, we'll create a virtual material and link it to the [`Computation`](../../nodes/primary_nodes/computation) nodes that we've built.
+First, we'll create a virtual material and add some
+[`Identifiers`](../../nodes/primary_nodes/material/#cript.nodes.primary_nodes.material.Material.identifiers)
+to the material to make it easier to identify and search.
 
-```py
+```python
+# create identifier dictionaries and put it in `identifiers` variable
+identifiers = [{"names": ["poly(styrene)", "poly(vinylbenzene)"]}]
+identifiers += [{"bigsmiles": "[H]{[>][<]C(C[>])c1ccccc1[<]}C(C)CC"}]
+identifiers += [{"chem_repeat": ["C8H8"]}]
 
-```
-
-Next, let's add some [`Identifiers`](../../nodes/primary_nodes/material/#cript.nodes.primary_nodes.material.Material.identifiers) nodes to the material to make it easier to identify and search.
-
-```py
-names = cript.Identifier(
-    key="names",
-    value=["poly(styrene)", "poly(vinylbenzene)"],
-)
-
-bigsmiles = cript.Identifier(
-    key="bigsmiles",
-    value="[H]{[>][<]C(C[>])c1ccccc1[<]}C(C)CC",
-)
-
-chem_repeat = cript.Identifier(
-    key="chem_repeat",
-    value="C8H8",
-)
-
-polystyrene.add_identifier(names)
-polystyrene.add_identifier(chem_repeat)
-polystyrene.add_identifier(bigsmiles)
+# create a material node object with identifiers
+polystyrene = cript.Material(name="virtual polystyrene", identifiers=identifiers)
 ```
 
 !!! note "Identifier keys"
     The allowed [`Identifiers`](../../nodes/primary_nodes/material/#cript.nodes.primary_nodes.material.Material.identifiers) keys are listed in the [material identifier keys](https://criptapp.org/keys/material-identifier-key/) in the CRIPT controlled vocabulary.
 
+## Add [`Property`](../../nodes/subobjects/property) sub-objects
 Let's also add some [`Property`](../../nodes/subobjects/property) nodes to the [`Material`](../../nodes/primary_nodes/material), which represent its physical or virtual (in the case of a simulated material) properties.
 
-```py
-phase = cript.Property(key="phase", value="solid")
-color = cript.Property(key="color", value="white")
+```python
+phase = cript.Property(key="phase", value="solid", type="none", unit=None)
+color = cript.Property(key="color", value="white", type="none", unit=None)
 
-polystyrene.add_property(phase)
-polystyrene.add_property(color)
+polystyrene.property += [phase]
+polystyrene.property += [color]
 ```
 
 !!! note "Material property keys"
     The allowed material [`Property`](../../nodes/subobjects/property) keys are listed in the [material property keys](https://criptapp.org/keys/material-property-key/) in the CRIPT controlled vocabulary.
 
-```python
-identifiers = [{"names": ["poly(styrene)", "poly(vinylbenzene)"]}]
-identifiers += [{"bigsmiles": "[H]{[>][<]C(C[>])c1ccccc1[<]}C(C)CC"}]
-identifiers += [{"chem_repeat": ["C8H8"]}]
-
-polystyrene = cript.Material(name="virtual polystyrene", identifiers=identifiers)
-```
-
+## Create [`ComputationalForcefield`](../../nodes/subobjects/computational_forcefield)
 Finally, we'll create a [`ComputationalForcefield`](../../nodes/subobjects/computational_forcefield) node and link it to the Material.
 
 
@@ -384,7 +369,7 @@ polystyrene.computational_forcefield = forcefield
     The allowed [`ComputationalForcefield`](../../nodes/subobjects/computational_forcefield/) keys are listed under the [computational forcefield keys](https://criptapp.org/keys/computational-forcefield-key/) in the CRIPT controlled vocabulary.
 
 Now we can save the project to CRIPT (and upload the files) or inspect the JSON output
-
+## Validate CRIPT Project Node
 ```python
 # Before we can save it, we should add all the orphaned nodes to the experiments.
 # It is important to do this for every experiment separately, but here we only have one.
@@ -398,7 +383,7 @@ print(project.get_json(indent=2).json)
 api.disconnect()
 ```
 
-# Conclusion
+## Conclusion
 
 You made it! We hope this tutorial has been helpful.
 

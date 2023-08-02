@@ -3,7 +3,7 @@ import inspect
 import json
 import uuid
 from dataclasses import asdict
-from typing import Dict, Optional, Set, Union
+from typing import Dict, Optional, Set, Union, List
 
 import cript.nodes
 from cript.nodes.core import BaseNode
@@ -189,7 +189,7 @@ class NodeEncoder(json.JSONEncoder):
                     uid_of_condensed.append(uid)
                 return processed_attribute
 
-        uid_of_condensed = []
+        uid_of_condensed: List = []
 
         nodes_to_condense = serialize_dict["node"]
         for node_type in nodes_to_condense:

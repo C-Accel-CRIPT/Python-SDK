@@ -54,7 +54,7 @@ def test_uid_deserialization(simple_algorithm_node, complex_parameter_node, simp
                 "type": "value",
                 "value": 5.0,
                 "unit": "GPa",
-                "computation": [{"node": ["Computation"], "uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef"}],
+                "computation": [{"uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef"}],
             },
             {
                 "node": ["Property"],
@@ -66,7 +66,6 @@ def test_uid_deserialization(simple_algorithm_node, complex_parameter_node, simp
                 "unit": "GPa",
                 "computation": [
                     {
-                        "node": ["Computation"],
                         "uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef",
                     }
                 ],

@@ -3,7 +3,7 @@ import inspect
 import json
 import uuid
 from dataclasses import asdict
-from typing import Dict, Optional, Set, Union, List
+from typing import Dict, List, Optional, Set, Union
 
 import cript.nodes
 from cript.nodes.core import BaseNode

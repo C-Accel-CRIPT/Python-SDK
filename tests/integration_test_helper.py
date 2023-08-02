@@ -1,5 +1,4 @@
 import json
-import warnings
 
 import pytest
 from conftest import HAS_INTEGRATION_TESTS_ENABLED
@@ -95,8 +94,4 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     print("\n\n=================== Project Node Deserialized =========================")
     print(my_project_from_api.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json)
     print("==============================================================")
-
     print("\n\n\n######################################## TEST Passed ########################################\n\n\n")
-
-    warnings.warn("Please uncomment `integrate_nodes_helper` to test with the API")
-    pass

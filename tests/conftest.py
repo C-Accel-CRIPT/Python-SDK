@@ -17,9 +17,21 @@ from fixtures.supporting_nodes import *
 
 import cript
 
+
+def _get_cript_tests_env() -> bool:
+    """
+    A little helper function, that ensure to mostly default to True.
+    Except if an explicit spelling of False is detected.
+    """
+    env_var = os.getenv("CRIPT_TESTS")
+    if env_var in ("false", "FALSE", "False"):
+        return False
+    return True
+
+
 # flip integration tests ON or OFF with this boolean
 # automatically gets value env vars to run integration tests
-HAS_INTEGRATION_TESTS_ENABLED: bool = os.getenv("CRIPT_TESTS").title() == "True"
+HAS_INTEGRATION_TESTS_ENABLED: bool = _get_cript_tests_env()
 
 
 @pytest.fixture(scope="session", autouse=True)

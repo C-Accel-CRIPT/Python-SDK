@@ -168,9 +168,7 @@ class _NodeDecoderHook:
         The `_NodeDecoderHook` class is used as an object hook for JSON deserialization,
         handling the conversion of JSON nodes into Python objects based on their node types.
         The `uid_cache` is an optional dictionary to store cached objects with shared UIDs
-        to avoid unnecessary deserialization and circular references.
-
-
+        to never create two different python nodes with the same uid.
         """
         if uid_cache is None:
             uid_cache = {}

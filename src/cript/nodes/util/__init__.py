@@ -19,7 +19,6 @@ from cript.nodes.exceptions import (
 )
 from cript.nodes.primary_nodes.experiment import Experiment
 from cript.nodes.primary_nodes.project import Project
-from cript.nodes.uuid_base import UUIDBaseNode
 
 
 class NodeEncoder(json.JSONEncoder):

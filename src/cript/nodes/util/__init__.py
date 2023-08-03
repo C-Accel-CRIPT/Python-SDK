@@ -199,8 +199,9 @@ class _NodeDecoderHook:
 
         Returns
         -------
-        dict
-            A Python dictionary representing the deserialized node or the input dictionary itself.
+        Union[CRIPT Node, dict]
+            Either returns a regular dictionary if the input JSON or input dict is NOT a node.
+            If it is a node, it returns the appropriate CRIPT node object, such as `cript.Material`
 
         Raises
         ------

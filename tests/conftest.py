@@ -20,13 +20,15 @@ import cript
 
 def _get_cript_tests_env() -> bool:
     """
-    A little helper function, that ensure to mostly default to True.
-    Except if an explicit spelling of False is detected.
+    Gets `CRIPT_TESTS` value from env variable and converts it to boolean.
+    If `CRIPT_TESTS` env var does not exist then it will default it to False.
     """
-    env_var = os.getenv("CRIPT_TESTS")
-    if env_var in ("false", "FALSE", "False"):
-        return False
-    return True
+    try:
+        has_integration_tests_enabled = os.getenv("CRIPT_TESTS").title().strip() == "True"
+    except AttributeError:
+        has_integration_tests_enabled = True
+
+    return has_integration_tests_enabled
 
 
 # flip integration tests ON or OFF with this boolean

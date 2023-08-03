@@ -339,7 +339,7 @@ def load_nodes_from_json(nodes_json: str):
 
     Returns
     -------
-    CRIPT Node or List of CRIPT Nodes
+    Union[CRIPT Node, List[CRIPT Node]]
         Typically returns a single CRIPT node,
         but if given a list of nodes, then it will serialize them and return a list of CRIPT nodes
     """

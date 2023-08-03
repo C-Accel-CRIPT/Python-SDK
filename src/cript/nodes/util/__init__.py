@@ -293,7 +293,7 @@ def _is_node_field_valid(node_type_list: list) -> bool:
         return False
 
 
-def load_nodes_from_json(nodes_json: str) -> UUIDBaseNode:
+def load_nodes_from_json(nodes_json: str):
     """
     User facing function, that return a node and all its children from a json string input.
 
@@ -339,8 +339,9 @@ def load_nodes_from_json(nodes_json: str) -> UUIDBaseNode:
 
     Returns
     -------
-    UUIDBaseNode
-        CRIPT Python SDK node object
+    CRIPT Node or List of CRIPT Nodes
+        Typically returns a single CRIPT node,
+        but if given a list of nodes, then it will serialize them and return a list of CRIPT nodes
     """
     node_json_hook = _NodeDecoderHook()
     json_nodes = json.loads(nodes_json, object_hook=node_json_hook)

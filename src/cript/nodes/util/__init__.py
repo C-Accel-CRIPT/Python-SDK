@@ -294,7 +294,53 @@ def _is_node_field_valid(node_type_list: list) -> bool:
 
 def load_nodes_from_json(nodes_json: str):
     """
-    User facing function, that return a node and all its children from a json input.
+    User facing function, that return a node and all its children from a json string input.
+
+    Parameters
+    ----------
+    nodes_json: str
+        JSON string representation of a CRIPT node
+
+    Examples
+    --------
+    ```python
+    # get project node from API
+    my_paginator = cript_api.search(
+        node_type=cript.Project,
+        search_mode=cript.SearchModes.EXACT_NAME,
+        value_to_search=project_node.name
+    )
+
+    # get the project from paginator
+    my_project_from_api_dict = my_paginator.current_page_results[0]
+
+    # convert API JSON to CRIPT Project node
+    my_project_from_api = cript.load_nodes_from_json(json.dumps(my_project_from_api_dict))
+    ```
+
+    Raises
+    ------
+    CRIPTJsonNodeError
+        If there is an issue with the JSON of the node field.
+    CRIPTJsonDeserializationError
+        If there is an error during deserialization of a specific node.
+    CRIPTDeserializationUIDError
+        If there is an issue with the UID used for deserialization, like circular references.
+
+    Notes
+    -----
+    This function uses a custom `_NodeDecoderHook` to convert JSON nodes into Python objects.
+    The `_NodeDecoderHook` class is responsible for handling the deserialization of nodes
+    and caching objects with shared UIDs to avoid redundant deserialization.
+
+    The function is intended for deserializing CRIPT nodes and should not be used for generic JSON.
+
+
+    Returns
+    -------
+    Union[CRIPT Node, List[CRIPT Node]]
+        Typically returns a single CRIPT node,
+        but if given a list of nodes, then it will serialize them and return a list of CRIPT nodes
     """
     node_json_hook = _NodeDecoderHook()
     json_nodes = json.loads(nodes_json, object_hook=node_json_hook)

@@ -45,9 +45,5 @@ def cript_api():
         # using the tests folder name within our cloud storage
         api._BUCKET_DIRECTORY_NAME = "tests"
 
-        print(api.host)
-        print(api._api_token)
-        print(api._storage_token)
-
         yield api
     assert cript.api.api._global_cached_api is None

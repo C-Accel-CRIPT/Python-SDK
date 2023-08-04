@@ -49,8 +49,10 @@ def _get_global_cached_api():
         raise CRIPTAPIRequiredError()
     return _global_cached_api
 
+
 # Set the logging configuration for the file
 logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
+
 
 class API:
     """

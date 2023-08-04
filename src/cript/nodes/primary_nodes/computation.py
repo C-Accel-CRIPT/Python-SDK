@@ -230,7 +230,7 @@ class Computation(PrimaryBaseNode):
 
     @input_data.setter
     @beartype
-    def input_data(self, new_input_data_list: List[Any]) -> None:
+    def input_data(self, new_input_data_list: Optional[List[Any]]) -> None:
         """
         set the input data list
 
@@ -278,7 +278,7 @@ class Computation(PrimaryBaseNode):
 
     @output_data.setter
     @beartype
-    def output_data(self, new_output_data_list: List[Any]) -> None:
+    def output_data(self, new_output_data_list: Optional[List[Any]]) -> None:
         """
         set the list of output data (data nodes) for this node
 
@@ -318,7 +318,7 @@ class Computation(PrimaryBaseNode):
 
     @software_configuration.setter
     @beartype
-    def software_configuration(self, new_software_configuration_list: List[Any]) -> None:
+    def software_configuration(self, new_software_configuration_list: Optional[List[Any]]) -> None:
         """
         set the list of software_configuration for this computation node
 
@@ -358,7 +358,7 @@ class Computation(PrimaryBaseNode):
 
     @condition.setter
     @beartype
-    def condition(self, new_condition_list: List[Any]) -> None:
+    def condition(self, new_condition_list: Optional[List[Any]]) -> None:
         """
         set the list of condition for this node
 
@@ -439,7 +439,7 @@ class Computation(PrimaryBaseNode):
 
     @citation.setter
     @beartype
-    def citation(self, new_citation_list: List[Any]) -> None:
+    def citation(self, new_citation_list: Optional[List[Any]]) -> None:
         """
         set the List of citations
 

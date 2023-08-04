@@ -20,6 +20,7 @@ staging_config.json
 production_config.json
 # ignore anything that the file name ends with `_config.json`
 ./tests/*_config.json
+*_config.json
 
 # pycache
 __pycache__/

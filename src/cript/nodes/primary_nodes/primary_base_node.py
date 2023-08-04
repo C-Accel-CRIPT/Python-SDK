@@ -1,5 +1,6 @@
 from abc import ABC
 from dataclasses import dataclass, replace
+from typing import Optional
 
 from beartype import beartype
 
@@ -111,7 +112,7 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
 
     @notes.setter
     @beartype
-    def notes(self, new_notes: str) -> None:
+    def notes(self, new_notes: Optional[str]) -> None:
         """
         allow every node that inherits base attributes to set its notes
         """

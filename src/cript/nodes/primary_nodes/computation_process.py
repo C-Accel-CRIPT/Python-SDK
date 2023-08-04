@@ -371,7 +371,7 @@ class ComputationProcess(PrimaryBaseNode):
 
     @output_data.setter
     @beartype
-    def output_data(self, new_output_data_list: List[Any]) -> None:
+    def output_data(self, new_output_data_list: Optional[List[Any]]) -> None:
         """
         set the output_data list for the computational_process
 
@@ -452,7 +452,7 @@ class ComputationProcess(PrimaryBaseNode):
 
     @software_configuration.setter
     @beartype
-    def software_configuration(self, new_software_configuration_list: List[Any]) -> None:
+    def software_configuration(self, new_software_configuration_list: Optional[List[Any]]) -> None:
         """
         set the list of software_configuration for the computational process
 
@@ -492,7 +492,7 @@ class ComputationProcess(PrimaryBaseNode):
 
     @condition.setter
     @beartype
-    def condition(self, new_condition: List[Any]) -> None:
+    def condition(self, new_condition: Optional[List[Any]]) -> None:
         """
         set the condition for the computational process
 
@@ -534,7 +534,7 @@ class ComputationProcess(PrimaryBaseNode):
 
     @citation.setter
     @beartype
-    def citation(self, new_citation_list: List[Any]) -> None:
+    def citation(self, new_citation_list: Optional[List[Any]]) -> None:
         """
         set the citation list for the computational process node
 
@@ -573,7 +573,7 @@ class ComputationProcess(PrimaryBaseNode):
 
     @property.setter
     @beartype
-    def property(self, new_property_list: List[Any]) -> None:
+    def property(self, new_property_list: Optional[List[Any]]) -> None:
         """
         set the properties list for the computational process
 

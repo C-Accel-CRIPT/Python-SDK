@@ -46,7 +46,7 @@ def cript_api():
     API: cript.API
         The created CRIPT API instance.
     """
-    storage_token = "my storage token"
+    storage_token = os.getenv("CRIPT_STORAGE_TOKEN")
 
     assert cript.api.api._global_cached_api is None
     with cript.API(host=None, api_token=None, storage_token=storage_token) as api:

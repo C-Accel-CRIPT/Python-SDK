@@ -417,7 +417,7 @@ class API:
             return self._vocabulary[category.value]
 
         # if vocabulary category is not in cache, then get it from API and cache it
-        response = requests.get(f"{self.host}/cv/{category.value}").json()
+        response = requests.get(f"{self.host}/cv/{category.value}/").json()
 
         if response["code"] != 200:
             # TODO give a better CRIPT custom Exception
@@ -636,7 +636,7 @@ class API:
 
             # This checks if the current node exists on the back end.
             # if it does exist we use `patch` if it doesn't `post`.
-            test_get_response: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers).json()
+            test_get_response: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers).json()
             patch_request = test_get_response["code"] == 200
 
             # TODO remove once get works properly
@@ -652,9 +652,9 @@ class API:
                 break
 
             if patch_request:
-                response: Dict = requests.patch(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}", headers=self._http_headers, data=json_data).json()  # type: ignore
+                response: Dict = requests.patch(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, data=json_data).json()  # type: ignore
             else:
-                response: Dict = requests.post(url=f"{self._host}/{node.node_type_snake_case}", headers=self._http_headers, data=json_data).json()  # type: ignore
+                response: Dict = requests.post(url=f"{self._host}/{node.node_type_snake_case}/", headers=self._http_headers, data=json_data).json()  # type: ignore
 
             # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
             # Errors with this code, may be fixable

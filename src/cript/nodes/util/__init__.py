@@ -155,6 +155,21 @@ class _UIDProxy:
 
 class _NodeDecoderHook:
     def __init__(self, uid_cache: Optional[Dict] = None):
+        """
+        Initialize the custom JSON object hook used for CRIPT node deserialization.
+
+        Parameters
+        ----------
+        uid_cache : Optional[Dict], optional
+            A dictionary to cache Python objects with shared UIDs, by default None.
+
+        Notes
+        -----
+        The `_NodeDecoderHook` class is used as an object hook for JSON deserialization,
+        handling the conversion of JSON nodes into Python objects based on their node types.
+        The `uid_cache` is an optional dictionary to store cached objects with shared UIDs
+        to never create two different python nodes with the same uid.
+        """
         if uid_cache is None:
             uid_cache = {}
         self._uid_cache = uid_cache
@@ -163,7 +178,7 @@ class _NodeDecoderHook:
         """
         Internal function, used as a hook for json deserialization.
 
-        This function is called recursively to convert every JSON of a node and it's children from node to JSON.
+        This function is called recursively to convert every JSON of a node and its children from node to JSON.
 
         If given a JSON without a "node" field then it is assumed that it is not a node
         and just a key value pair data, and the JSON string is then just converted from string to dict and returned
@@ -175,7 +190,27 @@ class _NodeDecoderHook:
 
         no serialization is needed in this case and just needs to be converted from str to dict
 
-        if the node field is present then continue and convert the JSON node into a Python object
+        if the node field is present, then continue and convert the JSON node into a Python object
+
+        Parameters
+        ----------
+        node_str : Union[dict, str]
+            The JSON representation of a node or a regular dictionary.
+
+        Returns
+        -------
+        Union[CRIPT Node, dict]
+            Either returns a regular dictionary if the input JSON or input dict is NOT a node.
+            If it is a node, it returns the appropriate CRIPT node object, such as `cript.Material`
+
+        Raises
+        ------
+        CRIPTJsonNodeError
+            If there is an issue with the JSON structure or the node type is invalid.
+        CRIPTJsonDeserializationError
+            If there is an error during deserialization of a specific node type.
+        CRIPTDeserializationUIDError
+            If there is an issue with the UID used for deserialization, like circular references.
         """
         node_dict = dict(node_str)  # type: ignore
 
@@ -294,7 +329,53 @@ def _is_node_field_valid(node_type_list: list) -> bool:
 
 def load_nodes_from_json(nodes_json: str):
     """
-    User facing function, that return a node and all its children from a json input.
+    User facing function, that return a node and all its children from a json string input.
+
+    Parameters
+    ----------
+    nodes_json: str
+        JSON string representation of a CRIPT node
+
+    Examples
+    --------
+    ```python
+    # get project node from API
+    my_paginator = cript_api.search(
+        node_type=cript.Project,
+        search_mode=cript.SearchModes.EXACT_NAME,
+        value_to_search=project_node.name
+    )
+
+    # get the project from paginator
+    my_project_from_api_dict = my_paginator.current_page_results[0]
+
+    # convert API JSON to CRIPT Project node
+    my_project_from_api = cript.load_nodes_from_json(json.dumps(my_project_from_api_dict))
+    ```
+
+    Raises
+    ------
+    CRIPTJsonNodeError
+        If there is an issue with the JSON of the node field.
+    CRIPTJsonDeserializationError
+        If there is an error during deserialization of a specific node.
+    CRIPTDeserializationUIDError
+        If there is an issue with the UID used for deserialization, like circular references.
+
+    Notes
+    -----
+    This function uses a custom `_NodeDecoderHook` to convert JSON nodes into Python objects.
+    The `_NodeDecoderHook` class is responsible for handling the deserialization of nodes
+    and caching objects with shared UIDs to avoid redundant deserialization.
+
+    The function is intended for deserializing CRIPT nodes and should not be used for generic JSON.
+
+
+    Returns
+    -------
+    Union[CRIPT Node, List[CRIPT Node]]
+        Typically returns a single CRIPT node,
+        but if given a list of nodes, then it will serialize them and return a list of CRIPT nodes
     """
     node_json_hook = _NodeDecoderHook()
     json_nodes = json.loads(nodes_json, object_hook=node_json_hook)

@@ -1,6 +1,6 @@
 import uuid
 from abc import ABC
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from typing import Any, Dict
 
 from cript.nodes.core import BaseNode
@@ -24,7 +24,7 @@ class UUIDBaseNode(BaseNode, ABC):
         All shared attributes between all Primary nodes and set to their default values
         """
 
-        uuid: str = ""
+        uuid: str = field(default_factory=lambda: str(uuid.uuid4()))
         updated_by: Any = None
         created_by: Any = None
         created_at: str = ""

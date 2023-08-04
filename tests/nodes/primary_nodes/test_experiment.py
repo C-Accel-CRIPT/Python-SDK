@@ -27,7 +27,7 @@ def test_create_complex_experiment(simple_process_node, simple_computation_node,
     experiment_name = "my experiment name"
     experiment_funders = ["National Science Foundation", "IRIS", "NIST"]
 
-    citation = copy.deepcopy(complex_citation_node)
+    citation = complex_citation_node
     my_experiment = cript.Experiment(
         name=experiment_name,
         process=[simple_process_node],

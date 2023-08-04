@@ -237,6 +237,16 @@ class API:
 
         self._get_db_schema()
 
+    def __str__(self) -> str:
+        """
+        States the host of the CRIPT API client
+
+        Returns
+        -------
+        str
+        """
+        return f"CRIPT API Client - Host URL: '{self.host}'"
+
     @beartype
     def _prepare_host(self, host: str) -> str:
         # strip ending slash to make host always uniform

@@ -173,7 +173,7 @@ class Experiment(PrimaryBaseNode):
 
     @process.setter
     @beartype
-    def process(self, new_process_list: List[Any]) -> None:
+    def process(self, new_process_list: Optional[List[Any]]) -> None:
         """
         set the list of process for this experiment
 
@@ -214,7 +214,7 @@ class Experiment(PrimaryBaseNode):
 
     @computation.setter
     @beartype
-    def computation(self, new_computation_list: List[Any]) -> None:
+    def computation(self, new_computation_list: Optional[List[Any]]) -> None:
         """
         set the list of computations for this experiment
 
@@ -259,7 +259,7 @@ class Experiment(PrimaryBaseNode):
 
     @computation_process.setter
     @beartype
-    def computation_process(self, new_computation_process_list: List[Any]) -> None:
+    def computation_process(self, new_computation_process_list: Optional[List[Any]]) -> None:
         """
         set the list of computation_process for this experiment
 
@@ -307,7 +307,7 @@ class Experiment(PrimaryBaseNode):
 
     @data.setter
     @beartype
-    def data(self, new_data_list: List[Any]) -> None:
+    def data(self, new_data_list: Optional[List[Any]]) -> None:
         """
         set the list of data for this experiment
 
@@ -344,7 +344,7 @@ class Experiment(PrimaryBaseNode):
 
     @funding.setter
     @beartype
-    def funding(self, new_funding_list: List[str]) -> None:
+    def funding(self, new_funding_list: Optional[List[str]]) -> None:
         """
         set the list of funders for this experiment
 
@@ -385,7 +385,7 @@ class Experiment(PrimaryBaseNode):
 
     @citation.setter
     @beartype
-    def citation(self, new_citation_list: List[Any]) -> None:
+    def citation(self, new_citation_list: Optional[List[Any]]) -> None:
         """
         set the list of citations for this experiment
 

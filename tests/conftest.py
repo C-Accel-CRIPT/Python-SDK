@@ -18,12 +18,11 @@ from fixtures.supporting_nodes import *
 
 import cript
 
-from test_utils.multiple_environment_config_helper import _get_config_file_path, CRIPTEnvironment
-
 # flip integration tests ON or OFF with this boolean
 # automatically gets value env vars to run integration tests
 HAS_INTEGRATION_TESTS_ENABLED: bool = os.getenv("CRIPT_TESTS").title() == "True"
 
+# server environment to get the correct config file `production_config.json`
 SERVER_ENVIRONMENT: str = "production"
 
 

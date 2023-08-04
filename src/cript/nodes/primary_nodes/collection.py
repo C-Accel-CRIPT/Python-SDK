@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
@@ -143,7 +143,7 @@ class Collection(PrimaryBaseNode):
 
     @experiment.setter
     @beartype
-    def experiment(self, new_experiment: List[Any]) -> None:
+    def experiment(self, new_experiment: Optional[List[Any]]) -> None:
         """
         sets the Experiment list within this collection
 
@@ -194,7 +194,7 @@ class Collection(PrimaryBaseNode):
 
     @inventory.setter
     @beartype
-    def inventory(self, new_inventory: List[Any]) -> None:
+    def inventory(self, new_inventory: Optional[List[Any]]) -> None:
         """
         Sets the List of inventories within this collection to a new list
 
@@ -229,7 +229,7 @@ class Collection(PrimaryBaseNode):
 
     @doi.setter
     @beartype
-    def doi(self, new_doi: str) -> None:
+    def doi(self, new_doi: Optional[str]) -> None:
         """
         set the CRIPT DOI for this collection to new CRIPT DOI
 
@@ -267,7 +267,7 @@ class Collection(PrimaryBaseNode):
 
     @citation.setter
     @beartype
-    def citation(self, new_citation: List[Any]) -> None:
+    def citation(self, new_citation: Optional[List[Any]]) -> None:
         """
         set the list of citations for this Collection
 

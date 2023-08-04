@@ -23,7 +23,7 @@ import cript
 HAS_INTEGRATION_TESTS_ENABLED: bool = os.getenv("CRIPT_TESTS").title() == "True"
 
 # server environment to get the correct config file `production_config.json`
-SERVER_ENVIRONMENT: str = "production"
+SERVER_ENVIRONMENT: str = "development"
 
 
 @pytest.fixture(scope="session", autouse=True)

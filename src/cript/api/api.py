@@ -49,6 +49,8 @@ def _get_global_cached_api():
         raise CRIPTAPIRequiredError()
     return _global_cached_api
 
+# Set the logging configuration for the file
+logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
 
 class API:
     """
@@ -549,7 +551,6 @@ class API:
         if self.verbose:
             # logging out info to the terminal for the user feedback
             # (improve UX because the program is currently slow)
-            logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
             logging.info(f"Validating {node_type} graph...")
 
         # set the schema to test against http POST or PATCH of DB Schema
@@ -828,6 +829,36 @@ class API:
 
         # the file is stored in cloud storage and must be retrieved via object_name
         self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=file_source, Filename=destination_path)  # type: ignore
+
+    @beartype
+    def delete(self, node) -> None:
+        """
+        delete a node from the database
+
+        Parameters
+        ----------
+        node: UUIDBaseNode
+            the node/sub-object that you want to delete
+
+        Returns
+        -------
+        None
+            simply deletes the node from the database
+
+        Notes
+        -----
+        After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
+        """
+        response: Dict = requests.delete(url=f"{self.host}/{node.node_type_snake_case}/{node.uuid}").json()
+
+        # first check if the node has been successfully deleted from API before doing anything else
+        if response["code"] != 200:
+            raise APIError(api_error=str(response))
+
+        # TODO delete the node locally as well
+
+        # let the user know that the node has been deleted from the database
+        logging.info(f"Deleted `{node.node_type}` with UUID: `{node.uuid}` from CRIPT database")
 
     @beartype
     def search(

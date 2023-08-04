@@ -1,0 +1,5 @@
+{
+  "host": "https://development.api.mycriptapp.org/",
+  "api_token": "production api token",
+  "storage_token": "production storage token"
+}

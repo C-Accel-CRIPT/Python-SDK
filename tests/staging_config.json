@@ -1,0 +1,5 @@
+{
+  "host": "https://lb-stage.mycriptapp.org:5150/",
+  "api_token": "staging api token",
+  "storage_token": "staging storage token"
+}

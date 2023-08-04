@@ -242,7 +242,7 @@ class Data(PrimaryBaseNode):
 
     @sample_preparation.setter
     @beartype
-    def sample_preparation(self, new_sample_preparation: Union[Any, None]) -> None:
+    def sample_preparation(self, new_sample_preparation: Optional[Any]) -> None:
         """
         set sample_preparation
 
@@ -273,7 +273,7 @@ class Data(PrimaryBaseNode):
 
     @computation.setter
     @beartype
-    def computation(self, new_computation_list: List[Any]) -> None:
+    def computation(self, new_computation_list: Optional[List[Any]]) -> None:
         """
         set list of computation  for this data node
 
@@ -304,7 +304,7 @@ class Data(PrimaryBaseNode):
 
     @computation_process.setter
     @beartype
-    def computation_process(self, new_computation_process: Union[Any, None]) -> None:
+    def computation_process(self, new_computation_process: Optional[Any]) -> None:
         """
         set the computational process
 
@@ -334,7 +334,7 @@ class Data(PrimaryBaseNode):
 
     @material.setter
     @beartype
-    def material(self, new_material_list: List[Any]) -> None:
+    def material(self, new_material_list: Optional[List[Any]]) -> None:
         """
         set the list of materials for this data node
 
@@ -370,7 +370,7 @@ class Data(PrimaryBaseNode):
 
     @process.setter
     @beartype
-    def process(self, new_process_list: List[Any]) -> None:
+    def process(self, new_process_list: Optional[List[Any]]) -> None:
         """
         set the list of process for this data node
 
@@ -414,7 +414,7 @@ class Data(PrimaryBaseNode):
 
     @citation.setter
     @beartype
-    def citation(self, new_citation_list: List[Any]) -> None:
+    def citation(self, new_citation_list: Optional[List[Any]]) -> None:
         """
         set the list of citation
 

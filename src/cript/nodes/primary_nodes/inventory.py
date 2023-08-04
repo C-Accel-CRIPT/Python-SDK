@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import List
+from typing import List, Optional
 
 from beartype import beartype
 
@@ -131,7 +131,7 @@ class Inventory(PrimaryBaseNode):
 
     @material.setter
     @beartype
-    def material(self, new_material_list: List[Material]):
+    def material(self, new_material_list: Optional[List[Material]]):
         """
         set the list of material for this inventory node
 

@@ -143,7 +143,7 @@ class API:
             pass
         ```
 
-        ### Create API Client with `None`
+        ### Create API Client with None
         Alternatively you can configure your system to have an environment variable of
         `CRIPT_TOKEN` for the API token and `CRIPT_STORAGE_TOKEN` for the storage token, then
         initialize `cript.API` `api_token` and `storage_token` with `None`.

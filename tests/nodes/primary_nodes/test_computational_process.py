@@ -1,4 +1,3 @@
-import copy
 import json
 import uuid
 
@@ -42,8 +41,8 @@ def test_create_complex_computational_process(
     computational_process_name = "my computational process name"
     computational_process_type = "cross_linking"
 
-    ingredient = copy.deepcopy(complex_ingredient_node)
-    data = copy.deepcopy(simple_data_node)
+    ingredient = complex_ingredient_node
+    data = simple_data_node
     my_computational_process = cript.ComputationProcess(
         name=computational_process_name,
         type=computational_process_type,

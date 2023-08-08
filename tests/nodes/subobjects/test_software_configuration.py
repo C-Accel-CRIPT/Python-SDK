@@ -1,4 +1,3 @@
-import copy
 import json
 import uuid
 
@@ -19,7 +18,7 @@ def test_json(complex_software_configuration_node, complex_software_configuratio
 
 def test_setter_getter(complex_software_configuration_node, simple_algorithm_node, complex_citation_node):
     sc2 = complex_software_configuration_node
-    software2 = copy.deepcopy(sc2.software)
+    software2 = sc2.software
     sc2.software = software2
     assert sc2.software is software2
 

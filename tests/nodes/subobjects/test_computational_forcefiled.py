@@ -33,7 +33,7 @@ def test_setter_getter(complex_computational_forcefield_node, complex_citation_n
     cf2.description = "generic polymer model"
     assert cf2.description == "generic polymer model"
 
-    data = copy.deepcopy(simple_data_node)
+    data = simple_data_node
     cf2.data += [data]
     assert cf2.data[-1] is data
 

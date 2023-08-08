@@ -237,7 +237,7 @@ class Process(PrimaryBaseNode):
 
     @ingredient.setter
     @beartype
-    def ingredient(self, new_ingredient_list: List[Any]) -> None:
+    def ingredient(self, new_ingredient_list: Optional[List[Any]]) -> None:
         """
         set the list of the ingredients for this process
 
@@ -307,7 +307,7 @@ class Process(PrimaryBaseNode):
 
     @equipment.setter
     @beartype
-    def equipment(self, new_equipment_list: List[Any]) -> None:
+    def equipment(self, new_equipment_list: Optional[List[Any]]) -> None:
         """
         set the list of equipment used for this process
 
@@ -338,7 +338,7 @@ class Process(PrimaryBaseNode):
 
     @product.setter
     @beartype
-    def product(self, new_product_list: List[Any]) -> None:
+    def product(self, new_product_list: Optional[List[Any]]) -> None:
         """
         set the product list for this process
 
@@ -375,7 +375,7 @@ class Process(PrimaryBaseNode):
 
     @waste.setter
     @beartype
-    def waste(self, new_waste_list: List[Any]) -> None:
+    def waste(self, new_waste_list: Optional[List[Any]]) -> None:
         """
         set the list of waste (Material node) for that resulted from this process
 
@@ -418,7 +418,7 @@ class Process(PrimaryBaseNode):
 
     @prerequisite_process.setter
     @beartype
-    def prerequisite_process(self, new_prerequisite_process_list: List["Process"]) -> None:
+    def prerequisite_process(self, new_prerequisite_process_list: Optional[List["Process"]]) -> None:
         """
         set the prerequisite_process for the process node
 
@@ -457,7 +457,7 @@ class Process(PrimaryBaseNode):
 
     @condition.setter
     @beartype
-    def condition(self, new_condition_list: List[Any]) -> None:
+    def condition(self, new_condition_list: Optional[List[Any]]) -> None:
         """
         set the list of condition for this process
 
@@ -533,7 +533,7 @@ class Process(PrimaryBaseNode):
 
     @citation.setter
     @beartype
-    def citation(self, new_citation_list: List[Any]) -> None:
+    def citation(self, new_citation_list: Optional[List[Any]]) -> None:
         """
         set the list of citation for this process
 
@@ -573,7 +573,7 @@ class Process(PrimaryBaseNode):
 
     @property.setter
     @beartype
-    def property(self, new_property_list: List[Any]) -> None:
+    def property(self, new_property_list: Optional[List[Any]]) -> None:
         """
         set the list of Property nodes for this process
 

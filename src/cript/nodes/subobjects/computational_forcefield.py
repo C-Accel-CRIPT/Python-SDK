@@ -408,7 +408,7 @@ class ComputationalForcefield(UUIDBaseNode):
 
     @data.setter
     @beartype
-    def data(self, new_data: List[Data]) -> None:
+    def data(self, new_data: Optional[List[Data]]) -> None:
         """
         set the data attribute of this computational_forcefield node
 
@@ -465,7 +465,7 @@ class ComputationalForcefield(UUIDBaseNode):
 
     @citation.setter
     @beartype
-    def citation(self, new_citation: List[Citation]) -> None:
+    def citation(self, new_citation: Optional[List[Citation]]) -> None:
         """
         set the citation subobject of the computational_forcefield subobject
 

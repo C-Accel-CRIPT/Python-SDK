@@ -174,6 +174,11 @@ class BaseNode(ABC):
             else:
                 arguments[field] = json_dict[field]
 
+        # add ommitted fields from default (necessary if they are required)
+        for field_name in [field.name for field in dataclasses.fields(default_dataclass)]:
+            if field_name not in arguments:
+                arguments[field_name] = getattr(default_dataclass, field_name)
+
         # If a node with this UUID already exists, we don't create a new node.
         # Instead we use the existing node from the cache and just update it.
         from cript.nodes.uuid_base import UUIDBaseNode

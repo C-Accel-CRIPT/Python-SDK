@@ -35,7 +35,7 @@ class NodeEncoder(json.JSONEncoder):
         A set to store the UIDs of nodes that have been processed during serialization.
     known_uuid : Set[str]
         A set to store the UUIDs of nodes that have been previously encountered in the JSON.
-    condense_to_uuid : Set[str]
+    condense_to_uuid : Dict[str, Set[str]]
         A set to store the node types that should be condensed to UUID edges in the JSON.
     suppress_attributes : Optional[Dict[str, Set[str]]]
         A dictionary that allows suppressing specific attributes for nodes with the corresponding UUIDs.
@@ -57,7 +57,7 @@ class NodeEncoder(json.JSONEncoder):
 
     handled_ids: Set[str] = set()
     known_uuid: Set[str] = set()
-    condense_to_uuid: Set[str] = set()
+    condense_to_uuid: Dict[str, Set[str]] = dict()
     suppress_attributes: Optional[Dict[str, Set[str]]] = None
 
     def default(self, obj):

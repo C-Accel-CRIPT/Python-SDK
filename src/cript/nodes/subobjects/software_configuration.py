@@ -129,7 +129,7 @@ class SoftwareConfiguration(UUIDBaseNode):
 
     @software.setter
     @beartype
-    def software(self, new_software: Union[Software, None]) -> None:
+    def software(self, new_software: Optional[Software]) -> None:
         """
         set the Software used
 
@@ -168,7 +168,7 @@ class SoftwareConfiguration(UUIDBaseNode):
 
     @algorithm.setter
     @beartype
-    def algorithm(self, new_algorithm: List[Algorithm]) -> None:
+    def algorithm(self, new_algorithm: Optional[List[Algorithm]]) -> None:
         """
         set the list of Algorithms
 
@@ -269,7 +269,7 @@ class SoftwareConfiguration(UUIDBaseNode):
 
     @citation.setter
     @beartype
-    def citation(self, new_citation: List[Citation]) -> None:
+    def citation(self, new_citation: Optional[List[Citation]]) -> None:
         """
         set the Citation sub-object
 

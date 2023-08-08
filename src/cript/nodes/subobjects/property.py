@@ -397,7 +397,7 @@ class Property(UUIDBaseNode):
 
     @component.setter
     @beartype
-    def component(self, new_component: List[Material]) -> None:
+    def component(self, new_component: Optional[List[Material]]) -> None:
         """
         set the list of Materials as components for the Property subobject
 
@@ -514,7 +514,7 @@ class Property(UUIDBaseNode):
 
     @sample_preparation.setter
     @beartype
-    def sample_preparation(self, new_sample_preparation: Union[Process, None]) -> None:
+    def sample_preparation(self, new_sample_preparation: Optional[Process]) -> None:
         """
         set the sample_preparation for the Property subobject
 
@@ -553,7 +553,7 @@ class Property(UUIDBaseNode):
 
     @condition.setter
     @beartype
-    def condition(self, new_condition: List[Condition]) -> None:
+    def condition(self, new_condition: Optional[List[Condition]]) -> None:
         """
         set the list of Conditions for this property subobject
 
@@ -602,7 +602,7 @@ class Property(UUIDBaseNode):
 
     @data.setter
     @beartype
-    def data(self, new_data: List[Data]) -> None:
+    def data(self, new_data: Optional[List[Data]]) -> None:
         """
         set the Data node for the Property subobject
 
@@ -641,7 +641,7 @@ class Property(UUIDBaseNode):
 
     @computation.setter
     @beartype
-    def computation(self, new_computation: List[Computation]) -> None:
+    def computation(self, new_computation: Optional[List[Computation]]) -> None:
         """
         set the list of Computation nodes that produced this property
 
@@ -699,7 +699,7 @@ class Property(UUIDBaseNode):
 
     @citation.setter
     @beartype
-    def citation(self, new_citation: List[Citation]) -> None:
+    def citation(self, new_citation: Optional[List[Citation]]) -> None:
         """
         set the list of Citation subobjects for the Property subobject
 

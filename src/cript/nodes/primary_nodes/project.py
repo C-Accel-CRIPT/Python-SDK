@@ -177,7 +177,7 @@ class Project(PrimaryBaseNode):
 
     @collection.setter
     @beartype
-    def collection(self, new_collection: List[Collection]) -> None:
+    def collection(self, new_collection: Optional[List[Collection]]) -> None:
         """
         set list of collections for the project node
 
@@ -216,7 +216,7 @@ class Project(PrimaryBaseNode):
 
     @material.setter
     @beartype
-    def material(self, new_materials: List[Material]) -> None:
+    def material(self, new_materials: Optional[List[Material]]) -> None:
         """
         set the list of materials for this project
 

@@ -189,7 +189,7 @@ class Algorithm(UUIDBaseNode):
         return self._json_attrs.parameter.copy()
 
     @parameter.setter
-    def parameter(self, new_parameter: List[Parameter]) -> None:
+    def parameter(self, new_parameter: Optional[List[Parameter]]) -> None:
         """
         set a list of cript.Parameter sub-objects
 
@@ -245,7 +245,7 @@ class Algorithm(UUIDBaseNode):
         return self._json_attrs.citation.copy()  # type: ignore
 
     @citation.setter
-    def citation(self, new_citation: Citation) -> None:
+    def citation(self, new_citation: Optional[Citation]) -> None:
         """
         set the algorithm citation subobject
 

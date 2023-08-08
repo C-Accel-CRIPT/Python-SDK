@@ -59,10 +59,10 @@ class Collection(PrimaryBaseNode):
         # TODO add proper typing in future, using Any for now to avoid circular import error
         member: List[User] = field(default_factory=list)
         admin: List[User] = field(default_factory=list)
-        experiment: Optional[List[Any]] = None
-        inventory: Optional[List[Any]] = None
+        experiment: List[Any] = field(default_factory=list)
+        inventory: List[Any] = field(default_factory=list)
         doi: str = ""
-        citation: Optional[List[Any]] = None
+        citation: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 

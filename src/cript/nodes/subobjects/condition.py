@@ -520,7 +520,7 @@ class Condition(UUIDBaseNode):
 
     @data.setter
     @beartype
-    def data(self, new_data: List[Data]) -> None:
+    def data(self, new_data: Optional[List[Data]]) -> None:
         """
         set the data node for this Condition Subobject
 

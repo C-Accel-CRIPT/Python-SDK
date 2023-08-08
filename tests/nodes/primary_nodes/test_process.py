@@ -110,9 +110,9 @@ def test_process_getters_and_setters(
     simple_process_node.type = new_process_type
     simple_process_node.ingredient = [complex_ingredient_node]
     simple_process_node.description = new_process_description
-    equipment = copy.deepcopy(complex_equipment_node)
+    equipment = complex_equipment_node
     simple_process_node.equipment = [equipment]
-    product = copy.deepcopy(simple_material_node)
+    product = simple_material_node
     simple_process_node.product = [product]
     simple_process_node.waste = [simple_material_node]
     simple_process_node.prerequisite_process = [simple_process_node]
@@ -120,7 +120,7 @@ def test_process_getters_and_setters(
     prop = cript.Property("n_neighbor", "value", 2.0, None)
     simple_process_node.property += [prop]
     simple_process_node.keyword = [new_process_keywords]
-    citation = copy.deepcopy(complex_citation_node)
+    citation = complex_citation_node
     simple_process_node.citation = [citation]
 
     # test getters

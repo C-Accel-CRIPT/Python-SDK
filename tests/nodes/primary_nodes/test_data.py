@@ -59,17 +59,6 @@ def test_create_complex_data_node(
     # assert my_complex_data.citation == [complex_citation_node]
 
 
-def test_data_type_invalid_vocabulary() -> None:
-    """
-    tests that setting the data type to an invalid vocabulary word gives the expected error
-
-    Returns
-    -------
-    None
-    """
-    pass
-
-
 def test_data_getters_and_setters(
     simple_data_node,
     complex_file_node,
@@ -104,7 +93,7 @@ def test_data_getters_and_setters(
     ]
 
     # use setters
-    comp_process = copy.deepcopy(simple_computational_process_node)
+    comp_process = simple_computational_process_node
     simple_data_node.type = my_data_type
     simple_data_node.file = my_new_files
     simple_data_node.sample_preparation = simple_process_node

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import List, Union
+from typing import List, Union, Optional
 
 from beartype import beartype
 
@@ -206,7 +206,7 @@ class Equipment(UUIDBaseNode):
 
     @condition.setter
     @beartype
-    def condition(self, new_condition: List[Condition]) -> None:
+    def condition(self, new_condition: Optional[List[Condition]]) -> None:
         """
         set a list of Conditions for the equipment sub-object
 
@@ -252,7 +252,7 @@ class Equipment(UUIDBaseNode):
 
     @file.setter
     @beartype
-    def file(self, new_file: List[File]) -> None:
+    def file(self, new_file: Optional[List[File]]) -> None:
         """
         set the file node for the equipment subobject
 
@@ -310,7 +310,7 @@ class Equipment(UUIDBaseNode):
 
     @citation.setter
     @beartype
-    def citation(self, new_citation: List[Citation]) -> None:
+    def citation(self, new_citation: Optional[List[Citation]]) -> None:
         """
         set the citation subobject for this equipment subobject
 

@@ -273,7 +273,7 @@ class Reference(UUIDBaseNode):
 
     @author.setter
     @beartype
-    def author(self, new_author: List[str]) -> None:
+    def author(self, new_author: Optional[List[str]]) -> None:
         """
         set the list of authors for the reference node
 
@@ -380,7 +380,7 @@ class Reference(UUIDBaseNode):
 
     @year.setter
     @beartype
-    def year(self, new_year: Union[int, None]) -> None:
+    def year(self, new_year: Optional[int]) -> None:
         """
         set the year for the scholarly work within the reference node
 
@@ -417,7 +417,7 @@ class Reference(UUIDBaseNode):
 
     @volume.setter
     @beartype
-    def volume(self, new_volume: Union[int, None]) -> None:
+    def volume(self, new_volume: Optional[int]) -> None:
         """
         set the volume of the scholarly work for this reference node
 
@@ -452,7 +452,7 @@ class Reference(UUIDBaseNode):
 
     @issue.setter
     @beartype
-    def issue(self, new_issue: Union[int, None]) -> None:
+    def issue(self, new_issue: Optional[int]) -> None:
         """
         set the issue of the scholarly work
 
@@ -487,7 +487,7 @@ class Reference(UUIDBaseNode):
 
     @pages.setter
     @beartype
-    def pages(self, new_pages_list: List[int]) -> None:
+    def pages(self, new_pages_list: Optional[List[int]]) -> None:
         """
         set the list of pages of the scholarly work for this reference node
 
@@ -636,7 +636,7 @@ class Reference(UUIDBaseNode):
 
     @pmid.setter
     @beartype
-    def pmid(self, new_pmid: Union[int, None]) -> None:
+    def pmid(self, new_pmid: Optional[int]) -> None:
         """
 
         Parameters

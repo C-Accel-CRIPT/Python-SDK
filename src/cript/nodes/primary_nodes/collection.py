@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional
 
 from beartype import beartype
 

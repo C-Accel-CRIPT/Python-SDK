@@ -68,7 +68,7 @@ def _deserialize_flattened_material_identifiers(json_dict: Dict) -> Dict:
             identifier_argument.append({identifier: json_dict[identifier]})
             # delete identifiers from the API JSON response as they are added to the material node
             del json_dict[identifier]
-    if len(identifier_argument) > 0:
-        json_dict["identifiers"] = identifier_argument
+
+    json_dict["identifiers"] = identifier_argument
 
     return json_dict

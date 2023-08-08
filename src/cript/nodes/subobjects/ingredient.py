@@ -203,7 +203,7 @@ class Ingredient(UUIDBaseNode):
 
     @keyword.setter
     @beartype
-    def keyword(self, new_keyword: List[str]) -> None:
+    def keyword(self, new_keyword: Optional[List[str]]) -> None:
         """
         set new ingredient keyword to replace the current
 

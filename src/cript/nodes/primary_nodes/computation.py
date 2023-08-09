@@ -69,7 +69,7 @@ class Computation(PrimaryBaseNode):
         software_configuration: List[Any] = field(default_factory=list)
         condition: List[Any] = field(default_factory=list)
         prerequisite_computation: Optional["Computation"] = None
-        citation: Optional[List[Any]] = None
+        citation: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 

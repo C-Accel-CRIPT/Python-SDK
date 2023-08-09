@@ -1,8 +1,7 @@
-import copy
+import dataclasses
 import inspect
 import json
 import uuid
-from dataclasses import asdict
 from typing import Dict, List, Optional, Set, Union
 
 import cript.nodes
@@ -117,13 +116,13 @@ class NodeEncoder(json.JSONEncoder):
                 if uuid_str in NodeEncoder.known_uuid:
                     return {"uuid": uuid_str}
 
-            default_values = asdict(obj.JsonAttributes())
+            default_dataclass = obj.JsonAttributes()
             serialize_dict = {}
             # Remove default values from serialization
-            for key in default_values:
-                if key in obj._json_attrs.__dataclass_fields__:
-                    if getattr(obj._json_attrs, key) != default_values[key]:
-                        serialize_dict[key] = copy.copy(getattr(obj._json_attrs, key))
+            for field_name in [field.name for field in dataclasses.fields(default_dataclass)]:
+                if getattr(default_dataclass, field_name) != getattr(obj._json_attrs, field_name):
+                    serialize_dict[field_name] = getattr(obj._json_attrs, field_name)
+            # add the default node type
             serialize_dict["node"] = obj._json_attrs.node
 
             # check if further modifications to the dict is needed before considering it done

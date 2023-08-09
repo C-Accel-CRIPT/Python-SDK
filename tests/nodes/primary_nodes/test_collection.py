@@ -100,8 +100,6 @@ def test_serialize_collection_to_json(complex_user_node) -> None:
         "node": ["Collection"],
         "name": "my collection name",
         "experiment": [{"node": ["Experiment"], "name": "my experiment name"}],
-        "inventory": [],
-        "citation": [],
         "member": [json.loads(copy.deepcopy(complex_user_node).json)],
         "admin": [json.loads(complex_user_node.json)],
     }

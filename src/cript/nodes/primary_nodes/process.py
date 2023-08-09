@@ -68,7 +68,7 @@ class Process(PrimaryBaseNode):
         prerequisite_process: List["Process"] = field(default_factory=list)
         condition: List[Any] = field(default_factory=list)
         property: List[Any] = field(default_factory=list)
-        keyword: Optional[List[str]] = None
+        keyword: List[str] = field(default_factory=list)
         citation: List[Any] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()

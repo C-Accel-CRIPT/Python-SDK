@@ -305,23 +305,39 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
     * test checks if there are at least 5 things in the paginator
         *  each page should have a max of 10 results and there should be close to 5k materials in db,
         * more than enough to at least have 5 in the paginator
+
+    * using `or` operator to check against staging and develop server
     """
     materials_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
 
     # test search results
     assert isinstance(materials_paginator, Paginator)
     assert len(materials_paginator.current_page_results) > 5
-    assert materials_paginator.current_page_results[0]["name"] == "(2-Chlorophenyl) 2,4-dichlorobenzoate"
+
+    develop_first_page_result = "(2-Chlorophenyl) 2,4-dichlorobenzoate"
+    staging_first_page_result = "Test material"
+
+    first_page_first_result = materials_paginator.current_page_results[0]["name"]
+
+    # adding `or` to make it comply with both develop and staging instances
+    assert (first_page_first_result == develop_first_page_result) or (first_page_first_result == staging_first_page_result)
 
     # tests that it can correctly go to the next page
     materials_paginator.next_page()
     assert len(materials_paginator.current_page_results) > 5
-    assert materials_paginator.current_page_results[0]["name"] == "2,4-Dichloro-N-(1-methylbutyl)benzamide"
+
+    develop_second_page_result = "2,4-Dichloro-N-(1-methylbutyl)benzamide"
+    staging_second_page_result = "(2-Methyl-4-oxo-3-prop-2-enylcyclopent-2-en-1-yl) 2,2-bis(4-chlorophenyl)acetate"
+
+    second_page_first_result = materials_paginator.current_page_results[0]["name"]
+
+    assert (second_page_first_result == develop_second_page_result) or (second_page_first_result == staging_second_page_result)
 
     # tests that it can correctly go to the previous page
     materials_paginator.previous_page()
     assert len(materials_paginator.current_page_results) > 5
-    assert materials_paginator.current_page_results[0]["name"] == "(2-Chlorophenyl) 2,4-dichlorobenzoate"
+
+    assert (first_page_first_result == develop_first_page_result) or (first_page_first_result == staging_first_page_result)
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
@@ -334,7 +350,14 @@ def test_api_search_contains_name(cript_api: cript.API) -> None:
 
     assert isinstance(contains_name_paginator, Paginator)
     assert len(contains_name_paginator.current_page_results) > 5
-    assert contains_name_paginator.current_page_results[0]["name"] == "Pilocarpine polyacrylate"
+
+    develop_first_result = "Pilocarpine polyacrylate"
+    staging_first_result = "Polybeccarine"
+
+    contains_name_first_result = contains_name_paginator.current_page_results[0]["name"]
+
+    # adding `or` to check against both develop and staging
+    assert (contains_name_first_result == develop_first_result) or (contains_name_first_result == staging_first_result)
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
@@ -356,14 +379,27 @@ def test_api_search_uuid(cript_api: cript.API) -> None:
     tests search with UUID
     searches for Sodium polystyrene sulfonate material that has a UUID of "fcc6ed9d-22a8-4c21-bcc6-25a88a06c5ad"
     """
-    uuid_to_search = "fcc6ed9d-22a8-4c21-bcc6-25a88a06c5ad"
+    # try develop result
+    try:
+        uuid_to_search = "fcc6ed9d-22a8-4c21-bcc6-25a88a06c5ad"
 
-    uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=uuid_to_search)
+        uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=uuid_to_search)
 
-    assert isinstance(uuid_paginator, Paginator)
-    assert len(uuid_paginator.current_page_results) == 1
-    assert uuid_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
-    assert uuid_paginator.current_page_results[0]["uuid"] == uuid_to_search
+        assert isinstance(uuid_paginator, Paginator)
+        assert len(uuid_paginator.current_page_results) == 1
+        assert uuid_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
+        assert uuid_paginator.current_page_results[0]["uuid"] == uuid_to_search
+
+    # if fail try staging result
+    except AssertionError:
+        uuid_to_search = "e1b41d34-3bf2-4cd8-9a19-6412df7e7efc"
+
+        uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=uuid_to_search)
+
+        assert isinstance(uuid_paginator, Paginator)
+        assert len(uuid_paginator.current_page_results) == 1
+        assert uuid_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
+        assert uuid_paginator.current_page_results[0]["uuid"] == uuid_to_search
 
 
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:

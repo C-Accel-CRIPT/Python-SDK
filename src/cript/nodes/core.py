@@ -247,17 +247,17 @@ class BaseNode(ABC):
         handled_ids: Optional[Set[str]] = None,
         known_uuid: Optional[Set[str]] = None,
         suppress_attributes: Optional[Dict[str, Set[str]]] = None,
-        is_patch=False,
-        condense_to_uuid={
-            "Material": ["parent_material", "component"],
-            "Inventory": ["material"],
-            "Ingredient": ["material"],
-            "Property": ["component"],
-            "ComputationProcess": ["material"],
-            "Data": ["material"],
-            "Process": ["product", "waste"],
-            "Project": ["member", "admin"],
-            "Collection": ["member", "admin"],
+        is_patch: bool = False,
+        condense_to_uuid: Dict[str, Set[str]] = {
+            "Material": {"parent_material", "component"},
+            "Inventory": {"material"},
+            "Ingredient": {"material"},
+            "Property": {"component"},
+            "ComputationProcess": {"material"},
+            "Data": {"material"},
+            "Process": {"product", "waste"},
+            "Project": {"member", "admin"},
+            "Collection": {"member", "admin"},
         },
         **kwargs
     ):

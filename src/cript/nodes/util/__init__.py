@@ -2,7 +2,7 @@ import dataclasses
 import inspect
 import json
 import uuid
-from typing import Dict, Optional, Set, Union
+from typing import Dict, List, Optional, Set, Union
 
 import cript.nodes
 from cript.nodes.core import BaseNode
@@ -21,12 +21,80 @@ from cript.nodes.primary_nodes.project import Project
 
 
 class NodeEncoder(json.JSONEncoder):
+    """
+    Custom JSON encoder for serializing CRIPT nodes to JSON.
+
+    This encoder is used to convert CRIPT nodes into JSON format while handling unique identifiers (UUIDs) and
+    condensed representations to avoid redundancy in the JSON output.
+    It also allows suppressing specific attributes from being included in the serialized JSON.
+
+    Attributes
+    ----------
+    handled_ids : Set[str]
+        A set to store the UIDs of nodes that have been processed during serialization.
+    known_uuid : Set[str]
+        A set to store the UUIDs of nodes that have been previously encountered in the JSON.
+    condense_to_uuid : Dict[str, Set[str]]
+        A set to store the node types that should be condensed to UUID edges in the JSON.
+    suppress_attributes : Optional[Dict[str, Set[str]]]
+        A dictionary that allows suppressing specific attributes for nodes with the corresponding UUIDs.
+
+    Methods
+    -------
+    ```python
+    default(self, obj: Any) -> Any:
+        # Convert CRIPT nodes and other objects to their JSON representation.
+    ```
+
+    ```python
+    _apply_modifications(self, serialize_dict: dict) -> Tuple[dict, List[str]]:
+        # Apply modifications to the serialized dictionary based on node types
+        # and attributes to be condensed. This internal function handles node
+        # condensation and attribute suppression during serialization.
+    ```
+    """
+
     handled_ids: Set[str] = set()
     known_uuid: Set[str] = set()
-    condense_to_uuid: Set[str] = set()
+    condense_to_uuid: Dict[str, Set[str]] = dict()
     suppress_attributes: Optional[Dict[str, Set[str]]] = None
 
     def default(self, obj):
+        """
+        Convert CRIPT nodes and other objects to their JSON representation.
+
+        This method is called during JSON serialization.
+        It customizes the serialization process for CRIPT nodes and handles unique identifiers (UUIDs)
+        to avoid redundant data in the JSON output.
+        It also allows for attribute suppression for specific nodes.
+
+        Parameters
+        ----------
+        obj : Any
+            The object to be serialized to JSON.
+
+        Returns
+        -------
+        dict
+            The JSON representation of the input object, which can be a string, a dictionary, or any other JSON-serializable type.
+
+        Raises
+        ------
+        CRIPTJsonDeserializationError
+            If there is an issue with the JSON deserialization process for CRIPT nodes.
+
+        Notes
+        -----
+        * If the input object is a UUID, it is converted to a string representation and returned.
+        * If the input object is a CRIPT node (an instance of `BaseNode`), it is serialized into a dictionary
+          representation. The node is first checked for uniqueness based on its UID (unique identifier), and if
+          it has already been serialized, it is represented as a UUID edge only. If not, the node's attributes
+          are added to the dictionary representation, and any default attribute values are removed to reduce
+          redundancy in the JSON output.
+        * The method `_apply_modifications()` is called to check if further modifications are needed before
+          considering the dictionary representation done. This includes condensing certain node types to UUID edges
+          and suppressing specific attributes for nodes.
+        """
         if isinstance(obj, uuid.UUID):
             return str(obj)
         if isinstance(obj, BaseNode):
@@ -70,7 +138,7 @@ class NodeEncoder(json.JSONEncoder):
             return serialize_dict
         return json.JSONEncoder.default(self, obj)
 
-    def _apply_modifications(self, serialize_dict):
+    def _apply_modifications(self, serialize_dict: Dict):
         """
         Checks the serialize_dict to see if any other operations are required before it
         can be considered done. If other operations are required, then it passes it to the other operations
@@ -120,12 +188,12 @@ class NodeEncoder(json.JSONEncoder):
                     uid_of_condensed.append(uid)
                 return processed_attribute
 
-        uid_of_condensed = []
+        uid_of_condensed: List = []
 
         nodes_to_condense = serialize_dict["node"]
         for node_type in nodes_to_condense:
             if node_type in self.condense_to_uuid:
-                attributes_to_process = self.condense_to_uuid[node_type]
+                attributes_to_process = self.condense_to_uuid[node_type]  # type: ignore
                 for attribute in attributes_to_process:
                     if attribute in serialize_dict:
                         attribute_to_condense = serialize_dict[attribute]

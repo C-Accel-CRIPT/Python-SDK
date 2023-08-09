@@ -143,7 +143,7 @@ class API:
             pass
         ```
 
-        ### Create API Client with `None`
+        ### Create API Client with None
         Alternatively you can configure your system to have an environment variable of
         `CRIPT_TOKEN` for the API token and `CRIPT_STORAGE_TOKEN` for the storage token, then
         initialize `cript.API` `api_token` and `storage_token` with `None`.
@@ -236,6 +236,16 @@ class API:
         self._check_initial_host_connection()
 
         self._get_db_schema()
+
+    def __str__(self) -> str:
+        """
+        States the host of the CRIPT API client
+
+        Returns
+        -------
+        str
+        """
+        return f"CRIPT API Client - Host URL: '{self.host}'"
 
     @beartype
     def _prepare_host(self, host: str) -> str:

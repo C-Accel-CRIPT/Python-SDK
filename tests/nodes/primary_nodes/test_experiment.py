@@ -126,7 +126,7 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
         "name": "my experiment name",
         "notes": "these are all of my notes for this experiment",
         "process": [{"node": ["Process"], "name": "my process name", "type": "affinity_pure", "keyword": []}],
-        "computation": [{"node": ["Computation"], "name": "my computation name", "type": "analysis", "citation": []}],
+        "computation": [{"node": ["Computation"], "name": "my computation name", "type": "analysis"}],
         "computation_process": [
             {
                 "node": ["ComputationProcess"],

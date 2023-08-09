@@ -101,7 +101,7 @@ def test_serialize_computation_to_json(simple_computation_node) -> None:
     tests that it can correctly turn the computation node into its equivalent JSON
     """
     # TODO test this more vigorously
-    expected_dict = {"node": ["Computation"], "name": "my computation name", "type": "analysis", "citation": []}
+    expected_dict = {"node": ["Computation"], "name": "my computation name", "type": "analysis"}
 
     # comparing dicts for better test
     ref_dict = json.loads(simple_computation_node.json)

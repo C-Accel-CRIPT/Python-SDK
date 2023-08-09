@@ -141,7 +141,7 @@ def test_serialize_process_to_json(simple_process_node) -> None:
     """
     test serializing process node to JSON
     """
-    expected_process_dict = {"node": ["Process"], "name": "my process name", "keyword": [], "type": "affinity_pure"}
+    expected_process_dict = {"node": ["Process"], "name": "my process name", "type": "affinity_pure"}
 
     # comparing dicts because they are more accurate
     ref_dict = json.loads(simple_process_node.json)

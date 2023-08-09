@@ -394,8 +394,7 @@ def test_api_search_uuid(cript_api: cript.API) -> None:
     except AssertionError:
         uuid_to_search = "e1b41d34-3bf2-4cd8-9a19-6412df7e7efc"
 
-        uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID,
-                                          value_to_search=uuid_to_search)
+        uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=uuid_to_search)
 
         assert isinstance(uuid_paginator, Paginator)
         assert len(uuid_paginator.current_page_results) == 1

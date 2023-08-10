@@ -50,8 +50,8 @@ def test_serialize_project_to_json(complex_project_node, complex_project_dict) -
     expected_dict = complex_project_dict
 
     # Since we condense those to UUID we remove them from the expected dict.
-    expected_dict["admin"] = [{"node": ["User"]}]
-    expected_dict["member"] = [{"node": ["User"]}]
+    expected_dict["admin"] = [{}]
+    expected_dict["member"] = [{}]
 
     # comparing dicts instead of JSON strings because dict comparison is more accurate
     serialized_project: dict = json.loads(complex_project_node.get_json(condense_to_uuid={}).json)

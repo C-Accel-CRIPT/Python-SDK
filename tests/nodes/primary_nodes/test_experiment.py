@@ -150,7 +150,7 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
                 ],
             }
         ],
-        "data": [{"node": ["Data"]}],
+        "data": [{}],
         "funding": ["National Science Foundation", "IRIS", "NIST"],
         "citation": [
             {

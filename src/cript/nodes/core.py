@@ -250,6 +250,7 @@ class BaseNode(ABC):
         is_patch: bool = False,
         condense_to_uuid: Dict[str, Set[str]] = {
             "Material": {"parent_material", "component"},
+            "Experiment": {"data"},
             "Inventory": {"material"},
             "Ingredient": {"material"},
             "Property": {"component"},

@@ -104,7 +104,7 @@ class NodeEncoder(json.JSONEncoder):
                 pass
             else:
                 if uid in NodeEncoder.handled_ids:
-                    return {"node": obj._json_attrs.node, "uid": uid}
+                    return {"uid": uid}
 
             # When saving graphs, some nodes can be pre-saved.
             # If that happens, we want to represent them as a UUID edge only
@@ -282,12 +282,12 @@ class _NodeDecoderHook:
         node_dict = dict(node_str)  # type: ignore
 
         # Handle UID objects.
-        if len(node_dict) == 2 and "uid" in node_dict and "node" in node_dict:
+        if len(node_dict) == 1 and "uid" in node_dict:
             try:
                 return self._uid_cache[node_dict["uid"]]
             except KeyError:
                 # TODO if we convince beartype to accept Proxy temporarily, enable return instead of raise
-                raise CRIPTDeserializationUIDError(node_dict["node"], node_dict["uid"])
+                raise CRIPTDeserializationUIDError("Unknown", node_dict["uid"])
                 # return _UIDProxy(node_dict["uid"])
 
         try:

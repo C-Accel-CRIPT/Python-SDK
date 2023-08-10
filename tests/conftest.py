@@ -17,9 +17,23 @@ from fixtures.supporting_nodes import *
 
 import cript
 
+
+def _get_cript_tests_env() -> bool:
+    """
+    Gets `CRIPT_TESTS` value from env variable and converts it to boolean.
+    If `CRIPT_TESTS` env var does not exist then it will default it to False.
+    """
+    try:
+        has_integration_tests_enabled = os.getenv("CRIPT_TESTS").title().strip() == "True"
+    except AttributeError:
+        has_integration_tests_enabled = True
+
+    return has_integration_tests_enabled
+
+
 # flip integration tests ON or OFF with this boolean
 # automatically gets value env vars to run integration tests
-HAS_INTEGRATION_TESTS_ENABLED: bool = os.getenv("CRIPT_TESTS").title() == "True"
+HAS_INTEGRATION_TESTS_ENABLED: bool = _get_cript_tests_env()
 
 
 @pytest.fixture(scope="session", autouse=True)

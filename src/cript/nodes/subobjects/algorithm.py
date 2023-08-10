@@ -151,6 +151,12 @@ class Algorithm(UUIDBaseNode):
 
         > Algorithm type must come from [CRIPT controlled vocabulary]()
 
+        Examples
+        --------
+        ```python
+        my_algorithm.type = "integration"
+        ```
+
         Returns
         -------
         str

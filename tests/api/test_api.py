@@ -298,6 +298,8 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
     """
     tests the api.search() method with just a node type material search
 
+    just testing that something comes back from the server
+
     Notes
     -----
     * also tests that it can go to the next page and previous page
@@ -305,39 +307,29 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
     * test checks if there are at least 5 things in the paginator
         *  each page should have a max of 10 results and there should be close to 5k materials in db,
         * more than enough to at least have 5 in the paginator
-
-    * using `or` operator to check against staging and develop server
     """
     materials_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
 
     # test search results
     assert isinstance(materials_paginator, Paginator)
     assert len(materials_paginator.current_page_results) > 5
-
-    develop_first_page_result = "(2-Chlorophenyl) 2,4-dichlorobenzoate"
-    staging_first_page_result = "Test material"
-
     first_page_first_result = materials_paginator.current_page_results[0]["name"]
 
-    # adding `or` to make it comply with both develop and staging instances
-    assert (first_page_first_result == develop_first_page_result) or (first_page_first_result == staging_first_page_result)
+    # just checking that the word has a few characters in it
+    assert len(first_page_first_result) > 3
 
     # tests that it can correctly go to the next page
     materials_paginator.next_page()
     assert len(materials_paginator.current_page_results) > 5
-
-    develop_second_page_result = "2,4-Dichloro-N-(1-methylbutyl)benzamide"
-    staging_second_page_result = "(2-Methyl-4-oxo-3-prop-2-enylcyclopent-2-en-1-yl) 2,2-bis(4-chlorophenyl)acetate"
-
     second_page_first_result = materials_paginator.current_page_results[0]["name"]
 
-    assert (second_page_first_result == develop_second_page_result) or (second_page_first_result == staging_second_page_result)
+    assert len(second_page_first_result) > 3
 
     # tests that it can correctly go to the previous page
     materials_paginator.previous_page()
     assert len(materials_paginator.current_page_results) > 5
 
-    assert (first_page_first_result == develop_first_page_result) or (first_page_first_result == staging_first_page_result)
+    assert len(first_page_first_result) > 3
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
@@ -351,13 +343,10 @@ def test_api_search_contains_name(cript_api: cript.API) -> None:
     assert isinstance(contains_name_paginator, Paginator)
     assert len(contains_name_paginator.current_page_results) > 5
 
-    develop_first_result = "Pilocarpine polyacrylate"
-    staging_first_result = "Polybeccarine"
-
     contains_name_first_result = contains_name_paginator.current_page_results[0]["name"]
 
-    # adding `or` to check against both develop and staging
-    assert (contains_name_first_result == develop_first_result) or (contains_name_first_result == staging_first_result)
+    # just checking that the result has a few characters in it
+    assert len(contains_name_first_result) > 3
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")

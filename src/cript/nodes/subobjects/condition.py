@@ -174,7 +174,7 @@ class Condition(UUIDBaseNode):
         """
         type of condition
 
-        > Condition key must come from [CRIPT Controlled Vocabulary](https://www.mycriptapp.org/vocab/condition_key)
+        > Condition key must come from [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/condition_key)
 
         Examples
         --------
@@ -395,7 +395,7 @@ class Condition(UUIDBaseNode):
         """
         Uncertainty type for the uncertainty value
 
-        [Uncertainty type](https://www.mycriptapp.org/vocab/uncertainty_type) must come from CRIPT controlled vocabulary
+        [Uncertainty type](https://app.criptapp.org/vocab/uncertainty_type) must come from CRIPT controlled vocabulary
 
         Examples
         --------

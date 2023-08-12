@@ -111,7 +111,7 @@ class Parameter(UUIDBaseNode):
     @beartype
     def key(self) -> str:
         """
-        Parameter key must come from the [CRIPT Controlled Vocabulary](https://www.mycriptapp.org/vocab/parameter_key)
+        Parameter key must come from the [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/parameter_key)
 
         Examples
         --------

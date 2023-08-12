@@ -180,7 +180,7 @@ class Reference(UUIDBaseNode):
         """
         Type of reference.
 
-        The [reference type](https://www.mycriptapp.org/vocab/reference_type)
+        The [reference type](https://app.criptapp.org/vocab/reference_type)
         must come from the CRIPT controlled vocabulary
 
         Examples

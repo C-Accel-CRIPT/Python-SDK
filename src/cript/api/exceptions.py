@@ -77,7 +77,7 @@ class CRIPTAPIRequiredError(CRIPTException):
     ```python
     import cript
 
-    my_host = "https://criptapp.org"
+    my_host = "https://api.criptapp.org/"
     my_token = "123456" # To use your token securely, please consider using environment variables
 
     my_api = cript.API(host=my_host, token=my_token)
@@ -136,7 +136,7 @@ class InvalidHostError(CRIPTException):
 
     ## How to Fix
     This is a simple error to fix, simply put `http://` or preferably `https://` in front of your domain
-    when passing in the host to the cript.API class such as `https://criptapp.org`
+    when passing in the host to the cript.API class such as `https://api.criptapp.org/`
 
     Currently, the only web protocol that is supported with the CRIPT Python SDK is `HTTP`.
 
@@ -144,7 +144,7 @@ class InvalidHostError(CRIPTException):
     ```python
     import cript
 
-    my_valid_host = "https://criptapp.org"
+    my_valid_host = "https://api.criptapp.org/"
     my_token = "123456" # To use your token securely, please consider using environment variables
 
     my_api = cript.API(host=my_valid_host, token=my_token)

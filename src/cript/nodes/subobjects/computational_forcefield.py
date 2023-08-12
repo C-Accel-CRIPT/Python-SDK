@@ -159,7 +159,7 @@ class ComputationalForcefield(UUIDBaseNode):
         type of forcefield
 
         Computational_Forcefield key must come from
-        [CRIPT Controlled Vocabulary](https://www.mycriptapp.org/vocab/computational_forcefield_key)
+        [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/computational_forcefield_key)
 
         Examples
         --------
@@ -199,7 +199,7 @@ class ComputationalForcefield(UUIDBaseNode):
         type of building block
 
         Computational_Forcefield building_block must come from
-        [CRIPT Controlled Vocabulary](https://www.mycriptapp.org/vocab/building_block)
+        [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/building_block)
 
         Examples
         --------

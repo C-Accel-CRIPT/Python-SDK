@@ -104,7 +104,7 @@ class Process(PrimaryBaseNode):
             [ingredient](../../subobjects/ingredient) used in this process
         type: str = ""
             Process type must come from
-            [CRIPT Controlled vocabulary process type](https://criptapp.org/keys/process-type/)
+            [CRIPT Controlled vocabulary process type](https://app.criptapp.org/vocab/process-type/)
         description: str = ""
             description of this process
         equipment: List[Equipment] = None
@@ -119,7 +119,7 @@ class Process(PrimaryBaseNode):
             list of [properties](../../subobjects/property) for this process
         keyword: List[str] = None
             list of keywords for this process must come from
-            [CRIPT process keyword controlled keyword](https://criptapp.org/keys/process-keyword/)
+            [CRIPT process keyword controlled keyword](https://app.criptapp.org/vocab/process-keyword/)
         citation: List[Citation] = None
             list of [citation](../../subobjects/citation)
 
@@ -178,7 +178,7 @@ class Process(PrimaryBaseNode):
     @beartype
     def type(self) -> str:
         """
-        [Process type](https://www.mycriptapp.org/vocab/process_type) must come from the CRIPT controlled vocabulary
+        [Process type](https://app.criptapp.org/vocab/process_type) must come from the CRIPT controlled vocabulary
 
         Examples
         --------
@@ -189,7 +189,7 @@ class Process(PrimaryBaseNode):
         Returns
         -------
         str
-            Select a [Process type](https://criptapp.org/keys/process-type/) from CRIPT controlled vocabulary
+            Select a [Process type](https://app.criptapp.org/vocab/process-type/) from CRIPT controlled vocabulary
         """
         return self._json_attrs.type
 
@@ -478,7 +478,7 @@ class Process(PrimaryBaseNode):
         """
         List of keyword for this process
 
-        [Process keyword](https://criptapp.org/keys/process-keyword/) must come from CRIPT controlled vocabulary
+        [Process keyword](https://app.criptapp.org/vocab/process-keyword/) must come from CRIPT controlled vocabulary
 
         Returns
         -------

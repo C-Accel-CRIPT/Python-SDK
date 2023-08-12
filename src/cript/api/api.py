@@ -108,7 +108,11 @@ class API:
         --------
         ### Create API client with host and token
         ```Python
-        with cript.API('https://criptapp.org', 'secret_token') as api:
+        with cript.API(
+                host="https://api.criptapp.org/",
+                api_token="my api token",
+                storage_token="my storage token"),
+        ) as api:
            # node creation, api.save(), etc.
         ```
 
@@ -160,7 +164,7 @@ class API:
         `config.json`
         ```json
         {
-            "host": "https://criptapp.org",
+            "host": "https://api.criptapp.org/",
             "api_token": "I am API token",
             "storage_token": "I am storage token"
         }
@@ -180,7 +184,7 @@ class API:
         Parameters
         ----------
         host : str, None
-            CRIPT host for the Python SDK to connect to such as `https://criptapp.org`
+            CRIPT host for the Python SDK to connect to such as https://api.criptapp.org/`
             This host address is the same address used to login to cript website.
             If `None` is specified, the host is inferred from the environment variable `CRIPT_HOST`.
         api_token : str, None
@@ -357,7 +361,7 @@ class API:
         ```
         Output
         ```Python
-        https://criptapp.org/api/v1
+        https://api.criptapp.org/api/v1
         ```
         """
         return self._host

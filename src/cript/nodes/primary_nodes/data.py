@@ -21,7 +21,7 @@ class Data(PrimaryBaseNode):
     |---------------------|---------------------------------------------------|----------------------------|-----------------------------------------------------------------------------------------|----------|
     | experiment          | [Experiment](experiment.md)                       |                            | Experiment the data belongs to                                                          | True     |
     | name                | str                                               | `"my_data_name"`           | Name of the data node                                                                   | True     |
-    | type                | str                                               | `"nmr_h1"`                 | Pick from [CRIPT data type controlled vocabulary](https://criptapp.org/keys/data-type/) | True     |
+    | type                | str                                               | `"nmr_h1"`                 | Pick from [CRIPT data type controlled vocabulary](https://app.criptapp.org/keys/data-type/) | True     |
     | file                | List[[File](../supporting_nodes/file.md)]         | `[file_1, file_2, file_3]` | list of file nodes                                                                      | False    |
     | sample_preparation  | [Process](process.md)                             |                            |                                                                                         | False    |
     | computation         | List[[Computation](computation.md)]               |                            | data produced from this Computation method                                              | False    |
@@ -144,7 +144,7 @@ class Data(PrimaryBaseNode):
     @beartype
     def type(self) -> str:
         """
-        The data type must come from [CRIPT data type vocabulary](https://www.mycriptapp.org/vocab/data_type)
+        The data type must come from [CRIPT data type vocabulary](https://app.criptapp.org/vocab/data_type)
 
         Example
         -------

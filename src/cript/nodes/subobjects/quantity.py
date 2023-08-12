@@ -141,7 +141,7 @@ class Quantity(UUIDBaseNode):
         """
         get the Quantity sub-object key attribute
 
-        [Quantity type](https://www.mycriptapp.org/vocab/quantity_key) must come from CRIPT controlled vocabulary
+        [Quantity type](https://app.criptapp.org/vocab/quantity_key) must come from CRIPT controlled vocabulary
 
         Returns
         -------
@@ -219,7 +219,7 @@ class Quantity(UUIDBaseNode):
         """
         get the uncertainty type attribute for the Quantity sub-object
 
-        [Uncertainty type](https://www.mycriptapp.org/vocab/uncertainty_type) must come from CRIPT controlled vocabulary
+        [Uncertainty type](https://app.criptapp.org/vocab/uncertainty_type) must come from CRIPT controlled vocabulary
 
         Returns
         -------

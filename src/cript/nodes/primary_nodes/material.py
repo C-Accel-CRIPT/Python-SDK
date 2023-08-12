@@ -25,8 +25,8 @@ class Material(PrimaryBaseNode):
     | keyword                   | list[str]                                                            | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material             |             | True  |
 
     ## Navigating to Material
-    Materials can be easily found on the [CRIPT](https://criptapp.org) home screen in the
-    under the navigation within the [Materials link](https://criptapp.org/material/)
+    Materials can be easily found on the [CRIPT](https://app.criptapp.org) home screen in the
+    under the navigation within the [Materials link](https://app.criptapp.org/material/)
 
     ## Available Sub-Objects for Material
     * [Identifier](../../subobjects/identifier)
@@ -174,7 +174,7 @@ class Material(PrimaryBaseNode):
         my_material.identifier = {"alternative_names": "my material alternative name"}
         ```
 
-        [material identifier key](https://www.mycriptapp.org/vocab/material_identifier_key)
+        [material identifier key](https://app.criptapp.org/vocab/material_identifier_key)
         must come from CRIPT controlled vocabulary
 
         Returns
@@ -325,7 +325,7 @@ class Material(PrimaryBaseNode):
         List of keyword for this material
 
         the material keyword must come from the
-        [CRIPT controlled vocabulary](https://www.mycriptapp.org/vocab/material_keyword)
+        [CRIPT controlled vocabulary](https://app.criptapp.org/vocab/material_keyword)
 
         ```python
         identifiers = [{"alternative_names": "my material alternative name"}]

@@ -115,7 +115,7 @@ class Citation(UUIDBaseNode):
         """
         Citation type subobject
 
-        Citation type must come from [CRIPT Controlled Vocabulary](https://www.mycriptapp.org/vocab/citation_type)
+        Citation type must come from [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/citation_type)
 
         Examples
         --------

@@ -185,7 +185,7 @@ class Ingredient(UUIDBaseNode):
     def keyword(self) -> List[str]:
         """
         ingredient keyword must come from the
-        [CRIPT controlled vocabulary](https://www.mycriptapp.org/vocab/ingredient_keyword)
+        [CRIPT controlled vocabulary](https://app.criptapp.org/vocab/ingredient_keyword)
 
         Examples
         --------

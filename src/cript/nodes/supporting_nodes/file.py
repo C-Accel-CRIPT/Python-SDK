@@ -94,7 +94,7 @@ class File(PrimaryBaseNode):
     | Attribute       | Type | Example                                                                                               | Description                                                                 | Required |
     |-----------------|------|-------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|----------|
     | source          | str  | `"path/to/my/file"` or `"https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system"` | source to the file can be URL or local path                                 | True     |
-    | type            | str  | `"logs"`                                                                                              | Pick from [CRIPT File Types](https://criptapp.org/keys/file-type/)          | True     |
+    | type            | str  | `"logs"`                                                                                              | Pick from [CRIPT File Types](https://app.criptapp.org/vocab/file-type/)          | True     |
     | extension       | str  | `".csv"`                                                                                              | file extension                                                              | False    |
     | data_dictionary | str  | `"my extra info in my data dictionary"`                                                               | set of information describing the contents, format, and structure of a file | False    |
 
@@ -280,7 +280,7 @@ class File(PrimaryBaseNode):
     @beartype
     def type(self) -> str:
         """
-        The [File type](https://www.mycriptapp.org/vocab/file_type) must come from CRIPT controlled vocabulary
+        The [File type](https://app.criptapp.org/vocab/file_type) must come from CRIPT controlled vocabulary
 
         Example
         -------

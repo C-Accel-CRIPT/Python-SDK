@@ -252,7 +252,7 @@ class ComputationProcess(PrimaryBaseNode):
     @beartype
     def type(self) -> str:
         """
-        The [computational process type](https://www.mycriptapp.org/vocab/computational_process_type)
+        The [computational process type](https://app.criptapp.org/vocab/computational_process_type)
         must come from CRIPT Controlled vocabulary
 
         Examples

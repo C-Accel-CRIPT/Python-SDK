@@ -149,7 +149,7 @@ class Paginator:
 
         Examples
         --------
-        requests.get("https://criptapp.org/api?page=2)
+        requests.get("https://api.criptapp.org//api?page=2)
         requests.get(f"{self.query}?page={self.current_page_number - 1}")
 
         Raises

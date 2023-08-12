@@ -193,7 +193,7 @@ class Property(UUIDBaseNode):
     @beartype
     def key(self) -> str:
         """
-        Property key must come from [CRIPT Controlled Vocabulary](https://www.mycriptapp.org/vocab/)
+        Property key must come from [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/)
 
         Examples
         --------
@@ -232,7 +232,7 @@ class Property(UUIDBaseNode):
         """
         type of value for this Property sub-object
 
-        [property type](https://www.mycriptapp.org/vocab/) must come from CRIPT controlled vocabulary
+        [property type](https://app.criptapp.org/vocab/) must come from CRIPT controlled vocabulary
 
         Examples
         ```python
@@ -361,7 +361,7 @@ class Property(UUIDBaseNode):
         """
         get the uncertainty_type for this Property subobject
 
-        [Uncertainty type](https://www.mycriptapp.org/vocab/uncertainty_type)
+        [Uncertainty type](https://app.criptapp.org/vocab/uncertainty_type)
         must come from CRIPT Controlled Vocabulary
 
         Returns
@@ -456,7 +456,7 @@ class Property(UUIDBaseNode):
         """
         approach or source of property data True sample_preparation Process sample preparation
 
-        [Property method](https://www.mycriptapp.org/vocab/property_method) must come from CRIPT Controlled Vocabulary
+        [Property method](https://app.criptapp.org/vocab/property_method) must come from CRIPT Controlled Vocabulary
 
         Examples
         --------

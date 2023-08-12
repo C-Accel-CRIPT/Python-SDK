@@ -3,7 +3,7 @@ from enum import Enum
 
 class VocabCategories(Enum):
     """
-    All available [CRIPT controlled vocabulary categories](https://www.mycriptapp.org/vocab/)
+    All available [CRIPT controlled vocabulary categories](https://app.criptapp.org/vocab/)
 
     Controlled vocabulary categories are used to classify data.
 

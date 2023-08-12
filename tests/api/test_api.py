@@ -362,7 +362,7 @@ def test_api_search_exact_name(cript_api: cript.API) -> None:
     assert exact_name_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
 
 
-@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
+@pytest.mark.skip(reason="needs to be setup with develop, staging, and production server UUID after ACS")
 def test_api_search_uuid(cript_api: cript.API) -> None:
     """
     tests search with UUID

@@ -1,0 +1,222 @@
+from dataclasses import dataclass, field, replace
+from typing import List, Optional, Union
+
+from beartype import beartype
+
+from cript.nodes.primary_nodes.material import Material
+from cript.nodes.subobjects.quantity import Quantity
+from cript.nodes.uuid_base import UUIDBaseNode
+
+
+class Ingredient(UUIDBaseNode):
+    """
+    ## Definition
+    An [Ingredient](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=22)
+    sub-objects are links to material nodes with the associated quantities.
+
+    ---
+
+    ## Can Be Added To:
+    * [process](../../primary_nodes/process)
+    * [computation_process](../../primary_nodes/computation_process)
+
+    ## Available sub-objects:
+    * [Quantity](../quantity)
+
+    ---
+
+    ## Attributes
+
+    | attribute  | type           | example  | description            | required | vocab |
+    |------------|----------------|----------|------------------------|----------|-------|
+    | material   | Material       |          | material               | True     |       |
+    | quantity   | list[Quantity] |          | quantities             | True     |       |
+    | keyword    | list(str)      | catalyst | keyword for ingredient |          | True  |
+
+    ## JSON Representation
+    ```json
+    {
+        "node":["Ingredient"],
+        "keyword":["catalyst"],
+        "uid":"_:32f173ab-a98a-449b-a528-1b656f652dd3",
+        "uuid":"32f173ab-a98a-449b-a528-1b656f652dd3"
+       "material":{
+          "name":"my material 1",
+          "node":["Material"],
+          "bigsmiles":"[H]{[>][<]C(C[>])c1ccccc1[]}",
+          "uid":"_:029367a8-aee7-493a-bc08-991e0f6939ae",
+          "uuid":"029367a8-aee7-493a-bc08-991e0f6939ae"
+       },
+       "quantity":[
+          {
+             "node":["Quantity"],
+             "key":"mass",
+             "value":11.2
+             "uncertainty":0.2,
+             "uncertainty_type":"stdev",
+             "unit":"kg",
+             "uid":"_:c95ee781-923b-4699-ba3b-923ce186ac5d",
+             "uuid":"c95ee781-923b-4699-ba3b-923ce186ac5d",
+          }
+       ]
+    }
+    ```
+    """
+
+    @dataclass(frozen=True)
+    class JsonAttributes(UUIDBaseNode.JsonAttributes):
+        material: Optional[Material] = None
+        quantity: List[Quantity] = field(default_factory=list)
+        keyword: List[str] = field(default_factory=list)
+
+    _json_attrs: JsonAttributes = JsonAttributes()
+
+    @beartype
+    def __init__(self, material: Material, quantity: List[Quantity], keyword: Optional[List[str]] = None, **kwargs):
+        """
+        create an ingredient sub-object
+
+        Examples
+        --------
+        ```python
+        import cript
+
+        # create material and identifier for the ingredient sub-object
+        my_identifiers = [{"bigsmiles": "123456"}]
+        my_material = cript.Material(name="my material", identifier=my_identifiers)
+
+        # create quantity sub-object
+        my_quantity = cript.Quantity(key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev")
+
+        # create ingredient sub-object and add all appropriate nodes/sub-objects
+        my_ingredient = cript.Ingredient(material=my_material, quantity=my_quantity, keyword="catalyst")
+        ```
+
+        Parameters
+        ----------
+        material : Material
+            material node
+        quantity : List[Quantity]
+            list of quantity sub-objects
+        keyword : List[str], optional
+            ingredient keyword must come from [CRIPT Controlled Vocabulary](), by default ""
+
+        Returns
+        -------
+        None
+            Create new Ingredient sub-object
+        """
+        super().__init__(**kwargs)
+        if keyword is None:
+            keyword = []
+        self._json_attrs = replace(self._json_attrs, material=material, quantity=quantity, keyword=keyword)
+        self.validate()
+
+    @classmethod
+    def _from_json(cls, json_dict: dict):
+        # TODO: remove this temporary fix, once back end is working correctly
+        if isinstance(json_dict["material"], list):
+            assert len(json_dict["material"]) == 1
+            json_dict["material"] = json_dict["material"][0]
+        return super(Ingredient, cls)._from_json(json_dict)
+
+    @property
+    @beartype
+    def material(self) -> Union[Material, None]:
+        """
+        current material in this ingredient sub-object
+
+        Returns
+        -------
+        Material
+            Material node within the ingredient sub-object
+        """
+        return self._json_attrs.material
+
+    @property
+    @beartype
+    def quantity(self) -> List[Quantity]:
+        """
+        quantity for the ingredient sub-object
+
+        Returns
+        -------
+        List[Quantity]
+            list of quantities for the ingredient sub-object
+        """
+        return self._json_attrs.quantity.copy()
+
+    @beartype
+    def set_material(self, new_material: Material, new_quantity: List[Quantity]) -> None:
+        """
+        update ingredient sub-object with new material and new list of quantities
+
+        Examples
+        --------
+        ```python
+        my_identifiers = [{"bigsmiles": "123456"}]
+        my_new_material = cript.Material(name="my material", identifier=my_identifiers)
+
+        my_new_quantity = cript.Quantity(
+            key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        )
+
+        # set new material and list of quantities
+        my_ingredient.set_material(new_material=my_new_material, new_quantity=[my_new_quantity])
+
+        ```
+
+        Parameters
+        ----------
+        new_material : Material
+            new material node to replace the current
+        new_quantity : List[Quantity]
+            new list of quantity sub-objects to replace the current quantity subobject on this node
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, material=new_material, quantity=new_quantity)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def keyword(self) -> List[str]:
+        """
+        ingredient keyword must come from the
+        [CRIPT controlled vocabulary](https://app.criptapp.org/vocab/ingredient_keyword)
+
+        Examples
+        --------
+        ```python
+        # set new ingredient keyword
+        my_ingredient.keyword = "computation"
+        ```
+
+        Returns
+        -------
+        str
+            get the current ingredient keyword
+        """
+        return self._json_attrs.keyword.copy()
+
+    @keyword.setter
+    @beartype
+    def keyword(self, new_keyword: List[str]) -> None:
+        """
+        set new ingredient keyword to replace the current
+
+        ingredient keyword must come from the [CRIPT controlled vocabulary]()
+
+        Parameters
+        ----------
+        new_keyword : str
+            new ingredient keyword
+
+        Returns
+        -------
+        None
+        """
+        new_attrs = replace(self._json_attrs, keyword=new_keyword)
+        self._update_json_attrs_if_valid(new_attrs)

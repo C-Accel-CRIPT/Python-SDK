@@ -1,0 +1,5 @@
+mkdocs==1.5.1
+mkdocs-material==9.1.21
+mkdocstrings[python]==0.22.0
+pymdown-extensions==10.1
+jupytext==1.15.0

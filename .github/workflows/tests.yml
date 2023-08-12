@@ -1,0 +1,48 @@
+# Runs all the Python SDK tests within the `tests/` directory to check our code
+
+name: Tests
+
+on:
+  # trunk-ignore(yamllint/empty-values)
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+      - develop
+      - trunk-merge/**
+  pull_request:
+    branches:
+      - main
+      - develop
+      - "*"
+
+jobs:
+  install:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: [3.7, 3.11]
+
+    env:
+      CRIPT_HOST: https://lb-stage.mycriptapp.org/
+      CRIPT_TOKEN: 123456789
+      CRIPT_STORAGE_TOKEN: 987654321
+      CRIPT_TESTS: False
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: pip install CRIPT Python SDK local package
+        run: python3 -m pip install .
+
+      - name: pip install requirements_dev.txt
+        run: python3 -m pip install -r requirements_dev.txt
+
+      - name: Run pytest on tests/
+        run: pytest ./tests/

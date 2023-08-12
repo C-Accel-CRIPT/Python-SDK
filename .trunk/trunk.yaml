@@ -1,0 +1,53 @@
+version: 0.1
+cli:
+  version: 1.13.0
+plugins:
+  sources:
+    - id: trunk
+      ref: v1.0.0
+      uri: https://github.com/trunk-io/plugins
+lint:
+  enabled:
+    - svgo@3.0.2
+    - cspell@6.31.2
+    - actionlint@1.6.25
+    - black@23.7.0
+    - git-diff-check
+    - gitleaks@8.17.0
+    - isort@5.12.0
+    - markdownlint@0.35.0
+    - oxipng@8.0.0
+    - prettier@3.0.0
+    - ruff@0.0.280
+    - taplo@0.8.1
+    - yamllint@1.32.0
+  ignore:
+    - linters: [prettier]
+      paths:
+        - site/**
+        - docs/**
+runtimes:
+  enabled:
+    - go@1.19.5
+    - node@18.12.1
+    - python@3.10.8
+actions:
+  enabled:
+    - trunk-announce
+    - trunk-check-pre-push
+    - trunk-fmt-pre-commit
+    - trunk-upgrade-available
+merge:
+  required_statuses:
+    - trunk
+    - Analyze (python)
+    - build
+    - install (ubuntu-latest, 3.7)
+    - install (ubuntu-latest, 3.11)
+    - install (macos-latest, 3.7)
+    - install (macos-latest, 3.11)
+    - test-coverage (ubuntu-latest, 3.7)
+    - test-coverage (ubuntu-latest, 3.11)
+    - mypy-test (3.7, ubuntu-latest)
+    - mypy-test (3.11, ubuntu-latest)
+    - test-examples (ubuntu-latest, 3.11)

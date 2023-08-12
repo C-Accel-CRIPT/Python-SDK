@@ -1,0 +1,21 @@
+# build docs from master branch and push to gh-pages branch to be deployed to repository GitHub pages
+
+name: Build & Deploy Docs
+on:
+  push:
+    branches:
+      - develop
+
+  # trunk-ignore(yamllint/empty-values)
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - run: pip install -r requirements_docs.txt
+      - run: mkdocs gh-deploy --force

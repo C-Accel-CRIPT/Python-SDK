@@ -1,0 +1,135 @@
+site_name: CRIPT Python SDK
+
+repo_url: https://github.com/C-Accel-CRIPT/Python-SDK
+repo_name: C-Accel-CRIPT/Python-SDK
+
+nav:
+  - Home: index.md
+  - Tutorial:
+      - CRIPT Installation Guide: tutorial/cript_installation_guide.md
+      - CRIPT API Token: tutorial/how_to_get_api_token.md
+  - Example Code Walkthrough:
+      - Synthesis: examples/synthesis.md
+      - Simulation: examples/simulation.md
+  - API Client:
+      - API: api/api.md
+      - Search Modes: api/search_modes.md
+      - Paginator: api/paginator.md
+      - Controlled Vocabulary Categories: api/controlled_vocabulary_categories.md
+  - Primary Nodes:
+      - Collection: nodes/primary_nodes/collection.md
+      - Computation: nodes/primary_nodes/computation.md
+      - Computation Process: nodes/primary_nodes/computation_process.md
+      - Data: nodes/primary_nodes/data.md
+      - Experiment: nodes/primary_nodes/experiment.md
+      - Inventory: nodes/primary_nodes/inventory.md
+      - Material: nodes/primary_nodes/material.md
+      - Project: nodes/primary_nodes/project.md
+      - Process: nodes/primary_nodes/process.md
+      - Reference: nodes/primary_nodes/reference.md
+      - Software: nodes/primary_nodes/software.md
+  - Sub-objects:
+      - Algorithm: nodes/subobjects/algorithm.md
+      - Citation: nodes/subobjects/citation.md
+      - Computational Forcefield: nodes/subobjects/computational_forcefield.md
+      - Condition: nodes/subobjects/condition.md
+      - Equipment: nodes/subobjects/equipment.md
+      #      - Identifier: nodes/subobjects/identifier.md
+      - Ingredient: nodes/subobjects/ingredient.md
+      - Parameter: nodes/subobjects/parameter.md
+      - Property: nodes/subobjects/property.md
+      - Quantity: nodes/subobjects/quantity.md
+      - Software Configuration: nodes/subobjects/software_configuration.md
+  - Supporting Nodes:
+      - User: nodes/supporting_nodes/user.md
+      #      - Group: nodes/supporting_nodes/group.md
+      - File: nodes/supporting_nodes/file.md
+  - Utility Functions: utility_functions.md
+  - Exceptions:
+      - API Exceptions: exceptions/api_exceptions.md
+      - Node Exceptions: exceptions/node_exceptions.md
+  - FAQ: faq.md
+  - Internal Wiki Documentation: https://github.com/C-Accel-CRIPT/Python-SDK/wiki
+  - CRIPT Python SDK Discussions: https://github.com/C-Accel-CRIPT/Python-SDK/discussions
+
+theme:
+  name: material
+  # below is the favicon image and documentation logo
+  logo: ./images/CRIPT_full_logo_colored_transparent.png
+  favicon: ./images/favicon.ico
+  icon:
+    admonition:
+      alert: octicons/alert-16
+  features:
+    - content.code.copy
+    - navigation.path
+    - nagivation.tracking
+    - navigation.footer
+
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+# This links the CRIPT logo to the CRIPT homepage
+extra:
+  homepage: https://criptapp.org
+#  social:
+#    - icon: fontawesome/brands/twitter
+#      link: https://twitter.com/squidfunk
+#      name: squidfunk on Twitter
+copyright: © 2023 MIT | All Rights Reserved
+
+extra_css:
+  - extra.css
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src, docs]
+          options:
+            show_bases: true
+            show_source: true
+            docstring_style: numpy
+      watch:
+        - src/
+
+markdown_extensions:
+  - toc:
+      baselevel: 2
+      permalink: True
+  - attr_list
+  - md_in_html
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg

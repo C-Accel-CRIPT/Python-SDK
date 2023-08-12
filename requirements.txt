@@ -1,0 +1,4 @@
+requests==2.31.0
+jsonschema==4.18.4
+boto3==1.28.17
+beartype==0.14.1

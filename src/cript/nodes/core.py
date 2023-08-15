@@ -259,7 +259,7 @@ class BaseNode(ABC):
             "ComputationProcess": {"material"},
             "Data": {"material"},
             "Process": {"product", "waste"},
-            "Project": {"member", "admin"},
+            "Project": {"member", "admin", "material"},
             "Collection": {"member", "admin"},
         },
         **kwargs

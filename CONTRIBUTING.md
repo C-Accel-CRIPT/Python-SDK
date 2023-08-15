@@ -55,7 +55,7 @@ When submitting a pull request, please make sure to:
 - Ensure your PR does not include any unrelated or unnecessary changes.
 - All CI must pass before a PR can be approved and merged into the code base.
 
-## Repositorty Wiki
+## Repository Wiki
 
 For more in-depth information about our project, development setup, coding conventions, and specific areas where you can
 contribute,

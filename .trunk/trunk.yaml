@@ -26,6 +26,10 @@ lint:
       paths:
         - site/**
         - docs/**
+    - linters: [cspell]
+      paths:
+        - mkdocs.yml
+
 runtimes:
   enabled:
     - go@1.19.5

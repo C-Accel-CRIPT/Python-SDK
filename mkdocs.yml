@@ -63,7 +63,7 @@ theme:
   features:
     - content.code.copy
     - navigation.path
-    - nagivation.tracking
+    - navigation.tracking
     - navigation.footer
 
   palette:

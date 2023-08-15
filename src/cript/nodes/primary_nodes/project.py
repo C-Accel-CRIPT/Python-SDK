@@ -106,6 +106,9 @@ class Project(PrimaryBaseNode):
         # First validate like other nodes
         super().validate(api=api, is_patch=is_patch)
 
+        if api.no_orphan_checks:
+            return
+
         # Check graph for orphaned nodes, that should be listed in project
         # Project.materials should contain all material nodes
         project_graph_materials = self.find_children({"node": ["Material"]})

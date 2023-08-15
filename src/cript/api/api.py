@@ -85,6 +85,8 @@ class API:
     _api_handle: str = "api"
     _api_version: str = "v1"
 
+    no_orphan_checks = False
+
     # trunk-ignore-begin(cspell)
     # AWS S3 constants
     _REGION_NAME: str = "us-east-1"

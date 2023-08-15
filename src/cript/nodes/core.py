@@ -154,6 +154,8 @@ class BaseNode(ABC):
 
         if api is None:
             api = _get_global_cached_api()
+        if api.no_schema_checks:
+            return
         api._is_node_schema_valid(self.get_json(is_patch=is_patch).json, is_patch=is_patch)
 
     @classmethod

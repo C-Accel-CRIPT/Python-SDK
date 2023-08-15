@@ -86,6 +86,7 @@ class API:
     _api_version: str = "v1"
 
     no_orphan_checks = False
+    no_schema_checks = False
 
     # trunk-ignore-begin(cspell)
     # AWS S3 constants

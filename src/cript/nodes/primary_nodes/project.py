@@ -106,6 +106,10 @@ class Project(PrimaryBaseNode):
         # First validate like other nodes
         super().validate(api=api, is_patch=is_patch)
 
+        from cript.api.api import _get_global_cached_api
+
+        if api is None:
+            api = _get_global_cached_api()
         if api.no_orphan_checks:
             return
 

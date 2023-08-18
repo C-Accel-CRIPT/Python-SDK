@@ -136,6 +136,30 @@ def test_process_getters_and_setters(
     assert simple_process_node.keyword == [new_process_keywords]
     assert simple_process_node.citation[-1] == citation
 
+    # test that optional attributes can be successfully removed
+    simple_process_node.ingredient = []
+    simple_process_node.description = ""
+    simple_process_node.equipment = []
+    simple_process_node.product = []
+    simple_process_node.waste = []
+    simple_process_node.prerequisite_process = []
+    simple_process_node.condition = []
+    simple_process_node.property = []
+    simple_process_node.keyword = []
+    simple_process_node.citation = []
+    
+    # assert that optional attributes have been removed
+    assert simple_process_node.ingredient == []
+    assert simple_process_node.description == ""
+    assert simple_process_node.equipment == []
+    assert simple_process_node.product == []
+    assert simple_process_node.waste == []
+    assert simple_process_node.prerequisite_process == []
+    assert simple_process_node.condition == []
+    assert simple_process_node.property == []
+    assert simple_process_node.keyword == []
+    assert simple_process_node.citation == []
+
 
 def test_serialize_process_to_json(simple_process_node) -> None:
     """

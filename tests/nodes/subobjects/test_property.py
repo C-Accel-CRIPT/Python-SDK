@@ -76,14 +76,14 @@ def test_setter_getter(complex_property_node, simple_material_node, simple_proce
     complex_property_node.notes = ""
     
     # assert optional attributes have been removed
-    assert complex_property_node.value == None
+    assert complex_property_node.value is None
     assert complex_property_node.unit == ""
-    assert complex_property_node.uncertainty == None
+    assert complex_property_node.uncertainty is None
     assert complex_property_node.uncertainty_type == ""
     assert complex_property_node.component == []
     assert complex_property_node.structure == ""
     assert complex_property_node.method == ""
-    assert complex_property_node.sample_preparation == None
+    assert complex_property_node.sample_preparation is None
     assert complex_property_node.condition == []
     assert complex_property_node.data == []
     assert complex_property_node.computation == []

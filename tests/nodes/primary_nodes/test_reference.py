@@ -151,14 +151,14 @@ def test_getters_and_setters_reference(complex_reference_node) -> None:
     assert complex_reference_node.author == []
     assert complex_reference_node.journal == ""
     assert complex_reference_node.publisher == ""
-    assert complex_reference_node.year == None
-    assert complex_reference_node.volume == None
-    assert complex_reference_node.issue == None
+    assert complex_reference_node.year is None
+    assert complex_reference_node.volume is None
+    assert complex_reference_node.issue is None
     assert complex_reference_node.pages == []
     assert complex_reference_node.doi == ""
     assert complex_reference_node.issn == ""
     assert complex_reference_node.arxiv_id == ""
-    assert complex_reference_node.pmid == None
+    assert complex_reference_node.pmid is None
     assert complex_reference_node.website == ""
 
 

@@ -98,8 +98,8 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
 
     # assert optional attributes have been removed
     assert simple_material_node.property == []
-    assert simple_material_node.parent_material == None
-    assert simple_material_node.computational_forcefield == None
+    assert simple_material_node.parent_material is None
+    assert simple_material_node.computational_forcefield is None
     assert simple_material_node.component == []
 
 

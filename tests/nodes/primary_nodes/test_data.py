@@ -70,6 +70,7 @@ def test_data_getters_and_setters(
 ) -> None:
     """
     tests that all the getters and setters are working fine
+    and they can be removed as well
 
     Notes
     -----
@@ -112,6 +113,22 @@ def test_data_getters_and_setters(
     assert simple_data_node.material == [simple_material_node]
     assert simple_data_node.process == [simple_process_node]
     assert simple_data_node.citation == [complex_citation_node]
+
+    # remove optional attributes
+    simple_data_node.sample_preparation = []
+    simple_data_node.computation = []
+    simple_data_node.computation_process = []
+    simple_data_node.material = []
+    simple_data_node.process = []
+    simple_data_node.citation = []
+    
+    # assert that optional attributes have been removed from data node
+    assert simple_data_node.sample_preparation == []
+    assert simple_data_node.computation == []
+    assert simple_data_node.computation_process == []
+    assert simple_data_node.material == []
+    assert simple_data_node.process == []
+    assert simple_data_node.citation == []
 
 
 def test_serialize_data_to_json(simple_data_node) -> None:

@@ -16,25 +16,38 @@ def test_json(complex_equipment_node, complex_equipment_dict):
 
 
 def test_setter_getter(complex_equipment_node, complex_condition_node, complex_file_node, complex_citation_node):
-    e2 = complex_equipment_node
-    e2.key = "glass_beaker"
-    assert e2.key == "glass_beaker"
-    e2.description = "Fancy glassware"
-    assert e2.description == "Fancy glassware"
+    """
+    test that getters and setters are working fine
+    """
+    complex_equipment_node.key = "glass_beaker"
+    assert complex_equipment_node.key == "glass_beaker"
 
-    assert len(e2.condition) == 1
-    c2 = complex_condition_node
-    e2.condition += [c2]
-    assert e2.condition[1] == c2
+    complex_equipment_node.description = "Fancy glassware"
+    assert complex_equipment_node.description == "Fancy glassware"
 
-    assert len(e2.file) == 0
-    e2.file += [complex_file_node]
-    assert e2.file[-1] is complex_file_node
+    assert len(complex_equipment_node.condition) == 1
+    complex_equipment_node.condition += [complex_condition_node]
+    assert complex_equipment_node.condition[1] == complex_condition_node
 
-    cit2 = copy.deepcopy(complex_citation_node)
-    assert len(e2.citation) == 1
-    e2.citation += [cit2]
-    assert e2.citation[1] == cit2
+    assert len(complex_equipment_node.file) == 0
+    complex_equipment_node.file += [complex_file_node]
+    assert complex_equipment_node.file[-1] is complex_file_node
+
+    assert len(complex_equipment_node.citation) == 1
+    complex_equipment_node.citation += [complex_citation_node]
+    assert complex_equipment_node.citation[1] == complex_citation_node
+
+    # remove optional attributes
+    complex_equipment_node.description = ""
+    complex_equipment_node.condition = []
+    complex_equipment_node.file = []
+    complex_equipment_node.citation = []
+
+    # assert that optional attributes have been removed
+    assert complex_equipment_node.description == ""
+    assert complex_equipment_node.condition == []
+    assert complex_equipment_node.file == []
+    assert complex_equipment_node.citation == []
 
 
 def test_integration_equipment(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_process_node, simple_equipment_node):

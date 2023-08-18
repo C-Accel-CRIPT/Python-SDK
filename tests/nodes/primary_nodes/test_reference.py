@@ -106,7 +106,6 @@ def test_getters_and_setters_reference(complex_reference_node) -> None:
     complex_reference_node.author = authors
     complex_reference_node.journal = journal
     complex_reference_node.publisher = publisher
-    complex_reference_node.publisher = publisher
     complex_reference_node.year = year
     complex_reference_node.volume = volume
     complex_reference_node.issue = issue
@@ -124,7 +123,6 @@ def test_getters_and_setters_reference(complex_reference_node) -> None:
     assert complex_reference_node.author == authors
     assert complex_reference_node.journal == journal
     assert complex_reference_node.publisher == publisher
-    assert complex_reference_node.publisher == publisher
     assert complex_reference_node.year == year
     assert complex_reference_node.volume == volume
     assert complex_reference_node.issue == issue
@@ -134,6 +132,34 @@ def test_getters_and_setters_reference(complex_reference_node) -> None:
     assert complex_reference_node.arxiv_id == arxiv_id
     assert complex_reference_node.pmid == pmid
     assert complex_reference_node.website == website
+
+    # remove optional attributes
+    complex_reference_node.author = []
+    complex_reference_node.journal = ""
+    complex_reference_node.publisher = ""
+    complex_reference_node.year = None
+    complex_reference_node.volume = None
+    complex_reference_node.issue = None
+    complex_reference_node.pages = []
+    complex_reference_node.doi = ""
+    complex_reference_node.issn = ""
+    complex_reference_node.arxiv_id = ""
+    complex_reference_node.pmid = None
+    complex_reference_node.website = ""
+    
+    # assert optional attributes have been removed
+    assert complex_reference_node.author == []
+    assert complex_reference_node.journal == ""
+    assert complex_reference_node.publisher == ""
+    assert complex_reference_node.year == None
+    assert complex_reference_node.volume == None
+    assert complex_reference_node.issue == None
+    assert complex_reference_node.pages == []
+    assert complex_reference_node.doi == ""
+    assert complex_reference_node.issn == ""
+    assert complex_reference_node.arxiv_id == ""
+    assert complex_reference_node.pmid == None
+    assert complex_reference_node.website == ""
 
 
 def test_reference_vocabulary() -> None:

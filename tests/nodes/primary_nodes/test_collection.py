@@ -89,6 +89,7 @@ def test_collection_getters_and_setters(simple_experiment_node, simple_inventory
     my_collection.doi = ""
     my_collection.citation = []
 
+    # assert users can remove optional attributes
     assert my_collection.name == new_collection_name
     assert my_collection.experiment == []
     assert my_collection.inventory == []

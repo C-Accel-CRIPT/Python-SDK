@@ -158,6 +158,14 @@ def test_file_getters_and_setters(complex_file_node) -> None:
     assert complex_file_node.extension == new_file_extension
     assert complex_file_node.data_dictionary == new_data_dictionary
 
+    # remove optional attributes
+    complex_file_node.extension = ""
+    complex_file_node.data_dictionary = ""
+
+    # assert optional attributes have been removed
+    assert complex_file_node.extension == ""
+    assert complex_file_node.data_dictionary == ""
+
 
 def test_serialize_file_to_json(complex_file_node) -> None:
     """

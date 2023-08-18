@@ -16,16 +16,24 @@ def test_json(complex_quantity_node, complex_quantity_dict):
 
 
 def test_getter_setter(complex_quantity_node):
-    q = complex_quantity_node
-    q.value = 0.5
-    assert q.value == 0.5
-    q.set_uncertainty(0.1, "stderr")
-    assert q.uncertainty == 0.1
-    assert q.uncertainty_type == "stderr"
+    complex_quantity_node.value = 0.5
+    assert complex_quantity_node.value == 0.5
 
-    q.set_key_unit("volume", "m**3")
-    assert q.key == "volume"
-    assert q.unit == "m**3"
+    complex_quantity_node.set_uncertainty(uncertainty=0.1, type="stderr")
+    assert complex_quantity_node.uncertainty == 0.1
+    assert complex_quantity_node.uncertainty_type == "stderr"
+
+    complex_quantity_node.set_key_unit(new_key="volume", new_unit="m**3")
+    assert complex_quantity_node.key == "volume"
+    assert complex_quantity_node.unit == "m**3"
+
+    # remove optional attributes
+    complex_quantity_node.set_uncertainty(uncertainty=None, type="")
+
+    # assert optional attributes have been removed
+    assert complex_quantity_node.uncertainty is None
+    assert complex_quantity_node.uncertainty_type == ""
+
 
 
 def test_integration_quantity(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_process_node, simple_ingredient_node, simple_material_node):

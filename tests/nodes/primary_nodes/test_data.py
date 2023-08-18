@@ -121,7 +121,7 @@ def test_data_getters_and_setters(
     simple_data_node.material = []
     simple_data_node.process = []
     simple_data_node.citation = []
-    
+
     # assert that optional attributes have been removed from data node
     assert simple_data_node.sample_preparation == []
     assert simple_data_node.computation == []

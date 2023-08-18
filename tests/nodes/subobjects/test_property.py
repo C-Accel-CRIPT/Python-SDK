@@ -74,7 +74,7 @@ def test_setter_getter(complex_property_node, simple_material_node, simple_proce
     complex_property_node.computation = []
     complex_property_node.citation = []
     complex_property_node.notes = ""
-    
+
     # assert optional attributes have been removed
     assert complex_property_node.value is None
     assert complex_property_node.unit == ""

@@ -26,7 +26,7 @@ def test_setter_getter(simple_algorithm_node, complex_citation_node, complex_par
     # remove optional attributes
     simple_algorithm_node.parameter = []
     simple_algorithm_node.citation = []
-    
+
     # assert the optional attributes have been removed
     assert simple_algorithm_node.parameter == []
     assert simple_algorithm_node.citation == []

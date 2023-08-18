@@ -94,7 +94,7 @@ def test_all_getters_and_setters_for_experiment(
     simple_experiment_node.data = []
     simple_experiment_node.funding = []
     simple_experiment_node.citation = []
-    
+
     # assert that optional attributes can be removed
     assert simple_experiment_node.process == []
     assert simple_experiment_node.computation == []

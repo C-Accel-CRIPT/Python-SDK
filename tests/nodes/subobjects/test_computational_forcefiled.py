@@ -51,7 +51,7 @@ def test_setter_getter(complex_computational_forcefield_node, complex_citation_n
     complex_computational_forcefield_node.description = ""
     complex_computational_forcefield_node.data = []
     complex_computational_forcefield_node.citation = []
-    
+
     # assert optional attributes have been removed
     assert complex_computational_forcefield_node.coarse_grained_mapping == ""
     assert complex_computational_forcefield_node.implicit_solvent == ""

@@ -147,7 +147,7 @@ def test_process_getters_and_setters(
     simple_process_node.property = []
     simple_process_node.keyword = []
     simple_process_node.citation = []
-    
+
     # assert that optional attributes have been removed
     assert simple_process_node.ingredient == []
     assert simple_process_node.description == ""

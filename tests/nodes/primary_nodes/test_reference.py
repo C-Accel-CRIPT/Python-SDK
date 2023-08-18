@@ -146,7 +146,7 @@ def test_getters_and_setters_reference(complex_reference_node) -> None:
     complex_reference_node.arxiv_id = ""
     complex_reference_node.pmid = None
     complex_reference_node.website = ""
-    
+
     # assert optional attributes have been removed
     assert complex_reference_node.author == []
     assert complex_reference_node.journal == ""

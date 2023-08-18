@@ -23,7 +23,6 @@ def test_parameter_setter_getter(complex_parameter_node):
     assert complex_parameter_node.unit == ""
 
 
-
 def test_parameter_json_serialization(complex_parameter_node, complex_parameter_dict):
     p = complex_parameter_node
     p_str = p.json

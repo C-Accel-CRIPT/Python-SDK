@@ -23,14 +23,18 @@ def test_json(complex_ingredient_node, complex_ingredient_dict):
 
 
 def test_getter_setter(complex_ingredient_node, complex_quantity_node, simple_material_node):
-    i2 = complex_ingredient_node
-    q2 = complex_quantity_node
-    i2.set_material(simple_material_node, [complex_quantity_node])
-    assert i2.material is simple_material_node
-    assert i2.quantity[-1] is q2
+    complex_ingredient_node.set_material(new_material=simple_material_node, new_quantity=[complex_quantity_node])
+    complex_ingredient_node.keyword = ["monomer"]
 
-    i2.keyword = ["monomer"]
-    assert i2.keyword == ["monomer"]
+    assert complex_ingredient_node.material is simple_material_node
+    assert complex_ingredient_node.quantity[-1] is complex_quantity_node
+    assert complex_ingredient_node.keyword == ["monomer"]
+
+    # remove optional attributes
+    complex_ingredient_node.keyword = []
+
+    # removed optional attributes
+    assert complex_ingredient_node.keyword == []
 
 
 def test_integration_ingredient(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_process_node, simple_ingredient_node, simple_material_node):

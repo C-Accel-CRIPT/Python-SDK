@@ -68,6 +68,34 @@ def test_create_complex_computational_process(
     assert my_computational_process.citation == [complex_citation_node]
 
 
+def test_computational_process_getters_and_setters(simple_computation_process_node, simple_data_node, simple_ingredient_node, simple_software_configuration, simple_condition_node, simple_property_node, complex_citation_node) -> None:
+    """
+    tests that all the getters and setters are working fine
+    """
+    computation_process_type = "hybrid_dynamics"
+    computation_process_notes = "my awesome notes"
+
+    simple_computation_process_node.type = computation_process_type
+    simple_computation_process_node.input_data = [simple_data_node]
+    simple_computation_process_node.output_data = [simple_data_node]
+    simple_computation_process_node.ingredient = [simple_ingredient_node]
+    simple_computation_process_node.software_configuration = [simple_software_configuration]
+    simple_computation_process_node.condition = [simple_condition_node]
+    simple_computation_process_node.property = [simple_property_node]
+    simple_computation_process_node.citation = [complex_citation_node]
+    simple_computation_process_node.notes = computation_process_notes
+
+    assert simple_computation_process_node.type == computation_process_type
+    assert simple_computation_process_node.input_data == [simple_data_node]
+    assert simple_computation_process_node.output_data == [simple_data_node]
+    assert simple_computation_process_node.ingredient == [simple_ingredient_node]
+    assert simple_computation_process_node.software_configuration == [simple_software_configuration]
+    assert simple_computation_process_node.condition == [simple_condition_node]
+    assert simple_computation_process_node.property == [simple_property_node]
+    assert simple_computation_process_node.citation == [complex_citation_node]
+    assert simple_computation_process_node.notes == computation_process_notes
+
+
 def test_serialize_computational_process_to_json(simple_computational_process_node) -> None:
     """
     tests that a computational process node can be correctly serialized to JSON

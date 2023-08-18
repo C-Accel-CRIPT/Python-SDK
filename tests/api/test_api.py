@@ -366,29 +366,27 @@ def test_api_search_exact_name(cript_api: cript.API) -> None:
 def test_api_search_uuid(cript_api: cript.API) -> None:
     """
     tests search with UUID
-    searches for Sodium polystyrene sulfonate material that has a UUID of "fcc6ed9d-22a8-4c21-bcc6-25a88a06c5ad"
+    searches for `Sodium polystyrene sulfonate` material via UUID
+
+    The test is made dynamic to work with any server environment
+    1. gets the material via `exact name search` and gets the full node
+    2. takes the UUID from the full node and puts it into the `UUID search`
+    3. asserts everything is as expected
     """
-    # try develop result
-    try:
-        uuid_to_search = "fcc6ed9d-22a8-4c21-bcc6-25a88a06c5ad"
+    material_name = "Sodium polystyrene sulfonate"
 
-        uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=uuid_to_search)
+    exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=material_name)
 
-        assert isinstance(uuid_paginator, Paginator)
-        assert len(uuid_paginator.current_page_results) == 1
-        assert uuid_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
-        assert uuid_paginator.current_page_results[0]["uuid"] == uuid_to_search
+    material_uuid = exact_name_paginator.current_page_results[0]["uuid"]
 
-    # if fail try staging result
-    except AssertionError:
-        uuid_to_search = "e1b41d34-3bf2-4cd8-9a19-6412df7e7efc"
+    uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID,
+                                      value_to_search=material_uuid)
 
-        uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=uuid_to_search)
+    assert isinstance(uuid_paginator, Paginator)
+    assert len(uuid_paginator.current_page_results) == 1
+    assert uuid_paginator.current_page_results[0]["name"] == material_name
+    assert uuid_paginator.current_page_results[0]["uuid"] == material_uuid
 
-        assert isinstance(uuid_paginator, Paginator)
-        assert len(uuid_paginator.current_page_results) == 1
-        assert uuid_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
-        assert uuid_paginator.current_page_results[0]["uuid"] == uuid_to_search
 
 
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:

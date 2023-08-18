@@ -8,13 +8,20 @@ import cript
 
 
 def test_parameter_setter_getter(complex_parameter_node):
-    p = complex_parameter_node
-    p.key = "damping_time"
-    assert p.key == "damping_time"
-    p.value = 15.0
-    assert p.value == 15.0
-    p.unit = "m"
-    assert p.unit == "m"
+    complex_parameter_node.key = "damping_time"
+    complex_parameter_node.value = 15.0
+    complex_parameter_node.unit = "m"
+
+    assert complex_parameter_node.value == 15.0
+    assert complex_parameter_node.key == "damping_time"
+    assert complex_parameter_node.unit == "m"
+
+    # remove optional attributes
+    complex_parameter_node.unit = ""
+
+    # assert optional attributes have been removed
+    assert complex_parameter_node.unit == ""
+
 
 
 def test_parameter_json_serialization(complex_parameter_node, complex_parameter_dict):

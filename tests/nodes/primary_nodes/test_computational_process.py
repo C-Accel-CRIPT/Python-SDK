@@ -75,6 +75,7 @@ def test_computational_process_getters_and_setters(simple_computation_process_no
     computation_process_type = "hybrid_dynamics"
     computation_process_notes = "my awesome notes"
 
+    # set all computation_process attributes
     simple_computation_process_node.type = computation_process_type
     simple_computation_process_node.input_data = [simple_data_node]
     simple_computation_process_node.output_data = [simple_data_node]
@@ -85,6 +86,7 @@ def test_computational_process_getters_and_setters(simple_computation_process_no
     simple_computation_process_node.citation = [complex_citation_node]
     simple_computation_process_node.notes = computation_process_notes
 
+    # test what was set via setters and what was gotten via getters are the same
     assert simple_computation_process_node.type == computation_process_type
     assert simple_computation_process_node.input_data == [simple_data_node]
     assert simple_computation_process_node.output_data == [simple_data_node]
@@ -94,6 +96,22 @@ def test_computational_process_getters_and_setters(simple_computation_process_no
     assert simple_computation_process_node.property == [simple_property_node]
     assert simple_computation_process_node.citation == [complex_citation_node]
     assert simple_computation_process_node.notes == computation_process_notes
+
+    # remove all optional computation_process attributes
+    simple_computation_process_node.output_data = []
+    simple_computation_process_node.software_configuration = []
+    simple_computation_process_node.condition = []
+    simple_computation_process_node.property = []
+    simple_computation_process_node.citation = []
+    simple_computation_process_node.notes = ""
+
+    # test computation process attributes can be removed correctly
+    assert simple_computation_process_node.output_data == []
+    assert simple_computation_process_node.software_configuration == []
+    assert simple_computation_process_node.condition == []
+    assert simple_computation_process_node.property == []
+    assert simple_computation_process_node.citation == []
+    assert simple_computation_process_node.notes == ""
 
 
 def test_serialize_computational_process_to_json(simple_computational_process_node) -> None:

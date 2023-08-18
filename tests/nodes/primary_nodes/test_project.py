@@ -42,6 +42,14 @@ def test_project_getters_and_setters(simple_project_node, simple_collection_node
     assert simple_project_node.collection == [complex_collection_node]
     assert simple_project_node.material == [simple_material_node]
 
+    # remove optional attributes
+    simple_project_node.collection = []
+    simple_project_node.material = []
+
+    # assert optional attributes have been removed
+    assert simple_project_node.collection == []
+    assert simple_project_node.material == []
+
 
 def test_serialize_project_to_json(complex_project_node, complex_project_dict) -> None:
     """

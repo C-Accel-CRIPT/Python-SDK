@@ -80,10 +80,8 @@ def test_computation_getters_and_setters(simple_computation_node, simple_data_no
     simple_computation_node.input_data = [simple_data_node]
     simple_computation_node.output_data = [simple_data_node]
     simple_computation_node.software_configuration = [complex_software_configuration_node]
-    condition = copy.deepcopy(complex_condition_node)
-    simple_computation_node.condition = [condition]
-    citation = copy.deepcopy(complex_citation_node)
-    simple_computation_node.citation = [citation]
+    simple_computation_node.condition = [complex_condition_node]
+    simple_computation_node.citation = [complex_citation_node]
     simple_computation_node.notes = new_notes
 
     # assert getter and setter are same
@@ -91,9 +89,26 @@ def test_computation_getters_and_setters(simple_computation_node, simple_data_no
     assert simple_computation_node.input_data == [simple_data_node]
     assert simple_computation_node.output_data == [simple_data_node]
     assert simple_computation_node.software_configuration == [complex_software_configuration_node]
-    assert simple_computation_node.condition == [condition]
-    assert simple_computation_node.citation == [citation]
+    assert simple_computation_node.condition == [complex_condition_node]
+    assert simple_computation_node.citation == [complex_citation_node]
     assert simple_computation_node.notes == new_notes
+
+    # remove node attributes
+    simple_computation_node.type = ""
+    simple_computation_node.input_data = []
+    simple_computation_node.output_data = []
+    simple_computation_node.software_configuration = []
+    simple_computation_node.condition = []
+    simple_computation_node.citation = []
+    simple_computation_node.notes = ""
+
+    # assert users can remove optional attributes
+    assert simple_computation_node.input_data == []
+    assert simple_computation_node.output_data == []
+    assert simple_computation_node.software_configuration == []
+    assert simple_computation_node.condition == []
+    assert simple_computation_node.citation == []
+    assert simple_computation_node.notes == ""
 
 
 def test_serialize_computation_to_json(simple_computation_node) -> None:

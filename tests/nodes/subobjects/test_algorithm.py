@@ -7,14 +7,29 @@ from util import strip_uid_from_dict
 import cript
 
 
-def test_setter_getter(simple_algorithm_node, complex_citation_node):
-    a = simple_algorithm_node
-    a.key = "berendsen"
-    assert a.key == "berendsen"
-    a.type = "integration"
-    assert a.type == "integration"
-    a.citation += [complex_citation_node]
-    assert strip_uid_from_dict(json.loads(a.citation[0].json)) == strip_uid_from_dict(json.loads(complex_citation_node.json))
+def test_setter_getter(simple_algorithm_node, complex_citation_node, complex_parameter_node):
+    """
+    test that getters and setters are working correctly in algorithm sub-object
+    """
+    simple_algorithm_node.key = "berendsen"
+    assert simple_algorithm_node.key == "berendsen"
+
+    simple_algorithm_node.type = "integration"
+    assert simple_algorithm_node.type == "integration"
+
+    simple_algorithm_node.parameter = [complex_parameter_node]
+    assert simple_algorithm_node.parameter == [complex_parameter_node]
+
+    simple_algorithm_node.citation += [complex_citation_node]
+    assert strip_uid_from_dict(json.loads(simple_algorithm_node.citation[0].json)) == strip_uid_from_dict(json.loads(complex_citation_node.json))
+
+    # remove optional attributes
+    simple_algorithm_node.parameter = []
+    simple_algorithm_node.citation = []
+    
+    # assert the optional attributes have been removed
+    assert simple_algorithm_node.parameter == []
+    assert simple_algorithm_node.citation == []
 
 
 def test_json(simple_algorithm_node, simple_algorithm_dict, complex_citation_node):

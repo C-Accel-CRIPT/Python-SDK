@@ -365,7 +365,7 @@ class Condition(UUIDBaseNode):
         return self._json_attrs.uncertainty
 
     @beartype
-    def set_uncertainty(self, new_uncertainty: Union[Number, str], new_uncertainty_type: str) -> None:
+    def set_uncertainty(self, new_uncertainty: Union[Number, str, None], new_uncertainty_type: str) -> None:
         """
         set uncertainty and uncertainty type
 

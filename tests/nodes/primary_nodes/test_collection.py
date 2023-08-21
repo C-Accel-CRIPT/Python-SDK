@@ -61,6 +61,7 @@ def test_collection_getters_and_setters(simple_experiment_node, simple_inventory
     2. use the setter to set the Collection node's attributes
     3. use the getter to get the Collection's attributes
     4. assert that what was set and what was gotten are the same
+    5. test that the attributes can also be removed as well from the node (either None, empty list, or empty str)
     """
     my_collection = cript.Collection(name="my collection name")
 
@@ -81,6 +82,19 @@ def test_collection_getters_and_setters(simple_experiment_node, simple_inventory
     assert my_collection.inventory == [simple_inventory_node]
     assert my_collection.doi == new_cript_doi
     assert my_collection.citation == [complex_citation_node]
+
+    # remove Collection attributes
+    my_collection.experiment = []
+    my_collection.inventory = []
+    my_collection.doi = ""
+    my_collection.citation = []
+
+    # assert users can remove optional attributes
+    assert my_collection.name == new_collection_name
+    assert my_collection.experiment == []
+    assert my_collection.inventory == []
+    assert my_collection.doi == ""
+    assert my_collection.citation == []
 
 
 def test_serialize_collection_to_json(complex_user_node) -> None:

@@ -17,30 +17,48 @@ def test_computational_forcefield(complex_computational_forcefield_node, complex
 
 
 def test_setter_getter(complex_computational_forcefield_node, complex_citation_node, simple_data_node):
-    cf2 = complex_computational_forcefield_node
-    cf2.key = "opls_ua"
-    assert cf2.key == "opls_ua"
+    """
+    test getters and setters are working correctly
+    """
+    complex_computational_forcefield_node.key = "opls_ua"
+    assert complex_computational_forcefield_node.key == "opls_ua"
 
-    cf2.building_block = "united_atoms"
-    assert cf2.building_block == "united_atoms"
+    complex_computational_forcefield_node.building_block = "united_atoms"
+    assert complex_computational_forcefield_node.building_block == "united_atoms"
 
-    cf2.implicit_solvent = ""
-    assert cf2.implicit_solvent == ""
+    complex_computational_forcefield_node.implicit_solvent = ""
+    assert complex_computational_forcefield_node.implicit_solvent == ""
 
-    cf2.source = "Iterative Boltzmann inversion"
-    assert cf2.source == "Iterative Boltzmann inversion"
+    complex_computational_forcefield_node.source = "Iterative Boltzmann inversion"
+    assert complex_computational_forcefield_node.source == "Iterative Boltzmann inversion"
 
-    cf2.description = "generic polymer model"
-    assert cf2.description == "generic polymer model"
+    complex_computational_forcefield_node.description = "generic polymer model"
+    assert complex_computational_forcefield_node.description == "generic polymer model"
 
     data = simple_data_node
-    cf2.data += [data]
-    assert cf2.data[-1] is data
+    complex_computational_forcefield_node.data += [data]
+    assert complex_computational_forcefield_node.data[-1] is data
 
-    assert len(cf2.citation) == 1
+    assert len(complex_computational_forcefield_node.citation) == 1
     citation2 = copy.deepcopy(complex_citation_node)
-    cf2.citation += [citation2]
-    assert cf2.citation[1] == citation2
+    complex_computational_forcefield_node.citation += [citation2]
+    assert complex_computational_forcefield_node.citation[1] == citation2
+
+    # remove optional attributes
+    complex_computational_forcefield_node.coarse_grained_mapping = ""
+    complex_computational_forcefield_node.implicit_solvent = ""
+    complex_computational_forcefield_node.source = ""
+    complex_computational_forcefield_node.description = ""
+    complex_computational_forcefield_node.data = []
+    complex_computational_forcefield_node.citation = []
+
+    # assert optional attributes have been removed
+    assert complex_computational_forcefield_node.coarse_grained_mapping == ""
+    assert complex_computational_forcefield_node.implicit_solvent == ""
+    assert complex_computational_forcefield_node.source == ""
+    assert complex_computational_forcefield_node.description == ""
+    assert complex_computational_forcefield_node.data == []
+    assert complex_computational_forcefield_node.citation == []
 
 
 def test_integration_computational_forcefield(cript_api, simple_project_node, simple_material_node, simple_computational_forcefield_node):

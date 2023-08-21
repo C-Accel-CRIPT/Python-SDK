@@ -17,13 +17,20 @@ def test_json(complex_software_node, complex_software_dict):
 
 
 def test_setter_getter(complex_software_node):
-    s2 = complex_software_node
-    s2.name = "PySAGES"
-    assert s2.name == "PySAGES"
-    s2.version = "v0.3.0"
-    assert s2.version == "v0.3.0"
-    s2.source = "https://github.com/SSAGESLabs/PySAGES"
-    assert s2.source == "https://github.com/SSAGESLabs/PySAGES"
+    complex_software_node.name = "PySAGES"
+    assert complex_software_node.name == "PySAGES"
+
+    complex_software_node.version = "v0.3.0"
+    assert complex_software_node.version == "v0.3.0"
+
+    complex_software_node.source = "https://github.com/SSAGESLabs/PySAGES"
+    assert complex_software_node.source == "https://github.com/SSAGESLabs/PySAGES"
+
+    # remove optional attributes
+    complex_software_node.source = ""
+
+    # assert optional attributes have been removed
+    assert complex_software_node.source == ""
 
 
 def test_uuid(complex_software_node):

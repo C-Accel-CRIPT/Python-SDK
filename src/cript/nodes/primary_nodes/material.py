@@ -272,7 +272,7 @@ class Material(PrimaryBaseNode):
 
     @parent_material.setter
     @beartype
-    def parent_material(self, new_parent_material: "Material") -> None:
+    def parent_material(self, new_parent_material: Optional["Material"]) -> None:
         """
         set the [parent materials](./) for this material
 

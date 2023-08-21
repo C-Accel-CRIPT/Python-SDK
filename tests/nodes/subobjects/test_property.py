@@ -18,45 +18,77 @@ def test_json(complex_property_node, complex_property_dict):
 
 
 def test_setter_getter(complex_property_node, simple_material_node, simple_process_node, complex_condition_node, simple_data_node, simple_computation_node, complex_citation_node):
-    p2 = complex_property_node
-    p2.key = "modulus_loss"
-    assert p2.key == "modulus_loss"
-    p2.type = "min"
-    assert p2.type == "min"
-    p2.set_value(600.1, "MPa")
-    assert p2.value == 600.1
-    assert p2.unit == "MPa"
+    complex_property_node.key = "modulus_loss"
+    assert complex_property_node.key == "modulus_loss"
 
-    p2.set_uncertainty(10.5, "stdev")
-    assert p2.uncertainty == 10.5
-    assert p2.uncertainty_type == "stdev"
+    complex_property_node.type = "min"
+    assert complex_property_node.type == "min"
 
-    p2.component += [simple_material_node]
-    assert p2.component[-1] is simple_material_node
-    p2.structure = "structure2"
-    assert p2.structure == "structure2"
+    complex_property_node.set_value(600.1, "MPa")
+    assert complex_property_node.value == 600.1
+    assert complex_property_node.unit == "MPa"
 
-    p2.method = "scale"
-    assert p2.method == "scale"
+    complex_property_node.set_uncertainty(10.5, "stdev")
+    assert complex_property_node.uncertainty == 10.5
+    assert complex_property_node.uncertainty_type == "stdev"
 
-    p2.sample_preparation = simple_process_node
-    assert p2.sample_preparation is simple_process_node
-    assert len(p2.condition) == 1
-    p2.condition += [complex_condition_node]
-    assert len(p2.condition) == 2
-    p2.data = [simple_data_node]
-    assert p2.data[0] is simple_data_node
+    complex_property_node.component += [simple_material_node]
+    assert complex_property_node.component[-1] is simple_material_node
+    complex_property_node.structure = "structure2"
+    assert complex_property_node.structure == "structure2"
 
-    p2.computation += [simple_computation_node]
-    assert p2.computation[-1] is simple_computation_node
+    complex_property_node.method = "scale"
+    assert complex_property_node.method == "scale"
 
-    assert len(p2.citation) == 1
+    complex_property_node.sample_preparation = simple_process_node
+    assert complex_property_node.sample_preparation is simple_process_node
+
+    assert len(complex_property_node.condition) == 1
+    complex_property_node.condition += [complex_condition_node]
+    assert len(complex_property_node.condition) == 2
+
+    complex_property_node.data = [simple_data_node]
+    assert complex_property_node.data[0] is simple_data_node
+
+    complex_property_node.computation += [simple_computation_node]
+    assert complex_property_node.computation[-1] is simple_computation_node
+
+    assert len(complex_property_node.citation) == 1
     cit2 = copy.deepcopy(complex_citation_node)
-    p2.citation += [cit2]
-    assert len(p2.citation) == 2
-    assert p2.citation[-1] == cit2
-    p2.notes = "notes2"
-    assert p2.notes == "notes2"
+    complex_property_node.citation += [cit2]
+    assert len(complex_property_node.citation) == 2
+    assert complex_property_node.citation[-1] == cit2
+
+    complex_property_node.notes = "notes2"
+    assert complex_property_node.notes == "notes2"
+
+    # remove optional attributes
+    complex_property_node.set_value(new_value=None, new_unit="")
+    complex_property_node.set_uncertainty(new_uncertainty=None, new_uncertainty_type="")
+    complex_property_node.component = []
+    complex_property_node.structure = ""
+    complex_property_node.method = ""
+    complex_property_node.sample_preparation = None
+    complex_property_node.condition = []
+    complex_property_node.data = []
+    complex_property_node.computation = []
+    complex_property_node.citation = []
+    complex_property_node.notes = ""
+
+    # assert optional attributes have been removed
+    assert complex_property_node.value is None
+    assert complex_property_node.unit == ""
+    assert complex_property_node.uncertainty is None
+    assert complex_property_node.uncertainty_type == ""
+    assert complex_property_node.component == []
+    assert complex_property_node.structure == ""
+    assert complex_property_node.method == ""
+    assert complex_property_node.sample_preparation is None
+    assert complex_property_node.condition == []
+    assert complex_property_node.data == []
+    assert complex_property_node.computation == []
+    assert complex_property_node.citation == []
+    assert complex_property_node.notes == ""
 
 
 def test_integration_material_property(cript_api, simple_project_node, simple_material_node, simple_property_node):

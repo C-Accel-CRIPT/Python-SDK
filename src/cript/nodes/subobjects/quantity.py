@@ -229,7 +229,7 @@ class Quantity(UUIDBaseNode):
         return self._json_attrs.uncertainty_type
 
     @beartype
-    def set_uncertainty(self, uncertainty: Number, type: str) -> None:
+    def set_uncertainty(self, uncertainty: Optional[Number], type: str) -> None:
         """
         set the `uncertainty value` and `uncertainty_type`
 

@@ -16,30 +16,46 @@ def test_json(complex_condition_node, complex_condition_dict):
 
 
 def test_setter_getters(complex_condition_node, complex_data_node):
-    c2 = complex_condition_node
-    c2.key = "pressure"
-    assert c2.key == "pressure"
-    c2.type = "avg"
-    assert c2.type == "avg"
+    complex_condition_node.key = "pressure"
+    assert complex_condition_node.key == "pressure"
+    complex_condition_node.type = "avg"
+    assert complex_condition_node.type == "avg"
 
-    c2.set_value(1, "bar")
-    assert c2.value == 1
-    assert c2.unit == "bar"
+    complex_condition_node.set_value(1, "bar")
+    assert complex_condition_node.value == 1
+    assert complex_condition_node.unit == "bar"
 
-    c2.descriptor = "ambient pressure"
-    assert c2.descriptor == "ambient pressure"
+    complex_condition_node.descriptor = "ambient pressure"
+    assert complex_condition_node.descriptor == "ambient pressure"
 
-    c2.set_uncertainty(0.1, "stdev")
-    assert c2.uncertainty == 0.1
-    assert c2.uncertainty_type == "stdev"
+    complex_condition_node.set_uncertainty(0.1, "stdev")
+    assert complex_condition_node.uncertainty == 0.1
+    assert complex_condition_node.uncertainty_type == "stdev"
 
-    c2.set_id = None
-    assert c2.set_id is None
-    c2.measurement_id = None
-    assert c2.measurement_id is None
+    complex_condition_node.set_id = None
+    assert complex_condition_node.set_id is None
+    complex_condition_node.measurement_id = None
+    assert complex_condition_node.measurement_id is None
 
-    c2.data = [complex_data_node]
-    assert c2.data[0] is complex_data_node
+    complex_condition_node.data = [complex_data_node]
+    assert complex_condition_node.data[0] is complex_data_node
+
+    # remove optional attributes
+    complex_condition_node.descriptor = ""
+    complex_condition_node.set_id = None
+    complex_condition_node.measurement_id = None
+    complex_condition_node.set_uncertainty(new_uncertainty_type="", new_uncertainty=None)
+
+    # TODO getting `CRIPTNodeSchemaError` when removing this data node from condition
+    # complex_condition_node.data = None
+
+    # assert the optional node attributes have been removed
+    assert complex_condition_node.descriptor == ""
+    assert complex_condition_node.set_id is None
+    assert complex_condition_node.measurement_id is None
+    assert complex_condition_node.uncertainty is None
+    assert complex_condition_node.uncertainty_type == ""
+    # assert complex_condition_node.data is Non
 
 
 def test_integration_process_condition(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_computation_node, simple_condition_node):

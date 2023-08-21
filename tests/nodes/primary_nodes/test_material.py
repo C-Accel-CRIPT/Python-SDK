@@ -90,6 +90,18 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     assert simple_material_node.keyword == new_material_keywords
     assert simple_material_node.component == new_components
 
+    # remove optional attributes
+    simple_material_node.property = []
+    simple_material_node.parent_material = None
+    simple_material_node.computational_forcefield = None
+    simple_material_node.component = []
+
+    # assert optional attributes have been removed
+    assert simple_material_node.property == []
+    assert simple_material_node.parent_material is None
+    assert simple_material_node.computational_forcefield is None
+    assert simple_material_node.component == []
+
 
 def test_serialize_material_to_json(complex_material_dict, complex_material_node) -> None:
     """

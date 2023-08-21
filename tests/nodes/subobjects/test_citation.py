@@ -17,13 +17,16 @@ def test_json(complex_citation_node, complex_citation_dict):
 
 
 def test_setter_getter(complex_citation_node, complex_reference_node):
-    c = complex_citation_node
-    c.type = "replicated"
-    assert c.type == "replicated"
+    """
+    test getters and setters are working fine
+    """
+    complex_citation_node.type = "replicated"
+    assert complex_citation_node.type == "replicated"
+
     new_ref = complex_reference_node
     new_ref.title = "foo bar"
-    c.reference = new_ref
-    assert c.reference == new_ref
+    complex_citation_node.reference = new_ref
+    assert complex_citation_node.reference == new_ref
 
 
 def test_integration_citation(cript_api, simple_project_node, simple_collection_node, complex_citation_node):

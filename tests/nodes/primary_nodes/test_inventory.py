@@ -27,6 +27,12 @@ def test_get_and_set_inventory(simple_inventory_node) -> None:
     assert isinstance(simple_inventory_node, cript.Inventory)
     assert simple_inventory_node.material[-1] == material_1
 
+    # remove optional attributes
+    simple_inventory_node.material = []
+
+    # assert that optional attributes have been removed
+    assert simple_inventory_node.material == []
+
 
 def test_inventory_serialization(simple_inventory_node, simple_material_dict) -> None:
     """

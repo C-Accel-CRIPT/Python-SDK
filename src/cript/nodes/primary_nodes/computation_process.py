@@ -23,17 +23,17 @@ class ComputationProcess(PrimaryBaseNode):
     computation_forcefield needs to be created.
 
     ## Attributes
-    | attribute                | type                          | example                               | description                                     | required | vocab |
-    |--------------------------|-------------------------------|---------------------------------------|-------------------------------------------------|----------|-------|
-    | type                     | str                           | general molecular dynamics simulation | category of computation                         | True     | True  |
-    | input_data               | list[Data]                    |                                       | input data nodes                                | True     |       |
-    | output_data              | list[Data]                    |                                       | output data nodes                               |          |       |
-    | ingredient              | list[Ingredient]              |                                       | ingredients                                     | True     |       |
-    | software_ configurations | list[Software  Configuration] |                                       | software and algorithms used                    |          |       |
-    | condition                | list[Condition]               |                                       | setup information                               |          |       |
-    | property               | list[Property]                |                                       | computation process properties                  |          |       |
-    | citation                | list[Citation]                |                                       | reference to a book, paper, or scholarly work   |          |       |
-    | notes                    | str                           |                                       | additional description of the step              |          |       |
+    | attribute                | type                          | example                               | description                                   | required | vocab |
+    |--------------------------|-------------------------------|---------------------------------------|-----------------------------------------------|----------|-------|
+    | type                     | str                           | general molecular dynamics simulation | category of computation                       | True     | True  |
+    | input_data               | list[Data]                    |                                       | input data nodes                              | True     |       |
+    | output_data              | list[Data]                    |                                       | output data nodes                             |          |       |
+    | ingredient               | list[Ingredient]              |                                       | ingredients                                   | True     |       |
+    | software_ configurations | list[Software  Configuration] |                                       | software and algorithms used                  |          |       |
+    | condition                | list[Condition]               |                                       | setup information                             |          |       |
+    | property                 | list[Property]                |                                       | computation process properties                |          |       |
+    | citation                 | list[Citation]                |                                       | reference to a book, paper, or scholarly work |          |       |
+    | notes                    | str                           |                                       | additional description of the step            |          |       |
 
 
     ## Available Subobjects

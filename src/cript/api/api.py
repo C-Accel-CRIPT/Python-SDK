@@ -109,11 +109,11 @@ class API:
         ### Create API client with host and token
         ```Python
         with cript.API(
-                host="https://api.criptapp.org/",
-                api_token="my api token",
-                storage_token="my storage token"),
+            host="https://api.criptapp.org/",
+            api_token="my api token",
+            storage_token="my storage token",
         ) as api:
-           # node creation, api.save(), etc.
+            # node creation, api.save(), etc.
         ```
 
         ---

@@ -160,6 +160,7 @@ class File(PrimaryBaseNode):
         ??? Example "Maximal File Node"
             ```python
             my_file = cript.File(
+                name="my file name",
                 source="https://criptapp.org",
                 type="calibration",
                 extension=".csv",

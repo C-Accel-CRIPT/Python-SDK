@@ -517,11 +517,14 @@ class API:
 
         # fetch db_schema from API
         else:
-            # fetch db schema, get the JSON body of it, and get the data of that JSON
-            response = requests.get(url=f"{self.host}/schema/").json()
+            # fetch db schema from API
+            response = requests.get(url=f"{self.host}/schema/")
 
-            if response["code"] != 200:
-                raise APIError(api_error=response.json())
+            # raise error if not HTTP 200
+            response.raise_for_status()
+
+            # if no error, take the JSON from the API response
+            response = response.json()
 
             # get the data from the API JSON response
             self._db_schema = response["data"]

@@ -91,7 +91,7 @@ project.collection += [collection]
 
 ```python
 print(project.json)
-print("\nOr more pretty\n")
+print("\n Or more pretty \n")
 print(project.get_json(indent=2).json)
 ```
 

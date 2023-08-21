@@ -51,11 +51,11 @@ def test_setter_getters(complex_condition_node, complex_data_node):
 
     # assert the optional node attributes have been removed
     assert complex_condition_node.descriptor == ""
-    assert complex_condition_node.set_id == None
-    assert complex_condition_node.measurement_id == None
-    assert complex_condition_node.uncertainty == None
+    assert complex_condition_node.set_id is Non
+    assert complex_condition_node.measurement_id is Non
+    assert complex_condition_node.uncertainty is Non
     assert complex_condition_node.uncertainty_type == ""
-    # assert complex_condition_node.data == None
+    # assert complex_condition_node.data is Non
 
 
 def test_integration_process_condition(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_computation_node, simple_condition_node):

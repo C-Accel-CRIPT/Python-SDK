@@ -11,7 +11,8 @@ Another great option can be the [Excel Uploader](https://c-accel-cript.github.io
 !!! Warning "CRIPT Availability"
     Currently, CRIPT is only available for users in the USA, and it is equipped with geo-blocking functionality that restricts access for users outside the USA.
 
-    > We are diligently working towards making CRIPT accessible globally. We appreciate your patience as we strive to achieve this goal!
+    > We are diligently working towards making CRIPT accessible worldwide. 
+    We appreciate your patience as we strive to achieve this goal!
 
 ---
 

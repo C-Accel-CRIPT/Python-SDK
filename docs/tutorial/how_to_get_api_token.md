@@ -16,14 +16,14 @@ The token is needed because we need to authenticate the user before saving any o
 <img class="screenshot-border" src="../../images/cript_token_page.png" alt="Screenshot of CRIPT security page where API token is found">
 
 <small>
-   [Security Settings](https://criptapp.org/security/)
+   [Security Settings](https://app.criptapp.org/security)
    under the profile icon dropdown
 </small>
 
 
 To get your token:
 
-1. please visit your [Security Settings](https://criptapp.org/security/) under the profile
+1. please visit your [Security Settings](https://app.criptapp.org/security) under the profile
    icon dropdown on the top right
 2. Click on the **copy** button next to the API Token to copy it to clipboard
 3. Now you can paste it into the `API Token` field

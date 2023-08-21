@@ -51,9 +51,9 @@ def test_setter_getters(complex_condition_node, complex_data_node):
 
     # assert the optional node attributes have been removed
     assert complex_condition_node.descriptor == ""
-    assert complex_condition_node.set_id is Non
-    assert complex_condition_node.measurement_id is Non
-    assert complex_condition_node.uncertainty is Non
+    assert complex_condition_node.set_id is None
+    assert complex_condition_node.measurement_id is None
+    assert complex_condition_node.uncertainty is None
     assert complex_condition_node.uncertainty_type == ""
     # assert complex_condition_node.data is Non
 

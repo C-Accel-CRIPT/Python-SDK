@@ -83,7 +83,7 @@ class File(PrimaryBaseNode):
     ## Definition
 
     The [File node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001
-    .pdf#page=28) provides a link to  scholarly work and allows users to specify in what way the work relates to that
+    .pdf#page=28) provides a link to scholarly work and allows users to specify in what way the work relates to that
     data. More specifically, users can specify that the data was directly extracted from, inspired by, derived from,
     etc.
 
@@ -149,26 +149,26 @@ class File(PrimaryBaseNode):
 
         Examples
         --------
-        ??? Example "Minimal File Node"
-            ```python
-            my_file = cript.File(
-                name="my file name",
-                source="https://criptapp.org",
-                type="calibration",
-            )
-            ```
+        ### Minimal File Node
+        ```python
+        my_file = cript.File(
+            name="my file name",
+            source="https://criptapp.org",
+            type="calibration",
+        )
+        ```
 
-        ??? Example "Maximal File Node"
-            ```python
-            my_file = cript.File(
-                name="my file name",
-                source="https://criptapp.org",
-                type="calibration",
-                extension=".csv",
-                data_dictionary="my file's data dictionary"
-                notes="my notes for this file"
-            )
-            ```
+        ### Maximal File Node
+        ```python
+        my_file = cript.File(
+            name="my file name",
+            source="https://criptapp.org",
+            type="calibration",
+            extension=".csv",
+            data_dictionary="my file's data dictionary",
+            notes="my notes for this file"
+        )
+        ```
         """
 
         super().__init__(name=name, notes=notes, **kwargs)
@@ -204,12 +204,12 @@ class File(PrimaryBaseNode):
 
         Examples
         --------
-        ??? Example "Minimal File Node"
-            ```python
-            my_file = cript.File(source="/local/path/to/file", type="calibration")
-            my_file.ensure_uploaded()
-            my_file.source # Starts with http now
-            ```
+        ### Example Minimal File Node
+        ```python
+        my_file = cript.File(source="/local/path/to/file", type="calibration")
+        my_file.ensure_uploaded()
+        my_file.source # Starts with http now
+        ```
 
         """
 

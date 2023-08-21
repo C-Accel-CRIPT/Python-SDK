@@ -17,18 +17,19 @@ class Data(PrimaryBaseNode):
     * [Citation](../../subobjects/citation)
 
     ## Attributes
-    | Attribute           | Type                                              | Example                    | Description                                                                             | Required |
-    |---------------------|---------------------------------------------------|----------------------------|-----------------------------------------------------------------------------------------|----------|
-    | experiment          | [Experiment](experiment.md)                       |                            | Experiment the data belongs to                                                          | True     |
-    | name                | str                                               | `"my_data_name"`           | Name of the data node                                                                   | True     |
+    | Attribute           | Type                                              | Example                    | Description                                                                                  | Required |
+    |---------------------|---------------------------------------------------|----------------------------|----------------------------------------------------------------------------------------------|----------|
+    | experiment          | [Experiment](experiment.md)                       |                            | Experiment the data belongs to                                                               | True     |
+    | name                | str                                               | `"my_data_name"`           | Name of the data node                                                                        | True     |
     | type                | str                                               | `"nmr_h1"`                 | Pick from [CRIPT data type controlled vocabulary](https://app.criptapp.org/vocab/data_type/) | True     |
-    | file                | List[[File](../supporting_nodes/file.md)]         | `[file_1, file_2, file_3]` | list of file nodes                                                                      | False    |
-    | sample_preparation  | [Process](process.md)                             |                            |                                                                                         | False    |
-    | computation         | List[[Computation](computation.md)]               |                            | data produced from this Computation method                                              | False    |
-    | computation_process | [Computational Process](./computation_process.md) |                            | data was produced from this computation process                                         | False    |
-    | material            | List[[Material](./material.md)]                   |                            | materials with attributes associated with the data node                                 | False    |
-    | process             | List[[Process](./process.md)]                     |                            | processes with attributes associated with the data node                                 | False    |
-    | citation            | [Citation](../subobjects/citation.md)             |                            | reference to a book, paper, or scholarly work                                           | False    |
+    | file                | List[[File](../supporting_nodes/file.md)]         | `[file_1, file_2, file_3]` | list of file nodes                                                                           | False    |
+    | sample_preparation  | [Process](process.md)                             |                            |                                                                                              | False    |
+    | computation         | List[[Computation](computation.md)]               |                            | data produced from this Computation method                                                   | False    |
+    | computation_process | [Computational Process](./computation_process.md) |                            | data was produced from this computation process                                              | False    |
+    | material            | List[[Material](./material.md)]                   |                            | materials with attributes associated with the data node                                      | False    |
+    | process             | List[[Process](./process.md)]                     |                            | processes with attributes associated with the data node                                      | False    |
+    | citation            | [Citation](../subobjects/citation.md)             |                            | reference to a book, paper, or scholarly work                                                | False    |
+    | notes               | str                                               | "my awesome notes"         | miscellaneous information, or custom data structure                                          | False    |
 
     Example
     --------

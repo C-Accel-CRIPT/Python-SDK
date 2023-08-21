@@ -9,8 +9,9 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 class Process(PrimaryBaseNode):
     """
     ## Definition
-    The process node contains a list of ingredients, quantities, and procedure information for an experimental material
-    transformation (chemical and physical).
+    The process node contains a list of [ingredients](../../subobjects/ingredient),
+    [quantities](../../subobjects/quantity), and procedure information for an experimental
+    [material](../material) transformation (chemical and physical).
 
     ## Attributes
 
@@ -27,6 +28,7 @@ class Process(PrimaryBaseNode):
     | property                | list[Property]   |                                                                                 | process properties                                                  |          |       |
     | keyword                 | list[str]        |                                                                                 | words that classify the process                                     |          | True  |
     | citation                | list[Citation]   |                                                                                 | reference to a book, paper, or scholarly work                       |          |       |
+    | notes                   | str              |                                                                                 | miscellaneous information, or custom data structure                 |          |       |
 
     ## Can be added to
     * [Experiment](../experiment)

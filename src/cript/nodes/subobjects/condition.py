@@ -365,7 +365,7 @@ class Condition(UUIDBaseNode):
         return self._json_attrs.uncertainty
 
     @beartype
-    def set_uncertainty(self, new_uncertainty: Union[Number, str], new_uncertainty_type: str) -> None:
+    def set_uncertainty(self, new_uncertainty: Union[Number, str, None], new_uncertainty_type: str) -> None:
         """
         set uncertainty and uncertainty type
 
@@ -520,7 +520,7 @@ class Condition(UUIDBaseNode):
 
     @data.setter
     @beartype
-    def data(self, new_data: List[Data]) -> None:
+    def data(self, new_data: Optional[List[Data]]) -> None:
         """
         set the data node for this Condition Subobject
 

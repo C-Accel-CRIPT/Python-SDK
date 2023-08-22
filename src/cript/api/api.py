@@ -13,7 +13,6 @@ import requests
 from beartype import beartype
 
 from cript.api.exceptions import (
-    APIError,
     CRIPTAPIRequiredError,
     CRIPTAPISaveError,
     CRIPTConnectionError,
@@ -518,16 +517,16 @@ class API:
         # fetch db_schema from API
         else:
             # fetch db schema from API
-            response = requests.get(url=f"{self.host}/schema/")
+            response: requests.Response = requests.get(url=f"{self.host}/schema/")
 
             # raise error if not HTTP 200
             response.raise_for_status()
 
             # if no error, take the JSON from the API response
-            response = response.json()
+            response_dict: Dict = response.json()
 
             # get the data from the API JSON response
-            self._db_schema = response["data"]
+            self._db_schema = response_dict["data"]
             return self._db_schema
 
     @beartype

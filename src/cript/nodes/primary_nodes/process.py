@@ -106,7 +106,7 @@ class Process(PrimaryBaseNode):
             [ingredient](../../subobjects/ingredient) used in this process
         type: str = ""
             Process type must come from
-            [CRIPT Controlled vocabulary process type](https://app.criptapp.org/vocab/process-type/)
+            [CRIPT Controlled vocabulary process type](https://app.criptapp.org/vocab/process_type/)
         description: str = ""
             description of this process
         equipment: List[Equipment] = None
@@ -480,7 +480,7 @@ class Process(PrimaryBaseNode):
         """
         List of keyword for this process
 
-        [Process keyword](https://app.criptapp.org/vocab/process-keyword/) must come from CRIPT controlled vocabulary
+        [Process keyword](https://app.criptapp.org/vocab/process_keyword/) must come from CRIPT controlled vocabulary
 
         Returns
         -------

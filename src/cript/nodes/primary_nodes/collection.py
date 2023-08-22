@@ -171,12 +171,12 @@ class Collection(PrimaryBaseNode):
         ```python
         material_1 = cript.Material(
             name="material 1",
-            identifiers=[{"alternative_names": "material 1 alternative name"}],
+            identifier=[{"alternative_names": "material 1 alternative name"}],
         )
 
         material_2 = cript.Material(
             name="material 2",
-            identifiers=[{"alternative_names": "material 2 alternative name"}],
+            identifier=[{"alternative_names": "material 2 alternative name"}],
         )
 
         my_inventory = cript.Inventory(

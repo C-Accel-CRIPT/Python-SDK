@@ -73,12 +73,12 @@ class Inventory(PrimaryBaseNode):
         ```python
         material_1 = cript.Material(
             name="material 1",
-            identifiers=[{"alternative_names": "material 1 alternative name"}],
+            identifier=[{"alternative_names": "material 1 alternative name"}],
         )
 
         material_2 = cript.Material(
             name="material 2",
-            identifiers=[{"alternative_names": "material 2 alternative name"}],
+            identifier=[{"alternative_names": "material 2 alternative name"}],
         )
 
         # instantiate inventory node
@@ -116,7 +116,7 @@ class Inventory(PrimaryBaseNode):
         ```python
         material_3 = cript.Material(
             name="new material 3",
-            identifiers=[{"alternative_names": "new material 3 alternative name"}],
+            identifier=[{"alternative_names": "new material 3 alternative name"}],
         )
 
         my_inventory.material = [my_material_3]

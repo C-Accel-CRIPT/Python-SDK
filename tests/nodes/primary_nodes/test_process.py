@@ -43,7 +43,7 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
     my_process_description = "my simple material description"
 
     process_waste = [
-        cript.Material(name="my process waste material 1", identifiers=[{"bigsmiles": "process waste bigsmiles"}]),
+        cript.Material(name="my process waste material 1", identifier=[{"bigsmiles": "process waste bigsmiles"}]),
     ]
 
     my_process_keywords = [

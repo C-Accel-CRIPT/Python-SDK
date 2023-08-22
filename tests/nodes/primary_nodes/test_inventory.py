@@ -18,7 +18,7 @@ def test_get_and_set_inventory(simple_inventory_node) -> None:
     4. assert that the materials list set and the one gotten are the same
     """
     # create new materials
-    material_1 = cript.Material(name="new material 1", identifiers=[{"names": ["new material 1 alternative name"]}])
+    material_1 = cript.Material(name="new material 1", identifier=[{"names": ["new material 1 alternative name"]}])
 
     # set inventory materials
     simple_inventory_node.material = [material_1]

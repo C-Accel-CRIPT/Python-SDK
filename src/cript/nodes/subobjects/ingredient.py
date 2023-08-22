@@ -82,8 +82,8 @@ class Ingredient(UUIDBaseNode):
         import cript
 
         # create material and identifier for the ingredient sub-object
-        my_identifiers = [{"bigsmiles": "123456"}]
-        my_material = cript.Material(name="my material", identifier=my_identifiers)
+        my_identifier = [{"bigsmiles": "123456"}]
+        my_material = cript.Material(name="my material", identifier=my_identifier)
 
         # create quantity sub-object
         my_quantity = cript.Quantity(key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev")
@@ -154,8 +154,8 @@ class Ingredient(UUIDBaseNode):
         Examples
         --------
         ```python
-        my_identifiers = [{"bigsmiles": "123456"}]
-        my_new_material = cript.Material(name="my material", identifier=my_identifiers)
+        my_identifier = [{"bigsmiles": "123456"}]
+        my_new_material = cript.Material(name="my material", identifier=my_identifier)
 
         my_new_quantity = cript.Quantity(
             key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"

@@ -23,8 +23,7 @@
 -->
 
 ## Disclaimer
-
-This is the successor to the original [CRIPT Python SDK](https://github.com/C-Accel-CRIPT/cript). The new CRIPT Python SDK is still under development, and we will officially release it as soon as it is ready. For now please use the [original CRIPT Python SDK](https://github.com/C-Accel-CRIPT/cript)
+# Access to CRIPT is limited to users within the United States of America.
 
 ---
 

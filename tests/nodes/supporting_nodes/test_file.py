@@ -124,14 +124,6 @@ def test_create_file_with_local_source(tmp_path) -> None:
     assert cript.File(name="my file node with local source", source=str(file_path), type="calibration")
 
 
-@pytest.mark.skip(reason="validating file type automatically with DB schema and test not currently needed")
-def test_file_type_invalid_vocabulary() -> None:
-    """
-    tests that setting the file type to an invalid vocabulary word gives the expected error
-    """
-    pass
-
-
 def test_file_getters_and_setters(complex_file_node) -> None:
     """
     tests that all the getters and setters are working fine

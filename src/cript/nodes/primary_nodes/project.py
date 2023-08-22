@@ -18,10 +18,11 @@ class Project(PrimaryBaseNode):
     [Materials](../material).
 
 
-    | attribute   | type             | description                            |
-    |-------------|------------------|----------------------------------------|
-    | collection | List[Collection] | collections that relate to the project |
-    | materials   | List[Materials]  | materials owned by the project         |
+    | attribute  | type             | description                                         |
+    |------------|------------------|-----------------------------------------------------|
+    | collection | List[Collection] | collections that relate to the project              |
+    | materials  | List[Materials]  | materials owned by the project                      |
+    | notes      | str              | miscellaneous information, or custom data structure |
 
     ## JSON Representation
     ```json

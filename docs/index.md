@@ -6,6 +6,14 @@ CRIPT offers multiple options to upload data, and scientists can pick the method
 
 Another great option can be the [Excel Uploader](https://c-accel-cript.github.io/cript-excel-uploader/) for scientists that do not have past Python experience or would rather easily input their data into the CRIPT Excel Template.
 
+## Disclaimer
+
+!!! Warning "CRIPT Availability"
+    Currently, CRIPT is only available for users in the USA, and it is equipped with geo-blocking functionality that restricts access for users outside the USA.
+
+    > We are diligently working towards making CRIPT accessible worldwide. 
+    We appreciate your patience as we strive to achieve this goal!
+
 ---
 
 ## Resources

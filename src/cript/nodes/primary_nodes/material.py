@@ -14,15 +14,16 @@ class Material(PrimaryBaseNode):
     is a collection of the identifiers and properties of a chemical, mixture, or substance.
 
     ## Attributes
-    | attribute                 | type                                                                 | example                                           | description                                  | required    | vocab |
-    |---------------------------|----------------------------------------------------------------------|---------------------------------------------------|----------------------------------------------|-------------|-------|
-    | identifiers               | list[Identifier]                                                     |                                                   | material identifiers                         | True        |       |
-    | component                 | list[[Material](./)]                                                 |                                                   | list of component that make up the mixture   |             |       |
-    | property                  | list[[Property](../../subobjects/property)]                          |                                                   | material properties                          |             |       |
-    | process                   | [Process](../process)                                                |                                                   | process node that made this material         |             |       |
-    | parent_material           | [Material](./)                                                       |                                                   | material node that this node was copied from |             |       |
-    | computational_ forcefield | [Computation  Forcefield](../../subobjects/computational_forcefield) |                                                   | computation forcefield                       | Conditional |       |
-    | keyword                   | list[str]                                                            | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material             |             | True  |
+    | attribute                 | type                                                                 | example                                           | description                                         | required    | vocab |
+    |---------------------------|----------------------------------------------------------------------|---------------------------------------------------|-----------------------------------------------------|-------------|-------|
+    | identifiers               | list[Identifier]                                                     |                                                   | material identifiers                                | True        |       |
+    | component                 | list[[Material](./)]                                                 |                                                   | list of component that make up the mixture          |             |       |
+    | property                  | list[[Property](../../subobjects/property)]                          |                                                   | material properties                                 |             |       |
+    | process                   | [Process](../process)                                                |                                                   | process node that made this material                |             |       |
+    | parent_material           | [Material](./)                                                       |                                                   | material node that this node was copied from        |             |       |
+    | computational_ forcefield | [Computation  Forcefield](../../subobjects/computational_forcefield) |                                                   | computation forcefield                              | Conditional |       |
+    | keyword                   | list[str]                                                            | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material                    |             | True  |
+    | notes                     | str                                                                  | "my awesome notes"                                | miscellaneous information, or custom data structure |             | True  |
 
     ## Navigating to Material
     Materials can be easily found on the [CRIPT](https://app.criptapp.org) home screen in the

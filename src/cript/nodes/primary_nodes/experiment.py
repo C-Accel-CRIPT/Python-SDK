@@ -24,6 +24,7 @@ class Experiment(PrimaryBaseNode):
     | data                | List[Data]                   | data nodes associated with this experiment                | False    |
     | funding             | List[str]                    | funding source for experiment                             | False    |
     | citation            | List[Citation]               | reference to a book, paper, or scholarly work             | False    |
+    | notes               | str                          | miscellaneous information, or custom data structure       | False    |
 
 
     ## Subobjects

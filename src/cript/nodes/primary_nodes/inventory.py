@@ -18,10 +18,10 @@ class Inventory(PrimaryBaseNode):
     certain type of synthesis.
 
     ## Attributes
-
-    | Attribute  | Type                            | Example             | Description                               |
-    |------------|---------------------------------|---------------------|-------------------------------------------|
-    | material  | list[[Material](./material.md)] |                     | material that you like to group together |
+    | Attribute | Type                            | Example            | Description                                         |
+    |-----------|---------------------------------|--------------------|-----------------------------------------------------|
+    | material  | list[[Material](./material.md)] |                    | material that you like to group together            |
+    | notes     | str                             | "my awesome notes" | miscellaneous information, or custom data structure |
 
 
     ## JSON Representation

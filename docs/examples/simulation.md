@@ -29,7 +29,7 @@ pip install cript
 
 ## Connect to CRIPT
 
-To connect to CRIPT, you must enter a `host` and an `API Token`. For most users, `host` will be `https://criptapp.org`.
+To connect to CRIPT, you must enter a `host` and an `API Token`. For most users, `host` will be `https://api.criptapp.org/`.
 
 !!! Warning "Keep API Token Secure"
 
@@ -165,10 +165,11 @@ packmol_config = cript.SoftwareConfiguration(software=packmol)
 ```
 
 !!! note "Algorithm keys"
-    The allowed [`Algorithm`](../../nodes/subobjects/algorithm/) keys are listed under [algorithm keys](https://criptapp.org/keys/algorithm-key/) in the CRIPT controlled vocabulary.
+    The allowed [`Algorithm`](../../nodes/subobjects/algorithm/) keys are listed under 
+    [algorithm keys](https://app.criptapp.org/vocab/algorithm_key) in the CRIPT controlled vocabulary.
 
 !!! note "Parameter keys"
-    The allowed [`Parameter`](../../nodes/subobjects/property/) keys are listed under [parameter keys](https://criptapp.org/keys/parameter-key/) in the CRIPT controlled vocabulary.
+    The allowed [`Parameter`](../../nodes/subobjects/property/) keys are listed under [parameter keys](https://app.criptapp.org/vocab/parameter_key) in the CRIPT controlled vocabulary.
 
 
 ## Create [Computations](../../nodes/primary_nodes/computation)
@@ -238,10 +239,10 @@ experiment.computation += [init, equilibration, bulk, ana]
 
 
 !!! note "Computation types"
-    The allowed [`Computation`](../../nodes/primary_nodes/computation) types are listed under [computation types](https://criptapp.org/keys/computation-type/) in the CRIPT controlled vocabulary.
+    The allowed [`Computation`](../../nodes/primary_nodes/computation) types are listed under [computation types](https://app.criptapp.org/vocab/computation_type) in the CRIPT controlled vocabulary.
 
 !!! note "Condition keys"
-    The allowed [`Condition`](../../nodes/subobjects/condition) keys are listed under [condition keys](https://criptapp.org/keys/condition-key/) in the CRIPT controlled vocabulary.
+    The allowed [`Condition`](../../nodes/subobjects/condition) keys are listed under [condition keys](https://app.criptapp.org/vocab/condition_key) in the CRIPT controlled vocabulary.
 
 
 ## Create and Upload [Files nodes](../../nodes/supporting_nodes/file)
@@ -302,7 +303,7 @@ final_data = cript.Data(
 ```
 
 !!! note "Data types"
-    The allowed [`Data`](../../nodes/primary_nodes/data) types are listed under the [data types](https://criptapp.org/keys/data-type/) in the CRIPT controlled vocabulary.
+    The allowed [`Data`](../../nodes/primary_nodes/data) types are listed under the [data types](https://app.criptapp.org/vocab/data_type) in the CRIPT controlled vocabulary.
 
 Next, we'll link these [`Data`](../../nodes/primary_nodes/data) nodes to the appropriate [`Computation`](../../nodes/primary_nodes/computation) nodes.
 
@@ -334,7 +335,7 @@ polystyrene = cript.Material(name="virtual polystyrene", identifiers=identifiers
 ```
 
 !!! note "Identifier keys"
-    The allowed [`Identifiers`](../../nodes/primary_nodes/material/#cript.nodes.primary_nodes.material.Material.identifiers) keys are listed in the [material identifier keys](https://criptapp.org/keys/material-identifier-key/) in the CRIPT controlled vocabulary.
+    The allowed [`Identifiers`](../../nodes/primary_nodes/material/#cript.nodes.primary_nodes.material.Material.identifiers) keys are listed in the [material identifier keys](https://app.criptapp.org/vocab/material_identifier_key) in the CRIPT controlled vocabulary.
 
 ## Add [`Property`](../../nodes/subobjects/property) sub-objects
 Let's also add some [`Property`](../../nodes/subobjects/property) nodes to the [`Material`](../../nodes/primary_nodes/material), which represent its physical or virtual (in the case of a simulated material) properties.
@@ -348,7 +349,7 @@ polystyrene.property += [color]
 ```
 
 !!! note "Material property keys"
-    The allowed material [`Property`](../../nodes/subobjects/property) keys are listed in the [material property keys](https://criptapp.org/keys/material-property-key/) in the CRIPT controlled vocabulary.
+    The allowed material [`Property`](../../nodes/subobjects/property) keys are listed in the [material property keys](https://app.criptapp.org/vocab/material_property_key) in the CRIPT controlled vocabulary.
 
 ## Create [`ComputationalForcefield`](../../nodes/subobjects/computational_forcefield)
 Finally, we'll create a [`ComputationalForcefield`](../../nodes/subobjects/computational_forcefield) node and link it to the Material.
@@ -366,7 +367,7 @@ polystyrene.computational_forcefield = forcefield
 ```
 
 !!! note "Computational forcefield keys"
-    The allowed [`ComputationalForcefield`](../../nodes/subobjects/computational_forcefield/) keys are listed under the [computational forcefield keys](https://criptapp.org/keys/computational-forcefield-key/) in the CRIPT controlled vocabulary.
+    The allowed [`ComputationalForcefield`](../../nodes/subobjects/computational_forcefield/) keys are listed under the [computational forcefield keys](https://app.criptapp.org/vocab/computational_forcefield_key) in the CRIPT controlled vocabulary.
 
 Now we can save the project to CRIPT (and upload the files) or inspect the JSON output
 ## Validate CRIPT Project Node

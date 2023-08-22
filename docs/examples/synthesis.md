@@ -29,7 +29,7 @@ pip install cript
 
 ## Connect to CRIPT
 
-To connect to CRIPT, you must enter a `host` and an `API Token`. For most users, `host` will be `https://criptapp.org`.
+To connect to CRIPT, you must enter a `host` and an `API Token`. For most users, `host` will be `https://api.criptapp.org/`.
 
 !!! Warning "Keep API Token Secure"
 
@@ -91,7 +91,7 @@ project.collection += [collection]
 
 ```python
 print(project.json)
-print("\nOr more pretty\n")
+print("\n Or more pretty \n")
 print(project.get_json(indent=2).json)
 ```
 

@@ -24,6 +24,7 @@ class Collection(PrimaryBaseNode):
     | inventory  | list[Inventory]  |                     | inventory owned by the collection                                              |
     | doi        | str              | `10.1038/1781168a0` | DOI: digital object identifier for a published collection; CRIPT generated DOI |
     | citation   | list[Citation]   |                     | reference to a book, paper, or scholarly work                                  |
+    | notes      | str              | "my awesome notes"  | miscellaneous information, or custom data structure                            |
 
 
     ## JSON Representation

@@ -49,8 +49,16 @@ def cript_api():
     storage_token = os.getenv("CRIPT_STORAGE_TOKEN")
 
     assert cript.api.api._global_cached_api is None
+
     with cript.API(host=None, api_token=None, storage_token=storage_token) as api:
+        # overriding AWS S3 cognito variables to be sure we do not upload test data to production storage
+        # staging AWS S3 cognito storage variables
+        api._IDENTITY_POOL_ID = "us-east-1:25043452-a922-43af-b8a6-7e938a9e55c1"
+        api._COGNITO_LOGIN_PROVIDER = "cognito-idp.us-east-1.amazonaws.com/us-east-1_vyK1N9p22"
+        api._BUCKET_NAME = "cript-stage-user-data"
         # using the tests folder name within our cloud storage
         api._BUCKET_DIRECTORY_NAME = "tests"
+
         yield api
+
     assert cript.api.api._global_cached_api is None

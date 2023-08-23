@@ -388,6 +388,22 @@ def test_api_search_uuid(cript_api: cript.API) -> None:
     assert uuid_paginator.current_page_results[0]["uuid"] == material_uuid
 
 
+@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
+def test_api_search_bigsmiles(cript_api: cript.API) -> None:
+    """
+    tests search method with bigsmiles search
+    searches for material "{[][$]CC(C)(C(=O)OCCCC)[$][]}" or
+    "{[][<]C(C)C(=O)O[>][<]}{[$][$]CCC(C)C[$],[$]CC(C(C)C)[$],[$]CC(C)(CC)[$][]}"
+    """
+    bigsmiles_search_value = "{[][<]C(C)C(=O)O[>][<]}{[$][$]CCC(C)C[$],[$]CC(C(C)C)[$],[$]CC(C)(CC)[$][]}"
+
+    bigsmiles_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.BIG_SMILES, value_to_search=bigsmiles_search_value)
+
+    assert isinstance(bigsmiles_paginator, Paginator)
+    assert len(bigsmiles_paginator.current_page_results) >= 1
+    # API is changing currently, and we cannot expect a single response in the exact position
+    # assert bigsmiles_paginator.current_page_results[1]["name"] == "BCDB_Material_1929"
+
 
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:
     """

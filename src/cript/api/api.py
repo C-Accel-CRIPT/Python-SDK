@@ -953,8 +953,8 @@ class API:
             # putting the value_to_search in the URL instead of a query
             value_to_search = None
 
-        elif search_mode == SearchModes.EXACT_NAME:
-            api_endpoint = f"{self._host}search/bigsmiles/"
+        elif search_mode == SearchModes.BIG_SMILES:
+            api_endpoint = f"{self._host}/search/bigsmiles/"
 
         assert api_endpoint != ""
 

@@ -15,6 +15,8 @@ class SearchModes(Enum):
         Search by node name containing a given string.
     UUID : str
         Search by node UUID.
+    BIG_SMILES: str
+        search materials by bigsmiles identifier.
 
     Examples
     -------
@@ -33,3 +35,4 @@ class SearchModes(Enum):
     CONTAINS_NAME: str = "contains_name"
     UUID: str = "uuid"
     # UUID_CHILDREN = "uuid_children"
+    BIG_SMILES: str = "bigsmiles"

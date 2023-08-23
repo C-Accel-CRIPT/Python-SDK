@@ -16,7 +16,10 @@ class SearchModes(Enum):
     UUID : str
         Search by node UUID.
     BIGSMILES: str
-        search materials by bigsmiles identifier.
+        Search materials by bigsmiles identifier.
+    NODE_TYPE_WITHIN_PARENT: str
+        Search for a node type within a parent.
+        > Example: Find all the materials within this specific project.
 
     Examples
     -------

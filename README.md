@@ -22,6 +22,12 @@
 [![Test Coverage](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/test_coverage.yaml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/test_coverage.yaml)
 -->
 
+## CRIPT Availability
+
+Currently, CRIPT is only available for users in the USA, and it is equipped with geo-blocking functionality that restricts access for users outside the USA. We are diligently working towards making CRIPT accessible worldwide. We appreciate your patience as we strive to achieve this goal!
+
+---
+
 ## What is it?
 
 The CRIPT Python SDK allows programmatic access to the [CRIPT platform](https://criptapp.org). It can help automate uploading your data to CRIPT, and aims to allow for manipulation of your CRIPT data through the python language. This is a perfect tool for users who have python experience and have large amount of data to upload to [CRIPT](https://criptapp.org).

@@ -394,11 +394,7 @@ def test_api_search_node_type_within_parent(cript_api: cript.API, simple_project
     searches for all materials within a project node
     """
 
-    all_materials_in_project_paginator = cript_api.search(
-        node_type=cript.Material,
-        search_mode=cript.SearchModes.NODE_TYPE_WITHIN_PARENT,
-        parent_node=simple_project_node
-    )
+    all_materials_in_project_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE_WITHIN_PARENT, parent_node=simple_project_node)
 
     print(simple_project_node.uuid)
 

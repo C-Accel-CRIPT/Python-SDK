@@ -854,13 +854,7 @@ class API:
         # the file is stored in cloud storage and must be retrieved via object_name
         self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=file_source, Filename=destination_path)  # type: ignore
 
-    def search(
-        self,
-        node_type: UUIDBaseNode,
-        search_mode: SearchModes,
-        value_to_search: Optional[str] = None,
-        parent_node: Optional[UUIDBaseNode] = None
-    ) -> Paginator:
+    def search(self, node_type: UUIDBaseNode, search_mode: SearchModes, value_to_search: Optional[str] = None, parent_node: Optional[UUIDBaseNode] = None) -> Paginator:
         """
         This method is used to perform search on the CRIPT platform.
 

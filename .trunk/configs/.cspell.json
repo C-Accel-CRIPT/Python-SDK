@@ -116,6 +116,7 @@
     "mkdocstrings",
     "setuptools",
     "miniconda",
-    "pymdown"
+    "pymdown",
+    "pydantic"
   ]
 }

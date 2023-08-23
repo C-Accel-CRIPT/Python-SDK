@@ -858,19 +858,58 @@ class API:
         self,
         node_type,
         search_mode: SearchModes,
-        value_to_search: Union[None, str],
+        value_to_search: Optional[str],
     ) -> Paginator:
         """
         This method is used to perform search on the CRIPT platform.
 
+        Essentially creates needed resources and passes it to paginator to get results from API
+        and display them.
+
         Examples
         --------
+        ### Search by Node Type
         ```python
-        # search by node type
         materials_paginator = cript_api.search(
             node_type=cript.Material,
             search_mode=cript.SearchModes.NODE_TYPE,
-            value_to_search=None,
+            value_to_search=None
+        )
+        ```
+
+        ### Search by Contains name
+        ```python
+        contains_name_paginator = cript_api.search(
+            node_type=cript.Process,
+            search_mode=cript.SearchModes.CONTAINS_NAME,
+            value_to_search="poly"
+        )
+        ```
+
+        ### Search by Exact Name
+        ```python
+        exact_name_paginator = cript_api.search(
+            node_type=cript.Project,
+            search_mode=cript.SearchModes.EXACT_NAME,
+            value_to_search="Sodium polystyrene sulfonate"
+        )
+        ```
+
+        ### Search by UUID
+        ```python
+        uuid_paginator = cript_api.search(
+            node_type=cript.Collection,
+            search_mode=cript.SearchModes.UUID,
+            value_to_search="75fd3ee5-48c2-4fc7-8d0b-842f4fc812b7"
+        )
+        ```
+
+        ### Search by BigSmiles
+        ```python
+        paginator = cript_api.search(
+            node_type=cript.Material,
+            search_mode=cript.SearchModes.BIGSMILES,
+            value_to_search="{[][$]CC(C)(C(=O)OCCCC)[$][]}"
         )
         ```
 
@@ -881,7 +920,7 @@ class API:
         search_mode : SearchModes
             Type of search you want to do. You can search by name, `UUID`, `EXACT_NAME`, etc.
             Refer to [valid search modes](../search_modes)
-        value_to_search : Union[str, None]
+        value_to_search : Optional[str]
             What you are searching for can be either a value, and if you are only searching for
             a `NODE_TYPE`, then this value can be empty or `None`
 
@@ -913,6 +952,9 @@ class API:
             api_endpoint = f"{self._host}/{node_type}/{value_to_search}"
             # putting the value_to_search in the URL instead of a query
             value_to_search = None
+
+        elif search_mode == SearchModes.BIGSMILES:
+            api_endpoint = f"{self._host}/search/bigsmiles/"
 
         assert api_endpoint != ""
 

@@ -446,7 +446,7 @@ class BaseNode(ABC):
                             # Only delete first child.
                             # Important to break loop here, since value and new_attr_list are not identical any more.
                     if found_child:
-                        new_attrs = replace(new_attrs, **{field: new_attr_list})    # type: ignore
+                        new_attrs = replace(new_attrs, **{field: new_attr_list})  # type: ignore
                         # Again only first found place is removed
                         break
         # Let's see if we found the child aka the new_attrs are different than the old ones

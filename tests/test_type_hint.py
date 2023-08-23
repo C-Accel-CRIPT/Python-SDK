@@ -12,7 +12,7 @@ def test_type_hint() -> None:
     cript.Material(name="my test material", identifier=[{"bigsmiles": "my bigsmiles"}])
 
     # invalid material
-    with pytest.raises(ValidationError) as error:
+    with pytest.raises(ValidationError):
         # giving an invalid identifier of int when expected List[Dict[str, str]]
         invalid_identifier = 5
         cript.Material(name="my test material", identifier=invalid_identifier)

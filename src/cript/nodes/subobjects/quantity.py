@@ -54,7 +54,7 @@ class Quantity(UUIDBaseNode):
     @dataclass(frozen=True)
     class JsonAttributes(UUIDBaseNode.JsonAttributes):
         key: str = ""
-        value: Optional[Number] = None
+        value: Union[Number, str, None] = None
         unit: str = ""
         uncertainty: Optional[Number] = None
         uncertainty_type: str = ""
@@ -171,7 +171,7 @@ class Quantity(UUIDBaseNode):
 
     @value.setter
     @beartype
-    def value(self, new_value: Union[int, float, str]) -> None:
+    def value(self, new_value: Union[Number, str, None]) -> None:
         """
         set the amount of Material
 

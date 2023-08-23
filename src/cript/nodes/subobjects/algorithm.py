@@ -251,7 +251,7 @@ class Algorithm(UUIDBaseNode):
         return self._json_attrs.citation.copy()  # type: ignore
 
     @citation.setter
-    def citation(self, new_citation: Citation) -> None:
+    def citation(self, new_citation: List[Citation]) -> None:
         """
         set the algorithm citation subobject
 

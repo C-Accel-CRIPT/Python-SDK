@@ -72,7 +72,7 @@ class Property(UUIDBaseNode):
         key: str = ""
         type: str = ""
         value: Union[Number, str, None] = None
-        unit: str = ""
+        unit: Optional[str] = ""
         uncertainty: Optional[Number] = None
         uncertainty_type: str = ""
         component: List[Material] = field(default_factory=list)
@@ -304,7 +304,7 @@ class Property(UUIDBaseNode):
 
     @property
     @beartype
-    def unit(self) -> str:
+    def unit(self) -> Optional[str]:
         """
         get the Property unit for the value
 

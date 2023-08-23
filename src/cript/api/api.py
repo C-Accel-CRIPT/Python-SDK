@@ -908,7 +908,7 @@ class API:
         ```python
         paginator = cript_api.search(
             node_type=cript.Material,
-            search_mode=cript.SearchModes.BIG_SMILES,
+            search_mode=cript.SearchModes.BIGSMILES,
             value_to_search="{[][$]CC(C)(C(=O)OCCCC)[$][]}"
         )
         ```
@@ -953,7 +953,7 @@ class API:
             # putting the value_to_search in the URL instead of a query
             value_to_search = None
 
-        elif search_mode == SearchModes.BIG_SMILES:
+        elif search_mode == SearchModes.BIGSMILES:
             api_endpoint = f"{self._host}/search/bigsmiles/"
 
         assert api_endpoint != ""

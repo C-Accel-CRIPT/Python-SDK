@@ -2,7 +2,7 @@ from dataclasses import dataclass, field, replace
 from numbers import Number
 from typing import List, Optional, Union
 
-from beartype import beartype
+from pydantic import validate_call
 
 from cript.nodes.primary_nodes.data import Data
 from cript.nodes.uuid_base import UUIDBaseNode
@@ -90,7 +90,7 @@ class Condition(UUIDBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    @beartype
+    @validate_call
     def __init__(
         self,
         key: str,
@@ -169,7 +169,7 @@ class Condition(UUIDBaseNode):
         self.validate()
 
     @property
-    @beartype
+    @validate_call
     def key(self) -> str:
         """
         type of condition
@@ -190,7 +190,7 @@ class Condition(UUIDBaseNode):
         return self._json_attrs.key
 
     @key.setter
-    @beartype
+    @validate_call
     def key(self, new_key: str) -> None:
         """
         set this Condition sub-object key
@@ -210,7 +210,7 @@ class Condition(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def type(self) -> str:
         """
         description for the value stored for this Condition node
@@ -229,7 +229,7 @@ class Condition(UUIDBaseNode):
         return self._json_attrs.type
 
     @type.setter
-    @beartype
+    @validate_call
     def type(self, new_type: str) -> None:
         """
         set the type attribute for this Condition node
@@ -247,7 +247,7 @@ class Condition(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def descriptor(self) -> str:
         """
         freeform description for Condition
@@ -266,7 +266,7 @@ class Condition(UUIDBaseNode):
         return self._json_attrs.descriptor
 
     @descriptor.setter
-    @beartype
+    @validate_call
     def descriptor(self, new_descriptor: str) -> None:
         """
         set the description of this Condition sub-object
@@ -284,7 +284,7 @@ class Condition(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def value(self) -> Optional[Union[Number, str]]:
         """
         value or quantity
@@ -327,7 +327,7 @@ class Condition(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def unit(self) -> str:
         """
         set units for this Condition subobject
@@ -346,7 +346,7 @@ class Condition(UUIDBaseNode):
         return self._json_attrs.unit
 
     @property
-    @beartype
+    @validate_call
     def uncertainty(self) -> Optional[Union[Number, str]]:
         """
         set uncertainty value for this Condition subobject
@@ -364,7 +364,7 @@ class Condition(UUIDBaseNode):
         """
         return self._json_attrs.uncertainty
 
-    @beartype
+    @validate_call
     def set_uncertainty(self, new_uncertainty: Union[Number, str, None], new_uncertainty_type: str) -> None:
         """
         set uncertainty and uncertainty type
@@ -390,7 +390,7 @@ class Condition(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def uncertainty_type(self) -> str:
         """
         Uncertainty type for the uncertainty value
@@ -411,7 +411,7 @@ class Condition(UUIDBaseNode):
         return self._json_attrs.uncertainty_type
 
     @property
-    @beartype
+    @validate_call
     def set_id(self) -> Union[int, None]:
         """
         ID of set (used to link measurements in as series)
@@ -430,7 +430,7 @@ class Condition(UUIDBaseNode):
         return self._json_attrs.set_id
 
     @set_id.setter
-    @beartype
+    @validate_call
     def set_id(self, new_set_id: Union[int, None]) -> None:
         """
          set this Condition subobjects set_id
@@ -448,7 +448,7 @@ class Condition(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def measurement_id(self) -> Union[int, None]:
         """
         ID for a single measurement (used to link multiple condition at a single instance)
@@ -467,7 +467,7 @@ class Condition(UUIDBaseNode):
         return self._json_attrs.measurement_id
 
     @measurement_id.setter
-    @beartype
+    @validate_call
     def measurement_id(self, new_measurement_id: Union[int, None]) -> None:
         """
         set the set_id for this Condition subobject
@@ -485,7 +485,7 @@ class Condition(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def data(self) -> List[Data]:
         """
         detailed data associated with the condition
@@ -519,7 +519,7 @@ class Condition(UUIDBaseNode):
         return self._json_attrs.data.copy()
 
     @data.setter
-    @beartype
+    @validate_call
     def data(self, new_data: List[Data]) -> None:
         """
         set the data node for this Condition Subobject

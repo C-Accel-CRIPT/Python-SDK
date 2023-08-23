@@ -1,6 +1,6 @@
 from dataclasses import dataclass, replace
 
-from beartype import beartype
+from pydantic import validate_call
 
 from cript.nodes.uuid_base import UUIDBaseNode
 
@@ -54,7 +54,7 @@ class Software(UUIDBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    @beartype
+    @validate_call
     def __init__(self, name: str, version: str, source: str = "", **kwargs):
         """
         create Software node
@@ -87,7 +87,7 @@ class Software(UUIDBaseNode):
         self.validate()
 
     @property
-    @beartype
+    @validate_call
     def name(self) -> str:
         """
         Software name
@@ -106,7 +106,7 @@ class Software(UUIDBaseNode):
         return self._json_attrs.name
 
     @name.setter
-    @beartype
+    @validate_call
     def name(self, new_name: str) -> None:
         """
         set the name of the Software node
@@ -124,7 +124,7 @@ class Software(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attr)
 
     @property
-    @beartype
+    @validate_call
     def version(self) -> str:
         """
         Software version
@@ -139,7 +139,7 @@ class Software(UUIDBaseNode):
         return self._json_attrs.version
 
     @version.setter
-    @beartype
+    @validate_call
     def version(self, new_version: str) -> None:
         """
         set the Software version
@@ -157,7 +157,7 @@ class Software(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attr)
 
     @property
-    @beartype
+    @validate_call
     def source(self) -> str:
         """
         Software source
@@ -176,7 +176,7 @@ class Software(UUIDBaseNode):
         return self._json_attrs.source
 
     @source.setter
-    @beartype
+    @validate_call
     def source(self, new_source: str) -> None:
         """
         set the Software source

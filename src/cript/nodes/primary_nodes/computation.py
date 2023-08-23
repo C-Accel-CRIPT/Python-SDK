@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field, replace
 from typing import Any, List, Optional
 
-from beartype import beartype
+from pydantic import validate_call
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 
@@ -73,7 +73,7 @@ class Computation(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    @beartype
+    @validate_call
     def __init__(
         self,
         name: str,
@@ -158,7 +158,7 @@ class Computation(PrimaryBaseNode):
     # ------------------ Properties ------------------
 
     @property
-    @beartype
+    @validate_call
     def type(self) -> str:
         """
         The type of computation
@@ -180,7 +180,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.type
 
     @type.setter
-    @beartype
+    @validate_call
     def type(self, new_computation_type: str) -> None:
         """
         set the computation type
@@ -199,7 +199,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def input_data(self) -> List[Any]:
         """
         List of input data (data nodes) for this node
@@ -229,7 +229,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.input_data.copy()
 
     @input_data.setter
-    @beartype
+    @validate_call
     def input_data(self, new_input_data_list: List[Any]) -> None:
         """
         set the input data list
@@ -247,7 +247,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def output_data(self) -> List[Any]:
         """
         List of output data (data nodes)
@@ -277,7 +277,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.output_data.copy()
 
     @output_data.setter
-    @beartype
+    @validate_call
     def output_data(self, new_output_data_list: List[Any]) -> None:
         """
         set the list of output data (data nodes) for this node
@@ -295,7 +295,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def software_configuration(self) -> List[Any]:
         """
         List of software_configuration for this computation node
@@ -317,7 +317,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.software_configuration.copy()
 
     @software_configuration.setter
-    @beartype
+    @validate_call
     def software_configuration(self, new_software_configuration_list: List[Any]) -> None:
         """
         set the list of software_configuration for this computation node
@@ -335,7 +335,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def condition(self) -> List[Any]:
         """
         List of condition for this computation node
@@ -357,7 +357,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.condition.copy()
 
     @condition.setter
-    @beartype
+    @validate_call
     def condition(self, new_condition_list: List[Any]) -> None:
         """
         set the list of condition for this node
@@ -374,7 +374,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def prerequisite_computation(self) -> Optional["Computation"]:
         """
         prerequisite computation
@@ -396,7 +396,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.prerequisite_computation
 
     @prerequisite_computation.setter
-    @beartype
+    @validate_call
     def prerequisite_computation(self, new_prerequisite_computation: Optional["Computation"]) -> None:
         """
         set new prerequisite_computation
@@ -413,7 +413,7 @@ class Computation(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def citation(self) -> List[Any]:
         """
         List of citations
@@ -438,7 +438,7 @@ class Computation(PrimaryBaseNode):
         return self._json_attrs.citation.copy()  # type: ignore
 
     @citation.setter
-    @beartype
+    @validate_call
     def citation(self, new_citation_list: List[Any]) -> None:
         """
         set the List of citations

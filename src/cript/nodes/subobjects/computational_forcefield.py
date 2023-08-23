@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field, replace
 from typing import List, Optional
 
-from beartype import beartype
+from pydantic import validate_call
 
 from cript.nodes.primary_nodes.data import Data
 from cript.nodes.subobjects.citation import Citation
@@ -93,7 +93,7 @@ class ComputationalForcefield(UUIDBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    @beartype
+    @validate_call
     def __init__(self, key: str, building_block: str, coarse_grained_mapping: str = "", implicit_solvent: str = "", source: str = "", description: str = "", data: Optional[List[Data]] = None, citation: Optional[List[Citation]] = None, **kwargs):
         """
         instantiate a computational_forcefield subobject
@@ -153,7 +153,7 @@ class ComputationalForcefield(UUIDBaseNode):
         self.validate()
 
     @property
-    @beartype
+    @validate_call
     def key(self) -> str:
         """
         type of forcefield
@@ -175,7 +175,7 @@ class ComputationalForcefield(UUIDBaseNode):
         return self._json_attrs.key
 
     @key.setter
-    @beartype
+    @validate_call
     def key(self, new_key: str) -> None:
         """
         set key for this computational_forcefield
@@ -193,7 +193,7 @@ class ComputationalForcefield(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def building_block(self) -> str:
         """
         type of building block
@@ -215,7 +215,7 @@ class ComputationalForcefield(UUIDBaseNode):
         return self._json_attrs.building_block
 
     @building_block.setter
-    @beartype
+    @validate_call
     def building_block(self, new_building_block: str) -> None:
         """
         type of building block
@@ -233,7 +233,7 @@ class ComputationalForcefield(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def coarse_grained_mapping(self) -> str:
         """
         atom to beads mapping
@@ -252,7 +252,7 @@ class ComputationalForcefield(UUIDBaseNode):
         return self._json_attrs.coarse_grained_mapping
 
     @coarse_grained_mapping.setter
-    @beartype
+    @validate_call
     def coarse_grained_mapping(self, new_coarse_grained_mapping: str) -> None:
         """
         atom to beads mapping
@@ -270,7 +270,7 @@ class ComputationalForcefield(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def implicit_solvent(self) -> str:
         """
         Name of implicit solvent
@@ -289,7 +289,7 @@ class ComputationalForcefield(UUIDBaseNode):
         return self._json_attrs.implicit_solvent
 
     @implicit_solvent.setter
-    @beartype
+    @validate_call
     def implicit_solvent(self, new_implicit_solvent: str) -> None:
         """
         set the implicit_solvent
@@ -303,7 +303,7 @@ class ComputationalForcefield(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def source(self) -> str:
         """
         source of forcefield
@@ -322,7 +322,7 @@ class ComputationalForcefield(UUIDBaseNode):
         return self._json_attrs.source
 
     @source.setter
-    @beartype
+    @validate_call
     def source(self, new_source: str) -> None:
         """
         set the computational_forcefield
@@ -336,7 +336,7 @@ class ComputationalForcefield(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def description(self) -> str:
         """
         description of the forcefield and any modifications that have been added
@@ -355,7 +355,7 @@ class ComputationalForcefield(UUIDBaseNode):
         return self._json_attrs.description
 
     @description.setter
-    @beartype
+    @validate_call
     def description(self, new_description: str) -> None:
         """
         set this computational_forcefields description
@@ -373,7 +373,7 @@ class ComputationalForcefield(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def data(self) -> List[Data]:
         """
         details of mapping schema and forcefield parameters
@@ -407,7 +407,7 @@ class ComputationalForcefield(UUIDBaseNode):
         return self._json_attrs.data.copy()
 
     @data.setter
-    @beartype
+    @validate_call
     def data(self, new_data: List[Data]) -> None:
         """
         set the data attribute of this computational_forcefield node
@@ -425,7 +425,7 @@ class ComputationalForcefield(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def citation(self) -> List[Citation]:
         """
         reference to a book, paper, or scholarly work
@@ -464,7 +464,7 @@ class ComputationalForcefield(UUIDBaseNode):
         return self._json_attrs.citation.copy()
 
     @citation.setter
-    @beartype
+    @validate_call
     def citation(self, new_citation: List[Citation]) -> None:
         """
         set the citation subobject of the computational_forcefield subobject

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field, replace
 from typing import List, Optional, Union
 
-from beartype import beartype
+from pydantic import validate_call
 
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.subobjects.quantity import Quantity
@@ -71,7 +71,7 @@ class Ingredient(UUIDBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    @beartype
+    @validate_call
     def __init__(self, material: Material, quantity: List[Quantity], keyword: Optional[List[str]] = None, **kwargs):
         """
         create an ingredient sub-object
@@ -121,7 +121,7 @@ class Ingredient(UUIDBaseNode):
         return super(Ingredient, cls)._from_json(json_dict)
 
     @property
-    @beartype
+    @validate_call
     def material(self) -> Union[Material, None]:
         """
         current material in this ingredient sub-object
@@ -134,7 +134,7 @@ class Ingredient(UUIDBaseNode):
         return self._json_attrs.material
 
     @property
-    @beartype
+    @validate_call
     def quantity(self) -> List[Quantity]:
         """
         quantity for the ingredient sub-object
@@ -146,7 +146,7 @@ class Ingredient(UUIDBaseNode):
         """
         return self._json_attrs.quantity.copy()
 
-    @beartype
+    @validate_call
     def set_material(self, new_material: Material, new_quantity: List[Quantity]) -> None:
         """
         update ingredient sub-object with new material and new list of quantities
@@ -181,7 +181,7 @@ class Ingredient(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def keyword(self) -> List[str]:
         """
         ingredient keyword must come from the
@@ -202,7 +202,7 @@ class Ingredient(UUIDBaseNode):
         return self._json_attrs.keyword.copy()
 
     @keyword.setter
-    @beartype
+    @validate_call
     def keyword(self, new_keyword: List[str]) -> None:
         """
         set new ingredient keyword to replace the current

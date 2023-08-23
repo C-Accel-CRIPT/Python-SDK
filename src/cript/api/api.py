@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional, Union
 import boto3
 import jsonschema
 import requests
-from beartype import beartype
+from pydantic import validate_call
 
 from cript.api.exceptions import (
     CRIPTAPIRequiredError,
@@ -94,7 +94,7 @@ class API:
     _internal_s3_client: Any = None  # type: ignore
     # trunk-ignore-end(cspell)
 
-    @beartype
+    @validate_call
     def __init__(self, host: Union[str, None] = None, api_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: Union[str, Path] = ""):
         """
         Initialize CRIPT API client with host and token.
@@ -250,7 +250,7 @@ class API:
         """
         return f"CRIPT API Client - Host URL: '{self.host}'"
 
-    @beartype
+    @validate_call
     def _prepare_host(self, host: str) -> str:
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
@@ -298,7 +298,7 @@ class API:
         self.connect()
         return self
 
-    @beartype
+    @validate_call
     def __exit__(self, type, value, traceback):
         self.disconnect()
 
@@ -417,7 +417,7 @@ class API:
 
         return self._vocabulary
 
-    @beartype
+    @validate_call
     def get_vocab_by_category(self, category: VocabCategories) -> List[dict]:
         """
         get the CRIPT controlled vocabulary by category
@@ -449,7 +449,7 @@ class API:
 
         return self._vocabulary[category.value]
 
-    @beartype
+    @validate_call
     def _is_vocab_valid(self, vocab_category: VocabCategories, vocab_word: str) -> bool:
         """
         checks if the vocabulary is valid within the CRIPT controlled vocabulary.
@@ -529,7 +529,7 @@ class API:
             self._db_schema = response_dict["data"]
             return self._db_schema
 
-    @beartype
+    @validate_call
     def _is_node_schema_valid(self, node_json: str, is_patch: bool = False) -> bool:
         """
         checks a node JSON schema against the db schema to return if it is valid or not.
@@ -783,7 +783,7 @@ class API:
         # return the object_name within AWS S3 for easy retrieval
         return object_name
 
-    @beartype
+    @validate_call
     def download_file(self, file_source: str, destination_path: str = ".") -> None:
         """
         Download a file from CRIPT Cloud Storage (AWS S3) and save it to the specified path.
@@ -853,7 +853,7 @@ class API:
         # the file is stored in cloud storage and must be retrieved via object_name
         self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=file_source, Filename=destination_path)  # type: ignore
 
-    @beartype
+    @validate_call
     def search(
         self,
         node_type,

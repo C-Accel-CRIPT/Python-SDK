@@ -2,7 +2,7 @@ from dataclasses import dataclass, field, replace
 from numbers import Number
 from typing import List, Optional, Union
 
-from beartype import beartype
+from pydantic import validate_call
 
 from cript.nodes.primary_nodes.computation import Computation
 from cript.nodes.primary_nodes.data import Data
@@ -87,7 +87,7 @@ class Property(UUIDBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    @beartype
+    @validate_call
     def __init__(
         self,
         key: str,
@@ -190,7 +190,7 @@ class Property(UUIDBaseNode):
         self.validate()
 
     @property
-    @beartype
+    @validate_call
     def key(self) -> str:
         """
         Property key must come from [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/)
@@ -209,7 +209,7 @@ class Property(UUIDBaseNode):
         return self._json_attrs.key
 
     @key.setter
-    @beartype
+    @validate_call
     def key(self, new_key: str) -> None:
         """
         set the key for this Property sub-object
@@ -227,7 +227,7 @@ class Property(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def type(self) -> str:
         """
         type of value for this Property sub-object
@@ -247,7 +247,7 @@ class Property(UUIDBaseNode):
         return self._json_attrs.type
 
     @type.setter
-    @beartype
+    @validate_call
     def type(self, new_type: str) -> None:
         """
         set the Property type for this subobject
@@ -265,7 +265,7 @@ class Property(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def value(self) -> Union[Number, str, None]:
         """
         get the Property value
@@ -277,7 +277,7 @@ class Property(UUIDBaseNode):
         """
         return self._json_attrs.value
 
-    @beartype
+    @validate_call
     def set_value(self, new_value: Union[Number, str, None], new_unit: str) -> None:
         """
         set the value attribute of the Property subobject
@@ -303,7 +303,7 @@ class Property(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def unit(self) -> str:
         """
         get the Property unit for the value
@@ -316,7 +316,7 @@ class Property(UUIDBaseNode):
         return self._json_attrs.unit
 
     @property
-    @beartype
+    @validate_call
     def uncertainty(self) -> Union[Number, None]:
         """
         get the uncertainty value of the Property node
@@ -328,7 +328,7 @@ class Property(UUIDBaseNode):
         """
         return self._json_attrs.uncertainty
 
-    @beartype
+    @validate_call
     def set_uncertainty(self, new_uncertainty: Optional[Number], new_uncertainty_type: str) -> None:
         """
         set the uncertainty value and type
@@ -356,7 +356,7 @@ class Property(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def uncertainty_type(self) -> str:
         """
         get the uncertainty_type for this Property subobject
@@ -372,7 +372,7 @@ class Property(UUIDBaseNode):
         return self._json_attrs.uncertainty_type
 
     @property
-    @beartype
+    @validate_call
     def component(self) -> List[Material]:
         """
         list of Materials that the Property relates to
@@ -396,7 +396,7 @@ class Property(UUIDBaseNode):
         return self._json_attrs.component.copy()
 
     @component.setter
-    @beartype
+    @validate_call
     def component(self, new_component: List[Material]) -> None:
         """
         set the list of Materials as components for the Property subobject
@@ -414,7 +414,7 @@ class Property(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def structure(self) -> str:
         """
         specific chemical structure associate with the property with atom mappings
@@ -433,7 +433,7 @@ class Property(UUIDBaseNode):
         return self._json_attrs.structure
 
     @structure.setter
-    @beartype
+    @validate_call
     def structure(self, new_structure: str) -> None:
         """
         set the this Property's structure
@@ -451,7 +451,7 @@ class Property(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def method(self) -> str:
         """
         approach or source of property data True sample_preparation Process sample preparation
@@ -472,7 +472,7 @@ class Property(UUIDBaseNode):
         return self._json_attrs.method
 
     @method.setter
-    @beartype
+    @validate_call
     def method(self, new_method: str) -> None:
         """
         set the Property method
@@ -492,7 +492,7 @@ class Property(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def sample_preparation(self) -> Union[Process, None]:
         """
         sample_preparation
@@ -513,7 +513,7 @@ class Property(UUIDBaseNode):
         return self._json_attrs.sample_preparation
 
     @sample_preparation.setter
-    @beartype
+    @validate_call
     def sample_preparation(self, new_sample_preparation: Union[Process, None]) -> None:
         """
         set the sample_preparation for the Property subobject
@@ -531,7 +531,7 @@ class Property(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def condition(self) -> List[Condition]:
         """
         list of Conditions under which the property was measured
@@ -552,7 +552,7 @@ class Property(UUIDBaseNode):
         return self._json_attrs.condition.copy()
 
     @condition.setter
-    @beartype
+    @validate_call
     def condition(self, new_condition: List[Condition]) -> None:
         """
         set the list of Conditions for this property subobject
@@ -570,7 +570,7 @@ class Property(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def data(self) -> List[Data]:
         """
         List of Data nodes for this Property subobjects
@@ -601,7 +601,7 @@ class Property(UUIDBaseNode):
         return self._json_attrs.data.copy()
 
     @data.setter
-    @beartype
+    @validate_call
     def data(self, new_data: List[Data]) -> None:
         """
         set the Data node for the Property subobject
@@ -619,7 +619,7 @@ class Property(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def computation(self) -> List[Computation]:
         """
         list of Computation nodes that produced this property
@@ -640,7 +640,7 @@ class Property(UUIDBaseNode):
         return self._json_attrs.computation.copy()
 
     @computation.setter
-    @beartype
+    @validate_call
     def computation(self, new_computation: List[Computation]) -> None:
         """
         set the list of Computation nodes that produced this property
@@ -658,7 +658,7 @@ class Property(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def citation(self) -> List[Citation]:
         """
         list of Citation subobjects for this Property subobject
@@ -698,7 +698,7 @@ class Property(UUIDBaseNode):
         return self._json_attrs.citation.copy()
 
     @citation.setter
-    @beartype
+    @validate_call
     def citation(self, new_citation: List[Citation]) -> None:
         """
         set the list of Citation subobjects for the Property subobject
@@ -716,7 +716,7 @@ class Property(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def notes(self) -> str:
         """
         notes for this Property subobject
@@ -735,7 +735,7 @@ class Property(UUIDBaseNode):
         return self._json_attrs.notes
 
     @notes.setter
-    @beartype
+    @validate_call
     def notes(self, new_notes: str) -> None:
         """
         set the notes for this Property subobject

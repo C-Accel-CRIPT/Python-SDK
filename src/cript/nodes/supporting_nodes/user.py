@@ -1,7 +1,7 @@
 from dataclasses import dataclass, replace
 from typing import Optional, Union
 
-from beartype import beartype
+from pydantic import validate_call
 
 from cript.nodes.uuid_base import UUIDBaseNode
 
@@ -58,7 +58,7 @@ class User(UUIDBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    @beartype
+    @validate_call
     def __init__(self, username: str, email: Optional[str] = "", orcid: Optional[str] = "", **kwargs):
         """
         Json from CRIPT API to be converted to a node
@@ -79,12 +79,12 @@ class User(UUIDBaseNode):
         self.validate()
 
     @property
-    @beartype
+    @validate_call
     def created_at(self) -> str:
         return self._json_attrs.created_at
 
     @property
-    @beartype
+    @validate_call
     def email(self) -> Union[str, None]:
         """
         user's email
@@ -101,12 +101,12 @@ class User(UUIDBaseNode):
         return self._json_attrs.email
 
     @property
-    @beartype
+    @validate_call
     def model_version(self) -> str:
         return self._json_attrs.model_version
 
     @property
-    @beartype
+    @validate_call
     def orcid(self) -> Union[str, None]:
         """
         users [ORCID](https://orcid.org/)
@@ -123,17 +123,17 @@ class User(UUIDBaseNode):
         return self._json_attrs.orcid
 
     @property
-    @beartype
+    @validate_call
     def picture(self) -> str:
         return self._json_attrs.picture
 
     @property
-    @beartype
+    @validate_call
     def updated_at(self) -> str:
         return self._json_attrs.updated_at
 
     @property
-    @beartype
+    @validate_call
     def username(self) -> str:
         """
         username of the User node

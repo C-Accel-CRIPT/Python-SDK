@@ -2,7 +2,7 @@ from typing import List, Optional, Union
 from urllib.parse import quote
 
 import requests
-from beartype import beartype
+from pydantic import validate_call
 
 
 class Paginator:
@@ -42,7 +42,7 @@ class Paginator:
 
     current_page_results: List[dict]
 
-    @beartype
+    @validate_call
     def __init__(
         self,
         http_headers: dict,
@@ -115,7 +115,7 @@ class Paginator:
         self.current_page_number -= 1
 
     @property
-    @beartype
+    @validate_call
     def current_page_number(self) -> int:
         """
         get the current page number that you are on.
@@ -136,7 +136,7 @@ class Paginator:
         return self._current_page_number
 
     @current_page_number.setter
-    @beartype
+    @validate_call
     def current_page_number(self, new_page_number: int) -> None:
         """
         flips to a specific page of data that has been requested
@@ -167,7 +167,7 @@ class Paginator:
             # when new page number is set, it is then fetched from the API
             self.fetch_page_from_api()
 
-    @beartype
+    @validate_call
     def fetch_page_from_api(self) -> List[dict]:
         """
         1. builds the URL from the query and page number

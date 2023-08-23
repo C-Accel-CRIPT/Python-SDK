@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field, replace
 from typing import List, Union
 
-from beartype import beartype
+from pydantic import validate_call
 
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.condition import Condition
@@ -59,7 +59,7 @@ class Equipment(UUIDBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    @beartype
+    @validate_call
     def __init__(self, key: str, description: str = "", condition: Union[List[Condition], None] = None, file: Union[List[File], None] = None, citation: Union[List[Citation], None] = None, **kwargs) -> None:
         """
         create equipment sub-object
@@ -99,7 +99,7 @@ class Equipment(UUIDBaseNode):
         self.validate()
 
     @property
-    @beartype
+    @validate_call
     def key(self) -> str:
         """
         scientific instrument
@@ -120,7 +120,7 @@ class Equipment(UUIDBaseNode):
         return self._json_attrs.key
 
     @key.setter
-    @beartype
+    @validate_call
     def key(self, new_key: str) -> None:
         """
         set the equipment key
@@ -140,7 +140,7 @@ class Equipment(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def description(self) -> str:
         """
         description of the equipment
@@ -159,7 +159,7 @@ class Equipment(UUIDBaseNode):
         return self._json_attrs.description
 
     @description.setter
-    @beartype
+    @validate_call
     def description(self, new_description: str) -> None:
         """
         set this equipments description
@@ -177,7 +177,7 @@ class Equipment(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def condition(self) -> List[Condition]:
         """
         conditions under which the property was measured
@@ -205,7 +205,7 @@ class Equipment(UUIDBaseNode):
         return self._json_attrs.condition.copy()
 
     @condition.setter
-    @beartype
+    @validate_call
     def condition(self, new_condition: List[Condition]) -> None:
         """
         set a list of Conditions for the equipment sub-object
@@ -223,7 +223,7 @@ class Equipment(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def file(self) -> List[File]:
         """
         list of file nodes to link to calibration or equipment specification documents
@@ -251,7 +251,7 @@ class Equipment(UUIDBaseNode):
         return self._json_attrs.file.copy()
 
     @file.setter
-    @beartype
+    @validate_call
     def file(self, new_file: List[File]) -> None:
         """
         set the file node for the equipment subobject
@@ -269,7 +269,7 @@ class Equipment(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def citation(self) -> List[Citation]:
         """
         reference to a book, paper, or scholarly work
@@ -309,7 +309,7 @@ class Equipment(UUIDBaseNode):
         return self._json_attrs.citation.copy()
 
     @citation.setter
-    @beartype
+    @validate_call
     def citation(self, new_citation: List[Citation]) -> None:
         """
         set the citation subobject for this equipment subobject

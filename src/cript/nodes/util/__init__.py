@@ -286,7 +286,7 @@ class _NodeDecoderHook:
             try:
                 return self._uid_cache[node_dict["uid"]]
             except KeyError:
-                # TODO if we convince beartype to accept Proxy temporarily, enable return instead of raise
+                # TODO if we convince runtime type checker to accept Proxy temporarily, enable return instead of raise
                 raise CRIPTDeserializationUIDError("Unknown", node_dict["uid"])
                 # return _UIDProxy(node_dict["uid"])
 
@@ -447,7 +447,7 @@ def load_nodes_from_json(nodes_json: str):
     node_json_hook = _NodeDecoderHook()
     json_nodes = json.loads(nodes_json, object_hook=node_json_hook)
 
-    # TODO: enable this logic to replace proxies, once beartype is OK with that.
+    # TODO: enable this logic to replace proxies, once runtime type checker is OK with that.
     # def recursive_proxy_replacement(node, handled_nodes):
     #     if isinstance(node, _UIDProxy):
     #         try:

@@ -77,7 +77,7 @@ def test_uid_deserialization(simple_algorithm_node, complex_parameter_node, simp
     with pytest.raises(cript.nodes.exceptions.CRIPTDeserializationUIDError):
         cript.load_nodes_from_json(json.dumps(material3_dict))
 
-    # TODO convince beartype to allow _ProxyUID as well
+    # TODO convince runtime type checker to allow _ProxyUID as well
     # material4_dict = {
     #     "node": [
     #         "Material"

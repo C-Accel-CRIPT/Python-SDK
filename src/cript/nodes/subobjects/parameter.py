@@ -2,7 +2,7 @@ from dataclasses import dataclass, replace
 from numbers import Number
 from typing import Optional, Union
 
-from beartype import beartype
+from pydantic import validate_call
 
 from cript.nodes.uuid_base import UUIDBaseNode
 
@@ -67,7 +67,7 @@ class Parameter(UUIDBaseNode):
 
     # Note that the key word args are ignored.
     # They are just here, such that we can feed more kwargs in that we get from the back end.
-    @beartype
+    @validate_call
     def __init__(self, key: str, value: Number, unit: Optional[str] = None, **kwargs):
         """
         create new Parameter sub-object
@@ -108,7 +108,7 @@ class Parameter(UUIDBaseNode):
         return super(Parameter, cls)._from_json(json_dict)
 
     @property
-    @beartype
+    @validate_call
     def key(self) -> str:
         """
         Parameter key must come from the [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/parameter_key)
@@ -127,7 +127,7 @@ class Parameter(UUIDBaseNode):
         return self._json_attrs.key
 
     @key.setter
-    @beartype
+    @validate_call
     def key(self, new_key: str) -> None:
         """
         set new key for the Parameter sub-object
@@ -147,7 +147,7 @@ class Parameter(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def value(self) -> Optional[Number]:
         """
         Parameter value
@@ -166,7 +166,7 @@ class Parameter(UUIDBaseNode):
         return self._json_attrs.value
 
     @value.setter
-    @beartype
+    @validate_call
     def value(self, new_value: Number) -> None:
         """
         set the Parameter value
@@ -184,7 +184,7 @@ class Parameter(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def unit(self) -> Union[str, None]:
         """
         Parameter unit
@@ -203,7 +203,7 @@ class Parameter(UUIDBaseNode):
         return self._json_attrs.unit
 
     @unit.setter
-    @beartype
+    @validate_call
     def unit(self, new_unit: str) -> None:
         """
         set the unit attribute for the Parameter sub-object

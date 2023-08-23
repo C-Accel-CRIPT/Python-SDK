@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field, replace
 from typing import List, Optional, Union
 
-from beartype import beartype
+from pydantic import validate_call
 
 from cript.nodes.subobjects.algorithm import Algorithm
 from cript.nodes.subobjects.citation import Citation
@@ -64,7 +64,7 @@ class SoftwareConfiguration(UUIDBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    @beartype
+    @validate_call
     def __init__(self, software: Software, algorithm: Optional[List[Algorithm]] = None, notes: str = "", citation: Union[List[Citation], None] = None, **kwargs):
         """
         Create Software_Configuration sub-object
@@ -105,7 +105,7 @@ class SoftwareConfiguration(UUIDBaseNode):
         self.validate()
 
     @property
-    @beartype
+    @validate_call
     def software(self) -> Union[Software, None]:
         """
         Software used
@@ -128,7 +128,7 @@ class SoftwareConfiguration(UUIDBaseNode):
         return self._json_attrs.software
 
     @software.setter
-    @beartype
+    @validate_call
     def software(self, new_software: Union[Software, None]) -> None:
         """
         set the Software used
@@ -146,7 +146,7 @@ class SoftwareConfiguration(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def algorithm(self) -> List[Algorithm]:
         """
         list of Algorithms used
@@ -167,7 +167,7 @@ class SoftwareConfiguration(UUIDBaseNode):
         return self._json_attrs.algorithm.copy()
 
     @algorithm.setter
-    @beartype
+    @validate_call
     def algorithm(self, new_algorithm: List[Algorithm]) -> None:
         """
         set the list of Algorithms
@@ -185,7 +185,7 @@ class SoftwareConfiguration(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def notes(self) -> str:
         """
         miscellaneous information, or custom data structure (e.g.; JSON). Notes can be written in plain text or JSON
@@ -210,7 +210,7 @@ class SoftwareConfiguration(UUIDBaseNode):
         return self._json_attrs.notes
 
     @notes.setter
-    @beartype
+    @validate_call
     def notes(self, new_notes: str) -> None:
         """
         set notes for Software_configuration
@@ -228,7 +228,7 @@ class SoftwareConfiguration(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    @beartype
+    @validate_call
     def citation(self) -> List[Citation]:
         """
         list of Citation sub-objects for the Software_Configuration
@@ -268,7 +268,7 @@ class SoftwareConfiguration(UUIDBaseNode):
         return self._json_attrs.citation.copy()
 
     @citation.setter
-    @beartype
+    @validate_call
     def citation(self, new_citation: List[Citation]) -> None:
         """
         set the Citation sub-object

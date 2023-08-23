@@ -868,50 +868,50 @@ class API:
 
         Examples
         --------
-        ### Search by Node Type
-        ```python
-        materials_paginator = cript_api.search(
-            node_type=cript.Material,
-            search_mode=cript.SearchModes.NODE_TYPE,
-            value_to_search=None
-        )
-        ```
+        ???+ Example "Search by Node Type"
+            ```python
+            materials_paginator = cript_api.search(
+                node_type=cript.Material,
+                search_mode=cript.SearchModes.NODE_TYPE,
+                value_to_search=None
+            )
+            ```
 
-        ### Search by Contains name
-        ```python
-        contains_name_paginator = cript_api.search(
-            node_type=cript.Process,
-            search_mode=cript.SearchModes.CONTAINS_NAME,
-            value_to_search="poly"
-        )
-        ```
+        ??? Example "Search by Contains name"
+            ```python
+            contains_name_paginator = cript_api.search(
+                node_type=cript.Process,
+                search_mode=cript.SearchModes.CONTAINS_NAME,
+                value_to_search="poly"
+            )
+            ```
 
-        ### Search by Exact Name
-        ```python
-        exact_name_paginator = cript_api.search(
-            node_type=cript.Project,
-            search_mode=cript.SearchModes.EXACT_NAME,
-            value_to_search="Sodium polystyrene sulfonate"
-        )
-        ```
+        ??? Example "Search by Exact Name"
+            ```python
+            exact_name_paginator = cript_api.search(
+                node_type=cript.Project,
+                search_mode=cript.SearchModes.EXACT_NAME,
+                value_to_search="Sodium polystyrene sulfonate"
+            )
+            ```
 
-        ### Search by UUID
-        ```python
-        uuid_paginator = cript_api.search(
-            node_type=cript.Collection,
-            search_mode=cript.SearchModes.UUID,
-            value_to_search="75fd3ee5-48c2-4fc7-8d0b-842f4fc812b7"
-        )
-        ```
+        ??? Example "Search by UUID"
+            ```python
+            uuid_paginator = cript_api.search(
+                node_type=cript.Collection,
+                search_mode=cript.SearchModes.UUID,
+                value_to_search="75fd3ee5-48c2-4fc7-8d0b-842f4fc812b7"
+            )
+            ```
 
-        ### Search by BigSmiles
-        ```python
-        paginator = cript_api.search(
-            node_type=cript.Material,
-            search_mode=cript.SearchModes.BIGSMILES,
-            value_to_search="{[][$]CC(C)(C(=O)OCCCC)[$][]}"
-        )
-        ```
+        ??? Example "Search by BigSmiles"
+            ```python
+            paginator = cript_api.search(
+                node_type=cript.Material,
+                search_mode=cript.SearchModes.BIGSMILES,
+                value_to_search="{[][$]CC(C)(C(=O)OCCCC)[$][]}"
+            )
+            ```
 
         Parameters
         ----------

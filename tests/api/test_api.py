@@ -388,22 +388,22 @@ def test_api_search_uuid(cript_api: cript.API) -> None:
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
-def test_api_search_bigsmiles(cript_api: cript.API) -> None:
+def test_api_search_node_type_within_parent(cript_api: cript.API, simple_project_node) -> None:
     """
-    tests search method with bigsmiles SearchMode to see if we just get at least one match
-    searches for material
-    "{[][<]C(C)C(=O)O[>][<]}{[$][$]CCC(C)C[$],[$]CC(C(C)C)[$],[$]CC(C)(CC)[$][]}"
-
-    another good example can be "{[][$]CC(C)(C(=O)OCCCC)[$][]}"
+    tests search NODE_TYPE_WITHIN_PARENT
+    searches for all materials within a project node
     """
-    bigsmiles_search_value = "{[][<]C(C)C(=O)O[>][<]}{[$][$]CCC(C)C[$],[$]CC(C(C)C)[$],[$]CC(C)(CC)[$][]}"
 
-    bigsmiles_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.BIG_SMILES, value_to_search=bigsmiles_search_value)
+    all_materials_in_project_paginator = cript_api.search(
+        node_type=cript.Material,
+        search_mode=cript.SearchModes.NODE_TYPE_WITHIN_PARENT,
+        parent_node=simple_project_node
+    )
 
-    assert isinstance(bigsmiles_paginator, Paginator)
-    assert len(bigsmiles_paginator.current_page_results) >= 1
-    # not sure if this will always be in this position in every server environment, so commenting it out for now
-    # assert bigsmiles_paginator.current_page_results[1]["name"] == "BCDB_Material_285"
+    print(simple_project_node.uuid)
+
+    assert isinstance(all_materials_in_project_paginator, Paginator)
+    assert len(all_materials_in_project_paginator.current_page_results) >= 1
 
 
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:

@@ -33,6 +33,7 @@ from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import VocabCategories
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.project import Project
+from cript.nodes.uuid_base import UUIDBaseNode
 
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.
@@ -853,12 +854,12 @@ class API:
         # the file is stored in cloud storage and must be retrieved via object_name
         self._s3_client.download_file(Bucket=self._BUCKET_NAME, Key=file_source, Filename=destination_path)  # type: ignore
 
-    @beartype
     def search(
         self,
-        node_type,
+        node_type: UUIDBaseNode,
         search_mode: SearchModes,
-        value_to_search: Optional[str],
+        value_to_search: Optional[str] = None,
+        parent_node: Optional[UUIDBaseNode] = None
     ) -> Paginator:
         """
         This method is used to perform search on the CRIPT platform.
@@ -913,6 +914,15 @@ class API:
             )
             ```
 
+        ??? Example "Search node type within parent"
+            ```python
+            all_materials_in_project_paginator = cript_api.search(
+                node_type=cript.Material,   # the node you want back
+                search_mode=cript.SearchModes.NODE_TYPE_WITHIN_PARENT,  # type of search
+                parent_node=my_project_node # parent node to search through
+            )
+            ```
+
         Parameters
         ----------
         node_type : UUIDBaseNode
@@ -922,7 +932,12 @@ class API:
             Refer to [valid search modes](../search_modes)
         value_to_search : Optional[str]
             What you are searching for can be either a value, and if you are only searching for
-            a `NODE_TYPE`, then this value can be empty or `None`
+            a `NODE_TYPE` or a search mode that does not take a value
+             then this value can be empty or `None` because it will not be used
+             > Not applicable for all search modes
+        parent_node: UUIDBaseNode default None
+            The parent that you are searching through.
+            > Not applicable for all search modes
 
         Returns
         -------
@@ -955,6 +970,9 @@ class API:
 
         elif search_mode == SearchModes.BIGSMILES:
             api_endpoint = f"{self._host}/search/bigsmiles/"
+
+        elif search_mode == SearchModes.NODE_TYPE_WITHIN_PARENT:
+            api_endpoint = f"{self._host}/{parent_node.node_type}/{parent_node.uuid}/{node_type}"
 
         assert api_endpoint != ""
 

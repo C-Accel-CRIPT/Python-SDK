@@ -34,5 +34,5 @@ class SearchModes(Enum):
     EXACT_NAME: str = "exact_name"
     CONTAINS_NAME: str = "contains_name"
     UUID: str = "uuid"
-    # UUID_CHILDREN = "uuid_children"
     BIGSMILES: str = "bigsmiles"
+    NODE_TYPE_WITHIN_PARENT: str = "node_type_within_parent"

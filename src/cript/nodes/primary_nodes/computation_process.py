@@ -159,7 +159,7 @@ class ComputationProcess(PrimaryBaseNode):
         # Material node for Quantity node
         my_material = cript.Material(
             name="my material",
-            identifiers=[{"alternative_names": "my material alternative name"}]
+            identifier=[{"alternative_names": "my material alternative name"}]
             )
 
         # create quantity node

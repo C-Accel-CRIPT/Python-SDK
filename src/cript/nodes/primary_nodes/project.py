@@ -202,8 +202,8 @@ class Project(PrimaryBaseNode):
         Examples
         --------
         ```python
-        identifiers = [{"alternative_names": "my material alternative name"}]
-        my_material = cript.Material(name="my material", identifiers=identifiers)
+        identifier = [{"alternative_names": "my material alternative name"}]
+        my_material = cript.Material(name="my material", identifier=identifier)
 
         my_project.material = [my_material]
         ```

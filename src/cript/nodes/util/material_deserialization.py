@@ -32,7 +32,7 @@ def _deserialize_flattened_material_identifiers(json_dict: Dict) -> Dict:
        "node":["Material"],
        "name":"my cool material",
        "uuid":"_:my cool material",
-       "identifiers":[
+       "identifier":[
           {"smiles":"CCC"},
           {"bigsmiles":"my big smiles"}
        ]
@@ -69,6 +69,6 @@ def _deserialize_flattened_material_identifiers(json_dict: Dict) -> Dict:
             # delete identifiers from the API JSON response as they are added to the material node
             del json_dict[identifier]
 
-    json_dict["identifiers"] = identifier_argument
+    json_dict["identifier"] = identifier_argument
 
     return json_dict

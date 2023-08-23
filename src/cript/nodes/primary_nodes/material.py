@@ -16,7 +16,7 @@ class Material(PrimaryBaseNode):
     ## Attributes
     | attribute                 | type                                                                 | example                                           | description                                         | required    | vocab |
     |---------------------------|----------------------------------------------------------------------|---------------------------------------------------|-----------------------------------------------------|-------------|-------|
-    | identifiers               | list[Identifier]                                                     |                                                   | material identifiers                                | True        |       |
+    | identifier               | list[Identifier]                                                     |                                                   | material identifiers                                | True        |       |
     | component                 | list[[Material](./)]                                                 |                                                   | list of component that make up the mixture          |             |       |
     | property                  | list[[Property](../../subobjects/property)]                          |                                                   | material properties                                 |             |       |
     | process                   | [Process](../process)                                                |                                                   | process node that made this material                |             |       |
@@ -62,7 +62,7 @@ class Material(PrimaryBaseNode):
         """
 
         # identifier sub-object for the material
-        identifiers: List[Dict[str, str]] = field(default_factory=dict)  # type: ignore
+        identifier: List[Dict[str, str]] = field(default_factory=dict)  # type: ignore
         # TODO add proper typing in future, using Any for now to avoid circular import error
         component: List["Material"] = field(default_factory=list)
         process: Optional[Process] = None
@@ -77,7 +77,7 @@ class Material(PrimaryBaseNode):
     def __init__(
         self,
         name: str,
-        identifiers: List[Dict[str, str]],
+        identifier: List[Dict[str, str]],
         component: Optional[List["Material"]] = None,
         process: Optional[Process] = None,
         property: Optional[List[Any]] = None,
@@ -93,7 +93,7 @@ class Material(PrimaryBaseNode):
         Parameters
         ----------
         name: str
-        identifiers: List[Dict[str, str]]
+        identifier: List[Dict[str, str]]
         component: List["Material"], default=None
         property: Optional[Process], default=None
         process: List[Process], default=None
@@ -121,7 +121,7 @@ class Material(PrimaryBaseNode):
         self._json_attrs = replace(
             self._json_attrs,
             name=name,
-            identifiers=identifiers,
+            identifier=identifier,
             component=component,
             process=process,
             property=property,
@@ -167,7 +167,7 @@ class Material(PrimaryBaseNode):
 
     @property
     @beartype
-    def identifiers(self) -> List[Dict[str, str]]:
+    def identifier(self) -> List[Dict[str, str]]:
         """
         get the identifiers for this material
 
@@ -183,11 +183,11 @@ class Material(PrimaryBaseNode):
         List[Dict[str, str]]
             list of dictionary that has identifiers for this material
         """
-        return self._json_attrs.identifiers.copy()
+        return self._json_attrs.identifier.copy()
 
-    @identifiers.setter
+    @identifier.setter
     @beartype
-    def identifiers(self, new_identifiers_list: List[Dict[str, str]]) -> None:
+    def identifier(self, new_identifier_list: List[Dict[str, str]]) -> None:
         """
         set the list of identifiers for this material
 
@@ -196,13 +196,13 @@ class Material(PrimaryBaseNode):
 
         Parameters
         ----------
-        new_identifiers_list: List[Dict[str, str]]
+        new_identifier_list: List[Dict[str, str]]
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, identifiers=new_identifiers_list)
+        new_attrs = replace(self._json_attrs, identifier=new_identifier_list)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -219,19 +219,19 @@ class Material(PrimaryBaseNode):
             # create material node
             cript.Material(
                 name="my component material 1",
-                identifiers=[{"alternative_names": "component 1 alternative name"}],
+                identifier=[{"alternative_names": "component 1 alternative name"}],
             ),
 
             # create material node
             cript.Material(
                 name="my component material 2",
-                identifiers=[{"alternative_names": "component 2 alternative name"}],
+                identifier=[{"alternative_names": "component 2 alternative name"}],
             ),
         ]
 
 
-        identifiers = [{"alternative_names": "my material alternative name"}]
-        my_material = cript.Material(name="my material", component=my_component, identifiers=identifiers)
+        identifier = [{"alternative_names": "my material alternative name"}]
+        my_material = cript.Material(name="my material", component=my_component, identifier=identifier)
         ```
 
         Returns
@@ -329,13 +329,13 @@ class Material(PrimaryBaseNode):
         [CRIPT controlled vocabulary](https://app.criptapp.org/vocab/material_keyword)
 
         ```python
-        identifiers = [{"alternative_names": "my material alternative name"}]
+        identifier = [{"alternative_names": "my material alternative name"}]
 
         # keyword
         material_keyword = ["acetylene", "acrylate", "alternating"]
 
         my_material = cript.Material(
-            name="my material", keyword=material_keyword, identifiers=identifiers
+            name="my material", keyword=material_keyword, identifier=identifier
         )
         ```
 
@@ -433,8 +433,8 @@ class Material(PrimaryBaseNode):
         * `name`: The name of the node
 
         optional fields in JSON:
-        * `identifiers`: A list of material identifiers.
-            * If the `identifiers` property is not present in the JSON dictionary,
+        * `identifier`: A list of material identifiers.
+            * If the `identifier` property is not present in the JSON dictionary,
             it will be set to an empty list.
         """
         from cript.nodes.util.material_deserialization import (

@@ -29,8 +29,8 @@ def test_removing_nodes(simple_algorithm_node, complex_parameter_node, simple_al
 
 
 def test_uid_deserialization(simple_algorithm_node, complex_parameter_node, simple_algorithm_dict):
-    identifiers = [{"bigsmiles": "123456"}]
-    material = cript.Material(name="my material", identifiers=identifiers)
+    identifier = [{"bigsmiles": "123456"}]
+    material = cript.Material(name="my material", identifier=identifier)
 
     computation = cript.Computation(name="my computation name", type="analysis")
     property1 = cript.Property("modulus_shear", "value", 5.0, "GPa", computation=[computation])

@@ -322,7 +322,7 @@ def _material_identifiers_list_to_json_fields(serialize_dict: dict) -> dict:
         {
             "node":["Material"],
             "name":"my material",
-            "identifiers":[ {"cas":"my material cas"} ],
+            "identifier":[ {"cas":"my material cas"} ],
             "uid":"_:a78203cb-82ea-4376-910e-dee74088cd37"
         }
     ```
@@ -350,13 +350,13 @@ def _material_identifiers_list_to_json_fields(serialize_dict: dict) -> dict:
     """
 
     # TODO this if statement might not be needed in future
-    if "identifiers" in serialize_dict:
-        for identifier in serialize_dict["identifiers"]:
+    if "identifier" in serialize_dict:
+        for identifier in serialize_dict["identifier"]:
             for key, value in identifier.items():
                 serialize_dict[key] = value
 
         # remove identifiers list of objects after it has been flattened
-        del serialize_dict["identifiers"]
+        del serialize_dict["identifier"]
 
     return serialize_dict
 

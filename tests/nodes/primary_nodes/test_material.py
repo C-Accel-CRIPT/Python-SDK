@@ -13,7 +13,7 @@ def test_create_complex_material(simple_material_node, simple_computational_forc
     """
 
     material_name = "my material name"
-    identifiers = [{"bigsmiles": "1234"}, {"bigsmiles": "4567"}]
+    identifier = [{"bigsmiles": "1234"}, {"bigsmiles": "4567"}]
     keyword = ["acetylene"]
 
     component = [simple_material_node]
@@ -21,11 +21,11 @@ def test_create_complex_material(simple_material_node, simple_computational_forc
 
     my_property = [cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")]
 
-    my_material = cript.Material(name=material_name, identifiers=identifiers, keyword=keyword, component=component, process=simple_process_node, property=my_property, computational_forcefield=forcefield)
+    my_material = cript.Material(name=material_name, identifier=identifier, keyword=keyword, component=component, process=simple_process_node, property=my_property, computational_forcefield=forcefield)
 
     assert isinstance(my_material, cript.Material)
     assert my_material.name == material_name
-    assert my_material.identifiers == identifiers
+    assert my_material.identifier == identifier
     assert my_material.keyword == keyword
     assert my_material.component == component
     assert my_material.process == simple_process_node
@@ -52,11 +52,11 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     # new attributes
     new_name = "new material name"
 
-    new_identifiers = [{"bigsmiles": "6789"}]
+    new_identifier = [{"bigsmiles": "6789"}]
 
     new_parent_material = cript.Material(
         name="my parent material",
-        identifiers=[
+        identifier=[
             {"bigsmiles": "9876"},
         ],
     )
@@ -66,7 +66,7 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     new_components = [
         cript.Material(
             name="my component material 1",
-            identifiers=[
+            identifier=[
                 {"bigsmiles": "654321"},
             ],
         ),
@@ -74,7 +74,7 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
 
     # set all attributes for Material node
     simple_material_node.name = new_name
-    simple_material_node.identifiers = new_identifiers
+    simple_material_node.identifier = new_identifier
     simple_material_node.property = [simple_property_node]
     simple_material_node.parent_material = new_parent_material
     simple_material_node.computational_forcefield = simple_computational_forcefield_node
@@ -83,7 +83,7 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
 
     # get all attributes and assert that they are equal to the setter
     assert simple_material_node.name == new_name
-    assert simple_material_node.identifiers == new_identifiers
+    assert simple_material_node.identifier == new_identifier
     assert simple_material_node.property == [simple_property_node]
     assert simple_material_node.parent_material == new_parent_material
     assert simple_material_node.computational_forcefield == simple_computational_forcefield_node
@@ -141,6 +141,6 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
 
     # ========= test update =========
     # update material attribute to trigger update
-    simple_project_node.material[0].identifiers = [{"bigsmiles": "my bigsmiles UPDATED"}]
+    simple_project_node.material[0].identifier = [{"bigsmiles": "my bigsmiles UPDATED"}]
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)

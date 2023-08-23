@@ -381,8 +381,8 @@ class Property(UUIDBaseNode):
         ---------
         ```python
 
-        my_identifiers = [{"bigsmiles": "123456"}]
-        my_material = cript.Material(name="my material", identifier=my_identifiers)
+        my_identifier = [{"bigsmiles": "123456"}]
+        my_material = cript.Material(name="my material", identifier=my_identifier)
 
         # add material node as component to Property subobject
         my_property.component = my_material

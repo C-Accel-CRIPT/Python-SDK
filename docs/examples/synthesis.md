@@ -124,7 +124,7 @@ my_solution_material_identifiers = [
 
 solution = cript.Material(
     name="SecBuLi solution 1.4M cHex",
-    identifiers=my_solution_material_identifiers
+    identifier=my_solution_material_identifiers
 )
 ```
 
@@ -132,10 +132,10 @@ These materials are simple, notice how we use the SMILES notation here as an ide
 Similarly, we can create more initial materials.
 
 ```python
-toluene = cript.Material(name="toluene", identifiers=[{"smiles": "Cc1ccccc1"}, {"pubchem_id": 1140}])
-styrene = cript.Material(name="styrene", identifiers=[{"smiles": "c1ccccc1C=C"}, {"inchi": "InChI=1S/C8H8/c1-2-8-6-4-3-5-7-8/h2-7H,1H2"}])
-butanol = cript.Material(name="1-butanol", identifiers=[{"smiles": "OCCCC"}, {"inchi_key": "InChIKey=LRHPLDYGYMQRHN-UHFFFAOYSA-N"}])
-methanol = cript.Material(name="methanol", identifiers=[{"smiles": "CO"}, {"names": ["Butan-1-ol", "Butyric alcohol", "Methylolpropane", "n-Butan-1-ol", "methanol"]}])
+toluene = cript.Material(name="toluene", identifier=[{"smiles": "Cc1ccccc1"}, {"pubchem_id": 1140}])
+styrene = cript.Material(name="styrene", identifier=[{"smiles": "c1ccccc1C=C"}, {"inchi": "InChI=1S/C8H8/c1-2-8-6-4-3-5-7-8/h2-7H,1H2"}])
+butanol = cript.Material(name="1-butanol", identifier=[{"smiles": "OCCCC"}, {"inchi_key": "InChIKey=LRHPLDYGYMQRHN-UHFFFAOYSA-N"}])
+methanol = cript.Material(name="methanol", identifier=[{"smiles": "CO"}, {"names": ["Butan-1-ol", "Butyric alcohol", "Methylolpropane", "n-Butan-1-ol", "methanol"]}])
 ```
 
 Now that we defined those materials, we can combine them into an inventory
@@ -250,7 +250,7 @@ that will serve as our product. We give the material a `name` attribute and add 
 [Project]((../../nodes/primary_nodes/project).
 
 ```python
-polystyrene = cript.Material(name="polystyrene", identifiers=[])
+polystyrene = cript.Material(name="polystyrene", identifier=[])
 project.material += [polystyrene]
 ```
 
@@ -258,12 +258,12 @@ Let's add some `Identifiers` to the material to make it easier to identify and s
 
 ```python
 # create a name identifier
-polystyrene.identifiers += [{"names": ["poly(styrene)", "poly(vinylbenzene)"]}]
+polystyrene.identifier += [{"names": ["poly(styrene)", "poly(vinylbenzene)"]}]
 
 # create a BigSMILES identifier
-polystyrene.identifiers += [{"bigsmiles": "[H]{[>][<]C(C[>])c1ccccc1[<]}C(C)CC"}]
+polystyrene.identifier += [{"bigsmiles": "[H]{[>][<]C(C[>])c1ccccc1[<]}C(C)CC"}]
 # create a chemical repeat unit identifier
-polystyrene.identifiers += [{"chem_repeat": ["C8H8"]}]
+polystyrene.identifier += [{"chem_repeat": ["C8H8"]}]
 ```
 
 Next, we'll add some [Property](../../nodes/subobjects/property) nodes to the

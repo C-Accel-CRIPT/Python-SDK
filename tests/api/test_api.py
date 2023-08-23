@@ -379,8 +379,7 @@ def test_api_search_uuid(cript_api: cript.API) -> None:
 
     material_uuid = exact_name_paginator.current_page_results[0]["uuid"]
 
-    uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID,
-                                      value_to_search=material_uuid)
+    uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=material_uuid)
 
     assert isinstance(uuid_paginator, Paginator)
     assert len(uuid_paginator.current_page_results) == 1

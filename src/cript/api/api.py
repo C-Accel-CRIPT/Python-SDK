@@ -966,8 +966,14 @@ class API:
         elif search_mode == SearchModes.CONTAINS_NAME:
             api_endpoint = f"{self._host}/search/{node_type}/"
 
+            if value_to_search is None:
+                raise ValueError("`value_to_search` is needed for `SearchModes.CONTAINS_NAME`")
+
         elif search_mode == SearchModes.EXACT_NAME:
             api_endpoint = f"{self._host}/search/exact/{node_type}/"
+
+            if value_to_search is None:
+                raise ValueError("`value_to_search` is needed for `SearchModes.EXACT_NAME`")
 
         elif search_mode == SearchModes.UUID:
             api_endpoint = f"{self._host}/{node_type}/{value_to_search}/"
@@ -977,13 +983,26 @@ class API:
         elif search_mode == SearchModes.BIGSMILES:
             api_endpoint = f"{self._host}/search/bigsmiles/"
 
+            if value_to_search is None:
+                raise ValueError("`value_to_search` is needed for `SearchModes.BIGSMILES`")
+
+
         elif search_mode == SearchModes.CHILD_NODE_TYPE_WITHIN_PARENT:
             api_endpoint = f"{self._host}/{parent_node.node_type}/{parent_node.uuid}/{node_type}/"
             # not using `value_to_search`
             value_to_search = None
 
+            if parent_node is None:
+                raise ValueError("`parent_node` is needed for `SearchModes.CHILD_NODE_TYPE_WITHIN_PARENT`")
+
         elif search_mode == SearchModes.CHILD_WITH_EXACT_NAME_WITHIN_PARENT:
             api_endpoint = f"{self._host}/search/exact/{parent_node.node_type}/{parent_node.uuid}/{node_type}/"
+
+            if value_to_search is None:
+                raise ValueError("`value_to_search` is needed for `SearchModes.CHILD_WITH_EXACT_NAME_WITHIN_PARENT`")
+
+            if parent_node is None:
+                raise ValueError("`parent_node` is needed for `SearchModes.CHILD_WITH_EXACT_NAME_WITHIN_PARENT`")
 
         assert api_endpoint != ""
 

@@ -943,6 +943,22 @@ class API:
             The parent that you are searching through.
             > Not applicable for all search modes
 
+        Raises
+        ------
+        ValueError
+            Raised when required arguments are missing for a specific search mode, preventing a silent failure.
+
+            Certain arguments are specific to different search modes. To ensure smooth API calls and avoid
+            confusion, this function performs a *pre-call* check for the necessary arguments based on the chosen
+            search mode. If a required argument is missing, a `ValueError` is raised.
+
+            Example:
+            ```python
+            cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME)
+            ```
+            > This example will raise a `ValueError` since the `value_to_search` argument is missing, which is
+            required for the `EXACT_NAME` SearchMode.
+
         Returns
         -------
         Paginator

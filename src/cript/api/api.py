@@ -908,12 +908,22 @@ class API:
             )
             ```
 
-        ??? Example "Search node type within parent"
+        ??? Example "Search child node type within parent"
             ```python
             all_materials_in_project_paginator = cript_api.search(
-                node_type=cript.Material,   # the node you want back
-                search_mode=cript.SearchModes.NODE_TYPE_WITHIN_PARENT,  # type of search
+                node_type=cript.Material,   # the node type you want back
+                search_mode=cript.SearchModes.CHILD_NODE_TYPE_WITHIN_PARENT,  # type of search
                 parent_node=my_project_node # parent node to search through
+            )
+            ```
+
+        ??? Example "Search child node type within parent"
+            ```python
+            materials_exact_name_in_project_paginator = cript_api.search(
+                node_type=cript.Material,
+                search_mode=cript.SearchModes.CHILD_WITH_EXACT_NAME_WITHIN_PARENT,
+                value_to_search="N-Butyl-2-chlorobenzamide",
+                parent_node=my_project_node
             )
             ```
 
@@ -949,24 +959,31 @@ class API:
 
         # requesting a page of some primary node
         if search_mode == SearchModes.NODE_TYPE:
-            api_endpoint = f"{self._host}/{node_type}"
+            api_endpoint = f"{self._host}/{node_type}/"
+            # not using `value_to_search`
+            value_to_search = None
 
         elif search_mode == SearchModes.CONTAINS_NAME:
-            api_endpoint = f"{self._host}/search/{node_type}"
+            api_endpoint = f"{self._host}/search/{node_type}/"
 
         elif search_mode == SearchModes.EXACT_NAME:
-            api_endpoint = f"{self._host}/search/exact/{node_type}"
+            api_endpoint = f"{self._host}/search/exact/{node_type}/"
 
         elif search_mode == SearchModes.UUID:
-            api_endpoint = f"{self._host}/{node_type}/{value_to_search}"
+            api_endpoint = f"{self._host}/{node_type}/{value_to_search}/"
             # putting the value_to_search in the URL instead of a query
             value_to_search = None
 
         elif search_mode == SearchModes.BIGSMILES:
             api_endpoint = f"{self._host}/search/bigsmiles/"
 
-        elif search_mode == SearchModes.NODE_TYPE_WITHIN_PARENT:
-            api_endpoint = f"{self._host}/{parent_node.node_type}/{parent_node.uuid}/{node_type}"
+        elif search_mode == SearchModes.CHILD_NODE_TYPE_WITHIN_PARENT:
+            api_endpoint = f"{self._host}/{parent_node.node_type}/{parent_node.uuid}/{node_type}/"
+            # not using `value_to_search`
+            value_to_search = None
+
+        elif search_mode == SearchModes.CHILD_WITH_EXACT_NAME_WITHIN_PARENT:
+            api_endpoint = f"{self._host}/search/exact/{parent_node.node_type}/{parent_node.uuid}/{node_type}/"
 
         assert api_endpoint != ""
 

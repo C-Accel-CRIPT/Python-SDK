@@ -1,4 +1,4 @@
 requests==2.31.0
-jsonschema==4.18.4
-boto3==1.28.17
+jsonschema==4.19.0
+boto3==1.28.34
 beartype==0.14.1

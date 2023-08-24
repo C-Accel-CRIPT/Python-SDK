@@ -406,15 +406,9 @@ def test_api_search_child_with_exact_name_within_parent(cript_api: cript.API, cr
     tests search NODE_TYPE_WITHIN_PARENT
     searches for all materials within a project node
     """
-
     exact_name_to_search = "N-Butyl-2-chlorobenzamide"
 
-    materials_exact_name_in_project_paginator = cript_api.search(
-        node_type=cript.Material,
-        search_mode=cript.SearchModes.CHILD_WITH_EXACT_NAME_WITHIN_PARENT,
-        value_to_search=exact_name_to_search,
-        parent_node=cript_project_node
-    )
+    materials_exact_name_in_project_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.CHILD_WITH_EXACT_NAME_WITHIN_PARENT, value_to_search=exact_name_to_search, parent_node=cript_project_node)
 
     assert isinstance(materials_exact_name_in_project_paginator, Paginator)
     assert len(materials_exact_name_in_project_paginator.current_page_results) >= 1

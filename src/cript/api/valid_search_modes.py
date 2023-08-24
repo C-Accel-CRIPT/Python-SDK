@@ -20,9 +20,6 @@ class SearchModes(Enum):
     CHILD_NODE_TYPE_WITHIN_PARENT: str
         Search for a node type within a parent.
         > Example: Find all the materials within this specific project.
-    CHILD_CONTAINS_NAME_WITHIN_PARENT: str
-        Search for a node containing a value for an attribute within a parent
-        > Example: Search for all materials that contain a certain name for the field specified within a project.
     CHILD_WITH_EXACT_NAME_WITHIN_PARENT: str
         Search for an exact node name within a parent
         > Example: Search for the materials with that exact name in the project or returns nothing.
@@ -45,5 +42,4 @@ class SearchModes(Enum):
     UUID: str = "uuid"
     BIGSMILES: str = "bigsmiles"
     CHILD_NODE_TYPE_WITHIN_PARENT: str = "child_node_type_within_parent"
-    CHILD_CONTAINS_NAME_WITHIN_PARENT: str = "child_contains_name_within_parent"
     CHILD_WITH_EXACT_NAME_WITHIN_PARENT: str = "child_with_exact_name_within_parent"

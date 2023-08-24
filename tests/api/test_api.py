@@ -11,6 +11,7 @@ import requests
 from conftest import HAS_INTEGRATION_TESTS_ENABLED
 
 import cript
+from cript import load_nodes_from_json
 from cript.api.exceptions import InvalidVocabulary
 from cript.api.paginator import Paginator
 from cript.nodes.exceptions import CRIPTNodeSchemaError
@@ -388,18 +389,36 @@ def test_api_search_uuid(cript_api: cript.API) -> None:
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
-def test_api_search_node_type_within_parent(cript_api: cript.API, simple_project_node) -> None:
+def test_api_search_child_node_type_within_parent(cript_api: cript.API, cript_project_node) -> None:
+    """
+    tests search NODE_TYPE_WITHIN_PARENT
+    searches for all materials within a project node
+    """
+    materials_in_project_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.CHILD_NODE_TYPE_WITHIN_PARENT, parent_node=cript_project_node)
+
+    assert isinstance(materials_in_project_paginator, Paginator)
+    assert len(materials_in_project_paginator.current_page_results) >= 1
+
+
+@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
+def test_api_search_child_with_exact_name_within_parent(cript_api: cript.API, cript_project_node) -> None:
     """
     tests search NODE_TYPE_WITHIN_PARENT
     searches for all materials within a project node
     """
 
-    all_materials_in_project_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE_WITHIN_PARENT, parent_node=simple_project_node)
+    exact_name_to_search = "N-Butyl-2-chlorobenzamide"
 
-    print(simple_project_node.uuid)
+    materials_exact_name_in_project_paginator = cript_api.search(
+        node_type=cript.Material,
+        search_mode=cript.SearchModes.CHILD_WITH_EXACT_NAME_WITHIN_PARENT,
+        value_to_search=exact_name_to_search,
+        parent_node=cript_project_node
+    )
 
-    assert isinstance(all_materials_in_project_paginator, Paginator)
-    assert len(all_materials_in_project_paginator.current_page_results) >= 1
+    assert isinstance(materials_exact_name_in_project_paginator, Paginator)
+    assert len(materials_exact_name_in_project_paginator.current_page_results) >= 1
+    assert materials_exact_name_in_project_paginator.current_page_results[0]["name"] == exact_name_to_search
 
 
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:

@@ -1,11 +1,31 @@
 import copy
 import json
 import uuid
+from typing import Dict
 
 import pytest
 from util import strip_uid_from_dict
 
 import cript
+from cript import load_nodes_from_json
+
+
+@pytest.fixture(scope="function")
+def cript_project_node(cript_api: cript.API) -> cript.Project:
+    """
+    The CRIPT project node that exists on all server environements
+
+    Notes
+    -----
+    Good to use for when you need to test against a project but can't use any single project
+    because it might not be available on all CRIPT server environments, or any permission issues, that
+    the project is visible to you but not others running your tests so they get false errors.
+    """
+    # get CRIPT project from API and convert to node
+    exact_name_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search="cript")
+    cript_project_dict: Dict = exact_name_paginator.current_page_results[0]
+    cript_project_node: cript.Project = load_nodes_from_json(json.dumps(cript_project_dict))
+    return cript_project_node
 
 
 @pytest.fixture(scope="function")

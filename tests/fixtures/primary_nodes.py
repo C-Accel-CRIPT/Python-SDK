@@ -13,7 +13,7 @@ from cript import load_nodes_from_json
 @pytest.fixture(scope="function")
 def cript_project_node(cript_api: cript.API) -> cript.Project:
     """
-    The CRIPT project node that exists on all server environements
+    The CRIPT project node that exists on all server environments
 
     Notes
     -----

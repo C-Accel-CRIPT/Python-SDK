@@ -11,7 +11,6 @@ import requests
 from conftest import HAS_INTEGRATION_TESTS_ENABLED
 
 import cript
-from cript import load_nodes_from_json
 from cript.api.exceptions import InvalidVocabulary
 from cript.api.paginator import Paginator
 from cript.nodes.exceptions import CRIPTNodeSchemaError

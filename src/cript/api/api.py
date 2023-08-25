@@ -12,7 +12,6 @@ import jsonschema
 import requests
 from beartype import beartype
 
-import cript
 from cript.api.exceptions import (
     CRIPTAPIRequiredError,
     CRIPTAPISaveError,

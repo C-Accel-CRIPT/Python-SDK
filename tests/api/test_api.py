@@ -406,14 +406,6 @@ def test_api_search_bigsmiles(cript_api: cript.API) -> None:
     # assert bigsmiles_paginator.current_page_results[1]["name"] == "BCDB_Material_285"
 
 
-@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
-def test_api_refresh_project(cript_api: cript.API):
-    """
-    take the CRIPT Project, since it is available on all environments, and refresh it successfully
-    """
-    pass
-
-
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:
     """
     tests that the Python SDK can successfully get the user node associated with the API Token

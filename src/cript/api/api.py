@@ -1065,30 +1065,3 @@ class API:
         # TODO log that it has been successfully deleted from API
         if self.verbose:
             self.logger.info(f"Deleted `{node.node_type}` with UUID of {node.uuid} from CRIPT API.")
-
-    # def refresh_project(self, project: cript.Project) -> cript.Project:
-    #     """
-    #     Takes a project node locally, fetches it from the API, and gives it back
-    #
-    #     Under the hood, it actually uses `cript.API.search()` with the SearchMode of `UUID`
-    #
-    #     Parameters
-    #     ----------
-    #     project: cript.Project
-    #
-    #     Raises
-    #     ------
-    #     APIError
-    #         In case the API responds with an error.
-    #
-    #     Returns
-    #     -------
-    #     Project Node: cript.Project
-    #         The latest project node as it exists on the CRIPT API
-    #     """
-    #     project_paginator: cript.Paginator = self.search(node_type=cript.Project, search_mode=SearchModes.UUID, value_to_search=project.uuid)
-    #
-    #     # deserialize project node from paginator
-    #     refreshed_project: cript.Project = cript.load_nodes_from_json(project_paginator.current_page_results[0])
-    #
-    #     return refreshed_project

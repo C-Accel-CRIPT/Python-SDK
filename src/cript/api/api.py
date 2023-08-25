@@ -12,12 +12,14 @@ import jsonschema
 import requests
 from beartype import beartype
 
+import cript
 from cript.api.exceptions import (
     CRIPTAPIRequiredError,
     CRIPTAPISaveError,
     CRIPTConnectionError,
     InvalidHostError,
     InvalidVocabulary,
+    APIError,
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
@@ -33,6 +35,7 @@ from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import VocabCategories
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.project import Project
+from cript.nodes.uuid_base import UUIDBaseNode
 
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.
@@ -960,3 +963,63 @@ class API:
 
         # TODO error handling if none of the API endpoints got hit
         return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, query=value_to_search, current_page_number=page_number)
+
+    def delete(self, node) -> None:
+        """
+        Delete a node from the CRIPT API
+
+        Makes a request to the API to delete a specific node.
+        If delete was successful, it will retrieve the latest project from CRIPT API
+        and return it, and the new project node should be used from that point forward.
+
+        Parameters
+        ----------
+        node: UUIDBaseNode
+            The node that you want to delete
+
+        Raises
+        ------
+        APIError
+            In case the API cannot delete the specified node.
+            Such cases can happen if you do not have permission to delete the node
+            or if the node is actively being used elsewhere in CRIPT and the API cannot delete it.
+
+        Returns
+        -------
+        None
+        """
+
+        response: Dict = requests.delete(headers=self._http_headers, url=f"{self._host}/{node.node_type}/{node.uuid}/").json()
+
+        if response["code"] != 200:
+            raise APIError(api_error=str(response))
+
+        # TODO log that it has been successfully deleted from API
+
+    def refresh_project(self, project: cript.Project) -> cript.Project:
+        """
+        Takes a project node locally, fetches it from the API, and gives it back
+
+        Under the hood, it actually uses `cript.API.search()` with the SearchMode of `UUID`
+
+        Parameters
+        ----------
+        project: cript.Project
+
+        Raises
+        ------
+        APIError
+            In case the API responds with an error.
+
+        Returns
+        -------
+        Project Node: cript.Project
+            The latest project node as it exists on the CRIPT API
+        """
+        project_paginator: cript.Paginator = self.search(node_type=cript.Project, search_mode=SearchModes.UUID, value_to_search=project.uuid)
+
+        # deserialize project node from paginator
+        refreshed_project: cript.Project = cript.load_nodes_from_json(project_paginator.current_page_results[0])
+
+        return refreshed_project
+

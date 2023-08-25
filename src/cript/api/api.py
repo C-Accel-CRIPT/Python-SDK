@@ -13,12 +13,12 @@ import requests
 from beartype import beartype
 
 from cript.api.exceptions import (
+    APIError,
     CRIPTAPIRequiredError,
     CRIPTAPISaveError,
     CRIPTConnectionError,
     InvalidHostError,
     InvalidVocabulary,
-    APIError,
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token

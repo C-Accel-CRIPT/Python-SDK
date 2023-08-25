@@ -59,7 +59,7 @@ class API:
 
     # dictates whether the user wants to see terminal log statements or not
     _verbose: bool = True
-    logger: logging.Logger = None
+    logger: logging.Logger = None   # type: ignore
 
     _host: str = ""
     _api_token: str = ""

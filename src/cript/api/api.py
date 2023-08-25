@@ -1019,6 +1019,10 @@ class API:
             Such cases can happen if you do not have permission to delete the node
             or if the node is actively being used elsewhere in CRIPT and the API cannot delete it.
 
+        Notes
+        -----
+        After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
+
         Returns
         -------
         None

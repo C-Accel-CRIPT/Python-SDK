@@ -56,27 +56,10 @@ class API:
     """
     ## Definition
     API Client class to communicate with the CRIPT API
-
-    Attributes
-    ----------
-    verbose : bool
-        A boolean flag that controls whether verbose logging is enabled or not.
-
-        When `verbose` is set to `True`, the class will provide additional detailed logging
-        to the terminal. This can be useful for debugging and understanding the internal
-        workings of the class.
-
-        When `verbose` is set to `False`, the class will only provide essential and concise
-        logging information, making the terminal output less cluttered and more user-friendly.
-
-        ```python
-        # turn off the terminal logs
-        api.verbose = False
-        ```
     """
 
     # dictates whether the user wants to see terminal log statements or not
-    verbose: bool = True
+    _verbose: bool = True
     logger: logging.Logger = None
 
     _host: str = ""
@@ -257,11 +240,16 @@ class API:
         """
         return f"CRIPT API Client - Host URL: '{self.host}'"
 
-    def _set_logger(self) -> None:
+    def _set_logger(self, verbose: bool = True) -> None:
         """
         Prepare and configure the logger for the API class.
 
         This function creates and configures a logger instance associated with the current module (class).
+
+        Parameters
+        ----------
+        verbose: bool default True
+            set if you want `cript.API` to give logs to console or not
 
         Returns
         -------
@@ -271,8 +259,11 @@ class API:
         # Create a logger instance associated with the current module
         logger = logging.getLogger(__name__)
 
-        # Set the log level
-        logger.setLevel(logging.INFO)
+        # Set the logger's level based on the verbose flag
+        if verbose:
+            logger.setLevel(logging.INFO)  # Display INFO logs
+        else:
+            logger.setLevel(logging.CRITICAL)  # Display no logs
 
         # Create a console handler
         console_handler = logging.StreamHandler()
@@ -288,6 +279,47 @@ class API:
 
         # set logger for the class
         self.logger = logger
+
+    @property
+    def verbose(self) -> bool:
+        """
+        A boolean flag that controls whether verbose logging is enabled or not.
+
+        When `verbose` is set to `True`, the class will provide additional detailed logging
+        to the terminal. This can be useful for debugging and understanding the internal
+        workings of the class.
+
+        When `verbose` is set to `False`, the class will only provide essential and concise
+        logging information, making the terminal output less cluttered and more user-friendly.
+
+        ```python
+        # turn off the terminal logs
+        api.verbose = False
+        ```
+
+        Returns
+        -------
+        bool
+            verbose boolean value
+        """
+        return self._verbose
+
+    @verbose.setter
+    def verbose(self, new_verbose_value: bool) -> None:
+        """
+        sets the verbose value and then sets a new logger for the class
+
+        Parameters
+        ----------
+        new_verbose_value: bool
+            new verbose value to turn the logging ON or OFF
+
+        Returns
+        -------
+        None
+        """
+        self._verbose = new_verbose_value
+        self._set_logger(verbose=new_verbose_value)
 
     @beartype
     def _prepare_host(self, host: str) -> str:
@@ -609,10 +641,9 @@ class API:
 
         node_dict = json.loads(node_json)
 
-        if self.verbose:
-            # logging out info to the terminal for the user feedback
-            # (improve UX because the program is currently slow)
-            self.logger.info(f"Validating {node_type} graph...")
+        # logging out info to the terminal for the user feedback
+        # (improve UX because the program is currently slow)
+        self.logger.info(f"Validating {node_type} graph...")
 
         # set the schema to test against http POST or PATCH of DB Schema
         schema_http_method: str
@@ -1063,4 +1094,3 @@ class API:
     #     refreshed_project: cript.Project = cript.load_nodes_from_json(project_paginator.current_page_results[0])
     #
     #     return refreshed_project
-

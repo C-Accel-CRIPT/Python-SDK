@@ -77,6 +77,7 @@ class API:
 
     # dictates whether the user wants to see terminal log statements or not
     verbose: bool = True
+    logger: logging.Logger = None
 
     _host: str = ""
     _api_token: str = ""
@@ -243,6 +244,9 @@ class API:
 
         self._get_db_schema()
 
+        # set a logger instance to use for the class logs
+        self._set_logger()
+
     def __str__(self) -> str:
         """
         States the host of the CRIPT API client
@@ -252,6 +256,38 @@ class API:
         str
         """
         return f"CRIPT API Client - Host URL: '{self.host}'"
+
+    def _set_logger(self) -> None:
+        """
+        Prepare and configure the logger for the API class.
+
+        This function creates and configures a logger instance associated with the current module (class).
+
+        Returns
+        -------
+        logging.Logger
+            The configured logger instance.
+        """
+        # Create a logger instance associated with the current module
+        logger = logging.getLogger(__name__)
+
+        # Set the log level
+        logger.setLevel(logging.INFO)
+
+        # Create a console handler
+        console_handler = logging.StreamHandler()
+
+        # Create a formatter for log messages (customize the format as desired)
+        formatter = logging.Formatter("%(levelname)s: %(message)s")
+
+        # Associate the formatter with the console handler
+        console_handler.setFormatter(formatter)
+
+        # Add the console handler to the logger
+        logger.addHandler(console_handler)
+
+        # set logger for the class
+        self.logger = logger
 
     @beartype
     def _prepare_host(self, host: str) -> str:
@@ -576,8 +612,7 @@ class API:
         if self.verbose:
             # logging out info to the terminal for the user feedback
             # (improve UX because the program is currently slow)
-            logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
-            logging.info(f"Validating {node_type} graph...")
+            self.logger.info(f"Validating {node_type} graph...")
 
         # set the schema to test against http POST or PATCH of DB Schema
         schema_http_method: str
@@ -995,31 +1030,33 @@ class API:
             raise APIError(api_error=str(response))
 
         # TODO log that it has been successfully deleted from API
+        if self.verbose:
+            self.logger.info(f"Deleted `{node.node_type}` with UUID of {node.uuid} from CRIPT API.")
 
-    def refresh_project(self, project: cript.Project) -> cript.Project:
-        """
-        Takes a project node locally, fetches it from the API, and gives it back
-
-        Under the hood, it actually uses `cript.API.search()` with the SearchMode of `UUID`
-
-        Parameters
-        ----------
-        project: cript.Project
-
-        Raises
-        ------
-        APIError
-            In case the API responds with an error.
-
-        Returns
-        -------
-        Project Node: cript.Project
-            The latest project node as it exists on the CRIPT API
-        """
-        project_paginator: cript.Paginator = self.search(node_type=cript.Project, search_mode=SearchModes.UUID, value_to_search=project.uuid)
-
-        # deserialize project node from paginator
-        refreshed_project: cript.Project = cript.load_nodes_from_json(project_paginator.current_page_results[0])
-
-        return refreshed_project
+    # def refresh_project(self, project: cript.Project) -> cript.Project:
+    #     """
+    #     Takes a project node locally, fetches it from the API, and gives it back
+    #
+    #     Under the hood, it actually uses `cript.API.search()` with the SearchMode of `UUID`
+    #
+    #     Parameters
+    #     ----------
+    #     project: cript.Project
+    #
+    #     Raises
+    #     ------
+    #     APIError
+    #         In case the API responds with an error.
+    #
+    #     Returns
+    #     -------
+    #     Project Node: cript.Project
+    #         The latest project node as it exists on the CRIPT API
+    #     """
+    #     project_paginator: cript.Paginator = self.search(node_type=cript.Project, search_mode=SearchModes.UUID, value_to_search=project.uuid)
+    #
+    #     # deserialize project node from paginator
+    #     refreshed_project: cript.Project = cript.load_nodes_from_json(project_paginator.current_page_results[0])
+    #
+    #     return refreshed_project
 

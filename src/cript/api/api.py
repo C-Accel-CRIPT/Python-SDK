@@ -1062,6 +1062,4 @@ class API:
         if response["code"] != 200:
             raise APIError(api_error=str(response))
 
-        # TODO log that it has been successfully deleted from API
-        if self.verbose:
-            self.logger.info(f"Deleted `{node.node_type}` with UUID of {node.uuid} from CRIPT API.")
+        self.logger.info(f"Deleted `{node.node_type}` with UUID of {node.uuid} from CRIPT API.")

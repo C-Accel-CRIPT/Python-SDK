@@ -4,6 +4,8 @@ from urllib.parse import quote
 import requests
 from beartype import beartype
 
+from cript.api.exceptions import APIError
+
 
 class Paginator:
     """
@@ -216,6 +218,6 @@ class Paginator:
 
         # TODO give a CRIPT error if HTTP response is anything other than 200
         if response["code"] != 200:
-            raise Exception(f"API responded with: {response['error']}")
+            raise APIError(f"API responded with: {response['error']}")
 
         return self.current_page_results

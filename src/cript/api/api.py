@@ -683,7 +683,17 @@ class API:
             # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
             # Errors with this code, may be fixable
             if response["code"] in (400, 409):
-                returned_save_values = _fix_node_save(self, node, response, save_values)
+                try:
+                    returned_save_values = _fix_node_save(self, node, response, save_values)
+                except CRIPTAPISaveError as exc:
+                    # If the previous error was a duplicated name issue (first if condition)
+                    # And (second condition) the request failed bc of the now suppressed name
+                    if "duplicate item [{'name':" in response["error"] and "'name' is a required property" in exc.api_response:
+                        # Raise a save error, with the nice name related error message
+                        raise CRIPTAPISaveError(api_host_domain=exc.api_host_domain, http_code=response["code"], api_response=response["error"], patch_request=exc.patch_request, pre_saved_nodes=exc.pre_saved_nodes, json_data=json_data) from exc
+                    # Else just raise the exception as normal.
+                    raise exc
+
                 save_values += returned_save_values
 
             # Handle errors from patching with too many attributes

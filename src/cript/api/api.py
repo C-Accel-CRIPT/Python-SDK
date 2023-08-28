@@ -16,6 +16,7 @@ from cript.api.exceptions import (
     CRIPTAPIRequiredError,
     CRIPTAPISaveError,
     CRIPTConnectionError,
+    CRIPTDuplicateNameError,
     InvalidHostError,
     InvalidVocabulary,
 )
@@ -690,7 +691,7 @@ class API:
                     # And (second condition) the request failed bc of the now suppressed name
                     if "duplicate item [{'name':" in response["error"] and "'name' is a required property" in exc.api_response:
                         # Raise a save error, with the nice name related error message
-                        raise CRIPTAPISaveError(api_host_domain=exc.api_host_domain, http_code=response["code"], api_response=response["error"], patch_request=exc.patch_request, pre_saved_nodes=exc.pre_saved_nodes, json_data=json_data) from exc
+                        raise CRIPTDuplicateNameError(response, json_data, exc) from exc
                     # Else just raise the exception as normal.
                     raise exc
 

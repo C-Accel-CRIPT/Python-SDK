@@ -96,3 +96,19 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     print(my_project_from_api.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json)
     print("==============================================================")
     print("\n\n\n######################################## TEST Passed ########################################\n\n\n")
+
+
+def integrate_delete_node_helper(cript_api: cript.API, node_to_delete) -> None:
+    """
+    1. takes the node/sub-object that needs to be deleted
+    1. checks that it first exists on the API before deleting
+    1. sends an HTTP DELETE to API
+    1. asserts that the API response is 200
+    1. tries to get the same node via UUID from the API and expects that it should fail
+
+    Notes
+    ------
+    > for future it should also take the project that the node was in, and get the project again
+    > then compare that the node was successfully deleted/missing from the project
+    """
+    pass

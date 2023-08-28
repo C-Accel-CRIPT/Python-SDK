@@ -88,7 +88,7 @@ def test_integration_project(cript_api, simple_project_node):
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 
-    # ========= test update =========
+    # ========= test delete =========
     cript_api.delete(node=simple_project_node)
 
     # should not be able to get node by UUID anymore because it is deleted and should get an error

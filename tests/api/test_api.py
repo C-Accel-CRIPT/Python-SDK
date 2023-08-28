@@ -4,7 +4,7 @@ import os
 import tempfile
 import uuid
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 import pytest
 import requests
@@ -404,6 +404,82 @@ def test_api_search_bigsmiles(cript_api: cript.API) -> None:
     assert len(bigsmiles_paginator.current_page_results) >= 1
     # not sure if this will always be in this position in every server environment, so commenting it out for now
     # assert bigsmiles_paginator.current_page_results[1]["name"] == "BCDB_Material_285"
+
+
+@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
+def test_api_node_limit(cript_api: cript.API) -> None:
+    """
+    The API currently does not accept more than 100 nodes at a time.
+    This test creates a project with 100+ nodes and attempts to run DB Schema on it
+    then save all of them one at a time to the API.
+
+    1. assemble a project with 100+ materials
+        * each material has a UUID in it to avoid duplicate node errors
+    1. add 100+ collections to the project
+    1. add 100+ experiments to the collection
+    1. add 100+ process to experiments
+    """
+    big_project = cript.Project(name=f"big project {uuid.uuid4()}")
+
+    # amount of new nodes to create for each step
+    iterations_to_create = 150
+
+    # ===================== add Materials =====================
+    # create a list for Materials
+    big_materials: List[cript.Material] = []
+
+    # create Material nodes
+    for i in range(0, iterations_to_create):
+        same_identifier_for_all = [{"bigsmiles": "my bigsmiles"}]
+
+        new_material = cript.Material(name=f"Material {i} for 100+ node test {uuid.uuid4()}", identifier=same_identifier_for_all)
+
+        big_materials.append(new_material)
+
+    # add list of Materials to the Project
+    big_project.material = big_materials
+
+    # ===================== add Collections =====================
+    # create a list for Collections
+    big_collections: List[cript.Collection] = []
+
+    # create Collection nodes
+    for i in range(0, 2):
+        new_collection = cript.Collection(name=f"Collection {i} for 100+ node test {uuid.uuid4()}")
+
+        big_collections.append(new_collection)
+
+    # add list of Collections to the project
+    big_project.collection = big_collections
+
+    # ===================== add Experiments =====================
+    # create a list with Experiments
+    big_experiments: List[cript.Experiment] = []
+
+    # create Experiment nodes
+    for i in range(0, iterations_to_create):
+        new_experiment = cript.Experiment(name=f"Experiment {i} for 100+ node test {uuid.uuid4()}")
+
+        big_experiments.append(new_experiment)
+
+    # add list of Experiments to Collection[0]
+    big_project.collection[0].experiment = big_experiments
+
+    # ===================== add Process =====================
+    # create a list many Process
+    big_process: List[cript.Process] = []
+
+    # create Process nodes
+    for i in range(0, iterations_to_create):
+        new_process = cript.Process(name=f"Process {i} for 100+ node test {uuid.uuid4()}", type="mix")
+
+        big_process.append(new_process)
+
+    # add list of Process to Experiment[0]
+    big_project.collection[0].experiment[0].process = big_process
+
+    # save big Project to API
+    # cript_api.save(project=big_project)
 
 
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:

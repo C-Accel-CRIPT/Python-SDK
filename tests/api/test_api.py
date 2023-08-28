@@ -414,7 +414,7 @@ def test_api_node_limit(cript_api: cript.API) -> None:
     then save all of them one at a time to the API.
 
     1. assemble a project with 100+ materials
-        * each material has a UUID in it to avoid duplicate node errors
+        * each material has a UUID in the name to avoid duplicate node errors
     1. add 100+ collections to the project
     1. add 100+ experiments to the collection
     1. add 100+ process to experiments

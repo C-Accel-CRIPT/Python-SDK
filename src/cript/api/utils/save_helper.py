@@ -53,7 +53,7 @@ class _InternalSaveValues:
         return False
 
 
-def _fix_node_save(api, node, response, save_values: _InternalSaveValues) -> _InternalSaveValues:
+def _fix_node_save(api, node, response, save_values: _InternalSaveValues, max_number_of_nodes_per_save: int) -> _InternalSaveValues:
     """
     Helper function, that attempts to fix a bad node.
     And if it is fixable, we resave the entire node.
@@ -74,7 +74,7 @@ def _fix_node_save(api, node, response, save_values: _InternalSaveValues) -> _In
         # So it will be known when we attempt to save the graph again.
         # Since we pre-saved this node, we want it to be UUID edge only the next JSON.
         # So we add it to the list of known nodes
-        returned_save_values = api._internal_save(missing_node, save_values)
+        returned_save_values = api._internal_save(missing_node, max_number_of_nodes_per_save, save_values)
         save_values += returned_save_values
         # The missing node, is now known to the API
         save_values.saved_uuid.add(missing_uuid)
@@ -101,7 +101,7 @@ def _fix_node_save(api, node, response, save_values: _InternalSaveValues) -> _In
                     save_values.suppress_attributes[str(duplicate_node.uuid)].add(set(search_dict.keys()))  # type: ignore
 
                 # Attempts to save the duplicate items element.
-                save_values += api._internal_save(duplicate_node, save_values)
+                save_values += api._internal_save(duplicate_node, max_number_of_nodes_per_save, save_values)
                 # After the save, we can reduce it to just a UUID edge in the graph (avoiding the duplicate issues).
                 save_values.saved_uuid.add(str(duplicate_node.uuid))
 

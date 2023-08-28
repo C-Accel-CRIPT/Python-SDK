@@ -2,7 +2,7 @@ import dataclasses
 import inspect
 import json
 import uuid
-from typing import Dict, List, Optional, Set, Union
+from typing import Any, Dict, List, Optional, Set, Union
 
 import cript.nodes
 from cript.nodes.core import BaseNode
@@ -58,6 +58,7 @@ class NodeEncoder(json.JSONEncoder):
     known_uuid: Set[str] = set()
     condense_to_uuid: Dict[str, Set[str]] = dict()
     suppress_attributes: Optional[Dict[str, Set[str]]] = None
+    json_node_set: Set[Any] = set()
 
     def default(self, obj):
         """
@@ -134,6 +135,9 @@ class NodeEncoder(json.JSONEncoder):
             if NodeEncoder.suppress_attributes is not None and str(obj.uuid) in NodeEncoder.suppress_attributes:
                 for attr in NodeEncoder.suppress_attributes[str(obj.uuid)]:
                     del serialize_dict[attr]
+
+            # We finished assembling the JSON for the node, so we add it into the handled nodes
+            NodeEncoder.json_node_set.add(obj)
 
             return serialize_dict
         return json.JSONEncoder.default(self, obj)

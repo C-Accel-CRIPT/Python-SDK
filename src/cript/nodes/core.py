@@ -274,6 +274,7 @@ class BaseNode(ABC):
         class ReturnTuple:
             json: str
             handled_ids: set
+            json_node_set: set
 
         # Do not check for circular references, since we handle them manually
         kwargs["check_circular"] = kwargs.get("check_circular", False)
@@ -295,9 +296,10 @@ class BaseNode(ABC):
         NodeEncoder.suppress_attributes = suppress_attributes
         previous_condense_to_uuid = copy.deepcopy(NodeEncoder.condense_to_uuid)
         NodeEncoder.condense_to_uuid = condense_to_uuid
+        NodeEncoder.json_node_set = set()
 
         try:
-            return ReturnTuple(json.dumps(self, cls=NodeEncoder, **kwargs), NodeEncoder.handled_ids)
+            return ReturnTuple(json.dumps(self, cls=NodeEncoder, **kwargs), NodeEncoder.handled_ids, NodeEncoder.json_node_set)
         except Exception as exc:
             # TODO this handling that doesn't tell the user what happened and how they can fix it
             #   this just tells the user that something is wrong
@@ -308,6 +310,7 @@ class BaseNode(ABC):
             NodeEncoder.known_uuid = previous_known_uuid
             NodeEncoder.suppress_attributes = previous_suppress_attributes
             NodeEncoder.condense_to_uuid = previous_condense_to_uuid
+            NodeEncoder.json_node_set = set()
 
     def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes=None) -> List:
         """

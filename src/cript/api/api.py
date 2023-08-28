@@ -618,7 +618,8 @@ class API:
             Just sends a `POST` or `Patch` request to the API
         """
         try:
-            self._internal_save(project, max_number_of_nodes_per_save=4)
+            # TODO: replace the hard coded 100 with a request to the API end point
+            self._internal_save(project, max_number_of_nodes_per_save=100)
         except CRIPTAPISaveError as exc:
             if exc.pre_saved_nodes:
                 for node_uuid in exc.pre_saved_nodes:
@@ -661,7 +662,6 @@ class API:
 
             # If the number of nodes is larger then accepted by the backend.
             # Try to save individual nodes first.
-            print(len(assembly_data.json_node_set), max_number_of_nodes_per_save)
             if len(assembly_data.json_node_set) > max_number_of_nodes_per_save:
                 # Pick one of the nodes at random, or for simplicity 0
                 pre_save_node = assembly_data.json_node_set.pop()
@@ -669,7 +669,6 @@ class API:
                 while pre_save_node == node:
                     pre_save_node = assembly_data.json_node_set.pop()
                 # Save this node ahead of time
-                print(pre_save_node.node_type, pre_save_node.uuid, save_values)
                 self._internal_save(pre_save_node, max_number_of_nodes_per_save, save_values)
                 # Ensure the node will be just a UUID at the next try to save the whole project
                 save_values.saved_uuid.add(str(pre_save_node.uuid))
@@ -725,7 +724,6 @@ class API:
                 break
 
         if response["code"] != 200:
-            print(save_values)
             raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], patch_request=patch_request, pre_saved_nodes=save_values.saved_uuid, json_data=json_data)  # type: ignore
 
         save_values.saved_uuid.add(str(node.uuid))

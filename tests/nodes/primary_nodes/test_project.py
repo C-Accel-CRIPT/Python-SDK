@@ -7,6 +7,7 @@ from util import strip_uid_from_dict
 
 import cript
 from cript.api.exceptions import APIError
+from tests.integration_test_helper import delete_integration_node_helper
 
 
 def test_create_simple_project(simple_collection_node) -> None:
@@ -89,13 +90,5 @@ def test_integration_project(cript_api, simple_project_node):
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
-    cript_api.delete(node=simple_project_node)
-
-    # should not be able to get node by UUID anymore because it is deleted and should get an error
-    with pytest.raises(APIError):
-        cript_api.search(
-            node_type=cript.Project,
-            search_mode=cript.SearchModes.UUID,
-            value_to_search=str(simple_project_node.uuid)
-        )
+    delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_project_node)
 

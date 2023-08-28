@@ -688,7 +688,7 @@ class API:
                     returned_save_values = _fix_node_save(self, node, response, save_values)
                 except CRIPTAPISaveError as exc:
                     # If the previous error was a duplicated name issue
-                    if "duplicate item [{'name':" in response["error"]:  # type: ignore
+                    if "duplicate item [{'name':" in str(response["error"]):
                         # And (second condition) the request failed bc of the now suppressed name
                         if "'name' is a required property" in exc.api_response:
                             # Raise a save error, with the nice name related error message

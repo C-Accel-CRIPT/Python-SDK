@@ -218,6 +218,6 @@ class Paginator:
 
         # TODO give a CRIPT error if HTTP response is anything other than 200
         if response["code"] != 200:
-            raise APIError(f"API responded with: {response['error']}")
+            raise APIError(api_error={response['error']}, http_method="GET", api_url=temp_api_endpoint)
 
         return self.current_page_results

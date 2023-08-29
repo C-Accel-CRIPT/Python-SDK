@@ -1057,9 +1057,11 @@ class API:
         None
         """
 
-        response: Dict = requests.delete(headers=self._http_headers, url=f"{self._host}/{node.node_type}/{node.uuid}/").json()
+        delete_node_api_url: str = f"{self._host}/{node.node_type}/{node.uuid}/"
+
+        response: Dict = requests.delete(headers=self._http_headers, url=delete_node_api_url).json()
 
         if response["code"] != 200:
-            raise APIError(api_error=str(response))
+            raise APIError(api_error=str(response), http_method="DELETE", api_url=delete_node_api_url)
 
         self.logger.info(f"Deleted `{node.node_type}` with UUID of {node.uuid} from CRIPT API.")

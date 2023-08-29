@@ -203,11 +203,9 @@ class APIError(CRIPTException):
 
         # if you have the URL then display it, otherwise just show the error message
         if self.api_url and self.http_method:
-            error_message: str = (f"CRIPT Python SDK sent HTTP `{self.http_method.upper()}` request to URL: `{self.api_url}` and API responded with {self.api_error}")
+            return f"CRIPT Python SDK sent HTTP `{self.http_method.upper()}` request to URL: `{self.api_url}` and API responded with {self.api_error}"
         else:
-            error_message: str = f"The API responded with: {self.api_error}"
-
-        return error_message
+            return f"The API responded with: {self.api_error}"
 
 
 class FileDownloadError(CRIPTException):

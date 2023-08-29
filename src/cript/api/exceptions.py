@@ -141,19 +141,19 @@ class CRIPTDuplicateNameError(CRIPTAPISaveError):
         # (and debug info in case it does happen.)
         try:
             json_dict = json.loads(self.json_data)
-        except (TypeError, json.JSONDecodeError) as exc:
+        except (TypeError, json.JSONDecodeError):
             self.name = "unknown_name"
             self.node = "UnknownType"
         try:
             self.name = json_dict["name"]
         except KeyError:
-            self.name = "unkown_name_key"
+            self.name = "unknown_name_key"
         try:
             self.node = json_dict["node"][0]
         except KeyError:
-            self.node = "UnknowTypeKey"
+            self.node = "UnknownTypeKey"
         except IndexError:
-            self.node = "UnknowTypeIdx"
+            self.node = "UnknownTypeIdx"
 
     def __str__(self) -> str:
         return f"The name '{self.name}' for your {self.node} node is already present in CRIPT. Either choose a new name!"  # , or consider namespaces like 'MyNameSpace::{self.name}' instead."

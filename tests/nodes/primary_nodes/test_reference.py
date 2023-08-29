@@ -3,7 +3,10 @@ import uuid
 import warnings
 
 import pytest
-from integration_test_helper import integrate_nodes_helper, delete_integration_node_helper
+from integration_test_helper import (
+    delete_integration_node_helper,
+    integrate_nodes_helper,
+)
 from util import strip_uid_from_dict
 
 import cript

@@ -1057,7 +1057,7 @@ class API:
         None
         """
 
-        delete_node_api_url: str = f"{self._host}/{node.node_type}/{node.uuid}/"
+        delete_node_api_url: str = f"{self._host}/{node.node_type_snake_case}/{node.uuid}/"
 
         response: Dict = requests.delete(headers=self._http_headers, url=delete_node_api_url).json()
 

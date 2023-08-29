@@ -118,6 +118,8 @@ def delete_integration_node_helper(cript_api: cript.API, node_to_delete: UUIDBas
     1. checks that it first exists on the API before deleting
     1. sends an HTTP DELETE to API
     1. asserts that the API response is 200
+        > This is done under the hood in the `cript.API.delete()`
+        method where at the end it checks that the response is 2000, else raises an error
     1. tries to get the same node via UUID from the API and expects that it should fail
 
     Notes

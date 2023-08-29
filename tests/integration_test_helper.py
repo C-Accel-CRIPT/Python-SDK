@@ -140,10 +140,10 @@ def delete_integration_node_helper(cript_api: cript.API, node_to_delete: UUIDBas
 
     assert len(my_node_paginator.current_page_results) == 1
 
-    # DELETE the project from API
+    # DELETE the node from the API
     cript_api.delete(node=node_to_delete)
 
-    # should not be able to get node by UUID anymore because it is deleted and should get an error
+    # should not be able to get node by UUID anymore because it is deleted and API should return an  error
     with pytest.raises(APIError):
         cript_api.search(
             node_type=node_to_delete,

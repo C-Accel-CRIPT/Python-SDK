@@ -88,4 +88,3 @@ def test_integration_project(cript_api, simple_project_node):
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_project_node)
-

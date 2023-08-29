@@ -137,7 +137,7 @@ def delete_integration_node_helper(cript_api: cript.API, node_to_delete: UUIDBas
         # passing in the full node to get the node type from
         node_type=node_to_delete,
         search_mode=cript.SearchModes.UUID,
-        value_to_search=str(node_to_delete.uuid)
+        value_to_search=str(node_to_delete.uuid),
     )
 
     assert len(my_node_paginator.current_page_results) == 1
@@ -148,11 +148,7 @@ def delete_integration_node_helper(cript_api: cript.API, node_to_delete: UUIDBas
     # should not be able to get node by UUID anymore because it is deleted and API should return an  error
 
     # with pytest.raises(APIError):
-    deleted_node_paginator = cript_api.search(
-        node_type=node_to_delete,
-        search_mode=cript.SearchModes.UUID,
-        value_to_search=str(node_to_delete.uuid)
-    )
+    deleted_node_paginator = cript_api.search(node_type=node_to_delete, search_mode=cript.SearchModes.UUID, value_to_search=str(node_to_delete.uuid))
 
     # be sure API responded with empty results
     assert len(deleted_node_paginator.current_page_results) == 0

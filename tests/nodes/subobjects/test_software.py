@@ -2,10 +2,12 @@ import copy
 import json
 import uuid
 
-from integration_test_helper import integrate_nodes_helper
+import pytest
+from integration_test_helper import integrate_nodes_helper, delete_integration_node_helper
 from util import strip_uid_from_dict
 
 import cript
+from cript.api.exceptions import APIError
 
 
 def test_json(complex_software_node, complex_software_dict):
@@ -73,3 +75,9 @@ def test_integration_software(cript_api, simple_project_node, simple_computation
     # change simple attribute to trigger update
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].software.version = "software version UPDATED"
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test delete =========
+    # software nodes are frozen nodes and cannot be deleted
+    # we expect the API to give an error when trying to delete a frozen node
+    with pytest.raises(APIError):
+        delete_integration_node_helper(cript_api=cript_api, node_to_delete=complex_software_node)

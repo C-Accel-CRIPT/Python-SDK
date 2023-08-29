@@ -2,10 +2,12 @@ import json
 import uuid
 import warnings
 
-from integration_test_helper import integrate_nodes_helper
+import pytest
+from integration_test_helper import integrate_nodes_helper, delete_integration_node_helper
 from util import strip_uid_from_dict
 
 import cript
+from cript.api.exceptions import APIError
 
 
 def test_create_simple_reference() -> None:
@@ -220,3 +222,15 @@ def test_integration_reference(cript_api, simple_project_node, complex_citation_
     simple_project_node.collection[0].citation[0].reference.title = "reference title UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test delete =========
+    # isolate reference from citation
+    reference_node_from_citation: cript.Reference = complex_citation_node.reference
+
+    # cannot delete a reference node because it is a frozen node
+    # so API gives errors when trying to delete it
+    with pytest.raises(APIError) as error:
+        delete_integration_node_helper(cript_api=cript_api, node_to_delete=reference_node_from_citation)
+
+        # current API error when trying to delete reference
+        assert "The browser (or proxy) sent a request that this server could not understand." in str(error)

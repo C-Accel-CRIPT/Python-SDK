@@ -4,10 +4,8 @@ import os
 import uuid
 
 import pytest
-from integration_test_helper import (
-    delete_integration_node_helper,
-    integrate_nodes_helper,
-)
+from integration_test_helper import (delete_integration_node_helper,
+                                     integrate_nodes_helper)
 from util import strip_uid_from_dict
 
 import cript

@@ -1,10 +1,10 @@
 import json
 
 import pytest
+from conftest import HAS_INTEGRATION_TESTS_ENABLED
 from deepdiff import DeepDiff
 
 import cript
-from conftest import HAS_INTEGRATION_TESTS_ENABLED
 from cript.nodes.uuid_base import UUIDBaseNode
 
 

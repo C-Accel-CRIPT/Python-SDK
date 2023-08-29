@@ -135,12 +135,28 @@ class CRIPTDuplicateNameError(CRIPTAPISaveError):
         super().__init__(
             parent_cript_save_error.api_host_domain, api_response["code"], api_response=api_response["error"], patch_request=parent_cript_save_error.patch_request, pre_saved_nodes=parent_cript_save_error.pre_saved_nodes, json_data=json_data
         )
-        json_dict = json.loads(self.json_data)
-        self.name = json_dict["name"]
-        self.node = json_dict["node"][0]
+
+        # We don't care if the data is invalid JSON
+        # So let's catch a couple of common exceptions and ensure still meaning error messages
+        # (and debug info in case it does happen.)
+        try:
+            json_dict = json.loads(self.json_data)
+        except (TypeError, json.JSONDecodeError) as exc:
+            self.name = "unknown_name"
+            self.node = "UnknownType"
+        try:
+            self.name = json_dict["name"]
+        except KeyError:
+            self.name = "unkown_name_key"
+        try:
+            self.node = json_dict["node"][0]
+        except KeyError:
+            self.node = "UnknowTypeKey"
+        except IndexError:
+            self.node = "UnknowTypeIdx"
 
     def __str__(self) -> str:
-        return f"The name '{self.name}' for your {self.node} node is already present in CRIPT.\n Either choose a new name, or consider namespaces like 'MyNameSpace::{self.name}' instead."
+        return f"The name '{self.name}' for your {self.node} node is already present in CRIPT. Either choose a new name!"  # , or consider namespaces like 'MyNameSpace::{self.name}' instead."
 
 
 class InvalidHostError(CRIPTException):

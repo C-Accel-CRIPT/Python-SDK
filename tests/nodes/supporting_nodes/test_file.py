@@ -4,7 +4,7 @@ import os
 import uuid
 
 import pytest
-from integration_test_helper import integrate_nodes_helper
+from integration_test_helper import integrate_nodes_helper, delete_integration_node_helper
 from util import strip_uid_from_dict
 
 import cript
@@ -218,3 +218,9 @@ def test_integration_file(cript_api, simple_project_node, simple_data_node):
     # simple_project_node.collection[0].experiment[0].data[0].file[0].data_dictionary = "file data_dictionary UPDATED"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test delete =========
+    # isolated file node from data node
+    file_node: cript.File = simple_project_node.collection[0].experiment[0].data[0].file[0]
+
+    delete_integration_node_helper(cript_api=cript_api, node_to_delete=file_node)

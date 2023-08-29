@@ -2,11 +2,10 @@ import copy
 import json
 import uuid
 
-from integration_test_helper import integrate_nodes_helper
+from integration_test_helper import integrate_nodes_helper, delete_integration_node_helper
 from util import strip_uid_from_dict
 
 import cript
-from tests.integration_test_helper import delete_integration_node_helper
 
 
 def test_create_simple_experiment() -> None:

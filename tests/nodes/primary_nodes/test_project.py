@@ -2,12 +2,11 @@ import json
 import uuid
 
 import pytest
-from integration_test_helper import integrate_nodes_helper
+from integration_test_helper import integrate_nodes_helper, delete_integration_node_helper
 from util import strip_uid_from_dict
 
 import cript
 from cript.api.exceptions import APIError
-from tests.integration_test_helper import delete_integration_node_helper
 
 
 def test_create_simple_project(simple_collection_node) -> None:

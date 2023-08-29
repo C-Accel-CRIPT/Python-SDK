@@ -422,7 +422,7 @@ def test_api_node_limit(cript_api: cript.API) -> None:
     big_project = cript.Project(name=f"big project {uuid.uuid4()}")
 
     # amount of new nodes to create for each step
-    iterations_to_create = 150
+    iterations_to_create = 50
 
     # ===================== add Materials =====================
     # create a list for Materials
@@ -479,7 +479,7 @@ def test_api_node_limit(cript_api: cript.API) -> None:
     big_project.collection[0].experiment[0].process = big_process
 
     # save big Project to API
-    # cript_api.save(project=big_project)
+    cript_api.save(project=big_project)
 
 
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:

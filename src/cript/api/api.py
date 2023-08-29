@@ -662,6 +662,7 @@ class API:
 
             # If the number of nodes is larger then accepted by the backend.
             # Try to save individual nodes first.
+            print(len(assembly_data.json_node_set), max_number_of_nodes_per_save)
             if len(assembly_data.json_node_set) > max_number_of_nodes_per_save:
                 # Pick one of the nodes at random, or for simplicity 0
                 pre_save_node = assembly_data.json_node_set.pop()
@@ -676,6 +677,7 @@ class API:
                     raise RuntimeError("The number of nodes to be saved at the same time, cannot be further reduce, current number of nodes to save {len(assembly_data)} max number accepted by API {max_number_of_nodes_per_save}")
                 # We don't need to attempt to save, we know it would fail, so continue to the next iteration
                 continue
+            print("B", len(assembly_data.json_node_set), max_number_of_nodes_per_save)
 
             # This checks if the current node exists on the back end.
             # if it does exist we use `patch` if it doesn't `post`.

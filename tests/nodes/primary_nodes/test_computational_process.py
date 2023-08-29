@@ -1,7 +1,7 @@
 import json
 import uuid
 
-from integration_test_helper import integrate_nodes_helper
+from integration_test_helper import integrate_nodes_helper, delete_integration_node_helper
 from util import strip_uid_from_dict
 
 import cript
@@ -145,7 +145,7 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
     assert ref_dict == expected_dict
 
 
-def test_integration_computational_process(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simplest_computational_process_node, simple_material_node, simple_data_node):
+def test_integration_computational_process(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simplest_computational_process_node, simple_material_node, simple_data_node) -> None:
     """
     integration test between Python SDK and API Client
 
@@ -177,3 +177,6 @@ def test_integration_computational_process(cript_api, simple_project_node, simpl
     simple_project_node.collection[0].experiment[0].computation_process[0].type = "DPD"
 
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test delete =========
+    delete_integration_node_helper(cript_api=cript_api, node_to_delete=simplest_computational_process_node)

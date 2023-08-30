@@ -12,11 +12,13 @@ import jsonschema
 import requests
 from beartype import beartype
 
+from cript.api import _API_TIMEOUT
 from cript.api.exceptions import (
     APIError,
     CRIPTAPIRequiredError,
     CRIPTAPISaveError,
     CRIPTConnectionError,
+    CRIPTDuplicateNameError,
     InvalidHostError,
     InvalidVocabulary,
 )
@@ -507,7 +509,7 @@ class API:
             return self._vocabulary[category.value]
 
         # if vocabulary category is not in cache, then get it from API and cache it
-        response = requests.get(f"{self.host}/cv/{category.value}/").json()
+        response = requests.get(f"{self.host}/cv/{category.value}/", timeout=_API_TIMEOUT).json()
 
         if response["code"] != 200:
             # TODO give a better CRIPT custom Exception
@@ -586,7 +588,7 @@ class API:
         # fetch db_schema from API
         else:
             # fetch db schema from API
-            response: requests.Response = requests.get(url=f"{self.host}/schema/")
+            response: requests.Response = requests.get(url=f"{self.host}/schema/", timeout=_API_TIMEOUT)
 
             # raise error if not HTTP 200
             response.raise_for_status()
@@ -727,7 +729,7 @@ class API:
 
             # This checks if the current node exists on the back end.
             # if it does exist we use `patch` if it doesn't `post`.
-            test_get_response: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers).json()
+            test_get_response: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, timeout=_API_TIMEOUT).json()
             patch_request = test_get_response["code"] == 200
 
             # TODO remove once get works properly
@@ -743,14 +745,25 @@ class API:
                 break
 
             if patch_request:
-                response: Dict = requests.patch(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, data=json_data).json()  # type: ignore
+                response: Dict = requests.patch(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, data=json_data, timeout=_API_TIMEOUT).json()  # type: ignore
             else:
-                response: Dict = requests.post(url=f"{self._host}/{node.node_type_snake_case}/", headers=self._http_headers, data=json_data).json()  # type: ignore
+                response: Dict = requests.post(url=f"{self._host}/{node.node_type_snake_case}/", headers=self._http_headers, data=json_data, timeout=_API_TIMEOUT).json()  # type: ignore
 
             # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
             # Errors with this code, may be fixable
             if response["code"] in (400, 409):
-                returned_save_values = _fix_node_save(self, node, response, save_values)
+                try:
+                    returned_save_values = _fix_node_save(self, node, response, save_values)
+                except CRIPTAPISaveError as exc:
+                    # If the previous error was a duplicated name issue
+                    if "duplicate item [{'name':" in str(response["error"]):
+                        # And (second condition) the request failed bc of the now suppressed name
+                        if "'name' is a required property" in exc.api_response:
+                            # Raise a save error, with the nice name related error message
+                            raise CRIPTDuplicateNameError(response, json_data, exc) from exc
+                    # Else just raise the exception as normal.
+                    raise exc
+
                 save_values += returned_save_values
 
             # Handle errors from patching with too many attributes
@@ -1023,9 +1036,10 @@ class API:
         elif search_mode == SearchModes.BIGSMILES:
             api_endpoint = f"{self._host}/search/bigsmiles/"
 
-        assert api_endpoint != ""
-
         # TODO error handling if none of the API endpoints got hit
+        if api_endpoint == "":
+            raise RuntimeError("Internal Error, please report this bug on https://github.com/C-Accel-CRIPT/Python-SDK/issues. ")
+
         return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, query=value_to_search, current_page_number=page_number)
 
     def delete(self, node) -> None:

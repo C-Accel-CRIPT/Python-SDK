@@ -1,4 +1,4 @@
-from typing import List, Optional, Set
+from typing import List, Set, Optional
 
 from cript.exceptions import CRIPTException
 
@@ -198,7 +198,7 @@ class APIError(CRIPTException):
         self.http_method = http_method
 
     def __str__(self) -> str:
-        # TODO refactor all of SDK using this error to be used the same to avoid this logic and optional attributes
+        # TODO refactor all of SDK using this error to be used the same to avoid this logic and Optional attributes
         # this logic currently exists to make previous SDK work
 
         # if you have the URL then display it, otherwise just show the error message

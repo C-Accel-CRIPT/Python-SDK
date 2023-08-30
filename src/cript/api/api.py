@@ -416,10 +416,10 @@ class API:
 
         The term "host" designates the specific CRIPT instance to which you intend to upload your data.
 
-        For most users, the host will be `criptapp.org`
+        For most users, the host will be `api.criptapp.org`
 
         ```yaml
-        host: criptapp.org
+        host: api.criptapp.org
         ```
 
         Examples

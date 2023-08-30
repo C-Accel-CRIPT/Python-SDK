@@ -93,8 +93,9 @@ class File(PrimaryBaseNode):
 
     | Attribute       | Type | Example                                                                                               | Description                                                                 | Required |
     |-----------------|------|-------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|----------|
+    | name            | str  | `"my file name"`                                                                                      | descriptive name for the file node                                          | True     |
     | source          | str  | `"path/to/my/file"` or `"https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system"` | source to the file can be URL or local path                                 | True     |
-    | type            | str  | `"logs"`                                                                                              | Pick from [CRIPT File Types](https://app.criptapp.org/vocab/file_type/)          | True     |
+    | type            | str  | `"logs"`                                                                                              | Pick from [CRIPT File Types](https://app.criptapp.org/vocab/file_type/)     | True     |
     | extension       | str  | `".csv"`                                                                                              | file extension                                                              | False    |
     | data_dictionary | str  | `"my extra info in my data dictionary"`                                                               | set of information describing the contents, format, and structure of a file | False    |
 

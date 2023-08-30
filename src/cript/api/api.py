@@ -1030,21 +1030,33 @@ class API:
 
     def delete(self, node) -> None:
         """
-        Delete a node from the CRIPT API
+        Simply deletes the desired node from the CRIPT API and writes a log in the terminal that the node has been
+        successfully deleted.
 
-        Makes a request to the API to delete a specific node.
-        If delete was successful, it will retrieve the latest project from CRIPT API
-        and return it, and the new project node should be used from that point forward.
+        Examples
+        --------
+        ```python
+        api.delete(node=my_material_node)
+        ```
 
         Notes
         -----
         After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
 
-        Examples
-        --------
-        ```python
-        cript_api.delete(node=my_material_node)
+        ```bash
+        INFO: Deleted `Data` with UUID of `80bfc642-157e-4692-a547-97c470725397` from CRIPT API.
         ```
+
+        Warnings
+        --------
+        After successfully deleting a node from the API, keep in mind that your local Project node in your script
+        may still contain outdated data as it has not been synced with the API.
+
+        To ensure you have the latest data, follow these steps:
+
+        1. Fetch the newest Project node from the API using the [`cript.API.search()`](./#cript.api.api.API.search) provided by the SDK.
+        1. Deserialize the retrieved data into a new Project node using the [`load_nodes_from_json`](../../utility_functions/#cript.nodes.util.load_nodes_from_json) utility function.
+        1. Replace your old Project node with the new one in your script for accurate and up-to-date information.
 
         Parameters
         ----------
@@ -1054,9 +1066,10 @@ class API:
         Raises
         ------
         APIError
-            In case the API cannot delete the specified node.
+            If the API responds with anything other than HTTP status 200, then the CRIPT Python SDK raises `APIError`
+            `APIError` is raised in case the API cannot delete the specified node.
             Such cases can happen if you do not have permission to delete the node
-            or if the node is actively being used elsewhere in CRIPT and the API cannot delete it.
+            or if the node is actively being used elsewhere in CRIPT platform and the API cannot delete it.
 
         Returns
         -------
@@ -1070,4 +1083,4 @@ class API:
         if response["code"] != 200:
             raise APIError(api_error=str(response), http_method="DELETE", api_url=delete_node_api_url)
 
-        self.logger.info(f"Deleted `{node.node_type}` with UUID of {node.uuid} from CRIPT API.")
+        self.logger.info(f"Deleted `{node.node_type}` with UUID of `{node.uuid}` from CRIPT API.")

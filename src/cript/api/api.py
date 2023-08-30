@@ -12,7 +12,7 @@ import jsonschema
 import requests
 from beartype import beartype
 
-from cript.api import _API_TIMEOUT
+from cript.api.api_config import _API_TIMEOUT
 from cript.api.exceptions import (
     CRIPTAPIRequiredError,
     CRIPTAPISaveError,
@@ -969,8 +969,8 @@ class API:
         elif search_mode == SearchModes.BIGSMILES:
             api_endpoint = f"{self._host}/search/bigsmiles/"
 
-        # TODO error handling if none of the API endpoints got hit
-        if api_endpoint == "":
-            raise RuntimeError("Internal Error, please report this bug on https://github.com/C-Accel-CRIPT/Python-SDK/issues. ")
+        # error handling if none of the API endpoints got hit
+        else:
+            raise RuntimeError("Internal Error: Failed to recognize any search modes. Please report this bug on https://github.com/C-Accel-CRIPT/Python-SDK/issues.")
 
         return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, query=value_to_search, current_page_number=page_number)

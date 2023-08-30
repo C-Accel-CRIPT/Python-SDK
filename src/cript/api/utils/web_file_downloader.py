@@ -4,6 +4,8 @@ from typing import Union
 
 import requests
 
+from cript.api import _API_TIMEOUT
+
 
 def download_file_from_url(url: str, destination_path: Union[str, Path]) -> None:
     """
@@ -31,7 +33,7 @@ def download_file_from_url(url: str, destination_path: Union[str, Path]) -> None
         just downloads the file
     """
 
-    response = requests.get(url=url)
+    response = requests.get(url=url, timeout=_API_TIMEOUT)
 
     # if not HTTP 200, then throw error
     response.raise_for_status()

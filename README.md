@@ -12,6 +12,7 @@
 [![Material MkDocs](https://img.shields.io/badge/Docs-mkdocs--material-blueviolet?style=flat-square&logo=markdown)](https://squidfunk.github.io/mkdocs-material/)
 
 <!-- [![trunk CI](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/trunk.yml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/trunk.yml) -->
+
 [![Tests](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/tests.yml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/tests.yml)
 [![CodeQL](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/codeql.yml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/codeql.yml)
 [![mypy](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/mypy.yaml/badge.svg)](https://github.com/C-Accel-CRIPT/Python-SDK/actions/workflows/mypy_check.yaml)

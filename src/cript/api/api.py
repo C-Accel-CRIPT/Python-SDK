@@ -1036,6 +1036,16 @@ class API:
         If delete was successful, it will retrieve the latest project from CRIPT API
         and return it, and the new project node should be used from that point forward.
 
+        Notes
+        -----
+        After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
+
+        Examples
+        --------
+        ```python
+        cript_api.delete(node=my_material_node)
+        ```
+
         Parameters
         ----------
         node: UUIDBaseNode
@@ -1047,10 +1057,6 @@ class API:
             In case the API cannot delete the specified node.
             Such cases can happen if you do not have permission to delete the node
             or if the node is actively being used elsewhere in CRIPT and the API cannot delete it.
-
-        Notes
-        -----
-        After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
 
         Returns
         -------

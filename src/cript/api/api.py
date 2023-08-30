@@ -287,9 +287,15 @@ class API:
         to the terminal. This can be useful for debugging and understanding the internal
         workings of the class.
 
-        When `verbose` is set to `False`, the class will only provide essential and concise
-        logging information, making the terminal output less cluttered and more user-friendly.
+        ```bash
+        INFO: Validating Project graph...
+        ```
 
+        When `verbose` is set to `False`, the class will only provide essential logging information,
+        making the terminal output less cluttered and more user-friendly.
+
+        Examples
+        --------
         ```python
         # turn off the terminal logs
         api.verbose = False

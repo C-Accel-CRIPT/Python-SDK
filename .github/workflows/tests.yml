@@ -16,6 +16,7 @@ on:
       - main
       - develop
       - "*"
+permissions: read-all
 
 jobs:
   install:

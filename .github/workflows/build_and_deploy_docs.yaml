@@ -8,6 +8,7 @@ on:
 
   # trunk-ignore(yamllint/empty-values)
   workflow_dispatch:
+permissions: read-all
 
 jobs:
   deploy:

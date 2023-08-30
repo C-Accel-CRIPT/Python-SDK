@@ -12,6 +12,7 @@ on:
     branches:
       - main
       - develop
+permissions: read-all
 
 jobs:
   mypy-test:

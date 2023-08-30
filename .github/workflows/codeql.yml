@@ -22,6 +22,7 @@ on:
     branches: [develop]
   schedule:
     - cron: 19 15 * * 2
+permissions: read-all
 
 jobs:
   analyze:

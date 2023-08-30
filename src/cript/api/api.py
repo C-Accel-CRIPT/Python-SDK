@@ -12,7 +12,7 @@ import jsonschema
 import requests
 from beartype import beartype
 
-from cript.api import _API_TIMEOUT
+from cript.api.api_config import _API_TIMEOUT
 from cript.api.exceptions import (
     CRIPTAPIRequiredError,
     CRIPTAPISaveError,

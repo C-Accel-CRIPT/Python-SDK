@@ -1,5 +1,5 @@
 import json
-from typing import List, Set, Optional
+from typing import List, Optional, Set
 
 from cript.exceptions import CRIPTException
 

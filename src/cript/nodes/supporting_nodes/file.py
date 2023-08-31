@@ -97,6 +97,7 @@ class File(PrimaryBaseNode):
     | type            | str  | `"logs"`                                                                                              | Pick from [CRIPT File Types](https://app.criptapp.org/vocab/file_type/)     | True     |
     | extension       | str  | `".csv"`                                                                                              | file extension                                                              | False    |
     | data_dictionary | str  | `"my extra info in my data dictionary"`                                                               | set of information describing the contents, format, and structure of a file | False    |
+    | notes           | str  |                                                                                                       | miscellaneous information, or custom data structure (e.g.; JSON)            |          |
 
     ## JSON
     ``` json

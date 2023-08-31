@@ -44,18 +44,12 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     * ignoring the UID field through all the JSON because those the API changes when responding
     """
 
-    # TODO this is temporary and must be removed
-    developer_name = "Navid"
-
     if not HAS_INTEGRATION_TESTS_ENABLED:
         pytest.skip("Integration tests with API requires real API and Storage token")
         return
 
     print("\n\n=================== Project Node ============================")
-    if developer_name == "Navid":
-        print(project_node.get_json(sort_keys=False).json)
-    else:
-        print(project_node.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json)
+    print(project_node.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json)
     print("==============================================================")
 
     cript_api.save(project_node)
@@ -67,10 +61,7 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     my_project_from_api_dict = my_paginator.current_page_results[0]
 
     print("\n\n================= API Response Node ============================")
-    if developer_name == "Navid":
-        print(json.dumps(my_project_from_api_dict, sort_keys=False))
-    else:
-        print(json.dumps(my_project_from_api_dict, sort_keys=False, indent=2))
+    print(json.dumps(my_project_from_api_dict, sort_keys=False, indent=2))
     print("==============================================================")
 
     # Configure keys and blocks to be ignored by deepdiff using exclude_regex_path
@@ -103,10 +94,7 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     # try to convert api JSON project to node
     my_project_from_api = cript.load_nodes_from_json(json.dumps(my_project_from_api_dict))
     print("\n\n=================== Project Node Deserialized =========================")
-    if developer_name == "Navid":
-        print(my_project_from_api.get_json(sort_keys=False).json)
-    else:
-        print(my_project_from_api.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json)
+    print(my_project_from_api.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json)
     print("==============================================================")
     print("\n\n\n######################################## TEST Passed ########################################\n\n\n")
 
@@ -118,13 +106,16 @@ def delete_integration_node_helper(cript_api: cript.API, node_to_delete: UUIDBas
     1. sends an HTTP DELETE to API
     1. asserts that the API response is 200
         > This is done under the hood in the `cript.API.delete()`
-        method where at the end it checks that the response is 2000, else raises an error
+        method where at the end it checks that the response is 200, else raises an error
     1. tries to get the same node via UUID from the API and expects that it should fail
 
     Notes
     ------
-    > for future it should also take the project that the node was in, and get the project again
-    > then compare that the node was successfully deleted/missing from the project
+    > for future this test should also take the project that the node was in, get the project again,
+    > and compare that the node was successfully deleted/missing from the project
+
+    > within search we can also add assert statements to be sure that the API gave the same node
+    > that we searched for. Not needed at the time of writing this test
     """
 
     if not HAS_INTEGRATION_TESTS_ENABLED:
@@ -139,14 +130,13 @@ def delete_integration_node_helper(cript_api: cript.API, node_to_delete: UUIDBas
         value_to_search=str(node_to_delete.uuid),
     )
 
+    # be sure API returned at least one result for the node that we searched for
     assert len(my_node_paginator.current_page_results) == 1
 
     # DELETE the node from the API
     cript_api.delete(node=node_to_delete)
 
-    # should not be able to get node by UUID anymore because it is deleted and API should return an  error
-
-    # with pytest.raises(APIError):
+    # should not be able to get node by UUID anymore because it is deleted
     deleted_node_paginator = cript_api.search(node_type=node_to_delete, search_mode=cript.SearchModes.UUID, value_to_search=str(node_to_delete.uuid))
 
     # be sure API responded with empty results

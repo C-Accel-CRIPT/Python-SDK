@@ -1,5 +1,5 @@
 from json import JSONDecodeError
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict
 from urllib.parse import quote
 
 import requests
@@ -202,29 +202,31 @@ class Paginator:
 
         response: requests.Response = requests.get(url=temp_api_endpoint, headers=self._http_headers, timeout=_API_TIMEOUT)
 
+        # it is expected that the response will be JSON
         # try to convert response to JSON
         try:
-            response = response.json()  # type: ignore
+            api_response: Dict = response.json()
 
         # if converting API response to JSON gives an error
-        # then there must have been an API error, so raise requests error
+        # then there must have been an API error, so raise the requests error
+        # this is to avoid bad indirect errors and make the errors more direct for users
         except JSONDecodeError:
             response.raise_for_status()
 
         # handling both cases in case there is result inside of data or just data
         try:
-            self.current_page_results = response["data"]["result"]
+            self.current_page_results = api_response["data"]["result"]
         except KeyError:
-            self.current_page_results = response["data"]
+            self.current_page_results = api_response["data"]
         except TypeError:
-            self.current_page_results = response["data"]
+            self.current_page_results = api_response["data"]
 
-        if response["code"] == 404 and response["error"] == "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.":
+        if api_response["code"] == 404 and api_response["error"] == "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.":
             self.current_page_results = []
             return self.current_page_results
 
         # TODO give a CRIPT error if HTTP response is anything other than 200
-        if response["code"] != 200:
-            raise Exception(f"API responded with: {response['error']}")
+        if api_response["code"] != 200:
+            raise Exception(f"API responded with: {api_response['error']}")
 
         return self.current_page_results

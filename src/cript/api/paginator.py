@@ -4,8 +4,8 @@ from urllib.parse import quote
 import requests
 from beartype import beartype
 
-from cript.api.exceptions import APIError
 from cript.api.api_config import _API_TIMEOUT
+from cript.api.exceptions import APIError
 
 
 class Paginator:

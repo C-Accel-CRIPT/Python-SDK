@@ -1,3 +1,4 @@
+from json import JSONDecodeError
 from typing import List, Optional, Union
 from urllib.parse import quote
 
@@ -199,7 +200,16 @@ class Paginator:
 
         temp_api_endpoint = f"{temp_api_endpoint}&page={self.current_page_number}"
 
-        response = requests.get(url=temp_api_endpoint, headers=self._http_headers, timeout=_API_TIMEOUT).json()
+        response: requests.Response = requests.get(url=temp_api_endpoint, headers=self._http_headers, timeout=_API_TIMEOUT)
+
+        # try to convert response to JSON
+        try:
+            response = response.json()  # type: ignore
+
+        # if converting API response to JSON gives an error
+        # then there must have been an API error, so raise requests error
+        except JSONDecodeError:
+            response.raise_for_status()
 
         # handling both cases in case there is result inside of data or just data
         try:

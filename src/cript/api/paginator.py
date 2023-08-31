@@ -5,6 +5,7 @@ import requests
 from beartype import beartype
 
 from cript.api.exceptions import APIError
+from cript.api.api_config import _API_TIMEOUT
 
 
 class Paginator:
@@ -199,10 +200,7 @@ class Paginator:
 
         temp_api_endpoint = f"{temp_api_endpoint}&page={self.current_page_number}"
 
-        response: Dict = requests.get(
-            url=temp_api_endpoint,
-            headers=self._http_headers,
-        ).json()
+        response: Dict = requests.get(url=temp_api_endpoint, headers=self._http_headers, timeout=_API_TIMEOUT).json()
 
         # handling both cases in case there is result inside of data or just data
         try:

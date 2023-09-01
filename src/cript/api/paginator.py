@@ -5,7 +5,7 @@ from urllib.parse import quote
 import requests
 from beartype import beartype
 
-from cript.api.api_config import _API_TIMEOUT
+from cript.api.config.api_config import _API_TIMEOUT
 from cript.api.exceptions import APIError
 
 

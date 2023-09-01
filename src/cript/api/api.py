@@ -12,7 +12,7 @@ import jsonschema
 import requests
 from beartype import beartype
 
-from cript.api.api_config import _API_TIMEOUT
+from cript.api.config.api_config import _API_TIMEOUT, _API_PREFIX, _API_VERSION
 from cript.api.exceptions import (
     APIError,
     CRIPTAPIRequiredError,
@@ -68,8 +68,6 @@ class API:
     _http_headers: dict = {}
     _vocabulary: dict = {}
     _db_schema: dict = {}
-    _api_handle: str = "api"
-    _api_version: str = "v1"
 
     # trunk-ignore-begin(cspell)
     # AWS S3 constants
@@ -331,7 +329,7 @@ class API:
     def _prepare_host(self, host: str) -> str:
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
-        host = f"{host}/{self._api_handle}/{self._api_version}"
+        host = f"{host}/{_API_PREFIX}/{_API_VERSION}"
 
         # if host is using unsafe "http://" then give a warning
         if host.startswith("http://"):

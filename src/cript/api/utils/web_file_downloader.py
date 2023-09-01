@@ -4,7 +4,7 @@ from typing import Union
 
 import requests
 
-from cript.api.api_config import _API_TIMEOUT
+from cript.api.config.api_config import _API_TIMEOUT
 
 
 def download_file_from_url(url: str, destination_path: Union[str, Path]) -> None:

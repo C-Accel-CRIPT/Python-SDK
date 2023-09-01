@@ -514,12 +514,14 @@ class API:
         if category.value in self._vocabulary:
             return self._vocabulary[category.value]
 
+        vocabulary_category_url: str = f"{self.host}/cv/{category.value}/"
+
         # if vocabulary category is not in cache, then get it from API and cache it
-        response = requests.get(f"{self.host}/cv/{category.value}/", timeout=_API_TIMEOUT).json()
+        response: Dict = requests.get(url=vocabulary_category_url, timeout=_API_TIMEOUT).json()
 
         if response["code"] != 200:
             # TODO give a better CRIPT custom Exception
-            raise Exception(f"while getting controlled vocabulary from CRIPT for {category}, " f"the API responded with http {response} ")
+            raise APIError(api_error=str(response), http_method="GET", api_url=vocabulary_category_url)
 
         # add to cache
         self._vocabulary[category.value] = response["data"]

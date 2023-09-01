@@ -1,5 +1,4 @@
 from json import JSONDecodeError
-
 from typing import Dict, List, Optional, Union
 from urllib.parse import quote
 

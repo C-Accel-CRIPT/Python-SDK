@@ -1,7 +1,6 @@
 import json
 import uuid
 
-import pytest
 from integration_test_helper import (
     delete_integration_node_helper,
     integrate_nodes_helper,
@@ -9,7 +8,6 @@ from integration_test_helper import (
 from util import strip_uid_from_dict
 
 import cript
-from cript.api.exceptions import APIError
 
 
 def test_json(complex_software_configuration_node, complex_software_configuration_dict):

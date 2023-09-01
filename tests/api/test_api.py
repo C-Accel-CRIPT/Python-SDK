@@ -20,13 +20,11 @@ def test_create_api(cript_api: cript.API) -> None:
     """
     tests that an API object can be successfully created with host and token
     """
-    # api = cript.API(host=None, api_token=None)
-    #
-    # # assertions
-    # assert api is not None
-    # assert isinstance(api, cript.API)
+    api = cript.API(host=None, api_token=None)
 
-    pass
+    # assertions
+    assert api is not None
+    assert isinstance(api, cript.API)
 
 
 def test_api_with_invalid_host() -> None:

@@ -1,7 +1,6 @@
 import json
 import uuid
 
-import pytest
 from integration_test_helper import (
     delete_integration_node_helper,
     integrate_nodes_helper,
@@ -9,7 +8,6 @@ from integration_test_helper import (
 from util import strip_uid_from_dict
 
 import cript
-from cript.api.exceptions import APIError
 
 
 def test_json(complex_software_configuration_node, complex_software_configuration_dict):
@@ -68,9 +66,4 @@ def test_integration_software_configuration(cript_api, simple_project_node, simp
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
-    # cannot delete `Software_Configuration` from a frozen node `Software`
-    with pytest.raises(APIError) as error:
-        delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_software_configuration)
-
-        # the current error that the API gives
-        assert "The browser (or proxy) sent a request that this server could not understand." in str(error)
+    delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_software_configuration)

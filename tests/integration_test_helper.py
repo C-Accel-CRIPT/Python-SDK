@@ -5,6 +5,7 @@ from conftest import HAS_INTEGRATION_TESTS_ENABLED
 from deepdiff import DeepDiff
 
 import cript
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
 def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
@@ -96,3 +97,47 @@ def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
     print(my_project_from_api.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json)
     print("==============================================================")
     print("\n\n\n######################################## TEST Passed ########################################\n\n\n")
+
+
+def delete_integration_node_helper(cript_api: cript.API, node_to_delete: UUIDBaseNode) -> None:
+    """
+    1. takes the node/sub-object that needs to be deleted
+    1. checks that it first exists on the API before deleting
+    1. sends an HTTP DELETE to API
+    1. asserts that the API response is 200
+        > This is done under the hood in the `cript.API.delete()`
+        method where at the end it checks that the response is 200, else raises an error
+    1. tries to get the same node via UUID from the API and expects that it should fail
+
+    Notes
+    ------
+    > for future this test should also take the project that the node was in, get the project again,
+    > and compare that the node was successfully deleted/missing from the project
+
+    > within search we can also add assert statements to be sure that the API gave the same node
+    > that we searched for. Not needed at the time of writing this test
+    """
+
+    if not HAS_INTEGRATION_TESTS_ENABLED:
+        pytest.skip("DELETE integration tests with API requires real API and Storage token")
+        return
+
+    # check that the node we want to delete first exists on the API
+    my_node_paginator = cript_api.search(
+        # passing in the full node to get the node type from
+        node_type=node_to_delete,
+        search_mode=cript.SearchModes.UUID,
+        value_to_search=str(node_to_delete.uuid),
+    )
+
+    # be sure API returned at least one result for the node that we searched for
+    assert len(my_node_paginator.current_page_results) == 1
+
+    # DELETE the node from the API
+    cript_api.delete(node=node_to_delete)
+
+    # should not be able to get node by UUID anymore because it is deleted
+    deleted_node_paginator = cript_api.search(node_type=node_to_delete, search_mode=cript.SearchModes.UUID, value_to_search=str(node_to_delete.uuid))
+
+    # be sure API responded with empty results
+    assert len(deleted_node_paginator.current_page_results) == 0

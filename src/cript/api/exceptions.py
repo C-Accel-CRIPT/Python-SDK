@@ -1,5 +1,5 @@
 import json
-from typing import List, Set
+from typing import List, Optional, Set
 
 from cript.exceptions import CRIPTException
 
@@ -214,13 +214,28 @@ class APIError(CRIPTException):
 
     api_error: str = ""
 
-    def __init__(self, api_error: str) -> None:
+    # having the URL that the API gave an error for helps in debugging
+    api_url: Optional[str] = None
+    http_method: Optional[str] = None
+
+    def __init__(self, api_error: str, http_method: Optional[str] = None, api_url: Optional[str] = None) -> None:
         self.api_error = api_error
 
-    def __str__(self) -> str:
-        error_message: str = f"The API responded with {self.api_error}"
+        self.api_url = api_url
 
-        return error_message
+        # TODO consider having an enum for all the HTTP methods so they are easily entered and disallows anything
+        #   that would be not make sense
+        self.http_method = http_method
+
+    def __str__(self) -> str:
+        # TODO refactor all of SDK using this error to be used the same to avoid this logic and Optional attributes
+        # this logic currently exists to make previous SDK work
+
+        # if you have the URL then display it, otherwise just show the error message
+        if self.api_url and self.http_method:
+            return f"CRIPT Python SDK sent HTTP `{self.http_method.upper()}` request to URL: `{self.api_url}` and API responded with {self.api_error}"
+        else:
+            return f"The API responded with: {self.api_error}"
 
 
 class FileDownloadError(CRIPTException):

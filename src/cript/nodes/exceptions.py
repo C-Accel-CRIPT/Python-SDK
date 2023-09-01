@@ -286,9 +286,6 @@ class CRIPTOrphanedMaterialError(CRIPTOrphanedNodesError):
     """
 
     def __init__(self, orphaned_node):
-        from cript.nodes.primary_nodes.material import Material
-
-        assert isinstance(orphaned_node, Material)
         super().__init__(orphaned_node)
 
     def __str__(self):
@@ -351,9 +348,6 @@ class CRIPTOrphanedDataError(CRIPTOrphanedExperimentError):
     """
 
     def __init__(self, orphaned_node):
-        from cript.nodes.primary_nodes.data import Data
-
-        assert isinstance(orphaned_node, Data)
         super().__init__(orphaned_node)
 
 
@@ -369,9 +363,6 @@ class CRIPTOrphanedProcessError(CRIPTOrphanedExperimentError):
     """
 
     def __init__(self, orphaned_node):
-        from cript.nodes.primary_nodes.process import Process
-
-        assert isinstance(orphaned_node, Process)
         super().__init__(orphaned_node)
 
 
@@ -387,9 +378,6 @@ class CRIPTOrphanedComputationError(CRIPTOrphanedExperimentError):
     """
 
     def __init__(self, orphaned_node):
-        from cript.nodes.primary_nodes.computation import Computation
-
-        assert isinstance(orphaned_node, Computation)
         super().__init__(orphaned_node)
 
 
@@ -405,7 +393,4 @@ class CRIPTOrphanedComputationalProcessError(CRIPTOrphanedExperimentError):
     """
 
     def __init__(self, orphaned_node):
-        from cript.nodes.primary_nodes.computation_process import ComputationProcess
-
-        assert isinstance(orphaned_node, ComputationProcess)
         super().__init__(orphaned_node)

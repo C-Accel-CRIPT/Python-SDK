@@ -12,10 +12,13 @@ import jsonschema
 import requests
 from beartype import beartype
 
+from cript.api.api_config import _API_TIMEOUT
 from cript.api.exceptions import (
+    APIError,
     CRIPTAPIRequiredError,
     CRIPTAPISaveError,
     CRIPTConnectionError,
+    CRIPTDuplicateNameError,
     InvalidHostError,
     InvalidVocabulary,
 )
@@ -54,27 +57,11 @@ class API:
     """
     ## Definition
     API Client class to communicate with the CRIPT API
-
-    Attributes
-    ----------
-    verbose : bool
-        A boolean flag that controls whether verbose logging is enabled or not.
-
-        When `verbose` is set to `True`, the class will provide additional detailed logging
-        to the terminal. This can be useful for debugging and understanding the internal
-        workings of the class.
-
-        When `verbose` is set to `False`, the class will only provide essential and concise
-        logging information, making the terminal output less cluttered and more user-friendly.
-
-        ```python
-        # turn off the terminal logs
-        api.verbose = False
-        ```
     """
 
     # dictates whether the user wants to see terminal log statements or not
-    verbose: bool = True
+    _verbose: bool = True
+    logger: logging.Logger = None  # type: ignore
 
     _host: str = ""
     _api_token: str = ""
@@ -241,6 +228,9 @@ class API:
 
         self._get_db_schema()
 
+        # set a logger instance to use for the class logs
+        self._set_logger()
+
     def __str__(self) -> str:
         """
         States the host of the CRIPT API client
@@ -250,6 +240,93 @@ class API:
         str
         """
         return f"CRIPT API Client - Host URL: '{self.host}'"
+
+    def _set_logger(self, verbose: bool = True) -> None:
+        """
+        Prepare and configure the logger for the API class.
+
+        This function creates and configures a logger instance associated with the current module (class).
+
+        Parameters
+        ----------
+        verbose: bool default True
+            set if you want `cript.API` to give logs to console or not
+
+        Returns
+        -------
+        logging.Logger
+            The configured logger instance.
+        """
+        # Create a logger instance associated with the current module
+        logger = logging.getLogger(__name__)
+
+        # Set the logger's level based on the verbose flag
+        if verbose:
+            logger.setLevel(logging.INFO)  # Display INFO logs
+        else:
+            logger.setLevel(logging.CRITICAL)  # Display no logs
+
+        # Create a console handler
+        console_handler = logging.StreamHandler()
+
+        # Create a formatter for log messages (customize the format as desired)
+        formatter = logging.Formatter("%(levelname)s: %(message)s")
+
+        # Associate the formatter with the console handler
+        console_handler.setFormatter(formatter)
+
+        # Add the console handler to the logger
+        logger.addHandler(console_handler)
+
+        # set logger for the class
+        self.logger = logger
+
+    @property
+    def verbose(self) -> bool:
+        """
+        A boolean flag that controls whether verbose logging is enabled or not.
+
+        When `verbose` is set to `True`, the class will provide additional detailed logging
+        to the terminal. This can be useful for debugging and understanding the internal
+        workings of the class.
+
+        ```bash
+        INFO: Validating Project graph...
+        ```
+
+        When `verbose` is set to `False`, the class will only provide essential logging information,
+        making the terminal output less cluttered and more user-friendly.
+
+        Examples
+        --------
+        ```python
+        # turn off the terminal logs
+        api.verbose = False
+        ```
+
+        Returns
+        -------
+        bool
+            verbose boolean value
+        """
+        return self._verbose
+
+    @verbose.setter
+    def verbose(self, new_verbose_value: bool) -> None:
+        """
+        sets the verbose value and then sets a new logger for the class
+
+        Parameters
+        ----------
+        new_verbose_value: bool
+            new verbose value to turn the logging ON or OFF
+
+        Returns
+        -------
+        None
+        """
+        self._verbose = new_verbose_value
+        self._set_logger(verbose=new_verbose_value)
 
     @beartype
     def _prepare_host(self, host: str) -> str:
@@ -348,10 +425,10 @@ class API:
 
         The term "host" designates the specific CRIPT instance to which you intend to upload your data.
 
-        For most users, the host will be `criptapp.org`
+        For most users, the host will be `api.criptapp.org`
 
         ```yaml
-        host: criptapp.org
+        host: api.criptapp.org
         ```
 
         Examples
@@ -439,7 +516,7 @@ class API:
             return self._vocabulary[category.value]
 
         # if vocabulary category is not in cache, then get it from API and cache it
-        response = requests.get(f"{self.host}/cv/{category.value}/").json()
+        response = requests.get(f"{self.host}/cv/{category.value}/", timeout=_API_TIMEOUT).json()
 
         if response["code"] != 200:
             # TODO give a better CRIPT custom Exception
@@ -518,7 +595,7 @@ class API:
         # fetch db_schema from API
         else:
             # fetch db schema from API
-            response: requests.Response = requests.get(url=f"{self.host}/schema/")
+            response: requests.Response = requests.get(url=f"{self.host}/schema/", timeout=_API_TIMEOUT)
 
             # raise error if not HTTP 200
             response.raise_for_status()
@@ -571,11 +648,9 @@ class API:
 
         node_dict = json.loads(node_json)
 
-        if self.verbose:
-            # logging out info to the terminal for the user feedback
-            # (improve UX because the program is currently slow)
-            logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
-            logging.info(f"Validating {node_type} graph...")
+        # logging out info to the terminal for the user feedback
+        # (improve UX because the program is currently slow)
+        self.logger.info(f"Validating {node_type} graph...")
 
         # set the schema to test against http POST or PATCH of DB Schema
         schema_http_method: str
@@ -661,7 +736,7 @@ class API:
 
             # This checks if the current node exists on the back end.
             # if it does exist we use `patch` if it doesn't `post`.
-            test_get_response: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers).json()
+            test_get_response: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, timeout=_API_TIMEOUT).json()
             patch_request = test_get_response["code"] == 200
 
             # TODO remove once get works properly
@@ -677,14 +752,25 @@ class API:
                 break
 
             if patch_request:
-                response: Dict = requests.patch(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, data=json_data).json()  # type: ignore
+                response: Dict = requests.patch(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, data=json_data, timeout=_API_TIMEOUT).json()  # type: ignore
             else:
-                response: Dict = requests.post(url=f"{self._host}/{node.node_type_snake_case}/", headers=self._http_headers, data=json_data).json()  # type: ignore
+                response: Dict = requests.post(url=f"{self._host}/{node.node_type_snake_case}/", headers=self._http_headers, data=json_data, timeout=_API_TIMEOUT).json()  # type: ignore
 
             # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
             # Errors with this code, may be fixable
             if response["code"] in (400, 409):
-                returned_save_values = _fix_node_save(self, node, response, save_values)
+                try:
+                    returned_save_values = _fix_node_save(self, node, response, save_values)
+                except CRIPTAPISaveError as exc:
+                    # If the previous error was a duplicated name issue
+                    if "duplicate item [{'name':" in str(response["error"]):
+                        # And (second condition) the request failed bc of the now suppressed name
+                        if "'name' is a required property" in exc.api_response:
+                            # Raise a save error, with the nice name related error message
+                            raise CRIPTDuplicateNameError(response, json_data, exc) from exc
+                    # Else just raise the exception as normal.
+                    raise exc
+
                 save_values += returned_save_values
 
             # Handle errors from patching with too many attributes
@@ -1019,7 +1105,65 @@ class API:
 
             api_endpoint = f"{self._host}/search/exact/{parent_node.node_type}/{parent_node.uuid}/{node_type}/"
 
-        assert api_endpoint != ""
+        # error handling if none of the API endpoints got hit
+        else:
+            raise RuntimeError("Internal Error: Failed to recognize any search modes. Please report this bug on https://github.com/C-Accel-CRIPT/Python-SDK/issues.")
 
-        # TODO error handling if none of the API endpoints got hit
         return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, query=value_to_search, current_page_number=page_number)
+
+    def delete(self, node) -> None:
+        """
+        Simply deletes the desired node from the CRIPT API and writes a log in the terminal that the node has been
+        successfully deleted.
+
+        Examples
+        --------
+        ```python
+        api.delete(node=my_material_node)
+        ```
+
+        Notes
+        -----
+        After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
+
+        ```bash
+        INFO: Deleted `Data` with UUID of `80bfc642-157e-4692-a547-97c470725397` from CRIPT API.
+        ```
+
+        Warnings
+        --------
+        After successfully deleting a node from the API, keep in mind that your local Project node in your script
+        may still contain outdated data as it has not been synced with the API.
+
+        To ensure you have the latest data, follow these steps:
+
+        1. Fetch the newest Project node from the API using the [`cript.API.search()`](./#cript.api.api.API.search) provided by the SDK.
+        1. Deserialize the retrieved data into a new Project node using the [`load_nodes_from_json`](../../utility_functions/#cript.nodes.util.load_nodes_from_json) utility function.
+        1. Replace your old Project node with the new one in your script for accurate and up-to-date information.
+
+        Parameters
+        ----------
+        node: UUIDBaseNode
+            The node that you want to delete
+
+        Raises
+        ------
+        APIError
+            If the API responds with anything other than HTTP status 200, then the CRIPT Python SDK raises `APIError`
+            `APIError` is raised in case the API cannot delete the specified node.
+            Such cases can happen if you do not have permission to delete the node
+            or if the node is actively being used elsewhere in CRIPT platform and the API cannot delete it.
+
+        Returns
+        -------
+        None
+        """
+
+        delete_node_api_url: str = f"{self._host}/{node.node_type_snake_case}/{node.uuid}/"
+
+        response: Dict = requests.delete(headers=self._http_headers, url=delete_node_api_url, timeout=_API_TIMEOUT).json()
+
+        if response["code"] != 200:
+            raise APIError(api_error=str(response), http_method="DELETE", api_url=delete_node_api_url)
+
+        self.logger.info(f"Deleted `{node.node_type}` with UUID of `{node.uuid}` from CRIPT API.")

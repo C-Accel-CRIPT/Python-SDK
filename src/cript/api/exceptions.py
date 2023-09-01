@@ -1,3 +1,4 @@
+import json
 from typing import List, Optional, Set
 
 from cript.exceptions import CRIPTException
@@ -110,7 +111,7 @@ class CRIPTAPISaveError(CRIPTException):
     http_code: str
     api_response: str
 
-    def __init__(self, api_host_domain: str, http_code: str, api_response: str, patch_request: bool, pre_saved_nodes: Optional[Set[str]] = None, json_data: Optional[str] = None):
+    def __init__(self, api_host_domain: str, http_code: str, api_response: str, patch_request: bool, pre_saved_nodes: Set[str], json_data: str):
         self.api_host_domain = api_host_domain
         self.http_code = http_code
         self.api_response = api_response
@@ -127,6 +128,35 @@ class CRIPTAPISaveError(CRIPTException):
             error_message += f" data: {self.json_data}"
 
         return error_message
+
+
+class CRIPTDuplicateNameError(CRIPTAPISaveError):
+    def __init__(self, api_response, json_data: str, parent_cript_save_error: CRIPTAPISaveError):
+        super().__init__(
+            parent_cript_save_error.api_host_domain, api_response["code"], api_response=api_response["error"], patch_request=parent_cript_save_error.patch_request, pre_saved_nodes=parent_cript_save_error.pre_saved_nodes, json_data=json_data
+        )
+
+        # We don't care if the data is invalid JSON
+        # So let's catch a couple of common exceptions and ensure still meaning error messages
+        # (and debug info in case it does happen.)
+        try:
+            json_dict = json.loads(self.json_data)
+        except (TypeError, json.JSONDecodeError):
+            self.name = "unknown_name"
+            self.node = "UnknownType"
+        try:
+            self.name = json_dict["name"]
+        except KeyError:
+            self.name = "unknown_name_key"
+        try:
+            self.node = json_dict["node"][0]
+        except KeyError:
+            self.node = "UnknownTypeKey"
+        except IndexError:
+            self.node = "UnknownTypeIdx"
+
+    def __str__(self) -> str:
+        return f"The name '{self.name}' for your {self.node} node is already present in CRIPT. Either choose a new name!"  # , or consider namespaces like 'MyNameSpace::{self.name}' instead."
 
 
 class InvalidHostError(CRIPTException):
@@ -184,13 +214,28 @@ class APIError(CRIPTException):
 
     api_error: str = ""
 
-    def __init__(self, api_error: str) -> None:
+    # having the URL that the API gave an error for helps in debugging
+    api_url: Optional[str] = None
+    http_method: Optional[str] = None
+
+    def __init__(self, api_error: str, http_method: Optional[str] = None, api_url: Optional[str] = None) -> None:
         self.api_error = api_error
 
-    def __str__(self) -> str:
-        error_message: str = f"The API responded with {self.api_error}"
+        self.api_url = api_url
 
-        return error_message
+        # TODO consider having an enum for all the HTTP methods so they are easily entered and disallows anything
+        #   that would be not make sense
+        self.http_method = http_method
+
+    def __str__(self) -> str:
+        # TODO refactor all of SDK using this error to be used the same to avoid this logic and Optional attributes
+        # this logic currently exists to make previous SDK work
+
+        # if you have the URL then display it, otherwise just show the error message
+        if self.api_url and self.http_method:
+            return f"CRIPT Python SDK sent HTTP `{self.http_method.upper()}` request to URL: `{self.api_url}` and API responded with {self.api_error}"
+        else:
+            return f"The API responded with: {self.api_error}"
 
 
 class FileDownloadError(CRIPTException):

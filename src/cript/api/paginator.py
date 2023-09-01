@@ -6,6 +6,7 @@ import requests
 from beartype import beartype
 
 from cript.api.api_config import _API_TIMEOUT
+from cript.api.exceptions import APIError
 
 
 class Paginator:
@@ -225,8 +226,7 @@ class Paginator:
             self.current_page_results = []
             return self.current_page_results
 
-        # TODO give a CRIPT error if HTTP response is anything other than 200
         if api_response["code"] != 200:
-            raise Exception(f"API responded with: {api_response['error']}")
+            raise APIError(api_error=str(response), http_method="GET", api_url=temp_api_endpoint)
 
         return self.current_page_results

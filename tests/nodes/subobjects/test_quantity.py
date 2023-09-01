@@ -1,7 +1,10 @@
 import json
 import uuid
 
-from integration_test_helper import integrate_nodes_helper
+from integration_test_helper import (
+    delete_integration_node_helper,
+    integrate_nodes_helper,
+)
 from util import strip_uid_from_dict
 
 import cript
@@ -63,3 +66,11 @@ def test_integration_quantity(cript_api, simple_project_node, simple_collection_
     # change simple attribute to trigger update
     simple_project_node.collection[0].experiment[0].process[0].ingredient[0].quantity[0].value = 123456789
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+
+    # ========= test delete =========
+    # isolate quantity from ingredient
+    quantity_subobject: cript.Quantity = simple_ingredient_node.quantity[0]
+
+    # each ingredient is required to have a quantity,
+    # so deleting the only quantity that it has is illegal because then it would make it invalid
+    delete_integration_node_helper(cript_api=cript_api, node_to_delete=quantity_subobject)

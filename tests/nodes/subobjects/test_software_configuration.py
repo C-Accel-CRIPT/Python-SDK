@@ -68,9 +68,4 @@ def test_integration_software_configuration(cript_api, simple_project_node, simp
     integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
-    # cannot delete `Software_Configuration` from a frozen node `Software`
-    with pytest.raises(APIError) as error:
-        delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_software_configuration)
-
-        # the current error that the API gives
-        assert "The browser (or proxy) sent a request that this server could not understand." in str(error)
+    delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_software_configuration)

@@ -82,12 +82,12 @@ class BaseNode(ABC):
                         possible_array = getattr(self._json_attrs.kwarg[: -len("_count")])
                         if not isinstance(possible_array, list):
                             raise CRIPTExtraJsonAttributes(self.node_type, kwarg)
-                    except KeyError:
+                    except AttributeError:
                         raise CRIPTExtraJsonAttributes(self.node_type, kwarg)
                 else:
                     try:
                         getattr(self._json_attrs, kwarg)
-                    except KeyError:
+                    except AttributeError:
                         raise CRIPTExtraJsonAttributes(self.node_type, kwarg)
 
         uid = get_new_uid()

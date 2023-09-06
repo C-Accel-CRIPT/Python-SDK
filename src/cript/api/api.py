@@ -868,6 +868,8 @@ class API:
         # upload file to AWS S3
         self._s3_client.upload_file(Filename=file_path, Bucket=self._BUCKET_NAME, Key=object_name)  # type: ignore
 
+        self.logger.info(f"Uploaded file: '{file_path}' to CRIPT storage")
+
         # return the object_name within AWS S3 for easy retrieval
         return object_name
 

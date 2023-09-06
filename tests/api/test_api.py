@@ -20,13 +20,11 @@ def test_create_api(cript_api: cript.API) -> None:
     """
     tests that an API object can be successfully created with host and token
     """
-    # api = cript.API(host=None, api_token=None)
-    #
-    # # assertions
-    # assert api is not None
-    # assert isinstance(api, cript.API)
+    api = cript.API(host=None, api_token=None)
 
-    pass
+    # assertions
+    assert api is not None
+    assert isinstance(api, cript.API)
 
 
 def test_api_with_invalid_host() -> None:
@@ -48,10 +46,10 @@ def test_api_context(cript_api: cript.API) -> None:
     assert cript.api.api._get_global_cached_api() is not None
 
 
-def test_api_cript_env_vars() -> None:
+def test_create_api_with_none() -> None:
     """
-    tests that when the cript.API is given None for host, api_token, storage_token that it can correctly
-    retrieve things from the env variable
+    tests that when the cript.API is given `None` for `host`, `api_token`, `storage_token`
+    that it can correctly retrieve them from the environment variables
     """
     host_value = "http://development.api.mycriptapp.org/"
     api_token_value = "my cript API token value"

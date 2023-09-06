@@ -9,7 +9,7 @@ from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 class Data(PrimaryBaseNode):
     """
     ## Definition
-    A [Data node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=13)
+    A  [Data node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=13)
      node contains the meta-data to describe raw data that is beyond a single value, (i.e. n-dimensional data).
      Each `Data` node must be linked to a single `Experiment` node.
 
@@ -19,6 +19,7 @@ class Data(PrimaryBaseNode):
     ## Attributes
     | Attribute           | Type                                              | Example                    | Description                                                                                  | Required |
     |---------------------|---------------------------------------------------|----------------------------|----------------------------------------------------------------------------------------------|----------|
+    | experiment          | [Experiment](experiment.md)                       |                            | Experiment the data belongs to                                                               | True     |
     | name                | str                                               | `"my_data_name"`           | Name of the data node                                                                        | True     |
     | type                | str                                               | `"nmr_h1"`                 | Pick from [CRIPT data type controlled vocabulary](https://app.criptapp.org/vocab/data_type/) | True     |
     | file                | List[[File](../supporting_nodes/file.md)]         | `[file_1, file_2, file_3]` | list of file nodes                                                                           | False    |
@@ -35,6 +36,7 @@ class Data(PrimaryBaseNode):
     ```python
     # create file node
     cript.File(
+        name="my file node name",
         source="https://criptapp.org",
         type="calibration",
         extension=".csv",
@@ -102,56 +104,7 @@ class Data(PrimaryBaseNode):
         citation: Optional[List[Any]] = None,
         notes: str = "",
         **kwargs
-    ) -> None:
-        """
-        Examples
-        --------
-        ```python
-        # create file nodes for the data node
-        my_file = cript.File(
-            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
-            type="calibration",
-            extension=".pdf",
-        )
-
-        # create data node and add the file node to it
-        my_data = cript.Data(
-            name="my data node name",
-            type="afm_amp",
-            file=my_file,
-        )
-        ```
-
-        Parameters
-        ----------
-        name: str
-            data node name
-        type: str
-            [data type](https://app.criptapp.org/vocab/data_type) must come from CRIPT controlled vocabulary
-        file: List[File], default None
-            list of CRIPT file nodes within the data node
-        sample_preparation: Process, default None
-            sample preparation
-        computation: Optional[Computation], default None
-            data was produced from this computation method
-        computation_process: Optional[ComputationalProcess], default None
-            data was produced from this computation process
-        material: Optional[List[Material]], default None
-            materials with attributes associated with the data node
-        process: Optional[List[Process]], default None
-            processes with attributes associated with the data node
-        citation: Optional[List[Citation]], default None
-            reference to a book, paper, or scholarly work
-        notes: str, default ""
-            miscellaneous information, or custom data structure
-        kwargs
-            used for deserializing JSON into Python SDK nodes
-
-        Returns
-        -------
-        None
-
-        """
+    ):
         super().__init__(name=name, notes=notes, **kwargs)
 
         if file is None:

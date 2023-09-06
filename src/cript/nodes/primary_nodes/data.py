@@ -104,6 +104,23 @@ class Data(PrimaryBaseNode):
         **kwargs
     ) -> None:
         """
+        Examples
+        --------
+        ```python
+        # create file nodes for the data node
+        my_file = cript.File(
+            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
+            type="calibration",
+            extension=".pdf",
+        )
+
+        # create data node and add the file node to it
+        my_data = cript.Data(
+            name="my data node name",
+            type="afm_amp",
+            file=my_file,
+        )
+        ```
 
         Parameters
         ----------
@@ -129,24 +146,6 @@ class Data(PrimaryBaseNode):
             miscellaneous information, or custom data structure
         kwargs
             used for deserializing JSON into Python SDK nodes
-
-        Examples
-        --------
-        ```python
-        # create file nodes for the data node
-        my_file = cript.File(
-            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
-            type="calibration",
-            extension=".pdf",
-        )
-
-        # create data node and add the file node to it
-        my_data = cript.Data(
-            name="my data node name",
-            type="afm_amp",
-            file=my_file,
-        )
-        ```
 
         Returns
         -------

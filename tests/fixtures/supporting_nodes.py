@@ -44,12 +44,9 @@ def complex_local_file_node(tmp_path_factory) -> cript.File:
     local_file_path.write_text(file_text)
 
     # create file node with source being a local file on computer
-    my_local_file = cript.File(name="my complex local file node fixture",
-                         source=str(local_file_path),
-                         type="calibration",
-                         extension=".csv",
-                         data_dictionary="my complex local files fixture data dictionary",
-                         notes="my complex local files fixture notes")
+    my_local_file = cript.File(
+        name="my complex local file node fixture", source=str(local_file_path), type="calibration", extension=".csv", data_dictionary="my complex local files fixture data dictionary", notes="my complex local files fixture notes"
+    )
 
     return my_local_file
 

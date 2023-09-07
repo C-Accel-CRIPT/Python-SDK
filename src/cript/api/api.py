@@ -1068,7 +1068,7 @@ class API:
         After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
 
         ```bash
-        INFO: Deleted `Data` with UUID of `80bfc642-157e-4692-a547-97c470725397` from CRIPT API.
+        INFO: Deleted 'Data' with UUID of '80bfc642-157e-4692-a547-97c470725397' from CRIPT API.
         ```
 
         Warnings
@@ -1107,4 +1107,4 @@ class API:
         if response["code"] != 200:
             raise APIError(api_error=str(response), http_method="DELETE", api_url=delete_node_api_url)
 
-        self.logger.info(f"Deleted `{node.node_type}` with UUID of `{node.uuid}` from CRIPT API.")
+        self.logger.info(f"Deleted '{node.node_type}' with UUID of '{node.uuid}' from CRIPT API.")

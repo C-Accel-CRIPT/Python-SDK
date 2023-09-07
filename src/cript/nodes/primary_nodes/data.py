@@ -35,6 +35,7 @@ class Data(PrimaryBaseNode):
     ```python
     # create file node
     cript.File(
+        name="my file node name",
         source="https://criptapp.org",
         type="calibration",
         extension=".csv",

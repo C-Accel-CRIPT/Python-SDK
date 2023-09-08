@@ -1,4 +1,4 @@
-name: CI
+name: Trunk.io
 
 on:
   push:
@@ -11,6 +11,7 @@ on:
       - main
       - develop
       - "*"
+permissions: read-all
 
 jobs:
   trunk:

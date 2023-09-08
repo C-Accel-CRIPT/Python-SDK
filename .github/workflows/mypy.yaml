@@ -1,6 +1,7 @@
 # check code types with mypy to be sure the static types are correct and make sense
 
 name: MyPy Check
+permissions: read-all
 
 on:
   push:

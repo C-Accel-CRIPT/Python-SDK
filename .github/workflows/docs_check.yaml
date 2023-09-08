@@ -1,6 +1,7 @@
 # this CI workflow checks the documentation for any broken links or errors within documentation files/configuration
 # and reports errors to catch errors and never deploy broken documentation
 name: MkDocs CI Check
+permissions: read-all
 
 on:
   push:

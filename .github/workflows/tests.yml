@@ -42,11 +42,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: temp
-        run: |
-          python3 --version
-          echo python${{ matrix.python-version }}
-          python${{ matrix.python-version }} --version
 
       - name: pip install CRIPT Python SDK local package
         run: python${{ matrix.python-version }} -m pip install .

@@ -1,4 +1,5 @@
 name: Test Jupyter Notebook
+permissions: read-all
 
 on:
   push:

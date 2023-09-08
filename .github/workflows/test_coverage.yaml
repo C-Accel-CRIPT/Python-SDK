@@ -2,6 +2,7 @@
 # WARNING: this workflow will fail if any of the tests within it fail
 
 name: Test Coverage
+permissions: read-all
 
 on:
   push:

@@ -1,6 +1,7 @@
 # Runs all the Python SDK tests within the `tests/` directory to check our code
 
 name: CI Tests
+permissions: read-all
 
 on:
   # trunk-ignore(yamllint/empty-values)

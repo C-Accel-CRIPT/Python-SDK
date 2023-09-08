@@ -2,6 +2,7 @@
 mypy>=1.4.1
 pytest>=7.4.0
 pytest-cov>=4.1.0
+types-jsonschema>=4.17.0.9
 types-requests>=2.31.0.1
 types-boto3>=1.0.2
 deepdiff>=6.3.1

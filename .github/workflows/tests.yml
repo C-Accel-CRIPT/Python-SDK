@@ -1,6 +1,6 @@
 # Runs all the Python SDK tests within the `tests/` directory to check our code
 
-name: Tests
+name: CI Tests
 
 on:
   # trunk-ignore(yamllint/empty-values)
@@ -38,11 +38,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: temp
+        run: |
+          python3 --version
+          echo python${{ matrix.python-version }}
+          python${{ matrix.python-version }} --version
+
       - name: pip install CRIPT Python SDK local package
-        run: python3 -m pip install .
+        run: python${{ matrix.python-version }} -m pip install .
 
       - name: pip install requirements_dev.txt
-        run: python3 -m pip install -r requirements_dev.txt
+        run: python${{ matrix.python-version }} -m pip install -r requirements_dev.txt
 
       - name: Run pytest on tests/
-        run: pytest ./tests/
+        run: python${{ matrix.python-version }} -m pytest ./tests/

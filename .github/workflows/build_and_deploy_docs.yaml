@@ -1,5 +1,7 @@
-# build docs from master branch and push to gh-pages branch to be deployed to repository GitHub pages
+# build docs from main branch and push to gh-pages branch to be deployed to repository GitHub pages
 name: Build & Deploy Docs
+
+# trunk-ignore(checkov/CKV2_GHA_1)
 permissions: write-all
 
 on:

@@ -30,7 +30,7 @@ class SearchModes(Enum):
     ```
 
     For more details and code examples,
-    please check the [cript.API.search() method](../api/#cript.api.api.API.search)
+    please check the [cript.API.search( ) method](../api/#cript.api.api.API.search)
     """
 
     NODE_TYPE: str = ""

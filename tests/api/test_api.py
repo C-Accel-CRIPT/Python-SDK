@@ -68,7 +68,7 @@ def test_config_file() -> None:
     test if the api can read configurations from `config.json`
     """
 
-    config_file_texts = {"host": "https://development.api.mycriptapp.org", "api_token": "I am token", "storage_token": "I am storage token"}
+    config_file_texts = {"host": "https://lb-stage.mycriptapp.org", "api_token": "I am token", "storage_token": "I am storage token"}
 
     with tempfile.NamedTemporaryFile(mode="w+t", suffix=".json", delete=False) as temp_file:
         # absolute file path

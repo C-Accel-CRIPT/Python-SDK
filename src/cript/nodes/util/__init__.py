@@ -406,18 +406,20 @@ def load_nodes_from_json(nodes_json: str):
     Examples
     --------
     ```python
-    # get project node from API
-    my_paginator = cript_api.search(
+    # Get updated project from API
+    my_paginator = api.search(
         node_type=cript.Project,
         search_mode=cript.SearchModes.EXACT_NAME,
-        value_to_search=project_node.name
+        value_to_search="my project name",
     )
 
-    # get the project from paginator
-    my_project_from_api_dict = my_paginator.current_page_results[0]
+    # Take specific Project you want from paginator
+    my_project_from_api_dict: dict = my_paginator.current_page_results[0]
 
-    # convert API JSON to CRIPT Project node
-    my_project_from_api = cript.load_nodes_from_json(json.dumps(my_project_from_api_dict))
+    # Deserialize your Project dict into a Project node
+    my_project_node_from_api = cript.load_nodes_from_json(
+        nodes_json=json.dumps(my_project_from_api_dict)
+    )
     ```
 
     Raises

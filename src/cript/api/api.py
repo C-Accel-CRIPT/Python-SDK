@@ -958,50 +958,50 @@ class API:
 
         Examples
         --------
-        ### Search by Node Type
-        ```python
-        materials_paginator = cript_api.search(
-            node_type=cript.Material,
-            search_mode=cript.SearchModes.NODE_TYPE,
-            value_to_search=None
-        )
-        ```
+        ???+ Example "Search by Node Type"
+            ```python
+            materials_paginator = cript_api.search(
+                node_type=cript.Material,
+                search_mode=cript.SearchModes.NODE_TYPE,
+                value_to_search=None
+            )
+            ```
 
-        ### Search by Contains name
-        ```python
-        contains_name_paginator = cript_api.search(
-            node_type=cript.Process,
-            search_mode=cript.SearchModes.CONTAINS_NAME,
-            value_to_search="poly"
-        )
-        ```
+        ??? Example "Search by Contains name"
+            ```python
+            contains_name_paginator = cript_api.search(
+                node_type=cript.Process,
+                search_mode=cript.SearchModes.CONTAINS_NAME,
+                value_to_search="poly"
+            )
+            ```
 
-        ### Search by Exact Name
-        ```python
-        exact_name_paginator = cript_api.search(
-            node_type=cript.Project,
-            search_mode=cript.SearchModes.EXACT_NAME,
-            value_to_search="Sodium polystyrene sulfonate"
-        )
-        ```
+        ??? Example "Search by Exact Name"
+            ```python
+            exact_name_paginator = cript_api.search(
+                node_type=cript.Project,
+                search_mode=cript.SearchModes.EXACT_NAME,
+                value_to_search="Sodium polystyrene sulfonate"
+            )
+            ```
 
-        ### Search by UUID
-        ```python
-        uuid_paginator = cript_api.search(
-            node_type=cript.Collection,
-            search_mode=cript.SearchModes.UUID,
-            value_to_search="75fd3ee5-48c2-4fc7-8d0b-842f4fc812b7"
-        )
-        ```
+        ??? Example "Search by UUID"
+            ```python
+            uuid_paginator = cript_api.search(
+                node_type=cript.Collection,
+                search_mode=cript.SearchModes.UUID,
+                value_to_search="75fd3ee5-48c2-4fc7-8d0b-842f4fc812b7"
+            )
+            ```
 
-        ### Search by BigSmiles
-        ```python
-        paginator = cript_api.search(
-            node_type=cript.Material,
-            search_mode=cript.SearchModes.BIGSMILES,
-            value_to_search="{[][$]CC(C)(C(=O)OCCCC)[$][]}"
-        )
-        ```
+        ??? Example "Search by BigSmiles"
+            ```python
+            paginator = cript_api.search(
+                node_type=cript.Material,
+                search_mode=cript.SearchModes.BIGSMILES,
+                value_to_search="{[][$]CC(C)(C(=O)OCCCC)[$][]}"
+            )
+            ```
 
         Parameters
         ----------
@@ -1018,6 +1018,32 @@ class API:
         -------
         Paginator
             paginator object for the user to use to flip through pages of search results
+
+        Notes
+        -----
+        To learn more about working with pagination, please refer to our
+        [paginator object documentation](../paginator).
+
+        Additionally, you can utilize the utility function [`load_nodes_from_json(node_json)`](../../utility_functions/#cript.nodes.util.load_nodes_from_json)
+        to convert API JSON responses into Python SDK nodes.
+
+        ???+ Example "Convert API JSON Response to Python SDK Nodes"
+            ```python
+            # Get updated project from API
+            my_paginator = api.search(
+                node_type=cript.Project,
+                search_mode=cript.SearchModes.EXACT_NAME,
+                value_to_search="my project name",
+            )
+
+            # Take specific Project you want from paginator
+            my_project_from_api_dict: dict = my_paginator.current_page_results[0]
+
+            # Deserialize your Project dict into a Project node
+            my_project_node_from_api = cript.load_nodes_from_json(
+                nodes_json=json.dumps(my_project_from_api_dict)
+            )
+            ```
         """
 
         # get node typ from class

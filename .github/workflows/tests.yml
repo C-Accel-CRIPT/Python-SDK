@@ -19,7 +19,7 @@ on:
       - "*"
 
 jobs:
-  install:
+  tests:
     runs-on: ${{ matrix.os }}
 
     strategy:

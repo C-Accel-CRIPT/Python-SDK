@@ -15,7 +15,7 @@ on:
       - develop
 
 jobs:
-  mypy-test:
+  mypy_check:
     strategy:
       matrix:
         python-version: [3.11]

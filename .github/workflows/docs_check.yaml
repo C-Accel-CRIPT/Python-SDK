@@ -17,7 +17,7 @@ on:
       - "*"
 
 jobs:
-  build:
+  documentation_ci_check:
     runs-on: ubuntu-latest
 
     steps:

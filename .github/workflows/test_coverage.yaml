@@ -16,7 +16,7 @@ on:
       - develop
 
 jobs:
-  test-coverage:
+  test_coverage:
     runs-on: ubuntu-latest
     strategy:
       matrix:

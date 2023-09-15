@@ -3,7 +3,7 @@ import json
 import uuid
 
 import pytest
-from util import strip_uid_from_dict
+from tests.utils.util import strip_uid_from_dict
 
 import cript
 

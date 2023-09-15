@@ -3,7 +3,7 @@ import json
 from dataclasses import replace
 
 import pytest
-from util import strip_uid_from_dict
+from tests.utils.util import strip_uid_from_dict
 
 import cript
 from cript.nodes.core import get_new_uid

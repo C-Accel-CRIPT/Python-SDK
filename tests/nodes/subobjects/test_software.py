@@ -3,11 +3,11 @@ import json
 import uuid
 
 import pytest
-from integration_test_helper import (
+from tests.utils.integration_test_helper import (
     delete_integration_node_helper,
     save_integration_node_helper,
 )
-from util import strip_uid_from_dict
+from tests.utils.util import strip_uid_from_dict
 
 import cript
 from cript.api.exceptions import APIError

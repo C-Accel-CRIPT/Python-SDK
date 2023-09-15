@@ -8,7 +8,7 @@ from typing import Dict
 
 import pytest
 import requests
-from conftest import HAS_INTEGRATION_TESTS_ENABLED
+from tests.conftest import HAS_INTEGRATION_TESTS_ENABLED
 
 import cript
 from cript.api.exceptions import InvalidVocabulary

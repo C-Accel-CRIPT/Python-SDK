@@ -3,7 +3,7 @@ import uuid
 
 from integration_test_helper import (
     delete_integration_node_helper,
-    integrate_nodes_helper,
+    save_integration_node_helper,
 )
 from util import strip_uid_from_dict
 
@@ -60,12 +60,12 @@ def test_integration_quantity(cript_api, simple_project_node, simple_collection_
     # add orphaned material node to project
     simple_project_node.material = [simple_material_node]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
     # change simple attribute to trigger update
     simple_project_node.collection[0].experiment[0].process[0].ingredient[0].quantity[0].value = 123456789
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     # isolate quantity from ingredient

@@ -3,7 +3,7 @@ import uuid
 
 from integration_test_helper import (
     delete_integration_node_helper,
-    integrate_nodes_helper,
+    save_integration_node_helper,
 )
 from util import strip_uid_from_dict
 
@@ -53,13 +53,13 @@ def test_integration_parameter(cript_api, simple_project_node, simple_collection
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].algorithm = [simple_algorithm_node]
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].algorithm[0].parameter = [complex_parameter_node]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
     # update simple attribute to trigger update
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].algorithm[0].parameter[0].value = 123456789
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=complex_parameter_node)

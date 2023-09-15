@@ -3,7 +3,7 @@ import uuid
 
 from integration_test_helper import (
     delete_integration_node_helper,
-    integrate_nodes_helper,
+    save_integration_node_helper,
 )
 from util import strip_uid_from_dict
 
@@ -73,12 +73,12 @@ def test_integration_inventory(cript_api, simple_project_node, simple_inventory_
 
     simple_project_node.collection[0].inventory = [simple_inventory_node]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
     simple_project_node.collection[0].inventory[0].notes = "inventory notes UPDATED"
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_inventory_node)

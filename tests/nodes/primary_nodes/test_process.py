@@ -4,7 +4,7 @@ import uuid
 
 from integration_test_helper import (
     delete_integration_node_helper,
-    integrate_nodes_helper,
+    save_integration_node_helper,
 )
 from util import strip_uid_from_dict
 
@@ -188,7 +188,7 @@ def test_integration_simple_process(cript_api, simple_project_node, simple_proce
 
     simple_project_node.collection[0].experiment[0].process = [simple_process_node]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
 
 def test_integration_complex_process(cript_api, simple_project_node, simple_process_node, simple_material_node):
@@ -210,13 +210,13 @@ def test_integration_complex_process(cript_api, simple_project_node, simple_proc
 
     simple_project_node.collection[0].experiment[0].process = [simple_process_node]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
     # change simple attribute to trigger update
     simple_project_node.collection[0].experiment[0].process[0].description = "process description UPDATED"
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_process_node)

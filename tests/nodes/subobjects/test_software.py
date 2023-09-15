@@ -5,7 +5,7 @@ import uuid
 import pytest
 from integration_test_helper import (
     delete_integration_node_helper,
-    integrate_nodes_helper,
+    save_integration_node_helper,
 )
 from util import strip_uid_from_dict
 
@@ -72,12 +72,12 @@ def test_integration_software(cript_api, simple_project_node, simple_computation
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration = [simple_software_configuration]
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].software = complex_software_node
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
     # change simple attribute to trigger update
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].software.version = "software version UPDATED"
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     # software nodes are frozen nodes and cannot be deleted

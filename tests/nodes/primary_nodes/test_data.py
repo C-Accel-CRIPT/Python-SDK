@@ -4,7 +4,7 @@ import uuid
 
 from integration_test_helper import (
     delete_integration_node_helper,
-    integrate_nodes_helper,
+    save_integration_node_helper,
 )
 from util import strip_uid_from_dict
 
@@ -178,13 +178,13 @@ def test_integration_data(cript_api, simple_project_node, simple_data_node):
 
     simple_project_node.collection[0].experiment[0].data = [simple_data_node]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
     # update a simple attribute of data to trigger update
     simple_project_node.collection[0].experiment[0].data[0].type = "afm_height"
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_data_node)

@@ -37,9 +37,10 @@ _We are always looking for ways to improve and create software that is a joy to 
 
 **Q:** How can I contribute to this project?
 
-**A:** _We would love to have you contribute.
-Please read the[GitHub repository wiki](https://github.com/C-Accel-CRIPT/Python-SDK/wiki)
-to understand more and get started. Feel free to contribute to any bugs you find, any issues within the
+**A:** _We would love to have you contribute!
+Please read our [contributing guidelines](https://github.com/C-Accel-CRIPT/Python-SDK/blob/main/CONTRIBUTING.md)
+and our [code of conduct](https://github.com/C-Accel-CRIPT/Python-SDK/blob/main/CODE_OF_CONDUCT.md) to get started.
+Feel free to contribute to any bugs you find, any issues within the
 [GitHub repository](https://github.com/C-Accel-CRIPT/Python-SDK/issues), or any features you want._
 
 ---
@@ -49,6 +50,13 @@ to understand more and get started. Feel free to contribute to any bugs you find
 **A:** _We have built this code with plugins in mind! Please visit the
 [CRIPT Python SDK GitHub repository Wiki](https://github.com/C-Accel-CRIPT/Python-SDK/wiki)
 tab for developer documentation._
+
+---
+
+**Q:** Is there documentation detailing the internal workings of the code?
+
+**A:** _Absolutely! For an in-depth look at the CRIPT Python SDK code, 
+consult the [GitHub repository wiki internal documentation](https://github.com/C-Accel-CRIPT/Python-SDK/wiki)._
 
 ---
 
@@ -74,7 +82,14 @@ A GitHub account is required._
 
 ---
 
-**Q:** Besides the user documentation are there any developer documentation that I can read through on how
+**Q:** Where can I find the release notes for each SDK version?
+
+**A:** _The release notes can be found on our 
+[CRIPT Python SDK repository releases section](https://github.com/C-Accel-CRIPT/Python-SDK/releases)_
+
+---
+
+**Q:** Besides the user documentation, is there any developer documentation that I can read through on how
 the code is written to get a better grasp of it?
 
 **A:** _You bet! There are documentation for developers within the

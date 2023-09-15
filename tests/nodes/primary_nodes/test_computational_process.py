@@ -1,13 +1,12 @@
 import json
 import uuid
 
+import cript
 from tests.utils.integration_test_helper import (
     delete_integration_node_helper,
     save_integration_node_helper,
 )
 from tests.utils.util import strip_uid_from_dict
-
-import cript
 
 
 def test_create_simple_computational_process(simple_data_node, complex_ingredient_node) -> None:

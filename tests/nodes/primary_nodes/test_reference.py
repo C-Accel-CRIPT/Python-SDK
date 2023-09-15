@@ -3,14 +3,14 @@ import uuid
 import warnings
 
 import pytest
+
+import cript
+from cript.api.exceptions import APIError
 from tests.utils.integration_test_helper import (
     delete_integration_node_helper,
     save_integration_node_helper,
 )
 from tests.utils.util import strip_uid_from_dict
-
-import cript
-from cript.api.exceptions import APIError
 
 
 def test_create_simple_reference() -> None:

@@ -11,11 +11,11 @@ The fixtures are all functional fixtures that stay consistent between all tests.
 import os
 
 import pytest
+
+import cript
 from tests.fixtures.primary_nodes import *
 from tests.fixtures.subobjects import *
 from tests.fixtures.supporting_nodes import *
-
-import cript
 
 
 def _get_cript_tests_env() -> bool:

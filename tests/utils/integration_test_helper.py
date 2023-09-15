@@ -1,11 +1,11 @@
 import json
 
 import pytest
-from tests.conftest import HAS_INTEGRATION_TESTS_ENABLED
 from deepdiff import DeepDiff
 
 import cript
 from cript.nodes.uuid_base import UUIDBaseNode
+from tests.conftest import HAS_INTEGRATION_TESTS_ENABLED
 
 
 def save_integration_node_helper(cript_api: cript.API, project_node: cript.Project):

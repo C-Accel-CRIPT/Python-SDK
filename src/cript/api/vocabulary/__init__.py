@@ -1,0 +1,1 @@
+from cript.api.vocabulary.vocabulary_categories import VocabCategories

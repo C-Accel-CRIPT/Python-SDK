@@ -2,13 +2,12 @@ import copy
 import json
 import uuid
 
-from integration_test_helper import (
-    delete_integration_node_helper,
-    integrate_nodes_helper,
-)
-from util import strip_uid_from_dict
-
 import cript
+from tests.utils.integration_test_helper import (
+    delete_integration_node_helper,
+    save_integration_node_helper,
+)
+from tests.utils.util import strip_uid_from_dict
 
 
 def test_create_simple_computation_node() -> None:
@@ -139,13 +138,13 @@ def test_integration_computation(cript_api, simple_project_node, simple_computat
     simple_project_node.name = f"test_integration_computation_name_{uuid.uuid4().hex}"
     simple_project_node.collection[0].experiment[0].computation = [simple_computation_node]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # --------- test update ---------
     # change simple computation attribute to trigger update
     simple_project_node.collection[0].experiment[0].computation[0].type = "data_fit"
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_computation_node)

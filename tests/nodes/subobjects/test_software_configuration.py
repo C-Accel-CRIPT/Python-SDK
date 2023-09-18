@@ -1,13 +1,12 @@
 import json
 import uuid
 
-from integration_test_helper import (
-    delete_integration_node_helper,
-    integrate_nodes_helper,
-)
-from util import strip_uid_from_dict
-
 import cript
+from tests.utils.integration_test_helper import (
+    delete_integration_node_helper,
+    save_integration_node_helper,
+)
+from tests.utils.util import strip_uid_from_dict
 
 
 def test_json(complex_software_configuration_node, complex_software_configuration_dict):
@@ -57,13 +56,13 @@ def test_integration_software_configuration(cript_api, simple_project_node, simp
     simple_project_node.collection[0].experiment[0].computation = [simple_computation_node]
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration = [simple_software_configuration]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
     # change simple attribute to trigger update
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].notes = "software configuration integration test UPDATED"
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_software_configuration)

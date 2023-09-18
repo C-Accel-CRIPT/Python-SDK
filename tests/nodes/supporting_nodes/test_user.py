@@ -1,9 +1,9 @@
 import json
 
 import pytest
-from util import strip_uid_from_dict
 
 import cript
+from tests.utils.util import strip_uid_from_dict
 
 
 def test_user_serialization_and_deserialization(complex_user_dict, complex_user_node):

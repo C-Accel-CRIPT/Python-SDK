@@ -36,7 +36,6 @@ from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import VocabCategories
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.project import Project
-from cript.nodes.uuid_base import UUIDBaseNode
 
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.

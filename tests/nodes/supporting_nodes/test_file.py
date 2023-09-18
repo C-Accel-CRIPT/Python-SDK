@@ -4,13 +4,13 @@ import os
 import uuid
 
 import pytest
-from integration_test_helper import (
-    delete_integration_node_helper,
-    integrate_nodes_helper,
-)
-from util import strip_uid_from_dict
 
 import cript
+from tests.utils.integration_test_helper import (
+    delete_integration_node_helper,
+    save_integration_node_helper,
+)
+from tests.utils.util import strip_uid_from_dict
 
 
 def test_create_file() -> None:
@@ -212,7 +212,7 @@ def test_integration_file(cript_api, simple_project_node, simple_data_node):
 
     simple_project_node.collection[0].experiment[0].data = [simple_data_node]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
     # change simple attribute to trigger update
@@ -220,7 +220,7 @@ def test_integration_file(cript_api, simple_project_node, simple_data_node):
     # TODO enable later
     # simple_project_node.collection[0].experiment[0].data[0].file[0].data_dictionary = "file data_dictionary UPDATED"
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     # isolated file node from data node

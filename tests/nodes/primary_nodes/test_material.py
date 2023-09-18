@@ -1,13 +1,12 @@
 import json
 import uuid
 
-from integration_test_helper import (
-    delete_integration_node_helper,
-    integrate_nodes_helper,
-)
-from util import strip_uid_from_dict
-
 import cript
+from tests.utils.integration_test_helper import (
+    delete_integration_node_helper,
+    save_integration_node_helper,
+)
+from tests.utils.util import strip_uid_from_dict
 
 
 def test_create_complex_material(simple_material_node, simple_computational_forcefield_node, simple_process_node) -> None:
@@ -140,13 +139,13 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
 
     simple_project_node.material = [simple_material_node]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
     # update material attribute to trigger update
     simple_project_node.material[0].identifier = [{"bigsmiles": "my bigsmiles UPDATED"}]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_material_node)

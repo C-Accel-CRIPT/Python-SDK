@@ -3,14 +3,14 @@ import uuid
 import warnings
 
 import pytest
-from integration_test_helper import (
-    delete_integration_node_helper,
-    integrate_nodes_helper,
-)
-from util import strip_uid_from_dict
 
 import cript
 from cript.api.exceptions import APIError
+from tests.utils.integration_test_helper import (
+    delete_integration_node_helper,
+    save_integration_node_helper,
+)
+from tests.utils.util import strip_uid_from_dict
 
 
 def test_create_simple_reference() -> None:
@@ -212,7 +212,7 @@ def test_integration_reference(cript_api, simple_project_node, complex_citation_
 
     simple_project_node.collection[0].citation = [complex_citation_node]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # TODO deserialization with citation in collection is wrong
     # raise Exception("Citation is missing from collection node from API")
@@ -224,7 +224,7 @@ def test_integration_reference(cript_api, simple_project_node, complex_citation_
     #  complex_reference_node.type = "book"
     simple_project_node.collection[0].citation[0].reference.title = "reference title UPDATED"
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     # isolate reference from citation

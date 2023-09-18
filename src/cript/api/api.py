@@ -12,6 +12,7 @@ import jsonschema
 import requests
 from beartype import beartype
 
+import cript
 from cript.api.api_config import _API_TIMEOUT
 from cript.api.exceptions import (
     APIError,
@@ -36,6 +37,7 @@ from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import VocabCategories
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.project import Project
+from cript.nodes.uuid_base import UUIDBaseNode
 
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.
@@ -946,7 +948,7 @@ class API:
     @beartype
     def search(
         self,
-        node_type,
+        node_type: Union[Any, str],
         search_mode: SearchModes,
         value_to_search: Optional[str],
     ) -> Paginator:
@@ -1005,7 +1007,7 @@ class API:
 
         Parameters
         ----------
-        node_type : UUIDBaseNode
+        node_type : Union[UUIDBaseNode, str]
             Type of node that you are searching for.
         search_mode : SearchModes
             Type of search you want to do. You can search by name, `UUID`, `EXACT_NAME`, etc.
@@ -1077,6 +1079,46 @@ class API:
             raise RuntimeError("Internal Error: Failed to recognize any search modes. Please report this bug on https://github.com/C-Accel-CRIPT/Python-SDK/issues.")
 
         return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, query=value_to_search, current_page_number=page_number)
+
+    @beartype
+    def get_node_by_uuid(self, node_type: Any, node_uuid: str) -> Any:
+        """
+        Gets a node from API by its UUID and returns the requested node represented as a Python object.
+
+        Examples
+        ---------
+        ```python
+        my_material_node: cript.Material = cript_api.get_node_by_uuid(node_type=cript.Material, node_uuid=material_uuid)
+        ```
+
+        Parameters
+        ----------
+        node_type: Any
+            The class representation of the type of node you're targeting, such as `cript.Material`.
+            This could be a representation of a `primary node`, `supporting node`, or `sub-object`.
+        node_uuid: str:
+            UUID of the target primary node, supporting node, or sub-object to retrieve from the API.
+
+        Returns
+        -------
+        UUIDBaseNode
+            The requested node represented as a Python object.
+        """
+
+        # get project node from API
+        my_paginator = self.search(
+            node_type=node_type,
+            search_mode=cript.SearchModes.UUID,
+            value_to_search=node_uuid
+        )
+
+        # get the project from paginator
+        my_node_from_api_dict = my_paginator.current_page_results[0]
+
+        # convert API JSON to CRIPT Project node
+        my_node_from_api = cript.load_nodes_from_json(json.dumps(my_node_from_api_dict))
+
+        return my_node_from_api
 
     def delete(self, node) -> None:
         """

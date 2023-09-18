@@ -1136,73 +1136,73 @@ class API:
     @beartype
     def delete_node_by_uuid(self, node_type: str, node_uuid: str) -> None:
         """
-         Simply deletes the desired node from the CRIPT API and writes a log in the terminal that the node has been
-         successfully deleted.
+        Simply deletes the desired node from the CRIPT API and writes a log in the terminal that the node has been
+        successfully deleted.
 
-         Examples
-         --------
-         ```python
-         api.delete(
-            node_type="computation_process",
-            node_uuid="2fd3d500-304d-4a06-8628-a79b59344b2f"
-         )
-         ```
+        Examples
+        --------
+        ```python
+        api.delete(
+           node_type="computation_process",
+           node_uuid="2fd3d500-304d-4a06-8628-a79b59344b2f"
+        )
+        ```
 
-         ??? "How to get `node_type in snake case`"
-                You can get the `node type in snake case` of a node via:
-                ```python
-                >>> import cript
-                >>> print(cript.ComputationProcess.node_type_snake_case)
-                computation_process
-                ```
+        ??? "How to get `node_type in snake case`"
+               You can get the `node type in snake case` of a node via:
+               ```python
+               >>> import cript
+               >>> print(cript.ComputationProcess.node_type_snake_case)
+               computation_process
+               ```
 
-                You can also call `api.delete_node_by_uuid()` with
-                ```python
-                api.delete(
-                    node_type=cript.ComputationProcess.node_type_snake_case,
-                    node_uuid="2fd3d500-304d-4a06-8628-a79b59344b2f",
-                )
-                ```
+               You can also call `api.delete_node_by_uuid()` with
+               ```python
+               api.delete(
+                   node_type=cript.ComputationProcess.node_type_snake_case,
+                   node_uuid="2fd3d500-304d-4a06-8628-a79b59344b2f",
+               )
+               ```
 
-         Notes
-         -----
-         After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
+        Notes
+        -----
+        After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
 
-         ```bash
-         INFO: Deleted 'Material' with UUID of '80bfc642-157e-4692-a547-97c470725397' from CRIPT API.
-         ```
+        ```bash
+        INFO: Deleted 'Material' with UUID of '80bfc642-157e-4692-a547-97c470725397' from CRIPT API.
+        ```
 
-         Warnings
-         --------
-         After successfully deleting a node from the API, keep in mind that your local Project node in your script
-         may still contain outdated data as it has not been synced with the API.
+        Warnings
+        --------
+        After successfully deleting a node from the API, keep in mind that your local Project node in your script
+        may still contain outdated data as it has not been synced with the API.
 
-         To ensure you have the latest data, follow these steps:
+        To ensure you have the latest data, follow these steps:
 
-         1. Fetch the newest Project node from the API using the [`cript.API.search()`](./#cript.api.api.API.search) provided by the SDK.
-         1. Deserialize the retrieved data into a new Project node using the [`load_nodes_from_json`](../../utility_functions/#cript.nodes.util.load_nodes_from_json) utility function.
-         1. Replace your old Project node with the new one in your script for accurate and up-to-date information.
+        1. Fetch the newest Project node from the API using the [`cript.API.search()`](./#cript.api.api.API.search) provided by the SDK.
+        1. Deserialize the retrieved data into a new Project node using the [`load_nodes_from_json`](../../utility_functions/#cript.nodes.util.load_nodes_from_json) utility function.
+        1. Replace your old Project node with the new one in your script for accurate and up-to-date information.
 
-         Parameters
-         ----------
-         node_type: str
-            the type of node that you want to delete in snake case
-         node_uuid: str
-            the UUID of the primary node, supporting node, or sub-object
-            that you want to delete from the API
+        Parameters
+        ----------
+        node_type: str
+           the type of node that you want to delete in snake case
+        node_uuid: str
+           the UUID of the primary node, supporting node, or sub-object
+           that you want to delete from the API
 
-         Raises
-         ------
-         APIError
-             If the API responds with anything other than HTTP status 200, then the CRIPT Python SDK raises `APIError`
-             `APIError` is raised in case the API cannot delete the specified node.
-             Such cases can happen if you do not have permission to delete the node
-             or if the node is actively being used elsewhere in CRIPT platform and the API cannot delete it.
+        Raises
+        ------
+        APIError
+            If the API responds with anything other than HTTP status 200, then the CRIPT Python SDK raises `APIError`
+            `APIError` is raised in case the API cannot delete the specified node.
+            Such cases can happen if you do not have permission to delete the node
+            or if the node is actively being used elsewhere in CRIPT platform and the API cannot delete it.
 
-         Returns
-         -------
-         None
-         """
+        Returns
+        -------
+        None
+        """
         delete_node_api_url: str = f"{self._host}/{node_type.lower()}/{node_uuid}/"
 
         response: Dict = requests.delete(headers=self._http_headers, url=delete_node_api_url, timeout=_API_TIMEOUT).json()

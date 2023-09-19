@@ -400,7 +400,7 @@ def test_api_search_bigsmiles(cript_api: cript.API) -> None:
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
-def test_api_search_get_node_by_uuid(cript_api: cript.API) -> None:
+def test_api_search_get_node_by_uuid(cript_api: cript.API, sodium_polystyrene_uuid) -> None:
     """
     tests `cript.API.get_node_by_uuid` works as intended
 
@@ -408,19 +408,11 @@ def test_api_search_get_node_by_uuid(cript_api: cript.API) -> None:
     1. from the node gotten from the API take out the UUID
     1. use the UUID to get the desired node
     """
-    # get node by EXACT_NAME to extract UUID from later
-    material_name = "Sodium polystyrene sulfonate"
-
-    exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=material_name)
-
-    material_uuid: str = exact_name_paginator.current_page_results[0]["uuid"]
-
-    # pass UUID for API node from the EXACT_SEARCH
-    my_material_node: cript.Material = cript_api.get_node_by_uuid(node_type=cript.Material, node_uuid=material_uuid)
+    my_material_node: cript.Material = cript_api.get_node_by_uuid(node_type=cript.Material, node_uuid=sodium_polystyrene_uuid)
 
     assert isinstance(my_material_node, cript.Material)
     assert my_material_node.name == "Sodium polystyrene sulfonate"
-    assert str(my_material_node.uuid) == material_uuid
+    assert str(my_material_node.uuid) == sodium_polystyrene_uuid
 
 
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:

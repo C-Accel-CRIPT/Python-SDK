@@ -948,7 +948,7 @@ class API:
     @beartype
     def search(
         self,
-        node_type: Union[Any, str],
+        node_type: Any,
         search_mode: SearchModes,
         value_to_search: Optional[str],
     ) -> Paginator:
@@ -1007,7 +1007,7 @@ class API:
 
         Parameters
         ----------
-        node_type : Union[UUIDBaseNode, str]
+        node_type : UUIDBaseNode
             Type of node that you are searching for.
         search_mode : SearchModes
             Type of search you want to do. You can search by name, `UUID`, `EXACT_NAME`, etc.

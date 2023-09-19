@@ -13,6 +13,7 @@ import os
 import pytest
 
 import cript
+from tests.fixtures.api_fixtures import *
 from tests.fixtures.primary_nodes import *
 from tests.fixtures.subobjects import *
 from tests.fixtures.supporting_nodes import *

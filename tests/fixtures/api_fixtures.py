@@ -3,7 +3,7 @@ import pytest
 import cript
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def sodium_polystyrene_uuid(cript_api: cript.API) -> str:
     """
     Get the UUID of the material, "Sodium polystyrene sulfonate" based on its EXACT_NAME from the API.

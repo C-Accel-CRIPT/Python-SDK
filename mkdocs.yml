@@ -107,8 +107,8 @@ plugins:
             show_bases: true
             show_source: true
             docstring_style: numpy
-      watch:
-        - src/
+watch:
+  - src/
 
 markdown_extensions:
   - toc:

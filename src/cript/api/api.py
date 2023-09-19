@@ -1106,11 +1106,7 @@ class API:
         """
 
         # get project node from API
-        my_paginator = self.search(
-            node_type=node_type,
-            search_mode=cript.SearchModes.UUID,
-            value_to_search=node_uuid
-        )
+        my_paginator = self.search(node_type=node_type, search_mode=cript.SearchModes.UUID, value_to_search=node_uuid)
 
         # get the project from paginator
         my_node_from_api_dict = my_paginator.current_page_results[0]

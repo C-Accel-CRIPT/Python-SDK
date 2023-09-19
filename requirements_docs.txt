@@ -2,4 +2,4 @@ mkdocs==1.5.3
 mkdocs-material==9.3.2
 mkdocstrings[python]==0.23.0
 pymdown-extensions==10.3
-jupytext==1.15.1
+jupytext==1.15.2

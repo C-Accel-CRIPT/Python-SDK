@@ -1,5 +1,5 @@
 import json
-from typing import Dict, List, Union, Any
+from typing import Any, Dict, List, Union
 
 from cript.nodes.exceptions import CRIPTJsonNodeError
 from cript.nodes.util import _is_node_field_valid

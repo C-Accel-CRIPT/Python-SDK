@@ -1246,13 +1246,13 @@ class API:
         -------
         None
         """
-        node_type: str = get_node_type_snake_case(node_type=node_type)
+        node_type_snake: str = get_node_type_snake_case(node_type=node_type)
 
-        delete_node_api_url: str = f"{self._host}/{node_type}/{node_uuid}/"
+        delete_node_api_url: str = f"{self._host}/{node_type_snake}/{node_uuid}/"
 
         response: Dict = requests.delete(headers=self._http_headers, url=delete_node_api_url, timeout=_API_TIMEOUT).json()
 
         if response["code"] != 200:
             raise APIError(api_error=str(response), http_method="DELETE", api_url=delete_node_api_url)
 
-        self.logger.info(f"Deleted '{node_type.title()}' with UUID of '{node_uuid}' from CRIPT API.")
+        self.logger.info(f"Deleted '{node_type_snake.title()}' with UUID of '{node_uuid}' from CRIPT API.")

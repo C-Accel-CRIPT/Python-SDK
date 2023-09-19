@@ -420,7 +420,7 @@ def test_api_search_get_node_by_uuid(cript_api: cript.API) -> None:
 
     assert isinstance(my_material_node, cript.Material)
     assert my_material_node.name == "Sodium polystyrene sulfonate"
-    assert my_material_node.uuid == material_uuid
+    assert str(my_material_node.uuid) == material_uuid
 
 
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:

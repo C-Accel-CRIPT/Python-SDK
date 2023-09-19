@@ -1088,7 +1088,9 @@ class API:
         Examples
         ---------
         ```python
-        my_material_node: cript.Material = cript_api.get_node_by_uuid(node_type=cript.Material, node_uuid=material_uuid)
+        my_material_node: cript.Material = cript_api.get_node_by_uuid(
+            node_type=cript.Material, node_uuid="e1b41d34-3bf2-4cd8-9a19-6412df7e7efc"
+        )
         ```
 
         Parameters

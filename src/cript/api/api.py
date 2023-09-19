@@ -14,18 +14,11 @@ from beartype import beartype
 
 import cript
 from cript.api.api_config import _API_TIMEOUT
-from cript.api.exceptions import (APIError, CRIPTAPIRequiredError,
-                                  CRIPTAPISaveError, CRIPTConnectionError,
-                                  CRIPTDuplicateNameError, InvalidHostError,
-                                  InvalidVocabulary)
+from cript.api.exceptions import APIError, CRIPTAPIRequiredError, CRIPTAPISaveError, CRIPTConnectionError, CRIPTDuplicateNameError, InvalidHostError, InvalidVocabulary
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
-from cript.api.utils.helper_functions import (_get_node_type_from_json,
-                                              get_node_type_snake_case)
-from cript.api.utils.save_helper import (_fix_node_save,
-                                         _get_uuid_from_error_message,
-                                         _identify_suppress_attributes,
-                                         _InternalSaveValues)
+from cript.api.utils.helper_functions import _get_node_type_from_json, get_node_type_snake_case
+from cript.api.utils.save_helper import _fix_node_save, _get_uuid_from_error_message, _identify_suppress_attributes, _InternalSaveValues
 from cript.api.utils.web_file_downloader import download_file_from_url
 from cript.api.valid_search_modes import SearchModes
 from cript.api.vocabulary_categories import VocabCategories

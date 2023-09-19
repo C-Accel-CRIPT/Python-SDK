@@ -1,5 +1,5 @@
 import json
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Any
 
 from cript.nodes.exceptions import CRIPTJsonNodeError
 from cript.nodes.util import _is_node_field_valid
@@ -41,3 +41,30 @@ def _get_node_type_from_json(node_json: Union[Dict, str]) -> str:
     # if invalid then raise error
     else:
         raise CRIPTJsonNodeError(node_list=node_type_list, json_str=str(node_json))
+
+
+def get_node_type_snake_case(node_type: Union[Any, str]) -> str:
+    """
+    takes a node_type in either class, object, or str type and returns the node type in string snake case
+
+    Parameters
+    ----------
+    node_type: Union[Any, str]
+        can be either a primary node, supporting node, or sub-object node
+
+    Notes
+    -----
+    can be used any time that we want to allow the user to input a `node_type` of either
+    `computation_process` or `cript.ComputationProcess`
+
+    Returns
+    -------
+    str
+        node type in string snake_case format
+    """
+    if isinstance(node_type, str):
+        return node_type.lower()
+    elif hasattr(node_type, "node_type_snake_case"):
+        return node_type.node_type_snake_case
+    else:
+        raise ValueError("Invalid node_type format. Please provide a class, object, or str.")

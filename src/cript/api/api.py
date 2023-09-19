@@ -25,7 +25,7 @@ from cript.api.exceptions import (
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
-from cript.api.utils.helper_functions import _get_node_type_from_json
+from cript.api.utils.helper_functions import _get_node_type_from_json, get_node_type_snake_case
 from cript.api.utils.save_helper import (
     _fix_node_save,
     _get_uuid_from_error_message,
@@ -1172,13 +1172,22 @@ class API:
         self.delete_node_by_uuid(node_type=node.node_type_snake_case, node_uuid=str(node.uuid))
 
     @beartype
-    def delete_node_by_uuid(self, node_type: str, node_uuid: str) -> None:
+    def delete_node_by_uuid(self, node_type: Union[Any, str], node_uuid: str) -> None:
         """
         Simply deletes the desired node from the CRIPT API and writes a log in the terminal that the node has been
         successfully deleted.
 
         Examples
         --------
+        ### Using Class Name
+        ```python
+        api.delete(
+           node_type=cript.ComputationProcess,
+           node_uuid="2fd3d500-304d-4a06-8628-a79b59344b2f"
+        )
+        ```
+
+        ### Using String Representation
         ```python
         api.delete(
            node_type="computation_process",
@@ -1186,7 +1195,7 @@ class API:
         )
         ```
 
-        ??? "How to get `node_type in snake case`"
+        ??? info "How to get `node_type` in snake case"
                You can get the `node type in snake case` of a node via:
                ```python
                >>> import cript
@@ -1194,13 +1203,9 @@ class API:
                computation_process
                ```
 
-               You can also call `api.delete_node_by_uuid()` with
-               ```python
-               api.delete(
-                   node_type=cript.ComputationProcess.node_type_snake_case,
-                   node_uuid="2fd3d500-304d-4a06-8628-a79b59344b2f",
-               )
-               ```
+        !!! note "Recommended Approach: Using Class Name"
+            While both methods are valid, using the direct type reference (like `cript.ComputationProcess`)
+            provides better type-checking and is recommended when working in environments that support it.
 
         Notes
         -----
@@ -1241,7 +1246,9 @@ class API:
         -------
         None
         """
-        delete_node_api_url: str = f"{self._host}/{node_type.lower()}/{node_uuid}/"
+        node_type: str = get_node_type_snake_case(node_type=node_type)
+
+        delete_node_api_url: str = f"{self._host}/{node_type}/{node_uuid}/"
 
         response: Dict = requests.delete(headers=self._http_headers, url=delete_node_api_url, timeout=_API_TIMEOUT).json()
 

@@ -112,14 +112,11 @@ class BaseNode(ABC):
     def node(self):
         return self._json_attrs.node
 
+    # TODO refactor/rename this method since the code has evolved
+    #   is this method even needed any more
     def _update_json_attrs_if_valid(self, new_json_attr: JsonAttributes) -> None:
         """
-        tries to update the node if valid and then checks if it is valid or not
-
-        1. updates the node with the new information
-        1. run db schema validation on it
-            1. if db schema validation succeeds then update and continue
-            1. else: raise an error and tell the user what went wrong
+        updates the node with the new information
 
         Parameters
         ----------
@@ -133,14 +130,7 @@ class BaseNode(ABC):
         -------
         None
         """
-        old_json_attrs = self._json_attrs
         self._json_attrs = new_json_attr
-
-        try:
-            self.validate()
-        except Exception as exc:
-            self._json_attrs = old_json_attrs
-            raise exc
 
     def validate(self, api=None, is_patch=False) -> None:
         """

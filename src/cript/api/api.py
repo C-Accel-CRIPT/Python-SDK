@@ -3,7 +3,6 @@ import json
 import logging
 import os
 import uuid
-import warnings
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
@@ -20,12 +19,11 @@ from cript.api.exceptions import (
     CRIPTAPISaveError,
     CRIPTConnectionError,
     CRIPTDuplicateNameError,
-    InvalidHostError,
     InvalidVocabulary,
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.get_host_token import resolve_host_and_token
-from cript.api.utils.helper_functions import _get_node_type_from_json
+from cript.api.utils.helper_functions import _get_node_type_from_json, prepare_host
 from cript.api.utils.save_helper import (
     _fix_node_save,
     _get_uuid_from_error_message,
@@ -216,7 +214,7 @@ class API:
             api_token = authentication_dict["api_token"]
             storage_token = authentication_dict["storage_token"]
 
-        self._host = self._prepare_host(host=host)  # type: ignore
+        self._host = prepare_host(host=host, api_handle=self._api_handle, api_version=self._api_version)  # type: ignore
         self._api_token = api_token  # type: ignore
         self._storage_token = storage_token  # type: ignore
 
@@ -327,21 +325,6 @@ class API:
         """
         self._verbose = new_verbose_value
         self._set_logger(verbose=new_verbose_value)
-
-    @beartype
-    def _prepare_host(self, host: str) -> str:
-        # strip ending slash to make host always uniform
-        host = host.rstrip("/")
-        host = f"{host}/{self._api_handle}/{self._api_version}"
-
-        # if host is using unsafe "http://" then give a warning
-        if host.startswith("http://"):
-            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
-
-        if not host.startswith("http"):
-            raise InvalidHostError()
-
-        return host
 
     # Use a property to ensure delayed init of s3_client
     @property

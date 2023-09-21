@@ -41,6 +41,7 @@ def test_create_complex_computational_process(
     """
 
     computational_process_name = "my computational process name"
+    computational_process_notes = "my computational process notes"
     computational_process_type = "cross_linking"
 
     ingredient = complex_ingredient_node
@@ -55,6 +56,7 @@ def test_create_complex_computational_process(
         condition=[complex_condition_node],
         property=[simple_property_node],
         citation=[complex_citation_node],
+        notes=computational_process_notes
     )
 
     # assertions
@@ -68,6 +70,7 @@ def test_create_complex_computational_process(
     assert my_computational_process.condition == [complex_condition_node]
     assert my_computational_process.property == [simple_property_node]
     assert my_computational_process.citation == [complex_citation_node]
+    assert my_computational_process.notes == computational_process_notes
 
 
 def test_computational_process_getters_and_setters(simple_computation_process_node, simple_data_node, simple_ingredient_node, simple_software_configuration, simple_condition_node, simple_property_node, complex_citation_node) -> None:

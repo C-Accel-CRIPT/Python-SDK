@@ -17,6 +17,7 @@ def test_create_complex_material(simple_material_node, simple_computational_forc
     material_name = "my material name"
     identifier = [{"bigsmiles": "1234"}, {"bigsmiles": "4567"}]
     keyword = ["acetylene"]
+    material_notes = "my material notes"
 
     component = [simple_material_node]
     forcefield = [simple_computational_forcefield_node]
@@ -33,6 +34,7 @@ def test_create_complex_material(simple_material_node, simple_computational_forc
     assert my_material.process == simple_process_node
     assert my_material.property == my_property
     assert my_material.computational_forcefield == forcefield
+    assert my_material.notes == material_notes
 
 
 def test_invalid_material_keywords() -> None:
@@ -53,6 +55,7 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     """
     # new attributes
     new_name = "new material name"
+    new_notes = "new material notes"
 
     new_identifier = [{"bigsmiles": "6789"}]
 
@@ -82,6 +85,7 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     simple_material_node.computational_forcefield = simple_computational_forcefield_node
     simple_material_node.keyword = new_material_keywords
     simple_material_node.component = new_components
+    simple_material_node.notes = new_notes
 
     # get all attributes and assert that they are equal to the setter
     assert simple_material_node.name == new_name
@@ -91,18 +95,21 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     assert simple_material_node.computational_forcefield == simple_computational_forcefield_node
     assert simple_material_node.keyword == new_material_keywords
     assert simple_material_node.component == new_components
+    assert simple_material_node.notes == new_notes
 
     # remove optional attributes
     simple_material_node.property = []
     simple_material_node.parent_material = None
     simple_material_node.computational_forcefield = None
     simple_material_node.component = []
+    simple_material_node.notes = ""
 
     # assert optional attributes have been removed
     assert simple_material_node.property == []
     assert simple_material_node.parent_material is None
     assert simple_material_node.computational_forcefield is None
     assert simple_material_node.component == []
+    assert simple_material_node.notes == ""
 
 
 def test_serialize_material_to_json(complex_material_dict, complex_material_node) -> None:

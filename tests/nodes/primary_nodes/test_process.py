@@ -72,7 +72,7 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
         property=[prop],
         keyword=my_process_keywords,
         citation=[citation],
-        notes=my_notes
+        notes=my_notes,
     )
     # assertions
     assert my_complex_process.type == my_process_type

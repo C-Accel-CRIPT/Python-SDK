@@ -39,14 +39,7 @@ def test_create_complex_collection(simple_experiment_node, simple_inventory_node
     my_cript_doi = "10.1038/1781168a0"
     my_collection_notes = "test_create_complex_collection notes"
 
-    my_collection = cript.Collection(
-        name=my_collection_name,
-        experiment=[simple_experiment_node],
-        inventory=[simple_inventory_node],
-        doi=my_cript_doi,
-        citation=[complex_citation_node],
-        notes=my_collection_notes
-    )
+    my_collection = cript.Collection(name=my_collection_name, experiment=[simple_experiment_node], inventory=[simple_inventory_node], doi=my_cript_doi, citation=[complex_citation_node], notes=my_collection_notes)
 
     # assertions
     assert isinstance(my_collection, cript.Collection)

@@ -48,7 +48,7 @@ def test_create_complex_data_node(
         material=[simple_material_node],
         process=[simple_process_node],
         # citation=[complex_citation_node],
-        notes=my_notes
+        notes=my_notes,
     )
 
     # assertions

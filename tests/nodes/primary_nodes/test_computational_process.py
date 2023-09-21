@@ -56,7 +56,7 @@ def test_create_complex_computational_process(
         condition=[complex_condition_node],
         property=[simple_property_node],
         citation=[complex_citation_node],
-        notes=computational_process_notes
+        notes=computational_process_notes,
     )
 
     # assertions

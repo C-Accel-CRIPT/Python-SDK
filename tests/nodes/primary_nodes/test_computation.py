@@ -16,6 +16,7 @@ def test_create_simple_computation_node() -> None:
     """
     my_computation_type = "analysis"
     my_computation_name = "this is my computation name"
+    my_computation_notes = "this is my computation notes"
 
     my_computation_node = cript.Computation(name=my_computation_name, type=my_computation_type)
 
@@ -23,6 +24,7 @@ def test_create_simple_computation_node() -> None:
     assert isinstance(my_computation_node, cript.Computation)
     assert my_computation_node.name == my_computation_name
     assert my_computation_node.type == my_computation_type
+    assert my_computation_node.notes == my_computation_notes
 
 
 def test_create_complex_computation_node(simple_data_node, complex_software_configuration_node, complex_condition_node, simple_computation_node, complex_citation_node) -> None:

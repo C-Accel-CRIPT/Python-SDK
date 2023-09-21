@@ -24,6 +24,7 @@ from cript.api.exceptions import (
     InvalidVocabulary,
 )
 from cript.api.paginator import Paginator
+from cript.api.utils.aws_s3_utils import get_s3_client
 from cript.api.utils.get_host_token import resolve_host_and_token
 from cript.api.utils.helper_functions import _get_node_type_from_json
 from cript.api.utils.save_helper import (
@@ -347,29 +348,19 @@ class API:
     @property
     def _s3_client(self) -> boto3.client:  # type: ignore
         """
-        creates or returns a fully authenticated and ready s3 client
+        Property to use when wanting to interact with AWS S3.
+
+        Gets a fully authenticated AWS S3 client if it was never created and stash it,
+        if the AWS S3 client has been created before, then returns the client that it has
 
         Returns
         -------
         s3_client: boto3.client
             fully prepared and authenticated s3 client ready to be used throughout the script
         """
-
         if self._internal_s3_client is None:
-            auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
-            identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._storage_token})
-            # TODO remove this temporary fix to the token, by getting is from back end.
-            aws_token = self._storage_token
+            self._internal_s3_client = get_s3_client(region_name=self._REGION_NAME, identity_pool_id=self._IDENTITY_POOL_ID, cognito_login_provider=self._COGNITO_LOGIN_PROVIDER, storage_token=self._storage_token)
 
-            aws_credentials = auth.get_credentials_for_identity(IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: aws_token})
-            aws_credentials = aws_credentials["Credentials"]
-            s3_client = boto3.client(
-                "s3",
-                aws_access_key_id=aws_credentials["AccessKeyId"],
-                aws_secret_access_key=aws_credentials["SecretKey"],
-                aws_session_token=aws_credentials["SessionToken"],
-            )
-            self._internal_s3_client = s3_client
         return self._internal_s3_client
 
     def __enter__(self):
@@ -869,7 +860,7 @@ class API:
         # upload file to AWS S3
         self._s3_client.upload_file(Filename=file_path, Bucket=self._BUCKET_NAME, Key=object_name)  # type: ignore
 
-        self.logger.info(f"Uploaded file: '{file_path}' to CRIPT storage")
+        self.logger.info(f"Uploaded File: '{file_path}' to CRIPT storage")
 
         # return the object_name within AWS S3 for easy retrieval
         return object_name

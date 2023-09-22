@@ -1,8 +1,12 @@
 from typing import Dict
 
+import pytest
+
 import cript
+from tests.conftest import HAS_INTEGRATION_TESTS_ENABLED
 
 
+@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
 def test_paginator_get_node_by_name(cript_api: cript.API) -> None:
     """
     Test if the paginator can retrieve a material by name from the current page.

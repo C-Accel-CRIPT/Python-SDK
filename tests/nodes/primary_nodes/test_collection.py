@@ -48,7 +48,7 @@ def test_create_complex_collection(simple_experiment_node, simple_inventory_node
     assert my_collection.inventory == [simple_inventory_node]
     assert my_collection.doi == my_cript_doi
     assert my_collection.citation == [complex_citation_node]
-    assert my_collection.my_collection_notes == my_collection_notes
+    assert my_collection.notes == my_collection_notes
 
 
 def test_collection_getters_and_setters(simple_experiment_node, simple_inventory_node, complex_citation_node) -> None:

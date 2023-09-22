@@ -24,7 +24,7 @@ def test_create_complex_material(simple_material_node, simple_computational_forc
 
     my_property = [cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")]
 
-    my_material = cript.Material(name=material_name, identifier=identifier, keyword=keyword, component=component, process=simple_process_node, property=my_property, computational_forcefield=forcefield)
+    my_material = cript.Material(name=material_name, identifier=identifier, keyword=keyword, component=component, process=simple_process_node, property=my_property, computational_forcefield=forcefield, notes=material_notes)
 
     assert isinstance(my_material, cript.Material)
     assert my_material.name == material_name

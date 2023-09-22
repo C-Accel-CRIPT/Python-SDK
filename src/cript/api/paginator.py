@@ -277,4 +277,3 @@ class Paginator:
                 return node_json
 
         return None
-

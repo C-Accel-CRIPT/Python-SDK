@@ -63,6 +63,7 @@ class API:
     # dictates whether the user wants to see terminal log statements or not
     _verbose: bool = True
     logger: logging.Logger = None  # type: ignore
+    has_db_schema_validation: bool = True
 
     _host: str = ""
     _api_token: str = ""
@@ -603,7 +604,7 @@ class API:
     @beartype
     def _is_node_schema_valid(self, node_json: str, is_patch: bool = False) -> bool:
         """
-        checks a node JSON schema against the db schema to return if it is valid or not.
+        Checks a node JSON schema against the db schema to return if it is valid or not.
 
         1. get db schema
         1. convert node_json str to dict
@@ -621,8 +622,8 @@ class API:
 
         Notes
         -----
-        This function does not take into consideration vocabulary validation.
-            For vocabulary validation please check `is_vocab_valid`
+        If `api.db_schema_validation_enabled` is set to `False`,
+        this function will skip database schema validation and always return `True`.
 
         Raises
         ------
@@ -634,6 +635,10 @@ class API:
         bool
             whether the node JSON is valid or not
         """
+
+        # Skip database schema validation if `has_db_schema_validation` is False.
+        if not self.has_db_schema_validation:
+            return True
 
         db_schema = self._get_db_schema()
 

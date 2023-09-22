@@ -230,3 +230,51 @@ class Paginator:
             raise APIError(api_error=str(response), http_method="GET", api_url=temp_api_endpoint)
 
         return self.current_page_results
+
+    def get_node_by_name(self, node_name: str) -> Optional[Dict]:
+        """
+        Get a node by its name instead of index number from the current page you are on.
+
+        Notes
+        -----
+        * This method will only work for Primary and File node because they have `name` attributes
+        while sub-objects do not have a `name` attribute
+        * This method will simply look through the first level of the results and will not
+        search the full tree of each node.
+
+        Examples
+        --------
+        ```python
+        # Search the API for all materials, obtaining a paginator object
+        # to navigate through the list of public materials.
+        materials_paginator = cript_api.search(
+            node_type=cript.Material,
+            search_mode=cript.SearchModes.NODE_TYPE,
+            value_to_search=None,
+        )
+
+        # Retrieve a material node (in JSON form) by specifying its name.
+        # If the material is not found, `None` is returned.
+        retrieved_material: Optional[Dict] = materials_paginator.get_node_by_name(
+            node_name="my material name"
+        )
+        ```
+
+        Parameters
+        ----------
+        node_name: str
+            the name of the node that you want to find within the current page
+
+        Returns
+        -------
+        Optional[Dict]
+            the desired node in JSON form and if it doesn't exist then it returns `None`
+        """
+        # return find_json_node_by_name(list_of_nodes=self.current_page_results, target_name=node_name)
+
+        for node_json in self.current_page_results:
+            if node_name == node_json["name"]:
+                return node_json
+
+        return None
+

@@ -29,7 +29,7 @@ class CRIPTNodeSchemaError(CRIPTException):
         * The format of the JSON the CRIPT Python SDK created was invalid
     1. There is something wrong with the database schema
 
-    ## How to Fix
+    ## Troubleshooting Tips
     The easiest way to troubleshoot this is to examine the JSON that the SDK created via printing out the
     [Project](../../nodes/primary_nodes/project) node's JSON and checking the place that the schema validation
     says failed
@@ -74,7 +74,7 @@ class CRIPTJsonDeserializationError(CRIPTException):
     ```json
     ```
 
-    ## How to Fix
+    ## Troubleshooting Tips
     """
 
     def __init__(self, node_type: str, json_str: str) -> None:
@@ -118,7 +118,7 @@ class CRIPTDeserializationUIDError(CRIPTException):
     ```
     Now the node is fully specified.
 
-    ## How to Fix
+    ## Troubleshooting Tips
     Specify the full node instead. This error might appear if you try to partially load previously generated JSON.
     """
 
@@ -174,7 +174,7 @@ class CRIPTJsonNodeError(CRIPTJsonDeserializationError):
         ```
 
 
-    ## How to Fix
+    ## Troubleshooting Tips
     Debugging skills are most helpful here as there is no one-size-fits-all approach.
 
     It is best to identify whether the invalid JSON was created in the Python SDK
@@ -207,7 +207,7 @@ class CRIPTJsonSerializationError(CRIPTException):
     ## Definition
     This Exception is raised if serialization of node from JSON to Python Object fails.
 
-    ## How to Fix
+    ## Troubleshooting Tips
     """
 
     def __init__(self, node_type: str, json_dict: str) -> None:
@@ -259,7 +259,7 @@ class CRIPTOrphanedNodesError(CRIPTException, ABC):
     If there is a material node that is used within a project but not a part of the
     inventory and the validation code finds it then it raises an `CRIPTOrphanedNodeError`
 
-    ## How To Fix
+    ## Troubleshooting Tips
     Fixing this is simple and easy, just take the node that CRIPT Python SDK
     found a problem with and associate it with the appropriate parent via
 
@@ -281,7 +281,7 @@ class CRIPTOrphanedMaterialError(CRIPTOrphanedNodesError):
     ## Definition
     CRIPTOrphanedNodesError, but specific for orphaned materials.
 
-    ## How To Fix
+    ## Troubleshooting Tips
     Handle this error by adding the orphaned materials into the parent project or its inventories.
     """
 
@@ -301,7 +301,7 @@ class CRIPTOrphanedExperimentError(CRIPTOrphanedNodesError):
     ## Definition
     CRIPTOrphanedNodesError, but specific for orphaned nodes that should be listed in one of the experiments.
 
-    ## How To Fix
+    ## Troubleshooting Tips
     Handle this error by adding the orphaned node into one the parent project's experiments.
     """
 
@@ -343,7 +343,7 @@ class CRIPTOrphanedDataError(CRIPTOrphanedExperimentError):
     ## Definition
     CRIPTOrphanedExperimentError, but specific for orphaned Data node that should be listed in one of the experiments.
 
-    ## How To Fix
+    ## Troubleshooting Tips
     Handle this error by adding the orphaned node into one the parent project's experiments `data` attribute.
     """
 
@@ -357,7 +357,7 @@ class CRIPTOrphanedProcessError(CRIPTOrphanedExperimentError):
     CRIPTOrphanedExperimentError, but specific for orphaned Process node that should be
     listed in one of the experiments.
 
-    ## How To Fix
+    ## Troubleshooting Tips
     Handle this error by adding the orphaned node into one the parent project's experiments
     `process` attribute.
     """
@@ -372,7 +372,7 @@ class CRIPTOrphanedComputationError(CRIPTOrphanedExperimentError):
     CRIPTOrphanedExperimentError, but specific for orphaned Computation node that should be
     listed in one of the experiments.
 
-    ## How To Fix
+    ## Troubleshooting Tips
     Handle this error by adding the orphaned node into one the parent project's experiments
     `Computation` attribute.
     """
@@ -387,7 +387,7 @@ class CRIPTOrphanedComputationalProcessError(CRIPTOrphanedExperimentError):
     CRIPTOrphanedExperimentError, but specific for orphaned ComputationalProcess
     node that should be listed in one of the experiments.
 
-    ## How To Fix
+    ## Troubleshooting Tips
     Handle this error by adding the orphaned node into one the parent project's experiments
     `ComputationalProcess` attribute.
     """

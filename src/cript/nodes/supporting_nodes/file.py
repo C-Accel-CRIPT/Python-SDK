@@ -341,6 +341,9 @@ class File(PrimaryBaseNode):
         my_file_node.extension = ".csv"`
         ```
 
+        !!! Note "file extensions must start with a dot"
+            File extensions must start with a dot, for example `.csv` or `.pdf`
+
         Returns
         -------
         extension: str

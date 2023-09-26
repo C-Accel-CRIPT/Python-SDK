@@ -201,9 +201,8 @@ class File(PrimaryBaseNode):
         It is not necessary to call this function manually.
         A saved project automatically ensures uploaded files, it is recommend to rely on the automatic upload.
 
-        Parameters:
+        Parameters
         -----------
-
         api: cript.API, optional
            API object that performs the upload.
            If None, the globally cached object is being used.
@@ -214,7 +213,7 @@ class File(PrimaryBaseNode):
         ```python
         my_file = cript.File(source="/local/path/to/file", type="calibration")
         my_file.ensure_uploaded()
-        my_file.source # Starts with http now
+        my_file.source # changed to cloud storage object name
         ```
 
         """

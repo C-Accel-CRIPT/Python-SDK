@@ -250,10 +250,33 @@ experiment.computation += [init, equilibration, bulk, ana]
 New we'd like to upload files associated with our simulation. First, we'll instantiate our File nodes under a specific project.
 
 ```python
-packing_file = cript.File(name="Initial simulation box snapshot with roughly packed molecules", type="computation_snapshot", source="path/to/local/file", extension=".csv")
-forcefield_file = cript.File(name="Forcefield definition file", type="data", source="path/to/local/file", extension=".pdf")
-snap_file = cript.File(name="Bulk measurement initial system snap shot", type="computation_snapshot", source="path/to/local/file", extension=".png")
-final_file = cript.File(name="Final snapshot of the system at the end the simulations", type="computation_snapshot", source="path/to/local/file", extension=".jpeg")
+packing_file = cript.File(
+    name="Initial simulation box snapshot with roughly packed molecules",
+    type="computation_snapshot",
+    source="path/to/local/file",
+    extension=".csv",
+)
+
+forcefield_file = cript.File(
+    name="Forcefield definition file",
+    type="data",
+    source="path/to/local/file",
+    extension=".pdf",
+)
+
+snap_file = cript.File(
+    name="Bulk measurement initial system snap shot",
+    type="computation_snapshot",
+    source="path/to/local/file",
+    extension=".png",
+)
+
+final_file = cript.File(
+    name="Final snapshot of the system at the end the simulations",
+    type="computation_snapshot",
+    source="path/to/local/file",
+    extension=".jpeg",
+)
 ```
 
 !!! note

@@ -64,15 +64,14 @@ def _upload_file_and_get_object_name(source: Union[str, Path], api=None) -> str:
     """
     from cript.api.api import _get_global_cached_api
 
-    # convert source to str for `_is_local_file` and to return str
+    # convert source to str for
     source = str(source)
 
-    if _is_local_file(file_source=source):
-        if api is None:
-            api = _get_global_cached_api()
-        object_name = api.upload_file(file_path=source)
-        # always getting a string for object_name
-        source = str(object_name)
+    if api is None:
+        api = _get_global_cached_api()
+    object_name = api.upload_file(file_path=source)
+    # always getting a string for object_name
+    source = str(object_name)
 
     # always returning a string
     return source
@@ -127,8 +126,10 @@ class File(PrimaryBaseNode):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    is_file_source_local_path: bool = False
+
     @beartype
-    def __init__(self, name: str, source: str, type: str, extension: str = "", data_dictionary: str = "", notes: str = "", **kwargs):
+    def __init__(self, name: str, source: str, type: str, is_file_source_local_path: bool, extension: str = "", data_dictionary: str = "", notes: str = "", **kwargs):
         """
         create a File node
 
@@ -189,6 +190,8 @@ class File(PrimaryBaseNode):
             data_dictionary=data_dictionary,
         )
 
+        self.is_file_source_local_path = is_file_source_local_path
+
         self.validate()
 
     def ensure_uploaded(self, api=None):
@@ -215,9 +218,7 @@ class File(PrimaryBaseNode):
         ```
 
         """
-
-        if _is_local_file(file_source=self.source):
-            # upload file source if local file
+        if self.is_file_source_local_path:
             self.source = _upload_file_and_get_object_name(source=self.source)
 
     # TODO can be made into a function
@@ -234,11 +235,16 @@ class File(PrimaryBaseNode):
         --------
         URL File Source
         ```python
-        my_file.source = "https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf"
+        my_file.set_file_source(
+            new_source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
+            is_file_source_local_path=False,
+        )
         ```
         Local File Path
         ```python
-        my_file.source = "/home/user/project/my_file.csv"
+        my_file.set_file_source(
+            new_source="/home/user/project/my_file.csv", is_file_source_local_path=True
+        )
         ```
 
         Returns
@@ -248,36 +254,59 @@ class File(PrimaryBaseNode):
         """
         return self._json_attrs.source
 
-    @source.setter
-    @beartype
-    def source(self, new_source: str) -> None:
+    def set_file_source(self, new_source: str, is_file_source_local_path: bool):
         """
         sets the source of the file node
         the source can either be a path to a file on local storage or a link to a file
 
-        1. checks if the file source is a link or a local file path
-        2. if the source is a link such as `https://wikipedia.com` then it sets the URL as the file source
-        3. if the file source is a local file path such as
-                `C:\\Users\\my_username\\Desktop\\cript\\file.txt`
-            1. then it opens the file and reads it
-            2. uploads it to the cloud storage
-            3. gets back a URL from where in the cloud the file is found
-            4. sets that as the source
+        1. if `is_file_source_local_path` is set to `True`
+            1. then it takes the file from local storage
+            1. uploads it to the cloud storage
+            1. gets back an object_name from cloud storage provider to later be able to retrieve the file
+
+        Example
+        --------
+        URL File Source
+        ```python
+        my_file.set_file_source(
+            new_source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
+            is_file_source_local_path=False,
+        )
+        ```
+        Local File Path
+        ```python
+        my_file.set_file_source(
+            new_source="/home/user/project/my_file.csv", is_file_source_local_path=True
+        )
+        ```
 
         Parameters
         ----------
         new_source: str
-
-        Example
-        -------
-        ```python
-        my_file.source = "https://pubs.acs.org/doi/10.1021/acscentsci.3c00011"
-        ```
+            new file source can be either a URL to a file or a file on your local storage
+        is_file_source_local_path: bool
+            tells the program if the file is located on your local storage and needs to be uploaded
+            to cloud storage.
 
         Returns
         -------
         None
+
+        Raises
+        ------
+        FileNotFound
+            If the `is_file_source_local_path` flag is set to `True`, but the file could not be found
+            on user's storage via the provided path,
+            then [FileNotFound](https://docs.python.org/3/library/exceptions.html#FileNotFoundError)
+            error is raised for the user to see and fix the given path to the correct file path.
         """
+        # if file source is a local path, then convert it to absolute path for correct OS
+        # so it is always valid and correct regardless
+        if is_file_source_local_path:
+            new_source = str(Path(new_source).resolve())
+
+        self.is_file_source_local_path = is_file_source_local_path
+
         new_attrs = replace(self._json_attrs, source=new_source)
         self._update_json_attrs_if_valid(new_attrs)
 

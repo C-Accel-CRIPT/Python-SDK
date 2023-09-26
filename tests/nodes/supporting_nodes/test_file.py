@@ -90,7 +90,7 @@ def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
     local_file_path.write_text(file_text)
 
     # create a file node with a local file path
-    my_file = cript.File(name="my local file source node", source=str(local_file_path), type="data")
+    my_file = cript.File(name="my local file source node", source=str(local_file_path), type="data", is_file_source_local_path=True)
 
     # check that the file source has been uploaded to cloud storage and source has changed to reflect that
     assert my_file.source.startswith("tests/")

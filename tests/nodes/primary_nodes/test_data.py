@@ -90,6 +90,7 @@ def test_data_getters_and_setters(
             name="my data file node",
             source="https://bing.com",
             type="computation_config",
+            is_file_source_local_path=False,
             extension=".pdf",
             data_dictionary="my second file data dictionary",
         ),

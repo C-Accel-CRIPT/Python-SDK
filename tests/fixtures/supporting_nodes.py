@@ -17,9 +17,9 @@ def complex_file_node() -> cript.File:
         name="my complex file node fixture",
         source="https://criptapp.org",
         type="calibration",
+        is_file_source_local_path=False,
         extension=".csv",
         data_dictionary="my file's data dictionary",
-        is_file_source_local_path=False,
     )
 
     return my_file

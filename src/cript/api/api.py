@@ -70,7 +70,7 @@ class API:
     _http_headers: dict = {}
     _vocabulary: dict = {}
     _db_schema: dict = {}
-    _api_handle: str = "api"
+    _api_prefix: str = "api"
     _api_version: str = "v1"
 
     # trunk-ignore-begin(cspell)
@@ -333,7 +333,7 @@ class API:
     def _prepare_host(self, host: str) -> str:
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
-        host = f"{host}/{self._api_handle}/{self._api_version}"
+        host = f"{host}/{self._api_prefix}/{self._api_version}"
 
         # if host is using unsafe "http://" then give a warning
         if host.startswith("http://"):

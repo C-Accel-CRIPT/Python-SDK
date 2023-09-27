@@ -63,3 +63,9 @@ def cript_api():
         yield api
 
     assert cript.api.api._global_cached_api is None
+
+
+@pytest.fixture(autouse=True)
+def inject_doctest_namespace(doctest_namespace, cript_api):
+    doctest_namespace["api"] = cript_api
+

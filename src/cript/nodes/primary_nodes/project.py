@@ -73,11 +73,9 @@ class Project(PrimaryBaseNode):
 
         Examples
         --------
-        >>> import os
         >>> import cript
-        
-        >>> with cript.API(host="https://api.criptapp.org/", api_token=os.getenv("CRIPT_TOKEN"), storage_token=os.getenv("CRIPT_STORAGE_TOKEN")) as api:
-        ...    my_project = cript.Project(name="my Project name")
+        >>> my_project = cript.Project(name="my Project name")
+
         
         Parameters
         ----------

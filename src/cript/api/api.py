@@ -94,6 +94,7 @@ class API:
 
         Examples
         --------
+        ### Create API client with host and token
         >>> import os
         >>> import cript
         >>> with cript.API(

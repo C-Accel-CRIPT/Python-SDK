@@ -76,14 +76,16 @@ class Algorithm(UUIDBaseNode):
 
     def __init__(self, key: str, type: str, parameter: Optional[List[Parameter]] = None, citation: Optional[List[Citation]] = None, **kwargs):  # ignored
         """
-        create algorithm sub-object
+        Create algorithm sub-object
 
         Parameters
         ----------
         key : str
-            algorithm key must come from [CRIPT controlled vocabulary]()
+            algorithm key must come from
+            [CRIPT controlled vocabulary](https://app.criptapp.org/vocab/algorithm_key)
         type : str
-            algorithm type must come from [CRIPT controlled vocabulary]()
+            algorithm type must come from
+            [CRIPT controlled vocabulary](https://app.criptapp.org/vocab/algorithm_type)
         parameter : List[Parameter], optional
             parameter sub-object, by default None
         citation : List[Citation], optional
@@ -134,7 +136,8 @@ class Algorithm(UUIDBaseNode):
         """
         set the algorithm key
 
-        > Algorithm key must come from [CRIPT Controlled Vocabulary]()
+        > Algorithm key must come from
+        [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/algorithm_key)
 
         Parameters
         ----------
@@ -149,7 +152,8 @@ class Algorithm(UUIDBaseNode):
         """
         Algorithm type
 
-        > Algorithm type must come from [CRIPT controlled vocabulary]()
+        > Algorithm type must come from
+        [CRIPT controlled vocabulary](https://app.criptapp.org/vocab/algorithm_type)
 
         Examples
         --------

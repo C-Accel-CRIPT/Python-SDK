@@ -140,26 +140,31 @@ def test_file_getters_and_setters(complex_file_node) -> None:
     new_file_type = "computation_config"
     new_file_extension = ".csv"
     new_data_dictionary = "new data dictionary"
+    new_notes = "new notes"
 
     # ------- set properties -------
     complex_file_node.source = new_source
     complex_file_node.type = new_file_type
     complex_file_node.extension = new_file_extension
     complex_file_node.data_dictionary = new_data_dictionary
+    complex_file_node.notes = new_notes
 
     # ------- assert set and get properties are the same -------
     assert complex_file_node.source == new_source
     assert complex_file_node.type == new_file_type
     assert complex_file_node.extension == new_file_extension
     assert complex_file_node.data_dictionary == new_data_dictionary
+    assert complex_file_node.notes == new_notes
 
     # remove optional attributes
     complex_file_node.extension = ""
     complex_file_node.data_dictionary = ""
+    complex_file_node.notes = ""
 
     # assert optional attributes have been removed
     assert complex_file_node.extension == ""
     assert complex_file_node.data_dictionary == ""
+    assert complex_file_node.notes == ""
 
 
 def test_serialize_file_to_json(complex_file_node) -> None:

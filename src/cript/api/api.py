@@ -94,15 +94,16 @@ class API:
 
         Examples
         --------
-        ### Create API client with host and token
-        ```Python
-        with cript.API(
-            host="https://api.criptapp.org/",
-            api_token="my api token",
-            storage_token="my storage token",
-        ) as api:
-            # node creation, api.save(), etc.
-        ```
+        >>> import os
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...    # node creation, api.save(), etc.
+        ...    pass
+
 
         ---
 
@@ -1180,8 +1181,8 @@ class API:
         ??? "How to get `node_type in snake case`"
                You can get the `node type in snake case` of a node via:
                ```python
-               >>> import cript
-               >>> print(cript.ComputationProcess.node_type_snake_case)
+                import cript
+                print(cript.ComputationProcess.node_type_snake_case)
                computation_process
                ```
 

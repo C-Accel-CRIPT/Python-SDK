@@ -167,13 +167,10 @@ class Project(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        my_new_collection = cript.Collection(
-            name="my collection name", experiments=[my_experiment_node]
-        )
-
-        my_project.collection = my_new_collection
-        ```
+        >>> import cript
+        >>> my_project = cript.Project(name="my Project name")
+        >>> my_new_collection = cript.Collection(name="my collection name")
+        >>> my_project.collection = [my_new_collection]
 
         Returns
         -------

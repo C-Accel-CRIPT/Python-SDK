@@ -68,4 +68,3 @@ def cript_api():
 @pytest.fixture(autouse=True)
 def inject_doctest_namespace(doctest_namespace, cript_api):
     doctest_namespace["api"] = cript_api
-

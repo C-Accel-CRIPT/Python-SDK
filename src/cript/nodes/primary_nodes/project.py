@@ -76,7 +76,7 @@ class Project(PrimaryBaseNode):
         >>> import cript
         >>> my_project = cript.Project(name="my Project name")
 
-        
+
         Parameters
         ----------
         name: str

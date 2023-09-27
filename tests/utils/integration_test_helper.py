@@ -4,8 +4,8 @@ import pytest
 from deepdiff import DeepDiff
 
 import cript
-from cript.nodes.uuid_base import UUIDBaseNode
 from conftest import HAS_INTEGRATION_TESTS_ENABLED
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
 def save_integration_node_helper(cript_api: cript.API, project_node: cript.Project):

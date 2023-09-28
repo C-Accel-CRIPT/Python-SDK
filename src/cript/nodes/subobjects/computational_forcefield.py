@@ -120,12 +120,11 @@ class ComputationalForcefield(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_computational_forcefield = cript.ComputationalForcefield(
-            key="opls_aa",
-            building_block="atom",
-        )
-        ```
+        >>> import cript
+        >>> my_computational_forcefield = cript.ComputationalForcefield(
+        ...     key="opls_aa",
+        ...     building_block="atom",
+        ... )
 
         Returns
         -------
@@ -163,9 +162,12 @@ class ComputationalForcefield(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_computational_forcefield.key = "amber"
-        ```
+        >>> import cript
+        >>> my_computational_forcefield = cript.ComputationalForcefield(
+        ...     key="opls_aa",
+        ...     building_block="atom",
+        ... )
+        >>> my_computational_forcefield.key = "amber"
 
         Returns
         -------
@@ -203,9 +205,12 @@ class ComputationalForcefield(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_computational_forcefield.building_block = "atom"
-        ```
+        >>> import cript
+        >>> my_computational_forcefield = cript.ComputationalForcefield(
+        ...     key="opls_aa",
+        ...     building_block="atom",
+        ... )
+        >>> my_computational_forcefield.building_block = "non_atomistic"
 
         Returns
         -------
@@ -240,9 +245,12 @@ class ComputationalForcefield(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_computational_forcefield.coarse_grained_mapping = "SC3 beads in MARTINI forcefield"
-        ```
+        >>> import cript
+        >>> my_computational_forcefield = cript.ComputationalForcefield(
+        ...     key="opls_aa",
+        ...     building_block="atom",
+        ... )
+        >>> my_computational_forcefield.coarse_grained_mapping = "SC3 beads in MARTINI forcefield"
 
         Returns
         -------
@@ -277,9 +285,12 @@ class ComputationalForcefield(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_computational_forcefield.implicit_solvent = "water"
-        ```
+        >>> import cript
+        >>> my_computational_forcefield = cript.ComputationalForcefield(
+        ...     key="opls_aa",
+        ...     building_block="atom",
+        ... )
+        >>> my_computational_forcefield.implicit_solvent = "water"
 
         Returns
         -------
@@ -310,9 +321,12 @@ class ComputationalForcefield(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_computational_forcefield.source = "package in GROMACS"
-        ```
+        >>> import cript
+        >>> my_computational_forcefield = cript.ComputationalForcefield(
+        ...     key="opls_aa",
+        ...     building_block="atom",
+        ... )
+        >>> my_computational_forcefield.source = "package in GROMACS"
 
         Returns
         -------
@@ -343,9 +357,12 @@ class ComputationalForcefield(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_computational_forcefield.description = "OPLS forcefield with partial charges calculated via the LBCC algorithm"
-        ```
+        >>> import cript
+        >>> my_computational_forcefield = cript.ComputationalForcefield(
+        ...     key="opls_aa",
+        ...     building_block="atom",
+        ... )
+        >>> my_computational_forcefield.description = "OPLS forcefield with partial charges calculated via the LBCC algorithm"
 
         Returns
         -------
@@ -380,24 +397,23 @@ class ComputationalForcefield(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        # create file nodes for the data node
-        my_file = cript.File(
-            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
-            type="calibration",
-            extension=".pdf",
-        )
-
-        # create data node and add the file node to it
-        my_data = cript.Data(
-            name="my data node name",
-            type="afm_amp",
-            file=my_file,
-        )
-
-        # add data node to computational_forcefield subobject
-        my_computational_forcefield.data = [my_data]
-        ```
+        >>> import cript
+        >>> my_computational_forcefield = cript.ComputationalForcefield(
+        ...     key="opls_aa",
+        ...     building_block="atom",
+        ... )
+        >>> my_file = cript.File(
+        ...     name="my file node name",
+        ...     source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
+        ...     type="calibration",
+        ...     extension=".pdf",
+        ... )
+        >>> my_data = cript.Data(
+        ...     name="my data node name",
+        ...     type="afm_amp",
+        ...     file=[my_file],
+        ... )
+        >>> my_computational_forcefield.data = [my_data]
 
         Returns
         -------
@@ -432,29 +448,29 @@ class ComputationalForcefield(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        # create reference node for the citation node
-        title = "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
-        title += "SOft coarse grained Monte-Carlo Acceleration (SOMA)"
-
-        my_reference = cript.Reference(
-            "journal_article",
-            title=title,
-            author=["Ludwig Schneider", "Marcus Müller"],
-            journal="Computer Physics Communications",
-            publisher="Elsevier",
-            year=2019,
-            pages=[463, 476],
-            doi="10.1016/j.cpc.2018.08.011",
-            issn="0010-4655",
-            website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
-        )
-
-        # create citation node and add reference node to it
-        my_citation = cript.Citation(type="reference", reference=my_reference)
-
-        my_computational_forcefield.citation = [my_citation]
-        ```
+        >>> import cript
+        >>> my_computational_forcefield = cript.ComputationalForcefield(
+        ...     key="opls_aa",
+        ...     building_block="atom",
+        ... )
+        >>> title = (
+        ...     "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
+        ...     "SOft coarse grained Monte-Carlo Acceleration (SOMA)"
+        ... )
+        >>> my_reference = cript.Reference(
+        ...     "journal_article",
+        ...     title=title,
+        ...     author=["Ludwig Schneider", "Marcus Müller"],
+        ...     journal="Computer Physics Communications",
+        ...     publisher="Elsevier",
+        ...     year=2019,
+        ...     pages=[463, 476],
+        ...     doi="10.1016/j.cpc.2018.08.011",
+        ...     issn="0010-4655",
+        ...     website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+        ... )
+        >>> my_citation = cript.Citation(type="reference", reference=my_reference)
+        >>> my_computational_forcefield.citation = [my_citation]
 
         Returns
         -------

@@ -258,7 +258,7 @@ class Collection(PrimaryBaseNode):
         --------
         >>> import cript
         >>> my_collection = cript.Collection(name="my collection name")
-        >>> reference = cript.Reference(
+        >>> my_reference = cript.Reference(
         ...     type="journal_article",
         ...     title="title",
         ...     author=["Ludwig Schneider", "Marcus Müller"],
@@ -270,8 +270,8 @@ class Collection(PrimaryBaseNode):
         ...     issn="0010-4655",
         ...     website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
         ... )
-        >>> my_citation = cript.Citation(type="derived_from", reference=reference)
-        >>> my_collection.citation = [my_citation]  # Assuming `citation` should be a list
+        >>> my_citation = cript.Citation(type="derived_from", reference=my_reference)
+        >>> my_collection.citation = [my_citation]
 
         Returns
         -------

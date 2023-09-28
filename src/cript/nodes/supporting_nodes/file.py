@@ -139,7 +139,8 @@ class File(PrimaryBaseNode):
         source: str
             link or path to local file
         type: str
-            Pick a file type from CRIPT controlled vocabulary [File types]()
+            Pick a file type from CRIPT controlled vocabulary
+            [File types](https://app.criptapp.org/vocab/file_type)
         extension:str
             file extension
         data_dictionary:str
@@ -298,7 +299,7 @@ class File(PrimaryBaseNode):
         Returns
         -------
         file type: str
-            file type must come from [CRIPT controlled vocabulary]()
+            file type must come from [CRIPT controlled vocabulary](https://app.criptapp.org/vocab/file_type)
         """
         return self._json_attrs.type
 

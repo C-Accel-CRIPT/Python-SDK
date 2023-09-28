@@ -327,7 +327,7 @@ class Data(PrimaryBaseNode):
     @beartype
     def computation(self) -> List[Any]:
         """
-        list of computation nodes for this material node
+        list of [computation nodes](../computation/) for this material node
 
         Examples
         --------
@@ -372,7 +372,54 @@ class Data(PrimaryBaseNode):
     @beartype
     def computation_process(self) -> Union[Any, None]:
         """
-        The computation_process for this data node
+        The [computation_process](../computation_process) for this data node
+
+        Examples
+        --------
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file node name",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ...     extension=".csv",
+        ...     data_dictionary="my file's data dictionary"
+        ... )
+        >>> my_data = cript.Data(
+        ...     name="my data name",
+        ...     type="afm_amp",
+        ...     file=[my_file]
+        ... )
+        >>> my_file_for_second_data_node = cript.File(
+        ...     name="my second file node name",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ...     extension=".csv",
+        ...     data_dictionary="my file's data dictionary"
+        ... )
+        >>> my_second_data_node = cript.Data(
+        ...     name="my data name",
+        ...     type="afm_amp",
+        ...     file=[my_file_for_second_data_node]
+        ... )
+        >>> my_material = cript.Material(
+        ...     name="my material name",
+        ...     identifier=[{"bigsmiles": "123456"}]
+        ... )
+        >>> my_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
+        >>> my_ingredient = cript.Ingredient(
+        ...     material=my_material,
+        ...     quantity=[my_quantity],
+        ...     keyword=["catalyst"],
+        ... )
+        >>> my_computational_process = cript.ComputationProcess(
+        ...     name="my computational process node name",
+        ...     type="cross_linking",
+        ...     input_data=[my_second_data_node],
+        ...     ingredient=[my_ingredient],
+        ... )
+
 
         Returns
         -------
@@ -402,7 +449,7 @@ class Data(PrimaryBaseNode):
     @beartype
     def material(self) -> List[Any]:
         """
-        List of materials for this node
+        List of [materials](../material) for this node
 
         Examples
         --------

@@ -112,7 +112,6 @@ class Experiment(PrimaryBaseNode):
         Examples
         --------
         >>> import cript
-        >>> # create an experiment node with all possible arguments
         >>> my_experiment = cript.Experiment(name="my experiment name")
 
         Returns

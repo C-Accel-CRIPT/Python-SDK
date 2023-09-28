@@ -205,12 +205,9 @@ class Project(PrimaryBaseNode):
         Examples
         --------
         >>> import cript
-        >>> # create project node
         >>> my_project = cript.Project(name="my Project name")
-        >>> # create material node
         >>> identifier = [{"bigsmiles": "my big smiles"}]
         >>> my_material = cript.Material(name="my material", identifier=identifier)
-        >>> # add material node to project node
         >>> my_project.material = [my_material]
 
         Returns

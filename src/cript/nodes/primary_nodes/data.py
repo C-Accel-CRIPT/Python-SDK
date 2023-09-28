@@ -231,7 +231,7 @@ class Data(PrimaryBaseNode):
     @beartype
     def file(self) -> List[Any]:
         """
-        get the list of files for this data node
+        get the list of [files](../../supporting_nodes/file) for this data node
 
         Examples
         --------
@@ -282,7 +282,7 @@ class Data(PrimaryBaseNode):
     @beartype
     def sample_preparation(self) -> Union[Any, None]:
         """
-        The sample preparation for this data node
+        The [sample preparation](../process) for this data node
 
         Examples
         --------
@@ -419,7 +419,6 @@ class Data(PrimaryBaseNode):
         ...     input_data=[my_second_data_node],
         ...     ingredient=[my_ingredient],
         ... )
-
 
         Returns
         -------

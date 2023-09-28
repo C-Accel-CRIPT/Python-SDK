@@ -152,9 +152,8 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
 
         Returns
         -------
@@ -185,9 +184,9 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference.type = "journal_article"
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.type = "web_site"
 
         Returns
         -------
@@ -224,9 +223,9 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference.title = "my new title"
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.title = "my new title"
 
         Returns
         -------
@@ -260,9 +259,9 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference.author = ["Bradley D. Olsen", "Dylan Walsh"]
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.author += ["Navid Hariri"]
 
         Returns
         -------
@@ -296,9 +295,9 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference.journal = "my new journal"
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.journal = "my new journal"
 
         Returns
         -------
@@ -332,9 +331,9 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference.publisher = "my new publisher"
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.publisher = "my new publisher"
 
         Returns
         -------
@@ -368,9 +367,9 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference.year = 2023
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.year = 2023
 
         Returns
         -------
@@ -404,9 +403,9 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference.volume = 1
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.volume = 1
 
         Returns
         -------
@@ -440,9 +439,9 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference.issue = 2
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.issue = 2
 
         Returns
         -------
@@ -475,9 +474,9 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference.pages = [123, 456]
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.pages = [123, 456]
 
         Returns
         -------
@@ -510,9 +509,9 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference.doi = "100.1038/1781168a0"
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.doi = "100.1038/1781168a0"
 
         Returns
         -------
@@ -533,9 +532,9 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference.doi = "100.1038/1781168a0"
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.doi = "100.1038/1781168a0"
 
         Returns
         -------
@@ -551,9 +550,10 @@ class Reference(UUIDBaseNode):
         The international standard serial number (ISSN) for this reference node
 
         Examples
-        ```python
-        my_reference.issn = "1456-4687"
-        ```
+        ---------
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.issn = "1456-4687"
 
         Returns
         -------
@@ -587,9 +587,9 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference.arxiv_id = "1501"
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.arxiv_id = "1501"
 
         Returns
         -------
@@ -623,9 +623,9 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference.pmid = 12345678
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.pmid = 12345678
 
         Returns
         -------
@@ -660,9 +660,9 @@ class Reference(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_reference.website = "https://criptapp.org"
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_reference.website = "https://criptapp.org"
 
         Returns
         -------

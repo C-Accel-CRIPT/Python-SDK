@@ -128,7 +128,7 @@ class File(PrimaryBaseNode):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, name: str, source: str, type: str, extension: str = "", data_dictionary: str = "", notes: str = "", **kwargs):
+    def __init__(self, name: str, source: str, type: str, extension: str, data_dictionary: str = "", notes: str = "", **kwargs):
         """
         create a File node
 
@@ -152,24 +152,27 @@ class File(PrimaryBaseNode):
 
         Examples
         --------
-        ### Minimal File Node
+        ### Web URL File Node
         ```python
         my_file = cript.File(
             name="my file name",
-            source="https://criptapp.org",
+            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
             type="calibration",
+            extension=".pdf",
+            data_dictionary="my file's data dictionary",
+            notes="my notes for this file",
         )
         ```
 
-        ### Maximal File Node
+        ### Local Source File Node
         ```python
         my_file = cript.File(
             name="my file name",
-            source="https://criptapp.org",
+            source="/home/user/MIT/project/my_file.csv",
             type="calibration",
             extension=".csv",
             data_dictionary="my file's data dictionary",
-            notes="my notes for this file"
+            notes="my notes for this file",
         )
         ```
         """
@@ -198,9 +201,8 @@ class File(PrimaryBaseNode):
         It is not necessary to call this function manually.
         A saved project automatically ensures uploaded files, it is recommend to rely on the automatic upload.
 
-        Parameters:
+        Parameters
         -----------
-
         api: cript.API, optional
            API object that performs the upload.
            If None, the globally cached object is being used.
@@ -211,7 +213,7 @@ class File(PrimaryBaseNode):
         ```python
         my_file = cript.File(source="/local/path/to/file", type="calibration")
         my_file.ensure_uploaded()
-        my_file.source # Starts with http now
+        my_file.source # changed to cloud storage object name
         ```
 
         """
@@ -338,6 +340,9 @@ class File(PrimaryBaseNode):
         ```python
         my_file_node.extension = ".csv"`
         ```
+
+        !!! Note "file extensions must start with a dot"
+            File extensions must start with a dot, for example `.csv` or `.pdf`
 
         Returns
         -------

@@ -17,7 +17,7 @@ def test_create_file() -> None:
     """
     tests that a simple file with only required attributes can be created
     """
-    file_node = cript.File(name="my file name", source="https://google.com", type="calibration")
+    file_node = cript.File(name="my file name", source="https://google.com", type="calibration", extension=".csv")
 
     assert isinstance(file_node, cript.File)
 
@@ -90,7 +90,7 @@ def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
     local_file_path.write_text(file_text)
 
     # create a file node with a local file path
-    my_file = cript.File(name="my local file source node", source=str(local_file_path), type="data")
+    my_file = cript.File(name="my local file source node", source=str(local_file_path), type="data", extension=".txt")
 
     # check that the file source has been uploaded to cloud storage and source has changed to reflect that
     assert my_file.source.startswith("tests/")
@@ -124,7 +124,7 @@ def test_create_file_with_local_source(tmp_path) -> None:
     with open(file_path, "w") as temporary_file:
         temporary_file.write("hello world!")
 
-    assert cript.File(name="my file node with local source", source=str(file_path), type="calibration")
+    assert cript.File(name="my file node with local source", source=str(file_path), type="calibration", extension=".txt")
 
 
 def test_file_getters_and_setters(complex_file_node) -> None:

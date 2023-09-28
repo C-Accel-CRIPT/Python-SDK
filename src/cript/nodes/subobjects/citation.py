@@ -78,27 +78,25 @@ class Citation(UUIDBaseNode):
 
         Examples
         -------
-        ```python
-        title = "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
-        title += "SOft coarse grained Monte-Carlo Acceleration (SOMA)"
+        >>> import cript
+        >>> title = (
+        ...     "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
+        ...     "Soft coarse grained Monte-Carlo Acceleration (SOMA)"
+        ... )
+        >>> my_reference = cript.Reference(
+        ...     "journal_article",
+        ...     title=title,
+        ...     author=["Ludwig Schneider", "Marcus Müller"],
+        ...     journal="Computer Physics Communications",
+        ...     publisher="Elsevier",
+        ...     year=2019,
+        ...     pages=[463, 476],
+        ...     doi="10.1016/j.cpc.2018.08.011",
+        ...     issn="0010-4655",
+        ...     website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+        ... )
+        >>> my_citation = cript.Citation(type="reference", reference=my_reference)
 
-        # create a Reference node for the Citation subobject
-        my_reference = Reference(
-            "journal_article",
-            title=title,
-            author=["Ludwig Schneider", "Marcus Müller"],
-            journal="Computer Physics Communications",
-            publisher="Elsevier",
-            year=2019,
-            pages=[463, 476],
-            doi="10.1016/j.cpc.2018.08.011",
-            issn="0010-4655",
-            website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
-        )
-
-        # create Citation subobject
-        my_citation = cript.Citation("reference", my_reference)
-        ```
 
         Returns
         -------
@@ -119,9 +117,25 @@ class Citation(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_citation.type = "extracted_by_algorithm"
-        ```
+        >>> import cript
+        >>> title = (
+        ...     "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
+        ...     "Soft coarse grained Monte-Carlo Acceleration (SOMA)"
+        ... )
+        >>> my_reference = cript.Reference(
+        ...     "journal_article",
+        ...     title=title,
+        ...     author=["Ludwig Schneider", "Marcus Müller"],
+        ...     journal="Computer Physics Communications",
+        ...     publisher="Elsevier",
+        ...     year=2019,
+        ...     pages=[463, 476],
+        ...     doi="10.1016/j.cpc.2018.08.011",
+        ...     issn="0010-4655",
+        ...     website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+        ... )
+        >>> my_citation = cript.Citation(type="reference", reference=my_reference)
+        >>> my_citation.type = "extracted_by_algorithm"
 
         Returns
         -------
@@ -158,23 +172,41 @@ class Citation(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        # create a Reference node for the Citation subobject
-        my_reference = Reference(
-            "journal_article",
-            title="my title",
-            author=["Ludwig Schneider", "Marcus Müller"],
-            journal="Computer Physics Communications",
-            publisher="Elsevier",
-            year=2019,
-            pages=[463, 476],
-            doi="10.1016/j.cpc.2018.08.011",
-            issn="0010-4655",
-            website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
-        )
-
-        my_citation.reference = my_reference
-        ```
+        >>> import cript
+        >>> title = (
+        ...     "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
+        ...     "Soft coarse grained Monte-Carlo Acceleration (SOMA)"
+        ... )
+        >>> my_reference = cript.Reference(
+        ...     "journal_article",
+        ...     title=title,
+        ...     author=["Ludwig Schneider", "Marcus Müller"],
+        ...     journal="Computer Physics Communications",
+        ...     publisher="Elsevier",
+        ...     year=2019,
+        ...     pages=[463, 476],
+        ...     doi="10.1016/j.cpc.2018.08.011",
+        ...     issn="0010-4655",
+        ...     website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+        ... )
+        >>> my_citation = cript.Citation(type="reference", reference=my_reference)
+        >>> my_new_reference = cript.Reference(
+        ...     type="journal_article",
+        ...     title="'Living' Polymers",
+        ...     author=["Dylan J. Walsh", "Bradley D. Olsen"],
+        ...     journal="Nature",
+        ...     publisher="Springer",
+        ...     year=2019,
+        ...     volume=3,
+        ...     issue=5,
+        ...     pages=[123, 456, 789],
+        ...     doi="10.1038/1781168a0",
+        ...     issn="1476-4687",
+        ...     arxiv_id="1501",
+        ...     pmid=12345678,
+        ...     website="https://criptapp.org",
+        ... )
+        >>> my_citation.reference = my_new_reference
 
         Returns
         -------

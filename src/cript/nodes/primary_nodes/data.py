@@ -32,20 +32,15 @@ class Data(PrimaryBaseNode):
 
     Example
     --------
-    ```python
-    # create file node
-    cript.File(
-        name="my file node name",
-        source="https://criptapp.org",
-        type="calibration",
-        extension=".csv",
-        data_dictionary="my file's data dictionary"
-    )
-
-
-    # create data node with required arguments
-    my_data = cript.Data(name="my data name", type="afm_amp", file=[simple_file_node])
-    ```
+    >>> import cript
+    >>> my_file = cript.File(
+    ...    name="my file node name",
+    ...    source="https://criptapp.org",
+    ...    type="calibration",
+    ...    extension=".csv",
+    ...    data_dictionary="my file's data dictionary"
+    ... )
+    >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
 
     ## JSON Representation
     ```json
@@ -107,21 +102,18 @@ class Data(PrimaryBaseNode):
         """
         Examples
         --------
-        ```python
-        # create file nodes for the data node
-        my_file = cript.File(
-            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
-            type="calibration",
-            extension=".pdf",
-        )
-
-        # create data node and add the file node to it
-        my_data = cript.Data(
-            name="my data node name",
-            type="afm_amp",
-            file=my_file,
-        )
-        ```
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file node name",
+        ...     source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
+        ...      type="calibration",
+        ...      extension=".pdf",
+        ... )
+        >>> my_data = cript.Data(
+        ...     name="my data node name",
+        ...     type="afm_amp",
+        ...     file=[my_file],
+        ... )
 
         Parameters
         ----------
@@ -151,7 +143,6 @@ class Data(PrimaryBaseNode):
         Returns
         -------
         None
-
         """
         super().__init__(name=name, notes=notes, **kwargs)
 
@@ -196,11 +187,18 @@ class Data(PrimaryBaseNode):
         """
         The data type must come from [CRIPT data type vocabulary](https://app.criptapp.org/vocab/data_type)
 
-        Example
-        -------
-        ```python
-        data.type = "afm_height"
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> my_file = cript.File(
+        ...    name="my file node name",
+        ...    source="https://criptapp.org",
+        ...    type="calibration",
+        ...    extension=".csv",
+        ...    data_dictionary="my file's data dictionary"
+        ... )
+        >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
+        >>> my_data.type = "nmr_h1"
 
         Returns
         -------
@@ -237,20 +235,23 @@ class Data(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create a list of file nodes
-        my_new_files = [
-            # file with link source
-            cript.File(
-                source="https://pubs.acs.org/doi/10.1021/acscentsci.3c00011",
-                type="computation_config",
-                extension=".pdf",
-                data_dictionary="my second file data dictionary",
-            ),
-        ]
-
-        data_node.file = my_new_files
-        ```
+        >>> import cript
+        >>> my_file = cript.File(
+        ...    name="my file node name",
+        ...    source="https://criptapp.org",
+        ...    type="calibration",
+        ...    extension=".csv",
+        ...    data_dictionary="my file's data dictionary"
+        ... )
+        >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
+        >>> my_new_file = cript.File(
+        ...    name="my new file node name",
+        ...    source="path/to/loca/file",
+        ...    type="calibration",
+        ...    extension=".csv",
+        ...    data_dictionary="my file's data dictionary"
+        ... )
+        >>> my_data.file += [my_new_file]
 
         Returns
         -------
@@ -283,6 +284,20 @@ class Data(PrimaryBaseNode):
         """
         The sample preparation for this data node
 
+        Examples
+        --------
+        >>> import cript
+        >>> my_new_files = cript.File(
+        ...     name="my file node name",
+        ...     source="https://pubs.acs.org/doi/10.1021/acscentsci.3c00011",
+        ...     type="computation_config",
+        ...     extension=".pdf",
+        ...     data_dictionary="my data dictionary",
+        ... )
+        >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_new_files])
+        >>> my_sample_preparation = cript.Process(name="my sample preparation name", type="affinity_pure")
+        >>> my_data.sample_preparation = my_sample_preparation
+
         Returns
         -------
         sample_preparation: Process
@@ -313,6 +328,20 @@ class Data(PrimaryBaseNode):
     def computation(self) -> List[Any]:
         """
         list of computation nodes for this material node
+
+        Examples
+        --------
+        >>> import cript
+        >>> my_file = cript.File(
+        ...    name="my file node name",
+        ...    source="https://criptapp.org",
+        ...    type="calibration",
+        ...    extension=".csv",
+        ...    data_dictionary="my file's data dictionary"
+        ... )
+        >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
+        >>> my_computation = cript.Computation(name="my computation name", type="analysis")
+        >>> my_data.computation = [my_computation]
 
         Returns
         -------
@@ -375,6 +404,20 @@ class Data(PrimaryBaseNode):
         """
         List of materials for this node
 
+        Examples
+        --------
+        >>> import cript
+        >>> my_file = cript.File(
+        ...    name="my file node name",
+        ...    source="https://criptapp.org",
+        ...    type="calibration",
+        ...    extension=".csv",
+        ...    data_dictionary="my file's data dictionary"
+        ... )
+        >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
+        >>> my_material = cript.Material(name="my material name", identifier=[{"bigsmiles": "123456"}])
+        >>> my_data.material = [my_material]
+
         Returns
         -------
         List[Material]
@@ -404,6 +447,20 @@ class Data(PrimaryBaseNode):
     def process(self) -> List[Any]:
         """
         list of [Process nodes](./process.md) for this data node
+
+        Examples
+        --------
+        >>> import cript
+        >>> my_file = cript.File(
+        ...    name="my file node name",
+        ...    source="https://criptapp.org",
+        ...    type="calibration",
+        ...    extension=".csv",
+        ...    data_dictionary="my file's data dictionary"
+        ... )
+        >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
+        >>> my_data.process = [my_process]
 
         Notes
         -----
@@ -442,18 +499,21 @@ class Data(PrimaryBaseNode):
         """
         List of [citation](../../subobjects/citation) within the data node
 
-        Example
-        -------
-        ```python
-        # create a reference node
-        my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
-
-        # create a citation list to house all the reference nodes
-        my_citation = cript.Citation(type="derived_from", reference=my_reference)
-
-        # add citations to data node
-        my_data.citation = my_citations
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> import cript
+        >>> my_file = cript.File(
+        ...    name="my file node name",
+        ...    source="https://criptapp.org",
+        ...    type="calibration",
+        ...    extension=".csv",
+        ...    data_dictionary="my file's data dictionary"
+        ... )
+        >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_citation = cript.Citation(type="derived_from", reference=my_reference)
+        >>> my_data.citation = [my_citation]
 
         Returns
         -------

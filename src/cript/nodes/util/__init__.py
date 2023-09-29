@@ -58,7 +58,7 @@ class NodeEncoder(json.JSONEncoder):
     known_uuid: Set[str] = set()
     condense_to_uuid: Dict[str, Set[str]] = dict()
     suppress_attributes: Optional[Dict[str, Set[str]]] = None
-    only_not_uuid: Optional[list[str]] = None
+    only_not_uuid: Optional[List[str]] = None
 
     def default(self, obj):
         """

@@ -142,7 +142,7 @@ class BaseNode(ABC):
             self._json_attrs = old_json_attrs
             raise exc
 
-    def validate(self, api=None, is_patch=False) -> None:
+    def validate(self, api=None, is_patch=False, only_this_node_full=True) -> None:
         """
         Validate this node (and all its children) against the schema provided by the data bank.
 
@@ -154,7 +154,10 @@ class BaseNode(ABC):
 
         if api is None:
             api = _get_global_cached_api()
-        api._is_node_schema_valid(self.get_json(is_patch=is_patch).json, is_patch=is_patch)
+        # We request only this node and all its **direct** children full, everything else is UUID.
+        # As a result, we avoid evaluating the entire graph, and only validate relevant parts
+        json_str: str = self.get_json(is_patch=is_patch, only_this_node_full=only_this_node_full).json
+        api._is_node_schema_valid(json_str, is_patch=is_patch)
 
     @classmethod
     def _from_json(cls, json_dict: dict):
@@ -248,6 +251,7 @@ class BaseNode(ABC):
         known_uuid: Optional[Set[str]] = None,
         suppress_attributes: Optional[Dict[str, Set[str]]] = None,
         is_patch: bool = False,
+        only_this_node_full=False,
         condense_to_uuid: Dict[str, Set[str]] = {
             "Material": {"parent_material", "component"},
             "Experiment": {"data"},
@@ -296,6 +300,16 @@ class BaseNode(ABC):
         previous_condense_to_uuid = copy.deepcopy(NodeEncoder.condense_to_uuid)
         NodeEncoder.condense_to_uuid = condense_to_uuid
 
+        previous_only_not_uuid: Optional[list[str]] = NodeEncoder.only_not_uuid
+        if only_this_node_full:
+            my_children = self.find_children({}, search_depth=1)
+            only_not_uuid = [str(child.uuid) for child in my_children]
+            try:
+                only_not_uuid += [str(self.uuid)]
+            except AttributeError:  # This works only for nodes that have a uuid
+                pass
+            NodeEncoder.only_not_uuid = only_not_uuid
+
         try:
             return ReturnTuple(json.dumps(self, cls=NodeEncoder, **kwargs), NodeEncoder.handled_ids)
         except Exception as exc:
@@ -308,6 +322,7 @@ class BaseNode(ABC):
             NodeEncoder.known_uuid = previous_known_uuid
             NodeEncoder.suppress_attributes = previous_suppress_attributes
             NodeEncoder.condense_to_uuid = previous_condense_to_uuid
+            NodeEncoder.only_not_uuid = previous_only_not_uuid
 
     def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes=None) -> List:
         """

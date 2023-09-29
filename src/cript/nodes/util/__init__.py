@@ -58,6 +58,7 @@ class NodeEncoder(json.JSONEncoder):
     known_uuid: Set[str] = set()
     condense_to_uuid: Dict[str, Set[str]] = dict()
     suppress_attributes: Optional[Dict[str, Set[str]]] = None
+    only_not_uuid: Optional[list[str]] = None
 
     def default(self, obj):
         """
@@ -114,6 +115,8 @@ class NodeEncoder(json.JSONEncoder):
                 pass
             else:
                 if uuid_str in NodeEncoder.known_uuid:
+                    return {"uuid": uuid_str}
+                if NodeEncoder.only_not_uuid is not None and uuid_str not in NodeEncoder.only_not_uuid:
                     return {"uuid": uuid_str}
 
             default_dataclass = obj.JsonAttributes()

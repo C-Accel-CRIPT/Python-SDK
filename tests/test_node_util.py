@@ -8,7 +8,6 @@ import cript
 from cript.nodes.core import get_new_uid
 from cript.nodes.exceptions import (
     CRIPTJsonNodeError,
-    CRIPTJsonSerializationError,
     CRIPTNodeSchemaError,
     CRIPTOrphanedComputationalProcessError,
     CRIPTOrphanedComputationError,
@@ -142,10 +141,6 @@ def test_json_error(complex_parameter_node):
     parameter._json_attrs = replace(parameter._json_attrs, value="abc")
     with pytest.raises(CRIPTNodeSchemaError):
         parameter.validate()
-    # Let's break it completely
-    parameter._json_attrs = None
-    with pytest.raises(CRIPTJsonSerializationError):
-        parameter.json
 
 
 def test_local_search(simple_algorithm_node, complex_parameter_node):

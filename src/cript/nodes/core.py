@@ -300,14 +300,15 @@ class BaseNode(ABC):
         previous_condense_to_uuid = copy.deepcopy(NodeEncoder.condense_to_uuid)
         NodeEncoder.condense_to_uuid = condense_to_uuid
 
+        # For validation of just a node and its direct children, we enable a new mode in Node encoding
+        # For this node we explicitly list the nodes that are fully expressed, every other node is a UUID
         previous_only_not_uuid: Optional[list[str]] = NodeEncoder.only_not_uuid
         if only_this_node_full:
             my_children = self.find_children({}, search_depth=1)
+            # Create the list of UUID of the direct children (search_depth==1)
             only_not_uuid = [str(child.uuid) for child in my_children]
-            try:
-                only_not_uuid += [str(self.uuid)]
-            except AttributeError:  # This works only for nodes that have a uuid
-                pass
+            # Add the self uuid for this node (if available)
+            only_not_uuid += [str(self.uuid)]
             NodeEncoder.only_not_uuid = only_not_uuid
 
         try:

@@ -713,6 +713,7 @@ class API:
         for file_node in node.find_children({"node": ["File"]}):
             file_node.ensure_uploaded(api=self)
 
+        # We request a full validation of the node just to be sure before save
         node.validate(api=self, only_this_node_full=False)
 
         # Dummy response to have a virtual do-while loop, instead of while loop.

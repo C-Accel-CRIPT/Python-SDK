@@ -116,6 +116,8 @@ class NodeEncoder(json.JSONEncoder):
             else:
                 if uuid_str in NodeEncoder.known_uuid:
                     return {"uuid": uuid_str}
+                # If we specified to only fully express certain nodes in `only_not_uuid`.
+                # Exit every other node with just its UUID.
                 if NodeEncoder.only_not_uuid is not None and uuid_str not in NodeEncoder.only_not_uuid:
                     return {"uuid": uuid_str}
 

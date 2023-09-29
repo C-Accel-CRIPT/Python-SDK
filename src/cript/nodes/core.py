@@ -306,9 +306,18 @@ class BaseNode(ABC):
         if only_this_node_full:
             my_children = self.find_children({}, search_depth=1)
             # Create the list of UUID of the direct children (search_depth==1)
-            only_not_uuid = [str(child.uuid) for child in my_children]
+            only_not_uuid = []
+            for child in my_children:
+                try:
+                    only_not_uuid.append(str(child.uuid))  # type: ignore
+                except AttributeError:  # Technically, BaseNode does not have uuid
+                    pass
             # Add the self uuid for this node (if available)
-            only_not_uuid += [str(self.uuid)]
+            try:
+                only_not_uuid.append(str(self.uuid))  # type: ignore
+            except AttributeError:  # Technically, BaseNode does not have uuid
+                pass
+
             NodeEncoder.only_not_uuid = only_not_uuid
 
         try:

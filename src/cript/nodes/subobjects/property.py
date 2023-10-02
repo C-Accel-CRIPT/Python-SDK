@@ -16,8 +16,9 @@ from cript.nodes.uuid_base import UUIDBaseNode
 class Property(UUIDBaseNode):
     """
     ## Definition
-    [Property](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=18) sub-objects
-    are qualities/traits of a [material](../../primary_nodes/material) or or [Process](../../primary_nodes/process)
+    [Property](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=18)
+    sub-objects are qualities/traits of a [material](../../primary_nodes/material) or
+    [Process](../../primary_nodes/process)
 
     ---
 
@@ -34,23 +35,23 @@ class Property(UUIDBaseNode):
 
     ## Attributes
 
-    | attribute          | type              | example                                                                | description                                                                  | required | vocab |
-    |--------------------|-------------------|------------------------------------------------------------------------|------------------------------------------------------------------------------|----------|-------|
-    | key                | str               | modulus_shear                                                          | type of property                                                             | True     | True  |
-    | type               | str               | min                                                                    | type of value stored                                                         | True     | True  |
-    | value              | Any               | 1.23                                                                   | value or quantity                                                            | True     |       |
-    | unit               | str               | gram                                                                   | unit for value                                                               | True     |       |
-    | uncertainty        | Number            | 0.1                                                                    | uncertainty of value                                                         |          |       |
-    | uncertainty_type   | str               | standard_deviation                                                     | type of uncertainty                                                          |          | True  |
-    | component          | list[Material]    |                                                                        | material that the property relates to**                                      |          |       |
-    | structure          | str               | {\[\]\[$\]\[C:1\]\[C:1\]\[$\], \[$\]\[C:2\]\[C:2\](\[C:2\]) \[$\]\[\]} | specific chemical structure associate with the property with atom mappings** |          |       |
-    | method             | str               | sec                                                                    | approach or source of property data                                          |          | True  |
-    | sample_preparation | Process           |                                                                        | sample preparation                                                           |          |       |
-    | condition          | list[Condition]   |                                                                        | conditions under which the property was measured                             |          |       |
-    | data               | Data              |                                                                        | data node                                                                    |          |       |
-    | computation        | list[Computation] |                                                                        | computation method that produced property                                    |          |       |
-    | citation           | list[Citation]    |                                                                        | reference to a book, paper, or scholarly work                                |          |       |
-    | notes              | str               |                                                                        | miscellaneous information, or custom data structure (e.g.; JSON)             |          |       |
+    | attribute          | type              | example                                 | description                                                                  | required | vocab |
+    |--------------------|-------------------|-----------------------------------------|------------------------------------------------------------------------------|----------|-------|
+    | key                | str               | modulus_shear                           | type of property                                                             | True     | True  |
+    | type               | str               | min                                     | type of value stored                                                         | True     | True  |
+    | value              | Any               | 1.23                                    | value or quantity                                                            | True     |       |
+    | unit               | str               | gram                                    | unit for value                                                               | True     |       |
+    | uncertainty        | Number            | 0.1                                     | uncertainty of value                                                         |          |       |
+    | uncertainty_type   | str               | standard_deviation                      | type of uncertainty                                                          |          | True  |
+    | component          | list[Material]    |                                         | material that the property relates to**                                      |          |       |
+    | structure          | str               | {\\[\\]\\[$\\]\\[C:1\\]\\[C:1\\]\\[$\\] | specific chemical structure associate with the property with atom mappings** |          |       |
+    | method             | str               | sec                                     | approach or source of property data                                          |          | True  |
+    | sample_preparation | Process           |                                         | sample preparation                                                           |          |       |
+    | condition          | list[Condition]   |                                         | conditions under which the property was measured                             |          |       |
+    | data               | Data              |                                         | data node                                                                    |          |       |
+    | computation        | list[Computation] |                                         | computation method that produced property                                    |          |       |
+    | citation           | list[Citation]    |                                         | reference to a book, paper, or scholarly work                                |          |       |
+    | notes              | str               |                                         | miscellaneous information, or custom data structure (e.g.; JSON)             |          |       |
 
 
     ## JSON Representation
@@ -146,11 +147,8 @@ class Property(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        import cript
-
-        my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
 
         Returns
         -------
@@ -197,9 +195,9 @@ class Property(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_parameter.key = "angle_rdist"
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property.key = "angle_rdist"
 
         Returns
         -------
@@ -235,9 +233,9 @@ class Property(UUIDBaseNode):
         [property type](https://app.criptapp.org/vocab/) must come from CRIPT controlled vocabulary
 
         Examples
-        ```python
-        my_property.type = "max"
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property.type = "max"
 
         Returns
         -------
@@ -284,9 +282,9 @@ class Property(UUIDBaseNode):
 
         Examples
         ---------
-        ```python
-        my_property.set_value(new_value=1, new_unit="gram")
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property.set_value(new_value=1, new_unit="gram")
 
         Parameters
         ----------
@@ -344,9 +342,9 @@ class Property(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_property.set_uncertainty(new_uncertainty=2, new_uncertainty_type="fwhm")
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property.set_uncertainty(new_uncertainty=2, new_uncertainty_type="fwhm")
 
         Returns
         -------
@@ -379,14 +377,10 @@ class Property(UUIDBaseNode):
 
         Examples
         ---------
-        ```python
-
-        my_identifier = [{"bigsmiles": "123456"}]
-        my_material = cript.Material(name="my material", identifier=my_identifier)
-
-        # add material node as component to Property subobject
-        my_property.component = my_material
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_material = cript.Material(name="my material", identifier=[{"bigsmiles": "123456"}])
+        >>> my_property.component = [my_material]
 
         Returns
         -------
@@ -421,9 +415,9 @@ class Property(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_property.structure = "{[][$][C:1][C:1][$],[$][C:2][C:2]([C:2])[$][]}"
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property.structure = "{[][$][C:1][C:1][$],[$][C:2][C:2]([C:2])[$][]}"
 
         Returns
         -------
@@ -460,9 +454,9 @@ class Property(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_property.method = "ASTM_D3574_Test_A"
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property.method = "ASTM_D3574_Test_A"
 
         Returns
         -------
@@ -499,11 +493,10 @@ class Property(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_process = cript.Process(name="my process name", type="affinity_pure")
-
-        my_property.sample_preparation = my_process
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
+        >>> my_property.sample_preparation = my_process
 
         Returns
         -------
@@ -538,11 +531,10 @@ class Property(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_condition = cript.Condition(key="atm", type="max", value=1)
-
-        my_property.condition = [my_condition]
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_condition = cript.Condition(key="atm", type="max", value=1)
+        >>> my_property.condition = [my_condition]
 
         Returns
         -------
@@ -577,21 +569,17 @@ class Property(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        # create file node for the Data node
-        my_file = cript.File(
-            source="https://criptapp.org",
-            type="calibration",
-            extension=".csv",
-            data_dictionary="my file's data dictionary",
-        )
-
-        # create data node for the property subobject
-        my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
-
-        # add data node to Property subobject
-        my_property.data = my_data
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_file = cript.File(
+        ...     name="my file node name",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ...     extension=".csv",
+        ...     data_dictionary="my file's data dictionary",
+        ... )
+        >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
+        >>> my_property.data = [my_data]
 
         Returns
         -------
@@ -626,11 +614,10 @@ class Property(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_computation = cript.Computation(name="my computation name", type="analysis")
-
-        my_property.computation = [my_computation]
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_computation = cript.Computation(name="my computation name", type="analysis")
+        >>> my_property.computation = [my_computation]
 
         Returns
         -------
@@ -665,30 +652,26 @@ class Property(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        # create reference node for the citation node
-        title = "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
-        title += "Soft coarse grained Monte-Carlo Acceleration (SOMA)"
-
-        my_reference = cript.Reference(
-            type="journal_article",
-            title=title,
-            author=["Ludwig Schneider", "Marcus Müller"],
-            journal="Computer Physics Communications",
-            publisher="Elsevier",
-            year=2019,
-            pages=[463, 476],
-            doi="10.1016/j.cpc.2018.08.011",
-            issn="0010-4655",
-            website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
-        )
-
-        # create citation node and add reference node to it
-        my_citation = cript.Citation(type="reference", reference=my_reference)
-
-        # add citation to Property subobject
-        my_property.citation = [my_citation]
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> title = (
+        ...     "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
+        ...     "Soft coarse grained Monte-Carlo Acceleration (SOMA)"
+        ... )
+        >>> my_reference = cript.Reference(
+        ...     type="journal_article",
+        ...     title=title,
+        ...     author=["Ludwig Schneider", "Marcus Müller"],
+        ...     journal="Computer Physics Communications",
+        ...     publisher="Elsevier",
+        ...     year=2019,
+        ...     pages=[463, 476],
+        ...     doi="10.1016/j.cpc.2018.08.011",
+        ...     issn="0010-4655",
+        ...     website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+        ... )
+        >>> my_citation = cript.Citation(type="reference", reference=my_reference)
+        >>> my_property.citation = [my_citation]
 
         Returns
         -------
@@ -723,9 +706,9 @@ class Property(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_property.notes = "these are my notes"
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property.notes = "these are my notes"
 
         Returns
         -------
@@ -738,7 +721,7 @@ class Property(UUIDBaseNode):
     @beartype
     def notes(self, new_notes: str) -> None:
         """
-        set the notes for this Property subobject
+        set the notes for this Property sub-object
 
         Parameters
         ----------

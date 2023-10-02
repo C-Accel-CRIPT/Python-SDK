@@ -78,19 +78,15 @@ class Ingredient(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        import cript
-
-        # create material and identifier for the ingredient sub-object
-        my_identifier = [{"bigsmiles": "123456"}]
-        my_material = cript.Material(name="my material", identifier=my_identifier)
-
-        # create quantity sub-object
-        my_quantity = cript.Quantity(key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev")
-
-        # create ingredient sub-object and add all appropriate nodes/sub-objects
-        my_ingredient = cript.Ingredient(material=my_material, quantity=my_quantity, keyword="catalyst")
-        ```
+        >>> import cript
+        >>> my_identifier = [{"bigsmiles": "123456"}]
+        >>> my_material = cript.Material(name="my material", identifier=my_identifier)
+        >>> my_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
+        >>> my_ingredient = cript.Ingredient(
+        ...     material=my_material, quantity=[my_quantity], keyword=["catalyst"]
+        ... )
 
         Parameters
         ----------
@@ -152,18 +148,21 @@ class Ingredient(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_identifier = [{"bigsmiles": "123456"}]
-        my_new_material = cript.Material(name="my material", identifier=my_identifier)
-
-        my_new_quantity = cript.Quantity(
-            key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
-        )
-
-        # set new material and list of quantities
-        my_ingredient.set_material(new_material=my_new_material, new_quantity=[my_new_quantity])
-
-        ```
+        >>> import cript
+        >>> my_material = cript.Material(name="my material", identifier=[{"bigsmiles": "123456"}])
+        >>> my_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
+        >>> my_ingredient = cript.Ingredient(
+        ...     material=my_material, quantity=[my_quantity], keyword=["catalyst"]
+        ... )
+        >>> my_new_material = cript.Material(
+        ...     name="my material", identifier=[{"bigsmiles": "78910"}]
+        ... )
+        >>> my_new_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
+        >>> my_ingredient.set_material(new_material=my_new_material, new_quantity=[my_new_quantity])
 
         Parameters
         ----------
@@ -188,10 +187,15 @@ class Ingredient(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        # set new ingredient keyword
-        my_ingredient.keyword = "computation"
-        ```
+        >>> import cript
+        >>> my_material = cript.Material(name="my material", identifier=[{"bigsmiles": "123456"}])
+        >>> my_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
+        >>> my_ingredient = cript.Ingredient(
+        ...     material=my_material, quantity=[my_quantity], keyword=["catalyst"]
+        ... )
+        >>> my_ingredient.keyword = ["computation"]
 
         Returns
         -------

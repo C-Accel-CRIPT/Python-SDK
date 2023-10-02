@@ -27,7 +27,7 @@ class Experiment(PrimaryBaseNode):
     | notes               | str                          | miscellaneous information, or custom data structure       | False    |
 
 
-    ## Subobjects
+    ## Sub-objects
     An
     [Experiment node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=9)
     can be thought as a folder/bucket that can hold:

@@ -21,7 +21,7 @@ class Material(PrimaryBaseNode):
     | property                  | list[[Property](../../subobjects/property)]                          |                                                   | material properties                                 |             |       |
     | process                   | [Process](../process)                                                |                                                   | process node that made this material                |             |       |
     | parent_material           | [Material](./)                                                       |                                                   | material node that this node was copied from        |             |       |
-    | computational_ forcefield | [Computation  Forcefield](../../subobjects/computational_forcefield) |                                                   | computation forcefield                              | Conditional |       |
+    | computational_forcefield  | [Computation  Forcefield](../../subobjects/computational_forcefield) |                                                   | computation forcefield                              | Conditional |       |
     | keyword                   | list[str]                                                            | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material                    |             | True  |
     | notes                     | str                                                                  | "my awesome notes"                                | miscellaneous information, or custom data structure |             | True  |
 

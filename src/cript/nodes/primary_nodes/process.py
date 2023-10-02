@@ -51,7 +51,6 @@ class Process(PrimaryBaseNode):
        "uuid":"f8ef33f3-677a-40f3-b24e-65ab2c99d796"
     }
     ```
-
     """
 
     @dataclass(frozen=True)
@@ -96,9 +95,10 @@ class Process(PrimaryBaseNode):
         """
         create a process node
 
-        ```python
-        my_process = cript.Process(name="my process name", type="affinity_pure")
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
 
         Parameters
         ----------
@@ -184,9 +184,9 @@ class Process(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        my_process.type = "affinity_pure"
-        ```
+        >>> import cript
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
+        >>> my_process.type = "affinity_pure"
 
         Returns
         -------
@@ -221,14 +221,17 @@ class Process(PrimaryBaseNode):
 
         Examples
         ---------
-        ```python
-        my_ingredients = cript.Ingredient(
-            material=simple_material_node,
-            quantities=[simple_quantity_node],
-        )
-
-        my_process.ingredient = [my_ingredients]
-        ```
+        >>> import cript
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
+        >>> my_identifier = [{"bigsmiles": "123456"}]
+        >>> my_material = cript.Material(name="my material", identifier=my_identifier)
+        >>> my_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
+        >>> my_ingredient = cript.Ingredient(
+        ...     material=my_material, quantity=[my_quantity], keyword=["catalyst"]
+        ... )
+        >>> my_process.ingredient = [my_ingredient]
 
         Returns
         -------
@@ -265,9 +268,9 @@ class Process(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        my_process.description = "To oven-dried 20 mL glass vial, 5 mL of styrene and 10 ml of toluene was added"
-        ```
+        >>> import cript
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
+        >>> my_process.description = "To oven-dried 20 mL glass vial, 5 mL of styrene and 10 ml of toluene was added"
 
         Returns
         -------
@@ -300,6 +303,13 @@ class Process(PrimaryBaseNode):
         """
         List of [equipment](../../subobjects/equipment) used for this process
 
+        Examples
+        --------
+        >>> import cript
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
+        >>> my_equipment = cript.Equipment(key="burner")
+        >>> my_process.equipment = [my_equipment]
+
         Returns
         -------
         List[Equipment]
@@ -330,6 +340,16 @@ class Process(PrimaryBaseNode):
     def product(self) -> List[Any]:
         """
         List of product (material nodes) for this process
+
+        Examples
+        --------
+        >>> import cript
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
+        >>> my_product_material = cript.Material(
+        ...     name="my product material",
+        ...     identifier=[{"amino_acid": "my material product amino_acid"}],
+        ... )
+        >>> my_process.product = [my_product_material]
 
         Returns
         -------
@@ -364,9 +384,13 @@ class Process(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        my_process.waste = my_waste_material
-        ```
+        >>> import cript
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
+        >>> my_waste_material = cript.Material(
+        ...     name="my waste material",
+        ...     identifier=[{"bigsmiles": "123456"}],
+        ... )
+        >>> my_process.waste = [my_waste_material]
 
         Returns
         -------
@@ -401,15 +425,13 @@ class Process(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-
-        my_prerequisite_process = [
-            cript.Process(name="prerequisite processes 1", type="blow_molding"),
-            cript.Process(name="prerequisite processes 2", type="centrifugation"),
-        ]
-
-        my_process.prerequisite_process = my_prerequisite_process
-        ```
+        >>> import cript
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
+        >>> my_prerequisite_process = [
+        ...     cript.Process(name="prerequisite processes 1", type="blow_molding"),
+        ...     cript.Process(name="prerequisite processes 2", type="centrifugation"),
+        ... ]
+        >>> my_process.prerequisite_process = my_prerequisite_process
 
         Returns
         -------
@@ -442,13 +464,11 @@ class Process(PrimaryBaseNode):
         List of condition present for this process
 
         Examples
-        -------
-        ```python
-        # create condition node
-        my_condition = cript.Condition(key="atm", type="min", value=1)
-
-        my_process.condition = [my_condition]
-        ```
+        --------
+        >>> import cript
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
+        >>> my_condition = cript.Condition(key="atm", type="min", value=1)
+        >>> my_process.condition = [my_condition]
 
         Returns
         -------
@@ -479,8 +499,13 @@ class Process(PrimaryBaseNode):
     def keyword(self) -> List[str]:
         """
         List of keyword for this process
-
         [Process keyword](https://app.criptapp.org/vocab/process_keyword/) must come from CRIPT controlled vocabulary
+
+        Examples
+        --------
+        >>> import cript
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
+        >>> my_process.keyword = ["self_assembly"]
 
         Returns
         -------
@@ -512,19 +537,15 @@ class Process(PrimaryBaseNode):
     @beartype
     def citation(self) -> List[Any]:
         """
-        List of citation for this process
+        List of [citation](../subobjects/citation.md) for this process
 
         Examples
         --------
-        ```python
-        # crate reference node for this citation
-        my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
-
-        # create citation node
-        my_citation = cript.Citation(type="derived_from", reference=my_reference)
-
-        my_process.citation = [my_citation]
-        ```
+        >>> import cript
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_citation = cript.Citation(type="derived_from", reference=my_reference)
+        >>> my_process.citation = [my_citation]
 
         Returns
         -------
@@ -559,12 +580,10 @@ class Process(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create property node
-         my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
-
-         my_process.properties = [my_property]
-        ```
+        >>> import cript
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
+        >>> my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
+        >>> my_process.property = [my_property]
 
         Returns
         -------

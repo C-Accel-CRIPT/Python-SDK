@@ -233,6 +233,7 @@ class Property(UUIDBaseNode):
         [property type](https://app.criptapp.org/vocab/) must come from CRIPT controlled vocabulary
 
         Examples
+        ---------
         >>> import cript
         >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
         >>> my_property.type = "max"

@@ -90,6 +90,14 @@ class Material(PrimaryBaseNode):
         """
         create a material node
 
+        Examples
+        --------
+        >>> import cript
+        >>> my_material = cript.Material(
+        ...     name="my component material 1",
+        ...     identifier=[{"amino_acid": "component 1 alternative name"}],
+        ... )
+
         Parameters
         ----------
         name: str
@@ -137,9 +145,13 @@ class Material(PrimaryBaseNode):
         material name
 
         Examples
-        ```python
-        my_material.name = "my new material"
-        ```
+        ---------
+        >>> import cript
+        >>> my_material = cript.Material(
+        ...     name="my component material 1",
+        ...     identifier=[{"chem_formula": "my material chem formula"}],
+        ... )
+        >>> my_material.name = "my new material name"
 
         Returns
         -------
@@ -171,9 +183,14 @@ class Material(PrimaryBaseNode):
         """
         get the identifiers for this material
 
-        ```python
-        my_material.identifier = {"alternative_names": "my material alternative name"}
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> my_material = cript.Material(
+        ...     name="my component material 1",
+        ...     identifier=[{"smiles": "component 1 smiles"}],
+        ... )
+        >>> my_material.identifier = [{"smiles": "my material alternative name"}]
 
         [material identifier key](https://app.criptapp.org/vocab/material_identifier_key)
         must come from CRIPT controlled vocabulary
@@ -212,27 +229,23 @@ class Material(PrimaryBaseNode):
         list of components ([material nodes](./)) that make up this material
 
         Examples
-        --------
-        ```python
-        # material component
-        my_component = [
-            # create material node
-            cript.Material(
-                name="my component material 1",
-                identifier=[{"alternative_names": "component 1 alternative name"}],
-            ),
-
-            # create material node
-            cript.Material(
-                name="my component material 2",
-                identifier=[{"alternative_names": "component 2 alternative name"}],
-            ),
-        ]
-
-
-        identifier = [{"alternative_names": "my material alternative name"}]
-        my_material = cript.Material(name="my material", component=my_component, identifier=identifier)
-        ```
+        ---------
+        >>> import cript
+        >>> my_components = [
+        ...     cript.Material(
+        ...         name="my component material 1",
+        ...         identifier=[{"smiles": "my material smiles"}],
+        ...     ),
+        ...     cript.Material(
+        ...         name="my component material 2",
+        ...         identifier=[{"vendor": "my material vendor"}],
+        ...     ),
+        ... ]
+        >>> my_mixed_material = cript.Material(
+        ...     name="my material",
+        ...     component=my_components,
+        ...     identifier=[{"bigsmiles": "123456"}]
+        ... )
 
         Returns
         -------
@@ -328,16 +341,13 @@ class Material(PrimaryBaseNode):
         the material keyword must come from the
         [CRIPT controlled vocabulary](https://app.criptapp.org/vocab/material_keyword)
 
-        ```python
-        identifier = [{"alternative_names": "my material alternative name"}]
-
-        # keyword
-        material_keyword = ["acetylene", "acrylate", "alternating"]
-
-        my_material = cript.Material(
-            name="my material", keyword=material_keyword, identifier=identifier
-        )
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> my_material = cript.Material(
+        ... name="my material", identifier=[{"inchi": "my material inchi"}]
+        ... )
+        >>> my_material.keyword = ["acetylene", "acrylate", "alternating"]
 
         Returns
         -------
@@ -380,12 +390,15 @@ class Material(PrimaryBaseNode):
         """
         list of material [property](../../subobjects/property)
 
-        ```python
-        # property subobject
-        my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
-
-        my_material.property = my_property
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> my_material = cript.Material(
+        ...     name="my component material 1",
+        ...     identifier=[{"smiles": "component 1 smiles"}],
+        ... )
+        >>> my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
+        >>> my_material.property = [my_property]
 
         Returns
         -------

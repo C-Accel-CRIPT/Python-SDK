@@ -16,7 +16,7 @@ class Material(PrimaryBaseNode):
     ## Attributes
     | attribute                 | type                                                                 | example                                           | description                                         | required    | vocab |
     |---------------------------|----------------------------------------------------------------------|---------------------------------------------------|-----------------------------------------------------|-------------|-------|
-    | identifier               | list[Identifier]                                                     |                                                   | material identifiers                                | True        |       |
+    | identifier                | list[Identifier]                                                     |                                                   | material identifiers                                | True        |       |
     | component                 | list[[Material](./)]                                                 |                                                   | list of component that make up the mixture          |             |       |
     | property                  | list[[Property](../../subobjects/property)]                          |                                                   | material properties                                 |             |       |
     | process                   | [Process](../process)                                                |                                                   | process node that made this material                |             |       |

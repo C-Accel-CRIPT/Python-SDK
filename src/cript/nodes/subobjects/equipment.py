@@ -32,9 +32,9 @@ class Equipment(UUIDBaseNode):
     |-------------|-----------------|-----------------------------------------------|--------------------------------------------------------------------------------|----------|-------|
     | key         | str             | hot plate                                     | material                                                                       | True     | True  |
     | description | str             | Hot plate with silicon oil bath with stir bar | additional details about the equipment                                         |          |       |
-    | condition  | list[Condition] |                                               | conditions under which the property was measured                               |          |       |
+    | condition   | list[Condition] |                                               | conditions under which the property was measured                               |          |       |
     | files       | list[File]      |                                               | list of file nodes to link to calibration or equipment specification documents |          |       |
-    | citation   | list[Citation]  |                                               | reference to a book, paper, or scholarly work                                  |          |       |
+    | citation    | list[Citation]  |                                               | reference to a book, paper, or scholarly work                                  |          |       |
 
     ## JSON Representation
     ```json

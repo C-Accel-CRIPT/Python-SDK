@@ -239,7 +239,6 @@ class File(PrimaryBaseNode):
         ...     source="https://criptapp.org",
         ...     type="calibration",
         ... )
-        >>> # change file source from URL to local file
         >>> my_file.source = "/home/user/project/my_file.csv"
 
         Returns

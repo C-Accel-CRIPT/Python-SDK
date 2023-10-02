@@ -153,25 +153,23 @@ class File(PrimaryBaseNode):
         Examples
         --------
         ### Minimal File Node
-        ```python
-        my_file = cript.File(
-            name="my file name",
-            source="https://criptapp.org",
-            type="calibration",
-        )
-        ```
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file name",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ... )
 
         ### Maximal File Node
-        ```python
-        my_file = cript.File(
-            name="my file name",
-            source="https://criptapp.org",
-            type="calibration",
-            extension=".csv",
-            data_dictionary="my file's data dictionary",
-            notes="my notes for this file"
-        )
-        ```
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file name",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ...     extension=".csv",
+        ...     data_dictionary="my file's data dictionary",
+        ...     notes="my notes for this file"
+        ... )
         """
 
         super().__init__(name=name, notes=notes, **kwargs)
@@ -208,11 +206,13 @@ class File(PrimaryBaseNode):
         Examples
         --------
         ### Example Minimal File Node
-        ```python
-        my_file = cript.File(source="/local/path/to/file", type="calibration")
-        my_file.ensure_uploaded()
-        my_file.source # Starts with http now
-        ```
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file node name",
+        ...     source="/local/path/to/file",
+        ...     type="calibration",
+        ... )
+        >>> my_file.ensure_uploaded()
 
         """
 
@@ -230,16 +230,17 @@ class File(PrimaryBaseNode):
         The File node source can be set to be either a path to a local file on disk
         or a URL path to a file on the web.
 
-        Example
+        Examples
         --------
         URL File Source
-        ```python
-        my_file.source = "https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf"
-        ```
-        Local File Path
-        ```python
-        my_file.source = "/home/user/project/my_file.csv"
-        ```
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file name",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ... )
+        >>> # change file source from URL to local file
+        >>> my_file.source = "/home/user/project/my_file.csv"
 
         Returns
         -------
@@ -268,11 +269,10 @@ class File(PrimaryBaseNode):
         ----------
         new_source: str
 
-        Example
-        -------
-        ```python
-        my_file.source = "https://pubs.acs.org/doi/10.1021/acscentsci.3c00011"
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> my_file.source = "https://pubs.acs.org/doi/10.1021/acscentsci.3c00011"
 
         Returns
         -------
@@ -287,11 +287,15 @@ class File(PrimaryBaseNode):
         """
         The [File type](https://app.criptapp.org/vocab/file_type) must come from CRIPT controlled vocabulary
 
-        Example
-        -------
-        ```python
-        my_file.type = "calibration"
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file name",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ... )
+        >>> my_file.type = "calibration"
 
         Returns
         -------
@@ -312,11 +316,10 @@ class File(PrimaryBaseNode):
         -----------
         new_type: str
 
-        Example
-        -------
-        ```python
-        my_file.type = "computation_config"
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> my_file.type = "computation_config"
 
         Returns
         -------
@@ -333,11 +336,15 @@ class File(PrimaryBaseNode):
         """
         The file extension property explicitly states what is the file extension of the file node.
 
-        Example
-        -------
-        ```python
-        my_file_node.extension = ".csv"`
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file name",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ... )
+        >>> my_file.extension = ".csv"
 
         Returns
         -------
@@ -357,11 +364,10 @@ class File(PrimaryBaseNode):
         new_extension: str
             new file extension to overwrite the current file extension
 
-        Example
-        -------
-        ```python
-        my_file.extension = ".pdf"
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> my_file.extension = ".pdf"
 
         Returns
         -------
@@ -383,10 +389,14 @@ class File(PrimaryBaseNode):
         It is advised for this field to be written in JSON format
 
         Examples
-        -------
-        ```python
-        my_file.data_dictionary = "{'notes': 'This is something that describes my file node.'}"
-        ```
+        ---------
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file name",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ... )
+        >>> my_file.data_dictionary = "{'notes': 'This is something that describes my file node.'}"
 
         Returns
         -------

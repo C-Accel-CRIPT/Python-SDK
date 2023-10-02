@@ -30,7 +30,7 @@ class Data(PrimaryBaseNode):
     | citation            | [Citation](../subobjects/citation.md)             |                            | reference to a book, paper, or scholarly work                                                | False    |
     | notes               | str                                               | "my awesome notes"         | miscellaneous information, or custom data structure                                          | False    |
 
-    Example
+    Examples
     --------
     >>> import cript
     >>> my_file = cript.File(

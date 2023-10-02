@@ -77,8 +77,8 @@ class Equipment(UUIDBaseNode):
         citation : Union[List[Citation], None], optional
             reference to a scholarly work, by default None
 
-        Example
-        -------
+        Examples
+        --------
         >>> import cript
         >>> my_equipment = cript.Equipment(key="burner")
 

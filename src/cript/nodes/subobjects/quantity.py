@@ -81,13 +81,10 @@ class Quantity(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        import cript
-
-        my_quantity = cript.Quantity(
-            key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
-        )
-        ```
+        >>> import cript
+        >>> my_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
 
         Returns
         -------
@@ -117,9 +114,11 @@ class Quantity(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_quantity.set_key_unit(new_key="mass", new_unit="gram")
-        ```
+        >>> import cript
+        >>> my_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
+        >>> my_quantity.set_key_unit(new_key="mass", new_unit="kg")
 
         Parameters
         ----------
@@ -158,9 +157,11 @@ class Quantity(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_quantity.value = 1
-        ```
+        >>> import cript
+        >>> my_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
+        >>> my_quantity.value = 1
 
         Returns
         -------
@@ -239,9 +240,10 @@ class Quantity(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_property.set_uncertainty(uncertainty=1, type="stderr")
-        ```
+        >>> import cript
+        >>> my_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
 
         Parameters
         ----------

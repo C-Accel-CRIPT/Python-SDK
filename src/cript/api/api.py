@@ -121,22 +121,18 @@ class API:
         Sensitive information can be securely stored in environment variables and loaded into the code using
         [os.getenv()](https://docs.python.org/3/library/os.html#os.getenv).
 
-        #### Example
-
-        ```python
-        import os
-
-        # securely load sensitive data into the script
-        cript_host = os.getenv("cript_host")
-        cript_api_token = os.getenv("cript_api_token")
-        cript_storage_token = os.getenv("cript_storage_token")
-
-        with cript.API(
-            host=cript_host, api_token=cript_api_token, storage_token=cript_storage_token
-        ) as api:
-            # write your script
-            pass
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> import os
+        >>> # securely load sensitive data into the script
+        >>> cript_host = os.getenv("cript_host")
+        >>> cript_api_token = os.getenv("cript_api_token")
+        >>> cript_storage_token = os.getenv("cript_storage_token")
+        >>> with cript.API(
+        ...     host=cript_host, api_token=cript_api_token, storage_token=cript_storage_token
+        ... ) as api:
+        ...     pass
 
         ### Create API Client with None
         Alternatively you can configure your system to have an environment variable of
@@ -161,16 +157,16 @@ class API:
         }
         ```
 
+        Examples
+        --------
         `my_script.py`
-        ```python
-        from pathlib import Path
-
-        # create a file path object of where the config file is
-        config_file_path = Path(__file__) / Path('./config.json')
-
-        with cript.API(config_file_path=config_file_path) as api:
-            # node creation, api.save(), etc.
-        ```
+        >>> from pathlib import Path
+        >>> import cript
+        >>> # create a file path object of where the config file is
+        >>> config_file_path = Path(__file__) / Path('./config.json')
+        >>> with cript.API(config_file_path=config_file_path) as api:   # doctest: +SKIP
+        ...     # node creation, api.save(), etc.
+        ...     pass
 
         Parameters
         ----------

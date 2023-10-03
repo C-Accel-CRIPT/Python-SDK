@@ -111,7 +111,6 @@ class File(PrimaryBaseNode):
         "data_dictionary": "my file's data dictionary",
     }
     ```
-
     """
 
     @dataclass(frozen=True)
@@ -154,28 +153,26 @@ class File(PrimaryBaseNode):
         Examples
         --------
         ### Web URL File Node
-        ```python
-        my_file = cript.File(
-            name="my file name",
-            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
-            type="calibration",
-            extension=".pdf",
-            data_dictionary="my file's data dictionary",
-            notes="my notes for this file",
-        )
-        ```
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file name",
+        ...     source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
+        ...     type="calibration",
+        ...     extension=".pdf",
+        ...     data_dictionary="my file's data dictionary",
+        ...     notes="my notes for this file",
+        ... )
 
         ### Local Source File Node
-        ```python
-        my_file = cript.File(
-            name="my file name",
-            source="/home/user/MIT/project/my_file.csv",
-            type="calibration",
-            extension=".csv",
-            data_dictionary="my file's data dictionary",
-            notes="my notes for this file",
-        )
-        ```
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file name",
+        ...     source="/home/user/MIT/project/my_file.csv",
+        ...     type="calibration",
+        ...     extension=".csv",
+        ...     data_dictionary="my file's data dictionary",
+        ...     notes="my notes for this file",
+        ... )
         """
 
         super().__init__(name=name, notes=notes, **kwargs)
@@ -210,11 +207,15 @@ class File(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        my_file = cript.File(source="/local/path/to/file", type="calibration")
-        my_file.ensure_uploaded()
-        my_file.source # changed to cloud storage object name
-        ```
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file node name",
+        ...     source="/local/path/to/file",
+        ...     type="calibration",
+        ...     extension="csv",
+        ... )
+        >>> my_file.ensure_uploaded()   # doctest: +SKIP
+        >>> my_file.source # changed to cloud storage object name   # doctest: +SKIP
         """
 
         if _is_local_file(file_source=self.source):
@@ -239,6 +240,7 @@ class File(PrimaryBaseNode):
         ...     name="my file name",
         ...     source="https://criptapp.org",
         ...     type="calibration",
+        ...     extension=".csv",
         ... )
         >>> my_file.source = "/home/user/project/my_file.csv"
 
@@ -294,6 +296,7 @@ class File(PrimaryBaseNode):
         ...     name="my file name",
         ...     source="https://criptapp.org",
         ...     type="calibration",
+        ...     extension=".csv",
         ... )
         >>> my_file.type = "calibration"
 
@@ -343,6 +346,7 @@ class File(PrimaryBaseNode):
         ...     name="my file name",
         ...     source="https://criptapp.org",
         ...     type="calibration",
+        ...     extension=".text",
         ... )
         >>> my_file.extension = ".csv"
 
@@ -398,6 +402,7 @@ class File(PrimaryBaseNode):
         ...     name="my file name",
         ...     source="https://criptapp.org",
         ...     type="calibration",
+        ...     extension=".png",
         ... )
         >>> my_file.data_dictionary = "{'notes': 'This is something that describes my file node.'}"
 
@@ -434,6 +439,19 @@ class File(PrimaryBaseNode):
         """
         download this file to current working directory or a specific destination.
         The file name will come from the file_node.name and the extension will come from file_node.extension
+
+        Examples
+        --------
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file node name",
+        ...     source="/local/path/to/file",
+        ...     type="calibration",
+        ...     extension=".jpeg",
+        ... )
+        >>> my_file.ensure_uploaded()   # doctest: +SKIP
+        >>> my_file.source # changed to cloud storage object name   # doctest: +SKIP
+        >>> my_file.download()  # doctest: +SKIP
 
         Notes
         -----

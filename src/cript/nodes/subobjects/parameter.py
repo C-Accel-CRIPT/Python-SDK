@@ -75,7 +75,7 @@ class Parameter(UUIDBaseNode):
         Parameters
         ----------
         key : str
-            Parameter key must come from [CRIPT Controlled Vocabulary]()
+            Parameter key must come from [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/parameter_key)
         value : Union[int, float]
             Parameter value
         unit : Union[str, None], optional
@@ -128,8 +128,6 @@ class Parameter(UUIDBaseNode):
     def key(self, new_key: str) -> None:
         """
         set new key for the Parameter sub-object
-
-        Parameter key must come from [CRIPT Controlled Vocabulary]()
 
         Parameters
         ----------

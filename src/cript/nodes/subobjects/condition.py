@@ -198,8 +198,6 @@ class Condition(UUIDBaseNode):
         """
         set this Condition sub-object key
 
-        > Condition key must come from [CRIPT Controlled Vocabulary]()
-
         Parameters
         ----------
         new_key : str

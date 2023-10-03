@@ -128,7 +128,7 @@ class File(PrimaryBaseNode):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, name: str, source: str, type: str, extension: str = "", data_dictionary: str = "", notes: str = "", **kwargs):
+    def __init__(self, name: str, source: str, type: str, extension: str, data_dictionary: str = "", notes: str = "", **kwargs):
         """
         create a File node
 
@@ -139,7 +139,8 @@ class File(PrimaryBaseNode):
         source: str
             link or path to local file
         type: str
-            Pick a file type from CRIPT controlled vocabulary [File types]()
+            Pick a file type from CRIPT controlled vocabulary
+            [File types](https://app.criptapp.org/vocab/file_type)
         extension:str
             file extension
         data_dictionary:str
@@ -152,24 +153,29 @@ class File(PrimaryBaseNode):
 
         Examples
         --------
-        ### Minimal File Node
-        >>> import cript
-        >>> my_file = cript.File(
-        ...     name="my file name",
-        ...     source="https://criptapp.org",
-        ...     type="calibration",
-        ... )
+        ### Web URL File Node
+        ```python
+        my_file = cript.File(
+            name="my file name",
+            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
+            type="calibration",
+            extension=".pdf",
+            data_dictionary="my file's data dictionary",
+            notes="my notes for this file",
+        )
+        ```
 
-        ### Maximal File Node
-        >>> import cript
-        >>> my_file = cript.File(
-        ...     name="my file name",
-        ...     source="https://criptapp.org",
-        ...     type="calibration",
-        ...     extension=".csv",
-        ...     data_dictionary="my file's data dictionary",
-        ...     notes="my notes for this file"
-        ... )
+        ### Local Source File Node
+        ```python
+        my_file = cript.File(
+            name="my file name",
+            source="/home/user/MIT/project/my_file.csv",
+            type="calibration",
+            extension=".csv",
+            data_dictionary="my file's data dictionary",
+            notes="my notes for this file",
+        )
+        ```
         """
 
         super().__init__(name=name, notes=notes, **kwargs)
@@ -196,24 +202,19 @@ class File(PrimaryBaseNode):
         It is not necessary to call this function manually.
         A saved project automatically ensures uploaded files, it is recommend to rely on the automatic upload.
 
-        Parameters:
+        Parameters
         -----------
-
         api: cript.API, optional
            API object that performs the upload.
            If None, the globally cached object is being used.
 
         Examples
         --------
-        ### Example Minimal File Node
-        >>> import cript
-        >>> my_file = cript.File(
-        ...     name="my file node name",
-        ...     source="/local/path/to/file",
-        ...     type="calibration",
-        ... )
-        >>> my_file.ensure_uploaded()
-
+        ```python
+        my_file = cript.File(source="/local/path/to/file", type="calibration")
+        my_file.ensure_uploaded()
+        my_file.source # changed to cloud storage object name
+        ```
         """
 
         if _is_local_file(file_source=self.source):
@@ -299,7 +300,7 @@ class File(PrimaryBaseNode):
         Returns
         -------
         file type: str
-            file type must come from [CRIPT controlled vocabulary]()
+            file type must come from [CRIPT controlled vocabulary](https://app.criptapp.org/vocab/file_type)
         """
         return self._json_attrs.type
 
@@ -344,6 +345,9 @@ class File(PrimaryBaseNode):
         ...     type="calibration",
         ... )
         >>> my_file.extension = ".csv"
+
+        !!! Note "file extensions must start with a dot"
+            File extensions must start with a dot, for example `.csv` or `.pdf`
 
         Returns
         -------

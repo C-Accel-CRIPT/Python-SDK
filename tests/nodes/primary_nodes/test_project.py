@@ -33,24 +33,29 @@ def test_project_getters_and_setters(simple_project_node, simple_collection_node
     4. what was set and what was gotten should be equivalent
     """
     new_project_name = "my new project name"
+    new_project_notes = "my new project notes"
 
     # set attributes
     simple_project_node.name = new_project_name
     simple_project_node.collection = [complex_collection_node]
     simple_project_node.material = [simple_material_node]
+    simple_project_node.notes = new_project_notes
 
     # get attributes and assert that they are the same
     assert simple_project_node.name == new_project_name
     assert simple_project_node.collection == [complex_collection_node]
     assert simple_project_node.material == [simple_material_node]
+    assert simple_project_node.notes == new_project_notes
 
     # remove optional attributes
     simple_project_node.collection = []
     simple_project_node.material = []
+    simple_project_node.notes = ""
 
     # assert optional attributes have been removed
     assert simple_project_node.collection == []
     assert simple_project_node.material == []
+    assert simple_project_node.notes == ""
 
 
 def test_serialize_project_to_json(complex_project_node, complex_project_dict) -> None:

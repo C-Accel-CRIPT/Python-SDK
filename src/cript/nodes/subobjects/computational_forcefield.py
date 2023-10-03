@@ -101,9 +101,11 @@ class ComputationalForcefield(UUIDBaseNode):
         Parameters
         ----------
         key : str
-            type of forcefield key must come from [CRIPT Controlled Vocabulary]()
+            type of forcefield key must come from
+            [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/computational_forcefield_key)
         building_block : str
-            type of computational_forcefield building_block must come from [CRIPT Controlled Vocabulary]()
+            type of computational_forcefield building_block must come from
+            [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/building_block)
         coarse_grained_mapping : str, optional
             atom to beads mapping, by default ""
         implicit_solvent : str, optional

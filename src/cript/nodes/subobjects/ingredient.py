@@ -95,7 +95,8 @@ class Ingredient(UUIDBaseNode):
         quantity : List[Quantity]
             list of quantity sub-objects
         keyword : List[str], optional
-            ingredient keyword must come from [CRIPT Controlled Vocabulary](), by default ""
+            ingredient keyword must come from
+            [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/ingredient_keyword), by default ""
 
         Returns
         -------
@@ -209,8 +210,6 @@ class Ingredient(UUIDBaseNode):
     def keyword(self, new_keyword: List[str]) -> None:
         """
         set new ingredient keyword to replace the current
-
-        ingredient keyword must come from the [CRIPT controlled vocabulary]()
 
         Parameters
         ----------

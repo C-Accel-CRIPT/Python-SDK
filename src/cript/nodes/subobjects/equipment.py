@@ -67,7 +67,7 @@ class Equipment(UUIDBaseNode):
         Parameters
         ----------
         key : str
-            Equipment key must come from [CRIPT Controlled Vocabulary]()
+            Equipment key must come from [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/equipment_key)
         description : str, optional
             additional details about the equipment, by default ""
         condition : Union[List[Condition], None], optional
@@ -122,8 +122,6 @@ class Equipment(UUIDBaseNode):
     def key(self, new_key: str) -> None:
         """
         set the equipment key
-
-        > Equipment key must come from [CRIPT Controlled Vocabulary]()
 
         Parameters
         ----------

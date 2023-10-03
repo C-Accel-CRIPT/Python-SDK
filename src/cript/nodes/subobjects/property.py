@@ -114,9 +114,9 @@ class Property(UUIDBaseNode):
         Parameters
         ----------
         key : str
-            type of property, Property key must come from the [CRIPT Controlled Vocabulary]()
+            type of property, Property key must come from the CRIPT Controlled Vocabulary
         type : str
-            type of value stored, Property type must come from the [CRIPT Controlled Vocabulary]()
+            type of value stored, Property type must come from the CRIPT Controlled Vocabulary
         value : Union[Number, None]
             value or quantity
         unit : str
@@ -471,8 +471,6 @@ class Property(UUIDBaseNode):
     def method(self, new_method: str) -> None:
         """
         set the Property method
-
-        Property method must come from [CRIPT Controlled Vocabulary]()
 
         Parameters
         ----------

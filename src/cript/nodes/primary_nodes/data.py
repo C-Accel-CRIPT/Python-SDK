@@ -212,7 +212,7 @@ class Data(PrimaryBaseNode):
     def type(self, new_data_type: str) -> None:
         """
         set the data type.
-        The data type must come from [CRIPT data type vocabulary]()
+        The data type must come from [CRIPT data type vocabulary](https://app.criptapp.org/vocab/data_type)
 
         Parameters
         ----------

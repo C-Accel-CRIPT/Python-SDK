@@ -72,7 +72,7 @@ class Citation(UUIDBaseNode):
         Parameters
         ----------
         type : citation type
-            citation type must come from [CRIPT Controlled Vocabulary]()
+            citation type must come from [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/citation_type)
         reference : Reference
             Reference node
 
@@ -148,9 +148,7 @@ class Citation(UUIDBaseNode):
     @beartype
     def type(self, new_type: str) -> None:
         """
-        set the citation subobject type
-
-        > Note: citation subobject must come from [CRIPT Controlled Vocabulary]()
+        set the citation sub-object type
 
         Parameters
         ----------

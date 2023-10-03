@@ -69,7 +69,8 @@ class Quantity(UUIDBaseNode):
         Parameters
         ----------
         key : str
-            type of quantity. Quantity key must come from [CRIPT Controlled Vocabulary]()
+            type of quantity. Quantity key must come from
+            [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/quantity_key)
         value : Number
             amount of material
         unit : str
@@ -77,7 +78,8 @@ class Quantity(UUIDBaseNode):
         uncertainty : Union[Number, None], optional
             uncertainty of value, by default None
         uncertainty_type : str, optional
-            type of uncertainty. Quantity uncertainty type must come from [CRIPT Controlled Vocabulary](), by default ""
+            type of uncertainty. Quantity uncertainty type must come from
+            [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/uncertainty_type), by default ""
 
         Examples
         --------
@@ -110,7 +112,7 @@ class Quantity(UUIDBaseNode):
         """
         set the Quantity key and unit attributes
 
-        Quantity key must come from [CRIPT Controlled Vocabulary]()
+        Quantity key must come from [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/quantity_key)
 
         Examples
         --------
@@ -123,7 +125,8 @@ class Quantity(UUIDBaseNode):
         Parameters
         ----------
         new_key : str
-            new Quantity key. Quantity key must come from [CRIPT Controlled Vocabulary]()
+            new Quantity key. Quantity key must come from
+            [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/quantity_key)
         new_unit : str
             new unit
 
@@ -236,7 +239,8 @@ class Quantity(UUIDBaseNode):
 
         Uncertainty and uncertainty type are set at the same time to keep the value and type in sync
 
-        `uncertainty_type` must come from [CRIPT Controlled Vocabulary]()
+        `uncertainty_type` must come from
+        [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/uncertainty_type)
 
         Examples
         --------
@@ -250,7 +254,8 @@ class Quantity(UUIDBaseNode):
         uncertainty : Number
             uncertainty value
         type : str
-            type of uncertainty, uncertainty_type must come from [CRIPT Controlled Vocabulary]()
+            type of uncertainty, uncertainty_type must come from
+            [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/uncertainty_type)
 
         Returns
         -------

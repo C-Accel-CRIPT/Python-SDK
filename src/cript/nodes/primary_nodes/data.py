@@ -246,7 +246,7 @@ class Data(PrimaryBaseNode):
         >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
         >>> my_new_file = cript.File(
         ...    name="my new file node name",
-        ...    source="path/to/loca/file",
+        ...    source="path/to/local/file",
         ...    type="calibration",
         ...    extension=".csv",
         ...    data_dictionary="my file's data dictionary"

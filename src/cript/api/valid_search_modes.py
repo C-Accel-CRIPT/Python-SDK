@@ -20,14 +20,13 @@ class SearchModes(Enum):
 
     Examples
     -------
-    ```python
-    # search by node type
-    materials_paginator = cript_api.search(
-        node_type=cript.Material,
-        search_mode=cript.SearchModes.NODE_TYPE,
-        value_to_search=None,
-    )
-    ```
+    >>> import cript
+    >>> # search by node type
+    >>> materials_paginator = api.search(
+    ...     node_type=cript.Material,
+    ...     search_mode=cript.SearchModes.NODE_TYPE,
+    ...     value_to_search=None,
+    ... )
 
     For more details and code examples,
     please check the [cript.API.search( ) method](../api/#cript.api.api.API.search)

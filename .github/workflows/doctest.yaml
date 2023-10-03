@@ -18,7 +18,7 @@ jobs:
   doctest:
     strategy:
       matrix:
-        python-version: [ 3.11 ]
+        python-version: [ 3.12 ]
         os: [ ubuntu-latest ]
 
     runs-on: ${{ matrix.os }}
@@ -39,7 +39,7 @@ jobs:
 
       - name: pip install CRIPT Python SDK local package
         run: | 
-          python${{ matrix.python-version }} -m pip install .
+          python${{ matrix.python-version }} -m pip install -e .
           pwd
 
       - name: Run Doctests

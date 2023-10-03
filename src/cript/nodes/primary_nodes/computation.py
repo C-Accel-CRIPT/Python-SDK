@@ -373,7 +373,9 @@ class Computation(PrimaryBaseNode):
         --------
         >>> import cript
         >>> my_computation = cript.Computation(name="my computation name", type="analysis")
-        >>> my_prerequisite_computation = cript.Computation(name="my prerequisite computation name", type="data_fit")
+        >>> my_prerequisite_computation = cript.Computation(
+        ...     name="my prerequisite computation name", type="data_fit"
+        ... )
         >>> my_computation.prerequisite_computation = my_prerequisite_computation
 
         Returns
@@ -406,18 +408,18 @@ class Computation(PrimaryBaseNode):
         """
         List of citations
 
-         Examples
-         --------
-         >>> import cript
-         >>> my_computation = cript.Computation(name="my computation name", type="analysis")
-         >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
-         >>> my_citation = cript.Citation(type="derived_from", reference=my_reference)
-         >>> my_computation.citation = [my_citation]
+        Examples
+        --------
+        >>> import cript
+        >>> my_computation = cript.Computation(name="my computation name", type="analysis")
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_citation = cript.Citation(type="derived_from", reference=my_reference)
+        >>> my_computation.citation = [my_citation]
 
-         Returns
-         -------
-         List[Citation]
-             list of citations for this computation node
+        Returns
+        -------
+        List[Citation]
+            list of citations for this computation node
         """
         return self._json_attrs.citation.copy()  # type: ignore
 

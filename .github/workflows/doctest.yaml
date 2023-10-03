@@ -18,8 +18,8 @@ jobs:
   doctest:
     strategy:
       matrix:
-        python-version: [3.12]
-        os: [ubuntu-latest]
+        python-version: [ 3.12 ]
+        os: [ ubuntu-latest ]
 
     runs-on: ${{ matrix.os }}
 

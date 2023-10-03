@@ -944,9 +944,10 @@ class API:
         ... ) as api:
         ...     desktop_path = (Path(__file__).parent / "cript_downloads" / "my_downloaded_file.txt").resolve()
         ...     my_file = cript.File(
-        ...         name="my file name",
+        ...         name="my file node name",
         ...         source="https://criptapp.org",
         ...         type="calibration",
+        ...         extension=".csv",
         ...     )
         ...     api.download_file(file_source=my_file.source, destination_path=str(desktop_path)) # doctest: +SKIP
 

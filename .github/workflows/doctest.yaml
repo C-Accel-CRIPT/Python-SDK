@@ -38,7 +38,9 @@ jobs:
           pip install -r requirements_dev.txt
 
       - name: pip install CRIPT Python SDK local package
-        run: python${{ matrix.python-version }} -m pip install .
+        run: | 
+          python${{ matrix.python-version }} -m pip install .
+          pwd
 
       - name: Run Doctests
-        run: pytest --doctest-modules src/cript/
+        run: python${{ matrix.python-version }} -m pytest --doctest-modules src/cript/

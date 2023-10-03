@@ -243,8 +243,6 @@ class API:
         ...     api_token=os.getenv("CRIPT_TOKEN"),
         ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
         ... ) as api:
-        ...    # node creation, api.save(), etc.
-        ...
         ...     print(api)
         CRIPT API Client - Host URL: 'https://api.criptapp.org/api/v1'
 
@@ -510,8 +508,8 @@ class API:
 
         Examples
         --------
+        >>> import os
         >>> import cript
-        >>> import os  # assuming you imported os for the getenv function
         >>> with cript.API(
         ...     host="https://api.criptapp.org/",
         ...     api_token=os.getenv("CRIPT_TOKEN"),
@@ -1052,7 +1050,8 @@ class API:
         To learn more about working with pagination, please refer to our
         [paginator object documentation](../paginator).
 
-        Additionally, you can utilize the utility function [`load_nodes_from_json(node_json)`](../../utility_functions/#cript.nodes.util.load_nodes_from_json)
+        Additionally, you can utilize the utility function
+        [`load_nodes_from_json(node_json)`](../../utility_functions/#cript.nodes.util.load_nodes_from_json)
         to convert API JSON responses into Python SDK nodes.
 
         ???+ Example "Convert API JSON Response to Python SDK Nodes"
@@ -1117,7 +1116,7 @@ class API:
         >>> from pathlib import Path
         >>> my_material_node: cript.Material = api.get_node_by_uuid(
         ...     node_type=cript.Material, node_uuid="e1b41d34-3bf2-4cd8-9a19-6412df7e7efc"
-        ... )
+        ... ) # doctest: +SKIP
 
         Parameters
         ----------
@@ -1251,8 +1250,10 @@ class API:
 
         To ensure you have the latest data, follow these steps:
 
-        1. Fetch the newest Project node from the API using the [`cript.API.search()`](./#cript.api.api.API.search) provided by the SDK.
-        1. Deserialize the retrieved data into a new Project node using the [`load_nodes_from_json`](../../utility_functions/#cript.nodes.util.load_nodes_from_json) utility function.
+        1. Fetch the newest Project node from the API using the
+        [`cript.API.search()`](./#cript.api.api.API.search) provided by the SDK.
+        1. Deserialize the retrieved data into a new Project node using the
+        [`load_nodes_from_json`](../../utility_functions/#cript.nodes.util.load_nodes_from_json) utility function.
         1. Replace your old Project node with the new one in your script for accurate and up-to-date information.
 
         Parameters

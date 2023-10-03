@@ -244,9 +244,15 @@ class Experiment(PrimaryBaseNode):
         ...     data_dictionary="my file's data dictionary",
         ... )
         >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
-        >>> my_material = cript.Material(name="my material name", identifier=[{"bigsmiles": "123456"}])
-        >>> my_quantity = cript.Quantity(key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev")
-        >>> my_ingredient = cript.Ingredient(material=my_material, quantity=[my_quantity], keyword=["catalyst"])
+        >>> my_material = cript.Material(
+        ...     name="my material name", identifier=[{"bigsmiles": "123456"}]
+        ... )
+        >>> my_quantity = cript.Quantity(
+        ... key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
+        >>> my_ingredient = cript.Ingredient(
+        ... material=my_material, quantity=[my_quantity], keyword=["catalyst"]
+        ... )
         >>> my_computation_process = cript.ComputationProcess(
         ...     name="my computational process name",
         ...     type="cross_linking",         # must come from CRIPT Controlled Vocabulary

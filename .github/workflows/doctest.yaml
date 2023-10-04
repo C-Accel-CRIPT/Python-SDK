@@ -23,6 +23,12 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    env:
+      CRIPT_HOST: https://lb-stage.mycriptapp.org/
+      CRIPT_TOKEN: 123456789
+      CRIPT_STORAGE_TOKEN: 987654321
+      CRIPT_TESTS: False
+
     steps:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4

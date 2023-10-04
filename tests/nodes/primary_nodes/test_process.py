@@ -30,7 +30,7 @@ def test_simple_process() -> None:
     assert my_process.keyword == my_process_keywords
 
 
-def test_complex_process_node(complex_ingredient_node, simple_equipment_node, complex_citation_node, simple_property_node, simple_condition_node, simple_material_node, simple_process_node, complex_equipment_node, complex_condition_node) -> None:
+def test_complex_process_node(complex_ingredient_node, complex_citation_node, simple_property_node, simple_material_node, simple_process_node, complex_equipment_node, complex_condition_node) -> None:
     """
     create a process node with all possible arguments
 
@@ -38,8 +38,6 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
     -----
     * indirectly tests the vocabulary as well, as it gives it valid vocabulary
     """
-    # TODO clean up this test and use fixtures from conftest.py
-
     my_process_name = "my complex process node name"
     my_process_type = "affinity_pure"
     my_process_description = "my simple material description"
@@ -55,10 +53,6 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
 
     my_notes = "my complex process notes"
 
-    # create complex process
-    citation = copy.deepcopy(complex_citation_node)
-    prop = cript.Property("n_neighbor", "value", 2.0, None)
-
     my_complex_process = cript.Process(
         name=my_process_name,
         type=my_process_type,
@@ -69,9 +63,9 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
         waste=process_waste,
         prerequisite_process=[simple_process_node],
         condition=[complex_condition_node],
-        property=[prop],
+        property=[simple_property_node],
         keyword=my_process_keywords,
-        citation=[citation],
+        citation=[complex_citation_node],
         notes=my_notes,
     )
     # assertions
@@ -83,9 +77,9 @@ def test_complex_process_node(complex_ingredient_node, simple_equipment_node, co
     assert my_complex_process.waste == process_waste
     assert my_complex_process.prerequisite_process[-1] == simple_process_node
     assert my_complex_process.condition[-1] == complex_condition_node
-    assert my_complex_process.property[-1] == prop
+    assert my_complex_process.property[-1] == simple_property_node
     assert my_complex_process.keyword[-1] == my_process_keywords[-1]
-    assert my_complex_process.citation[-1] == citation
+    assert my_complex_process.citation[-1] == complex_citation_node
     assert my_complex_process.notes == my_notes
 
 

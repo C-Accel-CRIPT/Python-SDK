@@ -18,8 +18,8 @@ jobs:
   doctest:
     strategy:
       matrix:
-        python-version: [ 3.12 ]
-        os: [ ubuntu-latest ]
+        python-version: [3.12]
+        os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -44,7 +44,7 @@ jobs:
           pip install -r requirements_dev.txt
 
       - name: pip install CRIPT Python SDK local package
-        run: | 
+        run: |
           python${{ matrix.python-version }} -m pip install -e .
           pwd
 

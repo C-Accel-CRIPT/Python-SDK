@@ -1,6 +1,6 @@
 # check documentation code example with pytest doctest and gives an error if a code example is wrong
 
-name: Doctest Check
+name: Doctest
 permissions: read-all
 
 on:

@@ -211,8 +211,6 @@ class ComputationProcess(PrimaryBaseNode):
         """
         super().__init__(name=name, notes=notes, **kwargs)
 
-        # TODO validate type from vocab
-
         if input_data is None:
             input_data = []
 
@@ -286,7 +284,6 @@ class ComputationProcess(PrimaryBaseNode):
         -------
         None
         """
-        # TODO check computational_process type with CRIPT controlled vocabulary
         new_attrs = replace(self._json_attrs, type=new_type)
         self._update_json_attrs_if_valid(new_attrs)
 

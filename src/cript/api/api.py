@@ -602,7 +602,7 @@ class API:
             return self._db_schema
 
     @beartype
-    def _is_node_schema_valid(self, node_json: str, is_patch: bool = False) -> bool:
+    def _is_node_schema_valid(self, node_json: str, is_patch: bool = False, force_validation: bool = False) -> bool:
         """
         Checks a node JSON schema against the db schema to return if it is valid or not.
 
@@ -637,7 +637,7 @@ class API:
         """
 
         # Skip database schema validation if `has_db_schema_validation` is False.
-        if not self.has_db_schema_validation:
+        if not self.has_db_schema_validation and not force_validation:
             return True
 
         db_schema = self._get_db_schema()

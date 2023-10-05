@@ -826,6 +826,19 @@ class API:
         my_file_s3_url = api.upload_file(absolute_file_path=my_file_path)
         ```
 
+        Notes
+        -----
+        We recommend using a [Path](https://docs.python.org/3/library/pathlib.html) object for specifying a file path. 
+        Using the Python [pathlib library](https://docs.python.org/3/library/pathlib.html) provides platform-agnostic approach 
+        for filesystem operations, ensuring seamless functionality across different operating systems. 
+        Additionally, [Path](https://docs.python.org/3/library/pathlib.html) objects offer various built-in methods 
+        for more sophisticated and secure file handling and has a easy to use interface that can make working with it a breeze 
+        and can help reduce errors.
+
+        Other options include using a raw string for relative/absolute file path, 
+        or using the [os.path module](https://docs.python.org/3/library/os.path.html).
+
+
         Raises
         ------
         FileNotFoundError

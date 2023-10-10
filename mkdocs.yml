@@ -5,18 +5,17 @@ repo_name: C-Accel-CRIPT/Python-SDK
 
 nav:
   - Home: index.md
-  - Tutorial:
-      - CRIPT Installation Guide: tutorial/cript_installation_guide.md
-      - CRIPT API Token: tutorial/how_to_get_api_token.md
+  - CRIPT Installation Guide: tutorial/cript_installation_guide.md
+  - How to Get CRIPT API Token: tutorial/how_to_get_api_token.md
   - Example Code Walkthrough:
       - Synthesis: examples/synthesis.md
       - Simulation: examples/simulation.md
-  - API Client:
+  - Work with CRIPT API:
       - API: api/api.md
       - Search Modes: api/search_modes.md
       - Paginator: api/paginator.md
       - Controlled Vocabulary Categories: api/controlled_vocabulary_categories.md
-  - Primary Nodes:
+  - Add Nodes:
       - Collection: nodes/primary_nodes/collection.md
       - Computation: nodes/primary_nodes/computation.md
       - Computation Process: nodes/primary_nodes/computation_process.md
@@ -28,7 +27,6 @@ nav:
       - Process: nodes/primary_nodes/process.md
       - Reference: nodes/primary_nodes/reference.md
       - Software: nodes/primary_nodes/software.md
-  - Sub-objects:
       - Algorithm: nodes/subobjects/algorithm.md
       - Citation: nodes/subobjects/citation.md
       - Computational Forcefield: nodes/subobjects/computational_forcefield.md
@@ -40,7 +38,6 @@ nav:
       - Property: nodes/subobjects/property.md
       - Quantity: nodes/subobjects/quantity.md
       - Software Configuration: nodes/subobjects/software_configuration.md
-  - Supporting Nodes:
       - User: nodes/supporting_nodes/user.md
       #      - Group: nodes/supporting_nodes/group.md
       - File: nodes/supporting_nodes/file.md

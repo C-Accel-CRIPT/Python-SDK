@@ -115,13 +115,13 @@ class Reference(UUIDBaseNode):
         """
         create a reference node
 
-        reference type must come from CRIPT controlled vocabulary
 
         Parameters
         ----------
         type: str
             type of literature.
-            The reference type must come from CRIPT controlled vocabulary
+            The [reference type](https://app.criptapp.org/vocab/reference_type/)
+            must come from CRIPT controlled vocabulary
         title: str
             title of publication
         author: List[str] default=""
@@ -149,11 +149,6 @@ class Reference(UUIDBaseNode):
         website: str default=""
             website where the publication can be accessed
 
-
-        Examples
-        --------
-        >>> import cript
-        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
 
         Returns
         -------

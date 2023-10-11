@@ -90,6 +90,11 @@ class Experiment(PrimaryBaseNode):
         """
         create an Experiment node
 
+        Examples
+        --------
+        >>> import cript
+        >>> my_experiment = cript.Experiment(name="my experiment name")
+
         Parameters
         ----------
         name: str
@@ -108,11 +113,6 @@ class Experiment(PrimaryBaseNode):
             list of Citation nodes for this experiment
         notes: str default=""
             notes for the experiment node
-
-        Examples
-        --------
-        >>> import cript
-        >>> my_experiment = cript.Experiment(name="my experiment name")
 
         Returns
         -------

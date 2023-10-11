@@ -115,6 +115,10 @@ class Reference(UUIDBaseNode):
         """
         create a reference node
 
+        Examples
+        --------
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
 
         Parameters
         ----------
@@ -148,7 +152,6 @@ class Reference(UUIDBaseNode):
             PMID: PubMed ID
         website: str default=""
             website where the publication can be accessed
-
 
         Returns
         -------

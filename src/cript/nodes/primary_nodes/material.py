@@ -308,6 +308,18 @@ class Material(PrimaryBaseNode):
         """
         list of [computational_forcefield](../../subobjects/computational_forcefield) for this material node
 
+        Examples
+        --------
+        >>> import cript
+        >>> my_material = cript.Material(
+        ...     name="my component material 1", identifier=[{"smiles": "component 1 smiles"}]
+        ... )
+        >>> my_computational_forcefield = cript.ComputationalForcefield(
+        ...     key="opls_aa",
+        ...     building_block="atom",
+        ... )
+        >>> my_material.computational_forcefield = my_computational_forcefield
+
         Returns
         -------
         List[ComputationForcefield]

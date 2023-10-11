@@ -312,7 +312,7 @@ class Material(PrimaryBaseNode):
         --------
         >>> import cript
         >>> my_material = cript.Material(
-        ...     name="my component material 1", identifier=[{"smiles": "component 1 smiles"}]
+        ...     name="my component material 1", identifier=[{"smiles": "my smiles"}]
         ... )
         >>> my_computational_forcefield = cript.ComputationalForcefield(
         ...     key="opls_aa",

@@ -12,7 +12,6 @@ class Reference(UUIDBaseNode):
 
     The
     [Reference node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=15)
-
     contains the metadata for a literature publication, book, or anything external to CRIPT.
     The reference node does NOT contain the base attributes.
 
@@ -24,7 +23,7 @@ class Reference(UUIDBaseNode):
     |-----------|-----------|--------------------------------------------|-----------------------------------------------|---------------|-------|
     | type      | str       | journal_article                            | type of literature                            | True          | True  |
     | title     | str       | 'Living' Polymers                          | title of publication                          | True          |       |
-    | author   | list[str] | Michael Szwarc                             | list of authors                               |               |       |
+    | author    | list[str] | Michael Szwarc                             | list of authors                               |               |       |
     | journal   | str       | Nature                                     | journal of the publication                    |               |       |
     | publisher | str       | Springer                                   | publisher of publication                      |               |       |
     | year      | int       | 1956                                       | year of publication                           |               |       |

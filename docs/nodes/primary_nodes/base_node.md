@@ -1,1 +1,1 @@
-# Base node
+::: cript.nodes.primary_nodes.primary_base_node

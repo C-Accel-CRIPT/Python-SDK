@@ -226,7 +226,8 @@ class Paginator:
             self.current_page_results = []
             return self.current_page_results
 
+        # if API response is not 200 raise error for the user to debug
         if api_response["code"] != 200:
-            raise APIError(api_error=str(response), http_method="GET", api_url=temp_api_endpoint)
+            raise APIError(api_error=str(response.json()), http_method="GET", api_url=temp_api_endpoint)
 
         return self.current_page_results

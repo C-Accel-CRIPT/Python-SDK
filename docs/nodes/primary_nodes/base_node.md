@@ -1,1 +1,1 @@
-::: cript.nodes.primary_nodes.primary_base_node
+::: cript.nodes.core.BaseNode

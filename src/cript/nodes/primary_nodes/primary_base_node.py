@@ -101,6 +101,12 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
         -------
         None
         """
+
+        # temporary fix where I hardcode the min length of name, but in future this needs to be more dynamic
+        # db schema requires all names to have at least three characters
+        if len(new_name) < 3:
+            raise ValueError(f"Invalid node name '{new_name}': The name must be at least 3 characters long to comply with the API's database schema.")
+
         new_attrs = replace(self._json_attrs, name=new_name)
         self._update_json_attrs_if_valid(new_attrs)
 

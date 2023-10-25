@@ -16,6 +16,10 @@ nav:
       - Search Modes: api/search_modes.md
       - Paginator: api/paginator.md
       - Controlled Vocabulary Categories: api/controlled_vocabulary_categories.md
+  - Base Nodes:
+      - BaseNode: nodes/primary_nodes/base_node.md
+      - UUIDBase: nodes/uuid_base.md
+      - PrimaryBaseNode: nodes/primary_nodes/primary_base_node.md
   - Primary Nodes:
       - Collection: nodes/primary_nodes/collection.md
       - Computation: nodes/primary_nodes/computation.md

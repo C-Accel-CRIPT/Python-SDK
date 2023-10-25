@@ -331,6 +331,31 @@ class API:
 
     @beartype
     def _prepare_host(self, host: str) -> str:
+        """
+        Takes the host URL provided by the user during API object construction (e.g., `https://api.criptapp.org`)
+        and standardizes it for internal use. Performs any required string manipulation to ensure uniformity.
+
+        Parameters
+        ----------
+        host: str
+            The host URL specified during API initialization, typically in the form `https://api.criptapp.org`.
+
+        Warnings
+        --------
+        If the specified host uses the unsafe "http://" protocol, a warning will be raised to consider using HTTPS.
+
+        Raises
+        ------
+        InvalidHostError
+            If the host string does not start with either "http" or "https", an InvalidHostError will be raised.
+            Only HTTP protocol is acceptable at this time.
+
+        Returns
+        -------
+        str
+            A standardized host string formatted for internal use.
+
+        """
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
         host = f"{host}/{self._api_prefix}/{self._api_version}"

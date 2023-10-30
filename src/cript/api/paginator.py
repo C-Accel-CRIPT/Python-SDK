@@ -163,8 +163,7 @@ class Paginator:
         if new_page_number < 0:
             error_message: str = f"Paginator current page number is invalid because it is negative: " f"{self.current_page_number} please set paginator.current_page_number " f"to a positive page number"
 
-            # TODO replace with custom error
-            raise Exception(error_message)
+            raise RuntimeError(error_message)
 
         else:
             self._current_page_number = new_page_number

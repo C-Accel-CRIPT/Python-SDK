@@ -31,7 +31,6 @@ class CRIPTConnectionError(CRIPTException):
         return error_message
 
 
-# TODO refactor
 class InvalidVocabulary(CRIPTException):
     """
     Raised when the CRIPT controlled vocabulary is invalid

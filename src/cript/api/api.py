@@ -563,7 +563,6 @@ class API:
         response: Dict = requests.get(url=vocabulary_category_url, timeout=_API_TIMEOUT).json()
 
         if response["code"] != 200:
-            # TODO give a better CRIPT custom Exception
             raise APIError(api_error=str(response), http_method="GET", api_url=vocabulary_category_url)
 
         # add to cache

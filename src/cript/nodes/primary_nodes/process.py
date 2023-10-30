@@ -255,8 +255,6 @@ class Process(PrimaryBaseNode):
         -------
         None
         """
-        # TODO need to validate with CRIPT controlled vocabulary
-        #   and if invalid then raise an error immediately
         new_attrs = replace(self._json_attrs, ingredient=new_ingredient_list)
         self._update_json_attrs_if_valid(new_attrs)
 

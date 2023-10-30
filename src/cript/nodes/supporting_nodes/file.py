@@ -177,9 +177,6 @@ class File(PrimaryBaseNode):
 
         super().__init__(name=name, notes=notes, **kwargs)
 
-        # TODO check if vocabulary is valid or not
-        # is_vocab_valid("file type", type)
-
         # setting every attribute except for source, which will be handled via setter
         self._json_attrs = replace(
             self._json_attrs,

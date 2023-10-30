@@ -10,10 +10,10 @@ import pytest
 import requests
 
 import cript
+from conftest import HAS_INTEGRATION_TESTS_ENABLED
 from cript.api.exceptions import InvalidVocabulary
 from cript.api.paginator import Paginator
 from cript.nodes.exceptions import CRIPTNodeSchemaError
-from tests.conftest import HAS_INTEGRATION_TESTS_ENABLED
 
 
 def test_api_with_invalid_host() -> None:

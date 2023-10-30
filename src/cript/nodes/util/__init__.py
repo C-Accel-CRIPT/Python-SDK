@@ -405,22 +405,19 @@ def load_nodes_from_json(nodes_json: Union[str, Dict]):
 
     Examples
     --------
-    ```python
-    # Get updated project from API
-    my_paginator = api.search(
-        node_type=cript.Project,
-        search_mode=cript.SearchModes.EXACT_NAME,
-        value_to_search="my project name",
-    )
-
-    # Take specific Project you want from paginator
-    my_project_from_api_dict: dict = my_paginator.current_page_results[0]
-
-    # Deserialize your Project dict into a Project node
-    my_project_node_from_api = cript.load_nodes_from_json(
-        nodes_json=json.dumps(my_project_from_api_dict)
-    )
-    ```
+    >>> import cript
+    >>> # Get updated project from API
+    >>> my_paginator = api.search(
+    ...     node_type=cript.Project,
+    ...     search_mode=cript.SearchModes.EXACT_NAME,
+    ...     value_to_search="my project name",
+    ... ) # doctest: +SKIP
+    >>> # Take specific Project you want from paginator
+    >>> my_project_from_api_dict: dict = my_paginator.current_page_results[0] # doctest: +SKIP
+    >>> # Deserialize your Project dict into a Project node
+    >>> my_project_node_from_api = cript.load_nodes_from_json( # doctest: +SKIP
+    ...     nodes_json=json.dumps(my_project_from_api_dict)
+    ... )
 
     Raises
     ------

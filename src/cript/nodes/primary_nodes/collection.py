@@ -47,8 +47,6 @@ class Collection(PrimaryBaseNode):
      "citation":[],
     }
     ```
-
-
     """
 
     @dataclass(frozen=True)
@@ -72,6 +70,11 @@ class Collection(PrimaryBaseNode):
         """
         create a Collection with a name
         add list of experiment, inventory, citation, doi, and notes if available.
+
+        Examples
+        --------
+        >>> import cript
+        >>> my_collection = cript.Collection(name="my collection name")
 
         Parameters
         ----------
@@ -131,9 +134,10 @@ class Collection(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        my_collection.experiment = [my_first_experiment]
-        ```
+        >>> import cript
+        >>> my_collection = cript.Collection(name="my collection name")
+        >>> my_experiment = cript.Experiment(name="my experiment name")
+        >>> my_collection.experiment = [my_experiment]
 
         Returns
         -------
@@ -168,23 +172,20 @@ class Collection(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        material_1 = cript.Material(
-            name="material 1",
-            identifier=[{"alternative_names": "material 1 alternative name"}],
-        )
-
-        material_2 = cript.Material(
-            name="material 2",
-            identifier=[{"alternative_names": "material 2 alternative name"}],
-        )
-
-        my_inventory = cript.Inventory(
-            name="my inventory name", materials_list=[material_1, material_2]
-        )
-
-        my_collection.inventory = [my_inventory]
-        ```
+        >>> import cript
+        >>> my_collection = cript.Collection(name="my collection name")
+        >>> material_1 = cript.Material(
+        ...     name="material 1",
+        ...     identifier=[{"bigsmiles": "material 1 bigsmiles"}],
+        ... )
+        >>> material_2 = cript.Material(
+        ...     name="material 2",
+        ...     identifier=[{"bigsmiles": "material 2 bigsmiles"}],
+        ... )
+        >>> my_inventory = cript.Inventory(
+        ...     name="my inventory name", material=[material_1, material_2]
+        ... )
+        >>> my_collection.inventory = [my_inventory]
 
         Returns
         -------
@@ -217,9 +218,11 @@ class Collection(PrimaryBaseNode):
         """
         The CRIPT DOI for this collection
 
-        ```python
-        my_collection.doi = "10.1038/1781168a0"
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> my_collection = cript.Collection(name="my collection name")
+        >>> my_collection.doi = "10.1038/1781168a0"
 
         Returns
         -------
@@ -253,11 +256,22 @@ class Collection(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        my_citation = cript.Citation(type="derived_from", reference=simple_reference_node)
-
-        my_collections.citation = my_citations
-        ```
+        >>> import cript
+        >>> my_collection = cript.Collection(name="my collection name")
+        >>> my_reference = cript.Reference(
+        ...     type="journal_article",
+        ...     title="title",
+        ...     author=["Ludwig Schneider", "Marcus Müller"],
+        ...     journal="Computer Physics Communications",
+        ...     publisher="Elsevier",
+        ...     year=2019,
+        ...     pages=[463, 476],
+        ...     doi="10.1016/j.cpc.2018.08.011",
+        ...     issn="0010-4655",
+        ...     website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+        ... )
+        >>> my_citation = cript.Citation(type="derived_from", reference=my_reference)
+        >>> my_collection.citation = [my_citation]
 
         Returns
         -------

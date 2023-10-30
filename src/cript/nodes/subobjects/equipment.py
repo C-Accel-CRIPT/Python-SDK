@@ -32,9 +32,9 @@ class Equipment(UUIDBaseNode):
     |-------------|-----------------|-----------------------------------------------|--------------------------------------------------------------------------------|----------|-------|
     | key         | str             | hot plate                                     | material                                                                       | True     | True  |
     | description | str             | Hot plate with silicon oil bath with stir bar | additional details about the equipment                                         |          |       |
-    | condition  | list[Condition] |                                               | conditions under which the property was measured                               |          |       |
+    | condition   | list[Condition] |                                               | conditions under which the property was measured                               |          |       |
     | files       | list[File]      |                                               | list of file nodes to link to calibration or equipment specification documents |          |       |
-    | citation   | list[Citation]  |                                               | reference to a book, paper, or scholarly work                                  |          |       |
+    | citation    | list[Citation]  |                                               | reference to a book, paper, or scholarly work                                  |          |       |
 
     ## JSON Representation
     ```json
@@ -77,11 +77,10 @@ class Equipment(UUIDBaseNode):
         citation : Union[List[Citation], None], optional
             reference to a scholarly work, by default None
 
-        Example
-        -------
-        ```python
-        my_equipment = cript.Equipment(key="burner")
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> my_equipment = cript.Equipment(key="burner")
 
         Returns
         -------
@@ -108,14 +107,13 @@ class Equipment(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_equipment = cript.Equipment(key="burner")
-        ```
+        >>> import cript
+        >>> my_equipment = cript.Equipment(key="burner")
+        >>> my_equipment.key = "hot_plate"
 
         Returns
         -------
         Equipment: str
-
         """
         return self._json_attrs.key
 
@@ -145,9 +143,9 @@ class Equipment(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_equipment.description = "additional details about the equipment"
-        ```
+        >>> import cript
+        >>> my_equipment = cript.Equipment(key="burner")
+        >>> my_equipment.description = "additional details about the equipment"
 
         Returns
         -------
@@ -182,18 +180,15 @@ class Equipment(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        # create a Condition sub-object
-        my_condition = cript.Condition(
-            key="temperature",
-            type="value",
-            value=22,
-            unit="C",
-        )
-
-        # add Condition sub-object to Equipment sub-object
-        my_equipment.condition = [my_condition]
-        ```
+        >>> import cript
+        >>> my_equipment = cript.Equipment(key="burner")
+        >>> my_condition = cript.Condition(
+        ...     key="temperature",
+        ...     type="value",
+        ...     value=22,
+        ...     unit="C",
+        ... )
+        >>> my_equipment.condition = [my_condition]
 
         Returns
         -------
@@ -228,18 +223,15 @@ class Equipment(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        # create a file node to be added to the equipment sub-object
-        my_file = cript.File(
-            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
-            type="calibration",
-            extension=".pdf",
-        )
-
-        # add file node to equipment sub-object
-        my_equipment.file = [my_file]
-
-        ```
+        >>> import cript
+        >>> my_equipment = cript.Equipment(key="burner")
+        >>> my_file = cript.File(
+        ...     name="my file node name",
+        ...     source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
+        ...     type="calibration",
+        ...     extension=".pdf",
+        ... )
+        >>> my_equipment.file = [my_file]
 
         Returns
         -------
@@ -274,30 +266,26 @@ class Equipment(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        # create reference node for the citation node
-        title = "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
-        title += "SOft coarse grained Monte-Carlo Acceleration (SOMA)"
-
-        my_reference = cript.Reference(
-            type="journal_article",
-            title=title,
-            author=["Ludwig Schneider", "Marcus Müller"],
-            journal="Computer Physics Communications",
-            publisher="Elsevier",
-            year=2019,
-            pages=[463, 476],
-            doi="10.1016/j.cpc.2018.08.011",
-            issn="0010-4655",
-            website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
-        )
-
-        # create citation node and add reference node to it
-        my_citation = cript.Citation(type="reference", reference=my_reference)
-
-        # add citation subobject to equipment
-        my_equipment.citation = [my_citation]
-        ```
+        >>> import cript
+        >>> my_equipment = cript.Equipment(key="burner")
+        >>> title = (
+        ...     "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
+        ...     "Soft coarse grained Monte-Carlo Acceleration (SOMA)"
+        ... )
+        >>> my_reference = cript.Reference(
+        ...     type="journal_article",
+        ...     title=title,
+        ...     author=["Ludwig Schneider", "Marcus Müller"],
+        ...     journal="Computer Physics Communications",
+        ...     publisher="Elsevier",
+        ...     year=2019,
+        ...     pages=[463, 476],
+        ...     doi="10.1016/j.cpc.2018.08.011",
+        ...     issn="0010-4655",
+        ...     website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+        ... )
+        >>> my_citation = cript.Citation(type="reference", reference=my_reference)
+        >>> my_equipment.citation = [my_citation]
 
         Returns
         -------

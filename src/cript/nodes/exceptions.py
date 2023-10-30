@@ -109,11 +109,16 @@ class CRIPTDeserializationUIDError(CRIPTException):
 
     ```json
     {
-    "node": ["Algorithm"],
-    "key": "mc_barostat",
-    "type": "barostat",
-    "parameter": {"node": ["Parameter"], "uid": "uid-string",
-                  "key": "update_frequency", "value":1, "unit": "1/second"}
+       "node":["Algorithm"],
+       "key":"mc_barostat",
+       "type":"barostat",
+       "parameter":{
+          "node":["Parameter"],
+          "uid":"uid-string",
+          "key":"update_frequency",
+          "value":1,
+          "unit":"1/second"
+       }
     }
     ```
     Now the node is fully specified.

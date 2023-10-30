@@ -27,7 +27,7 @@ class Experiment(PrimaryBaseNode):
     | notes               | str                          | miscellaneous information, or custom data structure       | False    |
 
 
-    ## Subobjects
+    ## Sub-objects
     An
     [Experiment node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=9)
     can be thought as a folder/bucket that can hold:
@@ -90,6 +90,11 @@ class Experiment(PrimaryBaseNode):
         """
         create an Experiment node
 
+        Examples
+        --------
+        >>> import cript
+        >>> my_experiment = cript.Experiment(name="my experiment name")
+
         Parameters
         ----------
         name: str
@@ -108,13 +113,6 @@ class Experiment(PrimaryBaseNode):
             list of Citation nodes for this experiment
         notes: str default=""
             notes for the experiment node
-
-        Examples
-        --------
-        ```python
-        # create an experiment node with all possible arguments
-        my_experiment = cript.Experiment(name="my experiment name")
-        ```
 
         Returns
         -------
@@ -158,12 +156,12 @@ class Experiment(PrimaryBaseNode):
         """
         List of process for experiment
 
-        ```python
-        # create a simple process node
-        my_process = cript.Process(name="my process name", type="affinity_pure")
-
-        my_experiment.process = [my_process]
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> my_experiment = cript.Experiment(name="my experiment name")
+        >>> my_process = cript.Process(name="my process name", type="affinity_pure")
+        >>> my_experiment.process = [my_process]
 
         Returns
         -------
@@ -198,13 +196,10 @@ class Experiment(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create computation node
-        my_computation = cript.Computation(name="my computation name", type="analysis")
-
-        # add computation node to experiment node
-        simple_experiment_node.computation = [simple_computation_node]
-        ```
+        >>> import cript
+        >>> my_experiment = cript.Experiment(name="my experiment name")
+        >>> my_computation = cript.Computation(name="my computation name", type="analysis")
+        >>> my_experiment.computation = [my_computation]
 
         Returns
         -------
@@ -239,17 +234,32 @@ class Experiment(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        my_computation_process = cript.ComputationalProcess(
-            name="my computational process name",
-            type="cross_linking",       # must come from CRIPT Controlled Vocabulary
-            input_data=[input_data],    # input data is another data node
-            ingredients=[ingredients],  # output data is another data node
-        )
-
-        # add computation_process node to experiment node
-        my_experiment.computation_process = [my_computational_process]
-        ```
+        >>> import cript
+        >>> my_experiment = cript.Experiment(name="my experiment name")
+        >>> my_file = cript.File(
+        ...     name="my file node",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ...     extension=".csv",
+        ...     data_dictionary="my file's data dictionary",
+        ... )
+        >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
+        >>> my_material = cript.Material(
+        ...     name="my material name", identifier=[{"bigsmiles": "123456"}]
+        ... )
+        >>> my_quantity = cript.Quantity(
+        ... key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
+        >>> my_ingredient = cript.Ingredient(
+        ... material=my_material, quantity=[my_quantity], keyword=["catalyst"]
+        ... )
+        >>> my_computation_process = cript.ComputationProcess(
+        ...     name="my computational process name",
+        ...     type="cross_linking",         # must come from CRIPT Controlled Vocabulary
+        ...     input_data=[my_data],         # input data is another data node
+        ...     ingredient=[my_ingredient],  # output data is another data node
+        ... )
+        >>> my_experiment.computation_process = [my_computation_process]
 
         Returns
         -------
@@ -284,20 +294,17 @@ class Experiment(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create a simple file node
-        my_file = cript.File(
-            source="https://criptapp.org",
-            type="calibration",
-            extension=".csv",
-            data_dictionary="my file's data dictionary",
-        )
-
-        # create a simple data node
-        my_data = cript.Data(name="my data name", type="afm_amp", files=[my_file])
-
-        my_experiment.data = my_data
-        ```
+        >>> import cript
+        >>> my_experiment = cript.Experiment(name="my experiment name")
+        >>> my_file = cript.File(
+        ...    name="my file node name",
+        ...    source="https://criptapp.org",
+        ...    type="calibration",
+        ...    extension=".csv",
+        ...    data_dictionary="my file's data dictionary",
+        ... )
+        >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
+        >>> my_experiment.data = [my_data]
 
         Returns
         -------
@@ -332,9 +339,9 @@ class Experiment(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        my_experiment.funding = ["National Science Foundation", "IRIS", "NIST"]
-        ```
+        >>> import cript
+        >>> my_experiment = cript.Experiment(name="my experiment name")
+        >>> my_experiment.funding = ["National Science Foundation", "IRIS", "NIST"]
 
         Returns
         -------
@@ -369,13 +376,22 @@ class Experiment(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create citation node
-        my_citation = cript.Citation(type="derived_from", reference=simple_reference_node)
-
-        # add citation to experiment
-        my_experiment.citations = [my_citation]
-        ```
+        >>> import cript
+        >>> my_experiment = cript.Experiment(name="my experiment name")
+        >>> my_reference = cript.Reference(
+        ...     type="journal_article",
+        ...     title="title",
+        ...     author=["Ludwig Schneider", "Marcus Müller"],
+        ...     journal="Computer Physics Communications",
+        ...     publisher="Elsevier",
+        ...     year=2019,
+        ...     pages=[463, 476],
+        ...     doi="10.1016/j.cpc.2018.08.011",
+        ...     issn="0010-4655",
+        ...     website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+        ... )
+        >>> my_citation = cript.Citation(type="derived_from", reference=my_reference)
+        >>> my_experiment.citation = [my_citation]
 
         Returns
         -------

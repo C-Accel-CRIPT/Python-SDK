@@ -95,14 +95,15 @@ class API:
         Examples
         --------
         ### Create API client with host and token
-        ```Python
-        with cript.API(
-            host="https://api.criptapp.org/",
-            api_token="my api token",
-            storage_token="my storage token",
-        ) as api:
-            # node creation, api.save(), etc.
-        ```
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...    # node creation, api.save(), etc.
+        ...    pass
+
 
         ---
 
@@ -113,27 +114,25 @@ class API:
             as the token might be exposed if the code is shared or stored in a version control system.
             Anyone that has access to your tokens can impersonate you on the CRIPT platform
 
-        ### Create API Client with
-        [Environment Variables](https://www.freecodecamp.org/news/python-env-vars-how-to-get-an-environment-variable-in-python/)
+        ### Create API Client with [Environment Variables](https://www.freecodecamp.org/news/python-env-vars-how-to-get-an-environment-variable-in-python/)
+
         Another great way to keep sensitive information secure is by using
         [environment variables](https://www.freecodecamp.org/news/python-env-vars-how-to-get-an-environment-variable-in-python/).
         Sensitive information can be securely stored in environment variables and loaded into the code using
         [os.getenv()](https://docs.python.org/3/library/os.html#os.getenv).
 
-        #### Example
-
-        ```python
-        import os
-
-        # securely load sensitive data into the script
-        cript_host = os.getenv("cript_host")
-        cript_api_token = os.getenv("cript_api_token")
-        cript_storage_token = os.getenv("cript_storage_token")
-
-        with cript.API(host=cript_host, api_token=cript_api_token, storage_token=cript_storage_token) as api:
-            # write your script
-            pass
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> import os
+        >>> # securely load sensitive data into the script
+        >>> cript_host = os.getenv("cript_host")
+        >>> cript_api_token = os.getenv("cript_api_token")
+        >>> cript_storage_token = os.getenv("cript_storage_token")
+        >>> with cript.API(
+        ...     host=cript_host, api_token=cript_api_token, storage_token=cript_storage_token
+        ... ) as api:
+        ...     pass
 
         ### Create API Client with None
         Alternatively you can configure your system to have an environment variable of
@@ -158,16 +157,16 @@ class API:
         }
         ```
 
+        Examples
+        --------
         `my_script.py`
-        ```python
-        from pathlib import Path
-
-        # create a file path object of where the config file is
-        config_file_path = Path(__file__) / Path('./config.json')
-
-        with cript.API(config_file_path=config_file_path) as api:
-            # node creation, api.save(), etc.
-        ```
+        >>> from pathlib import Path
+        >>> import cript
+        >>> # create a file path object of where the config file is
+        >>> config_file_path = Path(__file__) / Path('./config.json')
+        >>> with cript.API(config_file_path=config_file_path) as api:   # doctest: +SKIP
+        ...     # node creation, api.save(), etc.
+        ...     pass
 
         Parameters
         ----------
@@ -236,6 +235,17 @@ class API:
         """
         States the host of the CRIPT API client
 
+        Examples
+        --------
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...     print(api)
+        CRIPT API Client - Host URL: 'https://api.criptapp.org/api/v1'
+
         Returns
         -------
         str
@@ -300,10 +310,14 @@ class API:
 
         Examples
         --------
-        ```python
-        # turn off the terminal logs
-        api.verbose = False
-        ```
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...     # turn off the terminal logs
+        ...     api.verbose = False
 
         Returns
         -------
@@ -449,13 +463,14 @@ class API:
 
         Examples
         --------
-        ```python
-        print(cript_api.host)
-        ```
-        Output
-        ```Python
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...    print(api.host)
         https://api.criptapp.org/api/v1
-        ```
         """
         return self._host
 
@@ -515,6 +530,17 @@ class API:
     def get_vocab_by_category(self, category: VocabCategories) -> List[dict]:
         """
         get the CRIPT controlled vocabulary by category
+
+        Examples
+        --------
+        >>> import os
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...     api.get_vocab_by_category(cript.VocabCategories.MATERIAL_IDENTIFIER_KEY)  # doctest: +SKIP
 
         Parameters
         ----------
@@ -840,16 +866,16 @@ class API:
 
         Examples
         --------
-        ```python
-        import cript
-
-        api = cript.API(host, token)
-
-        # programmatically create the absolute path of your file, so the program always works correctly
-        my_file_path = (Path(__file__) / Path('../upload_files/my_file.txt')).resolve()
-
-        my_file_s3_url = api.upload_file(absolute_file_path=my_file_path)
-        ```
+        >>> from pathlib import Path
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...     # programmatically create the absolute path of your file, so the program always works correctly
+        ...     my_file_path = (Path(__file__) / Path('../upload_files/my_file.txt')).resolve()
+        ...     my_file_cloud_storage_source = api.upload_file(file_path=my_file_path)  # doctest: +SKIP
 
         Raises
         ------
@@ -934,12 +960,21 @@ class API:
 
         Examples
         --------
-        ```python
-        from pathlib import Path
-
-        desktop_path = (Path(__file__).parent / "cript_downloads" / "my_downloaded_file.txt").resolve()
-        cript_api.download_file(file_url=my_file_source, destination_path=desktop_path)
-        ```
+        >>> from pathlib import Path
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...     desktop_path = (Path(__file__).parent / "cript_downloads" / "my_downloaded_file.txt").resolve()
+        ...     my_file = cript.File(
+        ...         name="my file node name",
+        ...         source="https://criptapp.org",
+        ...         type="calibration",
+        ...         extension=".csv",
+        ...     )
+        ...     api.download_file(file_source=my_file.source, destination_path=str(desktop_path)) # doctest: +SKIP
 
         Raises
         ------
@@ -1041,7 +1076,8 @@ class API:
         To learn more about working with pagination, please refer to our
         [paginator object documentation](../paginator).
 
-        Additionally, you can utilize the utility function [`load_nodes_from_json(node_json)`](../../utility_functions/#cript.nodes.util.load_nodes_from_json)
+        Additionally, you can utilize the utility function
+        [`load_nodes_from_json(node_json)`](../../utility_functions/#cript.nodes.util.load_nodes_from_json)
         to convert API JSON responses into Python SDK nodes.
 
         ???+ Example "Convert API JSON Response to Python SDK Nodes"
@@ -1102,11 +1138,11 @@ class API:
 
         Examples
         ---------
-        ```python
-        my_material_node: cript.Material = cript_api.get_node_by_uuid(
-            node_type=cript.Material, node_uuid="e1b41d34-3bf2-4cd8-9a19-6412df7e7efc"
-        )
-        ```
+        >>> import cript
+        >>> from pathlib import Path
+        >>> my_material_node: cript.Material = api.get_node_by_uuid(
+        ...     node_type=cript.Material, node_uuid="e1b41d34-3bf2-4cd8-9a19-6412df7e7efc"
+        ... ) # doctest: +SKIP
 
         Parameters
         ----------
@@ -1140,9 +1176,12 @@ class API:
 
         Examples
         --------
-        ```python
-        api.delete(node=my_material_node)
-        ```
+        >>> import cript
+        >>> my_material_node = cript.Material(
+        ...     name="my component material 1",
+        ...     identifier=[{"amino_acid": "component 1 alternative name"}],
+        ... )
+        >>> api.delete(node=my_material_node) # doctest: +SKIP
 
         Notes
         -----
@@ -1195,18 +1234,22 @@ class API:
 
         Examples
         --------
-        ```python
-        api.delete(
-           node_type="computation_process",
-           node_uuid="2fd3d500-304d-4a06-8628-a79b59344b2f"
-        )
-        ```
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...      api.delete_node_by_uuid(
+        ...         node_type="computation_process",
+        ...         node_uuid="2fd3d500-304d-4a06-8628-a79b59344b2f"
+        ...     ) # doctest: +SKIP
 
         ??? "How to get `node_type in snake case`"
                You can get the `node type in snake case` of a node via:
                ```python
-               >>> import cript
-               >>> print(cript.ComputationProcess.node_type_snake_case)
+                import cript
+                print(cript.ComputationProcess.node_type_snake_case)
                computation_process
                ```
 
@@ -1233,8 +1276,10 @@ class API:
 
         To ensure you have the latest data, follow these steps:
 
-        1. Fetch the newest Project node from the API using the [`cript.API.search()`](./#cript.api.api.API.search) provided by the SDK.
-        1. Deserialize the retrieved data into a new Project node using the [`load_nodes_from_json`](../../utility_functions/#cript.nodes.util.load_nodes_from_json) utility function.
+        1. Fetch the newest Project node from the API using the
+        [`cript.API.search()`](./#cript.api.api.API.search) provided by the SDK.
+        1. Deserialize the retrieved data into a new Project node using the
+        [`load_nodes_from_json`](../../utility_functions/#cript.nodes.util.load_nodes_from_json) utility function.
         1. Replace your old Project node with the new one in your script for accurate and up-to-date information.
 
         Parameters

@@ -83,11 +83,8 @@ class Parameter(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        import cript
-
-        my_parameter = cript.Parameter("update_frequency", 1000.0, "1/second")
-        ```
+        >>> import cript
+        >>> my_parameter = cript.Parameter("update_frequency", 1000.0, "1/second")
 
         Returns
         -------
@@ -115,9 +112,9 @@ class Parameter(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_parameter.key = "bond_type"
-        ```
+        >>> import cript
+        >>> my_parameter = cript.Parameter("update_frequency", 1000.0, "1/second")
+        >>> my_parameter.key = "damping_time"
 
         Returns
         -------
@@ -152,9 +149,9 @@ class Parameter(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_parameter.value = 1
-        ```
+        >>> import cript
+        >>> my_parameter = cript.Parameter("update_frequency", 1000.0, "1/second")
+        >>> my_parameter.value = 1
 
         Returns
         -------
@@ -189,9 +186,9 @@ class Parameter(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_parameter.unit = "gram"
-        ```
+        >>> import cript
+        >>> my_parameter = cript.Parameter("update_frequency", 1000.0, "1/second")
+        >>> my_parameter.unit = "gram"
 
         Returns
         -------

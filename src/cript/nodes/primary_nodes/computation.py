@@ -115,9 +115,8 @@ class Computation(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        my_computation = cript.Computation(name="my computation name", type="analysis")
-        ```
+        >>> import cript
+        >>> my_computation = cript.Computation(name="my computation name", type="analysis")
 
         Returns
         -------
@@ -168,9 +167,9 @@ class Computation(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        my_computation.type = type="analysis"
-        ```
+        >>> import cript
+        >>> my_computation = cript.Computation(name="my computation name", type="analysis")
+        >>> my_computation.type = type="analysis"
 
         Returns
         -------
@@ -206,20 +205,17 @@ class Computation(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create file node
-        my_file = cript.File(
-            source="https://criptapp.org",
-            type="calibration",
-            extension=".csv",
-            data_dictionary="my file's data dictionary"
-        )
-
-        # create a data node
-        my_input_data = cript.Data(name="my data name", type="afm_amp", files=[my_file])
-
-        my_computation.input_data = [my_input_data]
-        ```
+        >>> import cript
+        >>> my_computation = cript.Computation(name="my computation name", type="analysis")
+        >>> my_file = cript.File(
+        ...     name="my file node name",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ...     extension=".csv",
+        ...     data_dictionary="my file's data dictionary"
+        ... )
+        >>> my_input_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
+        >>> my_computation.input_data = [my_input_data]
 
         Returns
         -------
@@ -254,20 +250,17 @@ class Computation(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create file node
-        my_file = cript.File(
-            source="https://criptapp.org",
-            type="calibration",
-            extension=".csv",
-            data_dictionary="my file's data dictionary"
-        )
-
-        # create a data node
-        my_output_data = cript.Data(name="my data name", type="afm_amp", files=[my_file])
-
-        my_computation.output_data = [my_output_data]
-        ```
+        >>> import cript
+        >>> my_computation = cript.Computation(name="my computation name", type="analysis")
+        >>> my_file = cript.File(
+        ...     name="my file node name",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ...     extension=".csv",
+        ...     data_dictionary="my file's data dictionary"
+        ... )
+        >>> my_output_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
+        >>> my_computation.output_data = [my_output_data]
 
         Returns
         -------
@@ -302,12 +295,11 @@ class Computation(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create software configuration node
-        my_software_configuration = cript.SoftwareConfiguration(software=simple_software_node)
-
-        my_computation.software_configuration = my_software_configuration
-        ```
+        >>> import cript
+        >>> my_computation = cript.Computation(name="my computation name", type="analysis")
+        >>> my_software = cript.Software(name="LAMMPS", version="23Jun22", source="lammps.org")
+        >>> my_software_configuration = cript.SoftwareConfiguration(software=my_software)
+        >>> my_computation.software_configuration = [my_software_configuration]
 
         Returns
         -------
@@ -342,12 +334,10 @@ class Computation(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create a condition node
-        my_condition = cript.Condition(key="atm", type="min", value=1)
-
-        my_computation.condition = my_condition
-        ```
+        >>> import cript
+        >>> my_computation = cript.Computation(name="my computation name", type="analysis")
+        >>> my_condition = cript.Condition(key="atm", type="min", value=1)
+        >>> my_computation.condition = [my_condition]
 
         Returns
         -------
@@ -381,12 +371,12 @@ class Computation(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create computation node for prerequisite_computation
-        my_prerequisite_computation = cript.Computation(name="my prerequisite computation name", type="data_fit")
-
-        my_computation.prerequisite_computation = my_prerequisite_computation
-        ```
+        >>> import cript
+        >>> my_computation = cript.Computation(name="my computation name", type="analysis")
+        >>> my_prerequisite_computation = cript.Computation(
+        ...     name="my prerequisite computation name", type="data_fit"
+        ... )
+        >>> my_computation.prerequisite_computation = my_prerequisite_computation
 
         Returns
         -------
@@ -418,22 +408,18 @@ class Computation(PrimaryBaseNode):
         """
         List of citations
 
-         Examples
-         --------
-         ```python
-         # create a reference node for the citation
-         my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        Examples
+        --------
+        >>> import cript
+        >>> my_computation = cript.Computation(name="my computation name", type="analysis")
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_citation = cript.Citation(type="derived_from", reference=my_reference)
+        >>> my_computation.citation = [my_citation]
 
-         # create a reference
-         my_citation = cript.Citation(type="derived_from", reference=my_reference)
-
-         my_computation.citation = [my_citation]
-         ```
-
-         Returns
-         -------
-         List[Citation]
-             list of citations for this computation node
+        Returns
+        -------
+        List[Citation]
+            list of citations for this computation node
         """
         return self._json_attrs.citation.copy()  # type: ignore
 

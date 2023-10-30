@@ -1,0 +1,52 @@
+# check documentation code example with pytest doctest and gives an error if a code example is wrong
+
+name: Doctest
+permissions: read-all
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - trunk-merge/**
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  doctest:
+    strategy:
+      matrix:
+        python-version: [3.12]
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      CRIPT_HOST: https://lb-stage.mycriptapp.org/
+      CRIPT_TOKEN: 123456789
+      CRIPT_STORAGE_TOKEN: 987654321
+      CRIPT_TESTS: False
+
+    steps:
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements_dev.txt
+
+      - name: pip install CRIPT Python SDK local package
+        run: |
+          python${{ matrix.python-version }} -m pip install -e .
+          pwd
+
+      - name: Run Doctests
+        run: python${{ matrix.python-version }} -m pytest --doctest-modules src/cript/

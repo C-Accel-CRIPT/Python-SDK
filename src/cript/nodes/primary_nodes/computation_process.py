@@ -143,42 +143,30 @@ class ComputationProcess(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-
-        # create file node for input data node
-        data_files = cript.File(
-            source="https://criptapp.org",
-            type="calibration",
-            extension=".csv",
-            data_dictionary="my file's data dictionary"
-        )
-
-        # create input data node
-        input_data = cript.Data(name="my data name", type="afm_amp", files=[data_files])
-
-        # Material node for Quantity node
-        my_material = cript.Material(
-            name="my material",
-            identifier=[{"alternative_names": "my material alternative name"}]
-            )
-
-        # create quantity node
-        my_quantity = cript.Quantity(key="mass", value=1.23, unit="gram")
-
-        # create ingredient node
-        ingredient = cript.Ingredient(
-            material=my_material,
-            quantities=[my_quantity],
-        )
-
-        # create computational process node
-        my_computational_process = cript.ComputationalProcess(
-            name="my computational process name",
-            type="cross_linking",
-            input_data=[input_data],
-            ingredient=[ingredient],
-        )
-        ```
+        >>> import cript
+        >>> data_files = cript.File(
+        ...     name="my file node name",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ...     extension=".csv",
+        ...     data_dictionary="my file's data dictionary"
+        ... )
+        >>> input_data = cript.Data(name="my data name", type="afm_amp", file=[data_files])
+        >>> my_material = cript.Material(
+        ...     name="my material",
+        ...     identifier=[{"alternative_names": "my material alternative name"}]
+        ... )
+        >>> my_quantity = cript.Quantity(key="mass", value=1.23, unit="kg")
+        >>> ingredient = cript.Ingredient(
+        ...     material=my_material,
+        ...     quantity=[my_quantity],
+        ... )
+        >>> my_computation_process = cript.ComputationProcess(
+        ...     name="my computational process name",
+        ...     type="cross_linking",
+        ...     input_data=[input_data],
+        ...     ingredient=[ingredient],
+        ... )
 
 
         Parameters
@@ -257,9 +245,8 @@ class ComputationProcess(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        my_computational_process.type = "DPD"
-        ```
+        >>> import cript
+        >>> my_computation_process.type = "DPD"   # doctest: +SKIP
 
         Returns
         -------
@@ -298,21 +285,16 @@ class ComputationProcess(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create file node for the data node
-        my_file = cript.File(
-            source="https://criptapp.org",
-            type="calibration",
-            extension=".csv",
-            data_dictionary="my file's data dictionary"
-        )
-
-        # create input data node
-        my_input_data = cript.Data(name="my input data name", type="afm_amp", files=[my_file])
-
-        # set computational process data node
-        my_computation.input_data = my_input_data
-        ```
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file node name",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ...     data_dictionary="my file's data dictionary",
+        ...     extension=".csv",
+        ... )
+        >>> my_input_data = cript.Data(name="my input data name", type="afm_amp", file=[my_file])
+        >>> my_computation_process.input_data = [my_input_data]     # doctest: +SKIP
 
         Returns
         -------
@@ -346,21 +328,16 @@ class ComputationProcess(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create file node for the data node
-        my_file = cript.File(
-            source="https://criptapp.org",
-            type="calibration",
-            extension=".csv",
-            data_dictionary="my file's data dictionary"
-        )
-
-        # create input data node
-        my_output_data = cript.Data(name="my output data name", type="afm_amp", files=[my_file])
-
-        # set computational process data node
-        my_computation.output_data = my_input_data
-        ```
+        >>> import cript
+        >>> my_file = cript.File(
+        ...     name="my file node name",
+        ...     source="https://criptapp.org",
+        ...     type="calibration",
+        ...     extension=".csv",
+        ...     data_dictionary="my file's data dictionary"
+        ... )
+        >>> my_output_data = cript.Data(name="my output data name", type="afm_amp", file=[my_file])
+        >>> my_computation_process.output_data = [my_output_data]    # doctest: +SKIP
 
         Returns
         -------
@@ -394,15 +371,15 @@ class ComputationProcess(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create ingredient node
-        my_ingredient = cript.Ingredient(
-            material=simple_material_node,
-            quantities=[simple_quantity_node],
-        )
-
-        my_computational_process.ingredient = my_ingredient
-        ```
+        >>> import cript
+        >>> my_material = cript.Material(name="my material", identifier=[{"bigsmiles": "123456"}])
+        >>> my_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
+        >>> my_ingredient = cript.Ingredient(
+        ...     material=my_material, quantity=[my_quantity], keyword=["catalyst"]
+        ... )
+        >>> my_computation_process.ingredient = [my_ingredient]   # doctest: +SKIP
 
         Returns
         -------
@@ -436,12 +413,10 @@ class ComputationProcess(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create software configuration node
-        my_software_configuration = cript.SoftwareConfiguration(software=simple_software_node)
-
-        my_computational_process.software_configuration = my_software_configuration
-        ```
+        >>> import cript
+        >>> my_software = cript.Software(name="LAMMPS", version="23Jun22", source="lammps.org")
+        >>> my_software_configuration = cript.SoftwareConfiguration(software=my_software)
+        >>> my_computation_process.software_configuration = [my_software_configuration]   # doctest: +SKIP
 
         Returns
         -------
@@ -475,13 +450,9 @@ class ComputationProcess(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create condition node
-         my_condition = cript.Condition(key="atm", type="min", value=1)
-
-         my_computational_process.condition = [my_condition]
-
-        ```
+        >>> import cript
+        >>> my_condition = cript.Condition(key="atm", type="min", value=1)
+        >>> my_computation_process.condition = [my_condition]     # doctest: +SKIP
 
         Returns
         -------
@@ -515,15 +486,10 @@ class ComputationProcess(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create a reference node for the citation
-        my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
-
-        # create a reference
-        my_citation = cript.Citation(type="derived_from", reference=my_reference)
-
-        my_computational_process.citation = [my_citation]
-        ```
+        >>> import cript
+        >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")
+        >>> my_citation = cript.Citation(type="derived_from", reference=my_reference)
+        >>> my_computation_process.citation = [my_citation]     # doctest: +SKIP
 
         Returns
         -------
@@ -557,12 +523,9 @@ class ComputationProcess(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        # create a property node
-        my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
-
-        my_computational_process.property = [my_property]
-        ```
+        >>> import cript
+        >>> my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
+        >>> my_computation_process.property = [my_property]     # doctest: +SKIP
 
         Returns
         -------

@@ -49,8 +49,6 @@ def cript_api():
     """
     storage_token = os.getenv("CRIPT_STORAGE_TOKEN")
 
-    assert cript.api.api._global_cached_api is None
-
     with cript.API(host=None, api_token=None, storage_token=storage_token) as api:
         # overriding AWS S3 cognito variables to be sure we do not upload test data to production storage
         # staging AWS S3 cognito storage variables
@@ -62,4 +60,7 @@ def cript_api():
 
         yield api
 
-    assert cript.api.api._global_cached_api is None
+
+@pytest.fixture(autouse=True)
+def inject_doctest_namespace(doctest_namespace, cript_api):
+    doctest_namespace["api"] = cript_api

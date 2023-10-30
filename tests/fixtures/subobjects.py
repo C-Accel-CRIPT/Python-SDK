@@ -24,7 +24,6 @@ def complex_parameter_dict() -> dict:
     return ret_dict
 
 
-# TODO this fixture should be renamed because it is simple_algorithm_subobject not complex
 @pytest.fixture(scope="function")
 def simple_algorithm_node() -> cript.Algorithm:
     """

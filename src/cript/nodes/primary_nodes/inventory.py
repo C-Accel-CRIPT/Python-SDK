@@ -70,22 +70,18 @@ class Inventory(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        material_1 = cript.Material(
-            name="material 1",
-            identifier=[{"alternative_names": "material 1 alternative name"}],
-        )
-
-        material_2 = cript.Material(
-            name="material 2",
-            identifier=[{"alternative_names": "material 2 alternative name"}],
-        )
-
-        # instantiate inventory node
-        my_inventory = cript.Inventory(
-            name="my inventory name", material=[material_1, material_2]
-        )
-        ```
+        >>> import cript
+        >>> material_1 = cript.Material(
+        ...    name="material 1",
+        ...    identifier=[{"bigsmiles": "material 1 bigsmiles"}],
+        ... )
+        >>> material_2 = cript.Material(
+        ...    name="material 2",
+        ...    identifier=[{"bigsmiles": "material 2 bigsmiles"}],
+        ... )
+        >>> my_inventory = cript.Inventory(
+        ...    name="my inventory name", material=[material_1, material_2]
+        ... )
 
         Parameters
         ----------
@@ -113,14 +109,17 @@ class Inventory(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        material_3 = cript.Material(
-            name="new material 3",
-            identifier=[{"alternative_names": "new material 3 alternative name"}],
-        )
-
-        my_inventory.material = [my_material_3]
-        ```
+        >>> import cript
+        >>> my_material = cript.Material(
+        ...    name="my material",
+        ...    identifier=[{"bigsmiles": "my bigsmiles"}],
+        ... )
+        >>> my_inventory = cript.Inventory(name="my inventory", material=[my_material])
+        >>> new_material = cript.Material(
+        ...    name="new material",
+        ...    identifier=[{"bigsmiles": "my bigsmiles"}],
+        ... )
+        >>> my_inventory.material = [new_material]
 
         Returns
         -------

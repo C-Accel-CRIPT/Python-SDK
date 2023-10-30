@@ -416,7 +416,7 @@ def load_nodes_from_json(nodes_json: Union[str, Dict]):
     >>> my_project_from_api_dict: dict = my_paginator.current_page_results[0] # doctest: +SKIP
     >>> # Deserialize your Project dict into a Project node
     >>> my_project_node_from_api = cript.load_nodes_from_json( # doctest: +SKIP
-    ...     nodes_json=json.dumps(my_project_from_api_dict)
+    ...     nodes_json=my_project_from_api_dict
     ... )
 
     Raises
@@ -435,7 +435,6 @@ def load_nodes_from_json(nodes_json: Union[str, Dict]):
     and caching objects with shared UIDs to avoid redundant deserialization.
 
     The function is intended for deserializing CRIPT nodes and should not be used for generic JSON.
-
 
     Returns
     -------

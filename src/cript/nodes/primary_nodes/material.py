@@ -140,45 +140,6 @@ class Material(PrimaryBaseNode):
 
     @property
     @beartype
-    def name(self) -> str:
-        """
-        material name
-
-        Examples
-        ---------
-        >>> import cript
-        >>> my_material = cript.Material(
-        ...     name="my component material 1",
-        ...     identifier=[{"chem_formula": "my material chem formula"}],
-        ... )
-        >>> my_material.name = "my new material name"
-
-        Returns
-        -------
-        str
-            material name
-        """
-        return self._json_attrs.name
-
-    @name.setter
-    @beartype
-    def name(self, new_name: str) -> None:
-        """
-        set the name of the material
-
-        Parameters
-        ----------
-        new_name: str
-
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, name=new_name)
-        self._update_json_attrs_if_valid(new_attrs)
-
-    @property
-    @beartype
     def identifier(self) -> List[Dict[str, str]]:
         """
         get the identifiers for this material

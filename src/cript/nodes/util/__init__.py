@@ -394,13 +394,13 @@ def _is_node_field_valid(node_type_list: list) -> bool:
         return False
 
 
-def load_nodes_from_json(nodes_json: str):
+def load_nodes_from_json(nodes_json: Union[str, Dict]):
     """
     User facing function, that return a node and all its children from a json string input.
 
     Parameters
     ----------
-    nodes_json: str
+    nodes_json: Union[str, dict]
         JSON string representation of a CRIPT node
 
     Examples
@@ -416,7 +416,7 @@ def load_nodes_from_json(nodes_json: str):
     >>> my_project_from_api_dict: dict = my_paginator.current_page_results[0] # doctest: +SKIP
     >>> # Deserialize your Project dict into a Project node
     >>> my_project_node_from_api = cript.load_nodes_from_json( # doctest: +SKIP
-    ...     nodes_json=json.dumps(my_project_from_api_dict)
+    ...     nodes_json=my_project_from_api_dict
     ... )
 
     Raises
@@ -436,16 +436,28 @@ def load_nodes_from_json(nodes_json: str):
 
     The function is intended for deserializing CRIPT nodes and should not be used for generic JSON.
 
-
     Returns
     -------
     Union[CRIPT Node, List[CRIPT Node]]
         Typically returns a single CRIPT node,
         but if given a list of nodes, then it will serialize them and return a list of CRIPT nodes
     """
+    # Initialize the custom decoder hook for JSON deserialization
     node_json_hook = _NodeDecoderHook()
-    json_nodes = json.loads(nodes_json, object_hook=node_json_hook)
 
+    # Check if the input is already a Python dictionary
+    if isinstance(nodes_json, Dict):
+        # If it's a dictionary, directly use the decoder hook to deserialize it
+        return node_json_hook(nodes_json)
+
+    # Check if the input is a JSON-formatted string
+    elif isinstance(nodes_json, str):
+        # If it's a JSON string, parse and deserialize it using the decoder hook
+        return json.loads(nodes_json, object_hook=node_json_hook)
+
+    # Raise an error if the input type is unsupported
+    else:
+        raise TypeError(f"Unsupported type for nodes_json: {type(nodes_json)}")
     # TODO: enable this logic to replace proxies, once beartype is OK with that.
     # def recursive_proxy_replacement(node, handled_nodes):
     #     if isinstance(node, _UIDProxy):
@@ -470,7 +482,6 @@ def load_nodes_from_json(nodes_json: str):
     #     return node
     # handled_nodes = set()
     # recursive_proxy_replacement(json_nodes, handled_nodes)
-    return json_nodes
 
 
 def add_orphaned_nodes_to_project(project: Project, active_experiment: Experiment, max_iteration: int = -1):

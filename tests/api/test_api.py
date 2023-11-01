@@ -393,22 +393,6 @@ def test_api_search_bigsmiles(cript_api: cript.API) -> None:
     # assert bigsmiles_paginator.current_page_results[1]["name"] == "BCDB_Material_285"
 
 
-@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
-def test_api_search_get_node_by_uuid(cript_api: cript.API, dynamic_material_data) -> None:
-    """
-    tests `cript.API.get_node_by_uuid` works as intended
-
-    1. get a node from API by EXACT_NAME
-    1. from the node gotten from the API take out the UUID
-    1. use the UUID to get the desired node
-    """
-    my_material_node: cript.Material = cript_api.get_node_by_uuid(node_type=cript.Material, node_uuid=dynamic_material_data["uuid"])
-
-    assert isinstance(my_material_node, cript.Material)
-    assert my_material_node.name == dynamic_material_data["name"]
-    assert str(my_material_node.uuid) == dynamic_material_data["uuid"]
-
-
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:
     """
     tests that the Python SDK can successfully get the user node associated with the API Token

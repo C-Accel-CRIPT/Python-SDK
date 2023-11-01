@@ -38,3 +38,9 @@ class SearchModes(Enum):
     UUID: str = "uuid"
     # UUID_CHILDREN = "uuid_children"
     BIGSMILES: str = "bigsmiles"
+
+
+class ExactSearchModes(Enum):
+    UUID = "uuid"
+    EXACT_NAME = "exact_name"
+    BIGSMILES = "bigsmiles"

@@ -34,7 +34,7 @@ from cript.api.utils.save_helper import (
     _InternalSaveValues,
 )
 from cript.api.utils.web_file_downloader import download_file_from_url
-from cript.api.valid_search_modes import SearchModes
+from cript.api.valid_search_modes import SearchModes, ExactSearchModes
 from cript.api.vocabulary_categories import VocabCategories
 from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.project import Project
@@ -1144,40 +1144,73 @@ class API:
         return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, query=value_to_search, current_page_number=page_number)
 
     @beartype
-    def get_node_by_uuid(self, node_type: Any, node_uuid: str) -> Any:
+    def get_node_by_exact_match(self, node_type: Any, search_mode: ExactSearchModes, value_to_search: str) -> Any:
         """
-        Gets a node from API by its UUID and returns the requested node represented as a Python object.
-
-        Examples
-        ---------
-        >>> import cript
-        >>> from pathlib import Path
-        >>> my_material_node: cript.Material = api.get_node_by_uuid(
-        ...     node_type=cript.Material, node_uuid="e1b41d34-3bf2-4cd8-9a19-6412df7e7efc"
-        ... ) # doctest: +SKIP
+        Fetches a node from the API based on exact match criteria and returns the requested node as a Python object.
 
         Parameters
         ----------
         node_type: Any
-            The class representation of the type of node you're targeting, such as `cript.Material`.
-            This could be a representation of a `primary node`, `supporting node`, or `sub-object`.
-        node_uuid: str:
-            UUID of the target primary node, supporting node, or sub-object to retrieve from the API.
+            The class representation of the type of node you're targeting.
+        search_mode: ExactSearchModes
+            The type of exact match criteria (UUID, EXACT_NAME, BIGSMILES, etc.)
+        value_to_search: str
+            The value you're searching for.
+
+        Examples
+        --------
+        >>> # Get Node by UUID
+        >>> my_material_node = api.get_node_by_exact_match(
+        ...     node_type=cript.Material,
+        ...     search_mode=ExactSearchModes.UUID,
+        ...     value_to_search="e1b41d34-3bf2-4cd8-9a19-6412df7e7efc"
+        ... ) # doctest: +SKIP
+
+        >>> # Get Node by Exact Name
+        >>> my_project_node = api.get_node_by_exact_match(
+        ...     node_type=cript.Project,
+        ...     search_mode=ExactSearchModes.EXACT_NAME,
+        ...     value_to_search="Sodium polystyrene sulfonate"
+        ... ) # doctest: +SKIP
+
+        >>> # Get Node by BigSmiles
+        >>> my_material_node = api.get_node_by_exact_match(
+        ...     node_type=cript.Material,
+        ...     search_mode=ExactSearchModes.BIGSMILES,
+        ...     value_to_search="{[][$]CC(C)(C(=O)OCCCC)[$][]}"
+        ... ) # doctest: +SKIP
+
 
         Returns
         -------
-        UUIDBaseNode
-            The requested node represented as a Python object.
+        Any
+            The requested node as a Python object.
+
+        Raises
+        ------
+        ValueError
+            If the node with the given exact match criteria is not found.
         """
 
-        # get project node from API
-        my_paginator = self.search(node_type=node_type, search_mode=cript.SearchModes.UUID, value_to_search=node_uuid)
+        # Use the existing search method to get a paginator
+        if search_mode == ExactSearchModes.EXACT_NAME:
+            my_paginator = self.search(node_type=node_type, search_mode=SearchModes.EXACT_NAME, value_to_search=value_to_search)
 
-        # get the project from paginator
+        elif search_mode == ExactSearchModes.UUID:
+            my_paginator = self.search(node_type=node_type, search_mode=SearchModes.UUID, value_to_search=value_to_search)
+
+        elif search_mode == ExactSearchModes.BIGSMILES:
+            my_paginator = self.search(node_type=node_type, search_mode=SearchModes.BIGSMILES, value_to_search=value_to_search)
+
+        # let the user know if no results are returned
+        if not my_paginator.current_page_results:
+            raise ValueError(f"No node found with {search_mode.value}: {value_to_search}")
+
+        # Get the node from the paginator
         my_node_from_api_dict = my_paginator.current_page_results[0]
 
-        # convert API JSON to CRIPT Project node
-        my_node_from_api = cript.load_nodes_from_json(json.dumps(my_node_from_api_dict))
+        # Convert API JSON to a node object
+        my_node_from_api = cript.load_nodes_from_json(my_node_from_api_dict)
 
         return my_node_from_api
 

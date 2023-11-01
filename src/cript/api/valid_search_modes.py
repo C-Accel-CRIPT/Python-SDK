@@ -5,6 +5,9 @@ class SearchModes(Enum):
     """
     Available search modes to use with the CRIPT API search
 
+    > For more details and code examples,
+    > please check the [cript.API.search( ) method](../api/#cript.api.api.API.search)
+
     Attributes
     ----------
     NODE_TYPE : str
@@ -27,9 +30,6 @@ class SearchModes(Enum):
     ...     search_mode=cript.SearchModes.NODE_TYPE,
     ...     value_to_search=None,
     ... )   # doctest: +SKIP
-
-    For more details and code examples,
-    please check the [cript.API.search( ) method](../api/#cript.api.api.API.search)
     """
 
     NODE_TYPE: str = ""

@@ -434,6 +434,20 @@ def test_api_get_node_by_exact_match_bigsmiles(cript_api: cript.API, dynamic_mat
     assert material_node.uuid == dynamic_material_data["uuid"]
 
 
+@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
+def test_api_get_node_by_invalid_search_mode(cript_api: cript.API) -> None:
+    """
+    Tests that a ValueError is raised when an invalid search value that does not exist.
+
+    This test function attempts to get a material from CRIPT DB with a unique name that cannot
+    possibly exist in the DB. The function expects a ValueError to be raised.
+    """
+    with pytest.raises(ValueError):
+        cript_api.get_node_by_exact_match(
+            node_type=cript.Material, search_mode=cript.ExactSearchModes.EXACT_NAME, value_to_search=f"a unique material name that does not exist in CRIPT DB with unique time: {str(datetime.datetime.now())}"  # This should raise a ValueError
+        )
+
+
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:
     """
     tests that the Python SDK can successfully get the user node associated with the API Token

@@ -8,7 +8,7 @@ from beartype.roar import BeartypeDecorHintPep585DeprecationWarning
 
 filterwarnings("ignore", category=BeartypeDecorHintPep585DeprecationWarning)
 
-from cript.api import API, SearchModes, VocabCategories
+from cript.api import API, SearchModes, ExactSearchModes, VocabCategories
 from cript.exceptions import CRIPTException
 from cript.nodes import (
     Algorithm,

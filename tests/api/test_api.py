@@ -393,6 +393,59 @@ def test_api_search_bigsmiles(cript_api: cript.API) -> None:
     # assert bigsmiles_paginator.current_page_results[1]["name"] == "BCDB_Material_285"
 
 
+@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
+def test_api_get_node_by_exact_match_exact_name(cript_api: cript.API, dynamic_material_data) -> None:
+    """
+    Tests get_node_by_exact_match method with exact name search.
+    Searches for material "Sodium polystyrene sulfonate".
+    """
+    material_node = cript_api.get_node_by_exact_match(
+        node_type=cript.Material,
+        search_mode=cript.ExactSearchModes.EXACT_NAME,
+        value_to_search=dynamic_material_data["name"]
+    )
+
+    assert isinstance(material_node, cript.Material)
+    assert material_node.name == dynamic_material_data["name"]
+    assert material_node.uuid == dynamic_material_data["uuid"]
+
+
+@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
+def test_api_get_node_by_exact_match_uuid(cript_api: cript.API, dynamic_material_data) -> None:
+    """
+    Tests get_node_by_exact_match with UUID.
+    Searches for `Sodium polystyrene sulfonate` material via UUID.
+    """
+    material_node = cript_api.get_node_by_exact_match(
+        node_type=cript.Material,
+        search_mode=cript.ExactSearchModes.UUID,
+        value_to_search=dynamic_material_data["uuid"]
+    )
+
+    assert isinstance(material_node, cript.Material)
+    assert material_node.name == dynamic_material_data["name"]
+    assert material_node.uuid == dynamic_material_data["uuid"]
+
+
+@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
+def test_api_get_node_by_bigsmiles(cript_api: cript.API, dynamic_material_data) -> None:
+    """
+    Tests get_node_by_exact_match with BIGSMILES search mode.
+    Searches for material "{[][<]C(C)C(=O)O[>][<]}{[$][$]CCC(C)C[$],[$]CC(C(C)C)[$],[$]CC(C)(CC)[$][]}".
+    """
+    bigsmiles_search_value = "{[][<]C(C)C(=O)O[>][<]}{[$][$]CCC(C)C[$],[$]CC(C(C)C)[$],[$]CC(C)(CC)[$][]}"
+
+    material_node = cript_api.get_node_by_exact_match(
+        node_type=cript.Material,
+        search_mode=cript.ExactSearchModes.BIGSMILES,
+        value_to_search=bigsmiles_search_value
+    )
+
+    assert isinstance(material_node, cript.Material)
+    assert material_node.name == dynamic_material_data["name"]
+    assert material_node.uuid == dynamic_material_data["uuid"]
+
+
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:
     """
     tests that the Python SDK can successfully get the user node associated with the API Token

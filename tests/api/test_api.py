@@ -437,13 +437,16 @@ def test_api_get_node_by_exact_match_bigsmiles(cript_api: cript.API, dynamic_mat
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
 def test_api_get_node_by_exact_match_invalid_search_value(cript_api: cript.API) -> None:
     """
-    Tests that a `ValueError` is correctly raised when the API returns no matches for the search.
+    Verifies that `ValueError` is raised when no matches are found in the CRIPT DB.
 
-    This test function attempts to get a material from CRIPT DB with a unique name that cannot
-    possibly exist in the DB. The function expects a ValueError to be raised.
+    This test aims to validate two aspects:
+    1. When using cript.API.search with a non-existent material name, the function should return a Paginator
+     object with zero results.
+    1. Then, when using cript.API.get_node_by_exact_match with the same non-existent name,
+    the function should raise a `ValueError` letting the user know that this material does not exist.
 
-    Also, tests cript.API.search to be sure that API really returned no results and
-    correctly throws `ValueError` when no result is given by the API
+    It does so by attempting to search for a material with a name that's guaranteed to be unique
+    and cannot exist in the CRIPT DB. The name includes the current date-time to ensure uniqueness.
     """
     nonexistent_material_name = f"a unique material name that cannot exist in CRIPT DB with unique time: {str(datetime.datetime.now())}"
 

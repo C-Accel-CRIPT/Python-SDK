@@ -1073,7 +1073,6 @@ class API:
             Type of node that you are searching for.
         search_mode : SearchModes
             Type of search you want to do. You can search by name, `UUID`, `EXACT_NAME`, etc.
-            Refer to [valid search modes](../search_modes)
         value_to_search : Optional[str]
             What you are searching for can be either a value, and if you are only searching for
             a `NODE_TYPE`, then this value can be empty or `None`
@@ -1154,8 +1153,6 @@ class API:
             The class representation of the type of node you're targeting.
         search_mode: ExactSearchModes
             The type of exact match criteria (UUID, EXACT_NAME, BIGSMILES, etc.).
-            The Exact serach mode must come
-            [cript.ExactSearchModes](../search_modes/#cript.api.valid_search_modes.ExactSearchModes)
         value_to_search: str
             The value you're searching for.
 

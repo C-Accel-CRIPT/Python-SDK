@@ -1153,7 +1153,9 @@ class API:
         node_type: Any
             The class representation of the type of node you're targeting.
         search_mode: ExactSearchModes
-            The type of exact match criteria (UUID, EXACT_NAME, BIGSMILES, etc.)
+            The type of exact match criteria (UUID, EXACT_NAME, BIGSMILES, etc.).
+            The Exact serach mode must come
+            [cript.ExactSearchModes](../search_modes/#cript.api.valid_search_modes.ExactSearchModes)
         value_to_search: str
             The value you're searching for.
 

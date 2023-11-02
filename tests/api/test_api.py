@@ -428,7 +428,7 @@ def test_api_get_node_by_exact_match_uuid(cript_api: cript.API, dynamic_material
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
-def test_api_get_node_by_bigsmiles(cript_api: cript.API, dynamic_material_data) -> None:
+def test_api_get_node_by_exact_match_bigsmiles(cript_api: cript.API, dynamic_material_data) -> None:
     """
     Tests get_node_by_exact_match with BIGSMILES search mode.
     Searches for material "{[][<]C(C)C(=O)O[>][<]}{[$][$]CCC(C)C[$],[$]CC(C(C)C)[$],[$]CC(C)(CC)[$][]}".

@@ -441,11 +441,20 @@ def test_api_get_node_by_invalid_search_mode(cript_api: cript.API) -> None:
 
     This test function attempts to get a material from CRIPT DB with a unique name that cannot
     possibly exist in the DB. The function expects a ValueError to be raised.
+
+    Also, tests cript.API.search to be sure that it correctly throws `ValueError` when no result is given by the API
     """
+    nonexistent_material_name = f"a unique material name that cannot exist in CRIPT DB with unique time: {str(datetime.datetime.now())}"
+
+    exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=nonexistent_material_name)
+
+    # check that API returned 0 results for the `nonexistent_material_name`
+    assert isinstance(exact_name_paginator, Paginator)
+    assert len(exact_name_paginator.current_page_results) == 0
+
+    # check that `get_node_by_exact_match` raises a `ValueError` since the API returned 0 results
     with pytest.raises(ValueError):
-        cript_api.get_node_by_exact_match(
-            node_type=cript.Material, search_mode=cript.ExactSearchModes.EXACT_NAME, value_to_search=f"a unique material name that does not exist in CRIPT DB with unique time: {str(datetime.datetime.now())}"  # This should raise a ValueError
-        )
+        cript_api.get_node_by_exact_match(node_type=cript.Material, search_mode=cript.ExactSearchModes.EXACT_NAME, value_to_search=nonexistent_material_name)
 
 
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:

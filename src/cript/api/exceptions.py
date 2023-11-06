@@ -157,7 +157,7 @@ class CRIPTDuplicateNameError(CRIPTAPISaveError):
             self.node = "UnknownTypeIdx"
 
     def __str__(self) -> str:
-        return f"The name '{self.name}' for your {self.node} node is already present in CRIPT. Either choose a new name!"  # , or consider namespaces like 'MyNameSpace::{self.name}' instead."
+        return f"The name '{self.name}' for your {self.node} node is already present in CRIPT. Please use a unique name"
 
 
 class InvalidHostError(CRIPTException):

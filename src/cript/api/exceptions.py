@@ -152,6 +152,7 @@ class CRIPTDuplicateNameError(CRIPTAPISaveError):
     Make sure that the name you are using to save a node is unique and does not already exist in the database.
     If you encounter a `CRIPTDuplicateNameError`, check the name of your node and try a different name.
     """
+
     def __init__(self, api_response, json_data: str, parent_cript_save_error: CRIPTAPISaveError):
         super().__init__(
             parent_cript_save_error.api_host_domain, api_response["code"], api_response=api_response["error"], patch_request=parent_cript_save_error.patch_request, pre_saved_nodes=parent_cript_save_error.pre_saved_nodes, json_data=json_data

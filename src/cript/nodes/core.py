@@ -242,7 +242,7 @@ class BaseNode(ABC):
         self.validate()
         return self.get_json().json
 
-    def get_self_contained_json(self):
+    def get_self_contained_json(self, **kwargs):
         """
         This generates a JSON representation of the current node at root that is self-contained.
         Self-contained means in this context that we do not have references via UUID to external node (i.e. present only the CRIPT back end).
@@ -250,8 +250,9 @@ class BaseNode(ABC):
         A self-contained JSON is also guaranteed to be loadable via `cript.load_nodes_from_json()` into the SDK.
 
         A self-contained JSON may not be directly compatible with the JSON schema requirements for POST or PATCH uploads.
+        Similar to `get_json` we also accept kwargs, that are passed on to the JSON decoding via `json.dumps()`  this can be used for example to prettify the output.
         """
-        return self.get_json(handled_ids=None, known_uuid=None, suppress_attributes=None, is_patch=False, condense_to_uuid={}).json
+        return self.get_json(handled_ids=None, known_uuid=None, suppress_attributes=None, is_patch=False, condense_to_uuid={}, **kwargs).json
 
     def get_json(
         self,
@@ -277,6 +278,8 @@ class BaseNode(ABC):
         User facing access to get the JSON of a node.
         Opposed to the also available property json this functions allows further control.
         Additionally, this function does not call `self.validate()` but the property `json` does.
+        We also accept `kwargs`, that are passed on to the JSON decoding via `json.dumps()` this can be used for example to prettify the output.
+
 
         Returns named tuple with json and handled ids as result.
         """

@@ -168,15 +168,16 @@ def test_is_node_schema_valid_skipped(cript_api: cript.API) -> None:
 
     """
 
-    cript_api.skip_validation = True
-    # ------ invalid node schema------
-    invalid_schema = {"invalid key": "invalid value", "node": ["Material"]}
+    with cript.API(host=cript_api.host, api_token=cript_api._api_token, storage_token=cript_api._storage_token) as local_cript_api:
+        local_cript_api.skip_validation = True
+        # ------ invalid node schema------
+        invalid_schema = {"invalid key": "invalid value", "node": ["Material"]}
 
-    # Test should be skipped
-    assert cript_api._is_node_schema_valid(node_json=json.dumps(invalid_schema), is_patch=False) is True
+        # Test should be skipped
+        assert local_cript_api._is_node_schema_valid(node_json=json.dumps(invalid_schema), is_patch=False) is True
 
-    with pytest.raises(CRIPTNodeSchemaError):
-        cript_api._is_node_schema_valid(node_json=json.dumps(invalid_schema), is_patch=False, force_validation=True)
+        with pytest.raises(CRIPTNodeSchemaError):
+            local_cript_api._is_node_schema_valid(node_json=json.dumps(invalid_schema), is_patch=False, force_validation=True)
 
 
 def test_get_vocabulary_by_category(cript_api: cript.API) -> None:

@@ -737,7 +737,7 @@ class API:
         for file_node in node.find_children({"node": ["File"]}):
             file_node.ensure_uploaded(api=self)
 
-        node.validate()
+        node.validate(force_validation=True)
 
         # Dummy response to have a virtual do-while loop, instead of while loop.
         response = {"code": -1}

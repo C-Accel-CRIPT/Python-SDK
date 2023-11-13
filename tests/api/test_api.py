@@ -168,7 +168,16 @@ def test_is_node_schema_valid_skipped(cript_api: cript.API) -> None:
 
     """
 
-    with cript.API(host=cript_api.host, api_token=cript_api._api_token, storage_token=cript_api._storage_token) as local_cript_api:
+    def extract_base_url(url):
+        # Split the URL by "//" first to separate the scheme (like http, https)
+        parts = url.split("//", 1)
+        scheme, rest = parts if len(parts) > 1 else ("", parts[0])
+
+        # Split the rest by the first "/" to separate the domain
+        domain = rest.split("/", 1)[0]
+        return f"{scheme}//{domain}" if scheme else domain
+
+    with cript.API(host=extract_base_url(cript_api.host), api_token=cript_api._api_token, storage_token=cript_api._storage_token) as local_cript_api:
         local_cript_api.skip_validation = True
         # ------ invalid node schema------
         invalid_schema = {"invalid key": "invalid value", "node": ["Material"]}

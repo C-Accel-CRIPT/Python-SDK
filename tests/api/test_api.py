@@ -155,6 +155,30 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     assert cript_api._is_node_schema_valid(node_json=json.dumps(valid_file_dict), is_patch=False) is True
 
 
+def test_is_node_schema_valid_skipped(cript_api: cript.API) -> None:
+    """
+    test that a CRIPT node can be correctly validated and invalidated with the db schema, when skipping tests is active
+
+    * test db schema validation with an invalid node, and it should be invalid, but only detected if forced
+
+    Notes
+    -----
+    * does not test if serialization/deserialization works correctly,
+    just tests if the node schema can work correctly if serialization was correct
+
+    """
+
+    cript_api.skip_validation = True
+    # ------ invalid node schema------
+    invalid_schema = {"invalid key": "invalid value", "node": ["Material"]}
+
+    # Test should be skipped
+    assert cript_api._is_node_schema_valid(node_json=json.dumps(invalid_schema), is_patch=False) is True
+
+    with pytest.raises(CRIPTNodeSchemaError):
+        cript_api._is_node_schema_valid(node_json=json.dumps(invalid_schema), is_patch=False, force_validation=True)
+
+
 def test_get_vocabulary_by_category(cript_api: cript.API) -> None:
     """
     tests if a vocabulary can be retrieved by category

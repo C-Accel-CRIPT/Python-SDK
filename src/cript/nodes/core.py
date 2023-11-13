@@ -242,6 +242,17 @@ class BaseNode(ABC):
         self.validate()
         return self.get_json().json
 
+    def get_self_contained_json(self):
+        """
+        This generates a JSON representation of the current node at root that is self-contained.
+        Self-contained means in this context that we do not have references via UUID to external node (i.e. present only the CRIPT back end).
+        Such a self-contained JSON can be helpful to temporarily store CRIPT nodes in a file to be uploaded to CRIPT at a later time.
+        A self-contained JSON is also guaranteed to be loadable via `cript.load_nodes_from_json()` into the SDK.
+
+        A self-contained JSON may not be directly compatible with the JSON schema requirements for POST or PATCH uploads.
+        """
+        return self.get_json(handled_ids=None, known_uuid=None, suppress_attributes=None, is_patch=False, condense_to_uuid={}).json
+
     def get_json(
         self,
         handled_ids: Optional[Set[str]] = None,

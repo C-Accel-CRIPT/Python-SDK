@@ -323,3 +323,14 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
 
     cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
     project.validate()
+
+
+def test_self_contained_json(complex_project_node):
+    json_string: str = complex_project_node.get_self_contained_json()
+
+    loaded_json = cript.load_nodes_from_json(json_string)
+    assert loaded_json == complex_project_node
+
+    short_json: str = complex_project_node.json
+    with pytest.raises(cript.nodes.exceptions.CRIPTJsonDeserializationError):
+        cript.load_nodes_from_json(short_json)

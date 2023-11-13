@@ -114,7 +114,7 @@ class API:
             as the token might be exposed if the code is shared or stored in a version control system.
             Anyone that has access to your tokens can impersonate you on the CRIPT platform
 
-        ### Create API Client with [Environment Variables](https://www.freecodecamp.org/news/python-env-vars-how-to-get-an-environment-variable-in-python/)
+        ### Create API Client with Environment Variables
 
         Another great way to keep sensitive information secure is by using
         [environment variables](https://www.freecodecamp.org/news/python-env-vars-how-to-get-an-environment-variable-in-python/).
@@ -455,10 +455,10 @@ class API:
 
         The term "host" designates the specific CRIPT instance to which you intend to upload your data.
 
-        For most users, the host will be `api.criptapp.org`
+        For most users, the host will be `https://api.criptapp.org`
 
         ```yaml
-        host: api.criptapp.org
+        host: https://api.criptapp.org
         ```
 
         Examples

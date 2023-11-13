@@ -1,6 +1,6 @@
-# check code types with mypy to be sure the static types are correct and make sense
+# check documentation code example with pytest doctest and gives an error if a code example is wrong
 
-name: MyPy Check
+name: Doctest
 permissions: read-all
 
 on:
@@ -15,13 +15,19 @@ on:
       - develop
 
 jobs:
-  mypy-test:
+  doctest:
     strategy:
       matrix:
         python-version: [3.12]
         os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
+
+    env:
+      CRIPT_HOST: https://lb-stage.mycriptapp.org/
+      CRIPT_TOKEN: 123456789
+      CRIPT_STORAGE_TOKEN: 987654321
+      CRIPT_TESTS: False
 
     steps:
       - name: Set up Python ${{ matrix.python-version }}
@@ -34,8 +40,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
+          python${{ matrix.python-version }} -m pip install --upgrade pip
           pip install -r requirements_dev.txt
 
-      - name: Run MyPy
-        run: mypy src/cript/
+      - name: pip install CRIPT Python SDK local package
+        run: python${{ matrix.python-version }} -m pip install -e .
+
+      - name: Run Doctests
+        run: python${{ matrix.python-version }} -m pytest --doctest-modules src/cript/

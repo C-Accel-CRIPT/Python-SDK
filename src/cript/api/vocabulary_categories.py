@@ -64,11 +64,10 @@ class VocabCategories(Enum):
 
     Examples
     --------
-    ```python
-    algorithm_vocabulary = api.get_vocabulary_by_category(
-        cript.VocabCategories.ALGORITHM_KEY
-        )
-    ```
+    >>> import cript
+    >>> algorithm_vocabulary = api.get_vocab_by_category(
+    ...     cript.VocabCategories.ALGORITHM_KEY
+    ... )
     """
 
     ALGORITHM_KEY: str = "algorithm_key"

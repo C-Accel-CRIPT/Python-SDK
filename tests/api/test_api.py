@@ -8,9 +8,9 @@ from typing import Dict
 
 import pytest
 import requests
-from conftest import HAS_INTEGRATION_TESTS_ENABLED
 
 import cript
+from conftest import HAS_INTEGRATION_TESTS_ENABLED
 from cript.api.exceptions import InvalidVocabulary
 from cript.api.paginator import Paginator
 from cript.nodes.exceptions import CRIPTNodeSchemaError
@@ -356,7 +356,7 @@ def test_api_search_exact_name(cript_api: cript.API) -> None:
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
-def test_api_search_uuid(cript_api: cript.API) -> None:
+def test_api_search_uuid(cript_api: cript.API, dynamic_material_data) -> None:
     """
     tests search with UUID
     searches for `Sodium polystyrene sulfonate` material via UUID
@@ -366,18 +366,12 @@ def test_api_search_uuid(cript_api: cript.API) -> None:
     2. takes the UUID from the full node and puts it into the `UUID search`
     3. asserts everything is as expected
     """
-    material_name = "Sodium polystyrene sulfonate"
-
-    exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=material_name)
-
-    material_uuid = exact_name_paginator.current_page_results[0]["uuid"]
-
-    uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=material_uuid)
+    uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=dynamic_material_data["uuid"])
 
     assert isinstance(uuid_paginator, Paginator)
     assert len(uuid_paginator.current_page_results) == 1
-    assert uuid_paginator.current_page_results[0]["name"] == material_name
-    assert uuid_paginator.current_page_results[0]["uuid"] == material_uuid
+    assert uuid_paginator.current_page_results[0]["name"] == dynamic_material_data["name"]
+    assert uuid_paginator.current_page_results[0]["uuid"] == dynamic_material_data["uuid"]
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
@@ -397,6 +391,22 @@ def test_api_search_bigsmiles(cript_api: cript.API) -> None:
     assert len(bigsmiles_paginator.current_page_results) >= 1
     # not sure if this will always be in this position in every server environment, so commenting it out for now
     # assert bigsmiles_paginator.current_page_results[1]["name"] == "BCDB_Material_285"
+
+
+@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
+def test_api_search_get_node_by_uuid(cript_api: cript.API, dynamic_material_data) -> None:
+    """
+    tests `cript.API.get_node_by_uuid` works as intended
+
+    1. get a node from API by EXACT_NAME
+    1. from the node gotten from the API take out the UUID
+    1. use the UUID to get the desired node
+    """
+    my_material_node: cript.Material = cript_api.get_node_by_uuid(node_type=cript.Material, node_uuid=dynamic_material_data["uuid"])
+
+    assert isinstance(my_material_node, cript.Material)
+    assert my_material_node.name == dynamic_material_data["name"]
+    assert str(my_material_node.uuid) == dynamic_material_data["uuid"]
 
 
 def test_get_my_user_node_from_api(cript_api: cript.API) -> None:

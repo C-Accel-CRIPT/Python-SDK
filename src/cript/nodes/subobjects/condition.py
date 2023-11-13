@@ -134,15 +134,13 @@ class Condition(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        # instantiate a Condition sub-object
-        my_condition = cript.Condition(
-            key="temperature",
-            type="value",
-            value=22,
-            unit="C",
-        )
-        ```
+        >>> import cript
+        >>> my_condition = cript.Condition(
+        ...     key="temperature",
+        ...     type="value",
+        ...     value=22,
+        ...     unit="C",
+        ... )
 
         Returns
         -------
@@ -178,9 +176,14 @@ class Condition(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_condition.key = "energy_threshold"
-        ```
+        >>> import cript
+        >>> my_condition = cript.Condition(
+        ...     key="temperature",
+        ...     type="value",
+        ...     value=22,
+        ...     unit="C",
+        ... )
+        >>> my_condition.key = "energy_threshold"
 
         Returns
         -------
@@ -194,8 +197,6 @@ class Condition(UUIDBaseNode):
     def key(self, new_key: str) -> None:
         """
         set this Condition sub-object key
-
-        > Condition key must come from [CRIPT Controlled Vocabulary]()
 
         Parameters
         ----------
@@ -217,9 +218,14 @@ class Condition(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_condition.type = "min"
-        ```
+        >>> import cript
+        >>> my_condition = cript.Condition(
+        ...     key="temperature",
+        ...     type="value",
+        ...     value=22,
+        ...     unit="C",
+        ... )
+        >>> my_condition.type = "min"
 
         Returns
         -------
@@ -254,9 +260,14 @@ class Condition(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_condition.description = "my condition description"
-        ```
+        >>> import cript
+        >>> my_condition = cript.Condition(
+        ...     key="temperature",
+        ...     type="value",
+        ...     value=22,
+        ...     unit="C",
+        ... )
+        >>> my_condition.descriptor = "my condition description"
 
         Returns
         -------
@@ -289,12 +300,6 @@ class Condition(UUIDBaseNode):
         """
         value or quantity
 
-        Examples
-        -------
-        ```python
-        my_condition.value = 10
-        ```
-
         Returns
         -------
         Union[Number, None]
@@ -315,9 +320,14 @@ class Condition(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_condition.set_value(new_value=1, new_unit="gram")
-        ```
+        >>> import cript
+        >>> my_condition = cript.Condition(
+        ...     key="temperature",
+        ...     type="value",
+        ...     value=22,
+        ...     unit="C",
+        ... )
+        >>> my_condition.set_value(new_value=1, new_unit="gram")
 
         Returns
         -------
@@ -332,12 +342,6 @@ class Condition(UUIDBaseNode):
         """
         set units for this Condition subobject
 
-        Examples
-        --------
-        ```python
-        my_condition.unit = "gram"
-        ```
-
         Returns
         -------
         unit: str
@@ -350,12 +354,6 @@ class Condition(UUIDBaseNode):
     def uncertainty(self) -> Optional[Union[Number, str]]:
         """
         set uncertainty value for this Condition subobject
-
-        Examples
-        --------
-        ```python
-        my_condition.uncertainty = "0.1"
-        ```
 
         Returns
         -------
@@ -378,9 +376,14 @@ class Condition(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_condition.set_uncertainty(new_uncertainty="0.2", new_uncertainty_type="std")
-        ```
+        >>> import cript
+        >>> my_condition = cript.Condition(
+        ...     key="temperature",
+        ...     type="value",
+        ...     value=22,
+        ...     unit="C",
+        ... )
+        >>> my_condition.set_uncertainty(new_uncertainty=0.2, new_uncertainty_type="stdev")
 
         Returns
         -------
@@ -397,12 +400,6 @@ class Condition(UUIDBaseNode):
 
         [Uncertainty type](https://app.criptapp.org/vocab/uncertainty_type) must come from CRIPT controlled vocabulary
 
-        Examples
-        --------
-        ```python
-        my_condition.uncertainty_type = "std"
-        ```
-
         Returns
         -------
         uncertainty_type: str
@@ -418,9 +415,14 @@ class Condition(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_condition.set_id = 0
-        ```
+        >>> import cript
+        >>> my_condition = cript.Condition(
+        ...     key="temperature",
+        ...     type="value",
+        ...     value=22,
+        ...     unit="C",
+        ... )
+        >>> my_condition.set_id = 0
 
         Returns
         -------
@@ -455,9 +457,14 @@ class Condition(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_condition.measurement_id = 0
-        ```
+        >>> import cript
+        >>> my_condition = cript.Condition(
+        ...     key="temperature",
+        ...     type="value",
+        ...     value=22,
+        ...     unit="C",
+        ... )
+        >>> my_condition.measurement_id = 0
 
         Returns
         -------
@@ -471,6 +478,17 @@ class Condition(UUIDBaseNode):
     def measurement_id(self, new_measurement_id: Union[int, None]) -> None:
         """
         set the set_id for this Condition subobject
+
+        Examples
+        --------
+        >>> import cript
+        >>> my_condition = cript.Condition(
+        ...     key="temperature",
+        ...     type="value",
+        ...     value=22,
+        ...     unit="C",
+        ... )
+        >>> my_condition.measurement_id = 1
 
         Parameters
         ----------
@@ -492,24 +510,25 @@ class Condition(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        # create file nodes for the data node
-        my_file = cript.File(
-            source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
-            type="calibration",
-            extension=".pdf",
-        )
-
-        # create data node and add the file node to it
-        my_data = cript.Data(
-            name="my data node name",
-            type="afm_amp",
-            file=my_file,
-        )
-
-        # add data node to Condition subobject
-        my_condition.data = [my_data]
-        ```
+        >>> import cript
+        >>> my_condition = cript.Condition(
+        ...     key="temperature",
+        ...     type="value",
+        ...     value=22,
+        ...     unit="C",
+        ... )
+        >>> my_file = cript.File(
+        ...     name="my file node name",
+        ...     source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
+        ...     type="calibration",
+        ...     extension=".pdf",
+        ... )
+        >>> my_data = cript.Data(
+        ...     name="my data node name",
+        ...     type="afm_amp",
+        ...     file=[my_file],
+        ... )
+        >>> my_condition.data = [my_data]
 
         Returns
         -------

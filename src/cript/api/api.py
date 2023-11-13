@@ -12,6 +12,7 @@ import jsonschema
 import requests
 from beartype import beartype
 
+import cript
 from cript.api.api_config import _API_TIMEOUT
 from cript.api.exceptions import (
     APIError,
@@ -23,6 +24,7 @@ from cript.api.exceptions import (
     InvalidVocabulary,
 )
 from cript.api.paginator import Paginator
+from cript.api.utils.aws_s3_utils import get_s3_client
 from cript.api.utils.get_host_token import resolve_host_and_token
 from cript.api.utils.helper_functions import _get_node_type_from_json
 from cript.api.utils.save_helper import (
@@ -68,7 +70,7 @@ class API:
     _http_headers: dict = {}
     _vocabulary: dict = {}
     _db_schema: dict = {}
-    _api_handle: str = "api"
+    _api_prefix: str = "api"
     _api_version: str = "v1"
 
     # trunk-ignore-begin(cspell)
@@ -93,14 +95,15 @@ class API:
         Examples
         --------
         ### Create API client with host and token
-        ```Python
-        with cript.API(
-            host="https://api.criptapp.org/",
-            api_token="my api token",
-            storage_token="my storage token",
-        ) as api:
-            # node creation, api.save(), etc.
-        ```
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...    # node creation, api.save(), etc.
+        ...    pass
+
 
         ---
 
@@ -111,27 +114,25 @@ class API:
             as the token might be exposed if the code is shared or stored in a version control system.
             Anyone that has access to your tokens can impersonate you on the CRIPT platform
 
-        ### Create API Client with
-        [Environment Variables](https://www.freecodecamp.org/news/python-env-vars-how-to-get-an-environment-variable-in-python/)
+        ### Create API Client with Environment Variables
+
         Another great way to keep sensitive information secure is by using
         [environment variables](https://www.freecodecamp.org/news/python-env-vars-how-to-get-an-environment-variable-in-python/).
         Sensitive information can be securely stored in environment variables and loaded into the code using
         [os.getenv()](https://docs.python.org/3/library/os.html#os.getenv).
 
-        #### Example
-
-        ```python
-        import os
-
-        # securely load sensitive data into the script
-        cript_host = os.getenv("cript_host")
-        cript_api_token = os.getenv("cript_api_token")
-        cript_storage_token = os.getenv("cript_storage_token")
-
-        with cript.API(host=cript_host, api_token=cript_api_token, storage_token=cript_storage_token) as api:
-            # write your script
-            pass
-        ```
+        Examples
+        --------
+        >>> import cript
+        >>> import os
+        >>> # securely load sensitive data into the script
+        >>> cript_host = os.getenv("cript_host")
+        >>> cript_api_token = os.getenv("cript_api_token")
+        >>> cript_storage_token = os.getenv("cript_storage_token")
+        >>> with cript.API(
+        ...     host=cript_host, api_token=cript_api_token, storage_token=cript_storage_token
+        ... ) as api:
+        ...     pass
 
         ### Create API Client with None
         Alternatively you can configure your system to have an environment variable of
@@ -156,16 +157,16 @@ class API:
         }
         ```
 
+        Examples
+        --------
         `my_script.py`
-        ```python
-        from pathlib import Path
-
-        # create a file path object of where the config file is
-        config_file_path = Path(__file__) / Path('./config.json')
-
-        with cript.API(config_file_path=config_file_path) as api:
-            # node creation, api.save(), etc.
-        ```
+        >>> from pathlib import Path
+        >>> import cript
+        >>> # create a file path object of where the config file is
+        >>> config_file_path = Path(__file__) / Path('./config.json')
+        >>> with cript.API(config_file_path=config_file_path) as api:   # doctest: +SKIP
+        ...     # node creation, api.save(), etc.
+        ...     pass
 
         Parameters
         ----------
@@ -234,6 +235,17 @@ class API:
         """
         States the host of the CRIPT API client
 
+        Examples
+        --------
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...     print(api)
+        CRIPT API Client - Host URL: 'https://api.criptapp.org/api/v1'
+
         Returns
         -------
         str
@@ -298,10 +310,14 @@ class API:
 
         Examples
         --------
-        ```python
-        # turn off the terminal logs
-        api.verbose = False
-        ```
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...     # turn off the terminal logs
+        ...     api.verbose = False
 
         Returns
         -------
@@ -329,9 +345,34 @@ class API:
 
     @beartype
     def _prepare_host(self, host: str) -> str:
+        """
+        Takes the host URL provided by the user during API object construction (e.g., `https://api.criptapp.org`)
+        and standardizes it for internal use. Performs any required string manipulation to ensure uniformity.
+
+        Parameters
+        ----------
+        host: str
+            The host URL specified during API initialization, typically in the form `https://api.criptapp.org`.
+
+        Warnings
+        --------
+        If the specified host uses the unsafe "http://" protocol, a warning will be raised to consider using HTTPS.
+
+        Raises
+        ------
+        InvalidHostError
+            If the host string does not start with either "http" or "https", an InvalidHostError will be raised.
+            Only HTTP protocol is acceptable at this time.
+
+        Returns
+        -------
+        str
+            A standardized host string formatted for internal use.
+
+        """
         # strip ending slash to make host always uniform
         host = host.rstrip("/")
-        host = f"{host}/{self._api_handle}/{self._api_version}"
+        host = f"{host}/{self._api_prefix}/{self._api_version}"
 
         # if host is using unsafe "http://" then give a warning
         if host.startswith("http://"):
@@ -346,29 +387,19 @@ class API:
     @property
     def _s3_client(self) -> boto3.client:  # type: ignore
         """
-        creates or returns a fully authenticated and ready s3 client
+        Property to use when wanting to interact with AWS S3.
+
+        Gets a fully authenticated AWS S3 client if it was never created and stash it,
+        if the AWS S3 client has been created before, then returns the client that it has
 
         Returns
         -------
         s3_client: boto3.client
             fully prepared and authenticated s3 client ready to be used throughout the script
         """
-
         if self._internal_s3_client is None:
-            auth = boto3.client("cognito-identity", region_name=self._REGION_NAME)
-            identity_id = auth.get_id(IdentityPoolId=self._IDENTITY_POOL_ID, Logins={self._COGNITO_LOGIN_PROVIDER: self._storage_token})
-            # TODO remove this temporary fix to the token, by getting is from back end.
-            aws_token = self._storage_token
+            self._internal_s3_client = get_s3_client(region_name=self._REGION_NAME, identity_pool_id=self._IDENTITY_POOL_ID, cognito_login_provider=self._COGNITO_LOGIN_PROVIDER, storage_token=self._storage_token)
 
-            aws_credentials = auth.get_credentials_for_identity(IdentityId=identity_id["IdentityId"], Logins={self._COGNITO_LOGIN_PROVIDER: aws_token})
-            aws_credentials = aws_credentials["Credentials"]
-            s3_client = boto3.client(
-                "s3",
-                aws_access_key_id=aws_credentials["AccessKeyId"],
-                aws_secret_access_key=aws_credentials["SecretKey"],
-                aws_session_token=aws_credentials["SessionToken"],
-            )
-            self._internal_s3_client = s3_client
         return self._internal_s3_client
 
     def __enter__(self):
@@ -424,21 +455,22 @@ class API:
 
         The term "host" designates the specific CRIPT instance to which you intend to upload your data.
 
-        For most users, the host will be `api.criptapp.org`
+        For most users, the host will be `https://api.criptapp.org`
 
         ```yaml
-        host: api.criptapp.org
+        host: https://api.criptapp.org
         ```
 
         Examples
         --------
-        ```python
-        print(cript_api.host)
-        ```
-        Output
-        ```Python
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...    print(api.host)
         https://api.criptapp.org/api/v1
-        ```
         """
         return self._host
 
@@ -499,6 +531,17 @@ class API:
         """
         get the CRIPT controlled vocabulary by category
 
+        Examples
+        --------
+        >>> import os
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...     api.get_vocab_by_category(cript.VocabCategories.MATERIAL_IDENTIFIER_KEY)  # doctest: +SKIP
+
         Parameters
         ----------
         category: str
@@ -520,7 +563,6 @@ class API:
         response: Dict = requests.get(url=vocabulary_category_url, timeout=_API_TIMEOUT).json()
 
         if response["code"] != 200:
-            # TODO give a better CRIPT custom Exception
             raise APIError(api_error=str(response), http_method="GET", api_url=vocabulary_category_url)
 
         # add to cache
@@ -823,16 +865,29 @@ class API:
 
         Examples
         --------
-        ```python
-        import cript
+        >>> from pathlib import Path
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...     # programmatically create the absolute path of your file, so the program always works correctly
+        ...     my_file_path = (Path(__file__) / Path('../upload_files/my_file.txt')).resolve()
+        ...     my_file_cloud_storage_source = api.upload_file(file_path=my_file_path)  # doctest: +SKIP
 
-        api = cript.API(host, token)
+        Notes
+        -----
+        We recommend using a [Path](https://docs.python.org/3/library/pathlib.html) object for specifying a file path.
+        Using the Python [pathlib library](https://docs.python.org/3/library/pathlib.html) provides platform-agnostic approach
+        for filesystem operations, ensuring seamless functionality across different operating systems.
+        Additionally, [Path](https://docs.python.org/3/library/pathlib.html) objects offer various built-in methods
+        for more sophisticated and secure file handling and has a easy to use interface that can make working with it a breeze
+        and can help reduce errors.
 
-        # programmatically create the absolute path of your file, so the program always works correctly
-        my_file_path = (Path(__file__) / Path('../upload_files/my_file.txt')).resolve()
+        Other options include using a raw string for relative/absolute file path,
+        or using the [os.path module](https://docs.python.org/3/library/os.path.html).
 
-        my_file_s3_url = api.upload_file(absolute_file_path=my_file_path)
-        ```
 
         Raises
         ------
@@ -868,7 +923,7 @@ class API:
         # upload file to AWS S3
         self._s3_client.upload_file(Filename=file_path, Bucket=self._BUCKET_NAME, Key=object_name)  # type: ignore
 
-        self.logger.info(f"Uploaded file: '{file_path}' to CRIPT storage")
+        self.logger.info(f"Uploaded File: '{file_path}' to CRIPT storage")
 
         # return the object_name within AWS S3 for easy retrieval
         return object_name
@@ -917,12 +972,21 @@ class API:
 
         Examples
         --------
-        ```python
-        from pathlib import Path
-
-        desktop_path = (Path(__file__).parent / "cript_downloads" / "my_downloaded_file.txt").resolve()
-        cript_api.download_file(file_url=my_file_source, destination_path=desktop_path)
-        ```
+        >>> from pathlib import Path
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...     desktop_path = (Path(__file__).parent / "cript_downloads" / "my_downloaded_file.txt").resolve()
+        ...     my_file = cript.File(
+        ...         name="my file node name",
+        ...         source="https://criptapp.org",
+        ...         type="calibration",
+        ...         extension=".csv",
+        ...     )
+        ...     api.download_file(file_source=my_file.source, destination_path=str(desktop_path)) # doctest: +SKIP
 
         Raises
         ------
@@ -946,7 +1010,7 @@ class API:
     @beartype
     def search(
         self,
-        node_type,
+        node_type: Any,
         search_mode: SearchModes,
         value_to_search: Optional[str],
     ) -> Paginator:
@@ -1024,7 +1088,8 @@ class API:
         To learn more about working with pagination, please refer to our
         [paginator object documentation](../paginator).
 
-        Additionally, you can utilize the utility function [`load_nodes_from_json(node_json)`](../../utility_functions/#cript.nodes.util.load_nodes_from_json)
+        Additionally, you can utilize the utility function
+        [`load_nodes_from_json(node_json)`](../../utility_functions/#cript.nodes.util.load_nodes_from_json)
         to convert API JSON responses into Python SDK nodes.
 
         ???+ Example "Convert API JSON Response to Python SDK Nodes"
@@ -1078,6 +1143,44 @@ class API:
 
         return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, query=value_to_search, current_page_number=page_number)
 
+    @beartype
+    def get_node_by_uuid(self, node_type: Any, node_uuid: str) -> Any:
+        """
+        Gets a node from API by its UUID and returns the requested node represented as a Python object.
+
+        Examples
+        ---------
+        >>> import cript
+        >>> from pathlib import Path
+        >>> my_material_node: cript.Material = api.get_node_by_uuid(
+        ...     node_type=cript.Material, node_uuid="e1b41d34-3bf2-4cd8-9a19-6412df7e7efc"
+        ... ) # doctest: +SKIP
+
+        Parameters
+        ----------
+        node_type: Any
+            The class representation of the type of node you're targeting, such as `cript.Material`.
+            This could be a representation of a `primary node`, `supporting node`, or `sub-object`.
+        node_uuid: str:
+            UUID of the target primary node, supporting node, or sub-object to retrieve from the API.
+
+        Returns
+        -------
+        UUIDBaseNode
+            The requested node represented as a Python object.
+        """
+
+        # get project node from API
+        my_paginator = self.search(node_type=node_type, search_mode=cript.SearchModes.UUID, value_to_search=node_uuid)
+
+        # get the project from paginator
+        my_node_from_api_dict = my_paginator.current_page_results[0]
+
+        # convert API JSON to CRIPT Project node
+        my_node_from_api = cript.load_nodes_from_json(json.dumps(my_node_from_api_dict))
+
+        return my_node_from_api
+
     def delete(self, node) -> None:
         """
         Simply deletes the desired node from the CRIPT API and writes a log in the terminal that the node has been
@@ -1085,17 +1188,25 @@ class API:
 
         Examples
         --------
-        ```python
-        api.delete(node=my_material_node)
-        ```
+        >>> import cript
+        >>> my_material_node = cript.Material(
+        ...     name="my component material 1",
+        ...     identifier=[{"amino_acid": "component 1 alternative name"}],
+        ... )
+        >>> api.delete(node=my_material_node) # doctest: +SKIP
 
         Notes
         -----
         After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
 
         ```bash
-        INFO: Deleted 'Data' with UUID of '80bfc642-157e-4692-a547-97c470725397' from CRIPT API.
+        INFO: Deleted 'Material' with UUID of '80bfc642-157e-4692-a547-97c470725397' from CRIPT API.
         ```
+
+        ??? info "Implementation Details"
+            Under the hood, this method actually calls
+            [delete_node_by_uuid](./#cript.api.api.API.delete_node_by_uuid)
+            with the node_type and node UUID
 
         Warnings
         --------
@@ -1125,12 +1236,89 @@ class API:
         -------
         None
         """
+        self.delete_node_by_uuid(node_type=node.node_type_snake_case, node_uuid=str(node.uuid))
 
-        delete_node_api_url: str = f"{self._host}/{node.node_type_snake_case}/{node.uuid}/"
+    @beartype
+    def delete_node_by_uuid(self, node_type: str, node_uuid: str) -> None:
+        """
+        Simply deletes the desired node from the CRIPT API and writes a log in the terminal that the node has been
+        successfully deleted.
+
+        Examples
+        --------
+        >>> import cript
+        >>> with cript.API(
+        ...     host="https://api.criptapp.org/",
+        ...     api_token=os.getenv("CRIPT_TOKEN"),
+        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
+        ... ) as api:
+        ...      api.delete_node_by_uuid(
+        ...         node_type="computation_process",
+        ...         node_uuid="2fd3d500-304d-4a06-8628-a79b59344b2f"
+        ...     ) # doctest: +SKIP
+
+        ??? "How to get `node_type in snake case`"
+               You can get the `node type in snake case` of a node via:
+               ```python
+                import cript
+                print(cript.ComputationProcess.node_type_snake_case)
+               computation_process
+               ```
+
+               You can also call `api.delete_node_by_uuid()` with
+               ```python
+               api.delete(
+                   node_type=cript.ComputationProcess.node_type_snake_case,
+                   node_uuid="2fd3d500-304d-4a06-8628-a79b59344b2f",
+               )
+               ```
+
+        Notes
+        -----
+        After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
+
+        ```bash
+        INFO: Deleted 'Material' with UUID of '80bfc642-157e-4692-a547-97c470725397' from CRIPT API.
+        ```
+
+        Warnings
+        --------
+        After successfully deleting a node from the API, keep in mind that your local Project node in your script
+        may still contain outdated data as it has not been synced with the API.
+
+        To ensure you have the latest data, follow these steps:
+
+        1. Fetch the newest Project node from the API using the
+        [`cript.API.search()`](./#cript.api.api.API.search) provided by the SDK.
+        1. Deserialize the retrieved data into a new Project node using the
+        [`load_nodes_from_json`](../../utility_functions/#cript.nodes.util.load_nodes_from_json) utility function.
+        1. Replace your old Project node with the new one in your script for accurate and up-to-date information.
+
+        Parameters
+        ----------
+        node_type: str
+           the type of node that you want to delete in snake case
+        node_uuid: str
+           the UUID of the primary node, supporting node, or sub-object
+           that you want to delete from the API
+
+        Raises
+        ------
+        APIError
+            If the API responds with anything other than HTTP status 200, then the CRIPT Python SDK raises `APIError`
+            `APIError` is raised in case the API cannot delete the specified node.
+            Such cases can happen if you do not have permission to delete the node
+            or if the node is actively being used elsewhere in CRIPT platform and the API cannot delete it.
+
+        Returns
+        -------
+        None
+        """
+        delete_node_api_url: str = f"{self._host}/{node_type.lower()}/{node_uuid}/"
 
         response: Dict = requests.delete(headers=self._http_headers, url=delete_node_api_url, timeout=_API_TIMEOUT).json()
 
         if response["code"] != 200:
             raise APIError(api_error=str(response), http_method="DELETE", api_url=delete_node_api_url)
 
-        self.logger.info(f"Deleted '{node.node_type}' with UUID of '{node.uuid}' from CRIPT API.")
+        self.logger.info(f"Deleted '{node_type.title()}' with UUID of '{node_uuid}' from CRIPT API.")

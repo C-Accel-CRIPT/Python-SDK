@@ -1,1 +1,1 @@
-# Base node
+::: cript.nodes.core.BaseNode

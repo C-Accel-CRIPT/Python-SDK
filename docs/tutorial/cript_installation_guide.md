@@ -7,7 +7,7 @@
 
 ## Steps
 
-1.  Install [Python 3.7+](https://www.python.org/downloads/)
+1.  Install [Python 3.8+](https://www.python.org/downloads/)
 2.  Create a virtual environment
 
     > It is best practice to create a dedicated [python virtual environment](https://docs.python.org/3/library/venv.html) for each python project

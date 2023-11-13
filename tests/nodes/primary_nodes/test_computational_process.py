@@ -1,13 +1,12 @@
 import json
 import uuid
 
-from integration_test_helper import (
-    delete_integration_node_helper,
-    integrate_nodes_helper,
-)
-from util import strip_uid_from_dict
-
 import cript
+from tests.utils.integration_test_helper import (
+    delete_integration_node_helper,
+    save_integration_node_helper,
+)
+from tests.utils.util import strip_uid_from_dict
 
 
 def test_create_simple_computational_process(simple_data_node, complex_ingredient_node) -> None:
@@ -42,6 +41,7 @@ def test_create_complex_computational_process(
     """
 
     computational_process_name = "my computational process name"
+    computational_process_notes = "my computational process notes"
     computational_process_type = "cross_linking"
 
     ingredient = complex_ingredient_node
@@ -56,6 +56,7 @@ def test_create_complex_computational_process(
         condition=[complex_condition_node],
         property=[simple_property_node],
         citation=[complex_citation_node],
+        notes=computational_process_notes,
     )
 
     # assertions
@@ -69,6 +70,7 @@ def test_create_complex_computational_process(
     assert my_computational_process.condition == [complex_condition_node]
     assert my_computational_process.property == [simple_property_node]
     assert my_computational_process.citation == [complex_citation_node]
+    assert my_computational_process.notes == computational_process_notes
 
 
 def test_computational_process_getters_and_setters(simple_computation_process_node, simple_data_node, simple_ingredient_node, simple_software_configuration, simple_condition_node, simple_property_node, complex_citation_node) -> None:
@@ -173,13 +175,13 @@ def test_integration_computational_process(cript_api, simple_project_node, simpl
 
     simple_project_node.collection[0].experiment[0].computation_process = [simplest_computational_process_node]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
     # change computational_process to trigger update
     simple_project_node.collection[0].experiment[0].computation_process[0].type = "DPD"
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simplest_computational_process_node)

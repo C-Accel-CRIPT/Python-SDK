@@ -1,14 +1,12 @@
-import copy
 import json
 import uuid
 
-from integration_test_helper import (
-    delete_integration_node_helper,
-    integrate_nodes_helper,
-)
-from util import strip_uid_from_dict
-
 import cript
+from tests.utils.integration_test_helper import (
+    delete_integration_node_helper,
+    save_integration_node_helper,
+)
+from tests.utils.util import strip_uid_from_dict
 
 
 def test_create_simple_data_node(complex_file_node) -> None:
@@ -37,29 +35,32 @@ def test_create_complex_data_node(
     create a complex data node with all possible arguments
     """
 
-    file_node = copy.deepcopy(complex_file_node)
+    my_notes = "my complex data node notes"
+
     my_complex_data = cript.Data(
         name="my complex data node name",
         type="afm_amp",
-        file=[file_node],
+        file=[complex_file_node],
         sample_preparation=simple_process_node,
         computation=[simple_computation_node],
         computation_process=[simple_computational_process_node],
         material=[simple_material_node],
         process=[simple_process_node],
         # citation=[complex_citation_node],
+        notes=my_notes,
     )
 
     # assertions
     assert isinstance(my_complex_data, cript.Data)
     assert my_complex_data.type == "afm_amp"
-    assert my_complex_data.file == [file_node]
+    assert my_complex_data.file == [complex_file_node]
     assert my_complex_data.sample_preparation == simple_process_node
     assert my_complex_data.computation == [simple_computation_node]
     assert my_complex_data.computation_process == [simple_computational_process_node]
     assert my_complex_data.material == [simple_material_node]
     assert my_complex_data.process == [simple_process_node]
     # assert my_complex_data.citation == [complex_citation_node]
+    assert my_complex_data.notes == my_notes
 
 
 def test_data_getters_and_setters(
@@ -84,6 +85,7 @@ def test_data_getters_and_setters(
     None
     """
     my_data_type = "afm_height"
+    my_data_notes = "my data getter setter notes"
 
     my_new_files = [
         complex_file_node,
@@ -106,6 +108,7 @@ def test_data_getters_and_setters(
     simple_data_node.material = [simple_material_node]
     simple_data_node.process = [simple_process_node]
     simple_data_node.citation = [complex_citation_node]
+    simple_data_node.notes = my_data_notes
 
     # assertions check getters and setters
     assert simple_data_node.type == my_data_type
@@ -116,6 +119,7 @@ def test_data_getters_and_setters(
     assert simple_data_node.material == [simple_material_node]
     assert simple_data_node.process == [simple_process_node]
     assert simple_data_node.citation == [complex_citation_node]
+    assert simple_data_node.notes == my_data_notes
 
     # remove optional attributes
     simple_data_node.sample_preparation = []
@@ -124,6 +128,7 @@ def test_data_getters_and_setters(
     simple_data_node.material = []
     simple_data_node.process = []
     simple_data_node.citation = []
+    simple_data_node.notes = ""
 
     # assert that optional attributes have been removed from data node
     assert simple_data_node.sample_preparation == []
@@ -132,6 +137,7 @@ def test_data_getters_and_setters(
     assert simple_data_node.material == []
     assert simple_data_node.process == []
     assert simple_data_node.citation == []
+    assert simple_data_node.notes == ""
 
 
 def test_serialize_data_to_json(simple_data_node) -> None:
@@ -178,13 +184,13 @@ def test_integration_data(cript_api, simple_project_node, simple_data_node):
 
     simple_project_node.collection[0].experiment[0].data = [simple_data_node]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
     # update a simple attribute of data to trigger update
     simple_project_node.collection[0].experiment[0].data[0].type = "afm_height"
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_data_node)

@@ -70,11 +70,10 @@ class Software(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_software = cript.Software(
-            name="my software name", version="v1.0.0", source="https://myurl.com"
-        )
-        ```
+        >>> import cript
+        >>> my_software = cript.Software(
+        ...     name="my software name", version="v1.0.0", source="https://myurl.com"
+        ... )
 
         Returns
         -------
@@ -94,9 +93,11 @@ class Software(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_software.name = "my software name"
-        ```
+        >>> import cript
+        >>> my_software = cript.Software(
+        ...     name="my software name", version="v1.0.0", source="https://myurl.com"
+        ... )
+        >>> my_software.name = "my software name"
 
         Returns
         -------
@@ -129,7 +130,13 @@ class Software(UUIDBaseNode):
         """
         Software version
 
-        my_software.version = "1.2.3"
+        Examples
+        --------
+        >>> import cript
+        >>> my_software = cript.Software(
+        ...     name="my software name", version="v1.0.0", source="https://myurl.com"
+        ... )
+        >>> my_software.version = "1.2.3"
 
         Returns
         -------
@@ -164,9 +171,11 @@ class Software(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_software.source = "https://mywebsite.com"
-        ```
+        >>> import cript
+        >>> my_software = cript.Software(
+        ...     name="my software name", version="v1.0.0", source="https://myurl.com"
+        ... )
+        >>> my_software.source = "https://myNewWebsite.com"
 
         Returns
         -------

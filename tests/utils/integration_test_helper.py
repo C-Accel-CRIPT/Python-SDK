@@ -1,14 +1,14 @@
 import json
 
 import pytest
-from conftest import HAS_INTEGRATION_TESTS_ENABLED
 from deepdiff import DeepDiff
 
 import cript
+from conftest import HAS_INTEGRATION_TESTS_ENABLED
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
-def integrate_nodes_helper(cript_api: cript.API, project_node: cript.Project):
+def save_integration_node_helper(cript_api: cript.API, project_node: cript.Project):
     """
     integration test between Python SDK and API Client
     tests both POST and GET

@@ -4,20 +4,20 @@ import os
 import uuid
 
 import pytest
-from integration_test_helper import (
-    delete_integration_node_helper,
-    integrate_nodes_helper,
-)
-from util import strip_uid_from_dict
 
 import cript
+from tests.utils.integration_test_helper import (
+    delete_integration_node_helper,
+    save_integration_node_helper,
+)
+from tests.utils.util import strip_uid_from_dict
 
 
 def test_create_file() -> None:
     """
     tests that a simple file with only required attributes can be created
     """
-    file_node = cript.File(name="my file name", source="https://google.com", type="calibration")
+    file_node = cript.File(name="my file name", source="https://google.com", type="calibration", extension=".csv")
 
     assert isinstance(file_node, cript.File)
 
@@ -90,7 +90,7 @@ def test_local_file_source_upload_and_download(tmp_path_factory) -> None:
     local_file_path.write_text(file_text)
 
     # create a file node with a local file path
-    my_file = cript.File(name="my local file source node", source=str(local_file_path), type="data")
+    my_file = cript.File(name="my local file source node", source=str(local_file_path), type="data", extension=".txt")
 
     # check that the file source has been uploaded to cloud storage and source has changed to reflect that
     assert my_file.source.startswith("tests/")
@@ -124,7 +124,7 @@ def test_create_file_with_local_source(tmp_path) -> None:
     with open(file_path, "w") as temporary_file:
         temporary_file.write("hello world!")
 
-    assert cript.File(name="my file node with local source", source=str(file_path), type="calibration")
+    assert cript.File(name="my file node with local source", source=str(file_path), type="calibration", extension=".txt")
 
 
 def test_file_getters_and_setters(complex_file_node) -> None:
@@ -140,26 +140,31 @@ def test_file_getters_and_setters(complex_file_node) -> None:
     new_file_type = "computation_config"
     new_file_extension = ".csv"
     new_data_dictionary = "new data dictionary"
+    new_notes = "new notes"
 
     # ------- set properties -------
     complex_file_node.source = new_source
     complex_file_node.type = new_file_type
     complex_file_node.extension = new_file_extension
     complex_file_node.data_dictionary = new_data_dictionary
+    complex_file_node.notes = new_notes
 
     # ------- assert set and get properties are the same -------
     assert complex_file_node.source == new_source
     assert complex_file_node.type == new_file_type
     assert complex_file_node.extension == new_file_extension
     assert complex_file_node.data_dictionary == new_data_dictionary
+    assert complex_file_node.notes == new_notes
 
     # remove optional attributes
     complex_file_node.extension = ""
     complex_file_node.data_dictionary = ""
+    complex_file_node.notes = ""
 
     # assert optional attributes have been removed
     assert complex_file_node.extension == ""
     assert complex_file_node.data_dictionary == ""
+    assert complex_file_node.notes == ""
 
 
 def test_serialize_file_to_json(complex_file_node) -> None:
@@ -212,7 +217,7 @@ def test_integration_file(cript_api, simple_project_node, simple_data_node):
 
     simple_project_node.collection[0].experiment[0].data = [simple_data_node]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
     # change simple attribute to trigger update
@@ -220,7 +225,7 @@ def test_integration_file(cript_api, simple_project_node, simple_data_node):
     # TODO enable later
     # simple_project_node.collection[0].experiment[0].data[0].file[0].data_dictionary = "file data_dictionary UPDATED"
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     # isolated file node from data node

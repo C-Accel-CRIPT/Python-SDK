@@ -69,7 +69,13 @@ class Project(PrimaryBaseNode):
     @beartype
     def __init__(self, name: str, collection: Optional[List[Collection]] = None, material: Optional[List[Material]] = None, notes: str = "", **kwargs):
         """
-        Create a Project node with Project name and Group
+        Create a Project node with Project name
+
+        Examples
+        --------
+        >>> import cript
+        >>> my_project = cript.Project(name="my Project name")
+
 
         Parameters
         ----------
@@ -161,13 +167,10 @@ class Project(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        my_new_collection = cript.Collection(
-            name="my collection name", experiments=[my_experiment_node]
-        )
-
-        my_project.collection = my_new_collection
-        ```
+        >>> import cript
+        >>> my_project = cript.Project(name="my Project name")
+        >>> my_new_collection = cript.Collection(name="my collection name")
+        >>> my_project.collection = [my_new_collection]
 
         Returns
         -------
@@ -201,12 +204,11 @@ class Project(PrimaryBaseNode):
 
         Examples
         --------
-        ```python
-        identifier = [{"alternative_names": "my material alternative name"}]
-        my_material = cript.Material(name="my material", identifier=identifier)
-
-        my_project.material = [my_material]
-        ```
+        >>> import cript
+        >>> my_project = cript.Project(name="my Project name")
+        >>> identifier = [{"bigsmiles": "my big smiles"}]
+        >>> my_material = cript.Material(name="my material", identifier=identifier)
+        >>> my_project.material = [my_material]
 
         Returns
         -------

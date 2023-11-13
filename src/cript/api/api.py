@@ -81,6 +81,12 @@ class API:
     _internal_s3_client: Any = None  # type: ignore
     # trunk-ignore-end(cspell)
 
+    # Advanced User Tip: Disabling Node Validation
+    # For experienced users, deactivating node validation during creation can be a time-saver.
+    # Note that the complete node graph will still undergo validation before being saved to the back end.
+    # Caution: It's advisable to keep validation active while debugging scripts, as disabling it can delay error notifications and complicate the debugging process.
+    skip_validation: bool = False
+
     @beartype
     def __init__(self, host: Union[str, None] = None, api_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: Union[str, Path] = ""):
         """
@@ -609,7 +615,7 @@ class API:
             return self._db_schema
 
     @beartype
-    def _is_node_schema_valid(self, node_json: str, is_patch: bool = False) -> bool:
+    def _is_node_schema_valid(self, node_json: str, is_patch: bool = False, force_validation: bool = False) -> bool:
         """
         checks a node JSON schema against the db schema to return if it is valid or not.
 
@@ -643,6 +649,10 @@ class API:
             whether the node JSON is valid or not
         """
 
+        # Fast exit without validation
+        if self.skip_validation and not force_validation:
+            return True
+
         db_schema = self._get_db_schema()
 
         node_type: str = _get_node_type_from_json(node_json=node_json)
@@ -651,7 +661,13 @@ class API:
 
         # logging out info to the terminal for the user feedback
         # (improve UX because the program is currently slow)
-        self.logger.info(f"Validating {node_type} graph...")
+        log_message = f"Validating {node_type} graph..."
+        if force_validation:
+            log_message = "Forced: " + log_message + " if error occur, try setting `cript.API.skip_validation = False` for debugging."
+        else:
+            log_message += " (Can be disabled by setting `cript.API.skip_validation = True`.)"
+
+        self.logger.info(log_message)
 
         # set the schema to test against http POST or PATCH of DB Schema
         schema_http_method: str

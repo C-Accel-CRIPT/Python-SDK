@@ -242,7 +242,7 @@ class BaseNode(ABC):
         self.validate()
         return self.get_json().json
 
-    def get_self_contained_json(self, **kwargs):
+    def get_self_contained_json(self, **kwargs) -> str:
         """
         Generates a long-form JSON representation of the current node and its hierarchy.
 

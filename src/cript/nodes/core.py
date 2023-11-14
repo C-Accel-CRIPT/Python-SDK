@@ -242,7 +242,7 @@ class BaseNode(ABC):
         self.validate()
         return self.get_json().json
 
-    def get_self_contained_json(self, **kwargs) -> str:
+    def get_expanded_json(self, **kwargs) -> str:
         """
         Generates a long-form JSON representation of the current node and its hierarchy.
 
@@ -291,7 +291,7 @@ class BaseNode(ABC):
         >>> my_project.collection = [my_collection]
         >>> my_project.collection[0].inventory = [my_inventory]
         >>> #  ============= Get long form JSON =============
-        >>> long_form_json = my_project.get_self_contained_json(indent=4)
+        >>> long_form_json = my_project.get_expanded_json()(indent=4)
 
         ???+ info "Short JSON VS Long JSON"
             # Default Short JSON
@@ -337,7 +337,7 @@ class BaseNode(ABC):
             ```
 
             # Long JSON
-            > This is what is created when `my_project.get_self_contained_json()`
+            > This is what is created when `my_project.get_expanded_json()()`
 
             ```json linenums="1"
             {

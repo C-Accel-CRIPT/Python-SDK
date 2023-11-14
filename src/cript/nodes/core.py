@@ -390,8 +390,7 @@ class BaseNode(ABC):
             }
             ```
         """
-        return self.get_json(handled_ids=None, known_uuid=None, suppress_attributes=None, is_patch=False,
-                             condense_to_uuid={}, **kwargs).json
+        return self.get_json(handled_ids=None, known_uuid=None, suppress_attributes=None, is_patch=False, condense_to_uuid={}, **kwargs).json
 
     def get_json(
         self,

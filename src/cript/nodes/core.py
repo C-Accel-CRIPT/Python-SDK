@@ -277,6 +277,9 @@ class BaseNode(ABC):
         The `get_expanded_json()` method differs from the standard [`json`](./#cript.nodes.core.BaseNode.json)
         property or method, which might provide a more condensed version of the node's data.
 
+        > For more information on condensed JSON and deserialization, please feel free to reference our discussion
+        > on [deserializing Python nodes to JSON](https://github.com/C-Accel-CRIPT/Python-SDK/discussions/177)
+
         Examples
         --------
         >>> import cript

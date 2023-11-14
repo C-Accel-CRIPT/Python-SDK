@@ -326,6 +326,13 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
 
 
 def test_expanded_json(complex_project_node):
+    """
+    Tests the generation and deserialization of expanded JSON for a complex project node.
+
+    This test verifies 2 key aspects:
+        1. A complex project node can be serialized into an expanded JSON string, without UUID placeholders.
+        2. The expanded JSON can be deserialized into a node  that is equivalent to the original node.
+    """
     expanded_project_json: str = complex_project_node.get_expanded_json()
     deserialized_project_node: cript.Project = cript.load_nodes_from_json(expanded_project_json)
 

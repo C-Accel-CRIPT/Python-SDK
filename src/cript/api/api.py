@@ -615,7 +615,7 @@ class API:
             return self._db_schema
 
     @beartype
-    def _is_node_schema_valid(self, node_json: str, is_patch: bool = False, force_validation: bool = False) -> bool:
+    def _is_node_schema_valid(self, node_json: str, is_patch: bool = False, force_validation: bool = False) -> Union[bool, None]:
         """
         checks a node JSON schema against the db schema to return if it is valid or not.
 
@@ -651,7 +651,7 @@ class API:
 
         # Fast exit without validation
         if self.skip_validation and not force_validation:
-            return True
+            return None
 
         db_schema = self._get_db_schema()
 

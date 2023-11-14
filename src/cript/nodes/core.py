@@ -272,6 +272,11 @@ class BaseNode(ABC):
         str
             A comprehensive JSON string representing the current node and its entire hierarchy in long-form.
 
+        Notes
+        -----
+        The `get_expanded_json()` method differs from the standard [`json`](./#cript.nodes.core.BaseNode.json)
+        property or method, which might provide a more condensed version of the node's data.
+
         Examples
         --------
         >>> import cript

@@ -287,10 +287,10 @@ class BaseNode(ABC):
         >>> my_project = cript.Project(name=f"my_Project")
         >>> my_collection = cript.Collection(name="my collection")
         >>> my_material_1 = cript.Material(
-        ...     name="my material 1", identifier=[{"bigsmiles": "mybigsmiles"}]
+        ...     name="my material 1", identifier=[{"bigsmiles": "my material 1 bigsmiles"}]
         ... )
         >>> my_material_2 = cript.Material(
-        ...     name="my material 2", identifier=[{"bigsmiles": "mybigsmiles"}]
+        ...     name="my material 2", identifier=[{"bigsmiles": "my material 2 bigsmiles"}]
         ... )
         >>> my_inventory = cript.Inventory(
         ...     name="my inventory", material=[my_material_1, my_material_2]
@@ -379,7 +379,7 @@ class BaseNode(ABC):
                                  "uid":"_:07bc3e4f-757f-4ac7-ae8a-7a0c68272531",
                                  "uuid":"07bc3e4f-757f-4ac7-ae8a-7a0c68272531",
                                  "name":"my material 1",
-                                 "bigsmiles":"mybigsmiles"
+                                 "bigsmiles":"my material 1 bigsmiles"
                               },
                               {
                                  "node":[
@@ -388,7 +388,7 @@ class BaseNode(ABC):
                                  "uid":"_:64565687-5707-4d67-860f-5ee4a057a45f",
                                  "uuid":"64565687-5707-4d67-860f-5ee4a057a45f",
                                  "name":"my material 2",
-                                 "bigsmiles":"mybigsmiles"
+                                 "bigsmiles":"my material 2 bigsmiles"
                               }
                            ]
                         }

@@ -307,8 +307,8 @@ class BaseNode(ABC):
         >>> #  ============= Get long form JSON =============
         >>> long_form_json = my_project.get_expanded_json(indent=4)
 
-        ???+ info "Short JSON VS Long JSON"
-            # Default Short JSON
+        ???+ info "Condensed JSON VS Expanded JSON"
+            # Default Condensed JSON
             > This is the JSON when `my_project.json` is called
 
             ```json linenums="1"
@@ -350,8 +350,8 @@ class BaseNode(ABC):
             }
             ```
 
-            # Long JSON
-            > This is what is created when `my_project.get_expanded_json()()`
+            # Expanded JSON
+            > This is what is created when `my_project.get_expanded_json()`
 
             ```json linenums="1"
             {

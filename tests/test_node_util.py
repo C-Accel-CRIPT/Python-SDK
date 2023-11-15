@@ -333,15 +333,15 @@ def test_expanded_json(complex_project_node):
         1. A complex project node can be serialized into an expanded JSON string, without UUID placeholders.
         2. The expanded JSON can be deserialized into a node  that is equivalent to the original node.
     """
-    expanded_project_json: str = complex_project_node.get_expanded_json()
-    deserialized_project_node: cript.Project = cript.load_nodes_from_json(expanded_project_json)
+    project_expanded_json: str = complex_project_node.get_expanded_json()
+    deserialized_project_node: cript.Project = cript.load_nodes_from_json(project_expanded_json)
 
     # assert the expanded JSON was correctly deserialized to project node
     assert deserialized_project_node == complex_project_node
 
-    short_json: str = complex_project_node.json
+    condensed_json: str = complex_project_node.json
 
     # since short JSON has UUID it will not be able to deserialize correctly and will
     # raise CRIPTJsonDeserializationError
     with pytest.raises(cript.nodes.exceptions.CRIPTJsonDeserializationError):
-        cript.load_nodes_from_json(short_json)
+        cript.load_nodes_from_json(condensed_json)

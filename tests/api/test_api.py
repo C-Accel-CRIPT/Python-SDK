@@ -183,7 +183,7 @@ def test_is_node_schema_valid_skipped(cript_api: cript.API) -> None:
         invalid_schema = {"invalid key": "invalid value", "node": ["Material"]}
 
         # Test should be skipped
-        assert local_cript_api._is_node_schema_valid(node_json=json.dumps(invalid_schema), is_patch=False) is True
+        assert local_cript_api._is_node_schema_valid(node_json=json.dumps(invalid_schema), is_patch=False) is None
 
         with pytest.raises(CRIPTNodeSchemaError):
             local_cript_api._is_node_schema_valid(node_json=json.dumps(invalid_schema), is_patch=False, force_validation=True)

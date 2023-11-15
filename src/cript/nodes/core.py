@@ -142,7 +142,7 @@ class BaseNode(ABC):
             self._json_attrs = old_json_attrs
             raise exc
 
-    def validate(self, api=None, is_patch=False) -> None:
+    def validate(self, api=None, is_patch: bool = False, force_validation: bool = False) -> None:
         """
         Validate this node (and all its children) against the schema provided by the data bank.
 
@@ -154,7 +154,7 @@ class BaseNode(ABC):
 
         if api is None:
             api = _get_global_cached_api()
-        api._is_node_schema_valid(self.get_json(is_patch=is_patch).json, is_patch=is_patch)
+        api._is_node_schema_valid(self.get_json(is_patch=is_patch).json, is_patch=is_patch, force_validation=force_validation)
 
     @classmethod
     def _from_json(cls, json_dict: dict):
@@ -239,8 +239,14 @@ class BaseNode(ABC):
         """
         # We cannot validate in `get_json` because we call it inside `validate`.
         # But most uses are probably the property, so we can validate the node here.
-        self.validate()
-        return self.get_json().json
+        json_string: str = self.get_json().json
+
+        from cript.api.api import _get_global_cached_api
+
+        api = _get_global_cached_api()
+        api._is_node_schema_valid(json_string, force_validation=True)
+
+        return json_string
 
     def get_json(
         self,

@@ -299,7 +299,7 @@ class BaseNode(ABC):
         >>> my_project.collection = [my_collection]
         >>> my_project.collection[0].inventory = [my_inventory]
         >>> #  ============= Get long form JSON =============
-        >>> long_form_json = my_project.get_expanded_json()(indent=4)
+        >>> long_form_json = my_project.get_expanded_json(indent=4)
 
         ???+ info "Short JSON VS Long JSON"
             # Default Short JSON

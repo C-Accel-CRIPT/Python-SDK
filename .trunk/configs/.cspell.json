@@ -120,6 +120,7 @@
     "BCDB",
     "doctest",
     "Doctest",
-    "Doctests"
+    "Doctests",
+    "linenums"
   ]
 }

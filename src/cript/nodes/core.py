@@ -142,7 +142,7 @@ class BaseNode(ABC):
             self._json_attrs = old_json_attrs
             raise exc
 
-    def validate(self, api=None, is_patch=False) -> None:
+    def validate(self, api=None, is_patch: bool = False, force_validation: bool = False) -> None:
         """
         Validate this node (and all its children) against the schema provided by the data bank.
 
@@ -154,7 +154,7 @@ class BaseNode(ABC):
 
         if api is None:
             api = _get_global_cached_api()
-        api._is_node_schema_valid(self.get_json(is_patch=is_patch).json, is_patch=is_patch)
+        api._is_node_schema_valid(self.get_json(is_patch=is_patch).json, is_patch=is_patch, force_validation=force_validation)
 
     @classmethod
     def _from_json(cls, json_dict: dict):
@@ -239,8 +239,172 @@ class BaseNode(ABC):
         """
         # We cannot validate in `get_json` because we call it inside `validate`.
         # But most uses are probably the property, so we can validate the node here.
-        self.validate()
-        return self.get_json().json
+        json_string: str = self.get_json().json
+
+        from cript.api.api import _get_global_cached_api
+
+        api = _get_global_cached_api()
+        api._is_node_schema_valid(json_string, force_validation=True)
+
+        return json_string
+
+    def get_expanded_json(self, **kwargs) -> str:
+        """
+        Generates a long-form JSON representation of the current node and its hierarchy.
+
+        The long-form JSON includes complete details of the node, eliminating the need for
+         references to UUIDs to nodes stored in the CRIPT database. This comprehensive representation
+         is useful for offline storage of CRIPT nodes, transferring nodes between different CRIPT instances,
+         or for backup purposes.
+
+        The generated long-form JSON can be reloaded into the SDK using
+        [`cript.load_nodes_from_json()`](../../../utility_functions/#cript.nodes.util.load_nodes_from_json),
+        ensuring consistency and completeness of the node data.
+        However, it's important to note that this long-form JSON might not comply directly with the JSON schema
+        required for POST or PATCH requests to the CRIPT API.
+
+        Optional keyword arguments (`kwargs`) are supported and are passed directly to `json.dumps()`.
+        These arguments allow customization of the JSON output, such as formatting for readability
+        or pretty printing.
+
+        Parameters
+        ----------
+        **kwargs : dict, optional
+            Additional keyword arguments for `json.dumps()` to customize the JSON output, such as `indent`
+            for pretty-printing.
+
+        Returns
+        -------
+        str
+            A comprehensive JSON string representing the current node and its entire hierarchy in long-form.
+
+        Notes
+        -----
+        The `get_expanded_json()` method differs from the standard [`json`](./#cript.nodes.core.BaseNode.json)
+        property or method, which might provide a more condensed version of the node's data.
+
+        > For more information on condensed JSON and deserialization, please feel free to reference our discussion
+        > on [deserializing Python nodes to JSON](https://github.com/C-Accel-CRIPT/Python-SDK/discussions/177)
+
+        Examples
+        --------
+        >>> import cript
+        >>> # ============= Create all needed nodes =============
+        >>> my_project = cript.Project(name=f"my_Project")
+        >>> my_collection = cript.Collection(name="my collection")
+        >>> my_material_1 = cript.Material(
+        ...     name="my material 1", identifier=[{"bigsmiles": "my material 1 bigsmiles"}]
+        ... )
+        >>> my_material_2 = cript.Material(
+        ...     name="my material 2", identifier=[{"bigsmiles": "my material 2 bigsmiles"}]
+        ... )
+        >>> my_inventory = cript.Inventory(
+        ...     name="my inventory", material=[my_material_1, my_material_2]
+        ... )
+        >>> #  ============= Assemble nodes =============
+        >>> my_project.collection = [my_collection]
+        >>> my_project.collection[0].inventory = [my_inventory]
+        >>> #  ============= Get long form JSON =============
+        >>> long_form_json = my_project.get_expanded_json(indent=4)
+
+        ???+ info "Condensed JSON VS Expanded JSON"
+            # Default Condensed JSON
+            > This is the JSON when `my_project.json` is called
+
+            ```json linenums="1"
+            {
+               "node":[
+                  "Project"
+               ],
+               "uid":"_:d0d1b3c9-d552-4d4f-afd2-76f01538b87a",
+               "uuid":"d0d1b3c9-d552-4d4f-afd2-76f01538b87a",
+               "name":"my_Project",
+               "collection":[
+                  {
+                     "node":[
+                        "Collection"
+                     ],
+                     "uid":"_:07765ac8-862a-459e-9d99-d0439d6a6a09",
+                     "uuid":"07765ac8-862a-459e-9d99-d0439d6a6a09",
+                     "name":"my collection",
+                     "inventory":[
+                        {
+                           "node":[
+                              "Inventory"
+                           ],
+                           "uid":"_:4cf2bbee-3dc0-400b-8269-709f99d89d9f",
+                           "uuid":"4cf2bbee-3dc0-400b-8269-709f99d89d9f",
+                           "name":"my inventory",
+                           "material":[
+                              {
+                                 "uuid":"0cf14572-4da2-43f2-8cb9-e8374086368e"
+                              },
+                              {
+                                 "uuid":"6302a8b0-4265-4a3a-a40f-bbcbb7293046"
+                              }
+                           ]
+                        }
+                     ]
+                  }
+               ]
+            }
+            ```
+
+            # Expanded JSON
+            > This is what is created when `my_project.get_expanded_json()`
+
+            ```json linenums="1"
+            {
+               "node":[
+                  "Project"
+               ],
+               "uid":"_:afe4bb2f-fa75-4736-b692-418a5143e6f5",
+               "uuid":"afe4bb2f-fa75-4736-b692-418a5143e6f5",
+               "name":"my_Project",
+               "collection":[
+                  {
+                     "node":[
+                        "Collection"
+                     ],
+                     "uid":"_:8b5c8125-c956-472a-9d07-8cb7b402b101",
+                     "uuid":"8b5c8125-c956-472a-9d07-8cb7b402b101",
+                     "name":"my collection",
+                     "inventory":[
+                        {
+                           "node":[
+                              "Inventory"
+                           ],
+                           "uid":"_:1bd3c966-cb35-494d-85cd-3515cde570f3",
+                           "uuid":"1bd3c966-cb35-494d-85cd-3515cde570f3",
+                           "name":"my inventory",
+                           "material":[
+                              {
+                                 "node":[
+                                    "Material"
+                                 ],
+                                 "uid":"_:07bc3e4f-757f-4ac7-ae8a-7a0c68272531",
+                                 "uuid":"07bc3e4f-757f-4ac7-ae8a-7a0c68272531",
+                                 "name":"my material 1",
+                                 "bigsmiles":"my material 1 bigsmiles"
+                              },
+                              {
+                                 "node":[
+                                    "Material"
+                                 ],
+                                 "uid":"_:64565687-5707-4d67-860f-5ee4a057a45f",
+                                 "uuid":"64565687-5707-4d67-860f-5ee4a057a45f",
+                                 "name":"my material 2",
+                                 "bigsmiles":"my material 2 bigsmiles"
+                              }
+                           ]
+                        }
+                     ]
+                  }
+               ]
+            }
+            ```
+        """
+        return self.get_json(handled_ids=None, known_uuid=None, suppress_attributes=None, is_patch=False, condense_to_uuid={}, **kwargs).json
 
     def get_json(
         self,
@@ -266,6 +430,8 @@ class BaseNode(ABC):
         User facing access to get the JSON of a node.
         Opposed to the also available property json this functions allows further control.
         Additionally, this function does not call `self.validate()` but the property `json` does.
+        We also accept `kwargs`, that are passed on to the JSON decoding via `json.dumps()` this can be used for example to prettify the output.
+
 
         Returns named tuple with json and handled ids as result.
         """

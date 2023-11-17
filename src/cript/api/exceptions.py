@@ -132,6 +132,27 @@ class CRIPTAPISaveError(CRIPTException):
 
 
 class CRIPTDuplicateNameError(CRIPTAPISaveError):
+    """
+    Exception raised when attempting to save a node with a name that already exists in CRIPT.
+
+    This exception class extends `CRIPTAPISaveError` and is used to handle errors
+    that occur when a node's name duplicates an existing node's name in the CRIPT database.
+
+    Parameters
+    ----------
+    api_response : dict
+        The response returned from the API that contains the error details.
+    json_data : str
+        The JSON data of the node that caused the duplication error.
+    parent_cript_save_error : CRIPTAPISaveError
+        The original `CRIPTAPISaveError` instance containing additional context of the error.
+
+    ## Troubleshooting
+    #### Duplicate Name Errors
+    Make sure that the name you are using to save a node is unique and does not already exist in the database.
+    If you encounter a `CRIPTDuplicateNameError`, check the name of your node and try a different name.
+    """
+
     def __init__(self, api_response, json_data: str, parent_cript_save_error: CRIPTAPISaveError):
         super().__init__(
             parent_cript_save_error.api_host_domain, api_response["code"], api_response=api_response["error"], patch_request=parent_cript_save_error.patch_request, pre_saved_nodes=parent_cript_save_error.pre_saved_nodes, json_data=json_data
@@ -157,7 +178,7 @@ class CRIPTDuplicateNameError(CRIPTAPISaveError):
             self.node = "UnknownTypeIdx"
 
     def __str__(self) -> str:
-        return f"The name '{self.name}' for your {self.node} node is already present in CRIPT. Either choose a new name!"  # , or consider namespaces like 'MyNameSpace::{self.name}' instead."
+        return f"The name '{self.name}' for your {self.node} node is already present in CRIPT. Please use a unique name"
 
 
 class InvalidHostError(CRIPTException):

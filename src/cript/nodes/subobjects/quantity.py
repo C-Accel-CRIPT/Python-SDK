@@ -69,7 +69,8 @@ class Quantity(UUIDBaseNode):
         Parameters
         ----------
         key : str
-            type of quantity. Quantity key must come from [CRIPT Controlled Vocabulary]()
+            type of quantity. Quantity key must come from
+            [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/quantity_key)
         value : Number
             amount of material
         unit : str
@@ -77,17 +78,15 @@ class Quantity(UUIDBaseNode):
         uncertainty : Union[Number, None], optional
             uncertainty of value, by default None
         uncertainty_type : str, optional
-            type of uncertainty. Quantity uncertainty type must come from [CRIPT Controlled Vocabulary](), by default ""
+            type of uncertainty. Quantity uncertainty type must come from
+            [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/uncertainty_type), by default ""
 
         Examples
         --------
-        ```python
-        import cript
-
-        my_quantity = cript.Quantity(
-            key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
-        )
-        ```
+        >>> import cript
+        >>> my_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
 
         Returns
         -------
@@ -113,18 +112,21 @@ class Quantity(UUIDBaseNode):
         """
         set the Quantity key and unit attributes
 
-        Quantity key must come from [CRIPT Controlled Vocabulary]()
+        Quantity key must come from [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/quantity_key)
 
         Examples
         --------
-        ```python
-        my_quantity.set_key_unit(new_key="mass", new_unit="gram")
-        ```
+        >>> import cript
+        >>> my_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
+        >>> my_quantity.set_key_unit(new_key="mass", new_unit="kg")
 
         Parameters
         ----------
         new_key : str
-            new Quantity key. Quantity key must come from [CRIPT Controlled Vocabulary]()
+            new Quantity key. Quantity key must come from
+            [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/quantity_key)
         new_unit : str
             new unit
 
@@ -158,9 +160,11 @@ class Quantity(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_quantity.value = 1
-        ```
+        >>> import cript
+        >>> my_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
+        >>> my_quantity.value = 1
 
         Returns
         -------
@@ -235,20 +239,23 @@ class Quantity(UUIDBaseNode):
 
         Uncertainty and uncertainty type are set at the same time to keep the value and type in sync
 
-        `uncertainty_type` must come from [CRIPT Controlled Vocabulary]()
+        `uncertainty_type` must come from
+        [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/uncertainty_type)
 
         Examples
         --------
-        ```python
-        my_property.set_uncertainty(uncertainty=1, type="stderr")
-        ```
+        >>> import cript
+        >>> my_quantity = cript.Quantity(
+        ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
+        ... )
 
         Parameters
         ----------
         uncertainty : Number
             uncertainty value
         type : str
-            type of uncertainty, uncertainty_type must come from [CRIPT Controlled Vocabulary]()
+            type of uncertainty, uncertainty_type must come from
+            [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/uncertainty_type)
 
         Returns
         -------

@@ -3,7 +3,6 @@ import json
 from dataclasses import replace
 
 import pytest
-from util import strip_uid_from_dict
 
 import cript
 from cript.nodes.core import get_new_uid
@@ -17,6 +16,7 @@ from cript.nodes.exceptions import (
     CRIPTOrphanedMaterialError,
     CRIPTOrphanedProcessError,
 )
+from tests.utils.util import strip_uid_from_dict
 
 
 def test_removing_nodes(simple_algorithm_node, complex_parameter_node, simple_algorithm_dict):
@@ -323,3 +323,25 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
 
     cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
     project.validate()
+
+
+def test_expanded_json(complex_project_node):
+    """
+    Tests the generation and deserialization of expanded JSON for a complex project node.
+
+    This test verifies 2 key aspects:
+        1. A complex project node can be serialized into an expanded JSON string, without UUID placeholders.
+        2. The expanded JSON can be deserialized into a node  that is equivalent to the original node.
+    """
+    project_expanded_json: str = complex_project_node.get_expanded_json()
+    deserialized_project_node: cript.Project = cript.load_nodes_from_json(project_expanded_json)
+
+    # assert the expanded JSON was correctly deserialized to project node
+    assert deserialized_project_node == complex_project_node
+
+    condensed_json: str = complex_project_node.json
+
+    # since short JSON has UUID it will not be able to deserialize correctly and will
+    # raise CRIPTJsonDeserializationError
+    with pytest.raises(cript.nodes.exceptions.CRIPTJsonDeserializationError):
+        cript.load_nodes_from_json(condensed_json)

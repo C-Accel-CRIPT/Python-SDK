@@ -8,9 +8,9 @@ from typing import Dict
 
 import pytest
 import requests
-from conftest import HAS_INTEGRATION_TESTS_ENABLED
 
 import cript
+from conftest import HAS_INTEGRATION_TESTS_ENABLED
 from cript.api.exceptions import InvalidVocabulary
 from cript.api.paginator import Paginator
 from cript.nodes.exceptions import CRIPTNodeSchemaError
@@ -153,6 +153,40 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
 
     # convert dict to JSON string because method expects JSON string
     assert cript_api._is_node_schema_valid(node_json=json.dumps(valid_file_dict), is_patch=False) is True
+
+
+def test_is_node_schema_valid_skipped(cript_api: cript.API) -> None:
+    """
+    test that a CRIPT node can be correctly validated and invalidated with the db schema, when skipping tests is active
+
+    * test db schema validation with an invalid node, and it should be invalid, but only detected if forced
+
+    Notes
+    -----
+    * does not test if serialization/deserialization works correctly,
+    just tests if the node schema can work correctly if serialization was correct
+
+    """
+
+    def extract_base_url(url):
+        # Split the URL by "//" first to separate the scheme (like http, https)
+        parts = url.split("//", 1)
+        scheme, rest = parts if len(parts) > 1 else ("", parts[0])
+
+        # Split the rest by the first "/" to separate the domain
+        domain = rest.split("/", 1)[0]
+        return f"{scheme}//{domain}" if scheme else domain
+
+    with cript.API(host=extract_base_url(cript_api.host), api_token=cript_api._api_token, storage_token=cript_api._storage_token) as local_cript_api:
+        local_cript_api.skip_validation = True
+        # ------ invalid node schema------
+        invalid_schema = {"invalid key": "invalid value", "node": ["Material"]}
+
+        # Test should be skipped
+        assert local_cript_api._is_node_schema_valid(node_json=json.dumps(invalid_schema), is_patch=False) is None
+
+        with pytest.raises(CRIPTNodeSchemaError):
+            local_cript_api._is_node_schema_valid(node_json=json.dumps(invalid_schema), is_patch=False, force_validation=True)
 
 
 def test_get_vocabulary_by_category(cript_api: cript.API) -> None:
@@ -356,7 +390,7 @@ def test_api_search_exact_name(cript_api: cript.API) -> None:
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
-def test_api_search_uuid(cript_api: cript.API) -> None:
+def test_api_search_uuid(cript_api: cript.API, dynamic_material_data) -> None:
     """
     tests search with UUID
     searches for `Sodium polystyrene sulfonate` material via UUID
@@ -366,18 +400,12 @@ def test_api_search_uuid(cript_api: cript.API) -> None:
     2. takes the UUID from the full node and puts it into the `UUID search`
     3. asserts everything is as expected
     """
-    material_name = "Sodium polystyrene sulfonate"
-
-    exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=material_name)
-
-    material_uuid = exact_name_paginator.current_page_results[0]["uuid"]
-
-    uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=material_uuid)
+    uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=dynamic_material_data["uuid"])
 
     assert isinstance(uuid_paginator, Paginator)
     assert len(uuid_paginator.current_page_results) == 1
-    assert uuid_paginator.current_page_results[0]["name"] == material_name
-    assert uuid_paginator.current_page_results[0]["uuid"] == material_uuid
+    assert uuid_paginator.current_page_results[0]["name"] == dynamic_material_data["name"]
+    assert uuid_paginator.current_page_results[0]["uuid"] == dynamic_material_data["uuid"]
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")

@@ -76,14 +76,16 @@ class Algorithm(UUIDBaseNode):
 
     def __init__(self, key: str, type: str, parameter: Optional[List[Parameter]] = None, citation: Optional[List[Citation]] = None, **kwargs):  # ignored
         """
-        create algorithm sub-object
+        Create algorithm sub-object
 
         Parameters
         ----------
         key : str
-            algorithm key must come from [CRIPT controlled vocabulary]()
+            algorithm key must come from
+            [CRIPT controlled vocabulary](https://app.criptapp.org/vocab/algorithm_key)
         type : str
-            algorithm type must come from [CRIPT controlled vocabulary]()
+            algorithm type must come from
+            [CRIPT controlled vocabulary](https://app.criptapp.org/vocab/algorithm_type)
         parameter : List[Parameter], optional
             parameter sub-object, by default None
         citation : List[Citation], optional
@@ -91,10 +93,8 @@ class Algorithm(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        # create algorithm sub-object
-        algorithm = cript.Algorithm(key="mc_barostat", type="barostat")
-        ```
+        >>> import cript
+        >>> my_algorithm = cript.Algorithm(key="mc_barostat", type="barostat")
 
         Returns
         -------
@@ -118,9 +118,9 @@ class Algorithm(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        algorithm.key = "amorphous_cell_module"
-        ```
+        >>> import cript
+        >>> my_algorithm = cript.Algorithm(key="mc_barostat", type="barostat")
+        >>> my_algorithm.key = "amorphous_cell_module"
 
         Returns
         -------
@@ -134,7 +134,8 @@ class Algorithm(UUIDBaseNode):
         """
         set the algorithm key
 
-        > Algorithm key must come from [CRIPT Controlled Vocabulary]()
+        > Algorithm key must come from
+        [CRIPT Controlled Vocabulary](https://app.criptapp.org/vocab/algorithm_key)
 
         Parameters
         ----------
@@ -149,13 +150,14 @@ class Algorithm(UUIDBaseNode):
         """
         Algorithm type
 
-        > Algorithm type must come from [CRIPT controlled vocabulary]()
+        > Algorithm type must come from
+        [CRIPT controlled vocabulary](https://app.criptapp.org/vocab/algorithm_type)
 
         Examples
         --------
-        ```python
-        my_algorithm.type = "integration"
-        ```
+        >>> import cript
+        >>> my_algorithm = cript.Algorithm(key="mc_barostat", type="barostat")
+        >>> my_algorithm.type = "integration"
 
         Returns
         -------
@@ -176,16 +178,13 @@ class Algorithm(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        # create parameter sub-object
-        my_parameter = [
-            cript.Parameter("update_frequency", 1000.0, "1/second")
-            cript.Parameter("damping_time", 1.0, "second")
-        ]
-
-        # add parameter sub-object to algorithm sub-object
-        algorithm.parameter = my_parameter
-        ```
+        >>> import cript
+        >>> my_algorithm = cript.Algorithm(key="mc_barostat", type="barostat")
+        >>> my_parameters = [
+        ...     cript.Parameter("update_frequency", 1000.0, "1/second"),
+        ...     cript.Parameter("damping_time", 1.0, "second"),
+        ... ]
+        >>> my_algorithm.parameter = my_parameters
 
         Returns
         -------
@@ -218,30 +217,27 @@ class Algorithm(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        title = "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
-        title += "SOft coarse grained Monte-Carlo Acceleration (SOMA)"
+        >>> import cript
+        >>> my_algorithm = cript.Algorithm(key="mc_barostat", type="barostat")
+        >>> title = (
+        ...     "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
+        ...     "Soft coarse grained Monte-Carlo Acceleration (SOMA)"
+        ... )
+        >>> my_reference = cript.Reference(
+        ...     type="journal_article",
+        ...     title=title,
+        ...     author=["Ludwig Schneider", "Marcus Müller"],
+        ...     journal="Computer Physics Communications",
+        ...     publisher="Elsevier",
+        ...     year=2019,
+        ...     pages=[463, 476],
+        ...     doi="10.1016/j.cpc.2018.08.011",
+        ...     issn="0010-4655",
+        ...     website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+        ... )
+        >>> my_citation = cript.Citation(type="reference", reference=my_reference)
+        >>> my_algorithm.citation = [my_citation]
 
-        # create reference node
-        my_reference = cript.Reference(
-            type="journal_article",
-            title=title,
-            author=["Ludwig Schneider", "Marcus Müller"],
-            journal="Computer Physics Communications",
-            publisher="Elsevier",
-            year=2019,
-            pages=[463, 476],
-            doi="10.1016/j.cpc.2018.08.011",
-            issn="0010-4655",
-            website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
-        )
-
-        # create citation sub-object and add reference to it
-        my_citation = cript.Citation(type="reference, reference==my_reference)
-
-        # add citation to algorithm node
-        algorithm.citation = my_citation
-        ```
 
         Returns
         -------

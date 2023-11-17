@@ -83,13 +83,9 @@ class SoftwareConfiguration(UUIDBaseNode):
 
         Examples
         ---------
-        ```python
-        import cript
-
-        my_software = cript.Software(name="LAMMPS", version="23Jun22", source="lammps.org")
-
-        my_software_configuration = cript.SoftwareConfiguration(software=my_software)
-        ```
+        >>> import cript
+        >>> my_software = cript.Software(name="LAMMPS", version="23Jun22", source="lammps.org")
+        >>> my_software_configuration = cript.SoftwareConfiguration(software=my_software)
 
         Returns
         -------
@@ -112,13 +108,10 @@ class SoftwareConfiguration(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_software = cript.Software(
-            name="my software name", version="v1.0.0", source="https://myurl.com"
-        )
-
-        my_software_configuration.software = my_software
-        ```
+        >>> import cript
+        >>> my_software = cript.Software(name="LAMMPS", version="23Jun22", source="lammps.org")
+        >>> my_software_configuration = cript.SoftwareConfiguration(software=my_software)
+        >>> my_software_configuration.software = my_software
 
         Returns
         -------
@@ -153,11 +146,11 @@ class SoftwareConfiguration(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        my_algorithm = cript.Algorithm(key="mc_barostat", type="barostat")
-
-        my_software_configuration.algorithm = [my_algorithm]
-        ```
+        >>> import cript
+        >>> my_algorithm = cript.Algorithm(key="mc_barostat", type="barostat")
+        >>> my_software = cript.Software(name="LAMMPS", version="23Jun22", source="lammps.org")
+        >>> my_software_configuration = cript.SoftwareConfiguration(software=my_software)
+        >>> my_software_configuration.algorithm = [my_algorithm]
 
         Returns
         -------
@@ -197,10 +190,12 @@ class SoftwareConfiguration(UUIDBaseNode):
         my_software_configuration.notes = "these are my awesome notes!"
         ```
 
-        ### JSON Notes
-        ```python
-        my_software_configuration.notes = "{'notes subject': 'notes contents'}"
-        ```
+        Examples
+        -------
+        >>> import cript
+        >>> my_software = cript.Software(name="LAMMPS", version="23Jun22", source="lammps.org")
+        >>> my_software_configuration = cript.SoftwareConfiguration(software=my_software)
+        >>> my_software_configuration.notes = "{'notes subject': 'notes contents'}"
 
         Returns
         -------
@@ -235,30 +230,27 @@ class SoftwareConfiguration(UUIDBaseNode):
 
         Examples
         --------
-        ```python
-        title = "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
-        title += "SOft coarse grained Monte-Carlo Acceleration (SOMA)"
-
-        # create reference node
-        my_reference = cript.Reference(
-            type"journal_article",
-            title=title,
-            author=["Ludwig Schneider", "Marcus Müller"],
-            journal="Computer Physics Communications",
-            publisher="Elsevier",
-            year=2019,
-            pages=[463, 476],
-            doi="10.1016/j.cpc.2018.08.011",
-            issn="0010-4655",
-            website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
-        )
-
-        # create citation sub-object and add reference to it
-        my_citation = Citation("reference", my_reference)
-
-        # add citation to algorithm node
-        my_software_configuration.citation = [my_citation]
-        ```
+        >>> import cript
+        >>> title = (
+        ...     "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
+        ...     "Soft coarse grained Monte-Carlo Acceleration (SOMA)"
+        ... )
+        >>> my_reference = cript.Reference(
+        ...     type="journal_article",
+        ...     title=title,
+        ...     author=["Ludwig Schneider", "Marcus Müller"],
+        ...     journal="Computer Physics Communications",
+        ...     publisher="Elsevier",
+        ...     year=2019,
+        ...     pages=[463, 476],
+        ...     doi="10.1016/j.cpc.2018.08.011",
+        ...     issn="0010-4655",
+        ...     website="https://www.sciencedirect.com/science/article/pii/S0010465518303072",
+        ... )
+        >>> my_citation = Citation("reference", my_reference)
+        >>> my_software = cript.Software(name="LAMMPS", version="23Jun22", source="lammps.org")
+        >>> my_software_configuration = cript.SoftwareConfiguration(software=my_software)
+        >>> my_software_configuration.citation = [my_citation]
 
         Returns
         -------

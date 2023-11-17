@@ -1,13 +1,12 @@
 import json
 import uuid
 
-from integration_test_helper import (
-    delete_integration_node_helper,
-    integrate_nodes_helper,
-)
-from util import strip_uid_from_dict
-
 import cript
+from tests.utils.integration_test_helper import (
+    delete_integration_node_helper,
+    save_integration_node_helper,
+)
+from tests.utils.util import strip_uid_from_dict
 
 
 def test_json(complex_software_configuration_node, complex_software_configuration_dict):
@@ -19,26 +18,32 @@ def test_json(complex_software_configuration_node, complex_software_configuratio
     assert strip_uid_from_dict(json.loads(sc2.json)) == strip_uid_from_dict(json.loads(sc.json))
 
 
-def test_setter_getter(complex_software_configuration_node, simple_algorithm_node, complex_citation_node):
-    sc2 = complex_software_configuration_node
-    software2 = sc2.software
-    sc2.software = software2
-    assert sc2.software is software2
+def test_setter_getter(simple_software_configuration, simple_algorithm_node, complex_citation_node):
+    """
+    test setters and getters for `SoftwareConfiguration` and be sure it works fine
+    also test that the node can be set and also reset
+    """
+    new_notes: str = "my new notes"
 
-    # assert len(sc2.algorithm) == 1
-    # al2 = simple_algorithm_node
-    # print(sc2.get_json(indent=2,sortkeys=False).json)
-    # print(al2.get_json(indent=2,sortkeys=False).json)
-    # sc2.algorithm += [al2]
-    # assert sc2.algorithm[1] is al2
+    # use setters
+    simple_software_configuration.algorithm = [simple_algorithm_node]
+    simple_software_configuration.citation = [complex_citation_node]
+    simple_software_configuration.notes = new_notes
 
-    sc2.notes = "my new fancy notes"
-    assert sc2.notes == "my new fancy notes"
+    # assert getters and setters are same
+    assert simple_software_configuration.algorithm == [simple_algorithm_node]
+    assert simple_software_configuration.citation == [complex_citation_node]
+    assert simple_software_configuration.notes == new_notes
 
-    # cit2 = complex_citation_node
-    # assert len(sc2.citation) == 1
-    # sc2.citation += [cit2]
-    # assert sc2.citation[1] == cit2
+    # remove optional attributes
+    simple_software_configuration.algorithm = []
+    simple_software_configuration.citation = []
+    simple_software_configuration.notes = ""
+
+    # assert that optional attributes have been removed from data node
+    assert simple_software_configuration.algorithm == []
+    assert simple_software_configuration.citation == []
+    assert simple_software_configuration.notes == ""
 
 
 def test_integration_software_configuration(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simple_computation_node, simple_software_configuration):
@@ -57,13 +62,13 @@ def test_integration_software_configuration(cript_api, simple_project_node, simp
     simple_project_node.collection[0].experiment[0].computation = [simple_computation_node]
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration = [simple_software_configuration]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
     # change simple attribute to trigger update
     simple_project_node.collection[0].experiment[0].computation[0].software_configuration[0].notes = "software configuration integration test UPDATED"
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_software_configuration)

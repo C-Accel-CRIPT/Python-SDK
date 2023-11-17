@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: [3.11]
+        python-version: [3.12]
 
     env:
       CRIPT_HOST: https://lb-stage.mycriptapp.org/
@@ -30,10 +30,10 @@ jobs:
       CRIPT_TESTS: False
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: 3.11
 

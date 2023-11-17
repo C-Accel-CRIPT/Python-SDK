@@ -2,13 +2,12 @@ import copy
 import json
 import uuid
 
-from integration_test_helper import (
-    delete_integration_node_helper,
-    integrate_nodes_helper,
-)
-from util import strip_uid_from_dict
-
 import cript
+from tests.utils.integration_test_helper import (
+    delete_integration_node_helper,
+    save_integration_node_helper,
+)
+from tests.utils.util import strip_uid_from_dict
 
 
 def test_create_simple_collection(simple_experiment_node) -> None:
@@ -38,14 +37,9 @@ def test_create_complex_collection(simple_experiment_node, simple_inventory_node
     """
     my_collection_name = "my complex collection name"
     my_cript_doi = "10.1038/1781168a0"
+    my_collection_notes = "test_create_complex_collection notes"
 
-    my_collection = cript.Collection(
-        name=my_collection_name,
-        experiment=[simple_experiment_node],
-        inventory=[simple_inventory_node],
-        doi=my_cript_doi,
-        citation=[complex_citation_node],
-    )
+    my_collection = cript.Collection(name=my_collection_name, experiment=[simple_experiment_node], inventory=[simple_inventory_node], doi=my_cript_doi, citation=[complex_citation_node], notes=my_collection_notes)
 
     # assertions
     assert isinstance(my_collection, cript.Collection)
@@ -54,6 +48,7 @@ def test_create_complex_collection(simple_experiment_node, simple_inventory_node
     assert my_collection.inventory == [simple_inventory_node]
     assert my_collection.doi == my_cript_doi
     assert my_collection.citation == [complex_citation_node]
+    assert my_collection.notes == my_collection_notes
 
 
 def test_collection_getters_and_setters(simple_experiment_node, simple_inventory_node, complex_citation_node) -> None:
@@ -70,6 +65,7 @@ def test_collection_getters_and_setters(simple_experiment_node, simple_inventory
 
     new_collection_name = "my new collection name"
     new_cript_doi = "my new cript doi"
+    new_collection_notes = "my collection getters and setters notes"
 
     # set Collection attributes
     my_collection.name = new_collection_name
@@ -77,6 +73,7 @@ def test_collection_getters_and_setters(simple_experiment_node, simple_inventory
     my_collection.inventory = [simple_inventory_node]
     my_collection.doi = new_cript_doi
     my_collection.citation = [complex_citation_node]
+    my_collection.notes = new_collection_notes
 
     # assert getters and setters are the same
     assert isinstance(my_collection, cript.Collection)
@@ -85,12 +82,14 @@ def test_collection_getters_and_setters(simple_experiment_node, simple_inventory
     assert my_collection.inventory == [simple_inventory_node]
     assert my_collection.doi == new_cript_doi
     assert my_collection.citation == [complex_citation_node]
+    assert my_collection.notes == new_collection_notes
 
     # remove Collection attributes
     my_collection.experiment = []
     my_collection.inventory = []
     my_collection.doi = ""
     my_collection.citation = []
+    my_collection.notes = ""
 
     # assert users can remove optional attributes
     assert my_collection.name == new_collection_name
@@ -98,6 +97,7 @@ def test_collection_getters_and_setters(simple_experiment_node, simple_inventory
     assert my_collection.inventory == []
     assert my_collection.doi == ""
     assert my_collection.citation == []
+    assert my_collection.notes == ""
 
 
 def test_serialize_collection_to_json(complex_user_node) -> None:
@@ -177,14 +177,14 @@ def test_integration_collection(cript_api, simple_project_node, simple_collectio
     simple_project_node.collection = [simple_collection_node]
 
     # ========= test create =========
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test update =========
     simple_project_node.collection[0].doi = "my doi UPDATED"
     # TODO enable later
     # simple_project_node.collection[0].notes = "my collection notes UPDATED"
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_collection_node)

@@ -117,6 +117,10 @@
     "setuptools",
     "miniconda",
     "pymdown",
-    "BCDB"
+    "BCDB",
+    "doctest",
+    "Doctest",
+    "Doctests",
+    "linenums"
   ]
 }

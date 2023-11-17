@@ -2,13 +2,12 @@ import copy
 import json
 import uuid
 
-from integration_test_helper import (
-    delete_integration_node_helper,
-    integrate_nodes_helper,
-)
-from util import strip_uid_from_dict
-
 import cript
+from tests.utils.integration_test_helper import (
+    delete_integration_node_helper,
+    save_integration_node_helper,
+)
+from tests.utils.util import strip_uid_from_dict
 
 
 def test_create_simple_computation_node() -> None:
@@ -31,6 +30,7 @@ def test_create_complex_computation_node(simple_data_node, complex_software_conf
     test that a complex computation node with all possible arguments can be created
     """
     my_computation_type = "analysis"
+    my_computation_notes = "this is my computation notes"
 
     citation = copy.deepcopy(complex_citation_node)
     condition = copy.deepcopy(complex_condition_node)
@@ -43,6 +43,7 @@ def test_create_complex_computation_node(simple_data_node, complex_software_conf
         condition=[condition],
         prerequisite_computation=simple_computation_node,
         citation=[citation],
+        notes=my_computation_notes,
     )
 
     # assertions
@@ -54,6 +55,7 @@ def test_create_complex_computation_node(simple_data_node, complex_software_conf
     assert my_computation_node.condition == [condition]
     assert my_computation_node.prerequisite_computation == simple_computation_node
     assert my_computation_node.citation == [citation]
+    assert my_computation_node.notes == my_computation_notes
 
 
 def test_computation_type_invalid_vocabulary() -> None:
@@ -139,13 +141,13 @@ def test_integration_computation(cript_api, simple_project_node, simple_computat
     simple_project_node.name = f"test_integration_computation_name_{uuid.uuid4().hex}"
     simple_project_node.collection[0].experiment[0].computation = [simple_computation_node]
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # --------- test update ---------
     # change simple computation attribute to trigger update
     simple_project_node.collection[0].experiment[0].computation[0].type = "data_fit"
 
-    integrate_nodes_helper(cript_api=cript_api, project_node=simple_project_node)
+    save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_computation_node)

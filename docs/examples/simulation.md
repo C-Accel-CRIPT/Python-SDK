@@ -55,8 +55,11 @@ with cript.API(host="https://api.criptapp.org/", api_token="123456", storage_tok
     Here in a jupyter notebook, we need to connect manually. We just have to remember to disconnect at the end.
 
 ```python
-api = cript.API(host="https://api.criptapp.org/", api_token=None, storage_token="123456")
+api = cript.API(
+    host="https://api.criptapp.org/", api_token=None, storage_token="123456"
+)
 api = api.connect()
+
 ```
 
 ## Create a Project
@@ -121,9 +124,17 @@ If They are not, you can create them as follows:
 
 ```python
 python = cript.Software(name="python", version="3.9")
+
 rdkit = cript.Software(name="rdkit", version="2020.9")
-stage = cript.Software(name="stage", source="https://doi.org/10.1021/jp505332p", version="N/A")
-packmol = cript.Software(name="Packmol", source="http://m3g.iqm.unicamp.br/packmol", version="N/A")
+
+stage = cript.Software(
+    name="stage", source="https://doi.org/10.1021/jp505332p", version="N/A"
+)
+
+packmol = cript.Software(
+    name="Packmol", source="http://m3g.iqm.unicamp.br/packmol", version="N/A"
+)
+
 openmm = cript.Software(name="openmm", version="7.5")
 ```
 
@@ -195,8 +206,11 @@ init = cript.Computation(
 )
 
 # Initiate the simulation equilibration using a separate node.
-# The equilibration process is governed by specific conditions and a set equilibration time.
-# Given this is an NPT (Number of particles, Pressure, Temperature) simulation, conditions such as the number of chains, temperature, and pressure are specified.
+# The equilibration process is governed by specific conditions and a 
+# set equilibration time.
+# Given this is an NPT (Number of particles, Pressure, Temperature) 
+# simulation, conditions such as the number of chains, temperature, 
+# and pressure are specified.
 equilibration = cript.Computation(
     name="Equilibrate data prior to measurement",
     type="MD",
@@ -211,7 +225,8 @@ equilibration = cript.Computation(
 )
 
 # This section involves the actual data measurement.
-# Note that we use the previously computed data as a prerequisite. Additionally, we incorporate the input data at a later stage.
+# Note that we use the previously computed data as a prerequisite. 
+# Additionally, we incorporate the input data at a later stage.
 bulk = cript.Computation(
     name="Bulk simulation for measurement",
     type="MD",
@@ -225,7 +240,8 @@ bulk = cript.Computation(
     prerequisite_computation=equilibration,
 )
 
-# The following step involves analyzing the data from the measurement run to ascertain a specific property.
+# The following step involves analyzing the data 
+# from the measurement run to ascertain a specific property.
 ana = cript.Computation(
     name="Density analysis",
     type="analysis",
@@ -250,10 +266,33 @@ experiment.computation += [init, equilibration, bulk, ana]
 New we'd like to upload files associated with our simulation. First, we'll instantiate our File nodes under a specific project.
 
 ```python
-packing_file = cript.File(name="Initial simulation box snapshot with roughly packed molecules", type="computation_snapshot", source="path/to/local/file")
-forcefield_file = cript.File(name="Forcefield definition file", type="data", source="path/to/local/file")
-snap_file = cript.File(name="Bulk measurement initial system snap shot", type="computation_snapshot", source="path/to/local/file")
-final_file = cript.File(name="Final snapshot of the system at the end the simulations", type="computation_snapshot", source="path/to/local/file")
+packing_file = cript.File(
+    name="Initial simulation box snapshot with roughly packed molecules",
+    type="computation_snapshot",
+    source="path/to/local/file",
+    extension=".csv",
+)
+
+forcefield_file = cript.File(
+    name="Forcefield definition file",
+    type="data",
+    source="path/to/local/file",
+    extension=".pdf",
+)
+
+snap_file = cript.File(
+    name="Bulk measurement initial system snap shot",
+    type="computation_snapshot",
+    source="path/to/local/file",
+    extension=".png",
+)
+
+final_file = cript.File(
+    name="Final snapshot of the system at the end the simulations",
+    type="computation_snapshot",
+    source="path/to/local/file",
+    extension=".jpeg",
+)
 ```
 
 !!! note
@@ -309,8 +348,10 @@ Next, we'll link these [`Data`](../../nodes/primary_nodes/data) nodes to the app
 
 ```python
 
-# Observe how this step also forms a continuous graph, enabling data to flow from one computation to the next.
-# The sequence initiates with the computation process and culminates with the determination of the material property.
+# Observe how this step also forms a continuous graph, 
+# enabling data to flow from one computation to the next.
+# The sequence initiates with the computation process 
+# and culminates with the determination of the material property.
 init.output_data = [packing_data, forcefield_data]
 equilibration.input_data = [packing_data, forcefield_data]
 equilibration.output_data = [equilibration_snap]
@@ -373,7 +414,8 @@ Now we can save the project to CRIPT (and upload the files) or inspect the JSON 
 ## Validate CRIPT Project Node
 ```python
 # Before we can save it, we should add all the orphaned nodes to the experiments.
-# It is important to do this for every experiment separately, but here we only have one.
+# It is important to do this for every experiment separately, 
+# but here we only have one.
 cript.add_orphaned_nodes_to_project(project, active_experiment=experiment)
 project.validate()
 

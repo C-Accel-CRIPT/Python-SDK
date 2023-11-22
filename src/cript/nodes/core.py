@@ -490,7 +490,14 @@ class BaseNode(ABC):
             if others are present too, that does not exclude the child.
         search_depth: int default -1
             Max depth of the search into the tree. Helpful if circles are expected. -1 specifies no limit
-        handled_nodes: None default
+        handled_nodes: Optional[List] default None
+            A list used to track nodes that have already been processed during the search.
+            This parameter is primarily used internally to prevent infinite loops in cases
+            where the node graph contains cycles. When a node is processed, it is added to this list.
+            If a node is encountered that is already in this list, it is skipped to avoid redundant processing.
+            By default, this parameter is `None`, which means that the search starts with an empty list of handled nodes.
+            In most use cases, users do not need to provide this parameter, as it is managed internally by the method.
+
 
         Returns
         -------

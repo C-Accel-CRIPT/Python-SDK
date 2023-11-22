@@ -481,23 +481,57 @@ class BaseNode(ABC):
         that match the criteria of search_attr.
         If a node is present multiple times in the graph, it is only once in the search results.
 
-        search_dept: Max depth of the search into the tree. Helpful if circles are expected. -1 specifies no limit
-
+        Parameters
+        ----------
         search_attr: dict
-           Dictionary that specifies which JSON attributes have to be present in a given node.
-           If an attribute is a list, it it is sufficient if the specified attributes are in the list,
-           if others are present too, that does not exclude the child.
+            What you are searching for within the JSON.
+            Dictionary that specifies which JSON attributes have to be present in a given node.
+            If an attribute is a list, it is sufficient if the specified attributes are in the list,
+            if others are present too, that does not exclude the child.
+        search_depth: int default -1
+            Max depth of the search into the tree. Helpful if circles are expected. -1 specifies no limit
+        handled_nodes: None default
 
-           Example: search_attr = `{"node": ["Parameter"]}` finds all "Parameter" nodes.
-                    search_attr = `{"node": ["Algorithm"], "parameter": {"name" : "update_frequency"}}`
-                                           finds all "Algorithm" nodes, that have a parameter "update_frequency".
-                                           Since parameter is a list an alternative notation is
-                                           ``{"node": ["Algorithm"], "parameter": [{"name" : "update_frequency"}]}`
-                                           and Algorithms are not excluded they have more parameters.
-                    search_attr = `{"node": ["Algorithm"], "parameter": [{"name" : "update_frequency"},
-                                           {"name" : "cutoff_distance"}]}`
-                                           finds all algorithms that have a parameter "update_frequency" and "cutoff_distance".
+        Returns
+        -------
+        List
+            list of all nodes that match the criteria found within the graph
+        
+        Examples
+        --------
+        >>> import cript
+        >>> # ----------- Create nodes -----------
+        >>> my_project = cript.Project(name=f"my_Project")
+        >>> my_collection = cript.Collection(name="my collection")
+        >>> my_material_1 = cript.Material(
+        ...     name="my material 1", identifier=[{"bigsmiles": "my material 1 bigsmiles"}]
+        ... )
+        >>> my_material_2 = cript.Material(
+        ...     name="my material 2", identifier=[{"bigsmiles": "my material 2 bigsmiles"}]
+        ... )
+        >>> my_inventory = cript.Inventory(
+        ...     name="my inventory", material=[my_material_1, my_material_2]
+        ... )
+        >>> #  ----------- Assemble nodes -----------
+        >>> my_project.collection = [my_collection]
+        >>> my_project.collection[0].inventory = [my_inventory]
+        >>> all_materials_in_project: list = my_project.find_children({"node": ["Material"]})
 
+
+        Notes
+        -----
+        * search_attr = `{"node": ["Parameter"]}` finds all "Parameter" nodes.
+        * search_attr = `{"node": ["Algorithm"], "parameter": {"name" : "update_frequency"}}`
+        > finds all "Algorithm" nodes, that have a parameter "update_frequency".
+        > Since parameter is a list.
+            * An alternative notation is
+            `{"node": ["Algorithm"], "parameter": [{"name" : "update_frequency"}]}`
+            > and Algorithms are not excluded they have more parameters.
+        * search_attr =
+        ```python
+        {"node": ["Algorithm"], "parameter": [{"name" : "update_frequency"},{"name" : "cutoff_distance"}]}
+        ```
+        > finds all algorithms that have a parameter "update_frequency" and "cutoff_distance".
         """
 
         def is_attr_present(node: BaseNode, key, value):

@@ -521,18 +521,26 @@ class BaseNode(ABC):
 
         Notes
         -----
-        * search_attr = `{"node": ["Parameter"]}` finds all "Parameter" nodes.
-        * search_attr = `{"node": ["Algorithm"], "parameter": {"name" : "update_frequency"}}`
-        > finds all "Algorithm" nodes, that have a parameter "update_frequency".
-        > Since parameter is a list.
-            * An alternative notation is
-            `{"node": ["Algorithm"], "parameter": [{"name" : "update_frequency"}]}`
-            > and Algorithms are not excluded they have more parameters.
-        * search_attr =
-        ```python
-        {"node": ["Algorithm"], "parameter": [{"name" : "update_frequency"},{"name" : "cutoff_distance"}]}
-        ```
-        > finds all algorithms that have a parameter "update_frequency" and "cutoff_distance".
+        The `find_children` method is versatile and can be used to search for nodes based on various criteria. Here are some examples to illustrate its usage:
+
+        * Searching for Specific Node Types:
+          `search_attr = {"node": ["Parameter"]}` will find all nodes of type "Parameter".
+        * Searching with Additional Attributes:
+          `search_attr = {"node": ["Algorithm"], "parameter": {"name" : "update_frequency"}}`
+          will locate "Algorithm" nodes containing a parameter named "update_frequency".
+          Note: For list attributes, a match occurs if the specified attribute is part of the list.
+            * Alternate notation: `{"node": ["Algorithm"], "parameter": [{"name" : "update_frequency"}]}`.
+          In this case, nodes with additional parameters are also included.
+        * Combining Multiple Search Criteria:
+          ```python
+          search_attr = {
+              "node": ["Algorithm"],
+              "parameter": [{"name": "update_frequency"}, {"name": "cutoff_distance"}]
+          }
+          ```
+          This finds all "Algorithm" nodes with both "update_frequency" and "cutoff_distance" parameters.
+
+        The `search_depth` parameter controls how deep the search goes into the node tree. A value of `-1` indicates no depth limit. The method effectively handles cycles in the graph by ensuring each node is processed only once. This makes the function suitable for complex node structures.
         """
 
         def is_attr_present(node: BaseNode, key, value):

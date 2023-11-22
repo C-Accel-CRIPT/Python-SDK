@@ -547,9 +547,10 @@ class BaseNode(ABC):
           ```
           This finds all "Algorithm" nodes with both "update_frequency" and "cutoff_distance" parameters.
 
-        The `search_depth` parameter controls how deep the search goes into the node tree. A value of `-1`
-        indicates no depth limit. The method effectively handles cycles in the graph by ensuring each node is
-        processed only once. This makes the function suitable for complex node structures.
+        The `search_depth` parameter controls how deep the search goes into the node tree.
+        A value of `-1` indicates no depth limit.
+        The method effectively handles cycles in the graph by ensuring each node is processed only once.
+        This makes the function suitable for complex node structures.
         """
 
         def is_attr_present(node: BaseNode, key, value):

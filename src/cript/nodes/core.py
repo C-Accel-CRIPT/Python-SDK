@@ -498,7 +498,6 @@ class BaseNode(ABC):
             By default, this parameter is `None`, which means that the search starts with an empty list of handled nodes.
             In most use cases, users do not need to provide this parameter, as it is managed internally by the method.
 
-
         Returns
         -------
         List

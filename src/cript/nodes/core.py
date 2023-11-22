@@ -475,7 +475,7 @@ class BaseNode(ABC):
             NodeEncoder.suppress_attributes = previous_suppress_attributes
             NodeEncoder.condense_to_uuid = previous_condense_to_uuid
 
-    def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes: Optional[List] =None) -> List:
+    def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes: Optional[List] = None) -> List:
         """
         Finds all the children in a given tree of nodes (specified by its root),
         that match the criteria of search_attr.
@@ -503,7 +503,7 @@ class BaseNode(ABC):
         -------
         List
             list of all nodes that match the criteria found within the graph
-        
+
         Examples
         --------
         >>> import cript

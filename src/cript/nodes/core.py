@@ -496,7 +496,8 @@ class BaseNode(ABC):
             where the node graph contains cycles. When a node is processed, it is added to this list.
             If a node is encountered that is already in this list, it is skipped to avoid redundant processing.
             By default, this parameter is `None`, which means that the search starts with an empty list of handled nodes.
-            In most use cases, users do not need to provide this parameter, as it is managed internally by the method.
+            In most use cases, users do not need to provide this parameter, as it is managed internally by the
+            method.
 
         Returns
         -------

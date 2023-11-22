@@ -475,7 +475,7 @@ class BaseNode(ABC):
             NodeEncoder.suppress_attributes = previous_suppress_attributes
             NodeEncoder.condense_to_uuid = previous_condense_to_uuid
 
-    def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes=None) -> List:
+    def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes: Optional[List] =None) -> List:
         """
         Finds all the children in a given tree of nodes (specified by its root),
         that match the criteria of search_attr.
@@ -517,7 +517,6 @@ class BaseNode(ABC):
         >>> my_project.collection[0].inventory = [my_inventory]
         >>> #  ============= Get list of all material nodes in project =============
         >>> all_materials_in_project: list = my_project.find_children({"node": ["Material"]})
-
 
         Notes
         -----

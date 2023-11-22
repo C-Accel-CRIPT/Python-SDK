@@ -527,7 +527,8 @@ class BaseNode(ABC):
 
         Notes
         -----
-        The `find_children` method is versatile and can be used to search for nodes based on various criteria. Here are some examples to illustrate its usage:
+        The `find_children` method is versatile and can be used to search for nodes based on various criteria.
+        Here are some examples to illustrate its usage:
 
         * Searching for Specific Node Types:
           `search_attr = {"node": ["Parameter"]}` will find all nodes of type "Parameter".

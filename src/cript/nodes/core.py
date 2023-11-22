@@ -500,7 +500,7 @@ class BaseNode(ABC):
         Examples
         --------
         >>> import cript
-        >>> # ----------- Create nodes -----------
+        >>> # ============= Create nodes =============
         >>> my_project = cript.Project(name=f"my_Project")
         >>> my_collection = cript.Collection(name="my collection")
         >>> my_material_1 = cript.Material(
@@ -512,9 +512,10 @@ class BaseNode(ABC):
         >>> my_inventory = cript.Inventory(
         ...     name="my inventory", material=[my_material_1, my_material_2]
         ... )
-        >>> #  ----------- Assemble nodes -----------
+        >>> #  ============= Assemble nodes =============
         >>> my_project.collection = [my_collection]
         >>> my_project.collection[0].inventory = [my_inventory]
+        >>> #  ============= Get list of all material nodes in project =============
         >>> all_materials_in_project: list = my_project.find_children({"node": ["Material"]})
 
 

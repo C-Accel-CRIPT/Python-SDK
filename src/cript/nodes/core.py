@@ -475,29 +475,82 @@ class BaseNode(ABC):
             NodeEncoder.suppress_attributes = previous_suppress_attributes
             NodeEncoder.condense_to_uuid = previous_condense_to_uuid
 
-    def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes=None) -> List:
+    def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes: Optional[List] = None) -> List:
         """
         Finds all the children in a given tree of nodes (specified by its root),
         that match the criteria of search_attr.
         If a node is present multiple times in the graph, it is only once in the search results.
 
-        search_dept: Max depth of the search into the tree. Helpful if circles are expected. -1 specifies no limit
-
+        Parameters
+        ----------
         search_attr: dict
-           Dictionary that specifies which JSON attributes have to be present in a given node.
-           If an attribute is a list, it it is sufficient if the specified attributes are in the list,
-           if others are present too, that does not exclude the child.
+            What you are searching for within the JSON.
+            Dictionary that specifies which JSON attributes have to be present in a given node.
+            If an attribute is a list, it is sufficient if the specified attributes are in the list,
+            if others are present too, that does not exclude the child.
+        search_depth: int default -1
+            Max depth of the search into the tree. Helpful if circles are expected. -1 specifies no limit
+        handled_nodes: Optional[List] default None
+            A list used to track nodes that have already been processed during the search.
+            This parameter is primarily used internally to prevent infinite loops in cases
+            where the node graph contains cycles. When a node is processed, it is added to this list.
+            If a node is encountered that is already in this list, it is skipped to avoid redundant processing.
+            By default, this parameter is `None`, which means that the search starts with an empty list of handled nodes.
+            In most use cases, users do not need to provide this parameter, as it is managed internally by the
+            method.
 
-           Example: search_attr = `{"node": ["Parameter"]}` finds all "Parameter" nodes.
-                    search_attr = `{"node": ["Algorithm"], "parameter": {"name" : "update_frequency"}}`
-                                           finds all "Algorithm" nodes, that have a parameter "update_frequency".
-                                           Since parameter is a list an alternative notation is
-                                           ``{"node": ["Algorithm"], "parameter": [{"name" : "update_frequency"}]}`
-                                           and Algorithms are not excluded they have more parameters.
-                    search_attr = `{"node": ["Algorithm"], "parameter": [{"name" : "update_frequency"},
-                                           {"name" : "cutoff_distance"}]}`
-                                           finds all algorithms that have a parameter "update_frequency" and "cutoff_distance".
+        Returns
+        -------
+        List
+            list of all nodes that match the criteria found within the graph
 
+        Examples
+        --------
+        >>> import cript
+        >>> # ============= Create nodes =============
+        >>> my_project = cript.Project(name=f"my_Project")
+        >>> my_collection = cript.Collection(name="my collection")
+        >>> my_material_1 = cript.Material(
+        ...     name="my material 1", identifier=[{"bigsmiles": "my material 1 bigsmiles"}]
+        ... )
+        >>> my_material_2 = cript.Material(
+        ...     name="my material 2", identifier=[{"bigsmiles": "my material 2 bigsmiles"}]
+        ... )
+        >>> my_inventory = cript.Inventory(
+        ...     name="my inventory", material=[my_material_1, my_material_2]
+        ... )
+        >>> #  ============= Assemble nodes =============
+        >>> my_project.collection = [my_collection]
+        >>> my_project.collection[0].inventory = [my_inventory]
+        >>> #  ============= Get list of all material nodes in project =============
+        >>> all_materials_in_project: list = my_project.find_children({"node": ["Material"]})
+
+        Notes
+        -----
+        The `find_children` method is versatile and can be used to search for nodes based on various criteria.
+        Here are some examples to illustrate its usage:
+
+        * Searching for Specific Node Types:
+          `search_attr = {"node": ["Parameter"]}` will find all nodes of type "Parameter".
+        * Searching with Additional Attributes:
+          `search_attr = {"node": ["Algorithm"], "parameter": {"name" : "update_frequency"}}`
+          will locate "Algorithm" nodes containing a parameter named "update_frequency".
+          Note: For list attributes, a match occurs if the specified attribute is part of the list.
+            * Alternate notation: `{"node": ["Algorithm"], "parameter": [{"name" : "update_frequency"}]}`.
+          In this case, nodes with additional parameters are also included.
+        * Combining Multiple Search Criteria:
+          ```python
+          search_attr = {
+              "node": ["Algorithm"],
+              "parameter": [{"name": "update_frequency"}, {"name": "cutoff_distance"}]
+          }
+          ```
+          This finds all "Algorithm" nodes with both "update_frequency" and "cutoff_distance" parameters.
+
+        The `search_depth` parameter controls how deep the search goes into the node tree.
+        A value of `-1` indicates no depth limit.
+        The method effectively handles cycles in the graph by ensuring each node is processed only once.
+        This makes the function suitable for complex node structures.
         """
 
         def is_attr_present(node: BaseNode, key, value):

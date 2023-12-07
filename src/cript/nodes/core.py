@@ -424,6 +424,7 @@ class BaseNode(ABC):
             "Project": {"member", "admin"},
             "Collection": {"member", "admin"},
         },
+        suppress_uid_usage: bool = False,
         **kwargs
     ):
         """
@@ -461,6 +462,8 @@ class BaseNode(ABC):
         NodeEncoder.suppress_attributes = suppress_attributes
         previous_condense_to_uuid = copy.deepcopy(NodeEncoder.condense_to_uuid)
         NodeEncoder.condense_to_uuid = condense_to_uuid
+        previous_suppress_uid_usage = copy.deepcopy(NodeEncoder.suppress_uid_usage)
+        NodeEncoder.suppress_uid_usage = suppress_uid_usage
 
         try:
             return ReturnTuple(json.dumps(self, cls=NodeEncoder, **kwargs), NodeEncoder.handled_ids)
@@ -474,6 +477,7 @@ class BaseNode(ABC):
             NodeEncoder.known_uuid = previous_known_uuid
             NodeEncoder.suppress_attributes = previous_suppress_attributes
             NodeEncoder.condense_to_uuid = previous_condense_to_uuid
+            NodeEncoder.suppress_uid_usage = previous_suppress_uid_usage
 
     def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes: Optional[List] = None) -> List:
         """

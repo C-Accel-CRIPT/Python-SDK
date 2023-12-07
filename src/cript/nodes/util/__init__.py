@@ -38,6 +38,8 @@ class NodeEncoder(json.JSONEncoder):
         A set to store the node types that should be condensed to UUID edges in the JSON.
     suppress_attributes : Optional[Dict[str, Set[str]]]
         A dictionary that allows suppressing specific attributes for nodes with the corresponding UUIDs.
+    suppress_uid_usage : bool
+        Can suppress the usage of UID abbreviations. Warning, this can lead to infinite recursion with graphs that contain cycles.
 
     Methods
     -------
@@ -58,6 +60,7 @@ class NodeEncoder(json.JSONEncoder):
     known_uuid: Set[str] = set()
     condense_to_uuid: Dict[str, Set[str]] = dict()
     suppress_attributes: Optional[Dict[str, Set[str]]] = None
+    suppress_uid_usage: bool = False
 
     def default(self, obj):
         """
@@ -103,9 +106,8 @@ class NodeEncoder(json.JSONEncoder):
             except AttributeError:
                 pass
             else:
-                pass
-                # if uid in NodeEncoder.handled_ids:
-                #     return {"uid": uid}
+                if not NodeEncoder.suppress_uid_usage and uid in NodeEncoder.handled_ids:
+                    return {"uid": uid}
 
             # When saving graphs, some nodes can be pre-saved.
             # If that happens, we want to represent them as a UUID edge only

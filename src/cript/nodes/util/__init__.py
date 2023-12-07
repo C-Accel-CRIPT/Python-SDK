@@ -103,8 +103,9 @@ class NodeEncoder(json.JSONEncoder):
             except AttributeError:
                 pass
             else:
-                if uid in NodeEncoder.handled_ids:
-                    return {"uid": uid}
+                pass
+                # if uid in NodeEncoder.handled_ids:
+                #     return {"uid": uid}
 
             # When saving graphs, some nodes can be pre-saved.
             # If that happens, we want to represent them as a UUID edge only

@@ -28,7 +28,6 @@ from cript.api.utils.get_host_token import resolve_host_and_token
 from cript.api.utils.helper_functions import _get_node_type_from_json
 from cript.api.utils.save_helper import (
     _fix_node_save,
-    _get_uuid_from_error_message,
     _identify_suppress_attributes,
     _InternalSaveValues,
 )
@@ -813,7 +812,11 @@ class API:
                 response: Dict = requests.patch(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, data=json_data, timeout=_API_TIMEOUT).json()  # type: ignore
             else:
                 response: Dict = requests.post(url=f"{self._host}/{node.node_type_snake_case}/", headers=self._http_headers, data=json_data, timeout=_API_TIMEOUT).json()  # type: ignore
+                # if node.node_type != "Project":
+                #     test_success: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, timeout=_API_TIMEOUT).json()
+                #     print("XYZ", json_data, save_values, response, test_success)
 
+            # print(json_data, patch_request, response, save_values)
             # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
             # Errors with this code, may be fixable
             if response["code"] in (400, 409):
@@ -828,7 +831,6 @@ class API:
                             raise CRIPTDuplicateNameError(response, json_data, exc) from exc
                     # Else just raise the exception as normal.
                     raise exc
-
                 save_values += returned_save_values
 
             # Handle errors from patching with too many attributes
@@ -841,12 +843,12 @@ class API:
             # Aka we did something to fix the occurring error
             if not save_values > old_save_values:
                 # TODO remove once get works properly
-                if not patch_request and response["code"] == 409 and response["error"].strip().startswith("Duplicate uuid:"):  # type: ignore
-                    duplicate_uuid = _get_uuid_from_error_message(response["error"])  # type: ignore
-                    if str(node.uuid) == duplicate_uuid:
-                        force_patch = True
-                        continue
-
+                if not patch_request:
+                    # and response["code"] == 409 and response["error"].strip().startswith("Duplicate uuid:"):  # type: ignore
+                    # duplicate_uuid = _get_uuid_from_error_message(response["error"])  # type: ignore
+                    # if str(node.uuid) == duplicate_uuid:
+                    force_patch = True
+                    continue
                 break
 
         if response["code"] != 200:

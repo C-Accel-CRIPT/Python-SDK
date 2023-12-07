@@ -28,7 +28,6 @@ from cript.api.utils.get_host_token import resolve_host_and_token
 from cript.api.utils.helper_functions import _get_node_type_from_json
 from cript.api.utils.save_helper import (
     _fix_node_save,
-    _get_uuid_from_error_message,
     _identify_suppress_attributes,
     _InternalSaveValues,
 )

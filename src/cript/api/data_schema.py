@@ -118,7 +118,7 @@ class DataSchema:
         return vocabulary
 
     @beartype
-    def get_vocab_by_category(self, category: VocabCategories) -> list[dict]:
+    def get_vocab_by_category(self, category: VocabCategories) -> list:
         """
         get the CRIPT controlled vocabulary by category
 

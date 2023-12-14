@@ -27,7 +27,7 @@ class DataSchema:
     # Caution: It's advisable to keep validation active while debugging scripts, as disabling it can delay error notifications and complicate the debugging process.
     skip_validation: bool = False
 
-    def _get_db_schema(self, host: str) -> dict[str, str]:
+    def _get_db_schema(self, host: str) -> dict:
         """
         Sends a GET request to CRIPT to get the database schema and returns it.
         The database schema can be used for validating the JSON request
@@ -69,14 +69,14 @@ class DataSchema:
         --------
         ### Create a stand alone DataSchema instance.
         >>> import cript
-        >>> data_schema = cript.DataSchema("https://api.criptapp.org/v1")
+        >>> data_schema = cript.api.DataSchema("https://api.criptapp.org/v1")
 
         """
 
         self._db_schema = self._get_db_schema(host)
         self._vocabulary = self._get_vocab(host)
 
-    def _get_vocab(self, host: str) -> dict[str, str]:
+    def _get_vocab(self, host: str) -> dict:
         """
         gets the entire CRIPT controlled vocabulary and stores it in _vocabulary
 
@@ -100,7 +100,7 @@ class DataSchema:
            ```
         """
 
-        vocabulary: dict[str, str] = {}
+        vocabulary: dict = {}
         # loop through all vocabulary categories and make a request to each vocabulary category
         # and put them all inside of self._vocab with the keys being the vocab category name
         for category in VocabCategories:

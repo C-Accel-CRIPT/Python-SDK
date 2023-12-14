@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Any, Union
+from typing import Union
 
 import jsonschema
 import requests
@@ -19,8 +19,8 @@ class DataSchema:
     DataSchema class, handles the interactions with the JSON node validation schema.
     """
 
-    _vocabulary: dict[str, Any] = {}
-    _db_schema: dict[str, str] = {}
+    _vocabulary: dict = {}
+    _db_schema: dict = {}
     # Advanced User Tip: Disabling Node Validation
     # For experienced users, deactivating node validation during creation can be a time-saver.
     # Note that the complete node graph will still undergo validation before being saved to the back end.

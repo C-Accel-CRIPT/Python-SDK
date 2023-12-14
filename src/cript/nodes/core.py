@@ -154,7 +154,7 @@ class BaseNode(ABC):
 
         if api is None:
             api = _get_global_cached_api()
-        api._is_node_schema_valid(self.get_json(is_patch=is_patch).json, is_patch=is_patch, force_validation=force_validation)
+        api.schema.is_node_schema_valid(self.get_json(is_patch=is_patch).json, is_patch=is_patch, force_validation=force_validation)
 
     @classmethod
     def _from_json(cls, json_dict: dict):
@@ -244,7 +244,7 @@ class BaseNode(ABC):
         from cript.api.api import _get_global_cached_api
 
         api = _get_global_cached_api()
-        api._is_node_schema_valid(json_string, force_validation=True)
+        api.schema.is_node_schema_valid(json_string, force_validation=True)
 
         return json_string
 

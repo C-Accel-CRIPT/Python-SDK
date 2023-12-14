@@ -62,7 +62,7 @@ class API:
     _api_token: str = ""
     _storage_token: str = ""
     _http_headers: dict = {}
-    _db_schema: DataSchema = {}
+    _db_schema: Optional[DataSchema] = None
     _api_prefix: str = "api"
     _api_version: str = "v1"
 

@@ -69,8 +69,8 @@ class DataSchema:
         --------
         ### Create a stand alone DataSchema instance.
         >>> import cript
-        >>> data_schema = cript.api.DataSchema("https://api.criptapp.org/api/v1/")
-
+        >>> with cript.API(host="https://api.criptapp.org/") as api:
+        ...    data_schema = cript.api.DataSchema(api.host)
         """
 
         self._db_schema = self._get_db_schema(host)

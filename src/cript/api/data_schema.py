@@ -143,7 +143,6 @@ class DataSchema:
         List[dict]
             list of JSON containing the controlled vocabulary
         """
-
         return self._vocabulary[category.value]
 
     @beartype

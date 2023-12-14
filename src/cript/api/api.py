@@ -31,6 +31,7 @@ from cript.api.utils.save_helper import (
 )
 from cript.api.utils.web_file_downloader import download_file_from_url
 from cript.api.valid_search_modes import SearchModes
+from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.project import Project
 
 # Do not use this directly! That includes devs.

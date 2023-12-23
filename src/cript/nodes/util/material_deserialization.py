@@ -55,7 +55,7 @@ def _deserialize_flattened_material_identifiers(json_dict: Dict) -> Dict:
 
     # get material identifiers keys from API and create a simple list
     # eg ["smiles", "bigsmiles", etc.]
-    all_identifiers_list: List[str] = [identifier.get("name") for identifier in api.get_vocab_by_category(cript.VocabCategories.MATERIAL_IDENTIFIER_KEY)]
+    all_identifiers_list: List[str] = [identifier.get("name") for identifier in api.schema.get_vocab_by_category(cript.VocabCategories.MATERIAL_IDENTIFIER_KEY)]
 
     # pop "name" from identifiers list because the node has to have a name
     all_identifiers_list.remove("name")

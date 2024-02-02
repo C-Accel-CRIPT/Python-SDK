@@ -1,9 +1,21 @@
 from abc import ABC
 from dataclasses import dataclass, replace
+import json
+from jsonschema import validate as jsonschema_validate
 
 from beartype import beartype
 
 from cript.nodes.uuid_base import UUIDBaseNode
+
+import cript
+import requests
+from cript.api.api_config import _API_TIMEOUT
+
+
+# WIP : we will load in these values from a config file
+class Config:
+    host = "https://lb-stage.mycriptapp.org"
+    token = ""
 
 
 class PrimaryBaseNode(UUIDBaseNode, ABC):
@@ -32,6 +44,202 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
         super().__init__(**kwargs)
         # replace name and notes within PrimaryBase
         self._json_attrs = replace(self._json_attrs, name=name, notes=notes)
+
+    @classmethod
+    def create_with_uuid(cls, uuid, name, **kwargs):
+        # Instantiate the object with given name, notes, and any additional keyword arguments.
+        obj = cls(name, **kwargs)
+        # Directly set the _uuid attribute. Consider modifying the base class to allow this, or use an appropriate setter.
+        obj._uuid = uuid  # This assumes there's a mechanism to set _uuid directly or indirectly in the base class.
+        return obj
+
+    # ================================================================================
+
+    @classmethod
+    def get_or_create(cls, node_type: str, object_name: str, **kwargs):
+        host = Config.host
+        token = Config.token
+
+        if hasattr(cript, node_type.capitalize()):
+            node_class = getattr(cript, node_type.capitalize())
+
+            object_exists, uuid = cls.object_exists(node_type=node_type, object_name=object_name)
+
+            if object_exists:
+                node_data = cls.fetch_object_data(node_type, uuid)
+                return node_class(**node_data, **kwargs)
+            else:
+                url = f"{host}/api/v1/{node_type}"
+                data = {"node": [node_type.capitalize()], "name": object_name}
+                headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+                response = requests.post(url, json=data, headers=headers)
+                # print("response++++")
+                # print(response)
+                if response.status_code == 200:  # Assuming 201 Created
+                    uuid = response.json()["data"]["result"][0].get("uuid")
+                    node_data = cls.fetch_object_data(node_type, uuid)
+                    return node_class(**node_data, **kwargs)
+                elif response.status_code == 409:  # Duplicate item
+                    print("Duplicate item detected. Attempting to fetch existing item.")
+                    # Assuming the object now exists, attempt to fetch it again
+                    _, uuid = cls.object_exists(node_type=node_type, object_name=object_name)
+                    if uuid:
+                        node_data = cls.fetch_object_data(node_type, uuid)
+                        return node_class(**node_data, **kwargs)
+                    else:
+                        print("Failed to fetch the existing item after duplicate error.")
+                        return None
+                else:
+                    # Handle other HTTP errors
+                    print(f"Error during creation: {response.status_code}, {response.json()}")
+                    return None
+        else:
+            raise ValueError(f"Invalid node type: {node_type}")
+
+    @staticmethod
+    def fetch_object_data(object_type: str, uuid: str):
+        host = Config.host
+        token = Config.token
+
+        get_url = f"{host}/api/v1/{object_type}/{uuid}"
+        headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+        response = requests.get(get_url, headers=headers)
+        response.raise_for_status()
+
+        if response.json()["data"]:
+            return response.json()["data"][0]  # Assuming the first item is the desired one
+        else:
+            return "Error"  # Consider raising an exception or returning None instead
+
+    @classmethod
+    def object_exists(cls, node_type: str, object_name: str):
+        host = Config.host
+        token = Config.token
+        api_url = f"{host}/api/v1/{node_type}/"  # Ensure this URL lists all objects of the type
+        headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+        try:
+            response = requests.get(api_url, headers=headers)
+            # print("\n[[[[[[response]]]]]]")
+            # print(response)
+
+            response.raise_for_status()
+            data = response.json()["data"]
+            # print(data)
+            # print("-----\n")
+            for item in data.get("result", []):
+                if item.get("name") == object_name:
+                    return True, item.get("uuid")
+            return False, None
+        except requests.RequestException as e:
+            print(f"An error occurred: {e}")
+            return False, None
+
+    @staticmethod
+    def load_schema_for_node_type(node_type):
+        """
+        Load the validation schema for a given node type.
+
+        Args:
+            node_type (str): The type of the node (e.g., 'Project', 'Material').
+
+        Returns:
+            dict: The loaded schema.
+        """
+        schema_file_path = f"src/cript/schemas/{node_type.lower()}_schema.json"  # Path to the schema file
+        try:
+            with open(schema_file_path, "r") as file:
+                schema = json.load(file)
+            return schema
+        except FileNotFoundError:
+            print(f"Schema file not found for node type: {node_type}")
+            # Handle the error or raise an exception
+        except json.JSONDecodeError:
+            print(f"Invalid JSON format in schema file for node type: {node_type}")
+            # Handle the error or raise an exception
+
+    def get_schema(self):
+        # Method to get the schema for validation.
+        # This could be overridden in subclasses for specific schemas.
+        return PrimaryBaseNode.load_schema_for_node_type(self.node_type)
+
+    def patch(self, changes={}):
+        # First, validate the changes against the schema
+        schema = self.get_schema()
+
+        jsonschema_validate(instance=changes, schema=schema)
+
+        print("self.get_json() for project")
+        print(self.get_json())
+
+        # Then, send the PATCH request
+        url = f"{Config.host}/api/v1/{self.node_type.lower()}/{self.uuid}"  # self.uuid project_uuid
+        # print("\n-- URL ---")
+        print(url)
+        headers = {
+            "Authorization": f"Bearer {Config.token}",
+            "Content-Type": "application/json",
+        }
+        response = requests.patch(url, json=changes, headers=headers)
+
+        return response
+
+    # =======================================================================
+
+    def patch_object(self, uuid, data):
+        host = Config.host
+        token = Config.token
+        """
+        Update an object with the given UUID.
+
+        Parameters:
+        - uuid (str): The UUID of the object to update.
+        - host (str): The base URL of the API.
+        - token (str): The authorization token.
+        - data (dict): The data to update in the object.
+
+        Returns:
+        - dict: The response data from the API.
+        """
+
+        # Validate data
+        if not self.validate_patch_data(data):
+            print("Data validation failed.")
+            return None
+
+        # Construct the PATCH request URL
+        patch_url = f"{host}/api/v1/object_type/{uuid}"  # Replace 'object_type' with the actual type
+
+        # Set up the HTTP headers
+        headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+        try:
+            # Perform the PATCH request
+            response = requests.patch(url=patch_url, headers=headers, json=data, timeout=_API_TIMEOUT)
+            response.raise_for_status()
+            return response.json()
+        except requests.RequestException as e:
+            print(f"An error occurred: {e}")
+            return None
+
+    def validate_patch_data(self, data):
+        """
+        using the schema
+
+        Validate the data for PATCH request.
+
+        Parameters:
+        - data (dict): Data to be validated.
+
+        Returns:
+        - bool: True if data is valid, False otherwise.
+
+        """
+        # Implement your validation logic here
+        # For example, check if required keys are present and values are of correct types
+        return True  # Return False if validation fails
 
     @beartype
     def __str__(self) -> str:

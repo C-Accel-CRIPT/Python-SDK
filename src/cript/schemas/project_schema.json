@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Project Patch Schema",
+    "type": "object",
+    "properties": {
+        "node": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "Project"
+                ]
+            },
+            "minItems": 1,
+            "maxItems": 1
+        },
+        "name": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "node",
+        "name"
+    ]
+}

@@ -7,6 +7,8 @@ import warnings
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
+# from deepdiff import DeepDiff
+
 import boto3
 import requests
 from beartype import beartype
@@ -31,7 +33,9 @@ from cript.api.utils.save_helper import (
 )
 from cript.api.utils.web_file_downloader import download_file_from_url
 from cript.api.valid_search_modes import SearchModes
+
 from cript.nodes.primary_nodes.project import Project
+from cript.nodes.core import BaseNode
 
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.
@@ -484,7 +488,9 @@ class API:
         except Exception as exc:
             raise CRIPTConnectionError(self.host, self._api_token) from exc
 
-    def save(self, project: Project) -> None:
+    def save(self, project: Project) -> str:  # None:
+        # kinda broken because only takes in a project and needs to resave an entire project
+        # in reality we should just take in a node, find out what kind of node it is , save that node
         """
         This method takes a project node, serializes the class into JSON
         and then sends the JSON to be saved to the API.

@@ -94,15 +94,11 @@ class Project(PrimaryBaseNode):
             instantiate a Project node
         """
         super().__init__(name=name, notes=notes, **kwargs)
-
-        if collection is None:
-            collection = []
-
-        if material is None:
-            material = []
-
-        self._json_attrs = replace(self._json_attrs, name=name, collection=collection, material=material)
-        self.validate()
+        # self.host = Config.host
+        self.collection = collection if collection is not None else []
+        self.material = material if material is not None else []
+        # self._json_attrs = replace(self._json_attrs, name=name, collection=collection, material=material)
+        # self.validate()
 
     def validate(self, api=None, is_patch=False, force_validation: bool = False):
         from cript.nodes.exceptions import (
@@ -110,43 +106,62 @@ class Project(PrimaryBaseNode):
             get_orphaned_experiment_exception,
         )
 
-        # First validate like other nodes
+        """
+        Validate the project's data.
+
+        Parameters:
+        - api: An optional API instance for additional validation against an external system.
+        - is_patch (bool): Indicates if this validation is part of a patch update.
+        - force_validation (bool): Force the validation regardless of the current state.
+        """
+        # First, validate like other nodes (calls the validate method of the superclass)
         super().validate(api=api, is_patch=is_patch, force_validation=force_validation)
 
-        # Check graph for orphaned nodes, that should be listed in project
-        # Project.materials should contain all material nodes
-        project_graph_materials = self.find_children({"node": ["Material"]})
-        # Combine all materials listed in the project inventories
-        project_inventory_materials = []
-        for inventory in self.find_children({"node": ["Inventory"]}):
-            for material in inventory.material:
-                project_inventory_materials.append(material)
-        for material in project_graph_materials:
-            if material not in self.material and material not in project_inventory_materials:
-                raise CRIPTOrphanedMaterialError(material)
+        # Custom validation logic for Project
+        # Example: Check if all materials are valid
 
-        # Check graph for orphaned nodes, that should be listed in the experiments
-        project_experiments = self.find_children({"node": ["Experiment"]})
-        # There are 4 different types of nodes Experiments are collecting.
-        node_types = ("Process", "Computation", "ComputationProcess", "Data")
-        # We loop over them with the same logic
-        for node_type in node_types:
-            # All in the graph has to be in at least one experiment
-            project_graph_nodes = self.find_children({"node": [node_type]})
-            node_type_attr = node_type.lower()
-            # Non-consistent naming makes this necessary for Computation Process
-            if node_type == "ComputationProcess":
-                node_type_attr = "computation_process"
+        # for material in self.material:
+        #     if not material.is_valid():  # Assuming is_valid() is a method of Material
+        #         raise ValueError("Invalid material found in the project.")
 
-            # Concatenation of all experiment attributes (process, computation, etc.)
-            # Every node of the graph must be present somewhere in this concatenated list.
-            experiment_nodes = []
-            for experiment in project_experiments:
-                for ex_node in getattr(experiment, node_type_attr):
-                    experiment_nodes.append(ex_node)
-            for node in project_graph_nodes:
-                if node not in experiment_nodes:
-                    raise get_orphaned_experiment_exception(node)
+        # Add any other project-specific validation rules here
+
+        # ---------- may unncomment or use this later for inspiration ---------
+
+        # # Check graph for orphaned nodes, that should be listed in project
+        # # Project.materials should contain all material nodes
+        # project_graph_materials = self.find_children({"node": ["Material"]})
+        # # Combine all materials listed in the project inventories
+        # project_inventory_materials = []
+        # for inventory in self.find_children({"node": ["Inventory"]}):
+        #     for material in inventory.material:
+        #         project_inventory_materials.append(material)
+        # for material in project_graph_materials:
+        #     if material not in self.material and material not in project_inventory_materials:
+        #         raise CRIPTOrphanedMaterialError(material)
+
+        # # Check graph for orphaned nodes, that should be listed in the experiments
+        # project_experiments = self.find_children({"node": ["Experiment"]})
+        # # There are 4 different types of nodes Experiments are collecting.
+        # node_types = ("Process", "Computation", "ComputationProcess", "Data")
+        # # We loop over them with the same logic
+        # for node_type in node_types:
+        #     # All in the graph has to be in at least one experiment
+        #     project_graph_nodes = self.find_children({"node": [node_type]})
+        #     node_type_attr = node_type.lower()
+        #     # Non-consistent naming makes this necessary for Computation Process
+        #     if node_type == "ComputationProcess":
+        #         node_type_attr = "computation_process"
+
+        #     # Concatenation of all experiment attributes (process, computation, etc.)
+        #     # Every node of the graph must be present somewhere in this concatenated list.
+        #     experiment_nodes = []
+        #     for experiment in project_experiments:
+        #         for ex_node in getattr(experiment, node_type_attr):
+        #             experiment_nodes.append(ex_node)
+        #     for node in project_graph_nodes:
+        #         if node not in experiment_nodes:
+        #             raise get_orphaned_experiment_exception(node)
 
     @property
     @beartype

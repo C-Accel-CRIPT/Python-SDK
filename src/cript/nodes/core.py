@@ -38,17 +38,6 @@ class classproperty(object):
         return self.f(obj)
 
 
-# maybe there should be a save method in here !
-# right now its just on the API and only takes in a projectv node
-# but maybe it should take in a base node
-
-
-# this will probably all go into the base node ?
-class Config:
-    host = "https://lb-stage.mycriptapp.org"
-    token = ""
-
-
 class BaseNode(ABC):
     """
     This abstract class is the base of all CRIPT nodes.
@@ -86,9 +75,6 @@ class BaseNode(ABC):
         super().__setattr__(key, value)
 
     def __init__(self, **kwargs):
-        # Validate each keyword argument
-        # self.allow_uuid_overwrite = False
-
         for kwarg in kwargs:
             if kwarg not in tolerated_extra_json:
                 # Handle attributes ending with "_count"
@@ -113,11 +99,6 @@ class BaseNode(ABC):
         uid = get_new_uid()
         self._json_attrs = replace(self._json_attrs, node=[self.node_type], uid=uid)
 
-    def set_uuid(self, uuid):
-        if self._json_attrs.uid and not self.allow_uuid_overwrite:
-            raise Exception("UUID is already set and cannot be overwritten.")
-        object.__setattr__(self, "_json_attrs", self._json_attrs.replace(uid=uuid))
-
     def __str__(self) -> str:
         """
         Return a string representation of a node data model attributes.
@@ -129,13 +110,15 @@ class BaseNode(ABC):
         """
         return str(asdict(self._json_attrs))
 
-    @property
-    def host(self):
-        return Config.host
+    # maybe add properties in core ?
 
-    @property
-    def token(self):
-        return Config.token
+    # @property
+    # def host(self):
+    #     return Config.host
+
+    # @property
+    # def token(self):
+    #     return Config.token
 
     @property
     def uid(self):
@@ -706,32 +689,3 @@ class BaseNode(ABC):
             return False
         self._update_json_attrs_if_valid(new_attrs)
         return True
-
-    def prepare_data_for_saving(self):
-        """
-        SUDO CODE
-        make a dictionary (json) to represent the node's data
-        would include all the necessary fields that the API expects.
-
-        maybe pass in the json as a parameter
-        """
-
-        data = {
-            "uuid": self.uuid,
-            # ... other   fields
-        }
-
-        # perform necessary data transformation.
-        # i.e if there are date fields, tiem fields updated, ensure in the correct string format
-
-        # if hasattr(self, 'date_field'):
-        #     data['date_field'] = self.date_field.isoformat()
-
-        # add validation or default values if required.
-
-        # for field in ['required_field_1', 'required_field_2']:
-        #     data[field] = getattr(self, field, 'default_value')
-
-        # Return the prepared data.
-
-        return data

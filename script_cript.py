@@ -17,11 +17,11 @@ import json
 # ============================
 
 
-# WIP : will load this from a config file
+# WIP : will load this from a config file or .env
 class Config:
     host = "https://lb-stage.mycriptapp.org"
-    token = ""
-    storage_token = ""
+    token = "eyJraWQiOiJsUitMbmh4ZXVaODlHQVwvVThSNHMwbUNMYWR5UE9OekVUSktxOGtKbXVHOD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZmI0ZWVlNS0wMjc4LTQ4ZmUtODEzYS1hOGQ3NWNhNDA2MzYiLCJjb2duaXRvOmdyb3VwcyI6WyJ1cy1lYXN0LTFfdnlLMU45cDIyX0NSSVBUIl0sImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX3Z5SzFOOXAyMiIsInZlcnNpb24iOjIsImNsaWVudF9pZCI6IjRjbjlzNXIyMzA4OTFoMzhlNGVzYzE0NnBzIiwib3JpZ2luX2p0aSI6IjIzN2YwNjNkLTY3ZGEtNDE1ZC04YmE3LTgwYjk4YzkwZGYyYyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoib3BlbmlkIGVtYWlsIiwiYXV0aF90aW1lIjoxNzA1NjIxNjkwLCJleHAiOjE3MDcxODkxNTQsImlhdCI6MTcwNzEwMjc1NCwianRpIjoiZTdlMjRkZmMtZGVkZS00YzMyLWExZTEtOGE0YzY3NTVhYjBjIiwidXNlcm5hbWUiOiJjcmlwdF82YTRhZDM1YS0wZTQxLTRmYjQtYTJhZS1kZDhlZjQ5NTFlMDQifQ.Qg0SQYdS9ufRcO3B_GrCycKAqJGGOS-X2wjsHrXhlc-Qp3RyeSrUfL93RQBsBjGfhzSh0JNxJhOZYIyA-4PuxZORLRuf0o6URZ0iq8fwo-xlyL1ilHZFZADaMmV5fdu_mxeusjZIo7_TB4W2OcxqXCBIDALfhYytSwFbRDXYcnfQaJ2ftCwOnOvETQpwSG2yLnPGM5yoGXR8aSesJoLDsRRWllCyKEraAL9xisfz0uCXWnD4N7WcJOgVloqVvZ7ZbfyQgL25SwTYBb9ZCxw5TrEeTqI6-tv-ClFfNU6MVIB2wOqsbt3vFQp8uCQWGkDmAMrn3Oib-OnuGJjf0MJddw"
+    storage_token = "eyJraWQiOiJ5SHVsWSsyMkpNUDFQNmFUd2hHbmhIa3RVRFRPYitDWkI0XC9SellmRGpPQT0iLCJhbGciOiJSUzI1NiJ9.eyJhdF9oYXNoIjoiNVZfdW1iV290OW1YWTVwR2pwaHdSQSIsInN1YiI6ImFmYjRlZWU1LTAyNzgtNDhmZS04MTNhLWE4ZDc1Y2E0MDYzNiIsImNvZ25pdG86Z3JvdXBzIjpbInVzLWVhc3QtMV92eUsxTjlwMjJfQ1JJUFQiXSwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV92eUsxTjlwMjIiLCJjb2duaXRvOnVzZXJuYW1lIjoiY3JpcHRfNmE0YWQzNWEtMGU0MS00ZmI0LWEyYWUtZGQ4ZWY0OTUxZTA0Iiwib3JpZ2luX2p0aSI6IjIzN2YwNjNkLTY3ZGEtNDE1ZC04YmE3LTgwYjk4YzkwZGYyYyIsImF1ZCI6IjRjbjlzNXIyMzA4OTFoMzhlNGVzYzE0NnBzIiwiaWRlbnRpdGllcyI6W3sidXNlcklkIjoiNmE0YWQzNWEtMGU0MS00ZmI0LWEyYWUtZGQ4ZWY0OTUxZTA0IiwicHJvdmlkZXJOYW1lIjoiQ1JJUFQiLCJwcm92aWRlclR5cGUiOiJPSURDIiwiaXNzdWVyIjpudWxsLCJwcmltYXJ5IjoidHJ1ZSIsImRhdGVDcmVhdGVkIjoiMTcwNTYyMTY4ODQzOSJ9XSwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE3MDU2MjE2OTAsImV4cCI6MTcwNzE4OTE1NCwiaWF0IjoxNzA3MTAyNzU0LCJqdGkiOiJmNTAwNjBiZi1hMzdkLTQ4ZTMtOTBkYy02YTRlYzE1ZTFmOTIiLCJlbWFpbCI6ImFsZXhhbmRyYS5kdWJveUBnbWFpbC5jb20ifQ.CXxXSeEjoWUMAU75mGaoNEhFJNXS1oL0TgJx340e9nkGKfDC-2o7F8fQSPF30VLZ9NARyf-5lVshH0Qvx__CqQ4rXisfqzcDraIrHIIcWL8ns_Tg8xdOMJCKLpadjfA-88cAwSDQrkXtotPFXvOhnfZQ-P_gwg38pFVd0_Uwe3SPz25JtWR0LzWubt1oTfoeqYt-6x1HRMWtAOUKpY_FLzoWoVK1c5hJdNaJgG16bRcqJUI5q3PuVaYkVQY3p20qb3rXKqqfsAHcwBJdTGulWD4zMT96busjlsmpHhG0TYDPbu-XrbCJ2BY4UShAOrpTtb7GxefboTFLLUcByuLeow"
 
 
 with cript.API(host="https://lb-stage.mycriptapp.org/", api_token=Config.token, storage_token=Config.storage_token) as api:  # "https://stage.mycriptapp.org/",
@@ -30,8 +30,8 @@ with cript.API(host="https://lb-stage.mycriptapp.org/", api_token=Config.token, 
     host = Config.host
     class_name = "Project"
     node_type = class_name.lower()
-    object_name = "proj sing wojj880f7f099923"
-    object_name_change = "proj wokf788fk0999023"
+    object_name = "proj sing wojj888yyy80fuuu7f099923"
+    object_name_change = "proj wokf78yyy88uu88fk0999023"
     class_params = {"node_type": node_type, "object_name": object_name}  # , "host": host, "token": api_token}  # Parameters needed to instantiate the class
 
     if hasattr(cript, class_name):

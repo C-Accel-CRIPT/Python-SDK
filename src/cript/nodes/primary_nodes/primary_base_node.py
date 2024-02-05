@@ -14,11 +14,11 @@ import datetime
 from deepdiff import DeepDiff
 
 
-# WIP : we will load in these values from a config file
+# WIP : we will load in these values from a config file or .env
 class Config:
     host = "https://lb-stage.mycriptapp.org"
-    token = ""
-    storage_token = ""
+    token = "Token here"
+    storage_token = "storage_token"
 
 
 class PrimaryBaseNode(UUIDBaseNode, ABC):

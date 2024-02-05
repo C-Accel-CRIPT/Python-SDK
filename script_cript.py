@@ -30,8 +30,8 @@ with cript.API(host="https://lb-stage.mycriptapp.org/", api_token=Config.token, 
     host = Config.host
     class_name = "Project"
     node_type = class_name.lower()
-    object_name = "proj sing wojj880f7f023"
-    object_name_change = "proj wokf788fk0023"
+    object_name = "proj sing wojj880f7f099923"
+    object_name_change = "proj wokf788fk0999023"
     class_params = {"node_type": node_type, "object_name": object_name}  # , "host": host, "token": api_token}  # Parameters needed to instantiate the class
 
     if hasattr(cript, class_name):
@@ -114,5 +114,14 @@ with cript.API(host="https://lb-stage.mycriptapp.org/", api_token=Config.token, 
         print("\n--project.material items")
         for item in project.material:
             print(item.get_json().json)
+
+        collection = cript.Collection(name="Initial screening")
+        # We add this collection to the project as a list.
+        project.collection.append(collection)
+
+        res2 = project.save()
+        print("\n -- now print project with collection")
+        print(project)
+
     else:
         print(f"Class {class_name} not found in the cript module")

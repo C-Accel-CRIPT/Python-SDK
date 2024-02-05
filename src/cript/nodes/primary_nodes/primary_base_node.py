@@ -10,12 +10,15 @@ from cript.nodes.uuid_base import UUIDBaseNode
 import cript
 import requests
 from cript.api.api_config import _API_TIMEOUT
+import datetime
+from deepdiff import DeepDiff
 
 
 # WIP : we will load in these values from a config file
 class Config:
     host = "https://lb-stage.mycriptapp.org"
     token = ""
+    storage_token = ""
 
 
 class PrimaryBaseNode(UUIDBaseNode, ABC):
@@ -102,7 +105,7 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
         host = Config.host
         token = Config.token
 
-        get_url = f"{host}/api/v1/{object_type}/{uuid}"
+        get_url = f"{host}/api/v1/{object_type.lower()}/{uuid}"
         headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
         response = requests.get(get_url, headers=headers)
@@ -171,13 +174,9 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
 
         jsonschema_validate(instance=changes, schema=schema)
 
-        print("self.get_json() for project")
-        print(self.get_json())
-
         # Then, send the PATCH request
         url = f"{Config.host}/api/v1/{self.node_type.lower()}/{self.uuid}"  # self.uuid project_uuid
         # print("\n-- URL ---")
-        print(url)
         headers = {
             "Authorization": f"Bearer {Config.token}",
             "Content-Type": "application/json",
@@ -186,60 +185,50 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
 
         return response
 
-    # =======================================================================
+    # ===================== save method with helper stuff ==================================================
 
-    def patch_object(self, uuid, data):
-        host = Config.host
-        token = Config.token
-        """
-        Update an object with the given UUID.
+    @staticmethod
+    def compute_diff(original, current):
+        diff = {}
+        for key in set(original.keys()) & set(current.keys()):  # Intersection of keys
+            if original[key] != current[key]:
+                diff[key] = current[key]
 
-        Parameters:
-        - uuid (str): The UUID of the object to update.
-        - host (str): The base URL of the API.
-        - token (str): The authorization token.
-        - data (dict): The data to update in the object.
+        # Optionally handle specific fields
+        if "material" in original and "material" in current:
+            # Assuming we can compare lengths to infer material count change
+            if len(original["material"]) != len(current["material"]):
+                diff["material_count"] = len(current["material"])
 
-        Returns:
-        - dict: The response data from the API.
-        """
+        return diff
 
-        # Validate data
-        if not self.validate_patch_data(data):
-            print("Data validation failed.")
-            return None
+    @staticmethod
+    def normalize_data(data):
+        # Exclude or normalize fields
+        data.pop("admin", None)
+        # Handle other fields as needed
+        return data
 
-        # Construct the PATCH request URL
-        patch_url = f"{host}/api/v1/object_type/{uuid}"  # Replace 'object_type' with the actual type
+    def save(self):
+        # Fetch the original object data
+        original = self.__class__.fetch_object_data(self.node_type, self.uuid)
+        # original = {"node": original["node"]}
 
-        # Set up the HTTP headers
-        headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+        # Use the current state of the object
+        modified = self.get_json().json
 
-        try:
-            # Perform the PATCH request
-            response = requests.patch(url=patch_url, headers=headers, json=data, timeout=_API_TIMEOUT)
-            response.raise_for_status()
-            return response.json()
-        except requests.RequestException as e:
-            print(f"An error occurred: {e}")
-            return None
+        diff = DeepDiff(original, modified, ignore_order=True)
+        diff_dict = diff.to_dict()
 
-    def validate_patch_data(self, data):
-        """
-        using the schema
+        diff_str = diff_dict["type_changes"]["root"]["new_value"]
+        changes_for_patch = json.loads(diff_str)
 
-        Validate the data for PATCH request.
+        changes_for_patch.pop("uuid")
+        changes_for_patch.pop("uid")
+        # print(changes_for_patch)
 
-        Parameters:
-        - data (dict): Data to be validated.
-
-        Returns:
-        - bool: True if data is valid, False otherwise.
-
-        """
-        # Implement your validation logic here
-        # For example, check if required keys are present and values are of correct types
-        return True  # Return False if validation fails
+        self.patch(changes=changes_for_patch)
+        print("[[[[ !!!!! ]]]]")
 
     @beartype
     def __str__(self) -> str:

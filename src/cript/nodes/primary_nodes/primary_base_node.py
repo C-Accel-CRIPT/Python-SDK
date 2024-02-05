@@ -77,15 +77,14 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
                 headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
                 response = requests.post(url, json=data, headers=headers)
-                # print("response++++")
-                # print(response)
-                if response.status_code == 200:  # Assuming 201 Created
+
+                if response.status_code == 200:  # response for us when created
                     uuid = response.json()["data"]["result"][0].get("uuid")
                     node_data = cls.fetch_object_data(node_type, uuid)
                     return node_class(**node_data, **kwargs)
-                elif response.status_code == 409:  # Duplicate item
+                elif response.status_code == 409:  # duplicate item
                     print("Duplicate item detected. Attempting to fetch existing item.")
-                    # Assuming the object now exists, attempt to fetch it again
+                    # assuming the object now exists, attempt to fetch it again
                     _, uuid = cls.object_exists(node_type=node_type, object_name=object_name)
                     if uuid:
                         node_data = cls.fetch_object_data(node_type, uuid)
@@ -125,13 +124,10 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
 
         try:
             response = requests.get(api_url, headers=headers)
-            # print("\n[[[[[[response]]]]]]")
-            # print(response)
 
             response.raise_for_status()
             data = response.json()["data"]
-            # print(data)
-            # print("-----\n")
+
             for item in data.get("result", []):
                 if item.get("name") == object_name:
                     return True, item.get("uuid")
@@ -174,9 +170,8 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
 
         jsonschema_validate(instance=changes, schema=schema)
 
-        # Then, send the PATCH request
         url = f"{Config.host}/api/v1/{self.node_type.lower()}/{self.uuid}"  # self.uuid project_uuid
-        # print("\n-- URL ---")
+
         headers = {
             "Authorization": f"Bearer {Config.token}",
             "Content-Type": "application/json",
@@ -185,29 +180,7 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
 
         return response
 
-    # ===================== save method with helper stuff ==================================================
-
-    @staticmethod
-    def compute_diff(original, current):
-        diff = {}
-        for key in set(original.keys()) & set(current.keys()):  # Intersection of keys
-            if original[key] != current[key]:
-                diff[key] = current[key]
-
-        # Optionally handle specific fields
-        if "material" in original and "material" in current:
-            # Assuming we can compare lengths to infer material count change
-            if len(original["material"]) != len(current["material"]):
-                diff["material_count"] = len(current["material"])
-
-        return diff
-
-    @staticmethod
-    def normalize_data(data):
-        # Exclude or normalize fields
-        data.pop("admin", None)
-        # Handle other fields as needed
-        return data
+    # ===================== save method with helper functions ==================================================
 
     def save(self):
         # Fetch the original object data
@@ -225,10 +198,8 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
 
         changes_for_patch.pop("uuid")
         changes_for_patch.pop("uid")
-        # print(changes_for_patch)
 
         self.patch(changes=changes_for_patch)
-        print("[[[[ !!!!! ]]]]")
 
     @beartype
     def __str__(self) -> str:

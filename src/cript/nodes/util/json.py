@@ -26,6 +26,7 @@ class NodeEncoder(json.JSONEncoder):
 
     Attributes
     ----------
+<<<<<<< HEAD
     handled_ids : Set[str]
         A set to store the UIDs of nodes that have been processed during serialization.
     known_uuid : Set[str]
@@ -33,6 +34,15 @@ class NodeEncoder(json.JSONEncoder):
     condense_to_uuid : Dict[str, Set[str]]
         A set to store the node types that should be condensed to UUID edges in the JSON.
     suppress_attributes : Optional[Dict[str, Set[str]]]
+=======
+    handled_ids : set[str]
+        A set to store the UIDs of nodes that have been processed during serialization.
+    known_uuid : set[str]
+        A set to store the UUIDs of nodes that have been previously encountered in the JSON.
+    condense_to_uuid : dict[str, set[str]]
+        A set to store the node types that should be condensed to UUID edges in the JSON.
+    suppress_attributes : Optional[dict[str, set[str]]]
+>>>>>>> 44cc898 (add missing file)
         A dictionary that allows suppressing specific attributes for nodes with the corresponding UUIDs.
 
     Methods
@@ -43,7 +53,11 @@ class NodeEncoder(json.JSONEncoder):
     ```
 
     ```python
+<<<<<<< HEAD
     _apply_modifications(self, serialize_dict: Dict) -> Tuple[Dict, List[str]]:
+=======
+    _apply_modifications(self, serialize_dict: dict) -> Tuple[dict, list[str]]:
+>>>>>>> 44cc898 (add missing file)
         # Apply modifications to the serialized dictionary based on node types
         # and attributes to be condensed. This internal function handles node
         # condensation and attribute suppression during serialization.
@@ -145,6 +159,7 @@ class NodeEncoder(json.JSONEncoder):
 
         Parameters
         ----------
+<<<<<<< HEAD
         serialize_dict: Dict
 
         Returns

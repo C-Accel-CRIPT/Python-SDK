@@ -805,6 +805,10 @@ class API:
         )
         diff_dict = diff0.to_dict()
 
+        print("----diff_dict")
+        print(diff_dict)
+        quit()
+
         try:
             dictionary_items_added = diff_dict.get("dictionary_item_added", {})  # probably need to be values changed
             values_changed = diff_dict.get("values_changed", {})
@@ -817,6 +821,9 @@ class API:
         # 0) REMOVE ITEMS ADDED - UNLINKING
 
         entities_to_remove_dict = {}
+        print("------iterable_items_removed/values_changed-------")
+        print(values_changed)
+        print(iterable_items_removed)
 
         for key, value in iterable_items_removed.items():
             # Use split to parse out the entity name from the key

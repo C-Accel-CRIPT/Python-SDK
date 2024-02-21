@@ -27,7 +27,8 @@ class Config:
     delete_all_projs = False
     material_name = "N9"
     # object_name = "Brili P1"  # "try444"  # "project0110"
-    object_name = "H@LL0"
+
+    object_name = "boohoo1"
     mat_name1 = "material_90900"
     mat_name2 = "butanol"
     headers = {"Authorization": f"Bearer {api_token}", "Content-Type": "application/json"}
@@ -39,7 +40,7 @@ with cript.API(host=Config.host, api_token=Config.api_token, storage_token=Confi
     class_name = "Project"
     node_type = class_name.lower()
     object_name = Config.object_name
-    object_name_change = "boohoo1"
+    # object_name_change = "boohoo1"
     class_params = {"node": node_type, "name": object_name}  #   , "material": [{"node": ["Material"], "name": Config.material_name}]}  # , "host": host, "token": api_token}  # Parameters needed to instantiate the class
 
     if Config.delete_all_projs:
@@ -67,77 +68,70 @@ with cript.API(host=Config.host, api_token=Config.api_token, storage_token=Confi
         quit()
 
     if hasattr(cript, class_name):
-        get_url = "https://lb-stage.mycriptapp.org/api/v1/project/e7381525-64b9-4849-a416-57aa1e09044f"
+        get_url = "https://lb-stage.mycriptapp.org/api/v1/project/3f96cade-31e0-49f8-ad7b-0891d416910c"
         result = requests.get(url=get_url, headers=api._http_headers)
         print(result)  # gets a 200
 
         # This includes not only the payload in JSON but also info about the request.
         result_json_dict = result.json()
-        # print(json.dumps(result_json_dict, indent=2))
 
-        # we only want the node payload which is in the ["data"] attribute
         my_project_from_api_dict = result_json_dict["data"]
 
         # Now your instinct was right to give it a string version, but I want to fix that
         project_list = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_api_dict))
         project = project_list[0]
-        # The API returns us a list with possible nodes, so we want to look at the first entry
-        # print(type(project[0]))
-        # quit()
 
-        # =============================================
-        # Instantiate the class
-        # Dynamically instantiate the Project class if it exists in the cript module
-        # project = getattr(cript, class_name).get_or_create(**class_params)
-        # maybe we need to validate the class params
+        # print("---- here project")
+        # print(project)
 
         # =============================================
         # GET OR CREATE FUNCTION THERE FOR LATER
-
         # project = PrimaryBaseNode.get_or_create(**class_params)  # also any leftover kwargs will be passed and accepted ? # (node_type="project", object_name=object_name)  # , host=host, token=api_token)
-        # project = api.get_or_create(**class_params)  # also any leftover kwargs will be passed and accepted ? # (node_type="project", object_name=object_name)  # , host=host, token=api_token)
+        project = api.get_or_create(**class_params)  # also any leftover kwargs will be passed and accepted ? # (node_type="project", object_name=object_name)  # , host=host, token=api_token)
+        print("---- here gotten project from functionality")
+        print(project)
+        print("----project.material.get_json()")
+        print([item.get_json() for item in project.material])
 
-        # ===========================================================================
-
-        # project = cript.Project(name="My first project.")
-        print("\n\n@@@@@ here we go")
+        print("\n\n here we go")
 
         material9000 = cript.Material(name=Config.mat_name1, identifier=[])
-        material2000 = cript.Material(name=Config.mat_name2, identifier=[])
-        material_000 = cript.Material(name="aa1511", identifier=[])
-        material_001 = cript.Material(name="aa2252", identifier=[])
-        material_002 = cript.Material(name="aa3533", identifier=[])
-        material_003 = cript.Material(name="aa4544", identifier=[])
+        material_000 = cript.Material(name="qq1511", identifier=[])
 
-        collection = cript.Collection(name="Initial-screening")
-        collection2 = cript.Collection(name="22-Initial-screening")
-        collection3 = cript.Collection(name="44-Initial-screening")
+        # collection = cript.Collection(name="0Initial-screening")
+        # collection2 = cript.Collection(name="202-Initial-screening")
+        # collection3 = cript.Collection(name="404-Initial-screening")
+
         # We add this collection to the project as a list.
         # project.collection.append(collection)
 
-        project.material += [material9000, material_000, material2000]
+        # TOTALLY RESET
+        project.material = [material9000, material_000]
         # ------------------------
-        project.material += [material_001]
-        project.material += [material_002]
-        project.material += [material_003]
 
         # document somewhere about this += operator !
-        project.collection += [collection]
-        project.collection += [collection2]
-        project.collection += [collection3]
 
-        print("----- project !!!!!\n")
+        # project.collection += [collection]
+        # project.collection += [collection2]
+        # project.collection += [collection3]
+
+        print("----- printing project \n")
         print(project)
 
         # project.save()
-        # api.save_node(project)
+        api.save_node(project)
         # quit()
 
-        print("\n\n@@@@@ here we go 2 ")
+        print("\n\n ----- resetting the material list ")
+        material_001 = cript.Material(name="qq2252", identifier=[])
+        material_002 = cript.Material(name="qq3533", identifier=[])
+        material_003 = cript.Material(name="qq4544", identifier=[])
+
         material2000 = cript.Material(name=Config.mat_name2, identifier=[])
         project.material = [material2000]
         print(project)
         api.save_node(project)
+        quit()
 
         # =========================OLD=============================================
 
@@ -179,9 +173,6 @@ with cript.API(host=Config.host, api_token=Config.api_token, storage_token=Confi
 
         # deep diff goes here
 
-        changes = {"node": [class_name], "name": object_name_change}
-
-        quit()
         # Assuming host and api_token are defined as per your provided code
         # response = primary_node_instance.patch(changes=changes)  # , host, api_token)
         try:

@@ -94,11 +94,15 @@ class Project(PrimaryBaseNode):
             instantiate a Project node
         """
         super().__init__(name=name, notes=notes, **kwargs)
-        # self.host = Config.host
-        self.collection = collection if collection is not None else []
-        self.material = material if material is not None else []
-        # self._json_attrs = replace(self._json_attrs, name=name, collection=collection, material=material)
-        # self.validate()
+
+        if collection is None:
+            collection = []
+
+        if material is None:
+            material = []
+
+        self._json_attrs = replace(self._json_attrs, name=name, collection=collection, material=material)
+        self.validate()
 
     def validate(self, api=None, is_patch=False, force_validation: bool = False):
         from cript.nodes.exceptions import (

@@ -110,16 +110,6 @@ class BaseNode(ABC):
         """
         return str(asdict(self._json_attrs))
 
-    # maybe add properties in core ?
-
-    # @property
-    # def host(self):
-    #     return Config.host
-
-    # @property
-    # def token(self):
-    #     return Config.token
-
     @property
     def uid(self):
         return self._json_attrs.uid

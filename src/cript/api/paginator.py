@@ -35,7 +35,7 @@ class Paginator:
     # if query or page number are None, then it means that api_endpoint does not allow for whatever that is None
     # and that is not added to the URL
     # by default the page_number and query are `None` and they can get filled in
-    _query: Union[str, None]
+    _query: str
     _current_page_number: int
     _current_position: int
     _fetched_nodes: list
@@ -45,7 +45,7 @@ class Paginator:
         self,
         http_headers: dict,
         api_endpoint: str,
-        query: Optional[str] = None,
+        query: str = "",
     ):
         """
         create a paginator
@@ -71,8 +71,6 @@ class Paginator:
             instantiate a paginator
         """
         self._http_headers = http_headers
-        self._api_endpoint = None
-        self._query = ""
         self._current_page_number = 0
         self._fetched_nodes = []
         self._current_position = 0

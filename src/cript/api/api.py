@@ -733,7 +733,7 @@ class API:
         self,
         node_type: Any,
         search_mode: SearchModes,
-        value_to_search: Optional[str],
+        value_to_search: str = "",
     ) -> Paginator:
         """
         This method is used to perform search on the CRIPT platform.
@@ -748,7 +748,6 @@ class API:
             materials_iterator = cript_api.search(
                 node_type=cript.Material,
                 search_mode=cript.SearchModes.NODE_TYPE,
-                value_to_search=None
             )
             ```
 
@@ -795,7 +794,7 @@ class API:
         search_mode : SearchModes
             Type of search you want to do. You can search by name, `UUID`, `EXACT_NAME`, etc.
             Refer to [valid search modes](../search_modes)
-        value_to_search : Optional[str]
+        value_to_search : str
             What you are searching for can be either a value, and if you are only searching for
             a `NODE_TYPE`, then this value can be empty or `None`
 
@@ -827,7 +826,7 @@ class API:
         elif search_mode == SearchModes.UUID:
             api_endpoint = f"{self._host}/{node_type}/{value_to_search}"
             # putting the value_to_search in the URL instead of a query
-            value_to_search = None
+            value_to_search = ""
 
         elif search_mode == SearchModes.BIGSMILES:
             api_endpoint = f"{self._host}/search/bigsmiles/"

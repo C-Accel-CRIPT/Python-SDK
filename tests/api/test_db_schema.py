@@ -48,6 +48,7 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     valid_material_dict = {"node": ["Material"], "name": "0.053 volume fraction CM gel", "uid": "_:0.053 volume fraction CM gel"}
 
     # convert dict to JSON string because method expects JSON string
+    print("is_node_schema_valid")
     assert cript_api.schema.is_node_schema_valid(node_json=json.dumps(valid_material_dict), is_patch=False) is True
     # ------ valid file schema ------
     valid_file_dict = {
@@ -59,6 +60,7 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
     }
 
     # convert dict to JSON string because method expects JSON string
+    print("is_node_schema_valid")
     assert cript_api.schema.is_node_schema_valid(node_json=json.dumps(valid_file_dict), is_patch=False) is True
 
 
@@ -90,6 +92,7 @@ def test_is_node_schema_valid_skipped(cript_api: cript.API) -> None:
         invalid_schema = {"invalid key": "invalid value", "node": ["Material"]}
 
         # Test should be skipped
+        print("is_node_schema_valid")
         assert local_cript_api.schema.is_node_schema_valid(node_json=json.dumps(invalid_schema), is_patch=False) is None
 
         with pytest.raises(CRIPTNodeSchemaError):

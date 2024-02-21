@@ -1,0 +1,56 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Material Node Schema",
+    "type": "object",
+    "properties": {
+        "node": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "Material"
+                ]
+            },
+            "minItems": 1,
+            "maxItems": 1
+        },
+        "name": {
+            "type": "string"
+        },
+        "property": {
+            "type": "array",
+            "items": {
+                "$ref": "./property_schema.json"
+            },
+            "optional": true
+        },
+        "uuid": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "optional": true
+        }
+    },
+    "required": [
+        "node",
+        "name"
+    ],
+    "additionalProperties": false,
+    "anyOf": [
+        {
+            "required": [
+                "uuid"
+            ]
+        },
+        {
+            "not": {
+                "required": [
+                    "uuid"
+                ]
+            },
+            "required": [
+                "node",
+                "name"
+            ]
+        }
+    ]
+}

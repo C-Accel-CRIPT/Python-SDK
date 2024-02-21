@@ -1,6 +1,5 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Project Patch Schema",
     "type": "object",
     "properties": {
         "node": {
@@ -8,26 +7,31 @@
             "items": {
                 "type": "string",
                 "enum": [
-                    "Project"
+                    "Property"
                 ]
             },
             "minItems": 1,
             "maxItems": 1
         },
-        "name": {
+        "key": {
             "type": "string"
         },
-        "materials": {
-            "type": "array",
-            "items": {
-                "$ref": "./material_schema.json"
-            },
-            "optional": true
+        "method": {
+            "type": "string"
+        },
+        "type": {
+            "type": "string"
+        },
+        "uuid": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
         }
     },
     "required": [
         "node",
-        "name"
+        "key",
+        "method",
+        "type"
     ],
     "additionalProperties": false
 }

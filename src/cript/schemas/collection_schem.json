@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Project Patch Schema",
+    "title": "Collection Patch Schema",
     "type": "object",
     "properties": {
         "node": {
@@ -8,7 +8,7 @@
             "items": {
                 "type": "string",
                 "enum": [
-                    "Project"
+                    "Collection"
                 ]
             },
             "minItems": 1,
@@ -16,13 +16,6 @@
         },
         "name": {
             "type": "string"
-        },
-        "materials": {
-            "type": "array",
-            "items": {
-                "$ref": "./material_schema.json"
-            },
-            "optional": true
         }
     },
     "required": [

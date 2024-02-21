@@ -6,6 +6,8 @@ import uuid
 import warnings
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
+from deepdiff import DeepDiff
+import cript
 
 # from deepdiff import DeepDiff
 
@@ -34,12 +36,24 @@ from cript.api.utils.save_helper import (
 from cript.api.utils.web_file_downloader import download_file_from_url
 from cript.api.valid_search_modes import SearchModes
 
+from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
 from cript.nodes.core import BaseNode
+
 
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.
 _global_cached_api = None
+
+
+# load from .env
+class Config:
+    host = os.getenv("HOST")
+    api_token = os.getenv("API_KEY")
+    storage_token = os.getenv("STORAGE_KEY")
+    object_name0 = "P2"
+    object_name = "try444"  # "project0110"  # "P2A3DAA"
+    is_public = False  # True
 
 
 def _get_global_cached_api():
@@ -488,7 +502,547 @@ class API:
         except Exception as exc:
             raise CRIPTConnectionError(self.host, self._api_token) from exc
 
-    def save(self, project: Project) -> str:  # None:
+    # ================ helpers ==============
+    @classmethod
+    def object_exists(cls, node: str, name: str):
+        host = Config.host
+        token = Config.api_token
+
+        # FOR NOW : hard code brilis proj name
+        # object_name = "P2A3DAA" # not used
+
+        api_url = f"{host}/api/v1/search/exact/{node}/?q={name}"  # Ensure this URL lists all objects of the type
+        headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+        try:
+            response = requests.get(api_url, headers=headers)
+
+            data = response.json()["data"]
+            print("\nlength should be 1: ", len(data.get("result")))
+
+            if len(data.get("result")) == 1:
+                item = data.get("result")[0]
+
+                return True, item.get("uuid")
+
+            return False, None
+
+        except requests.RequestException as e:
+            print(f"An error occurred: {e}")
+            return False, None
+
+    @staticmethod
+    def fetch_object_data(object_type: str, uuid: str):
+        host = Config.host
+        token = Config.api_token
+        get_url = f"{host}/api/v1/{object_type.lower()}/{uuid}"
+        headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+        response = requests.get(get_url, headers=headers)
+        response.raise_for_status()
+        if response.json()["data"]:
+            return response.json()["data"][0]  # Assuming the first item is the desired one
+        else:
+            return "Error"  # Consider raising an exception or returning None instead
+
+    @classmethod
+    def get_or_create(cls, node: str, name: str, parent_uuid: str = "", parent_node_type: str = "", is_public=Config.is_public, **kwargs):
+        host = Config.host
+        token = Config.api_token
+
+        if hasattr(cript, node.capitalize()):
+            node_class = getattr(cript, node.capitalize())
+
+            object_exists, uuid = cls.object_exists(node=node, name=name)
+
+            print("----\n  print object_exists, uuid ??")
+            print(object_exists, uuid)
+
+            if object_exists:
+                print(f"Object exists, fetching data for {node} with UUID: {uuid}")
+                node_data = cls.fetch_object_data(node, uuid)
+                # print(f"Fetched data for {node}: {node_data}")
+
+                # Define the list of child node types
+                child_node_list = [
+                    "collection",
+                    "material",
+                    "property",
+                    "process",
+                    # Add other node types as needed
+                ]
+
+                for key in child_node_list:
+                    if key in node_data:
+                        if isinstance(node_data[key], list) and all(isinstance(item, dict) for item in node_data[key]):
+                            # All items are dictionaries, proceed with instantiation
+                            child_class_name = key.capitalize()
+                            child_class = getattr(cript, child_class_name, None)
+                            if child_class:
+                                node_data[key] = [child_class._from_json(item) for item in node_data[key]]
+                            else:
+                                print(f"Warning: Child class {child_class_name} not found for key {key}.")
+                        elif all(isinstance(item, cript.nodes.primary_nodes.material.Material) for item in node_data[key]):
+                            # Items are already instances of Material, no action needed
+                            print(f"Info: {key} already contains instantiated objects.")
+                        else:
+                            # Mixed or unexpected types, handle accordingly
+                            print(f"Warning: Unexpected data format for {key}.")
+
+                # Use the dynamically updated node_data to instantiate the node using its _from_json method
+                return node_class._from_json(node_data)
+
+            else:
+                print(f"Object does not exist, creating {node} named {name} ...now will create .... do a post and then fetch")
+
+                if node == "project":
+                    url = f"{host}/api/v1/{node}"
+                    data = {"node": [node.capitalize()], "name": name, "public": is_public}
+                    data.update(kwargs)
+
+                    headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+                    response = requests.post(url, json=data, headers=headers)
+                    print("++++ ::::: response")
+                    print(response.json())
+
+                    if response.status_code == 200:  # response for us when created
+                        print("---here here")
+                        uuid = response.json()["data"]["result"][0].get("uuid")
+                        node_data = cls.fetch_object_data(node, uuid)
+
+                        return node_class(**node_data)  # , **kwargs)
+                else:
+                    api_url = f"{host}/api/v1/{parent_node_type}/{parent_uuid}"  # Ensure this URL lists all objects of the type
+                    headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+                    data = {"node": [f"{parent_node_type.capitalize()}"], f"{node.lower()}": [{"node": [f"{node.capitalize()}"], "name": f"{name}"}]}  # probably luss kwargs
+
+                    print(data)
+
+                    try:
+                        response = requests.patch(
+                            api_url,
+                            json=data,
+                            headers=headers,
+                        )
+
+                        response.raise_for_status()
+                        res = response.json()
+                        data = response.json()["data"]
+
+                        if response.status_code == 200:  # response for us when created
+                            print("---star star")
+                            uuid = response.json()["data"]["result"][0].get("uuid")
+                            return node_class(**node_data)  # , **kwargs)
+
+                    except Exception as e:
+                        print("here4444")
+                        print(e)
+
+        else:
+            raise ValueError(f"Invalid node type: {node}")
+
+    @staticmethod
+    def load_schema_for_node_type(node_type):
+        """
+        Load the validation schema for a given node type.
+
+        Args:
+            node_type (str): The type of the node (e.g., 'Project', 'Material').
+
+        Returns:
+            dict: The loaded schema.
+        """
+        schema_file_path = f"src/cript/schemas/{node_type.lower()}_schema.json"  # Path to the schema file
+        try:
+            with open(schema_file_path, "r") as file:
+                schema = json.load(file)
+            return schema
+        except FileNotFoundError:
+            print(f"Schema file not found for node type: {node_type}")
+
+        except json.JSONDecodeError:
+            print(f"Invalid JSON format in schema file for node type: {node_type}")
+
+    @staticmethod
+    def remove_keys_from_dict(
+        dictionary,
+        keys_to_remove=["uuid", "experiment_count", "inventory_count", "public", "created_at", "email", "model_version", "orcid", "uid", "updated_at", "username", "admin_count", "collection_count", "locked", "material_count", "member_count"],
+    ):
+        """Recursively remove keys from a dictionary."""
+        if not isinstance(dictionary, dict):
+            return dictionary
+        for key in keys_to_remove:
+            dictionary.pop(key, None)
+        for key, value in list(dictionary.items()):  # Use list() to avoid RuntimeError during iteration
+            if isinstance(value, dict):
+                API.remove_keys_from_dict(value, keys_to_remove)
+            elif isinstance(value, list):
+                for item in value:
+                    API.remove_keys_from_dict(item, keys_to_remove)
+        return dictionary
+
+    @staticmethod
+    def remove_duplicates(node_objects, duplicate_list):
+        removed_items = []  # To store removed materials
+        remaining_items = []  # To store remaining materials after removal
+
+        for item in node_objects:
+            if item["name"] in duplicate_list:
+                removed_items.append(item)
+            else:
+                remaining_items.append(item)
+
+        return remaining_items
+
+    @staticmethod
+    def send_patch_request_for_entity(parent_node=None, payload=None):  # (self, base_url, entity_uuid, data, auth_token=None):
+        """
+        Sends a PATCH request to update an entity.
+        """
+
+        base_url = Config.host
+        parent_uuid = parent_node.uuid
+        url = f"{base_url}/api/v1/project/{parent_uuid}"  # if entity_uuid else base_url
+
+        headers = {
+            "Content-Type": "application/json",
+        }
+
+        headers["Authorization"] = f"Bearer {Config.api_token}"
+
+        data = payload
+
+        # print(data)
+
+        response = requests.patch(url, json=data, headers=headers)
+
+        if response.status_code == 200:
+            print("Entity updated successfully.")
+        else:
+            print(f"Entity updated Failed. Status code: {response.status_code}, Response: {response.text}")
+
+        return response
+
+    @staticmethod
+    def find_uuid_by_name_and_type(self, name, node_type):
+        """
+        Queries the system to find the UUID of an entity based on its name and type.
+
+        Args:
+            name (str): The name of the entity.
+            type (str): The type of the entity (e.g., 'Material').
+
+        Returns:
+            str: The UUID of the entity if found, None otherwise.
+        """
+        base_url = "https://lb-stage.mycriptapp.org/api/v1"
+        # Adjust the URL construction to fit the required format
+        print(name)
+        # name = name.strip().replace(" ", "+")
+        name = name.strip().replace(" ", "%20")
+        print(name)
+        print("^^---^^^")
+        print(node_type)
+        print("-----====")
+
+        search_url = f"{base_url}/search/exact/{node_type.lower()}/?q={name}"
+        headers = {
+            "Authorization": f"Bearer {Config.api_token}",  # Use your actual API token
+            "Content-Type": "application/json",
+        }
+
+        try:
+            response = requests.get(search_url, headers=headers)
+            response.raise_for_status()  # This will raise an HTTPError if the response was an error
+
+            # Assuming the API returns a JSON response with entities, and you're interested in the first one
+            found_node = response.json()
+            if found_node:
+                if found_node["data"]["result"]:
+                    print(len(found_node["data"]["result"]))
+                    return found_node["data"]["result"][0]["uuid"]
+                else:
+                    print("No results found")
+
+            else:
+                print(f"Error querying UUID for name '{name}' and type '{node_type}': {e}")
+                return None
+        except requests.RequestException as e:
+            print(f"Error querying UUID for name '{name}' and type '{node_type}': {e}")
+            return None
+
+    # ================= SAVE ==================
+    @classmethod
+    def save_node(self, new_node: PrimaryBaseNode):
+        original = self.fetch_object_data(new_node.node_type, new_node.uuid)
+
+        modified = json.loads(new_node.get_json().json)  # Assuming this is already a dictionary
+
+        cleaned_original = self.remove_keys_from_dict(original)
+        cleaned_modified = self.remove_keys_from_dict(modified)
+
+        exclude_regex_paths = [
+            r"root(\[.*\])?\['uid'\]",
+            r"root\['\w+_count'\]",  # All the attributes that end with _count
+            r"root(\[.*\])?\['\w+_count'\]",  # All the attributes that end with _count
+            r"root(\[.*\])?\['locked'\]",
+            r"root(\[.*\])?\['admin'\]",
+            r"root(\[.*\])?\['created_at'\]",
+            r"root(\[.*\])?\['created_by'\]",
+            r"root(\[.*\])?\['updated_at'\]",
+            r"root(\[.*\])?\['updated_by'\]",
+            r"root(\[.*\])?\['public'\]",
+            r"root(\[.*\])?\['notes'\]",
+            r"root(\[.*\])?\['model_version'\]",
+        ]
+
+        diff0 = DeepDiff(
+            cleaned_original,
+            cleaned_modified,
+            exclude_regex_paths=exclude_regex_paths,
+            ignore_order=True,
+        )
+        diff_dict = diff0.to_dict()
+
+        try:
+            dictionary_items_added = diff_dict.get("dictionary_item_added", {})  # probably need to be values changed
+            values_changed = diff_dict.get("values_changed", {})
+            iterable_items_added = diff_dict.get("iterable_item_added", {})
+            iterable_items_removed = diff_dict.get("iterable_item_removed", {})
+
+        except Exception as e:
+            print(e)
+
+        # 0) REMOVE ITEMS ADDED - UNLINKING
+
+        entities_to_remove_dict = {}
+
+        for key, value in iterable_items_removed.items():
+            # Use split to parse out the entity name from the key
+            try:
+                entity_name = key.split("['")[1].split("']")[0]
+                # print("\nhere return uuid based off of node and name")
+                # print(value)
+
+            except IndexError:
+                entity_name = None
+
+            # Proceed with the rest of the logic as before
+            if entity_name:
+                if entity_name not in entities_to_remove_dict:
+                    # value['name'], value['node']
+                    uuid = new_node.find_uuid_by_name_and_type(value["name"], value["node"][0].lower())
+                    entities_to_remove_dict[entity_name] = [{"uuid": uuid}]
+                else:
+                    # value['name'], value['node']
+                    uuid = new_node.find_uuid_by_name_and_type(value["name"], value["node"][0].lower())
+                    entities_to_remove_dict[entity_name].append({"uuid": uuid})
+            else:
+                # If no entity_name could be extracted, add or append to a generic key
+                generic_key = "unknown_entities"
+                if generic_key not in entities_to_remove_dict:
+                    entities_to_remove_dict[generic_key] = [key]
+                else:
+                    entities_to_remove_dict[generic_key].append(key)
+
+        print("\n======\nentities_to_remove_dict")
+        print(entities_to_remove_dict)
+
+        entities_to_remove_dict["node"] = ["Project"]
+        payload = entities_to_remove_dict
+        print(new_node)
+        try:
+            print(new_node["uuid"])
+        except Exception as e:
+            print(e)
+        try:
+            print(new_node.uuid)
+        except Exception as e:
+            print(e)
+
+        response = API.send_patch_request_for_entity(parent_node=new_node, payload=payload)
+        quit()
+        # print(" ---  removing     ")
+        # print(response.json())
+
+        # 1) ITERABLE ITEMS ADDED
+        print("  1)   ITERABLE ITEMS ADDED ")
+
+        entities_to_patch_dict = {}
+
+        for key, value in iterable_items_added.items():
+            # Use split to parse out the entity name from the key
+            try:
+                entity_name = key.split("['")[1].split("']")[0]
+            except IndexError:
+                entity_name = None
+
+            # Proceed with the rest of the logic as before
+            if entity_name:
+                if entity_name not in entities_to_patch_dict:
+                    entities_to_patch_dict[entity_name] = [value]
+                else:
+                    entities_to_patch_dict[entity_name].append(value)
+            else:
+                # If no entity_name could be extracted, add or append to a generic key
+                generic_key = "unknown_entities"
+                if generic_key not in entities_to_patch_dict:
+                    entities_to_patch_dict[generic_key] = [key]
+                else:
+                    entities_to_patch_dict[generic_key].append(key)
+
+        # print("======entities_to_patch_dict")
+        # print(entities_to_patch_dict)
+
+        # 2) DICT ITEMS ADDED
+        print("  2) DICT ITEMS ADDED ")
+        # print("dictionary_items_added:  ", dictionary_items_added)
+
+        for path in dictionary_items_added:
+            # Strip "root" and square brackets, then remove quotes
+            key_name = path.replace("root[", "").replace("]", "").replace("'", "")
+            entities_to_patch_dict[key_name] = []
+
+        entities_to_patch_dict_keys_list = list(entities_to_patch_dict.keys())
+
+        #######################
+        # this will pacth changes ,
+        # retry without duplicates, and relink , and
+        ###################
+
+        for item in entities_to_patch_dict_keys_list:
+            if isinstance(cleaned_modified[item], list):
+                node_objects = cleaned_modified[item]
+
+                try:
+                    schema = new_node.load_schema_for_node_type(item)  # Assume load_schema is implemented to fetch the correct schema
+                    print("\n-----0 schema")
+                    print(schema)
+                    print("-----0 schema\n")
+                    for obj in node_objects:
+                        # Dynamically set the key based on the first element of the 'node' list, converted to lowercase
+                        key = obj.get("node")[0].lower() if obj.get("node") else "unknown"
+
+                        # Check if the key exists in the global_patch_dict
+                        if key in entities_to_patch_dict:
+                            # If key exists, append the current object to the list
+                            entities_to_patch_dict[key].append(obj)
+                        else:
+                            # If key does not exist, create a new list with the current object
+                            entities_to_patch_dict[key] = [obj]
+
+                    # print(entities_to_patch_dict)
+                except ValidationError as e:
+                    print(f"Validation error for {item}: {e}")
+                    continue  # Skip patching this entity due to validation failure
+                    # Send patch request for the current entity with its objects
+
+                # print(f"VALIDATED list under ENTITY {item}")
+                # print("pray we get here")
+                entities_to_patch_dict["node"] = new_node.node
+                # print(entities_to_patch_dict)
+
+                # print("$$$$$$--00---node_objects")
+
+                # payload = {"node": [self.node_type.capitalize()], item: node_objects}
+
+                payload = entities_to_patch_dict
+
+                response = new_node.send_patch_request_for_entity(payload)
+                # print("            77777   (...0.0)     555      ")
+                # print(response.json())
+
+                if response.status_code in [200, 204]:
+                    print(f"Update successful for {item}.")
+
+                elif response.status_code in [409, 400]:
+                    # if there are duplicates, we can relink
+                    error_response = response.json()  # Assuming this returns an error message indicating duplicates
+
+                    # print(" NOW SHOULD GET HERE ")
+                    # print("-+++++- error_response")
+                    # print(error_response["error"])
+
+                    error_message = error_response["error"]
+                    # error_message = "duplicate item [{'name': 'yoyo888'}, {'name': 'uwa888'}] for Material"
+                    # Extract the JSON-like list of dictionaries as a string
+                    try:
+                        # print(error_message)
+                        name_list_str = error_message.split("[")[1].split("]")[0]
+                        try_this = eval("[" + name_list_str + "]")
+                        # print("try_this")
+                        # print(try_this)
+                        # print(type(try_this))
+                        # print(type(try_this[0]))
+                        duplicate_names = [str(item) for item in try_this]
+
+                        if type(try_this[0]) == dict:
+                            # print("AMIHERE")
+                            name_list1 = [str(item["name"]) for item in try_this if "name" in item]
+                            # print(name_list1)
+                            duplicate_names = name_list1
+
+                    except:
+                        print("could not parse")
+                        # quit()
+
+                    # duplicate_names = [item["name"] for item in name_list]
+
+                    list_without_duplicates = new_node.remove_duplicates(node_objects, duplicate_names)
+
+                    # print("---- !!! trying 1")
+
+                    if len(list_without_duplicates) > 0:
+                        # Prepare the original payload minus the duplicates for retry
+                        payload_without_duplicates = {"node": [new_node.node_type.capitalize()], item: list_without_duplicates}
+
+                        # print("---- !!! hey !!!  wooooooo")
+                        # print(payload_without_duplicates)
+
+                        dedupe_response = new_node.send_patch_request_for_entity(payload_without_duplicates)
+                        if dedupe_response.status_code in [200, 204]:
+                            print(f"dedupe update successful {dedupe_response.status_code} .")
+                        else:
+                            print(f"dedupe update failed with status code {dedupe_response.status_code}: {dedupe_response.text}")
+
+                    # print("---- !!! trying 2")
+
+                    if len(duplicate_names) > 0:
+                        # Find UUIDs for duplicates and prepare them for relinking
+                        uuids_for_relinking = [new_node.find_uuid_by_name_and_type(name, item) for name in duplicate_names]
+                        relink_payload = {"node": [new_node.node_type.capitalize()], item: [{"uuid": uuid} for uuid in uuids_for_relinking if uuid]}
+
+                        relink_response = API.send_patch_request_for_entity(new_node, relink_payload)
+                        # print("------")
+                        print("relink_response", relink_response)
+
+                        if relink_response.status_code in [200, 204]:
+                            print(f"Relink update successful for {item} with relinking.")
+                        else:
+                            print(f"Relink update failed for {item} with status code {relink_response.status_code}: {relink_response.text}")
+
+                    print(" SWEATING !  hopefully here ")
+
+                else:
+                    print(f"Update failed for {item} with status code {response.status_code}: {response.text}")
+
+            # ------------------------------------------------------------
+            elif isinstance(cleaned_modified[item], dict):
+                # Business logic for the dictionary goes here
+                print(f"Single dict: {cleaned_modified[item]}")
+                # Implement your business logic here
+            else:
+                # Handle the case where the item is neither a list of dictionaries nor a single dictionary
+                print(f"{item} is neither a list of dicts nor a single dict.")
+
+        # this needs more work
+        print(" - FINALLY WE GET ALL THE WAY TO THE END ")
+
+    # ====================END SAVE=================================
+
+    # =========================================================================
+    def save(self, node: PrimaryBaseNode):  # project: Project) -> str:  # None:
         # kinda broken because only takes in a project and needs to resave an entire project
         # in reality we should just take in a node, find out what kind of node it is , save that node
         """
@@ -513,7 +1067,7 @@ class API:
             Just sends a `POST` or `Patch` request to the API
         """
         try:
-            self._internal_save(project)
+            self._internal_save(node)
         except CRIPTAPISaveError as exc:
             if exc.pre_saved_nodes:
                 for node_uuid in exc.pre_saved_nodes:

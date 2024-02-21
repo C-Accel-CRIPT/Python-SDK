@@ -257,6 +257,7 @@ class DataSchema:
         # set which node you are using schema validation for
         db_schema["$ref"] = f"#/$defs/{node_type}{schema_http_method}"
 
+        # COME BACK HERE ALI , collection?
         try:
             jsonschema.validate(instance=node_dict, schema=db_schema)
         except jsonschema.exceptions.ValidationError as error:

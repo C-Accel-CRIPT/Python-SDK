@@ -815,9 +815,8 @@ class API:
 
         api_endpoint: str = ""
 
-        # requesting a page of some primary node
         if search_mode == SearchModes.NODE_TYPE:
-            api_endpoint = f"{self._host}/{node_type}"
+            api_endpoint = f"{self._host}/search/{node_type}"
 
         elif search_mode == SearchModes.CONTAINS_NAME:
             api_endpoint = f"{self._host}/search/{node_type}"

@@ -71,24 +71,25 @@ class Paginator:
             instantiate a paginator
         """
         self._http_headers = http_headers
-        self._api_endpoint = api_endpoint
-        self._query = query
+        self._api_endpoint = None
+        self._query = ""
         self._current_page_number = 0
         self._fetched_nodes = []
         self._current_position = 0
 
         # check if it is a string and not None to avoid AttributeError
         try:
-            self._api_endpoint = self._api_endpoint.rstrip("/").strip()
+            self._api_endpoint = api_endpoint.rstrip("/").strip()
         except AttributeError as exc:
             if self._api_endpoint is not None:
                 raise RuntimeError(f"Invalid type for api_endpoint {self._api_endpoint} for a paginator.") from exc
 
         # check if it is a string and not None to avoid AttributeError
         try:
-            self._query = quote(self._query)
-        except AttributeError as exc:
-            if self._query is not None:
+            self._query = quote(query)
+        except TypeError as exc:
+            self._query = ""
+            if query is not None:
                 raise RuntimeError(f"Invalid type for query {self._query} a paginator.") from exc
 
     @beartype
@@ -144,6 +145,7 @@ class Paginator:
 
         if api_response["code"] == 404 and api_response["error"] == "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.":
             current_page_results = []
+        import json
 
         # if API response is not 200 raise error for the user to debug
         if api_response["code"] != 200:

@@ -58,10 +58,10 @@ def save_integration_node_helper(cript_api: cript.API, project_node: cript.Proje
     my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=project_node.name)
 
     # get the project from paginator
-    my_project_from_api_dict = my_paginator.current_page_results[0]
+    my_project_from_api_node = my_paginator.next()
 
     print("\n\n================= API Response Node ============================")
-    print(json.dumps(my_project_from_api_dict, sort_keys=False, indent=2))
+    print(json.dumps(my_project_from_api_node.json, sort_keys=False, indent=2))
     print("==============================================================")
 
     # Configure keys and blocks to be ignored by deepdiff using exclude_regex_path
@@ -82,7 +82,7 @@ def save_integration_node_helper(cript_api: cript.API, project_node: cript.Proje
         r"root(\[.*\])?\['model_version'\]",
     ]
     # Compare the JSONs
-    diff = DeepDiff(json.loads(project_node.json), my_project_from_api_dict, exclude_regex_paths=exclude_regex_paths)
+    diff = DeepDiff(json.loads(project_node.json), json.loads(my_project_from_api_node.json), exclude_regex_paths=exclude_regex_paths)
     # with open("la", "a") as file_handle:
     #     file_handle.write(str(diff) + "\n")
 
@@ -92,9 +92,8 @@ def save_integration_node_helper(cript_api: cript.API, project_node: cript.Proje
     # assert not list(diff.get("dictionary_item_added", []))
 
     # try to convert api JSON project to node
-    my_project_from_api = cript.load_nodes_from_json(json.dumps(my_project_from_api_dict))
     print("\n\n=================== Project Node Deserialized =========================")
-    print(my_project_from_api.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json)
+    print(my_project_from_api_node.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json)
     print("==============================================================")
     print("\n\n\n######################################## TEST Passed ########################################\n\n\n")
 

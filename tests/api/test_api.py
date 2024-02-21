@@ -169,23 +169,12 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
 
     # test search results
     assert isinstance(materials_paginator, Paginator)
-    assert len(materials_paginator.current_page_results) > 5
-    first_page_first_result = materials_paginator.current_page_results[0]["name"]
-
+    materials_list = list(materials_paginator)
+    # Assure that we paginated more then one page
+    assert materials_paginator._current_page_number > 0
+    assert len(materials_list) > 5
+    first_page_first_result = materials_list[0]["name"]
     # just checking that the word has a few characters in it
-    assert len(first_page_first_result) > 3
-
-    # tests that it can correctly go to the next page
-    materials_paginator.next_page()
-    assert len(materials_paginator.current_page_results) > 5
-    second_page_first_result = materials_paginator.current_page_results[0]["name"]
-
-    assert len(second_page_first_result) > 3
-
-    # tests that it can correctly go to the previous page
-    materials_paginator.previous_page()
-    assert len(materials_paginator.current_page_results) > 5
-
     assert len(first_page_first_result) > 3
 
 
@@ -198,9 +187,12 @@ def test_api_search_contains_name(cript_api: cript.API) -> None:
     contains_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.CONTAINS_NAME, value_to_search="poly")
 
     assert isinstance(contains_name_paginator, Paginator)
-    assert len(contains_name_paginator.current_page_results) > 5
+    contains_name_list = list(contains_name_paginator)
+    # Assure that we paginated more then one page
+    assert contains_name_paginator._current_page_number > 0
+    assert len(contains_name_list) > 5
 
-    contains_name_first_result = contains_name_paginator.current_page_results[0]["name"]
+    contains_name_first_result = contains_name_list["name"]
 
     # just checking that the result has a few characters in it
     assert len(contains_name_first_result) > 3
@@ -215,7 +207,8 @@ def test_api_search_exact_name(cript_api: cript.API) -> None:
     exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME, value_to_search="Sodium polystyrene sulfonate")
 
     assert isinstance(exact_name_paginator, Paginator)
-    assert len(exact_name_paginator.current_page_results) == 1
+    exact_name_list = list(exact_name_paginator)
+    assert len(exact_name_list) == 1
     assert exact_name_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
 
 
@@ -233,7 +226,8 @@ def test_api_search_uuid(cript_api: cript.API, dynamic_material_data) -> None:
     uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=dynamic_material_data["uuid"])
 
     assert isinstance(uuid_paginator, Paginator)
-    assert len(uuid_paginator.current_page_results) == 1
+    uuid_list = list(uuid_paginator)
+    assert len(uuid_list) == 1
     assert uuid_paginator.current_page_results[0]["name"] == dynamic_material_data["name"]
     assert uuid_paginator.current_page_results[0]["uuid"] == dynamic_material_data["uuid"]
 
@@ -252,7 +246,8 @@ def test_api_search_bigsmiles(cript_api: cript.API) -> None:
     bigsmiles_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.BIGSMILES, value_to_search=bigsmiles_search_value)
 
     assert isinstance(bigsmiles_paginator, Paginator)
-    assert len(bigsmiles_paginator.current_page_results) >= 1
+    bigsmiles_list = list(bigsmiles_paginator)
+    assert len(bigsmiles_list) >= 1
     # not sure if this will always be in this position in every server environment, so commenting it out for now
     # assert bigsmiles_paginator.current_page_results[1]["name"] == "BCDB_Material_285"
 

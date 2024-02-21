@@ -5,7 +5,7 @@ import dataclasses
 import inspect
 import json
 import uuid
-from typing import Optional, Union
+from typing import Dict, List, Optional, Set, Union
 
 import cript.nodes
 from cript.nodes.core import BaseNode
@@ -26,13 +26,13 @@ class NodeEncoder(json.JSONEncoder):
 
     Attributes
     ----------
-    handled_ids : set[str]
+    handled_ids : Set[str]
         A set to store the UIDs of nodes that have been processed during serialization.
-    known_uuid : set[str]
+    known_uuid : Set[str]
         A set to store the UUIDs of nodes that have been previously encountered in the JSON.
-    condense_to_uuid : dict[str, set[str]]
+    condense_to_uuid : Dict[str, Set[str]]
         A set to store the node types that should be condensed to UUID edges in the JSON.
-    suppress_attributes : Optional[dict[str, set[str]]]
+    suppress_attributes : Optional[Dict[str, Set[str]]]
         A dictionary that allows suppressing specific attributes for nodes with the corresponding UUIDs.
 
     Methods
@@ -43,17 +43,17 @@ class NodeEncoder(json.JSONEncoder):
     ```
 
     ```python
-    _apply_modifications(self, serialize_dict: dict) -> Tuple[dict, list[str]]:
+    _apply_modifications(self, serialize_dict: Dict) -> Tuple[Dict, List[str]]:
         # Apply modifications to the serialized dictionary based on node types
         # and attributes to be condensed. This internal function handles node
         # condensation and attribute suppression during serialization.
     ```
     """
 
-    handled_ids: set[str] = set()
-    known_uuid: set[str] = set()
-    condense_to_uuid: dict[str, set[str]] = dict()
-    suppress_attributes: Optional[dict[str, set[str]]] = None
+    handled_ids: Set[str] = set()
+    known_uuid: Set[str] = set()
+    condense_to_uuid: Dict[str, Set[str]] = dict()
+    suppress_attributes: Optional[Dict[str, Set[str]]] = None
 
     def default(self, obj):
         """
@@ -134,7 +134,7 @@ class NodeEncoder(json.JSONEncoder):
             return serialize_dict
         return json.JSONEncoder.default(self, obj)
 
-    def _apply_modifications(self, serialize_dict: dict):
+    def _apply_modifications(self, serialize_dict: Dict):
         """
         Checks the serialize_dict to see if any other operations are required before it
         can be considered done. If other operations are required, then it passes it to the other operations
@@ -145,11 +145,11 @@ class NodeEncoder(json.JSONEncoder):
 
         Parameters
         ----------
-        serialize_dict: dict
+        serialize_dict: Dict
 
         Returns
         -------
-        serialize_dict: dict
+        serialize_dict: Dict
         """
 
         def process_attribute(attribute):
@@ -170,7 +170,7 @@ class NodeEncoder(json.JSONEncoder):
                 return element, uid
 
             # Processes an attribute based on its type (list or single element)
-            if isinstance(attribute, list):
+            if isinstance(attribute, List):
                 processed_elements = []
                 for element in attribute:
                     processed_element, uid = strip_to_edge_uuid(element)
@@ -184,7 +184,7 @@ class NodeEncoder(json.JSONEncoder):
                     uid_of_condensed.append(uid)
                 return processed_attribute
 
-        uid_of_condensed: list = []
+        uid_of_condensed: List = []
 
         nodes_to_condense = serialize_dict["node"]
         for node_type in nodes_to_condense:
@@ -204,7 +204,7 @@ class NodeEncoder(json.JSONEncoder):
 
 
 class _NodeDecoderHook:
-    def __init__(self, uid_cache: Optional[dict] = None):
+    def __init__(self, uid_cache: Optional[Dict] = None):
         """
         Initialize the custom JSON object hook used for CRIPT node deserialization.
 
@@ -224,7 +224,7 @@ class _NodeDecoderHook:
             uid_cache = {}
         self._uid_cache = uid_cache
 
-    def __call__(self, node_str: Union[dict, str]) -> dict:
+    def __call__(self, node_str: Union[Dict, str]) -> Dict:
         """
         Internal function, used as a hook for json deserialization.
 
@@ -244,7 +244,7 @@ class _NodeDecoderHook:
 
         Parameters
         ----------
-        node_str : Union[dict, str]
+        node_str : Union[Dict, str]
             The JSON representation of a node or a regular dictionary.
 
         Returns
@@ -298,7 +298,7 @@ class _NodeDecoderHook:
         return node_dict
 
 
-def load_nodes_from_json(nodes_json: Union[str, dict]):
+def load_nodes_from_json(nodes_json: Union[str, Dict]):
     """
     User facing function, that return a node and all its children from a json string input.
 
@@ -342,7 +342,7 @@ def load_nodes_from_json(nodes_json: Union[str, dict]):
 
     Returns
     -------
-    Union[CRIPT Node, list[CRIPT Node]]
+    Union[CRIPT Node, List[CRIPT Node]]
         Typically returns a single CRIPT node,
         but if given a list of nodes, then it will serialize them and return a list of CRIPT nodes
     """
@@ -356,7 +356,7 @@ def load_nodes_from_json(nodes_json: Union[str, dict]):
     return json.loads(nodes_json, object_hook=node_json_hook)
 
 
-def _material_identifiers_list_to_json_fields(serialize_dict: dict) -> dict:
+def _material_identifiers_list_to_json_fields(serialize_dict: Dict) -> Dict:
     """
     input:
     ```json
@@ -380,12 +380,12 @@ def _material_identifiers_list_to_json_fields(serialize_dict: dict) -> dict:
 
     Parameters
     ----------
-    serialize_dict: dict
+    serialize_dict: Dict
         the serialized dictionary of the node
 
     Returns
     -------
-    serialized_dict = dict
+    serialized_dict = Dict
         new dictionary that has converted the list of dictionary identifiers into the dictionary as fields
 
     """
@@ -402,7 +402,7 @@ def _material_identifiers_list_to_json_fields(serialize_dict: dict) -> dict:
     return serialize_dict
 
 
-def _rename_field(serialize_dict: dict, old_name: str, new_name: str) -> dict:
+def _rename_field(serialize_dict: Dict, old_name: str, new_name: str) -> Dict:
     """
     renames `property_` to `property` the JSON
     """
@@ -412,14 +412,14 @@ def _rename_field(serialize_dict: dict, old_name: str, new_name: str) -> dict:
     return serialize_dict
 
 
-def _is_node_field_valid(node_type_list: list) -> bool:
+def _is_node_field_valid(node_type_list: List) -> bool:
     """
     a simple function that checks if the node field has only a single node type in there
     and not 2 or None
 
     Parameters
     ----------
-    node_type_list: list
+    node_type_list: List
         e.g. "node": ["Material"]
 
     Returns
@@ -458,7 +458,7 @@ def _is_node_field_valid(node_type_list: list) -> bool:
 #     handled_nodes.add(node.uid)
 #     for field in node._json_attrs.__dict__:
 #         child_node = getattr(node._json_attrs, field)
-#         if not isinstance(child_node, list):
+#         if not isinstance(child_node, List):
 #             if hasattr(cn, "__bases__") and BaseNode in child_node.__bases__:
 #                 child_node = recursive_proxy_replacement(child_node, handled_nodes)
 #                 node._json_attrs = replace(node._json_attrs, field=child_node)

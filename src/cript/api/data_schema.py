@@ -1,5 +1,4 @@
 import json
-import logging
 from typing import Union
 
 import jsonschema
@@ -21,6 +20,7 @@ class DataSchema:
 
     _vocabulary: dict = {}
     _db_schema: dict = {}
+    _logger = None
     # Advanced User Tip: Disabling Node Validation
     # For experienced users, deactivating node validation during creation can be a time-saver.
     # Note that the complete node graph will still undergo validation before being saved to the back end.
@@ -45,13 +45,15 @@ class DataSchema:
             return self._db_schema
 
         # fetch db_schema from API
-        logging.info(f"Loading node validation schema from {host}/schema/")
+        if self._logger:
+            self._logger.info(f"Loading node validation schema from {host}/schema/")
         # fetch db schema from API
         response: requests.Response = requests.get(url=f"{host}/schema/", timeout=_API_TIMEOUT)
 
         # raise error if not HTTP 200
         response.raise_for_status()
-        logging.info(f"Loading node validation schema from {host}/schema/ was successful.")
+        if self._logger:
+            self._logger.info(f"Loading node validation schema from {host}/schema/ was successful.")
 
         # if no error, take the JSON from the API response
         response_dict: dict = response.json()
@@ -61,7 +63,7 @@ class DataSchema:
 
         return db_schema
 
-    def __init__(self, host: str):
+    def __init__(self, host: str, logger=None):
         """
         Initialize DataSchema class with a full hostname to fetch the node validation schema.
 
@@ -75,6 +77,7 @@ class DataSchema:
 
         self._db_schema = self._get_db_schema(host)
         self._vocabulary = self._get_vocab(host)
+        self._logger = logger
 
     def _get_vocab(self, host: str) -> dict:
         """
@@ -244,7 +247,8 @@ class DataSchema:
         else:
             log_message += " (Can be disabled by setting `cript.API.skip_validation = True`.)"
 
-        logging.info(log_message)
+        if self._logger:
+            self._logger.info(log_message)
 
         # set the schema to test against http POST or PATCH of DB Schema
         schema_http_method: str

@@ -67,28 +67,35 @@ with cript.API(host=Config.host, api_token=Config.api_token, storage_token=Confi
         quit()
 
     if hasattr(cript, class_name):
-        # get_url = "https://lb-stage.mycriptapp.org/api/v1/project/e7381525-64b9-4849-a416-57aa1e09044f"
-        # result = requests.get(url=get_url, headers=Config.headers)
-        # print(result)
+        get_url = "https://lb-stage.mycriptapp.org/api/v1/project/e7381525-64b9-4849-a416-57aa1e09044f"
+        result = requests.get(url=get_url, headers=api._http_headers)
+        print(result)  # gets a 200
 
-        # my_project_from_api_dict = result.json()
+        # This includes not only the payload in JSON but also info about the request.
+        result_json_dict = result.json()
+        # print(json.dumps(result_json_dict, indent=2))
 
-        # # project = cript.load_nodes_from_json(json)
+        # we only want the node payload which is in the ["data"] attribute
+        my_project_from_api_dict = result_json_dict["data"]
 
-        # my_project_node_from_api = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_api_dict))
+        # Now your instinct was right to give it a string version, but I want to fix that
+        project_list = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_api_dict))
+        project = project_list[0]
+        # The API returns us a list with possible nodes, so we want to look at the first entry
+        # print(type(project[0]))
+        # quit()
 
-        # print(type(my_project_node_from_api))
-        # print("-------")
-        # api.save_node(my_project_node_from_api)
-
-        # ====================================
+        # =============================================
         # Instantiate the class
         # Dynamically instantiate the Project class if it exists in the cript module
         # project = getattr(cript, class_name).get_or_create(**class_params)
         # maybe we need to validate the class params
 
+        # =============================================
+        # GET OR CREATE FUNCTION THERE FOR LATER
+
         # project = PrimaryBaseNode.get_or_create(**class_params)  # also any leftover kwargs will be passed and accepted ? # (node_type="project", object_name=object_name)  # , host=host, token=api_token)
-        project = api.get_or_create(**class_params)  # also any leftover kwargs will be passed and accepted ? # (node_type="project", object_name=object_name)  # , host=host, token=api_token)
+        # project = api.get_or_create(**class_params)  # also any leftover kwargs will be passed and accepted ? # (node_type="project", object_name=object_name)  # , host=host, token=api_token)
 
         # ===========================================================================
 
@@ -114,9 +121,10 @@ with cript.API(host=Config.host, api_token=Config.api_token, storage_token=Confi
         project.material += [material_002]
         project.material += [material_003]
 
-        project.collection.append(collection)
-        project.collection.append(collection2)
-        project.collection.append(collection3)
+        # document somewhere about this += operator !
+        project.collection += [collection]
+        project.collection += [collection2]
+        project.collection += [collection3]
 
         print("----- project !!!!!\n")
         print(project)

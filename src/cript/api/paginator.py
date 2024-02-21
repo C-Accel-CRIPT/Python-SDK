@@ -1,5 +1,5 @@
 from json import JSONDecodeError
-from typing import Dict, List, Optional, Union
+from typing import Dict, Optional, Union
 from urllib.parse import quote
 
 import requests
@@ -37,8 +37,8 @@ class Paginator:
     # by default the page_number and query are `None` and they can get filled in
     _query: Union[str, None]
     _current_page_number: int
-    _curren_position: int
-    _fetched_nodes: list["BaseNode"]
+    _current_position: int
+    _fetched_nodes: list
 
     @beartype
     def __init__(

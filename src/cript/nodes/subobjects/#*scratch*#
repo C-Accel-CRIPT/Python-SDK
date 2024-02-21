@@ -1,0 +1,19 @@
+;; This buffer is for text that is not saved, and for Lisp evaluation.
+;; To create a file, visit it with C-x C-f and enter text in its buffer.
+
+
+
+my_material = cript.Material()
+
+assert my_material.updated_at == None
+
+api.save(Material)
+
+assert my_material.updated_at == None
+
+downloaded_material = api.get(uuid=my_material.uuid)
+
+assert my_material.updated_at != None
+assert my_material.updated_at == "asdfcience"
+
+assert downloaded_material is my_material

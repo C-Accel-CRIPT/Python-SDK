@@ -3,7 +3,6 @@ import json
 import logging
 import os
 import uuid
-import warnings
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
@@ -17,9 +16,7 @@ from cript.api.exceptions import (
     APIError,
     CRIPTAPIRequiredError,
     CRIPTAPISaveError,
-    CRIPTConnectionError,
     CRIPTDuplicateNameError,
-    InvalidHostError,
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.aws_s3_utils import get_s3_client
@@ -208,7 +205,7 @@ class API:
             api_token = authentication_dict["api_token"]
             storage_token = authentication_dict["storage_token"]
 
-        self._host = self._prepare_host(host=host)  # type: ignore
+        self._host: str = host.rstrip("/")
         self._api_token = api_token  # type: ignore
         self._storage_token = storage_token  # type: ignore
 
@@ -220,7 +217,7 @@ class API:
 
         # set a logger instance to use for the class logs
         self._init_logger(default_log_level)
-        self._db_schema = DataSchema(self.host, self.logger)
+        self._db_schema = DataSchema(self)
 
     def __str__(self) -> str:
         """
@@ -282,46 +279,6 @@ class API:
     @property
     def logger(self):
         return self._logger
-
-    @beartype
-    def _prepare_host(self, host: str) -> str:
-        """
-        Takes the host URL provided by the user during API object construction (e.g., `https://api.criptapp.org`)
-        and standardizes it for internal use. Performs any required string manipulation to ensure uniformity.
-
-        Parameters
-        ----------
-        host: str
-            The host URL specified during API initialization, typically in the form `https://api.criptapp.org`.
-
-        Warnings
-        --------
-        If the specified host uses the unsafe "http://" protocol, a warning will be raised to consider using HTTPS.
-
-        Raises
-        ------
-        InvalidHostError
-            If the host string does not start with either "http" or "https", an InvalidHostError will be raised.
-            Only HTTP protocol is acceptable at this time.
-
-        Returns
-        -------
-        str
-            A standardized host string formatted for internal use.
-
-        """
-        # strip ending slash to make host always uniform
-        host = host.rstrip("/")
-        host = f"{host}/{self._api_prefix}/{self._api_version}"
-
-        # if host is using unsafe "http://" then give a warning
-        if host.startswith("http://"):
-            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
-
-        if not host.startswith("http"):
-            raise InvalidHostError()
-
-        return host
 
     # Use a property to ensure delayed init of s3_client
     @property
@@ -414,24 +371,6 @@ class API:
         """
         return self._host
 
-    def _check_initial_host_connection(self) -> None:
-        """
-        tries to create a connection with host and if the host does not respond or is invalid it raises an error
-
-        Raises
-        -------
-        CRIPTConnectionError
-            raised when the host does not give the expected response
-
-        Returns
-        -------
-        None
-        """
-        try:
-            pass
-        except Exception as exc:
-            raise CRIPTConnectionError(self.host, self._api_token) from exc
-
     def save(self, project: Project) -> None:
         """
         This method takes a project node, serializes the class into JSON
@@ -497,7 +436,7 @@ class API:
 
             # This checks if the current node exists on the back end.
             # if it does exist we use `patch` if it doesn't `post`.
-            test_get_response: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, timeout=_API_TIMEOUT).json()
+            test_get_response: Dict = self._capsule_request(url_path=f"/{node.node_type_snake_case}/{str(node.uuid)}/", method="GET").json()
             patch_request = test_get_response["code"] == 200
 
             # TODO remove once get works properly
@@ -512,13 +451,15 @@ class API:
                 response = {"code": 200}
                 break
 
+            method = "POST"
             if patch_request:
-                response: Dict = requests.patch(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, data=json_data, timeout=_API_TIMEOUT).json()  # type: ignore
-            else:
-                response: Dict = requests.post(url=f"{self._host}/{node.node_type_snake_case}/", headers=self._http_headers, data=json_data, timeout=_API_TIMEOUT).json()  # type: ignore
-                # if node.node_type != "Project":
-                #     test_success: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, timeout=_API_TIMEOUT).json()
-                #     print("XYZ", json_data, save_values, response, test_success)
+                method = "PATCH"
+
+            response: Dict = self._capsule_request(url=f"/{node.node_type_snake_case}/{str(node.uuid)}/", method=method, data=json_data).json()  # type: ignore
+
+            # if node.node_type != "Project":
+            #     test_success: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, timeout=_API_TIMEOUT).json()
+            #     print("XYZ", json_data, save_values, response, test_success)
 
             # print(json_data, patch_request, response, save_values)
             # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
@@ -997,11 +938,59 @@ class API:
         -------
         None
         """
-        delete_node_api_url: str = f"{self._host}/{node_type.lower()}/{node_uuid}/"
 
-        response: Dict = requests.delete(headers=self._http_headers, url=delete_node_api_url, timeout=_API_TIMEOUT).json()
+        response: Dict = self._capsule_request(url_path=f"/{node_type.lower()}/{node_uuid}/", method="DELETE").json()
 
         if response["code"] != 200:
-            raise APIError(api_error=str(response), http_method="DELETE", api_url=delete_node_api_url)
+            raise APIError(api_error=str(response), http_method="DELETE", api_url=f"/{node_type.lower()}/{node_uuid}/")
 
         self.logger.info(f"Deleted '{node_type.title()}' with UUID of '{node_uuid}' from CRIPT API.")
+
+    def _capsule_request(self, url_path: str, method: str, api_request: bool = True, headers: Optional[Dict] = None, timeout: int = _API_TIMEOUT, **kwargs) -> requests.Response:
+        """Helper function that capsules every request call we make against the backend.
+
+        Please *always* use this methods instead of `requests` directly.
+        We can log all request calls this way, which can help debugging immensely.
+
+        Parameters
+        ----------
+        url_path:str
+          URL path that we want to request from. So every thing that follows api.host. You can omit the api prefix and api version if you use api_request=True they are automatically added.
+
+        method: str
+          One of `GET`, `OPTIONS`, `HEAD`, `POST`, `PUT, `PATCH`, or `DELETE` as this will directly passed to `requests.request(...)`. See https://docs.python-requests.org/en/latest/api/ for details.
+
+        headers: Dict
+          HTTPS headers to use for the request.
+          If None (default) use the once associated with this API object for authentication.
+
+        timeout:int
+          Time out to be used for the request call.
+
+        kwargs
+          additional keyword arguments that are passed to `request.request`
+        """
+
+        extra_debug_info: bool = True
+
+        if headers is None:
+            headers = self._http_headers
+
+        url: str = self.host
+        if api_request:
+            url += f"/{self._api_prefix}/{self._api_version}"
+        url += url_path
+
+        pre_log_message: str = f"Requesting {method} from {url}"
+        if extra_debug_info:
+            pre_log_message += f"headers {headers} kwargs {kwargs}"
+        pre_log_message += "..."
+        self.logger.debug(pre_log_message)
+
+        response: requests.Response = requests.request(url=url, method=method, headers=headers, timeout=timeout, **kwargs)
+        post_log_message: str = f"Request return with {response.status_code}"
+        if extra_debug_info:
+            post_log_message += f" {response}"
+        self.logger.debug(post_log_message)
+
+        return response

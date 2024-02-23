@@ -36,10 +36,9 @@ class DataSchema:
         >>> with cript.API(host="https://api.criptapp.org/") as api:
         ...    data_schema = cript.api.DataSchema(api)
         """
-
+        self._api = api
         self._db_schema = self._get_db_schema()
         self._vocabulary = self._get_vocab()
-        self._api = api
 
     def _get_db_schema(self) -> dict:
         """
@@ -75,7 +74,7 @@ class DataSchema:
 
         return db_schema
 
-    def _get_vocab(self, host: str) -> dict:
+    def _get_vocab(self) -> dict:
         """
         gets the entire CRIPT controlled vocabulary and stores it in _vocabulary
 

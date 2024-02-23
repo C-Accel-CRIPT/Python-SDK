@@ -2,6 +2,7 @@ import copy
 import json
 import logging
 import os
+import traceback
 import uuid
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
@@ -71,6 +72,8 @@ class API:
     _BUCKET_DIRECTORY_NAME: str = "python_sdk_files"
     _internal_s3_client: Any = None  # type: ignore
     # trunk-ignore-end(cspell)
+
+    extra_api_log_debug_info: bool = False
 
     @beartype
     def __init__(self, host: Union[str, None] = None, api_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: Union[str, Path] = "", default_log_level=logging.INFO):
@@ -211,9 +214,6 @@ class API:
 
         # add Bearer to token for HTTP requests
         self._http_headers = {"Authorization": f"Bearer {self._api_token}", "Content-Type": "application/json"}
-
-        # check that api can connect to CRIPT with host and token
-        self._check_initial_host_connection()
 
         # set a logger instance to use for the class logs
         self._init_logger(default_log_level)
@@ -452,10 +452,12 @@ class API:
                 break
 
             method = "POST"
+            url_path = f"/{node.node_type_snake_case}/"
             if patch_request:
                 method = "PATCH"
+                url_path += f"{str(node.uuid)}/"
 
-            response: Dict = self._capsule_request(url=f"/{node.node_type_snake_case}/{str(node.uuid)}/", method=method, data=json_data).json()  # type: ignore
+            response: Dict = self._capsule_request(url_path=url_path, method=method, data=json_data).json()  # type: ignore
 
             # if node.node_type != "Project":
             #     test_success: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, timeout=_API_TIMEOUT).json()
@@ -971,8 +973,6 @@ class API:
           additional keyword arguments that are passed to `request.request`
         """
 
-        extra_debug_info: bool = True
-
         if headers is None:
             headers = self._http_headers
 
@@ -982,15 +982,15 @@ class API:
         url += url_path
 
         pre_log_message: str = f"Requesting {method} from {url}"
-        if extra_debug_info:
-            pre_log_message += f"headers {headers} kwargs {kwargs}"
+        if self.extra_api_log_debug_info:
+            pre_log_message += f" from {traceback.format_stack(limit=4)} kwargs {kwargs}"
         pre_log_message += "..."
         self.logger.debug(pre_log_message)
 
         response: requests.Response = requests.request(url=url, method=method, headers=headers, timeout=timeout, **kwargs)
         post_log_message: str = f"Request return with {response.status_code}"
-        if extra_debug_info:
-            post_log_message += f" {response}"
+        if self.extra_api_log_debug_info:
+            post_log_message += f" {response.json()}"
         self.logger.debug(post_log_message)
 
         return response

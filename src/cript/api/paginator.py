@@ -1,5 +1,5 @@
 from json import JSONDecodeError
-from typing import Dict, Optional, Union
+from typing import Dict
 from urllib.parse import quote
 
 import requests
@@ -143,7 +143,6 @@ class Paginator:
 
         if api_response["code"] == 404 and api_response["error"] == "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.":
             current_page_results = []
-        import json
 
         # if API response is not 200 raise error for the user to debug
         if api_response["code"] != 200:

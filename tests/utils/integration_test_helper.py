@@ -141,3 +141,7 @@ def delete_integration_node_helper(cript_api: cript.API, node_to_delete: UUIDBas
 
     # be sure API responded with empty results
     assert len(deleted_node_paginator.current_page_results) == 0
+
+
+def save_node_integration(cript_api: cript.API, project_node: cript.Project):
+    pass

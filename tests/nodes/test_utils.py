@@ -1,5 +1,5 @@
 import cript
-from cript.nodes.util import _is_node_field_valid
+from cript.nodes.util.json import _is_node_field_valid
 
 
 def test_is_node_field_valid() -> None:

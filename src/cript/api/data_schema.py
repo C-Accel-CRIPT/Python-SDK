@@ -18,7 +18,6 @@ class DataSchema:
 
     _vocabulary: dict = {}
     _db_schema: dict = {}
-    _api = None
     # Advanced User Tip: Disabling Node Validation
     # For experienced users, deactivating node validation during creation can be a time-saver.
     # Note that the complete node graph will still undergo validation before being saved to the back end.

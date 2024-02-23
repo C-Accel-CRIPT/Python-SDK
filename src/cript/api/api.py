@@ -367,9 +367,17 @@ class API:
         ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
         ... ) as api:
         ...    print(api.host)
-        https://api.criptapp.org/api/v1
+        https://api.criptapp.org/
         """
         return self._host
+
+    @property
+    def api_prefix(self):
+        return self._api_prefix
+
+    @property
+    def api_version(self):
+        return self._api_version
 
     def save(self, project: Project) -> None:
         """
@@ -978,7 +986,7 @@ class API:
 
         url: str = self.host
         if api_request:
-            url += f"/{self._api_prefix}/{self._api_version}"
+            url += f"/{self.api_prefix}/{self.api_version}"
         url += url_path
 
         pre_log_message: str = f"Requesting {method} from {url}"

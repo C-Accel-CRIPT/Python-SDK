@@ -232,7 +232,7 @@ class API:
         ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
         ... ) as api:
         ...     print(api)
-        CRIPT API Client - Host URL: 'https://api.criptapp.org/'
+        CRIPT API Client - Host URL: 'https://api.criptapp.org'
 
         Returns
         -------
@@ -367,7 +367,7 @@ class API:
         ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
         ... ) as api:
         ...    print(api.host)
-        https://api.criptapp.org/
+        https://api.criptapp.org
         """
         return self._host
 

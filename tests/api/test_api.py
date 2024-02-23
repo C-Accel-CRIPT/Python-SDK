@@ -56,7 +56,7 @@ def test_create_api_with_none() -> None:
 
     # assert SDK correctly got env vars to create cript.API with
     # host/api/v1
-    assert api._host == f"{env_var_host}/api/v1"
+    assert api._host == f"{env_var_host}"
     assert api._api_token == os.environ["CRIPT_TOKEN"]
     assert api._storage_token == os.environ["CRIPT_STORAGE_TOKEN"]
 
@@ -80,7 +80,7 @@ def test_config_file() -> None:
 
         api = cript.API(config_file_path=config_file_path)
 
-        assert api._host == config_file_texts["host"] + "/api/v1"
+        assert api._host == config_file_texts["host"]
         assert api._api_token == config_file_texts["api_token"]
 
 

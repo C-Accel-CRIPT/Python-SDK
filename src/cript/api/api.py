@@ -6,6 +6,9 @@ import uuid
 import warnings
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
+import jsonschema
+
+import re
 
 import boto3
 import requests
@@ -31,7 +34,12 @@ from cript.api.utils.save_helper import (
 )
 from cript.api.utils.web_file_downloader import download_file_from_url
 from cript.api.valid_search_modes import SearchModes
+from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+
 from cript.nodes.primary_nodes.project import Project
+from deepdiff import DeepDiff
+import cript
+
 
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.
@@ -46,6 +54,16 @@ def _get_global_cached_api():
     if _global_cached_api is None:
         raise CRIPTAPIRequiredError()
     return _global_cached_api
+
+
+# load from .env
+class Config:
+    host = os.getenv("CRIPT_HOST")
+    api_token = os.getenv("CRIPT_TOKEN")
+    storage_token = os.getenv("CRIPT_STORAGE_TOKEN")
+    object_name0 = "P2"
+    object_name = "try444"  # "project0110"  # "P2A3DAA"
+    is_public = False  # True
 
 
 class API:
@@ -483,6 +501,404 @@ class API:
             pass
         except Exception as exc:
             raise CRIPTConnectionError(self.host, self._api_token) from exc
+
+    # ================ helpers ==============
+    @classmethod
+    def object_exists(cls, node: str, name: str):
+        host = Config.host
+        token = Config.api_token
+
+        # FOR NOW : hard code brilis proj name
+        # object_name = "P2A3DAA" # not used
+
+        api_url = f"{host}/api/v1/search/exact/{node}/?q={name}"  # Ensure this URL lists all objects of the type
+        headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+        try:
+            response = requests.get(api_url, headers=headers)
+
+            data = response.json()["data"]
+            print("\nlength should be 1: ", len(data.get("result")))
+
+            if len(data.get("result")) == 1:
+                item = data.get("result")[0]
+
+                return True, item.get("uuid")
+
+            return False, None
+
+        except requests.RequestException as e:
+            print(f"An error occurred: {e}")
+            return False, None
+
+    @staticmethod
+    def fetch_object_data(object_type: str, uuid: str):
+        host = Config.host
+        token = Config.api_token
+        print("---000----")
+        print(object_type.lower())
+        get_url = f"{host}/api/v1/{object_type.lower()}/{uuid}"
+        headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+        response = requests.get(get_url, headers=headers)
+        # print(response.json())
+        # print("are we fffing here")
+        response.raise_for_status()
+        if response.json()["data"]:
+
+            return response.json()["data"][0]  # Assuming the first item is the desired one
+
+        else:
+            raise ValueError(f"No data available in response {response}")
+
+    @staticmethod
+    def load_schema_for_node_type(node_type):
+        """
+        Load the validation schema for a given node type.
+
+        Args:
+            node_type (str): The type of the node (e.g., 'Project', 'Material').
+
+        Returns:
+            dict: The loaded schema.
+        """
+        schema_file_path = f"src/cript/schemas/{node_type.lower()}_schema.json"  # Path to the schema file
+        try:
+            with open(schema_file_path, "r") as file:
+                schema = json.load(file)
+            return schema
+        except FileNotFoundError:
+            print(f"Schema file not found for node type: {node_type}")
+
+        except json.JSONDecodeError:
+            print(f"Invalid JSON format in schema file for node type: {node_type}")
+
+    @staticmethod
+    def remove_keys_from_dict(
+        dictionary,
+        keys_to_remove=["uuid", "experiment_count", "inventory_count", "public", "created_at", "email", "model_version", "orcid", "uid", "updated_at", "username", "admin_count", "collection_count", "locked", "material_count", "member_count"],
+    ):
+        """Recursively remove keys from a dictionary."""
+        if not isinstance(dictionary, dict):
+            return dictionary
+        for key in keys_to_remove:
+            dictionary.pop(key, None)
+        for key, value in list(dictionary.items()):  # Use list() to avoid RuntimeError during iteration
+            if isinstance(value, dict):
+                API.remove_keys_from_dict(value, keys_to_remove)
+            elif isinstance(value, list):
+                for item in value:
+                    API.remove_keys_from_dict(item, keys_to_remove)
+        return dictionary
+
+    @staticmethod
+    def remove_duplicates(node_objects, duplicate_list):
+        removed_items = []  # To store removed materials
+        remaining_items = []  # To store remaining materials after removal
+
+        for item in node_objects:
+            if item["name"] in duplicate_list:
+                removed_items.append(item)
+            else:
+                remaining_items.append(item)
+
+        return remaining_items
+
+    @staticmethod
+    def send_patch_request_for_node(parent_node=None, payload=None):  # (self, base_url, entity_uuid, data, auth_token=None):
+        """
+        Sends a PATCH request to update an entity.
+        """
+        base_url = Config.host
+        parent_uuid = parent_node.uuid
+        parent_node_type = parent_node.node[0].lower()
+        url = f"{base_url}/api/v1/{parent_node_type}/{parent_uuid}"  # if entity_uuid else base_url
+        headers = {
+            "Content-Type": "application/json",
+        }
+        headers["Authorization"] = f"Bearer {Config.api_token}"
+        data = payload
+        response = requests.patch(url, json=data, headers=headers)
+        if response.status_code == 200:
+            print("\nEntity updated successfully.", response.status_code)
+        else:
+            print(f"Entity patch updated Failed. Status code: {response.status_code}, Response: {response.text}")
+        return response
+
+    @staticmethod
+    def send_delete_request_for_node(parent_node=None, payload=None):  # (self, base_url, entity_uuid, data, auth_token=None):
+        """
+        Sends a PATCH request to update an entity.
+        """
+        base_url = Config.host
+        parent_uuid = parent_node.uuid
+        parent_node_type = parent_node.node[0].lower()
+        url = f"{base_url}/api/v1/{parent_node_type}/{parent_uuid}"  # if entity_uuid else base_url
+        headers = {
+            "Content-Type": "application/json",
+        }
+        headers["Authorization"] = f"Bearer {Config.api_token}"
+        data = payload
+        response = requests.delete(url, json=data, headers=headers)
+        if response.status_code == 200:
+            print("\nEntity updated successfully.", response.status_code)
+        else:
+            print(f"Entity delete updated Failed. Status code: {response.status_code}, Response: {response.text}")
+        return response
+
+    @staticmethod
+    def find_uuid_by_name_and_type(name, node_type):
+        """
+        Queries the system to find the UUID of an entity based on its name and type.
+
+        Args:
+            name (str): The name of the entity.
+            type (str): The type of the entity (e.g., 'Material').
+
+        Returns:
+            str: The UUID of the entity if found, None otherwise.
+        """
+        base_url = "https://lb-stage.mycriptapp.org/api/v1"
+        # Adjust the URL construction to fit the required format
+        # print(name)
+        # name = name.strip().replace(" ", "+")
+        name = name.strip().replace(" ", "%20")
+        # print(name)
+
+        search_url = f"{base_url}/search/exact/{node_type.lower()}/?q={name}"
+
+        headers = {
+            "Authorization": f"Bearer {Config.api_token}",  # Use your actual API token
+            "Content-Type": "application/json",
+        }
+
+        try:
+            response = requests.get(search_url, headers=headers)
+            response.raise_for_status()  # This will raise an HTTPError if the response was an error
+
+            # Assuming the API returns a JSON response with entities, and you're interested in the first one
+            found_node = response.json()
+
+            if found_node:
+
+                if found_node["data"]["result"]:
+
+                    return found_node["data"]["result"][0]["uuid"]
+                else:
+                    print("got 200 but empty results so call again")
+
+                    search_url = f"{base_url}/search/{node_type.lower()}/?q={name}"
+                    response = requests.get(search_url, headers=headers)
+
+                    uuid = response.json()["data"]["result"][0]["uuid"]
+                    return uuid
+            else:
+                print(f"Error querying UUID for name '{name}' and type '{node_type}': {e}")
+                print("search_url")
+                print(search_url)
+                return None
+        except requests.RequestException as e:
+            print(f"Error querying UUID for name '{name}' and type '{node_type}': {e}")
+            print("search_url")
+            print(search_url)
+            return None
+
+    @classmethod
+    def create_node(cls, node_type, data):
+        if node_type == "project":  # elif node type is something else it will have a parent
+            headers = {"Authorization": f"Bearer {Config.api_token}", "Content-Type": "application/json"}
+            url = "https://lb-stage.mycriptapp.org/api/v1/project/"
+
+            response = requests.post(url, json=data, headers=headers)
+            return response
+
+    @classmethod
+    def add_to_dict(cls, dictionary, key=None, value=None):
+        # Check if the key exists in the dictionary
+        if key in dictionary:
+            # Key exists, append the value to the list
+            dictionary[key].append(value)
+        else:
+            # Key does not exist, create a new list with the value
+            dictionary[key] = [value]
+
+    # ================================== SAVE ===================================
+    @classmethod
+    def save_node(self, new_node: PrimaryBaseNode):
+
+        # try to create or else fail
+        try:
+            node_type = new_node.node[0].lower()
+            original = self.fetch_object_data(node_type, new_node.uuid)
+            if (original == None) and self.object_exists(node=node_type, name=new_node.name):
+                # try to fetch existing data to update
+                raise ValueError("this name already exists stored under a different uuid")
+                # write a test that this error will show
+
+        except:
+            # otherwise save all new node
+
+            if new_node.node[0].lower() == "project":
+                # "couldnt fetch data create a new node with api post")
+
+                data = {"node": new_node.node, "name": new_node.name}  # , "material": [{"node": ["Material"], "name": Config.material_name}]}  # , "public": Config.is_public}
+                print(data)
+
+                if response.json()["code"] in [409, 400]:
+                    return "already exists"
+                elif response.json()["code"] == 200:
+
+                    print(response.json())
+
+                    original_dict = response.json()["data"]["result"][0]
+                    original = original_dict
+
+            else:
+                print(f"couldnt create or fetch data for {new_node.node}")
+
+        modified = json.loads(new_node.get_json().json)  # Assuming this is already a dictionary
+
+        cleaned_original = self.remove_keys_from_dict(original)
+        cleaned_modified = self.remove_keys_from_dict(modified)
+
+        exclude_regex_paths = [
+            r"root(\[.*\])?\['uid'\]",
+            r"root\['\w+_count'\]",  # All the attributes that end with _count
+            r"root(\[.*\])?\['\w+_count'\]",  # All the attributes that end with _count
+            r"root(\[.*\])?\['locked'\]",
+            r"root(\[.*\])?\['admin'\]",
+            r"root(\[.*\])?\['created_at'\]",
+            r"root(\[.*\])?\['created_by'\]",
+            r"root(\[.*\])?\['updated_at'\]",
+            r"root(\[.*\])?\['updated_by'\]",
+            r"root(\[.*\])?\['public'\]",
+            r"root(\[.*\])?\['notes'\]",
+            r"root(\[.*\])?\['model_version'\]",
+        ]
+
+        diff_ = DeepDiff(
+            cleaned_original,
+            cleaned_modified,
+            exclude_regex_paths=exclude_regex_paths,
+            ignore_order=True,
+        )
+        diff_dict = diff_.to_dict()
+
+        try:
+            # probably need to be values changed
+            values_changed = diff_dict.get("values_changed", {})
+            iterable_items_added = diff_dict.get("iterable_item_added", {})
+            iterable_items_removed = diff_dict.get("iterable_item_removed", {})
+            dictionary_items_added = diff_dict.get("dictionary_item_added", {})
+
+        except Exception as e:
+            print(e)
+
+        entities_to_patch_dict = {}
+        entities_to_remove_dict = {}
+
+        # 1) VALUES CHANGED
+        print("  1)   VALUES CHANGED ")
+
+        for key, value in values_changed.items():
+
+            pattern1 = r"^\w+\['\w+'\]\[\d+\]$"
+
+            # result = re.split(pattern, string)
+
+            if re.match(pattern1, key):
+                entity_name = key.split("['")[1].split("']")[0]
+
+                value["new_value"]
+
+                old_val_node_dict = value["old_value"]  # gotta do a search by uuid on the name and node
+
+                uuid_to_remove = API.find_uuid_by_name_and_type(old_val_node_dict["name"], old_val_node_dict["node"][0].lower())
+
+                if uuid_to_remove:
+                    API.add_to_dict(entities_to_remove_dict, key=entity_name, value={"uuid": f"{uuid_to_remove}"})
+                else:
+                    print("uuid is None (values changed)")
+                node_to_add = value["new_value"]  # gotta do a search by uuid on the name and node
+                API.add_to_dict(entities_to_patch_dict, key=entity_name, value=node_to_add)
+
+            entities_to_patch_dict["node"] = new_node.node
+            entities_to_remove_dict["node"] = new_node.node
+
+        #######################################
+
+        # 2) ITERABLE ITEMS ADDED
+        print("  2)   ITERABLE ITEMS ADDED ")
+
+        for key, value in iterable_items_added.items():
+            print(value)
+            DataSchema.is_node_schema_valid(value)
+
+            # Use split to parse out the entity name from the key
+            try:
+                entity_name = key.split("['")[1].split("']")[0]
+            except IndexError:
+                entity_name = None
+
+            # Proceed with the rest of the logic as before
+            if entity_name:
+                if entity_name not in entities_to_patch_dict:
+                    entities_to_patch_dict[entity_name] = [value]
+                else:
+                    entities_to_patch_dict[entity_name].append(value)
+            else:
+                print("warning no entity name")
+
+        print("  2) DICT ITEMS ADDED  ")
+
+        # print(dictionary_items_added)
+
+        for path in dictionary_items_added:
+            print(path)
+            # Strip "root" and square brackets, then remove quotes
+            key_name = path.replace("root[", "").replace("]", "").replace("'", "")
+            entities_to_patch_dict[key_name] = cleaned_modified[key_name]
+
+        # 3) REMOVE ITEMS  - UNLINKING
+        print("  3)  REMOVE ITEMS  - UNLINKING")
+
+        for key, value in iterable_items_removed.items():
+            pattern = r"^\w+\['\w+'\]\[\d+\]$"  # like "root['material'][0]"
+            if re.match(pattern, key):
+                try:
+                    entity_name = key.split("['")[1].split("']")[0]
+
+                except IndexError:
+                    entity_name = None
+
+            # Proceed with the rest of the logic as before
+            if entity_name:
+
+                uuid_to_remove = API.find_uuid_by_name_and_type(value["name"], value["node"][0].lower())
+                if uuid_to_remove:
+                    API.add_to_dict(entities_to_remove_dict, key=entity_name, value={"uuid": f"{uuid_to_remove}"})
+                else:
+                    print("uuid is None")
+                    print(value)
+            else:
+                print("warning no entity name")
+
+        # print("\n ====== entities_to_remove_dict")
+        # print(entities_to_remove_dict)
+
+        entities_to_remove_dict["node"] = ["Project"]
+
+        payload_remove = entities_to_remove_dict
+        payload_patch = entities_to_patch_dict
+
+        response = API.send_patch_request_for_node(parent_node=new_node, payload=payload_patch)
+        print(response.status_code)
+        # removing done
+        response = API.send_delete_request_for_node(parent_node=new_node, payload=payload_remove)
+        print(response.status_code)
+
+        ######################################
+
+        print(" - FINALLY WE GET ALL THE WAY TO THE END ")
 
     def save(self, project: Project) -> None:
         """

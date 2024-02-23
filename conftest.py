@@ -8,6 +8,7 @@ and keeping all nodes in one file makes it easier/cleaner to create tests.
 
 The fixtures are all functional fixtures that stay consistent between all tests.
 """
+import logging
 import os
 
 import pytest
@@ -57,6 +58,8 @@ def cript_api():
         api._BUCKET_NAME = "cript-stage-user-data"
         # using the tests folder name within our cloud storage
         api._BUCKET_DIRECTORY_NAME = "tests"
+        api.extra_api_log_debug_info = True
+        api.logger.setLevel(logging.DEBUG)
 
         yield api
 

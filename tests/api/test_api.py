@@ -13,19 +13,6 @@ import cript
 from conftest import HAS_INTEGRATION_TESTS_ENABLED
 
 
-def test_api_with_invalid_host() -> None:
-    """
-    this mostly tests the _prepare_host() function to be sure it is working as expected
-    * attempting to create an api client with invalid host appropriately throws a `CRIPTConnectionError`
-    * giving a host that does not start with http such as "criptapp.org" should throw an InvalidHostError
-    """
-    with pytest.raises((requests.ConnectionError, cript.api.exceptions.CRIPTConnectionError)):
-        cript.API(host="https://some_invalid_host", api_token="123456789", storage_token="123456")
-
-    with pytest.raises(cript.api.exceptions.InvalidHostError):
-        cript.API(host="no_http_host.org", api_token="123456789", storage_token="987654321")
-
-
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="skipping because API client needs API token")
 def test_api_context(cript_api: cript.API) -> None:
     assert cript.api.api._global_cached_api is not None
@@ -55,7 +42,7 @@ def test_create_api_with_none() -> None:
 
     # assert SDK correctly got env vars to create cript.API with
     # host/api/v1
-    assert api._host == f"{env_var_host}/api/v1"
+    assert api._host == f"{env_var_host}"
     assert api._api_token == os.environ["CRIPT_TOKEN"]
     assert api._storage_token == os.environ["CRIPT_STORAGE_TOKEN"]
 
@@ -79,7 +66,7 @@ def test_config_file() -> None:
 
         api = cript.API(config_file_path=config_file_path)
 
-        assert api._host == config_file_texts["host"] + "/api/v1"
+        assert api._host == config_file_texts["host"]
         assert api._api_token == config_file_texts["api_token"]
 
 

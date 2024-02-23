@@ -52,7 +52,7 @@ class UUIDBaseNode(BaseNode, ABC):
         from cript.api.api import _get_global_cached_api
 
         api = _get_global_cached_api()
-        return f"{api.host}/{self.uuid}"
+        return f"{api.host}/{api.api_prefix}/{api.api_version}/{self.uuid}"
 
     def __deepcopy__(self, memo):
         node = super().__deepcopy__(memo)

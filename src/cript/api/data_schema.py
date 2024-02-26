@@ -215,7 +215,10 @@ class DataSchema:
         try:
             log_message += " '" + str(node_dict["name"]) + "'"
         except KeyError:
-            log_message += " '" + str(node_dict["uid"]) + "'"
+            try:
+                log_message += " '" + str(node_dict["uid"]) + "'"
+            except KeyError:
+                pass
 
         log_message += " ... "
 

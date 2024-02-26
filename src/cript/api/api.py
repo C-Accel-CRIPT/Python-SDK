@@ -17,6 +17,7 @@ from cript.api.exceptions import (
     APIError,
     CRIPTAPIRequiredError,
     CRIPTAPISaveError,
+    CRIPTConnectionError,
     CRIPTDuplicateNameError,
 )
 from cript.api.paginator import Paginator
@@ -217,7 +218,6 @@ class API:
 
         # set a logger instance to use for the class logs
         self._init_logger(default_log_level)
-        self._db_schema = DataSchema(self)
 
     def __str__(self) -> str:
         """
@@ -316,7 +316,18 @@ class API:
         If this function is called manually, the `API.disconnect` function has to be called later.
 
         For manual connection: nested API object are discouraged.
+
+        Raises
+        -------
+        CRIPTConnectionError
+            raised when the host does not give the expected response
         """
+        # As a form to check our connection, we pull and establish the dataschema
+        try:
+            self._db_schema = DataSchema(self)
+        except APIError as exc:
+            raise CRIPTConnectionError(self.host, self._api_token) from exc
+
         # Store the last active global API (might be None)
         global _global_cached_api
         self._previous_global_cached_api = copy.copy(_global_cached_api)

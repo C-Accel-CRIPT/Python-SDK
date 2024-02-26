@@ -116,7 +116,7 @@ class Paginator:
         # Composition of the query URL
         temp_api_endpoint: str = self._api_endpoint
         temp_api_endpoint += "/?q="
-        if self._query is not None:
+        if len(self._query) > 0:
             temp_api_endpoint += f"{self._query}"
         temp_api_endpoint += f"&page={self._current_page_number}"
 

@@ -36,8 +36,8 @@ class DataSchema:
         ...    data_schema = cript.api.DataSchema(api)
         """
         self._api = api
+        self._vocabulary = {}
         self._db_schema = self._get_db_schema()
-        self._vocabulary = self._get_vocab()
 
     def _get_db_schema(self) -> dict:
         """
@@ -62,7 +62,9 @@ class DataSchema:
         response = self._api._capsule_request(url_path="/schema/", method="GET")
 
         # raise error if not HTTP 200
-        response.raise_for_status()
+        if response["code"] != 200:
+            raise APIError(api_error=str(response), http_method="GET", api_url="/schema")
+
         self._api.logger.info(f"Loading node validation schema from {self._api.host}/schema/ was successful.")
 
         # if no error, take the JSON from the API response
@@ -73,46 +75,19 @@ class DataSchema:
 
         return db_schema
 
-    def _get_vocab(self) -> dict:
+    def _fetch_vocab_entry(self, category: VocabCategories):
         """
-        gets the entire CRIPT controlled vocabulary and stores it in _vocabulary
-
-        1. loops through all controlled vocabulary categories
-            1. if the category already exists in the controlled vocabulary then skip that category and continue
-            1. if the category does not exist in the `_vocabulary` dict,
-            then request it from the API and append it to the `_vocabulary` dict
-        1. at the end the `_vocabulary` should have all the controlled vocabulary and that will be returned
-
-           Examples
-           --------
-           The vocabulary looks like this
-           ```json
-           {'algorithm_key':
-                [
-                    {
-                    'description': "Velocity-Verlet integration algorithm. Parameters: 'integration_timestep'.",
-                    'name': 'velocity_verlet'
-                    },
-            }
-           ```
+        Fetches one the CRIPT controlled vocabulary and stores it in self._vocabulary
         """
 
-        vocabulary: dict = {}
-        # loop through all vocabulary categories and make a request to each vocabulary category
-        # and put them all inside of self._vocab with the keys being the vocab category name
-        for category in VocabCategories:
-            vocabulary_category_url: str = f"/cv/{category.value}/"
+        vocabulary_category_url: str = f"/cv/{category.value}/"
 
-            # if vocabulary category is not in cache, then get it from API and cache it
-            response: dict = self._api._capsule_request(url_path=vocabulary_category_url, method="GET").json()
-
-            if response["code"] != 200:
-                raise APIError(api_error=str(response), http_method="GET", api_url=vocabulary_category_url)
-
-            # add to cache
-            vocabulary[category.value] = response["data"]
-
-        return vocabulary
+        # if vocabulary category is not in cache, then get it from API and cache it
+        response: dict = self._api._capsule_request(url_path=vocabulary_category_url, method="GET").json()
+        if response["code"] != 200:
+            raise APIError(api_error=str(response), http_method="GET", api_url=vocabulary_category_url)
+        # add to cache
+        self._vocabulary[category.value] = response["data"]
 
     @beartype
     def get_vocab_by_category(self, category: VocabCategories) -> list:
@@ -128,7 +103,7 @@ class DataSchema:
         ...     api_token=os.getenv("CRIPT_TOKEN"),
         ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
         ... ) as api:
-        ...     api.validation_schema.get_vocab_by_category(cript.VocabCategories.MATERIAL_IDENTIFIER_KEY)  # doctest: +SKIP
+        ...     api.schema.get_vocab_by_category(cript.VocabCategories.MATERIAL_IDENTIFIER_KEY)  # doctest: +SKIP
 
         Parameters
         ----------
@@ -140,7 +115,11 @@ class DataSchema:
         List[dict]
             list of JSON containing the controlled vocabulary
         """
-        return self._vocabulary[category.value]
+        try:
+            return self._vocabulary[category.value]
+        except APIError:
+            self._fetch_vocab_entry(category)
+            return self._vocabulary[category.value]
 
     @beartype
     def _is_vocab_valid(self, vocab_category: VocabCategories, vocab_word: str) -> bool:
@@ -176,7 +155,7 @@ class DataSchema:
         #     return True
 
         # get just the category needed
-        controlled_vocabulary = self._vocabulary[vocab_category.value]
+        controlled_vocabulary = self.get_vocab_by_category(vocab_category)
 
         # TODO this can be faster with a dict of dicts that can do o(1) look up
         #  looping through an unsorted list is an O(n) look up which is slow

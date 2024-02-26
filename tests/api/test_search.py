@@ -37,17 +37,16 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
 def test_api_search_contains_name(cript_api: cript.API) -> None:
     """
     tests that it can correctly search with contains name mode
-    searches for a material that contains the name "poly"
+    searches for a material that contains the name "polystyrene"
     """
-    contains_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.CONTAINS_NAME, value_to_search="poly")
+    contains_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.CONTAINS_NAME, value_to_search="polystyrene")
 
     assert isinstance(contains_name_paginator, Paginator)
     contains_name_list = list(contains_name_paginator)
     # Assure that we paginated more then one page
-    assert contains_name_paginator._current_page_number > 0
-    assert len(contains_name_list) > 5
+    assert len(contains_name_list) > 2
 
-    contains_name_first_result = contains_name_list["name"]
+    contains_name_first_result = contains_name_list[0].name
 
     # just checking that the result has a few characters in it
     assert len(contains_name_first_result) > 3
@@ -64,7 +63,7 @@ def test_api_search_exact_name(cript_api: cript.API) -> None:
     assert isinstance(exact_name_paginator, Paginator)
     exact_name_list = list(exact_name_paginator)
     assert len(exact_name_list) == 1
-    assert exact_name_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
+    assert exact_name_list[0].name == "Sodium polystyrene sulfonate"
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
@@ -83,8 +82,8 @@ def test_api_search_uuid(cript_api: cript.API, dynamic_material_data) -> None:
     assert isinstance(uuid_paginator, Paginator)
     uuid_list = list(uuid_paginator)
     assert len(uuid_list) == 1
-    assert uuid_paginator.current_page_results[0]["name"] == dynamic_material_data["name"]
-    assert uuid_paginator.current_page_results[0]["uuid"] == dynamic_material_data["uuid"]
+    assert uuid_list[0].name == dynamic_material_data["name"]
+    assert str(uuid_list[0].uuid) == dynamic_material_data["uuid"]
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")

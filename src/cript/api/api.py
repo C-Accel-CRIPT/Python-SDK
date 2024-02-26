@@ -775,29 +775,35 @@ class API:
         node_type = node_type.node_type_snake_case
 
         api_endpoint: str = ""
+        page_number: Union[int, None] = None
 
         if search_mode == SearchModes.NODE_TYPE:
             api_endpoint = f"/search/{node_type}"
+            page_number = 0
 
         elif search_mode == SearchModes.CONTAINS_NAME:
             api_endpoint = f"/search/{node_type}"
+            page_number = 0
 
         elif search_mode == SearchModes.EXACT_NAME:
             api_endpoint = f"/search/exact/{node_type}"
+            page_number = None
 
         elif search_mode == SearchModes.UUID:
             api_endpoint = f"/{node_type}/{value_to_search}"
             # putting the value_to_search in the URL instead of a query
             value_to_search = ""
+            page_number = None
 
         elif search_mode == SearchModes.BIGSMILES:
             api_endpoint = "/search/bigsmiles/"
+            page_number = 0
 
         # error handling if none of the API endpoints got hit
         else:
             raise RuntimeError("Internal Error: Failed to recognize any search modes. Please report this bug on https://github.com/C-Accel-CRIPT/Python-SDK/issues.")
 
-        return Paginator(api=self, url_path=api_endpoint, query=value_to_search)
+        return Paginator(api=self, url_path=api_endpoint, page_number=page_number, query=value_to_search)
 
     def delete(self, node) -> None:
         """
@@ -982,7 +988,7 @@ class API:
         response: requests.Response = requests.request(url=url, method=method, headers=headers, timeout=timeout, **kwargs)
         post_log_message: str = f"Request return with {response.status_code}"
         if self.extra_api_log_debug_info:
-            post_log_message += f" {response.json()}"
+            post_log_message += f" {response.text}"
         self.logger.debug(post_log_message)
 
         return response

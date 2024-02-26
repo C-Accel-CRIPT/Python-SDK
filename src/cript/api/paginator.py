@@ -1,5 +1,5 @@
 from json import JSONDecodeError
-from typing import Dict
+from typing import Dict, Optional, Union
 from urllib.parse import quote
 
 import requests
@@ -29,16 +29,18 @@ class Paginator:
 
     _url_path: str
     _query: str
-    _current_page_number: int
+    _initial_page_number: Union[int, None]
     _current_position: int
     _fetched_nodes: list
+    _number_fetched_pages: int = 0
 
     @beartype
     def __init__(
         self,
         api,
-        url_path: str = "",
-        query: str = "",
+        url_path: str,
+        page_number: Union[int, None],
+        query: str,
     ):
         """
         create a paginator
@@ -64,7 +66,8 @@ class Paginator:
             instantiate a paginator
         """
         self._api = api
-        self._current_page_number = 0
+        self._initial_page_number = page_number
+        self._number_fetched_pages = 0
         self._fetched_nodes = []
         self._current_position = 0
 
@@ -102,7 +105,9 @@ class Paginator:
         # Composition of the query URL
         temp_url_path: str = self._url_path
         temp_url_path += f"/?q={self._query}"
-        temp_url_path += f"&page={self._current_page_number}"
+        if self._initial_page_number is not None:
+            temp_url_path += f"&page={self._initial_page_number + self._number_fetched_pages}"
+        self._number_fetched_pages += 1
 
         response: requests.Response = self._api._capsule_request(url_path=temp_url_path, method="GET")
 
@@ -132,18 +137,23 @@ class Paginator:
         if api_response["code"] != 200:
             raise APIError(api_error=str(response.json()), http_method="GET", api_url=temp_url_path)
 
-        if len(current_page_results) == 0:
-            raise StopIteration
-
         node_list = load_nodes_from_json(current_page_results)
         self._fetched_nodes += node_list
-        self._current_page_number += 1
 
     def __next__(self):
         if self._current_position >= len(self._fetched_nodes):
+            # Without a page number argument, we can only fetch once.
+            if self._initial_page_number is None and self._number_fetched_pages > 0:
+                raise StopIteration
             self._fetch_next_page()
+
         self._current_position += 1
-        return self._fetched_nodes[self._current_position - 1]
+        try:
+            return self._fetched_nodes[self._current_position - 1]
+        except IndexError:  # This is not a random access iteration.
+            # So if fetching a next page wasn't enough to get the index inbound,
+            # The iteration stops
+            raise StopIteration
 
     def __iter__(self):
         self._current_position = 0

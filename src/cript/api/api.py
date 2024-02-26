@@ -322,7 +322,7 @@ class API:
         CRIPTConnectionError
             raised when the host does not give the expected response
         """
-        # As a form to check our connection, we pull and establish the dataschema
+        # As a form to check our connection, we pull and establish the data schema
         try:
             self._db_schema = DataSchema(self)
         except APIError as exc:
@@ -777,27 +777,27 @@ class API:
         api_endpoint: str = ""
 
         if search_mode == SearchModes.NODE_TYPE:
-            api_endpoint = f"{self._host}/search/{node_type}"
+            api_endpoint = f"/search/{node_type}"
 
         elif search_mode == SearchModes.CONTAINS_NAME:
-            api_endpoint = f"{self._host}/search/{node_type}"
+            api_endpoint = f"/search/{node_type}"
 
         elif search_mode == SearchModes.EXACT_NAME:
-            api_endpoint = f"{self._host}/search/exact/{node_type}"
+            api_endpoint = f"/search/exact/{node_type}"
 
         elif search_mode == SearchModes.UUID:
-            api_endpoint = f"{self._host}/{node_type}/{value_to_search}"
+            api_endpoint = f"/{node_type}/{value_to_search}"
             # putting the value_to_search in the URL instead of a query
             value_to_search = ""
 
         elif search_mode == SearchModes.BIGSMILES:
-            api_endpoint = f"{self._host}/search/bigsmiles/"
+            api_endpoint = "/search/bigsmiles/"
 
         # error handling if none of the API endpoints got hit
         else:
             raise RuntimeError("Internal Error: Failed to recognize any search modes. Please report this bug on https://github.com/C-Accel-CRIPT/Python-SDK/issues.")
 
-        return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, query=value_to_search)
+        return Paginator(api=self, url_path=api_endpoint, query=value_to_search)
 
     def delete(self, node) -> None:
         """

@@ -5,7 +5,6 @@ from urllib.parse import quote
 import requests
 from beartype import beartype
 
-from cript.api.api_config import _API_TIMEOUT
 from cript.api.exceptions import APIError
 from cript.nodes.util import load_nodes_from_json
 
@@ -28,13 +27,7 @@ class Paginator:
 
     """
 
-    _http_headers: dict
-
-    _api_endpoint: str
-
-    # if query or page number are None, then it means that api_endpoint does not allow for whatever that is None
-    # and that is not added to the URL
-    # by default the page_number and query are `None` and they can get filled in
+    _url_path: str
     _query: str
     _current_page_number: int
     _current_position: int
@@ -43,8 +36,8 @@ class Paginator:
     @beartype
     def __init__(
         self,
-        http_headers: dict,
-        api_endpoint: str,
+        api,
+        url_path: str = "",
         query: str = "",
     ):
         """
@@ -70,25 +63,18 @@ class Paginator:
         None
             instantiate a paginator
         """
-        self._http_headers = http_headers
+        self._api = api
         self._current_page_number = 0
         self._fetched_nodes = []
         self._current_position = 0
 
         # check if it is a string and not None to avoid AttributeError
         try:
-            self._api_endpoint = api_endpoint.rstrip("/").strip()
-        except AttributeError as exc:
-            if self._api_endpoint is not None:
-                raise RuntimeError(f"Invalid type for api_endpoint {self._api_endpoint} for a paginator.") from exc
+            self._url_path = quote(url_path.rstrip("/").strip())
+        except Exception as exc:
+            raise RuntimeError(f"Invalid type for api_endpoint {self._url_path} for a paginator.") from exc
 
-        # check if it is a string and not None to avoid AttributeError
-        try:
-            self._query = quote(query)
-        except TypeError as exc:
-            self._query = ""
-            if query is not None:
-                raise RuntimeError(f"Invalid type for query {self._query} a paginator.") from exc
+        self._query = quote(query)
 
     @beartype
     def _fetch_next_page(self) -> None:
@@ -114,13 +100,11 @@ class Paginator:
         """
 
         # Composition of the query URL
-        temp_api_endpoint: str = self._api_endpoint
-        temp_api_endpoint += "/?q="
-        if len(self._query) > 0:
-            temp_api_endpoint += f"{self._query}"
-        temp_api_endpoint += f"&page={self._current_page_number}"
+        temp_url_path: str = self._url_path
+        temp_url_path += f"/?q={self._query}"
+        temp_url_path += f"&page={self._current_page_number}"
 
-        response: requests.Response = requests.get(url=temp_api_endpoint, headers=self._http_headers, timeout=_API_TIMEOUT)
+        response: requests.Response = self._api._capsule_request(url_path=temp_url_path, method="GET")
 
         # it is expected that the response will be JSON
         # try to convert response to JSON
@@ -146,7 +130,8 @@ class Paginator:
 
         # if API response is not 200 raise error for the user to debug
         if api_response["code"] != 200:
-            raise APIError(api_error=str(response.json()), http_method="GET", api_url=temp_api_endpoint)
+            raise APIError(api_error=str(response.json()), http_method="GET", api_url=temp_url_path)
+
         if len(current_page_results) == 0:
             raise StopIteration
 

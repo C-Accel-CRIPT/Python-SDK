@@ -59,7 +59,7 @@ class DataSchema:
         # fetch db_schema from API
         self._api.logger.info(f"Loading node validation schema from {self._api.host}/schema/")
         # fetch db schema from API
-        response = self._api._capsule_request(url_path="/schema/", method="GET")
+        response: dict = self._api._capsule_request(url_path="/schema/", method="GET").json()
 
         # raise error if not HTTP 200
         if response["code"] != 200:
@@ -67,11 +67,8 @@ class DataSchema:
 
         self._api.logger.info(f"Loading node validation schema from {self._api.host}/schema/ was successful.")
 
-        # if no error, take the JSON from the API response
-        response_dict: dict = response.json()
-
         # get the data from the API JSON response
-        db_schema = response_dict["data"]
+        db_schema = response["data"]
 
         return db_schema
 

@@ -2,10 +2,8 @@ import json
 from typing import Union
 
 import jsonschema
-import requests
 from beartype import beartype
 
-from cript.api.api_config import _API_TIMEOUT
 from cript.api.exceptions import APIError, InvalidVocabulary
 from cript.api.utils.helper_functions import _get_node_type_from_json
 from cript.api.vocabulary_categories import VocabCategories
@@ -20,14 +18,28 @@ class DataSchema:
 
     _vocabulary: dict = {}
     _db_schema: dict = {}
-    _logger = None
     # Advanced User Tip: Disabling Node Validation
     # For experienced users, deactivating node validation during creation can be a time-saver.
     # Note that the complete node graph will still undergo validation before being saved to the back end.
     # Caution: It's advisable to keep validation active while debugging scripts, as disabling it can delay error notifications and complicate the debugging process.
     skip_validation: bool = False
 
-    def _get_db_schema(self, host: str) -> dict:
+    def __init__(self, api):
+        """
+        Initialize DataSchema class with a full hostname to fetch the node validation schema.
+
+        Examples
+        --------
+        ### Create a stand alone DataSchema instance.
+        >>> import cript
+        >>> with cript.API(host="https://api.criptapp.org/") as api:
+        ...    data_schema = cript.api.DataSchema(api)
+        """
+        self._api = api
+        self._vocabulary = {}
+        self._db_schema = self._get_db_schema()
+
+    def _get_db_schema(self) -> dict:
         """
         Sends a GET request to CRIPT to get the database schema and returns it.
         The database schema can be used for validating the JSON request
@@ -45,80 +57,34 @@ class DataSchema:
             return self._db_schema
 
         # fetch db_schema from API
-        if self._logger:
-            self._logger.info(f"Loading node validation schema from {host}/schema/")
+        self._api.logger.info(f"Loading node validation schema from {self._api.host}/schema/")
         # fetch db schema from API
-        response: requests.Response = requests.get(url=f"{host}/schema/", timeout=_API_TIMEOUT)
+        response: dict = self._api._capsule_request(url_path="/schema/", method="GET").json()
 
         # raise error if not HTTP 200
-        response.raise_for_status()
-        if self._logger:
-            self._logger.info(f"Loading node validation schema from {host}/schema/ was successful.")
+        if response["code"] != 200:
+            raise APIError(api_error=str(response), http_method="GET", api_url="/schema")
 
-        # if no error, take the JSON from the API response
-        response_dict: dict = response.json()
+        self._api.logger.info(f"Loading node validation schema from {self._api.host}/schema/ was successful.")
 
         # get the data from the API JSON response
-        db_schema = response_dict["data"]
+        db_schema = response["data"]
 
         return db_schema
 
-    def __init__(self, host: str, logger=None):
+    def _fetch_vocab_entry(self, category: VocabCategories):
         """
-        Initialize DataSchema class with a full hostname to fetch the node validation schema.
-
-        Examples
-        --------
-        ### Create a stand alone DataSchema instance.
-        >>> import cript
-        >>> with cript.API(host="https://api.criptapp.org/") as api:
-        ...    data_schema = cript.api.DataSchema(api.host)
+        Fetches one the CRIPT controlled vocabulary and stores it in self._vocabulary
         """
 
-        self._db_schema = self._get_db_schema(host)
-        self._vocabulary = self._get_vocab(host)
-        self._logger = logger
+        vocabulary_category_url: str = f"/cv/{category.value}/"
 
-    def _get_vocab(self, host: str) -> dict:
-        """
-        gets the entire CRIPT controlled vocabulary and stores it in _vocabulary
-
-        1. loops through all controlled vocabulary categories
-            1. if the category already exists in the controlled vocabulary then skip that category and continue
-            1. if the category does not exist in the `_vocabulary` dict,
-            then request it from the API and append it to the `_vocabulary` dict
-        1. at the end the `_vocabulary` should have all the controlled vocabulary and that will be returned
-
-           Examples
-           --------
-           The vocabulary looks like this
-           ```json
-           {'algorithm_key':
-                [
-                    {
-                    'description': "Velocity-Verlet integration algorithm. Parameters: 'integration_timestep'.",
-                    'name': 'velocity_verlet'
-                    },
-            }
-           ```
-        """
-
-        vocabulary: dict = {}
-        # loop through all vocabulary categories and make a request to each vocabulary category
-        # and put them all inside of self._vocab with the keys being the vocab category name
-        for category in VocabCategories:
-            vocabulary_category_url: str = f"{host}/cv/{category.value}/"
-
-            # if vocabulary category is not in cache, then get it from API and cache it
-            response: dict = requests.get(url=vocabulary_category_url, timeout=_API_TIMEOUT).json()
-
-            if response["code"] != 200:
-                raise APIError(api_error=str(response), http_method="GET", api_url=vocabulary_category_url)
-
-            # add to cache
-            vocabulary[category.value] = response["data"]
-
-        return vocabulary
+        # if vocabulary category is not in cache, then get it from API and cache it
+        response: dict = self._api._capsule_request(url_path=vocabulary_category_url, method="GET").json()
+        if response["code"] != 200:
+            raise APIError(api_error=str(response), http_method="GET", api_url=vocabulary_category_url)
+        # add to cache
+        self._vocabulary[category.value] = response["data"]
 
     @beartype
     def get_vocab_by_category(self, category: VocabCategories) -> list:
@@ -134,7 +100,7 @@ class DataSchema:
         ...     api_token=os.getenv("CRIPT_TOKEN"),
         ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
         ... ) as api:
-        ...     api.validation_schema.get_vocab_by_category(cript.VocabCategories.MATERIAL_IDENTIFIER_KEY)  # doctest: +SKIP
+        ...     api.schema.get_vocab_by_category(cript.VocabCategories.MATERIAL_IDENTIFIER_KEY)  # doctest: +SKIP
 
         Parameters
         ----------
@@ -146,7 +112,11 @@ class DataSchema:
         List[dict]
             list of JSON containing the controlled vocabulary
         """
-        return self._vocabulary[category.value]
+        try:
+            return self._vocabulary[category.value]
+        except KeyError:
+            self._fetch_vocab_entry(category)
+            return self._vocabulary[category.value]
 
     @beartype
     def _is_vocab_valid(self, vocab_category: VocabCategories, vocab_word: str) -> bool:
@@ -182,7 +152,7 @@ class DataSchema:
         #     return True
 
         # get just the category needed
-        controlled_vocabulary = self._vocabulary[vocab_category.value]
+        controlled_vocabulary = self.get_vocab_by_category(vocab_category)
 
         # TODO this can be faster with a dict of dicts that can do o(1) look up
         #  looping through an unsorted list is an O(n) look up which is slow
@@ -247,8 +217,7 @@ class DataSchema:
         else:
             log_message += " (Can be disabled by setting `cript.API.skip_validation = True`.)"
 
-        if self._logger:
-            self._logger.info(log_message)
+        self._api.logger.info(log_message)
 
         # set the schema to test against http POST or PATCH of DB Schema
         schema_http_method: str

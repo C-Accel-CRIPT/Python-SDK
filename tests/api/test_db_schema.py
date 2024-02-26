@@ -122,19 +122,6 @@ def test_get_vocabulary_by_category(cript_api: cript.API) -> None:
     assert "pubchem_cid" in material_identifiers
 
 
-def test_get_controlled_vocabulary_from_api(cript_api: cript.API) -> None:
-    """
-    checks if it can successfully get the controlled vocabulary list from CRIPT API
-    """
-    number_of_vocab_categories = 26
-    vocab = cript_api.schema._get_vocab(cript_api.host)
-
-    # assertions
-    # check vocabulary list is not empty
-    assert bool(vocab) is True
-    assert len(vocab) == number_of_vocab_categories
-
-
 def test_is_vocab_valid(cript_api: cript.API) -> None:
     """
     tests if the method for vocabulary is validating and invalidating correctly

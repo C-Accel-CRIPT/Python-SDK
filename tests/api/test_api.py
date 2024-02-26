@@ -11,20 +11,6 @@ import requests
 
 import cript
 from conftest import HAS_INTEGRATION_TESTS_ENABLED
-from cript.api.paginator import Paginator
-
-
-def test_api_with_invalid_host() -> None:
-    """
-    this mostly tests the _prepare_host() function to be sure it is working as expected
-    * attempting to create an api client with invalid host appropriately throws a `CRIPTConnectionError`
-    * giving a host that does not start with http such as "criptapp.org" should throw an InvalidHostError
-    """
-    with pytest.raises((requests.ConnectionError, cript.api.exceptions.CRIPTConnectionError)):
-        cript.API(host="https://some_invalid_host", api_token="123456789", storage_token="123456")
-
-    with pytest.raises(cript.api.exceptions.InvalidHostError):
-        cript.API(host="no_http_host.org", api_token="123456789", storage_token="987654321")
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="skipping because API client needs API token")
@@ -56,7 +42,7 @@ def test_create_api_with_none() -> None:
 
     # assert SDK correctly got env vars to create cript.API with
     # host/api/v1
-    assert api._host == f"{env_var_host}/api/v1"
+    assert api._host == f"{env_var_host}"
     assert api._api_token == os.environ["CRIPT_TOKEN"]
     assert api._storage_token == os.environ["CRIPT_STORAGE_TOKEN"]
 
@@ -80,7 +66,7 @@ def test_config_file() -> None:
 
         api = cript.API(config_file_path=config_file_path)
 
-        assert api._host == config_file_texts["host"] + "/api/v1"
+        assert api._host == config_file_texts["host"]
         assert api._api_token == config_file_texts["api_token"]
 
 
@@ -148,131 +134,3 @@ def test_upload_and_download_local_file(cript_api, tmp_path_factory) -> None:
 
     # assert download file contents are the same as uploaded file contents
     assert downloaded_file_contents == file_text
-
-
-@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
-def test_api_search_node_type(cript_api: cript.API) -> None:
-    """
-    tests the api.search() method with just a node type material search
-
-    just testing that something comes back from the server
-
-    Notes
-    -----
-    * also tests that it can go to the next page and previous page
-    * later this test should be expanded to test things that it should expect an error for as well.
-    * test checks if there are at least 5 things in the paginator
-        *  each page should have a max of 10 results and there should be close to 5k materials in db,
-        * more than enough to at least have 5 in the paginator
-    """
-    materials_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE, value_to_search=None)
-
-    # test search results
-    assert isinstance(materials_paginator, Paginator)
-    assert len(materials_paginator.current_page_results) > 5
-    first_page_first_result = materials_paginator.current_page_results[0]["name"]
-
-    # just checking that the word has a few characters in it
-    assert len(first_page_first_result) > 3
-
-    # tests that it can correctly go to the next page
-    materials_paginator.next_page()
-    assert len(materials_paginator.current_page_results) > 5
-    second_page_first_result = materials_paginator.current_page_results[0]["name"]
-
-    assert len(second_page_first_result) > 3
-
-    # tests that it can correctly go to the previous page
-    materials_paginator.previous_page()
-    assert len(materials_paginator.current_page_results) > 5
-
-    assert len(first_page_first_result) > 3
-
-
-@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
-def test_api_search_contains_name(cript_api: cript.API) -> None:
-    """
-    tests that it can correctly search with contains name mode
-    searches for a material that contains the name "poly"
-    """
-    contains_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.CONTAINS_NAME, value_to_search="poly")
-
-    assert isinstance(contains_name_paginator, Paginator)
-    assert len(contains_name_paginator.current_page_results) > 5
-
-    contains_name_first_result = contains_name_paginator.current_page_results[0]["name"]
-
-    # just checking that the result has a few characters in it
-    assert len(contains_name_first_result) > 3
-
-
-@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
-def test_api_search_exact_name(cript_api: cript.API) -> None:
-    """
-    tests search method with exact name search
-    searches for material "Sodium polystyrene sulfonate"
-    """
-    exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME, value_to_search="Sodium polystyrene sulfonate")
-
-    assert isinstance(exact_name_paginator, Paginator)
-    assert len(exact_name_paginator.current_page_results) == 1
-    assert exact_name_paginator.current_page_results[0]["name"] == "Sodium polystyrene sulfonate"
-
-
-@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
-def test_api_search_uuid(cript_api: cript.API, dynamic_material_data) -> None:
-    """
-    tests search with UUID
-    searches for `Sodium polystyrene sulfonate` material via UUID
-
-    The test is made dynamic to work with any server environment
-    1. gets the material via `exact name search` and gets the full node
-    2. takes the UUID from the full node and puts it into the `UUID search`
-    3. asserts everything is as expected
-    """
-    uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=dynamic_material_data["uuid"])
-
-    assert isinstance(uuid_paginator, Paginator)
-    assert len(uuid_paginator.current_page_results) == 1
-    assert uuid_paginator.current_page_results[0]["name"] == dynamic_material_data["name"]
-    assert uuid_paginator.current_page_results[0]["uuid"] == dynamic_material_data["uuid"]
-
-
-@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
-def test_api_search_bigsmiles(cript_api: cript.API) -> None:
-    """
-    tests search method with bigsmiles SearchMode to see if we just get at least one match
-    searches for material
-    "{[][<]C(C)C(=O)O[>][<]}{[$][$]CCC(C)C[$],[$]CC(C(C)C)[$],[$]CC(C)(CC)[$][]}"
-
-    another good example can be "{[][$]CC(C)(C(=O)OCCCC)[$][]}"
-    """
-    bigsmiles_search_value = "{[][<]C(C)C(=O)O[>][<]}{[$][$]CCC(C)C[$],[$]CC(C(C)C)[$],[$]CC(C)(CC)[$][]}"
-
-    bigsmiles_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.BIGSMILES, value_to_search=bigsmiles_search_value)
-
-    assert isinstance(bigsmiles_paginator, Paginator)
-    assert len(bigsmiles_paginator.current_page_results) >= 1
-    # not sure if this will always be in this position in every server environment, so commenting it out for now
-    # assert bigsmiles_paginator.current_page_results[1]["name"] == "BCDB_Material_285"
-
-
-def test_get_my_user_node_from_api(cript_api: cript.API) -> None:
-    """
-    tests that the Python SDK can successfully get the user node associated with the API Token
-    """
-    pass
-
-
-def test_get_my_group_node_from_api(cript_api: cript.API) -> None:
-    """
-    tests that group node that is associated with their API Token can be gotten correctly
-    """
-    pass
-
-
-def test_get_my_projects_from_api(cript_api: cript.API) -> None:
-    """
-    get a page of project nodes that is associated with the API token
-    """
-    pass

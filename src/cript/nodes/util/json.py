@@ -26,14 +26,13 @@ class NodeEncoder(json.JSONEncoder):
 
     Attributes
     ----------
-    handled_ids : Set[str]
+    handled_ids : set[str]
         A set to store the UIDs of nodes that have been processed during serialization.
-    known_uuid : Set[str]
+    known_uuid : set[str]
         A set to store the UUIDs of nodes that have been previously encountered in the JSON.
-    condense_to_uuid : Dict[str, Set[str]]
+    condense_to_uuid : dict[str, set[str]]
         A set to store the node types that should be condensed to UUID edges in the JSON.
-    suppress_attributes : Optional[Dict[str, Set[str]]]
-        A dictionary that allows suppressing specific attributes for nodes with the corresponding UUIDs.
+    suppress_attributes : Optional[dict[str, set[str]]]
 
     Methods
     -------
@@ -43,7 +42,7 @@ class NodeEncoder(json.JSONEncoder):
     ```
 
     ```python
-    _apply_modifications(self, serialize_dict: Dict) -> Tuple[Dict, List[str]]:
+    _apply_modifications(self, serialize_dict: dict) -> Tuple[dict, list[str]]:
         # Apply modifications to the serialized dictionary based on node types
         # and attributes to be condensed. This internal function handles node
         # condensation and attribute suppression during serialization.
@@ -136,20 +135,21 @@ class NodeEncoder(json.JSONEncoder):
 
     def _apply_modifications(self, serialize_dict: Dict):
         """
-        Checks the serialize_dict to see if any other operations are required before it
-        can be considered done. If other operations are required, then it passes it to the other operations
-        and at the end returns the fully finished dict.
+                Checks the serialize_dict to see if any other operations are required before it
+                can be considered done. If other operations are required, then it passes it to the other operations
+                and at the end returns the fully finished dict.
 
-        This function is essentially a big switch case that checks the node type
-        and determines what other operations are required for it.
+                This function is essentially a big switch case that checks the node type
+                and determines what other operations are required for it.
 
-        Parameters
-        ----------
-        serialize_dict: Dict
+                Parameters
+                ----------
+        <<<<<<< HEAD
+                serialize_dict: Dict
 
-        Returns
-        -------
-        serialize_dict: Dict
+                Returns
+                -------
+                serialize_dict: Dict
         """
 
         def process_attribute(attribute):

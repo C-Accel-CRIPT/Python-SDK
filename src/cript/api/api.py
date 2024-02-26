@@ -2,8 +2,8 @@ import copy
 import json
 import logging
 import os
+import traceback
 import uuid
-import warnings
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
@@ -19,7 +19,6 @@ from cript.api.exceptions import (
     CRIPTAPISaveError,
     CRIPTConnectionError,
     CRIPTDuplicateNameError,
-    InvalidHostError,
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.aws_s3_utils import get_s3_client
@@ -74,6 +73,8 @@ class API:
     _BUCKET_DIRECTORY_NAME: str = "python_sdk_files"
     _internal_s3_client: Any = None  # type: ignore
     # trunk-ignore-end(cspell)
+
+    extra_api_log_debug_info: bool = False
 
     @beartype
     def __init__(self, host: Union[str, None] = None, api_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: Union[str, Path] = "", default_log_level=logging.INFO):
@@ -208,19 +209,15 @@ class API:
             api_token = authentication_dict["api_token"]
             storage_token = authentication_dict["storage_token"]
 
-        self._host = self._prepare_host(host=host)  # type: ignore
+        self._host: str = host.rstrip("/")
         self._api_token = api_token  # type: ignore
         self._storage_token = storage_token  # type: ignore
 
         # add Bearer to token for HTTP requests
         self._http_headers = {"Authorization": f"Bearer {self._api_token}", "Content-Type": "application/json"}
 
-        # check that api can connect to CRIPT with host and token
-        self._check_initial_host_connection()
-
         # set a logger instance to use for the class logs
         self._init_logger(default_log_level)
-        self._db_schema = DataSchema(self.host, self.logger)
 
     def __str__(self) -> str:
         """
@@ -235,7 +232,7 @@ class API:
         ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
         ... ) as api:
         ...     print(api)
-        CRIPT API Client - Host URL: 'https://api.criptapp.org/api/v1'
+        CRIPT API Client - Host URL: 'https://api.criptapp.org'
 
         Returns
         -------
@@ -283,46 +280,6 @@ class API:
     def logger(self):
         return self._logger
 
-    @beartype
-    def _prepare_host(self, host: str) -> str:
-        """
-        Takes the host URL provided by the user during API object construction (e.g., `https://api.criptapp.org`)
-        and standardizes it for internal use. Performs any required string manipulation to ensure uniformity.
-
-        Parameters
-        ----------
-        host: str
-            The host URL specified during API initialization, typically in the form `https://api.criptapp.org`.
-
-        Warnings
-        --------
-        If the specified host uses the unsafe "http://" protocol, a warning will be raised to consider using HTTPS.
-
-        Raises
-        ------
-        InvalidHostError
-            If the host string does not start with either "http" or "https", an InvalidHostError will be raised.
-            Only HTTP protocol is acceptable at this time.
-
-        Returns
-        -------
-        str
-            A standardized host string formatted for internal use.
-
-        """
-        # strip ending slash to make host always uniform
-        host = host.rstrip("/")
-        host = f"{host}/{self._api_prefix}/{self._api_version}"
-
-        # if host is using unsafe "http://" then give a warning
-        if host.startswith("http://"):
-            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
-
-        if not host.startswith("http"):
-            raise InvalidHostError()
-
-        return host
-
     # Use a property to ensure delayed init of s3_client
     @property
     def _s3_client(self) -> boto3.client:  # type: ignore
@@ -359,7 +316,18 @@ class API:
         If this function is called manually, the `API.disconnect` function has to be called later.
 
         For manual connection: nested API object are discouraged.
+
+        Raises
+        -------
+        CRIPTConnectionError
+            raised when the host does not give the expected response
         """
+        # As a form to check our connection, we pull and establish the data schema
+        try:
+            self._db_schema = DataSchema(self)
+        except APIError as exc:
+            raise CRIPTConnectionError(self.host, self._api_token) from exc
+
         # Store the last active global API (might be None)
         global _global_cached_api
         self._previous_global_cached_api = copy.copy(_global_cached_api)
@@ -410,27 +378,17 @@ class API:
         ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
         ... ) as api:
         ...    print(api.host)
-        https://api.criptapp.org/api/v1
+        https://api.criptapp.org
         """
         return self._host
 
-    def _check_initial_host_connection(self) -> None:
-        """
-        tries to create a connection with host and if the host does not respond or is invalid it raises an error
+    @property
+    def api_prefix(self):
+        return self._api_prefix
 
-        Raises
-        -------
-        CRIPTConnectionError
-            raised when the host does not give the expected response
-
-        Returns
-        -------
-        None
-        """
-        try:
-            pass
-        except Exception as exc:
-            raise CRIPTConnectionError(self.host, self._api_token) from exc
+    @property
+    def api_version(self):
+        return self._api_version
 
     def save(self, project: Project) -> None:
         """
@@ -497,7 +455,7 @@ class API:
 
             # This checks if the current node exists on the back end.
             # if it does exist we use `patch` if it doesn't `post`.
-            test_get_response: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, timeout=_API_TIMEOUT).json()
+            test_get_response: Dict = self._capsule_request(url_path=f"/{node.node_type_snake_case}/{str(node.uuid)}/", method="GET").json()
             patch_request = test_get_response["code"] == 200
 
             # TODO remove once get works properly
@@ -512,13 +470,17 @@ class API:
                 response = {"code": 200}
                 break
 
+            method = "POST"
+            url_path = f"/{node.node_type_snake_case}/"
             if patch_request:
-                response: Dict = requests.patch(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, data=json_data, timeout=_API_TIMEOUT).json()  # type: ignore
-            else:
-                response: Dict = requests.post(url=f"{self._host}/{node.node_type_snake_case}/", headers=self._http_headers, data=json_data, timeout=_API_TIMEOUT).json()  # type: ignore
-                # if node.node_type != "Project":
-                #     test_success: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, timeout=_API_TIMEOUT).json()
-                #     print("XYZ", json_data, save_values, response, test_success)
+                method = "PATCH"
+                url_path += f"{str(node.uuid)}/"
+
+            response: Dict = self._capsule_request(url_path=url_path, method=method, data=json_data).json()  # type: ignore
+
+            # if node.node_type != "Project":
+            #     test_success: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, timeout=_API_TIMEOUT).json()
+            #     print("XYZ", json_data, save_values, response, test_success)
 
             # print(json_data, patch_request, response, save_values)
             # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
@@ -733,7 +695,7 @@ class API:
         self,
         node_type: Any,
         search_mode: SearchModes,
-        value_to_search: Optional[str],
+        value_to_search: str = "",
     ) -> Paginator:
         """
         This method is used to perform search on the CRIPT platform.
@@ -745,16 +707,15 @@ class API:
         --------
         ???+ Example "Search by Node Type"
             ```python
-            materials_paginator = cript_api.search(
+            materials_iterator = cript_api.search(
                 node_type=cript.Material,
                 search_mode=cript.SearchModes.NODE_TYPE,
-                value_to_search=None
             )
             ```
 
         ??? Example "Search by Contains name"
             ```python
-            contains_name_paginator = cript_api.search(
+            contains_name_iterator = cript_api.search(
                 node_type=cript.Process,
                 search_mode=cript.SearchModes.CONTAINS_NAME,
                 value_to_search="poly"
@@ -763,7 +724,7 @@ class API:
 
         ??? Example "Search by Exact Name"
             ```python
-            exact_name_paginator = cript_api.search(
+            exact_name_iterator = cript_api.search(
                 node_type=cript.Project,
                 search_mode=cript.SearchModes.EXACT_NAME,
                 value_to_search="Sodium polystyrene sulfonate"
@@ -772,7 +733,7 @@ class API:
 
         ??? Example "Search by UUID"
             ```python
-            uuid_paginator = cript_api.search(
+            uuid_iterator = cript_api.search(
                 node_type=cript.Collection,
                 search_mode=cript.SearchModes.UUID,
                 value_to_search="75fd3ee5-48c2-4fc7-8d0b-842f4fc812b7"
@@ -781,7 +742,7 @@ class API:
 
         ??? Example "Search by BigSmiles"
             ```python
-            paginator = cript_api.search(
+            iterator = cript_api.search(
                 node_type=cript.Material,
                 search_mode=cript.SearchModes.BIGSMILES,
                 value_to_search="{[][$]CC(C)(C(=O)OCCCC)[$][]}"
@@ -795,74 +756,54 @@ class API:
         search_mode : SearchModes
             Type of search you want to do. You can search by name, `UUID`, `EXACT_NAME`, etc.
             Refer to [valid search modes](../search_modes)
-        value_to_search : Optional[str]
+        value_to_search : str
             What you are searching for can be either a value, and if you are only searching for
             a `NODE_TYPE`, then this value can be empty or `None`
 
         Returns
         -------
         Paginator
-            paginator object for the user to use to flip through pages of search results
+            An iterator that will present and fetch the results to the user seamlessly
 
         Notes
         -----
         To learn more about working with pagination, please refer to our
         [paginator object documentation](../paginator).
-
-        Additionally, you can utilize the utility function
-        [`load_nodes_from_json(node_json)`](../../utility_functions/#cript.nodes.util.load_nodes_from_json)
-        to convert API JSON responses into Python SDK nodes.
-
-        ???+ Example "Convert API JSON Response to Python SDK Nodes"
-            ```python
-            # Get updated project from API
-            my_paginator = api.search(
-                node_type=cript.Project,
-                search_mode=cript.SearchModes.EXACT_NAME,
-                value_to_search="my project name",
-            )
-
-            # Take specific Project you want from paginator
-            my_project_from_api_dict: dict = my_paginator.current_page_results[0]
-
-            # Deserialize your Project dict into a Project node
-            my_project_node_from_api = cript.load_nodes_from_json(
-                nodes_json=json.dumps(my_project_from_api_dict)
-            )
-            ```
         """
 
         # get node typ from class
         node_type = node_type.node_type_snake_case
 
-        # always putting a page parameter of 0 for all search URLs
-        page_number = 0
-
         api_endpoint: str = ""
+        page_number: Union[int, None] = None
 
-        # requesting a page of some primary node
         if search_mode == SearchModes.NODE_TYPE:
-            api_endpoint = f"{self._host}/{node_type}"
+            api_endpoint = f"/search/{node_type}"
+            page_number = 0
 
         elif search_mode == SearchModes.CONTAINS_NAME:
-            api_endpoint = f"{self._host}/search/{node_type}"
+            api_endpoint = f"/search/{node_type}"
+            page_number = 0
 
         elif search_mode == SearchModes.EXACT_NAME:
-            api_endpoint = f"{self._host}/search/exact/{node_type}"
+            api_endpoint = f"/search/exact/{node_type}"
+            page_number = None
 
         elif search_mode == SearchModes.UUID:
-            api_endpoint = f"{self._host}/{node_type}/{value_to_search}"
+            api_endpoint = f"/{node_type}/{value_to_search}"
             # putting the value_to_search in the URL instead of a query
-            value_to_search = None
+            value_to_search = ""
+            page_number = None
 
         elif search_mode == SearchModes.BIGSMILES:
-            api_endpoint = f"{self._host}/search/bigsmiles/"
+            api_endpoint = "/search/bigsmiles/"
+            page_number = 0
 
         # error handling if none of the API endpoints got hit
         else:
             raise RuntimeError("Internal Error: Failed to recognize any search modes. Please report this bug on https://github.com/C-Accel-CRIPT/Python-SDK/issues.")
 
-        return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, query=value_to_search, current_page_number=page_number)
+        return Paginator(api=self, url_path=api_endpoint, page_number=page_number, query=value_to_search)
 
     def delete(self, node) -> None:
         """
@@ -997,11 +938,57 @@ class API:
         -------
         None
         """
-        delete_node_api_url: str = f"{self._host}/{node_type.lower()}/{node_uuid}/"
 
-        response: Dict = requests.delete(headers=self._http_headers, url=delete_node_api_url, timeout=_API_TIMEOUT).json()
+        response: Dict = self._capsule_request(url_path=f"/{node_type.lower()}/{node_uuid}/", method="DELETE").json()
 
         if response["code"] != 200:
-            raise APIError(api_error=str(response), http_method="DELETE", api_url=delete_node_api_url)
+            raise APIError(api_error=str(response), http_method="DELETE", api_url=f"/{node_type.lower()}/{node_uuid}/")
 
         self.logger.info(f"Deleted '{node_type.title()}' with UUID of '{node_uuid}' from CRIPT API.")
+
+    def _capsule_request(self, url_path: str, method: str, api_request: bool = True, headers: Optional[Dict] = None, timeout: int = _API_TIMEOUT, **kwargs) -> requests.Response:
+        """Helper function that capsules every request call we make against the backend.
+
+        Please *always* use this methods instead of `requests` directly.
+        We can log all request calls this way, which can help debugging immensely.
+
+        Parameters
+        ----------
+        url_path:str
+          URL path that we want to request from. So every thing that follows api.host. You can omit the api prefix and api version if you use api_request=True they are automatically added.
+
+        method: str
+          One of `GET`, `OPTIONS`, `HEAD`, `POST`, `PUT, `PATCH`, or `DELETE` as this will directly passed to `requests.request(...)`. See https://docs.python-requests.org/en/latest/api/ for details.
+
+        headers: Dict
+          HTTPS headers to use for the request.
+          If None (default) use the once associated with this API object for authentication.
+
+        timeout:int
+          Time out to be used for the request call.
+
+        kwargs
+          additional keyword arguments that are passed to `request.request`
+        """
+
+        if headers is None:
+            headers = self._http_headers
+
+        url: str = self.host
+        if api_request:
+            url += f"/{self.api_prefix}/{self.api_version}"
+        url += url_path
+
+        pre_log_message: str = f"Requesting {method} from {url}"
+        if self.extra_api_log_debug_info:
+            pre_log_message += f" from {traceback.format_stack(limit=4)} kwargs {kwargs}"
+        pre_log_message += "..."
+        self.logger.debug(pre_log_message)
+
+        response: requests.Response = requests.request(url=url, method=method, headers=headers, timeout=timeout, **kwargs)
+        post_log_message: str = f"Request return with {response.status_code}"
+        if self.extra_api_log_debug_info:
+            post_log_message += f" {response.raw}"
+        self.logger.debug(post_log_message)
+
+        return response

@@ -114,7 +114,7 @@ class DataSchema:
         """
         try:
             return self._vocabulary[category.value]
-        except APIError:
+        except KeyError:
             self._fetch_vocab_entry(category)
             return self._vocabulary[category.value]
 

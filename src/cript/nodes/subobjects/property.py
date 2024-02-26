@@ -167,7 +167,7 @@ class Property(UUIDBaseNode):
             citation = []
 
         super().__init__(**kwargs)
-        self._json_attrs = replace(
+        new_json_attrs = replace(
             self._json_attrs,
             key=key,
             type=type,
@@ -185,7 +185,7 @@ class Property(UUIDBaseNode):
             citation=citation,
             notes=notes,
         )
-        self.validate()
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype

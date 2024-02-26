@@ -104,8 +104,8 @@ class Citation(UUIDBaseNode):
             Instantiate citation subobject
         """
         super().__init__(**kwargs)
-        self._json_attrs = replace(self._json_attrs, type=type, reference=reference)
-        self.validate()
+        new_json_attrs = replace(self._json_attrs, type=type, reference=reference)
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype

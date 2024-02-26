@@ -167,7 +167,7 @@ class Data(PrimaryBaseNode):
         if citation is None:
             citation = []
 
-        self._json_attrs = replace(
+        new_json_attrs = replace(
             self._json_attrs,
             type=type,
             file=file,
@@ -178,8 +178,7 @@ class Data(PrimaryBaseNode):
             process=process,
             citation=citation,
         )
-
-        self.validate()
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype

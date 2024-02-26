@@ -73,8 +73,7 @@ class API:
     """
 
     # dictates whether the user wants to see terminal log statements or not
-    _verbose: bool = True
-    logger: logging.Logger = None  # type: ignore
+    _logger: logging.Logger = None  # type: ignore
 
     _host: str = ""
     _api_token: str = ""
@@ -95,7 +94,7 @@ class API:
     # trunk-ignore-end(cspell)
 
     @beartype
-    def __init__(self, host: Union[str, None] = None, api_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: Union[str, Path] = ""):
+    def __init__(self, host: Union[str, None] = None, api_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: Union[str, Path] = "", default_log_level=logging.INFO):
         """
         Initialize CRIPT API client with host and token.
         Additionally, you can  use a config.json file and specify the file path.
@@ -238,8 +237,8 @@ class API:
         self._check_initial_host_connection()
 
         # set a logger instance to use for the class logs
-        self._set_logger()
-        self._db_schema = DataSchema(self.host)
+        self._init_logger(default_log_level)
+        self._db_schema = DataSchema(self.host, self.logger)
 
     def __str__(self) -> str:
         """
@@ -262,7 +261,7 @@ class API:
         """
         return f"CRIPT API Client - Host URL: '{self.host}'"
 
-    def _set_logger(self, verbose: bool = True) -> None:
+    def _init_logger(self, log_level=logging.INFO) -> None:
         """
         Prepare and configure the logger for the API class.
 
@@ -270,7 +269,7 @@ class API:
 
         Parameters
         ----------
-        verbose: bool default True
+        log_level: logging.LEVEL default logging.INFO
             set if you want `cript.API` to give logs to console or not
 
         Returns
@@ -281,11 +280,7 @@ class API:
         # Create a logger instance associated with the current module
         logger = logging.getLogger(__name__)
 
-        # Set the logger's level based on the verbose flag
-        if verbose:
-            logger.setLevel(logging.INFO)  # Display INFO logs
-        else:
-            logger.setLevel(logging.CRITICAL)  # Display no logs
+        logger.setLevel(log_level)
 
         # Create a console handler
         console_handler = logging.StreamHandler()
@@ -300,58 +295,11 @@ class API:
         logger.addHandler(console_handler)
 
         # set logger for the class
-        self.logger = logger
+        self._logger = logger
 
     @property
-    def verbose(self) -> bool:
-        """
-        A boolean flag that controls whether verbose logging is enabled or not.
-
-        When `verbose` is set to `True`, the class will provide additional detailed logging
-        to the terminal. This can be useful for debugging and understanding the internal
-        workings of the class.
-
-        ```bash
-        INFO: Validating Project graph...
-        ```
-
-        When `verbose` is set to `False`, the class will only provide essential logging information,
-        making the terminal output less cluttered and more user-friendly.
-
-        Examples
-        --------
-        >>> import cript
-        >>> with cript.API(
-        ...     host="https://api.criptapp.org/",
-        ...     api_token=os.getenv("CRIPT_TOKEN"),
-        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
-        ... ) as api:
-        ...     # turn off the terminal logs
-        ...     api.verbose = False
-
-        Returns
-        -------
-        bool
-            verbose boolean value
-        """
-        return self._verbose
-
-    @verbose.setter
-    def verbose(self, new_verbose_value: bool) -> None:
-        """
-        sets the verbose value and then sets a new logger for the class
-
-        Parameters
-        ----------
-        new_verbose_value: bool
-            new verbose value to turn the logging ON or OFF
-
-        Returns
-        -------
-        None
-        """
-        self._verbose = new_verbose_value
-        self._set_logger(verbose=new_verbose_value)
+    def logger(self):
+        return self._logger
 
     @beartype
     def _prepare_host(self, host: str) -> str:
@@ -1348,7 +1296,7 @@ class API:
 
         Notes
         -----
-        After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
+        After the node has been successfully deleted, a log is written to the terminal
 
         ```bash
         INFO: Deleted 'Material' with UUID of '80bfc642-157e-4692-a547-97c470725397' from CRIPT API.
@@ -1426,7 +1374,7 @@ class API:
 
         Notes
         -----
-        After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
+        After the node has been successfully deleted, a log is written
 
         ```bash
         INFO: Deleted 'Material' with UUID of '80bfc642-157e-4692-a547-97c470725397' from CRIPT API.

@@ -27,7 +27,7 @@ def test_create_simple_project(simple_collection_node) -> None:
     assert my_project.collection == [simple_collection_node]
 
 
-def test_update_project_add_material_and_collection(simple_collection_node) -> None:
+def test_update_project_add_material_and_collection(simple_collection_node, cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_project.py::test_update_project_add_material_and_collection
     test that a project can be updated an reset
@@ -45,7 +45,7 @@ def test_update_project_add_material_and_collection(simple_collection_node) -> N
     # create a new project to be in api and save
     # save it to database via api 
 
-    cript_api = cript.API
+    # cript_api = cript.API
     my_project_name = "test-project-name"
     create_payload = {"node":["Project"], "name":my_project_name}
     create_response = cript_api.create_node("project" ,create_payload)
@@ -120,14 +120,10 @@ def test_update_project_add_material_and_collection(simple_collection_node) -> N
         
 
 
-def test_update_project_change_or_reset_material(simple_collection_node) -> None:
+def test_update_project_change_or_reset_material(simple_collection_node, cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_project.py::test_update_project_add_material_and_collection
-    test that a project can be updated an reset
-
-    need to creat ethe node to the api 
-    just a simple function that makes the post 
-    api.create_on
+    test that a project can be updated and completley reset
 
     strategy:
     create something with a post/patch
@@ -135,13 +131,9 @@ def test_update_project_change_or_reset_material(simple_collection_node) -> None
     then try to obtain it with load data
 
     """
-    # create a new project to be in api and save
-    # save it to database via api 
 
-    cript_api = cript.API
-    # my_project_name = "test-projects-n59e0"
     epoch_time = int(time.time())
-    name_1 = f"myproj_ali"
+    name_1 = f"myproj_ali_{epoch_time}"
     mat_3 = f"my_mat__{epoch_time}"
     col_name = "031o0col"
 
@@ -152,17 +144,20 @@ def test_update_project_change_or_reset_material(simple_collection_node) -> None
                             {"uuid": "ea8f957c-b6e5-4668-b306-e0d6b0d05d9a"},
                             {"uuid": "3bd734c3-9c4a-47e3-ad25-f6cbd9309683"}
                       ]}
+    try:
+        create_response = cript_api.create_node("project" ,create_payload)
+    except Exception as e:
+        print(e)
 
-    create_response = cript_api.create_node("project" ,create_payload)
 
-    # print("\ncreate_response")
     cr_res_list = create_response.json()["data"]["result"]
-    # print(len(cr_res_list))
-    
 
+    
     if create_response.json()["code"] in [409,400]:
+        print("---create_response")
+        print(create_response)
         raise ValueError(create_response)
-        # load_nodes_from_json is what i awan tnext 
+
         
     elif create_response.json()["code"] in [201,200]:
         # print(" got here ")
@@ -195,56 +190,54 @@ def test_update_project_change_or_reset_material(simple_collection_node) -> None
         print(project_loaded)
 
         material_003 = cript.Material(name=mat_3, identifier=[])
-        toluene = cript.Material(name="toluene", identifier=[{"smiles": "Cc1ccccc1"}, {"pubchem_id": 1140}])
+        toluene = cript.Material(name="toluene", identifier=[{"smiles": "Cc1ccccc1"} ])  #, {"pubchem_id": 1140}])
         # styrene = cript.Material(name="styrene", identifier=[{"smiles": "c1ccccc1C=C"}, {"inchi": "InChI=1S/C8H8/c1-2-8-6-4-3-5-7-8/h2-7H,1H2"}])
 
         collection = cript.Collection(name=col_name)
 
-        # TOTALLY RESET
-        project_loaded.material = [material_003]
-        # project_loaded.material = [toluene] #, material_002]
+        # TOTALLY RESET to toluene or my material material_003
+
+        # project_loaded.material = [material_003]
+        project_loaded.material = [toluene]
         project_loaded.collection = [collection] 
    
         print("\n~~~~TOTALLY RESET~~~~project_loaded")
-        # print(project_loaded)
         print("\n~~~~~~~~~~~~ SAVING NOW ~~~~~~~~~~~")
         cript_api.save_node(project_loaded)
         
         print("\n-- probably need to fix save --\n---project after saved")
-        # print(project_loaded.get_json().json)
 
-        # 2) from get request for deserialization 2 - (then assert)
-        get_url = f"https://lb-stage.mycriptapp.org/api/v1/project/{uuid}"
+
+        # 2) manual get request for deserialization 2 - (then assert)
+        get_url = f"https://lb-stage.mycriptapp.org/api/v1/project/{uuid}" # change the way headers are used
         headers = {"Authorization": f"Bearer {os.environ["CRIPT_TOKEN"]}", "Content-Type": "application/json"}
-        # headers = cript_api._http_headers
-        result = requests.get(url=get_url, headers=headers)
+        result = requests.get(url=get_url, headers=headers) #cript_api._http_headers
+
         print("\n~~~~~~ saved reflected result")
         result_json_dict = result.json()
         my_project_from_res_data_dict = result_json_dict["data"]
         print("my_project_from_api_dict")
         print(my_project_from_res_data_dict)
-        # Now your instinct was right to give it a string version, but I want to fix that
+
         project_list = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_res_data_dict))
         project_loaded = project_list[0]
         print("\nproject2")
         print(project_loaded)
         
-        # DO SOME ASSERTS HERE 
-
+       
+         # DO SOME ASSERTS HERE 
         print(project_loaded.material[0].get_json().json)
 
-
-
-        assert json.loads(project_loaded.material[0].get_json().json)["name"]== json.loads(material_003.get_json().json)["name"]#, material_002]
+        assert json.loads(project_loaded.material[0].get_json().json)["name"]== json.loads(toluene.get_json().json)["name"]# or material_003toluene.get_json().json)["name"]
         assert len(project_loaded.material) == 1
         assert  json.loads(project_loaded.collection[0].get_json().json)["name"] == json.loads(collection.get_json().json)["name"]
  
-        
         # at the end delete the data
         print("now deleting proj and eventually 2 mats")
         print("only issue with this test is the toluene")
+
         del_res = requests.delete(f"https://lb-stage.mycriptapp.org/api/v1/project/{uuid}", headers=headers)
-        print(del_res)
+
         assert del_res.json()["code"] == 200
 
         # quit()

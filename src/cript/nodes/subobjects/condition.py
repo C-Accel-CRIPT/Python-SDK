@@ -151,7 +151,7 @@ class Condition(UUIDBaseNode):
         if data is None:
             data = []
 
-        self._json_attrs = replace(
+        new_json_attrs = replace(
             self._json_attrs,
             key=key,
             type=type,
@@ -164,7 +164,7 @@ class Condition(UUIDBaseNode):
             measurement_id=measurement_id,
             data=data,
         )
-        self.validate()
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype

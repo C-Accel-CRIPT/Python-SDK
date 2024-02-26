@@ -18,50 +18,35 @@ from cript.nodes.exceptions import (
 
 class NodeEncoder(json.JSONEncoder):
     """
-        Custom JSON encoder for serializing CRIPT nodes to JSON.
+    Custom JSON encoder for serializing CRIPT nodes to JSON.
 
-        This encoder is used to convert CRIPT nodes into JSON format while handling unique identifiers (UUIDs) and
-        condensed representations to avoid redundancy in the JSON output.
-        It also allows suppressing specific attributes from being included in the serialized JSON.
+    This encoder is used to convert CRIPT nodes into JSON format while handling unique identifiers (UUIDs) and
+    condensed representations to avoid redundancy in the JSON output.
+    It also allows suppressing specific attributes from being included in the serialized JSON.
 
-        Attributes
-        ----------
-    <<<<<<< HEAD
-        handled_ids : Set[str]
-            A set to store the UIDs of nodes that have been processed during serialization.
-        known_uuid : Set[str]
-            A set to store the UUIDs of nodes that have been previously encountered in the JSON.
-        condense_to_uuid : Dict[str, Set[str]]
-            A set to store the node types that should be condensed to UUID edges in the JSON.
-        suppress_attributes : Optional[Dict[str, Set[str]]]
-    =======
-        handled_ids : set[str]
-            A set to store the UIDs of nodes that have been processed during serialization.
-        known_uuid : set[str]
-            A set to store the UUIDs of nodes that have been previously encountered in the JSON.
-        condense_to_uuid : dict[str, set[str]]
-            A set to store the node types that should be condensed to UUID edges in the JSON.
-        suppress_attributes : Optional[dict[str, set[str]]]
-    >>>>>>> 44cc898 (add missing file)
-            A dictionary that allows suppressing specific attributes for nodes with the corresponding UUIDs.
+    Attributes
+    ----------
+    handled_ids : set[str]
+        A set to store the UIDs of nodes that have been processed during serialization.
+    known_uuid : set[str]
+        A set to store the UUIDs of nodes that have been previously encountered in the JSON.
+    condense_to_uuid : dict[str, set[str]]
+        A set to store the node types that should be condensed to UUID edges in the JSON.
+    suppress_attributes : Optional[dict[str, set[str]]]
 
-        Methods
-        -------
-        ```python
-        default(self, obj: Any) -> Any:
-            # Convert CRIPT nodes and other objects to their JSON representation.
-        ```
+    Methods
+    -------
+    ```python
+    default(self, obj: Any) -> Any:
+        # Convert CRIPT nodes and other objects to their JSON representation.
+    ```
 
-        ```python
-    <<<<<<< HEAD
-        _apply_modifications(self, serialize_dict: Dict) -> Tuple[Dict, List[str]]:
-    =======
-        _apply_modifications(self, serialize_dict: dict) -> Tuple[dict, list[str]]:
-    >>>>>>> 44cc898 (add missing file)
-            # Apply modifications to the serialized dictionary based on node types
-            # and attributes to be condensed. This internal function handles node
-            # condensation and attribute suppression during serialization.
-        ```
+    ```python
+    _apply_modifications(self, serialize_dict: dict) -> Tuple[dict, list[str]]:
+        # Apply modifications to the serialized dictionary based on node types
+        # and attributes to be condensed. This internal function handles node
+        # condensation and attribute suppression during serialization.
+    ```
     """
 
     handled_ids: Set[str] = set()

@@ -137,6 +137,7 @@ class Paginator:
 
         node_list = load_nodes_from_json(current_page_results)
         self._fetched_nodes += node_list
+        self._current_page_number += 1
 
     def __next__(self):
         if self._current_position >= len(self._fetched_nodes):

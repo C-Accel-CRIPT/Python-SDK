@@ -988,7 +988,7 @@ class API:
         response: requests.Response = requests.request(url=url, method=method, headers=headers, timeout=timeout, **kwargs)
         post_log_message: str = f"Request return with {response.status_code}"
         if self.extra_api_log_debug_info:
-            post_log_message += f" {response.text}"
+            post_log_message += f" {response.raw}"
         self.logger.debug(post_log_message)
 
         return response

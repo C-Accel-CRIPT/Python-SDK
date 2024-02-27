@@ -1,4 +1,4 @@
-from json import JSONDecodeError
+import json
 from typing import Dict, Union
 from urllib.parse import quote
 
@@ -33,6 +33,7 @@ class Paginator:
     _current_position: int
     _fetched_nodes: list
     _number_fetched_pages: int = 0
+    auto_load_nodes: bool = True
 
     @beartype
     def __init__(
@@ -119,8 +120,11 @@ class Paginator:
         # if converting API response to JSON gives an error
         # then there must have been an API error, so raise the requests error
         # this is to avoid bad indirect errors and make the errors more direct for users
-        except JSONDecodeError:
-            response.raise_for_status()
+        except json.JSONDecodeError as json_exc:
+            try:
+                response.raise_for_status()
+            except Exception as exc:
+                raise exc from json_exc
 
         # handling both cases in case there is result inside of data or just data
         try:
@@ -137,8 +141,10 @@ class Paginator:
         if api_response["code"] != 200:
             raise APIError(api_error=str(response.json()), http_method="GET", api_url=temp_url_path)
 
-        node_list = load_nodes_from_json(current_page_results)
-        self._fetched_nodes += node_list
+        # Here we only load the JSON into the temporary results.
+        # This delays error checking, and allows users to disable auto node conversion
+        json_list = current_page_results
+        self._fetched_nodes += json_list
 
     def __next__(self):
         if self._current_position >= len(self._fetched_nodes):
@@ -147,13 +153,23 @@ class Paginator:
                 raise StopIteration
             self._fetch_next_page()
 
-        self._current_position += 1
         try:
-            return self._fetched_nodes[self._current_position - 1]
+            next_node_json = self._fetched_nodes[self._current_position - 1]
         except IndexError:  # This is not a random access iteration.
             # So if fetching a next page wasn't enough to get the index inbound,
             # The iteration stops
             raise StopIteration
+
+        if self.auto_load_nodes:
+            return_data = load_nodes_from_json(next_node_json)
+        else:
+            return_data = next_node_json
+
+        # Advance position last, so if an exception occurs, for example when
+        # node decoding fails, we do not advance, and users can try again without decoding
+        self._current_position += 1
+
+        return return_data
 
     def __iter__(self):
         self._current_position = 0

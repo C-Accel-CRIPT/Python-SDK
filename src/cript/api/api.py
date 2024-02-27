@@ -63,6 +63,7 @@ class API:
     _db_schema: Optional[DataSchema] = None
     _api_prefix: str = "api"
     _api_version: str = "v1"
+    _api_request_session: Union[None, requests.Session] = None
 
     # trunk-ignore-begin(cspell)
     # AWS S3 constants
@@ -322,6 +323,12 @@ class API:
         CRIPTConnectionError
             raised when the host does not give the expected response
         """
+
+        # Establish a requests session object
+        if self._api_request_session:
+            self.disconnect()
+        self._api_request_session = requests.Session()
+
         # As a form to check our connection, we pull and establish the data schema
         try:
             self._db_schema = DataSchema(self)
@@ -344,6 +351,10 @@ class API:
 
         For manual connection: nested API object are discouraged.
         """
+        # Disconnect request session
+        if self._api_request_session:
+            self._api_request_session.close()
+
         # Restore the previously active global API (might be None)
         global _global_cached_api
         _global_cached_api = self._previous_global_cached_api
@@ -946,7 +957,7 @@ class API:
 
         self.logger.info(f"Deleted '{node_type.title()}' with UUID of '{node_uuid}' from CRIPT API.")
 
-    def _capsule_request(self, url_path: str, method: str, api_request: bool = True, headers: Optional[Dict] = None, timeout: int = _API_TIMEOUT, **kwargs) -> requests.Response:
+    def _capsule_request(self, url_path: str, method: str, api_request: bool = True, timeout: int = _API_TIMEOUT, **kwargs) -> requests.Response:
         """Helper function that capsules every request call we make against the backend.
 
         Please *always* use this methods instead of `requests` directly.

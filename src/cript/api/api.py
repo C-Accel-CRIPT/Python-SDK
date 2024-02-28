@@ -979,6 +979,7 @@ class API:
         kwargs
           additional keyword arguments that are passed to `request.request`
         """
+
         url: str = self.host
         if api_request:
             url += f"/{self.api_prefix}/{self.api_version}"
@@ -990,6 +991,8 @@ class API:
         pre_log_message += "..."
         self.logger.debug(pre_log_message)
 
+        if self._api_request_session is None:
+            raise CRIPTAPIRequiredError
         response: requests.Response = self._api_request_session.request(url=url, method=method, timeout=timeout, **kwargs)
         post_log_message: str = f"Request return with {response.status_code}"
         if self.extra_api_log_debug_info:

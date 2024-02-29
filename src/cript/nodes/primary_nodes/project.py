@@ -101,8 +101,8 @@ class Project(PrimaryBaseNode):
         if material is None:
             material = []
 
-        self._json_attrs = replace(self._json_attrs, name=name, collection=collection, material=material)
-        self.validate()
+        new_json_attrs = replace(self._json_attrs, name=name, collection=collection, material=material)
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     def validate(self, api=None, is_patch=False, force_validation: bool = False):
         from cript.nodes.exceptions import (

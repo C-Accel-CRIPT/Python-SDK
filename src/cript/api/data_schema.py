@@ -211,7 +211,17 @@ class DataSchema:
 
         # logging out info to the terminal for the user feedback
         # (improve UX because the program is currently slow)
-        log_message = f"Validating {node_type} graph..."
+        log_message = f"Validating {node_type} graph"
+        try:
+            log_message += " '" + str(node_dict["name"]) + "'"
+        except KeyError:
+            try:
+                log_message += " '" + str(node_dict["uid"]) + "'"
+            except KeyError:
+                pass
+
+        log_message += " ... "
+
         if force_validation:
             log_message = "Forced: " + log_message + " if error occur, try setting `cript.API.skip_validation = False` for debugging."
         else:

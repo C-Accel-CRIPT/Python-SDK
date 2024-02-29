@@ -9,7 +9,7 @@ from tests.utils.integration_test_helper import (
 from tests.utils.util import strip_uid_from_dict
 
 
-def test_create_complex_material(simple_material_node, simple_computational_forcefield_node, simple_process_node) -> None:
+def test_create_complex_material(cript_api, simple_material_node, simple_computational_forcefield_node, simple_process_node) -> None:
     """
     tests that a simple material can be created with only the required arguments
     """
@@ -31,7 +31,7 @@ def test_create_complex_material(simple_material_node, simple_computational_forc
     vendor = "my vendor"
 
     component = [simple_material_node]
-    forcefield = [simple_computational_forcefield_node]
+    forcefield = simple_computational_forcefield_node
 
     my_property = [cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")]
 

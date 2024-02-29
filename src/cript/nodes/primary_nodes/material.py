@@ -195,6 +195,7 @@ class Material(PrimaryBaseNode):
         )
         self._update_json_attrs_if_valid(new_json_attrs)
 
+
     def validate(self, api=None, is_patch: bool = False, force_validation: bool = False) -> None:
         super().validate(api=api, is_patch=is_patch, force_validation=force_validation)
 

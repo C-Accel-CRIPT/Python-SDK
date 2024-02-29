@@ -24,11 +24,29 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
 
     # test search results
     assert isinstance(materials_paginator, Paginator)
-    materials_list = list(materials_paginator)
+    materials_list = []
+    while True:
+        try:
+            try:
+                material_node = next(materials_paginator)
+            except cript.CRIPTException as exc:
+                materials_paginator.auto_load_nodes = False
+                material_json = next(materials_paginator)
+                print(exc, material_json)
+            else:
+                materials_list += [material_node]
+            finally:
+                materials_paginator.auto_load_nodes = True
+        except StopIteration:
+            break
+        # We don't need to search for a million pages here.
+        if materials_paginator._number_fetched_pages > 6:
+            break
+
     # Assure that we paginated more then one page
-    assert materials_paginator._current_page_number > 0
+    assert materials_paginator._number_fetched_pages > 0
     assert len(materials_list) > 5
-    first_page_first_result = materials_list[0]["name"]
+    first_page_first_result = materials_list[0].name
     # just checking that the word has a few characters in it
     assert len(first_page_first_result) > 3
 

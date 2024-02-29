@@ -140,7 +140,7 @@ class ComputationalForcefield(UUIDBaseNode):
         if data is None:
             data = []
 
-        self._json_attrs = replace(
+        new_json_attrs = replace(
             self._json_attrs,
             key=key,
             building_block=building_block,
@@ -151,7 +151,7 @@ class ComputationalForcefield(UUIDBaseNode):
             data=data,
             citation=citation,
         )
-        self.validate()
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype

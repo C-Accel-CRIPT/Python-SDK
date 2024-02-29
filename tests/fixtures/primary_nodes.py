@@ -248,7 +248,7 @@ def complex_material_dict(simple_property_node, simple_process_node, complex_com
     material_dict["process"] = json.loads(simple_process_node.get_json(condense_to_uuid={}).json)
     material_dict["parent_material"] = json.loads(simple_material_node.get_json(condense_to_uuid={}).json)
     material_dict["computational_forcefield"] = json.loads(complex_computational_forcefield_node.get_json(condense_to_uuid={}).json)
-    material_dict["bigsmiles"] = "my complex_material_node"
+    material_dict["bigsmiles"] = "{[][$]CC[$][]}"
     material_dict["keyword"] = my_material_keyword
 
     return strip_uid_from_dict(material_dict)

@@ -29,6 +29,7 @@ def test_create_complex_material(cript_api, simple_material_node, simple_computa
     pubchem_cid = 155
     smiles = "*CC*"
     vendor = "my vendor"
+    inchi_key = "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
 
     component = [simple_material_node]
     forcefield = simple_computational_forcefield_node
@@ -47,7 +48,9 @@ def test_create_complex_material(cript_api, simple_material_node, simple_computa
         bigsmiles=bigsmiles,
         chem_formula=chem_formula,
         chemical_id=chemical_id,
+        chem_repeat=chem_repeat,
         inchi=inchi,
+        inchi_key=inchi_key,
         lot_number=lot_number,
         names=names,
         pubchem_cid=pubchem_cid,
@@ -69,6 +72,7 @@ def test_create_complex_material(cript_api, simple_material_node, simple_computa
     assert my_material.chem_repeat == chem_repeat
     assert my_material.chemical_id == chemical_id
     assert my_material.inchi == inchi
+    assert my_material.inchi_key == inchi_key
     assert my_material.lot_number == lot_number
     assert my_material.names == names
     assert my_material.pubchem_cid == pubchem_cid
@@ -90,6 +94,7 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
 
     new_parent_material = cript.Material(
         name="my parent material",
+        smiles="CC",
     )
 
     new_material_keywords = ["acetylene"]
@@ -97,6 +102,7 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     new_components = [
         cript.Material(
             name="my component material 1",
+            smiles="CC",
         ),
     ]
 

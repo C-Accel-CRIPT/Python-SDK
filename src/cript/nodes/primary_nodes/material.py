@@ -30,6 +30,7 @@ class Material(PrimaryBaseNode):
     | chem_repeat               | str                                                                  | "C=Cc1ccccc1"                                     | Chemical formular of the repeat unit                | Conditional |       |
     | chemical_id               | str                                                                  | "126094"                                          | Unique chemical ID                                  | Conditional |       |
     | inchi                     | str                                                                  | "InChI=1S/H2O/h1H2"                               | InChI string of the chemical                        | Conditional |       |
+    | inchi_key                 | str                                                                  | "XLYOFNOQVPJJNP-UHFFFAOYSA-N"                     | InChI key of the chemical                           | Conditional |       |
     | lot_number                | str                                                                  | "123"                                             | Lot number of the chemical                          | Conditional |       |
     | names                     | list[str]                                                            | ["water", "Hydrogen oxide"]                       | Alternative names that are being used               | Conditional |       |
     | pubchem_cid               | int                                                                  | 962                                               | PubChemID of the chemical                           | Conditional |       |
@@ -85,6 +86,7 @@ class Material(PrimaryBaseNode):
         chem_repeat: List[str] = field(default_factory=list)
         chemical_id: Optional[str] = None
         inchi: Optional[str] = None
+        inchi_key: Optional[str] = None
         lot_number: Optional[str] = None
         names: List[str] = field(default_factory=list)
         pubchem_cid: Optional[int] = None
@@ -109,6 +111,7 @@ class Material(PrimaryBaseNode):
         chem_repeat: Optional[List[str]] = None,
         chemical_id: Optional[str] = None,
         inchi: Optional[str] = None,
+        inchi_key: Optional[str] = None,
         lot_number: Optional[str] = None,
         names: Optional[List[str]] = None,
         pubchem_cid: Optional[int] = None,
@@ -143,6 +146,7 @@ class Material(PrimaryBaseNode):
         chem_repeat: Optional[List[str]] = None,
         chemical_id: Optional[str] = None,
         inchi: Optional[str] = None,
+        inchi_key: Optional[str] = None,
         lot_number: Optional[str] = None,
         names: Optional[List[str]] = None,
         pubchem_cid: Optional[int] = None,
@@ -187,6 +191,7 @@ class Material(PrimaryBaseNode):
             chem_repeat=chem_repeat,
             chemical_id=chemical_id,
             inchi=inchi,
+            inchi_key=inchi_key,
             lot_number=lot_number,
             names=names,
             pubchem_cid=pubchem_cid,
@@ -194,7 +199,6 @@ class Material(PrimaryBaseNode):
             vendor=vendor,
         )
         self._update_json_attrs_if_valid(new_json_attrs)
-
 
     def validate(self, api=None, is_patch: bool = False, force_validation: bool = False) -> None:
         super().validate(api=api, is_patch=is_patch, force_validation=force_validation)
@@ -205,6 +209,7 @@ class Material(PrimaryBaseNode):
             and self.chem_formula is None
             and len(self.chem_repeat) == 0
             and self.chemical_id is None
+            and self.inchi_key is None
             and self.inchi is None
             and self.lot_number is None
             and len(self.names) == 0

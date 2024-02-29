@@ -62,7 +62,6 @@ class Material(PrimaryBaseNode):
         """
 
         # identifier sub-object for the material
-        identifier: List[Dict[str, str]] = field(default_factory=dict)  # type: ignore
         # TODO add proper typing in future, using Any for now to avoid circular import error
         component: List["Material"] = field(default_factory=list)
         process: Optional[Process] = None
@@ -70,6 +69,17 @@ class Material(PrimaryBaseNode):
         parent_material: Optional["Material"] = None
         computational_forcefield: Optional[Any] = None
         keyword: List[str] = field(default_factory=list)
+        amino_acid: Optional[str] = None
+        bigsmiles: Optional[str] = None
+        chem_formula: Optional[str] = None
+        chem_repeat: List[str] = field(default_factory=list)
+        chemical_id: Optional[str] = None
+        inchi: Optional[str] = None
+        lot_number: Optional[str] = None
+        names: List[str] = field(default_factory=list)
+        pubchem_cid: Optional[int] = None
+        smiles: Optional[str] = None
+        vendor: Optional[str] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -84,6 +94,17 @@ class Material(PrimaryBaseNode):
         parent_material: Optional["Material"] = None,
         computational_forcefield: Optional[Any] = None,
         keyword: Optional[List[str]] = None,
+        amino_acid: Optional[str] = None,
+        bigsmiles: Optional[str] = None,
+        chem_formula: Optional[str] = None,
+        chem_repeat: Optional[List[str]] = None,
+        chemical_id: Optional[str] = None,
+        inchi: Optional[str] = None,
+        lot_number: Optional[str] = None,
+        names: Optional[List[str]] = None,
+        pubchem_cid: Optional[int] = None,
+        smiles: Optional[str] = None,
+        vendor: Optional[str] = None,
         notes: str = "",
         **kwargs
     ):
@@ -95,7 +116,7 @@ class Material(PrimaryBaseNode):
         >>> import cript
         >>> my_material = cript.Material(
         ...     name="my component material 1",
-        ...     identifier=[{"amino_acid": "component 1 alternative name"}],
+        ...     amino_acid = "component 1 alternative name",
         ... )
 
         Parameters
@@ -108,6 +129,17 @@ class Material(PrimaryBaseNode):
         parent_material: "Material", default=None
         computational_forcefield: ComputationalForcefield, default=None
         keyword: List[str], default=None
+        amino_acid: Optional[str] = None,
+        bigsmiles: Optional[str] = None,
+        chem_formula: Optional[str] = None,
+        chem_repeat: Optional[List[str]] = None,
+        chemical_id: Optional[str] = None,
+        inchi: Optional[str] = None,
+        lot_number: Optional[str] = None,
+        names: Optional[List[str]] = None,
+        pubchem_cid: Optional[int] = None,
+        smiles: Optional[str] = None,
+        vendor: Optional[str] = None,
 
         Returns
         -------
@@ -126,6 +158,12 @@ class Material(PrimaryBaseNode):
         if keyword is None:
             keyword = []
 
+        if chem_repeat is None:
+            chem_repeat = []
+
+        if names is None:
+            names = []
+
         self._json_attrs = replace(
             self._json_attrs,
             name=name,
@@ -136,51 +174,149 @@ class Material(PrimaryBaseNode):
             parent_material=parent_material,
             computational_forcefield=computational_forcefield,
             keyword=keyword,
+            amino_acid=amino_acid,
+            bigsmiles=bigsmiles,
+            chem_formula=chem_formula,
+            chem_repeat=chem_repeat,
+            chemical_id=chemical_id,
+            inchi=inchi,
+            lot_number=lot_number,
+            names=names,
+            pubchem_cid=pubchem_cid,
+            smiles=smiles,
+            vendor=vendor,
         )
 
     @property
     @beartype
-    def identifier(self) -> List[Dict[str, str]]:
-        """
-        get the identifiers for this material
+    def amino_acid(self) -> str:
+        return self._json_attrs.amino_acid
 
-        Examples
-        --------
-        >>> import cript
-        >>> my_material = cript.Material(
-        ...     name="my component material 1",
-        ...     identifier=[{"smiles": "component 1 smiles"}],
-        ... )
-        >>> my_material.identifier = [{"smiles": "my material alternative name"}]
-
-        [material identifier key](https://app.criptapp.org/vocab/material_identifier_key)
-        must come from CRIPT controlled vocabulary
-
-        Returns
-        -------
-        List[Dict[str, str]]
-            list of dictionary that has identifiers for this material
-        """
-        return self._json_attrs.identifier.copy()
-
-    @identifier.setter
+    @amino_acid.setter
     @beartype
-    def identifier(self, new_identifier_list: List[Dict[str, str]]) -> None:
-        """
-        set the list of identifiers for this material
+    def amino_acid(self, new_amino_acid: str) -> None:
+        new_attrs = replace(self._json_attrs, amino_acid=new_amino_acid)
+        self._update_json_attrs_if_valid(new_attrs)
 
-        the identifier keys must come from the
-        material identifiers keyword within the CRIPT controlled vocabulary
+    @property
+    @beartype
+    def bigsmiles(self) -> str:
+        return self._json_attrs.bigsmiles
 
-        Parameters
-        ----------
-        new_identifier_list: List[Dict[str, str]]
+    @bigsmiles.setter
+    @beartype
+    def bigsmiles(self, new_bigsmiles: str) -> None:
+        new_attrs = replace(self._json_attrs, bigsmiles=new_bigsmiles)
+        self._update_json_attrs_if_valid(new_attrs)
 
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, identifier=new_identifier_list)
+    @property
+    @beartype
+    def chem_formula(self) -> str:
+        return self._json_attrs.chem_formula
+
+    @chem_formula.setter
+    @beartype
+    def chem_formula(self, new_chem_formula: str) -> None:
+        new_attrs = replace(self._json_attrs, chem_formula=new_chem_formula)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def chemical_id(self) -> str:
+        return self._json_attrs.chemical_id
+
+    @chemical_id.setter
+    @beartype
+    def chemical_id(self, new_chemical_id: str) -> None:
+        new_attrs = replace(self._json_attrs, chemical_id=new_chemical_id)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def inchi(self) -> str:
+        return self._json_attrs.inchi
+
+    @inchi.setter
+    @beartype
+    def inchi(self, new_inchi: str) -> None:
+        new_attrs = replace(self._json_attrs, inchi=new_inchi)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def inchi_key(self) -> str:
+        return self._json_attrs.inchi_key
+
+    @inchi_key.setter
+    @beartype
+    def inchi_key(self, new_inchi_key: str) -> None:
+        new_attrs = replace(self._json_attrs, inchi_key=new_inchi_key)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def lot_number(self) -> str:
+        return self._json_attrs.lot_number
+
+    @lot_number.setter
+    @beartype
+    def lot_number(self, new_lot_number: str) -> None:
+        new_attrs = replace(self._json_attrs, lot_number=new_lot_number)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def smiles(self) -> str:
+        return self._json_attrs.smiles
+
+    @smiles.setter
+    @beartype
+    def smiles(self, new_smiles: str) -> None:
+        new_attrs = replace(self._json_attrs, smiles=new_smiles)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def vendor(self) -> str:
+        return self._json_attrs.vendor
+
+    @vendor.setter
+    @beartype
+    def vendor(self, new_vendor: str) -> None:
+        new_attrs = replace(self._json_attrs, vendor=new_vendor)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def chem_repeat(self) -> List[str]:
+        return self._json_attrs.chem_repeat.copy()
+
+    @chem_repeat.setter
+    @beartype
+    def chem_repeat(self, new_chem_repeat: List[str]) -> None:
+        new_attrs = replace(self._json_attrs, chem_repeat=new_chem_repeat)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def names(self) -> List[str]:
+        return self._json_attrs.names.copy()
+
+    @names.setter
+    @beartype
+    def names(self, new_names: List[str]) -> None:
+        new_attrs = replace(self._json_attrs, names=new_names)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def pubchem_cid(self) -> int:
+        return self._json_attrs.pubchem_cid
+
+    @pubchem_cid.setter
+    @beartype
+    def pubchem_cid(self, new_pubchem_cid: int) -> None:
+        new_attrs = replace(self._json_attrs, pubchem_cid=new_pubchem_cid)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -195,17 +331,17 @@ class Material(PrimaryBaseNode):
         >>> my_components = [
         ...     cript.Material(
         ...         name="my component material 1",
-        ...         identifier=[{"smiles": "my material smiles"}],
+        ...         smiles="my material smiles",
         ...     ),
         ...     cript.Material(
         ...         name="my component material 2",
-        ...         identifier=[{"vendor": "my material vendor"}],
+        ...         vendor= "my material vendor",
         ...     ),
         ... ]
         >>> my_mixed_material = cript.Material(
         ...     name="my material",
         ...     component=my_components,
-        ...     identifier=[{"bigsmiles": "123456"}]
+        ...     "bigsmiles" = "123456",
         ... )
 
         Returns
@@ -273,7 +409,7 @@ class Material(PrimaryBaseNode):
         --------
         >>> import cript
         >>> my_material = cript.Material(
-        ...     name="my component material 1", identifier=[{"smiles": "my smiles"}]
+        ...     name="my component material 1", smiles= "my smiles"
         ... )
         >>> my_computational_forcefield = cript.ComputationalForcefield(
         ...     key="opls_aa",
@@ -318,7 +454,7 @@ class Material(PrimaryBaseNode):
         --------
         >>> import cript
         >>> my_material = cript.Material(
-        ... name="my material", identifier=[{"inchi": "my material inchi"}]
+        ... name="my material", "inchi" = "my material inchi"
         ... )
         >>> my_material.keyword = ["acetylene", "acrylate", "alternating"]
 
@@ -368,7 +504,7 @@ class Material(PrimaryBaseNode):
         >>> import cript
         >>> my_material = cript.Material(
         ...     name="my component material 1",
-        ...     identifier=[{"smiles": "component 1 smiles"}],
+        ...     "smiles" = "component 1 smiles",
         ... )
         >>> my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
         >>> my_material.property = [my_property]
@@ -396,37 +532,3 @@ class Material(PrimaryBaseNode):
         """
         new_attrs = replace(self._json_attrs, property=new_property_list)
         self._update_json_attrs_if_valid(new_attrs)
-
-    @classmethod
-    @beartype
-    def _from_json(cls, json_dict: Dict):
-        """
-        Create a new instance of a node from a JSON representation.
-
-        Parameters
-        ----------
-        json_dict : Dict
-            A JSON dictionary representing a node
-
-        Returns
-        -------
-        node
-            A new instance of a node.
-
-        Notes
-        -----
-        required fields in JSON:
-        * `name`: The name of the node
-
-        optional fields in JSON:
-        * `identifier`: A list of material identifiers.
-            * If the `identifier` property is not present in the JSON dictionary,
-            it will be set to an empty list.
-        """
-        from cript.nodes.util.material_deserialization import (
-            _deserialize_flattened_material_identifiers,
-        )
-
-        json_dict = _deserialize_flattened_material_identifiers(json_dict)
-
-        return super()._from_json(json_dict)

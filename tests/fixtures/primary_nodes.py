@@ -177,7 +177,7 @@ def complex_process_node(complex_ingredient_node, simple_equipment_node, complex
     my_process_description = "my simple material description"
 
     process_waste = [
-        cript.Material(name="my process waste material 1", identifier=[{"bigsmiles": "process waste bigsmiles"}]),
+        cript.Material(name="my process waste material 1", bigsmiles="CC{[$][$]COC[$][]}"),
     ]
 
     my_process_keywords = [
@@ -218,9 +218,8 @@ def simple_material_node() -> cript.Material:
     """
     simple material node to use between tests
     """
-    identifier = [{"bigsmiles": "123456"}]
     # Use a unique name
-    my_material = cript.Material(name="my test material " + str(uuid.uuid4()), identifier=identifier)
+    my_material = cript.Material(name="my test material " + str(uuid.uuid4()), bigsmiles="{[][$]CC[$][]}")
 
     return my_material
 
@@ -260,12 +259,11 @@ def complex_material_node(simple_property_node, simple_process_node, complex_com
     """
     complex Material node with all possible attributes filled
     """
-    my_identifier = [{"bigsmiles": "my complex_material_node"}]
     my_material_keyword = ["acetylene"]
 
     my_complex_material = cript.Material(
         name="my complex material",
-        identifier=my_identifier,
+        bigsmiles="{[][$]CC[$][]}",
         property=[simple_property_node],
         process=copy.deepcopy(simple_process_node),
         parent_material=simple_material_node,
@@ -283,7 +281,7 @@ def simple_inventory_node(simple_material_node) -> None:
     """
     # set up inventory node
 
-    material_2 = cript.Material(name="material 2 " + str(uuid.uuid4()), identifier=[{"bigsmiles": "my big smiles"}])
+    material_2 = cript.Material(name="material 2 " + str(uuid.uuid4()), bigsmiles="{[][$]COC[$][]}")
 
     my_inventory = cript.Inventory(name="my inventory name", material=[simple_material_node, material_2])
 

@@ -79,8 +79,7 @@ class Ingredient(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_identifier = [{"bigsmiles": "123456"}]
-        >>> my_material = cript.Material(name="my material", identifier=my_identifier)
+        >>> my_material = cript.Material(name="my material", bigsmiles="my bigsmiles")
         >>> my_quantity = cript.Quantity(
         ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
         ... )
@@ -150,7 +149,7 @@ class Ingredient(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_material = cript.Material(name="my material", identifier=[{"bigsmiles": "123456"}])
+        >>> my_material = cript.Material(name="my material", bigsmiles = "123456")
         >>> my_quantity = cript.Quantity(
         ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
         ... )
@@ -158,7 +157,7 @@ class Ingredient(UUIDBaseNode):
         ...     material=my_material, quantity=[my_quantity], keyword=["catalyst"]
         ... )
         >>> my_new_material = cript.Material(
-        ...     name="my material", identifier=[{"bigsmiles": "78910"}]
+        ...     name="my material", bigsmiles = "78910"
         ... )
         >>> my_new_quantity = cript.Quantity(
         ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
@@ -189,7 +188,7 @@ class Ingredient(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_material = cript.Material(name="my material", identifier=[{"bigsmiles": "123456"}])
+        >>> my_material = cript.Material(name="my material", bigsmiles = "123456")
         >>> my_quantity = cript.Quantity(
         ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
         ... )

@@ -154,7 +154,7 @@ class ComputationProcess(PrimaryBaseNode):
         >>> input_data = cript.Data(name="my data name", type="afm_amp", file=[data_files])
         >>> my_material = cript.Material(
         ...     name="my material",
-        ...     identifier=[{"names": ["my material alternative name"]}]
+        ...     names = ["my material alternative name"]
         ... )
         >>> my_quantity = cript.Quantity(key="mass", value=1.23, unit="kg")
         >>> ingredient = cript.Ingredient(
@@ -368,7 +368,7 @@ class ComputationProcess(PrimaryBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_material = cript.Material(name="my material", identifier=[{"bigsmiles": "123456"}])
+        >>> my_material = cript.Material(name="my material", "bigsmiles" = "my bigsmiles")
         >>> my_quantity = cript.Quantity(
         ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
         ... )

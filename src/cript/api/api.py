@@ -815,7 +815,7 @@ class API:
         >>> import cript
         >>> my_material_node = cript.Material(
         ...     name="my component material 1",
-        ...     identifier=[{"amino_acid": "component 1 alternative name"}],
+        ...     names = ["component 1 alternative name"],
         ... )
         >>> api.delete(node=my_material_node) # doctest: +SKIP
 

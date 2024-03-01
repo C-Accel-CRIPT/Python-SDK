@@ -380,7 +380,7 @@ class Property(UUIDBaseNode):
         ---------
         >>> import cript
         >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
-        >>> my_material = cript.Material(name="my material", identifier=[{"bigsmiles": "123456"}])
+        >>> my_material = cript.Material(name="my material", bigsmiles = "123456")
         >>> my_property.component = [my_material]
 
         Returns

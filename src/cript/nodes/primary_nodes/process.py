@@ -223,8 +223,7 @@ class Process(PrimaryBaseNode):
         ---------
         >>> import cript
         >>> my_process = cript.Process(name="my process name", type="affinity_pure")
-        >>> my_identifier = [{"bigsmiles": "123456"}]
-        >>> my_material = cript.Material(name="my material", identifier=my_identifier)
+        >>> my_material = cript.Material(name="my material", bigsmiles = "material bigsmiles")
         >>> my_quantity = cript.Quantity(
         ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
         ... )
@@ -345,7 +344,7 @@ class Process(PrimaryBaseNode):
         >>> my_process = cript.Process(name="my process name", type="affinity_pure")
         >>> my_product_material = cript.Material(
         ...     name="my product material",
-        ...     identifier=[{"amino_acid": "my material product amino_acid"}],
+        ...     amino_acid = "my material product amino_acid",
         ... )
         >>> my_process.product = [my_product_material]
 
@@ -386,7 +385,7 @@ class Process(PrimaryBaseNode):
         >>> my_process = cript.Process(name="my process name", type="affinity_pure")
         >>> my_waste_material = cript.Material(
         ...     name="my waste material",
-        ...     identifier=[{"bigsmiles": "123456"}],
+        ...     bigsmiles = "123456",
         ... )
         >>> my_process.waste = [my_waste_material]
 

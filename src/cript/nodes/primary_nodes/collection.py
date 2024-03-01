@@ -175,11 +175,11 @@ class Collection(PrimaryBaseNode):
         >>> my_collection = cript.Collection(name="my collection name")
         >>> material_1 = cript.Material(
         ...     name="material 1",
-        ...     identifier=[{"bigsmiles": "material 1 bigsmiles"}],
+        ...     bigsmiles = "material 1 bigsmiles",
         ... )
         >>> material_2 = cript.Material(
         ...     name="material 2",
-        ...     identifier=[{"bigsmiles": "material 2 bigsmiles"}],
+        ...     bigsmiles = "material 2 bigsmiles",
         ... )
         >>> my_inventory = cript.Inventory(
         ...     name="my inventory name", material=[material_1, material_2]

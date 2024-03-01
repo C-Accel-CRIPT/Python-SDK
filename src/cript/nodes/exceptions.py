@@ -61,7 +61,7 @@ class CRIPTMaterialIdentifierError(CRIPTException):
         self.material_node = material_node
 
     def __str__(self) -> str:
-        error_message = "Every Material node needs at least one idetifier from "
+        error_message = "Every Material node needs at least one identifier from "
         error_message += " [ 'amino_acid', 'bigsmiles', 'chem_formula', 'chem_repeat', 'chemical_id', 'inchi', 'lot_number', 'names', 'pubchem_cid', 'smiles','vendor'] set."
         error_message += f" This node {self.material_node} has none set."
         return error_message

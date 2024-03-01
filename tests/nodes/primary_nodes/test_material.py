@@ -22,7 +22,7 @@ def test_create_complex_material(cript_api, simple_material_node, simple_computa
     bigsmiles = "NC{[$][$]CC[$][]}"
     chem_formula = "NC5"
     chem_repeat = ["CC"]
-    chemical_id = "my chemid"
+    chemical_id = "my chemical_id"
     inchi = "my inchi"
     lot_number = "lot 1"
     names = ["polyethylene"]
@@ -110,7 +110,7 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     bigsmiles = "NC{[$][$]CC[$][]}"
     chem_formula = "NC5"
     chem_repeat = ["CC"]
-    chemical_id = "my chemid"
+    chemical_id = "my chemical_id"
     inchi = "my inchi"
     lot_number = "lot 1"
     names = ["polyethylene"]

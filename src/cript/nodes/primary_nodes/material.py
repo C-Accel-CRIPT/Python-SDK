@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
@@ -24,10 +24,10 @@ class Material(PrimaryBaseNode):
     | computational_forcefield  | [Computation  Forcefield](../../subobjects/computational_forcefield) |                                                   | computation forcefield                              | Conditional |       |
     | keyword                   | list[str]                                                            | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material                    |             | True  |
     | notes                     | str                                                                  | "my awesome notes"                                | miscellaneous information, or custom data structure |             | True  |
-    | amino_acid                | str                                                                  | "LeuProHis"                                       | if the material is an amino acid seuqence, list it. | Conditional |       |
+    | amino_acid                | str                                                                  | "LeuProHis"                                       | if the material is an amino acid sequence, list it. | Conditional |       |
     | bigsmiles                 | str                                                                  | "CC{[$][$]CC[$][]}"                               | BigSMILES string for polymer                        | Conditional |       |
-    | chem_formula              | str                                                                  | "C22H33NO10"                                      | Chemical formular of the material or monomer        | Conditional |       |
-    | chem_repeat               | str                                                                  | "C=Cc1ccccc1"                                     | Chemical formular of the repeat unit                | Conditional |       |
+    | chem_formula              | str                                                                  | "C22H33NO10"                                      | Chemical formula of the material or monomer        | Conditional |       |
+    | chem_repeat               | str                                                                  | "C=Cc1ccccc1"                                     | Chemical formula of the repeat unit                | Conditional |       |
     | chemical_id               | str                                                                  | "126094"                                          | Unique chemical ID                                  | Conditional |       |
     | inchi                     | str                                                                  | "InChI=1S/H2O/h1H2"                               | InChI string of the chemical                        | Conditional |       |
     | inchi_key                 | str                                                                  | "XLYOFNOQVPJJNP-UHFFFAOYSA-N"                     | InChI key of the chemical                           | Conditional |       |

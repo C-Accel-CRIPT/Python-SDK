@@ -32,6 +32,13 @@ from cript.api.utils.web_file_downloader import download_file_from_url
 from cript.api.valid_search_modes import SearchModes
 from cript.nodes.primary_nodes.project import Project
 
+from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+
+from cript.nodes.primary_nodes.material import Material
+from cript.nodes.primary_nodes.project import Project
+from deepdiff import DeepDiff
+import re
+
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.
 _global_cached_api = None
@@ -390,6 +397,257 @@ class API:
     def api_version(self):
         return self._api_version
 
+    # =============================
+
+    @staticmethod
+    def remove_keys_from_dict(
+        dictionary,
+        keys_to_remove=["uuid", "experiment_count", "inventory_count", "public", "created_at", "email", "model_version", "orcid", "uid", "updated_at", "username", "admin_count", "collection_count", "locked", "material_count", "member_count"],
+    ):
+        """Recursively remove keys from a dictionary."""
+        if not isinstance(dictionary, dict):
+            return dictionary
+        for key in keys_to_remove:
+            dictionary.pop(key, None)
+        for key, value in list(dictionary.items()):  # Use list() to avoid RuntimeError during iteration
+            if isinstance(value, dict):
+                API.remove_keys_from_dict(value, keys_to_remove)
+            elif isinstance(value, list):
+                for item in value:
+                    API.remove_keys_from_dict(item, keys_to_remove)
+        return dictionary
+
+    @classmethod
+    def add_to_dict(cls, dictionary, key=None, value=None):
+        # Check if the key exists in the dictionary
+        if key in dictionary:
+            # Key exists, append the value to the list
+            dictionary[key].append(value)
+        else:
+            # Key does not exist, create a new list with the value
+            dictionary[key] = [value]
+
+    # ================================== SAVE EXISTING ===================================
+    def add_existing_node_by_name(
+        self,
+        parent_node: PrimaryBaseNode,
+        child_node: PrimaryBaseNode,
+    ):
+        child_class_name = child_node.node[0]
+        child_class_object = globals().get(child_class_name.capitalize(), None)
+
+        # Check if the class exists
+        if child_class_object is None:
+            raise ValueError(f"Class {child_class_name} not found")
+
+        existing_node = next(self.search(child_class_object, search_mode=SearchModes.EXACT_NAME, value_to_search=child_node.name))
+        existing_uuid = str(existing_node.uuid)
+
+        parent_node_type = parent_node.node[0].lower()
+
+        url_path = f"/{parent_node_type}/{parent_node.uuid}"
+
+        payload = {"node": parent_node.node, f"{child_node.node[0].lower()}": [{"uuid": existing_uuid}]}
+
+        patch_response = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(payload))
+
+        if patch_response.status_code in [200, 201]:
+            print("worked")
+        else:
+            raise ("error in patching existing item")
+
+    # ================================== SAVE ===================================
+
+    def save_node(self, new_node: PrimaryBaseNode):
+
+        # try to create or else fail
+        try:
+            node_type = new_node.node[0].lower()
+
+            get_url = f"/{node_type}/{new_node.uuid}"
+
+            try:
+                original = self._capsule_request(url_path=get_url, method="GET").json()["data"][0]
+
+            except:
+                original = None
+                # raise ValueError(f"No data available in response {response}")
+
+            existing_uuid = self.search(Material, search_mode=SearchModes.EXACT_NAME, value_to_search=new_node.name)  # "return uuid with next"  # self.object_exists(node=node_type, name=new_node.name):
+
+            if (original == None) and existing_uuid:
+
+                raise ValueError("this name already exists stored under a different uuid")
+
+        except:
+
+            if new_node.node[0].lower() == "project":
+
+                data = {"node": new_node.node, "name": new_node.name}  # , "material": [{"node": ["Material"], "name": Config.material_name}]}  # , "public": Config.is_public}
+
+                response = self._capsule_request(url_path="/project/", method="POST", data=json.dumps(data))
+
+                if response.json()["code"] in [409, 400]:
+                    return "already exists"
+                elif response.json()["code"] == 200:
+
+                    original_dict = response.json()["data"]["result"][0]
+                    original = original_dict
+
+            else:
+                print(f"couldnt create or fetch data for {new_node.node}")
+
+        modified = json.loads(new_node.get_json().json)  # Assuming this is already a dictionary
+
+        cleaned_original = self.remove_keys_from_dict(original)
+        cleaned_modified = self.remove_keys_from_dict(modified)
+
+        exclude_regex_paths = [
+            r"root(\[.*\])?\['uid'\]",
+            r"root\['\w+_count'\]",  # All the attributes that end with _count
+            r"root(\[.*\])?\['\w+_count'\]",  # All the attributes that end with _count
+            r"root(\[.*\])?\['locked'\]",
+            r"root(\[.*\])?\['admin'\]",
+            r"root(\[.*\])?\['created_at'\]",
+            r"root(\[.*\])?\['created_by'\]",
+            r"root(\[.*\])?\['updated_at'\]",
+            r"root(\[.*\])?\['updated_by'\]",
+            r"root(\[.*\])?\['public'\]",
+            r"root(\[.*\])?\['notes'\]",
+            r"root(\[.*\])?\['model_version'\]",
+        ]
+
+        diff_ = DeepDiff(
+            cleaned_original,
+            cleaned_modified,
+            exclude_regex_paths=exclude_regex_paths,
+            ignore_order=True,
+        )
+        diff_dict = diff_.to_dict()
+
+        try:
+
+            values_changed = diff_dict.get("values_changed", {})
+            iterable_items_added = diff_dict.get("iterable_item_added", {})
+            iterable_items_removed = diff_dict.get("iterable_item_removed", {})
+            dictionary_items_added = diff_dict.get("dictionary_item_added", {})
+
+        except Exception as e:
+            print(e)
+
+        entities_to_patch_dict = {}
+        entities_to_remove_dict = {}
+
+        # 1) VALUES CHANGED
+        print("  1)   VALUES CHANGED ")
+
+        for key, value in values_changed.items():
+
+            pattern1 = r"^\w+\['\w+'\]\[\d+\]$"
+
+            if re.match(pattern1, key):
+                entity_name = key.split("['")[1].split("']")[0]
+
+                value["new_value"]
+
+                old_val_node_dict = value["old_value"]
+
+                node_to_remove = next(self.search(node_type=Material, search_mode=SearchModes.EXACT_NAME, value_to_search=old_val_node_dict["name"]))
+
+                if node_to_remove:
+                    uuid_to_remove = node_to_remove.uuid
+                    API.add_to_dict(entities_to_remove_dict, key=entity_name, value={"uuid": f"{uuid_to_remove}"})
+                else:
+                    print("uuid is None (values changed)")
+                node_to_add = value["new_value"]  # gotta do a search by uuid on the name and node
+                API.add_to_dict(entities_to_patch_dict, key=entity_name, value=node_to_add)
+
+            entities_to_patch_dict["node"] = new_node.node
+            entities_to_remove_dict["node"] = new_node.node
+
+        #######################################
+
+        # 2) ITERABLE ITEMS ADDED
+        print("  2)   ITERABLE ITEMS ADDED ")
+
+        for key, value in iterable_items_added.items():
+            print(value)
+            DataSchema.is_node_schema_valid(value)
+
+            # Use split to parse out the entity name from the key
+            try:
+                entity_name = key.split("['")[1].split("']")[0]
+            except IndexError:
+                entity_name = None
+
+            # Proceed with the rest of the logic as before
+            if entity_name:
+                if entity_name not in entities_to_patch_dict:
+                    entities_to_patch_dict[entity_name] = [value]
+                else:
+                    entities_to_patch_dict[entity_name].append(value)
+            else:
+                print("warning no entity name")
+
+        print("  3) DICT ITEMS ADDED  ")
+
+        for path in dictionary_items_added:
+            print(path)
+            # Strip "root" and square brackets, then remove quotes
+            key_name = path.replace("root[", "").replace("]", "").replace("'", "")
+            entities_to_patch_dict[key_name] = cleaned_modified[key_name]
+
+        # 3) REMOVE ITEMS  - UNLINKING
+        print("  4)  REMOVE ITEMS  - UNLINKING")
+
+        for key, value in iterable_items_removed.items():
+            pattern = r"^\w+\['\w+'\]\[\d+\]$"  # like "root['material'][0]"
+            if re.match(pattern, key):
+                try:
+                    entity_name = key.split("['")[1].split("']")[0]
+
+                except IndexError:
+                    entity_name = None
+
+            if entity_name:
+
+                node_to_remove = next(self.search(node_type=Material, search_mode=SearchModes.EXACT_NAME, value_to_search=value["name"]))
+
+                if node_to_remove:
+                    uuid_to_remove = node_to_remove.uuid
+                    API.add_to_dict(entities_to_remove_dict, key=entity_name, value={"uuid": f"{uuid_to_remove}"})
+                else:
+                    print("uuid is None")
+                    print(value)
+            else:
+                print("warning no entity name")
+
+        entities_to_remove_dict["node"] = ["Project"]
+
+        payload_remove = entities_to_remove_dict
+        payload_patch = entities_to_patch_dict
+
+        url_path = f"/project/{new_node.uuid}"
+
+        patch_response = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(payload_patch))
+
+        if patch_response.status_code in [400, 409]:
+            print("take the materials that exist and link it , then resend the other materials")
+            print(patch_response.json())
+            # raise ("error")
+
+        remove_response = self._capsule_request(url_path=url_path, method="DELETE", data=json.dumps(payload_remove))
+
+        if remove_response.status_code in [400, 409]:
+            print("failed to remove these: ", remove_response.json())
+            raise (remove_response.json())
+            # raise ("error")
+
+        ######################################
+
+        print(" - FINALLY WE GET ALL THE WAY TO THE END ")
+
+    # ==================================
     def save(self, project: Project) -> None:
         """
         This method takes a project node, serializes the class into JSON
@@ -424,7 +682,6 @@ class API:
     def _internal_save(self, node, save_values: Optional[_InternalSaveValues] = None) -> _InternalSaveValues:
         """
         Internal helper function that handles the saving of different nodes (not just project).
-
         If a "Bad UUID" error happens, we find that node with the UUID and save it first.
         Then we recursively call the _internal_save again.
         Because it is recursive, this repeats until no "Bad UUID" error happen anymore.
@@ -969,6 +1226,7 @@ class API:
 
         kwargs
           additional keyword arguments that are passed to `request.request`
+          if this is found to be a json string - this will go into the body of the request (i.e. the payload) but it must be sent as json_str not a dict !
         """
 
         if headers is None:

@@ -50,7 +50,9 @@ def cript_api():
     """
     storage_token = os.getenv("CRIPT_STORAGE_TOKEN")
 
-    with cript.API(host=None, api_token=None, storage_token=storage_token, default_log_level=logging.DEBUG) as api:
+    with cript.API(host=None, api_token=None, storage_token=storage_token, default_log_level=logging.WARNING) as api:
+        # ^^  was default_log_level=logging.DEBUG
+
         # overriding AWS S3 cognito variables to be sure we do not upload test data to production storage
         # staging AWS S3 cognito storage variables
         api._IDENTITY_POOL_ID = "us-east-1:25043452-a922-43af-b8a6-7e938a9e55c1"

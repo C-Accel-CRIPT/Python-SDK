@@ -116,15 +116,9 @@ They are for example the chemical you buy commercially and use as input into you
 For this we create this inventory by adding the [Material](../../nodes/primary_nodes/material) we need one by one.
 
 ```python
-# create a list of identifiers as dictionaries to
-# identify your material to the community and your team
-my_solution_material_identifiers = [
-    {"chemical_id": "598-30-1"}
-]
-
 solution = cript.Material(
     name="SecBuLi solution 1.4M cHex",
-    identifier=my_solution_material_identifiers
+    chemical_id = "598-30-1",
 )
 ```
 
@@ -132,10 +126,10 @@ These materials are simple, notice how we use the SMILES notation here as an ide
 Similarly, we can create more initial materials.
 
 ```python
-toluene = cript.Material(name="toluene", identifier=[{"smiles": "Cc1ccccc1"}, {"pubchem_cid": 1140}])
-styrene = cript.Material(name="styrene", identifier=[{"smiles": "c1ccccc1C=C"}, {"inchi": "InChI=1S/C8H8/c1-2-8-6-4-3-5-7-8/h2-7H,1H2"}])
-butanol = cript.Material(name="1-butanol", identifier=[{"smiles": "OCCCC"}, {"inchi_key": "InChIKey=LRHPLDYGYMQRHN-UHFFFAOYSA-N"}])
-methanol = cript.Material(name="methanol", identifier=[{"smiles": "CO"}, {"names": ["Butan-1-ol", "Butyric alcohol", "Methylolpropane", "n-Butan-1-ol", "methanol"]}])
+toluene = cript.Material(name="toluene", smiles="Cc1ccccc1, pubchem_cid = 1140)
+styrene = cript.Material(name="styrene", smiles = "c1ccccc1C=C", inchi = "InChI=1S/C8H8/c1-2-8-6-4-3-5-7-8/h2-7H,1H2")
+butanol = cript.Material(name="1-butanol", smiles = "OCCCC", inchi_key = "InChIKey=LRHPLDYGYMQRHN-UHFFFAOYSA-N")
+methanol = cript.Material(name="methanol", smiles = CO, names = ["Butan-1-ol", "Butyric alcohol", "Methylolpropane", "n-Butan-1-ol", "methanol"]}])
 ```
 
 Now that we defined those materials, we can combine them into an inventory
@@ -250,20 +244,15 @@ that will serve as our product. We give the material a `name` attribute and add 
 [Project]((../../nodes/primary_nodes/project).
 
 ```python
-polystyrene = cript.Material(name="polystyrene", identifier=[])
+polystyrene = cript.Material(name="polystyrene", bigsmiles="[H]{[>][<]C(C[>])c1ccccc1[<]}C(C)CC")
 project.material += [polystyrene]
 ```
 
 Let's add some `Identifiers` to the material to make it easier to identify and search.
 
 ```python
-# create a name identifier
-polystyrene.identifier += [{"names": ["poly(styrene)", "poly(vinylbenzene)"]}]
-
-# create a BigSMILES identifier
-polystyrene.identifier += [{"bigsmiles": "[H]{[>][<]C(C[>])c1ccccc1[<]}C(C)CC"}]
 # create a chemical repeat unit identifier
-polystyrene.identifier += [{"chem_repeat": ["C8H8"]}]
+polystyrene.chem_repeat = ["C8H8"]
 ```
 
 Next, we'll add some [Property](../../nodes/subobjects/property) nodes to the

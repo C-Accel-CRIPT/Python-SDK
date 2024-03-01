@@ -20,7 +20,7 @@ def test_get_and_set_inventory(simple_inventory_node) -> None:
     4. assert that the materials list set and the one gotten are the same
     """
     # create new materials
-    material_1 = cript.Material(name="new material 1", identifier=[{"names": ["new material 1 alternative name"]}])
+    material_1 = cript.Material(name="new material 1", names=["new material 1 alternative name"])
     my_notes = "my inventory notes"
 
     # set inventory
@@ -49,7 +49,7 @@ def test_inventory_serialization(simple_inventory_node, simple_material_dict) ->
     2. strips the UID from all the nodes within that dict
     3. compares the expected_dict written to what JSON deserializes
     """
-    expected_dict = {"node": ["Inventory"], "name": "my inventory name", "material": [simple_material_dict, {"node": ["Material"], "name": "material 2", "bigsmiles": "my big smiles"}]}
+    expected_dict = {"node": ["Inventory"], "name": "my inventory name", "material": [simple_material_dict, {"node": ["Material"], "name": "material 2", "bigsmiles": "{[][$]COC[$][]}"}]}
 
     # TODO this needs better testing
     # force not condensing to edge uuid during json serialization

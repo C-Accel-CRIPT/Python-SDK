@@ -230,7 +230,7 @@ def simple_material_dict() -> dict:
     the dictionary that `simple_material_node` produces
     putting it in one location to make updating it easy
     """
-    simple_material_dict: dict = {"node": ["Material"], "name": "my material", "bigsmiles": "123456"}
+    simple_material_dict: dict = {"node": ["Material"], "name": "my material", "bigsmiles": "{[][$]COC[$][]}"}
 
     return simple_material_dict
 

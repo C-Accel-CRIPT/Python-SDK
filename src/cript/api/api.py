@@ -454,9 +454,6 @@ class API:
         entity_name = f"{child_class_type.lower()}"
         uuid_link_payload = {"node": parent_node.node, entity_name: []}
 
-        print("\n_____existing_child_node_names")
-        print(existing_child_node_names)
-
         for name in existing_child_node_names:
             # print(name.strip())
             # name = name.strip()
@@ -469,10 +466,6 @@ class API:
             API.add_to_dict(uuid_link_payload, key=entity_name, value={"uuid": f"{existing_uuid}"})
 
         patch_response = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(uuid_link_payload))
-
-        print("\n____HERE PATCH payload and RESP")
-        print("uuid_link_payload:  ", uuid_link_payload)
-        print("patch_response:  ", patch_response)
 
         if patch_response.status_code in [200, 201]:
             # print("worked")

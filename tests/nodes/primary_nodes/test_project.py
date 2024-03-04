@@ -231,6 +231,7 @@ def test_update_project_change_or_reset_material_to_existing_materials(cript_api
         # print(create_response)
     except Exception as e:
         print(e)
+        raise ValueError(e)
 
     cr_res_list = create_response.json()["data"]["result"]
 
@@ -269,26 +270,14 @@ def test_update_project_change_or_reset_material_to_existing_materials(cript_api
         project_loaded.material = [toluene, styrene]
         project_loaded.collection = [collection]
 
-        # print("\n~~~~~~~~~~~~ SAVING NOW ~~~~~~~~~~~")
-        # print(project_loaded)
-        # print("~~~~~~~~~~")
         cript_api.save_node(project_loaded)
-        # print("BASICALLY now WE NEED TO ASSERT ON THE RESPONSE, NOT RELOAD IT INTO A NODE")
-
-        # print("\n-- probably need to fix save --\n---project after saved")
 
         get_url = f"/project/{uuid}"
         edited_result = cript_api._capsule_request(url_path=get_url, method="GET")
 
-        # print("\n~~~~~~ saved reflected result")
-        # print(edited_result.json())
-
         assert len(edited_result.json()["data"]) == 1
 
         final = edited_result.json()["data"][0]
-
-        print("\n\n____final")
-        print(final)
 
         assert len(final["material"]) == 2  # styrene and toluene
 
@@ -298,13 +287,7 @@ def test_update_project_change_or_reset_material_to_existing_materials(cript_api
 
         assert set1 == set2  # or material_003toluene.get_json().json)["name"]
 
-        # print("\n___final")
-        # print(final)
-
         assert final["collection"][0]["name"] == json.loads(collection.get_json().json)["name"]
-
-        # print("now deleting proj and eventually 2 mats")
-        # print("only issue with this test is the toluene")
 
         del_res = cript_api._capsule_request(url_path=f"/project/{uuid}", method="DELETE")
 

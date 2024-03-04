@@ -559,6 +559,7 @@ class API:
                     original = original_dict
 
             else:
+                # this would have been fetched above for a non project node
                 print(f"couldnt create or fetch data for {new_node.node}")
 
         modified = json.loads(new_node.get_json().json)  # Assuming this is already a dictionary
@@ -661,8 +662,11 @@ class API:
         print("  3) DICT ITEMS ADDED  ")
 
         for path in dictionary_items_added:
-            # print(path)
+            print("\n__________path")
+            print(path)
+            print("----------")
             # Strip "root" and square brackets, then remove quotes
+
             key_name = path.replace("root[", "").replace("]", "").replace("'", "")
             entities_to_patch_dict[key_name] = cleaned_modified[key_name]
 

@@ -160,10 +160,10 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_material_node)
 
 
-@pytest.mark.skip(reason="test is WIP")
-def test_update_material_change_or_reset_children_to_existing_children(cript_api) -> None:
+@pytest.mark.skip(reason="test is WIP, regex is not in place")
+def test_material_node_change(cript_api) -> None:
     """
-    pytest nodes/primary_nodes/test_project.py::test_update_project_change_or_reset_material_to_existing_materials
+    pytest nodes/primary_nodes/test_material.py::test_material_node_change
     test that a project can be updated and completley reset
     strategy:
     create something with a post/patch
@@ -177,7 +177,7 @@ def test_update_material_change_or_reset_children_to_existing_children(cript_api
     col_name = f"031o0col__{epoch_time}"
 
     url_path = f"/project/"
-    create_payload = {"node": ["Project"], "name": name_1, "material": [{"uuid": "1809330c-31d2-4a80-af72-77b84070ee1d"}, {"uuid": "ea8f957c-b6e5-4668-b306-e0d6b0d05d9a"}]}
+    create_payload = {"node": ["Project"], "name": name_1, "material": [{"node": ["Material"], "name": mat_1, "property": [{"node": ["Property"], "key": "air_flow", "method": "prescribed", "type": "value"}]}]}
 
     try:
         create_response = cript_api._capsule_request(url_path=url_path, method="POST", data=json.dumps(create_payload))
@@ -204,22 +204,32 @@ def test_update_material_change_or_reset_children_to_existing_children(cript_api
 
         uuid = None
         for item in cr_res_list:
-            if item["node"] == ["Project"]:
+            if item["node"] == ["Material"]:
 
                 uuid = item["uuid"]
         if uuid == None:
-            raise ValueError("no project node")
+            raise ValueError("no material node")
 
-        get_url = f"/project/{uuid}"
+        get_url = f"/material/{uuid}"
 
         result = cript_api._capsule_request(url_path=get_url, method="GET")
 
         result_json_dict = result.json()
 
-        my_project_from_res_data_dict = result_json_dict["data"][0]
+        my_mat_from_res_data_dict = result_json_dict["data"][0]
 
-        project_list = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_res_data_dict))
-        project_loaded = project_list
+        mat_list = cript.load_nodes_from_json(nodes_json=json.dumps(my_mat_from_res_data_dict))
+        mat_loaded = mat_list
+
+        print("mat_loaded")
+        print(mat_loaded)
+
+        # create a color property
+        # property_001 = cript.Property(name=mat_1, identifier=[])
+        color = cript.Property(key="color", value="white", type="none", unit=None)
+
+        # add the properties to the material
+        mat_loaded.property += [color]
 
         """
         1 - get existing material node by uuid - paginator
@@ -229,25 +239,27 @@ def test_update_material_change_or_reset_children_to_existing_children(cript_api
         3 - save the node
         """
 
-        material_001 = cript.Material(name=mat_1, identifier=[])
-        toluene = cript.Material(name="toluene", identifier=[{"smiles": "Cc1ccccc1"}])  # , {"pubchem_id": 1140}])
-        styrene = cript.Material(name="styrene", identifier=[{"smiles": "Cc1ccccc1"}])
-
-        collection = cript.Collection(name=col_name)
-
-        project_loaded.material = [toluene, styrene]
-        project_loaded.collection = [collection]
-
         print("\n~~~~~~~~~~~~ SAVING NOW ~~~~~~~~~~~")
-        print(project_loaded)  # material_loaded
-        print("~~~~~~~~~~")
-        cript_api.save_node(project_loaded)  # material_loaded
+        print(mat_loaded)  # material_loaded
+        print(dir(mat_loaded))
+
+        payload = {"node": ["Material"], "property": [{"node": ["Property"], "key": "air_flow", "method": "chrom", "type": "value"}]}
+        response = cript_api._capsule_request(url_path=f"/{mat_loaded.node[0].lower()}/{mat_loaded.uuid}", method="PATCH", data=json.dumps(payload))
+        print("~~")
+        print(response.json())
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+        cript_api.save_node(mat_loaded)  # material_loaded
         print("BASICALLY now WE NEED TO ASSERT ON THE RESPONSE, NOT RELOAD IT INTO A NODE")
+
+        quit()
 
         print("\n-- probably need to fix save --\n---project after saved")
 
         get_url = f"/material/{uuid}"  # f"/project/{uuid}"
         edited_result = cript_api._capsule_request(url_path=get_url, method="GET")
+
+        quit()
 
         print("\n~~~~~~ saved reflected result")
         print(edited_result.json())

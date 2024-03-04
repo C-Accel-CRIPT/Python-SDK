@@ -427,38 +427,100 @@ class API:
             # Key does not exist, create a new list with the value
             dictionary[key] = [value]
 
-    # ================================== SAVE EXISTING ===================================
-    def add_existing_node_by_name(
+    # ================================== ADD EXISTING NODES-NAMES===================================
+    def add_existing_nodes_by_name(
         self,
         parent_node: PrimaryBaseNode,
-        child_node: PrimaryBaseNode,
+        child_class_type: str,
+        existing_child_node_names: list,  # must be list of strings
     ):
-        child_class_name = child_node.node[0]
-        child_class_object = globals().get(child_class_name.capitalize(), None)
+        """
+        this function will take a list of exact names and add them by uuid
+        takes in Parent Node, child cass type as a str i.e. "material" or "Material" (either work)
+
+        """
+
+        # child_class_type = child_node.node[0]
+        child_class_object = globals().get(child_class_type.capitalize(), None)
 
         # Check if the class exists
         if child_class_object is None:
-            raise ValueError(f"Class {child_class_name} not found")
+            raise ValueError(f"Class {child_class_type} not found")
 
-        existing_node = next(self.search(child_class_object, search_mode=SearchModes.EXACT_NAME, value_to_search=child_node.name))
-        existing_uuid = str(existing_node.uuid)
-
+        # go through thte list of names and create the payload :
         parent_node_type = parent_node.node[0].lower()
-
         url_path = f"/{parent_node_type}/{parent_node.uuid}"
 
-        payload = {"node": parent_node.node, f"{child_node.node[0].lower()}": [{"uuid": existing_uuid}]}
+        entity_name = f"{child_class_type.lower()}"
+        uuid_link_payload = {"node": parent_node.node, entity_name: []}
 
-        patch_response = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(payload))
+        for name in existing_child_node_names:
+            # print(name.strip())
+            name = name.strip()
 
-        if patch_response.status_code in [200, 201]:
-            print("worked")
+            existing_node = next(self.search(child_class_object, search_mode=SearchModes.EXACT_NAME, value_to_search=name.strip()))
+            existing_uuid = str(existing_node.uuid)
+
+            parent_node_type = parent_node.node[0].lower()
+
+            API.add_to_dict(uuid_link_payload, key=entity_name, value={"uuid": f"{existing_uuid}"})
+
+            patch_response = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(uuid_link_payload))
+
+            if patch_response.status_code in [200, 201]:
+                # print("worked")
+                # print(patch_response.json())
+                return patch_response
+            else:
+                raise ("error in patching existing item")
+
+    def remove_nodes_by_name(
+        self,
+        parent_node: PrimaryBaseNode,
+        child_class_type: str,
+        existing_child_node_names: list,
+    ):
+        """
+        this function will take a list of exact names and add them by uuid
+        takes in Parent Node, child cass type as a str i.e. "material" or "Material" (either work)
+
+        """
+
+        # child_class_type = child_node.node[0]
+        child_class_object = globals().get(child_class_type.capitalize(), None)
+
+        # Check if the class exists
+        if child_class_object is None:
+            raise ValueError(f"Class {child_class_type} not found")
+
+        # go through thte list of names and create the payload :
+        parent_node_type = parent_node.node[0].lower()
+        url_path = f"/{parent_node_type}/{parent_node.uuid}"
+
+        entity_name = f"{child_class_type.lower()}"
+        uuid_link_payload = {"node": parent_node.node, entity_name: []}
+
+        for name in existing_child_node_names:
+            # print(name.strip())
+            name = name.strip().lower()
+
+            existing_node = next(self.search(child_class_object, search_mode=SearchModes.EXACT_NAME, value_to_search=name.strip()))
+            existing_uuid = str(existing_node.uuid)
+
+            parent_node_type = parent_node.node[0].lower()
+
+            API.add_to_dict(uuid_link_payload, key=entity_name, value={"uuid": f"{existing_uuid}"})
+
+        del_response = self._capsule_request(url_path=url_path, method="DELETE", data=json.dumps(uuid_link_payload))
+
+        if del_response.status_code in [200, 201]:
+            # print("delete worked")
+            # print(del_response.json())
+            return del_response
         else:
             raise ("error in patching existing item")
 
-    # ================================== SAVE ===================================
-
-    def save_node(self, new_node: PrimaryBaseNode):
+    def save_node(self, new_node: PrimaryBaseNode, link_existing=True):
 
         # try to create or else fail
         try:
@@ -525,6 +587,10 @@ class API:
         )
         diff_dict = diff_.to_dict()
 
+        # print("-----diff_dict")
+        # print(diff_dict)
+        # quit()
+
         try:
 
             values_changed = diff_dict.get("values_changed", {})
@@ -559,6 +625,7 @@ class API:
                     API.add_to_dict(entities_to_remove_dict, key=entity_name, value={"uuid": f"{uuid_to_remove}"})
                 else:
                     print("uuid is None (values changed)")
+
                 node_to_add = value["new_value"]  # gotta do a search by uuid on the name and node
                 API.add_to_dict(entities_to_patch_dict, key=entity_name, value=node_to_add)
 
@@ -592,7 +659,7 @@ class API:
         print("  3) DICT ITEMS ADDED  ")
 
         for path in dictionary_items_added:
-            print(path)
+            # print(path)
             # Strip "root" and square brackets, then remove quotes
             key_name = path.replace("root[", "").replace("]", "").replace("'", "")
             entities_to_patch_dict[key_name] = cleaned_modified[key_name]
@@ -626,15 +693,42 @@ class API:
 
         payload_remove = entities_to_remove_dict
         payload_patch = entities_to_patch_dict
+        # print("\n\n____payload_patch")
+        # print(payload_patch)
+        # quit()
 
         url_path = f"/project/{new_node.uuid}"
 
         patch_response = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(payload_patch))
 
         if patch_response.status_code in [400, 409]:
-            print("take the materials that exist and link it , then resend the other materials")
-            print(patch_response.json())
-            # raise ("error")
+
+            """take the materials that exist and link it , then resend the other materials"""
+            # print(patch_response.json())
+
+            if link_existing == True:
+
+                names_list_of_dicts = patch_response.json().get("error").split("item")[1].split("for")[0]
+                child_class_type = patch_response.json().get("error").split("item")[1].split("for")[1].strip().lower()
+
+                eval_names = eval(names_list_of_dicts)
+                # print(eval_names)
+                names_list = [name["name"].lower() for name in eval_names]
+                # print("names_list")
+
+                self.add_existing_nodes_by_name(
+                    parent_node=new_node,
+                    child_class_type=child_class_type,
+                    existing_child_node_names=names_list,
+                )
+
+                # need to retry for collection
+                payload_patch.pop(child_class_type)
+                patch_response2 = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(payload_patch))
+
+                # print("\n\n___patch_response2")
+                # print(patch_response2.json())
+                # quit()
 
         remove_response = self._capsule_request(url_path=url_path, method="DELETE", data=json.dumps(payload_remove))
 
@@ -643,11 +737,9 @@ class API:
             raise (remove_response.json())
             # raise ("error")
 
-        ######################################
-
         print(" - FINALLY WE GET ALL THE WAY TO THE END ")
 
-    # ==================================
+    # ======================================================================================================
     def save(self, project: Project) -> None:
         """
         This method takes a project node, serializes the class into JSON

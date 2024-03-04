@@ -146,8 +146,8 @@ def test_update_project_change_or_reset_materials_newly_made(cript_api) -> None:
     cr_res_list = create_response.json()["data"]["result"]
 
     if create_response.json()["code"] in [409, 400, 401]:
-        # print("---create_response")
-        # print(create_response)
+        print("---create_response")
+        print(create_response)
         raise ValueError(create_response)
 
     elif create_response.json()["code"] in [201, 200]:
@@ -286,6 +286,9 @@ def test_update_project_change_or_reset_material_to_existing_materials(cript_api
         assert len(edited_result.json()["data"]) == 1
 
         final = edited_result.json()["data"][0]
+
+        print("\n\n____final")
+        print(final)
 
         assert len(final["material"]) == 2  # styrene and toluene
 

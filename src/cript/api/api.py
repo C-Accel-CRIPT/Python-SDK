@@ -454,9 +454,12 @@ class API:
         entity_name = f"{child_class_type.lower()}"
         uuid_link_payload = {"node": parent_node.node, entity_name: []}
 
+        print("\n_____existing_child_node_names")
+        print(existing_child_node_names)
+
         for name in existing_child_node_names:
             # print(name.strip())
-            name = name.strip()
+            # name = name.strip()
 
             existing_node = next(self.search(child_class_object, search_mode=SearchModes.EXACT_NAME, value_to_search=name.strip()))
             existing_uuid = str(existing_node.uuid)
@@ -465,14 +468,18 @@ class API:
 
             API.add_to_dict(uuid_link_payload, key=entity_name, value={"uuid": f"{existing_uuid}"})
 
-            patch_response = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(uuid_link_payload))
+        patch_response = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(uuid_link_payload))
 
-            if patch_response.status_code in [200, 201]:
-                # print("worked")
-                # print(patch_response.json())
-                return patch_response
-            else:
-                raise ("error in patching existing item")
+        print("\n____HERE PATCH payload and RESP")
+        print("uuid_link_payload:  ", uuid_link_payload)
+        print("patch_response:  ", patch_response)
+
+        if patch_response.status_code in [200, 201]:
+            # print("worked")
+            # print(patch_response.json())
+            return patch_response
+        else:
+            raise ("error in patching existing item")
 
     def remove_nodes_by_name(
         self,
@@ -519,6 +526,8 @@ class API:
             return del_response
         else:
             raise ("error in patching existing item")
+
+    # ======================================================================================================
 
     def save_node(self, new_node: PrimaryBaseNode, link_existing=True):
 
@@ -693,9 +702,12 @@ class API:
 
         payload_remove = entities_to_remove_dict
         payload_patch = entities_to_patch_dict
-        # print("\n\n____payload_patch")
-        # print(payload_patch)
-        # quit()
+
+        print("\n\n____payload_remove")
+        print(payload_remove)
+
+        print("\n\n____payload_patch")
+        print(payload_patch)
 
         url_path = f"/project/{new_node.uuid}"
 
@@ -703,7 +715,7 @@ class API:
 
         if patch_response.status_code in [400, 409]:
 
-            """take the materials that exist and link it , then resend the other materials"""
+            print("""take the materials that exist and link it , then resend the other materials""")
             # print(patch_response.json())
 
             if link_existing == True:
@@ -726,12 +738,12 @@ class API:
                 payload_patch.pop(child_class_type)
                 patch_response2 = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(payload_patch))
 
-                # print("\n\n___patch_response2")
-                # print(patch_response2.json())
-                # quit()
+                print("\n\n___patch_response2")
+                print(patch_response2.json())
 
         remove_response = self._capsule_request(url_path=url_path, method="DELETE", data=json.dumps(payload_remove))
-
+        print("\n\n___patch_remove_response")
+        print(remove_response.json())
         if remove_response.status_code in [400, 409]:
             print("failed to remove these: ", remove_response.json())
             raise (remove_response.json())

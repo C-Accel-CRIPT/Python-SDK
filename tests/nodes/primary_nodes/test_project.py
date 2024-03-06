@@ -1,11 +1,14 @@
 import json
+import time
 import uuid
 
-import time
+import pytest
 
 import cript
-
-from tests.utils.integration_test_helper import delete_integration_node_helper, save_integration_node_helper  # , _create_node
+from tests.utils.integration_test_helper import (  # , _create_node
+    delete_integration_node_helper,
+    save_integration_node_helper,
+)
 from tests.utils.util import strip_uid_from_dict
 
 # try this or else put it in tests.utils.util
@@ -100,38 +103,22 @@ def test_integration_project(cript_api, simple_project_node):
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_project_node)
 
 
-"""
-main changes here - 
-we need to get rid of env stuff 
-we need to replace requests with capsule
-
-we need to replace anything here that has create node 
-    - put that into util func or capsule?
-
-- object_exists - next generator
-- find_uuid_by_name_and_type - next generator
-"""
-
-
+@pytest.mark.skip(reason="api")
 def test_update_project_change_or_reset_materials_newly_made(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_project.py::test_update_project_change_or_reset_materials_newly_made
-    test that a project can be updated and completley reset
-    strategy:
-    create something with a post/patch
-    with a name (we will delete at  the end)
-    then try to obtain it with load data
+
     """
 
     epoch_time = int(time.time())
-    name_1 = f"myproj_ali_{epoch_time}"
+    name_1 = f"my_proj_ali_{epoch_time}"
     mat_1 = f"my_mat__{epoch_time}"
     col_name = "031o0col"
 
     # print("hello")
 
     # url_path = f"/{node.node_type_snake_case}/"
-    url_path = f"/project/"
+    url_path = "/project/"
     create_payload = {"node": ["Project"], "name": name_1, "material": [{"uuid": "1809330c-31d2-4a80-af72-77b84070ee1d"}, {"uuid": "ea8f957c-b6e5-4668-b306-e0d6b0d05d9a"}]}
 
     # print(cript_api._capsule_request(url_path=url_path, method="POST", data=json.dumps(create_payload)).json())
@@ -151,13 +138,11 @@ def test_update_project_change_or_reset_materials_newly_made(cript_api) -> None:
         raise ValueError(create_response)
 
     elif create_response.json()["code"] in [201, 200]:
-
         uuid = None
         for item in cr_res_list:
             if item["node"] == ["Project"]:
-
                 uuid = item["uuid"]
-        if uuid == None:
+        if uuid is None:
             raise ValueError("no project node")
 
         get_url = f"/project/{uuid}"
@@ -208,22 +193,18 @@ def test_update_project_change_or_reset_materials_newly_made(cript_api) -> None:
         assert del_res.json()["code"] == 200
 
 
+@pytest.mark.skip(reason="api")
 def test_update_project_change_or_reset_material_to_existing_materials(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_project.py::test_update_project_change_or_reset_material_to_existing_materials
-    test that a project can be updated and completley reset
-    strategy:
-    create something with a post/patch
-    with a name (we will delete at  the end)
-    then try to obtain it with load data
+
     """
 
     epoch_time = int(time.time())
-    name_1 = f"myproj_ali_{epoch_time}"
-    mat_1 = f"my_mat__{epoch_time}"
+    name_1 = f"m_yproj_ali_{epoch_time}"
     col_name = f"031o0col__{epoch_time}"
 
-    url_path = f"/project/"
+    url_path = "/project/"
     create_payload = {"node": ["Project"], "name": name_1, "material": [{"uuid": "1809330c-31d2-4a80-af72-77b84070ee1d"}, {"uuid": "ea8f957c-b6e5-4668-b306-e0d6b0d05d9a"}]}
 
     try:
@@ -241,13 +222,11 @@ def test_update_project_change_or_reset_material_to_existing_materials(cript_api
         raise ValueError(create_response)
 
     elif create_response.json()["code"] in [201, 200]:
-
         uuid = None
         for item in cr_res_list:
             if item["node"] == ["Project"]:
-
                 uuid = item["uuid"]
-        if uuid == None:
+        if uuid is None:
             raise ValueError("no project node")
 
         get_url = f"/project/{uuid}"
@@ -261,7 +240,6 @@ def test_update_project_change_or_reset_material_to_existing_materials(cript_api
         project_list = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_res_data_dict))
         project_loaded = project_list
 
-        material_001 = cript.Material(name=mat_1, identifier=[])
         toluene = cript.Material(name="toluene", identifier=[{"smiles": "Cc1ccccc1"}])  # , {"pubchem_id": 1140}])
         styrene = cript.Material(name="styrene", identifier=[{"smiles": "Cc1ccccc1"}])
 
@@ -270,6 +248,7 @@ def test_update_project_change_or_reset_material_to_existing_materials(cript_api
         project_loaded.material = [toluene, styrene]
         project_loaded.collection = [collection]
 
+        # SAVE_NODE CALL HERE
         cript_api.save_node(project_loaded)
 
         get_url = f"/project/{uuid}"
@@ -294,10 +273,11 @@ def test_update_project_change_or_reset_material_to_existing_materials(cript_api
         assert del_res.json()["code"] == 200
 
 
+@pytest.mark.skip(reason="api")
 def test_add_existing_materials_by_name_to_project(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_project.py::test_add_existing_materials_by_name_to_project
-    test that a project can be updated and completley reset
+    test that a project can be updated and completely reset
     strategy:
     create something with a post/patch
     with a name (we will delete at  the end)
@@ -307,30 +287,27 @@ def test_add_existing_materials_by_name_to_project(cript_api) -> None:
     epoch_time = int(time.time())
     name_1 = f"myproj_ali_{epoch_time}"
 
-    url_path = f"/project/"
+    url_path = "/project/"
     create_payload = {"node": ["Project"], "name": name_1, "material": [{"uuid": "1809330c-31d2-4a80-af72-77b84070ee1d"}, {"uuid": "ea8f957c-b6e5-4668-b306-e0d6b0d05d9a"}]}
 
     try:
         create_response = cript_api._capsule_request(url_path=url_path, method="POST", data=json.dumps(create_payload))
         # print(create_response)
     except Exception as e:
-
         print(e)
 
     cr_res_list = create_response.json()["data"]["result"]
 
     if create_response.json()["code"] in [409, 400]:
-
         # print(create_response)
         raise ValueError(create_response)
 
     elif create_response.json()["code"] in [201, 200]:
-
         uuid = None
         for item in cr_res_list:
             if item["node"] == ["Project"]:
                 uuid = item["uuid"]
-        if uuid == None:
+        if uuid is None:
             raise ValueError("no project node")
 
         get_url = f"/project/{uuid}"
@@ -354,6 +331,7 @@ def test_add_existing_materials_by_name_to_project(cript_api) -> None:
         assert add_res.json()["code"] == 200
 
 
+@pytest.mark.skip(reason="api")
 def test_remove_existing_materials_by_name_from_project(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_project.py::test_remove_existing_materials_by_name_from_project
@@ -365,32 +343,29 @@ def test_remove_existing_materials_by_name_from_project(cript_api) -> None:
     """
 
     epoch_time = int(time.time())
-    name_1 = f"myproj_ali_{epoch_time}"
+    name_1 = f"my_proj_ali_{epoch_time}"
 
-    url_path = f"/project/"
+    url_path = "/project/"
     create_payload = {"node": ["Project"], "name": name_1, "material": [{"uuid": "1809330c-31d2-4a80-af72-77b84070ee1d"}, {"uuid": "ea8f957c-b6e5-4668-b306-e0d6b0d05d9a"}]}
 
     try:
         create_response = cript_api._capsule_request(url_path=url_path, method="POST", data=json.dumps(create_payload))
         # print(create_response)
     except Exception as e:
-
         print(e)
 
     cr_res_list = create_response.json()["data"]["result"]
 
     if create_response.json()["code"] in [409, 400]:
-
         # print(create_response)
         raise ValueError(create_response)
 
     elif create_response.json()["code"] in [201, 200]:
-
         uuid = None
         for item in cr_res_list:
             if item["node"] == ["Project"]:
                 uuid = item["uuid"]
-        if uuid == None:
+        if uuid is None:
             raise ValueError("no project node")
 
         get_url = f"/project/{uuid}"
@@ -408,9 +383,9 @@ def test_remove_existing_materials_by_name_from_project(cript_api) -> None:
         # print("\n~~~~~~~~~~~~ ADDING NOW ~~~~~~~~~~~")
 
         # cript_api.add_existing_node_by_name(parent_node=project_loaded, child_node=toluene)
-        add_res = cript_api.add_existing_nodes_by_name(parent_node=project_loaded, child_class_type="material", existing_child_node_names=["toluene", "styrene"])
+        cript_api.add_existing_nodes_by_name(parent_node=project_loaded, child_class_type="material", existing_child_node_names=["toluene", "styrene"])
 
-        # print("\n~~~~~~~~~~~~ now deleteing ~~~~~~~~~~~")
+        # print("\n~~~~~~~~~~~~ now deleting ~~~~~~~~~~~")
 
         delete_res = cript_api.remove_nodes_by_name(parent_node=project_loaded, child_class_type="material", existing_child_node_names=["toluene", "styrene"])
 

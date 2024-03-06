@@ -305,7 +305,7 @@ def test_material_property_node_change(cript_api) -> None:
     """
 
     epoch_time = int(time.time())
-    name_1 = f"myproj_ali_{epoch_time}"
+    name_1 = f"my_proj_ali_{epoch_time}"
     mat_1 = f"my_mat__{epoch_time}"
 
     url_path = "/project/"

@@ -201,7 +201,7 @@ def test_update_project_change_or_reset_material_to_existing_materials(cript_api
     """
 
     epoch_time = int(time.time())
-    name_1 = f"m_yproj_ali_{epoch_time}"
+    name_1 = f"my_proj_ali_{epoch_time}"
     col_name = f"031o0col__{epoch_time}"
 
     url_path = "/project/"
@@ -285,7 +285,7 @@ def test_add_existing_materials_by_name_to_project(cript_api) -> None:
     """
 
     epoch_time = int(time.time())
-    name_1 = f"myproj_ali_{epoch_time}"
+    name_1 = f"my_proj_ali_{epoch_time}"
 
     url_path = "/project/"
     create_payload = {"node": ["Project"], "name": name_1, "material": [{"uuid": "1809330c-31d2-4a80-af72-77b84070ee1d"}, {"uuid": "ea8f957c-b6e5-4668-b306-e0d6b0d05d9a"}]}
@@ -335,7 +335,7 @@ def test_add_existing_materials_by_name_to_project(cript_api) -> None:
 def test_remove_existing_materials_by_name_from_project(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_project.py::test_remove_existing_materials_by_name_from_project
-    test that a project can be updated and completley reset
+    test that a project can be updated and completely reset
     strategy:
     create something with a post/patch
     with a name (we will delete at  the end)

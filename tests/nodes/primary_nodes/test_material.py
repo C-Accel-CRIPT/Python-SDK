@@ -298,10 +298,11 @@ def test_material_property_node_add(cript_api) -> None:
         # assert del_res.json()["code"] == 200
 
 
-@pytest.mark.skip(reason="api")
+# @pytest.mark.skip(reason="api")
 def test_material_property_node_change(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_material.py::test_material_property_node_change
+
     """
 
     epoch_time = int(time.time())

@@ -193,7 +193,7 @@ def test_update_project_change_or_reset_materials_newly_made(cript_api) -> None:
         assert del_res.json()["code"] == 200
 
 
-@pytest.mark.skip(reason="api")
+# @pytest.mark.skip(reason="api")
 def test_update_project_change_or_reset_material_to_existing_materials(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_project.py::test_update_project_change_or_reset_material_to_existing_materials

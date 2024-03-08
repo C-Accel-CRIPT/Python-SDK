@@ -365,7 +365,7 @@ First, we'll create a virtual material with identifiers to make it easier to sea
 
 ```python
 # create a material node object with identifiers
-polystyrene = cript.Material(name="virtual polystyrene", bigsmiles="[H]{[>][<]C(C[>])c1ccccc1[<]}C(C)CC", names = ["poly(styrene)", "poly(vinylbenzene)", chem_repeat= ["C8H8"])
+polystyrene = cript.Material(name="virtual polystyrene", bigsmiles="[H]{[>][<]C(C[>])c1ccccc1[<]}C(C)CC", names = ["poly(styrene)", "poly(vinylbenzene)"], chem_repeat= ["C8H8"])
 ```
 
 ## Add [`Property`](../../nodes/subobjects/property) sub-objects

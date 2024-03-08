@@ -104,7 +104,7 @@ def test_integration_project(cript_api, simple_project_node):
 
 
 @pytest.mark.skip(reason="api")
-def test_update_project_change_or_reset_materials_newly_made(cript_api) -> None:
+def test_update_project_change_or_reset_newly_made_materials(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_project.py::test_update_project_change_or_reset_materials_newly_made
 

@@ -470,20 +470,6 @@ class API:
         print("😎")
         for item in old_list:
             print(type(item))
-        # for item in old_list:
-        #     print(type(item))
-
-        # print("old new list 1")
-        # print(old_list)
-        # print(new_list)
-
-        # old_list = [API.remove_keys_from_dict(item) for item in old_list]
-        # new_list = [API.remove_keys_from_dict(item) for item in new_list]
-
-        # print("old new list 2")
-        # print(old_list)
-        # print(new_list)
-        # quit()
 
         # Convert list of dictionaries to list of sorted JSON strings for comparison
         old_json_strings = {json.dumps(item, sort_keys=True) for item in old_list}
@@ -499,17 +485,10 @@ class API:
         added_dicts0 = [json.loads(item) for item in added]
         added_dicts = [API.remove_keys_from_dict(item) for item in added_dicts0]
 
-        print("❤️‍🔥❤️----❤️❤️❤️❤️❤️❤️❤️❤️")
+        print("❤️‍🔥⏳")
         print(added_dicts)
-        # removed = [{"uuid": item["uuid"]} for item in removed]
-        # quit()
 
-        # I think here we need to process the uuid for removal
-        # and the dictionary clean for the patch...
-        print("😍")
-
-        print("🤑")
-        return {"idea": "i'll return entity also...", "added": added_dicts, "removed": removed_dicts}
+        return {"added": added_dicts, "removed": removed_dicts}
 
     # ================================== ADD EXISTING NODES-NAMES===================================
     def add_existing_nodes_by_name(
@@ -647,23 +626,24 @@ class API:
 
         modified = json.loads(new_node.get_json().json)  # Assuming this is already a dictionary
 
-        print("\noriginal 1.1: ", original)
+        # print("\noriginal 1.1: ", original)
         # print(original)
         # quit()
+
         cleaned_original = original  # self.remove_keys_from_dict(original)
         cleaned_modified = modified  # self.remove_keys_from_dict(modified)
 
-        print("actually these are good for mat at least\n")
-        print(cleaned_original)
-        print("----")
-        print(cleaned_modified)
-        print("---------")
+        # print("actually these are good for mat at least\n")
+        # print(cleaned_original)
+        # print("----")
+        # print(cleaned_modified)
+        # print("---------")
         # print(cleaned_original["property"])
         # print(cleaned_modified["property"])
 
         # DEBUG IM NOT READY TO TRASH
-        print(type(cleaned_original))
-        print(type(cleaned_modified))
+        # print(type(cleaned_original))
+        # print(type(cleaned_modified))
 
         cleaned_original = self.preprocess_for_diff(cleaned_original)
         cleaned_modified = self.preprocess_for_diff(cleaned_modified)
@@ -672,13 +652,13 @@ class API:
 
         # Check types after preprocessing
 
-        if "material" in cleaned_original:
-            print("Type after preprocessing (original):", type(cleaned_original["material"]))
-            print("Type after preprocessing (modified):", type(cleaned_modified["material"]))
+        # if "material" in cleaned_original:
+        #     print("Type after preprocessing (original):", type(cleaned_original["material"]))
+        #     print("Type after preprocessing (modified):", type(cleaned_modified["material"]))
 
-        if "property" in cleaned_original:
-            print("Type after preprocessing (original):", type(cleaned_original["property"]))
-            print("Type after preprocessing (modified):", type(cleaned_modified["property"]))
+        # if "property" in cleaned_original:
+        #     print("Type after preprocessing (original):", type(cleaned_original["property"]))
+        #     print("Type after preprocessing (modified):", type(cleaned_modified["property"]))
         # ------------------___----------_______----
 
         exclude_regex_paths = [
@@ -728,17 +708,18 @@ class API:
             # pattern0 = r"^root\['(.+)'\]$"
             pattern1 = r"^\w+\['(\w+)'\]$"
 
-            print("\nkey")
-            print(key)
+            # print("\nkey")
+            # print(key)
+
             # quit()
             match = re.match(pattern1, key)
             if match:
-                print("\ndoes it match here for this test\n")
-                print("key")
-                print(key)
+                # print("\ndoes it match here for this test\n")
+                # print("key")
+                # print(key)
                 entity_name = match.group(1)  # This captures the "material" part
-                print("entity_name")
-                print(entity_name)
+                # print("entity_name")
+                # print(entity_name)
                 # quit()
 
                 # entity_name = key.split("['")[1].split("']")[0]
@@ -747,18 +728,19 @@ class API:
                 old_val_node_json = json.loads(value["old_value"])
                 new_val_node_json = json.loads(value["new_value"])
 
+                """
                 # if both old_val_node_json and new_val_node_json are both lists
                 # then compare which ones are added and which ones are removed
                 # maybe with another deep diff comparison
+                """
 
-                # if they a
-                print("old_val_node_json")
-                print(type(old_val_node_json))
-                print(old_val_node_json)
+                # print("old_val_node_json")
+                # print(type(old_val_node_json))
+                # print(old_val_node_json)
 
-                print("new_val_node_json")
-                print(type(new_val_node_json))
-                print(new_val_node_json)
+                # print("new_val_node_json")
+                # print(type(new_val_node_json))
+                # print(new_val_node_json)
 
                 if type(old_val_node_json) == list and type(new_val_node_json) == list:
                     print("here we getg")
@@ -818,6 +800,7 @@ class API:
         #######################################
 
         # 2) ITERABLE ITEMS ADDED
+        print("   2) ITERABLE ITEMS ADDED  ")
         for key, value in iterable_items_added.items():
             print(value)
 
@@ -834,6 +817,7 @@ class API:
             else:
                 print("warning no entity name")
 
+        # 3) DICT ITEMS ADDED
         print("  3) DICT ITEMS ADDED  ")
 
         for path in dictionary_items_added:
@@ -851,12 +835,11 @@ class API:
             else:
                 print("No key_name found in path")
 
-        # 3) REMOVE ITEMS  - UNLINKING
+        # 4) REMOVE ITEMS  - UNLINKING
         print("  4)  REMOVE ITEMS  - UNLINKING")
 
         for key, value in iterable_items_removed.items():
             # come back to fix
-            print("DO I GET TO 4 ??")
             pattern = r"^\w+\['\w+'\]\[\d+\]$"  # like "root['material'][0]"
             if re.match(pattern, key):
                 print("Do i get to 4 regex ??")

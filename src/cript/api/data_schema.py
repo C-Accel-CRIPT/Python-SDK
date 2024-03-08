@@ -223,9 +223,9 @@ class DataSchema:
         log_message += " ... "
 
         if force_validation:
-            log_message = "Forced: " + log_message + " if error occur, try setting `cript.API.skip_validation = False` for debugging."
+            log_message = "Forced: " + log_message + " if error occur, try setting `cript_api.schema.skip_validation = False` for debugging."
         else:
-            log_message += " (Can be disabled by setting `cript.API.skip_validation = True`.)"
+            log_message += " (Can be disabled by setting `cript_api.schema.skip_validation = True`.)"
 
         self._api.logger.info(log_message)
 

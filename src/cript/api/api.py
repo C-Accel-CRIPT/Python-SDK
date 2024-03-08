@@ -418,11 +418,98 @@ class API:
     def add_to_dict(cls, dictionary, key=None, value=None):
         # Check if the key exists in the dictionary
         if key in dictionary:
-            # Key exists, append the value to the list
-            dictionary[key].append(value)
+            # Check if the value is a list
+            if isinstance(value, list):
+                # Value is a list, extend the existing list with the new one
+                dictionary[key].extend(value)
+            else:
+                # Value is not a list, append it to the list
+                dictionary[key].append(value)
         else:
             # Key does not exist, create a new list with the value
-            dictionary[key] = [value]
+            # If the value is a list, use it directly; otherwise, create a list with one element
+            dictionary[key] = value if isinstance(value, list) else [value]
+
+    @staticmethod
+    def preprocess_for_diff(obj):
+        """
+        this is gonna be more important maybe overtaking the regular expressions.
+        it is making child fields a string a string
+
+        when taking in a parent node, making patch to parent, any child node will want to
+        the idea is that you take both fields, you make them both strings!!
+        that was the secret. and then compare
+        for example in project : material and material children - for original and modified, make them both strings and compare
+        in material : property and property children - for original and modified, make them both strings and compare
+        """
+
+        # this will probably be converted for every child node
+        # this will
+        if "property" in obj and isinstance(obj["property"], list):
+            print("Before preprocessing:", obj["property"])
+            # obj["property"] = [item.get_json() for item in obj["property"]]
+            obj["property"] = json.dumps(obj["property"], sort_keys=True)
+            print("After preprocessing:", obj["property"])
+
+        if "material" in obj and isinstance(obj["material"], list):
+            print("Before preprocessing:", obj["material"])
+            # obj["property"] = [item.get_json() for item in obj["property"]]
+            obj["material"] = json.dumps(obj["material"], sort_keys=True)
+            print("After preprocessing:", obj["material"])
+
+        return obj
+
+    @classmethod
+    def compare_json_lists(cls, old_list, new_list):
+        """
+        return {
+            "added": added_json,
+            "removed": removed_json
+                }
+        """
+        print("😎")
+        for item in old_list:
+            print(type(item))
+        # for item in old_list:
+        #     print(type(item))
+
+        # print("old new list 1")
+        # print(old_list)
+        # print(new_list)
+
+        # old_list = [API.remove_keys_from_dict(item) for item in old_list]
+        # new_list = [API.remove_keys_from_dict(item) for item in new_list]
+
+        # print("old new list 2")
+        # print(old_list)
+        # print(new_list)
+        # quit()
+
+        # Convert list of dictionaries to list of sorted JSON strings for comparison
+        old_json_strings = {json.dumps(item, sort_keys=True) for item in old_list}
+        new_json_strings = {json.dumps(item, sort_keys=True) for item in new_list}
+
+        # Find differences
+        added = new_json_strings - old_json_strings  # Present in new but not in old
+        removed = old_json_strings - new_json_strings  # Present in old but not in new
+
+        removed_dicts = [{"uuid": json.loads(item).get("uuid")} for item in removed]
+
+        # Convert JSON strings back to dictionaries
+        added_dicts0 = [json.loads(item) for item in added]
+        added_dicts = [API.remove_keys_from_dict(item) for item in added_dicts0]
+
+        print("❤️‍🔥❤️----❤️❤️❤️❤️❤️❤️❤️❤️")
+        print(added_dicts)
+        # removed = [{"uuid": item["uuid"]} for item in removed]
+        # quit()
+
+        # I think here we need to process the uuid for removal
+        # and the dictionary clean for the patch...
+        print("😍")
+
+        print("🤑")
+        return {"idea": "i'll return entity also...", "added": added_dicts, "removed": removed_dicts}
 
     # ================================== ADD EXISTING NODES-NAMES===================================
     def add_existing_nodes_by_name(
@@ -520,21 +607,10 @@ class API:
     # ======================================================================================================
 
     def save_node(self, new_node: PrimaryBaseNode, link_existing=True):
-        def preprocess_for_diff(obj):
-            """
-            when taking in a parent node, making patch to parent, any child node will want to
-            the idea is that you take both fields, you make them both strings!!
-            that was the secret. and then compare
-            for example in project : material and material children - for original and modified, make them both strings and compare
-            in material : property and property children - for original and modified, make them both strings and compare
-            """
-            print("Before preprocessing:", obj["property"])
-            # this will probably be converted for every child node
-            if "property" in obj and isinstance(obj["property"], list):
-                # obj["property"] = [item.get_json() for item in obj["property"]]
-                obj["property"] = json.dumps(obj["property"], sort_keys=True)
-            print("After preprocessing:", obj["property"])
-            return obj
+        # print("new_node dir")
+        # print(dir(new_node))
+        # print(new_node.find_children())
+        # quit()
 
         # try to create or else fail
         try:
@@ -542,11 +618,15 @@ class API:
             get_url = f"/{node_type}/{new_node.uuid}"
             try:
                 original = self._capsule_request(url_path=get_url, method="GET").json()["data"][0]
+                print("\noriginal 1: ", original)
             except Exception as e:
                 original = None
                 # raise ValueError(f"No data available in response {response}")
 
-            existing_uuid = self.search(Material, search_mode=SearchModes.EXACT_NAME, value_to_search=new_node.name)  # "return uuid with next"  # self.object_exists(node=node_type, name=new_node.name):
+            class_type = new_node.node[0]
+            klass = globals().get(class_type.capitalize(), None)
+            # klass = Material or Project depending on node
+            existing_uuid = self.search(klass, search_mode=SearchModes.EXACT_NAME, value_to_search=new_node.name)  # "return uuid with next"  # self.object_exists(node=node_type, name=new_node.name):
             if (original is None) and existing_uuid:
                 raise ValueError("this name already exists stored under a different uuid")
 
@@ -559,6 +639,7 @@ class API:
                 elif response.json()["code"] == 200:
                     original_dict = response.json()["data"]["result"][0]
                     original = original_dict
+                    print("\noriginal 2: ", original)
 
             else:
                 # this would have been fetched above for a non project node
@@ -566,8 +647,11 @@ class API:
 
         modified = json.loads(new_node.get_json().json)  # Assuming this is already a dictionary
 
-        cleaned_original = self.remove_keys_from_dict(original)
-        cleaned_modified = self.remove_keys_from_dict(modified)
+        print("\noriginal 1.1: ", original)
+        # print(original)
+        # quit()
+        cleaned_original = original  # self.remove_keys_from_dict(original)
+        cleaned_modified = modified  # self.remove_keys_from_dict(modified)
 
         print("actually these are good for mat at least\n")
         print(cleaned_original)
@@ -581,16 +665,24 @@ class API:
         print(type(cleaned_original))
         print(type(cleaned_modified))
 
-        cleaned_original = preprocess_for_diff(cleaned_original)
-        cleaned_modified = preprocess_for_diff(cleaned_modified)
+        cleaned_original = self.preprocess_for_diff(cleaned_original)
+        cleaned_modified = self.preprocess_for_diff(cleaned_modified)
 
         # ------------------___----------_______----
 
         # Check types after preprocessing
-        print("Type after preprocessing (original):", type(cleaned_original["property"]))
-        print("Type after preprocessing (modified):", type(cleaned_modified["property"]))
+
+        if "material" in cleaned_original:
+            print("Type after preprocessing (original):", type(cleaned_original["material"]))
+            print("Type after preprocessing (modified):", type(cleaned_modified["material"]))
+
+        if "property" in cleaned_original:
+            print("Type after preprocessing (original):", type(cleaned_original["property"]))
+            print("Type after preprocessing (modified):", type(cleaned_modified["property"]))
+        # ------------------___----------_______----
 
         exclude_regex_paths = [
+            r"root(\[.*\])?\['uuid'\]",
             r"root(\[.*\])?\['uid'\]",
             r"root\['\w+_count'\]",  # All the attributes that end with _count
             r"root(\[.*\])?\['\w+_count'\]",  # All the attributes that end with _count
@@ -608,9 +700,10 @@ class API:
         diff_ = DeepDiff(cleaned_original, cleaned_modified, exclude_regex_paths=exclude_regex_paths, ignore_order=True)
         diff_dict = diff_.to_dict()
 
-        print(" here is diff trying to see for process how it changes")
+        print(" \nhere is diff trying to see for process how it changes\n")
         print(diff_dict)
-        quit()
+
+        # quit()
 
         try:
             values_changed = diff_dict.get("values_changed", {})
@@ -621,8 +714,8 @@ class API:
         except Exception as e:
             print(e)
 
-        entities_to_patch_dict = {}  # entities_to_patch_dict["node"] = new_node.node
-        entities_to_remove_dict = {}  # entities_to_patch_dict["node"] = new_node.node
+        entities_to_patch_dict = {}
+        entities_to_remove_dict = {}
 
         # 1) VALUES CHANGED
         print("  1)   VALUES CHANGED ")
@@ -631,47 +724,106 @@ class API:
         print(values_changed)
 
         for key, value in values_changed.items():
-            pattern1 = r"^\w+\['\w+'\]\[\d+\]$"  # which pattern is this for
+            # pattern1 = r"^\w+\['\w+'\]\[\d+\]$"  # which pattern is this for
+            # pattern0 = r"^root\['(.+)'\]$"
+            pattern1 = r"^\w+\['(\w+)'\]$"
 
-            if re.match(pattern1, key):
+            print("\nkey")
+            print(key)
+            # quit()
+            match = re.match(pattern1, key)
+            if match:
                 print("\ndoes it match here for this test\n")
-                quit()
+                print("key")
+                print(key)
+                entity_name = match.group(1)  # This captures the "material" part
+                print("entity_name")
+                print(entity_name)
+                # quit()
 
-                entity_name = key.split("['")[1].split("']")[0]
-                value["new_value"]
-                old_val_node_dict = value["old_value"]
-                node_to_remove = next(self.search(node_type=Material, search_mode=SearchModes.EXACT_NAME, value_to_search=old_val_node_dict["name"]))
+                # entity_name = key.split("['")[1].split("']")[0]
+                # value["new_value"]
 
-                if node_to_remove:
-                    uuid_to_remove = node_to_remove.uuid
-                    API.add_to_dict(entities_to_remove_dict, key=entity_name, value={"uuid": f"{uuid_to_remove}"})
-                else:
-                    print("uuid is None (values changed)")
+                old_val_node_json = json.loads(value["old_value"])
+                new_val_node_json = json.loads(value["new_value"])
 
-                node_to_add = value["new_value"]  # gotta do a search by uuid on the name and node
-                API.add_to_dict(entities_to_patch_dict, key=entity_name, value=node_to_add)
+                # if both old_val_node_json and new_val_node_json are both lists
+                # then compare which ones are added and which ones are removed
+                # maybe with another deep diff comparison
 
-            entities_to_patch_dict["node"] = new_node.node
-            entities_to_remove_dict["node"] = new_node.node
+                # if they a
+                print("old_val_node_json")
+                print(type(old_val_node_json))
+                print(old_val_node_json)
+
+                print("new_val_node_json")
+                print(type(new_val_node_json))
+                print(new_val_node_json)
+
+                if type(old_val_node_json) == list and type(new_val_node_json) == list:
+                    print("here we getg")
+                    nodes_to_add_remove = API.compare_json_lists(old_val_node_json, new_val_node_json)
+                    # print("go to Add Dict:", add_remove_result["added"])
+                    # print(f"go to Remove Dict:", nodes_to_add_remove["removed"])
+                    # then pass this into the add to dict for respective stuff
+
+                    # API.add_to_dict(entities_to_remove_dict, key=entity_name, value=remove_list)
+
+                    # nodes_to_add = nodes_to_add_remove["added"]  # value["new_value"]  # gotta do a search by uuid on the name and node
+                    API.add_to_dict(entities_to_patch_dict, key=entity_name, value=nodes_to_add_remove["added"])
+                    API.add_to_dict(entities_to_remove_dict, key=entity_name, value=nodes_to_add_remove["removed"])
+
+                # quit()
+                # child_class_type = entity_name
+                # klass = globals().get(child_class_type.capitalize(), None)
+                # # klass = Material or Project depending on entity
+
+                # remove_list = []
+                # for item in result["removed"]:
+
+                #     # parent node then match json to get the property node
+
+                #     print("\noriginal: ", original)
+                #     print("\nitem: ", item)
+                #     # quit()
+
+                #     node_to_remove = next(self.search(node_type=klass, search_mode=SearchModes.EXACT_NAME, value_to_search=item["name"]))
+
+                #     if node_to_remove:
+                #         uuid_to_remove = node_to_remove.uuid
+                #         remove_list.append({"uuid": f"{uuid_to_remove}"})
+                #     else:
+                #         print("uuid is None (values changed)")
+
+                # API.add_to_dict(entities_to_remove_dict, key=entity_name, value=remove_list)
+
+                # node_to_add = result["added"]  # value["new_value"]  # gotta do a search by uuid on the name and node
+                # API.add_to_dict(entities_to_patch_dict, key=entity_name, value=node_to_add)
+
+        ###################################
+        entities_to_patch_dict["node"] = new_node.node
+        entities_to_remove_dict["node"] = new_node.node
+
+        print("entities_to_patch_dict")
+        print(entities_to_patch_dict)
+        print("entities_to_remove_dict")
+        print(entities_to_remove_dict)
+        print("remove_list")
+
+        remove_list = nodes_to_add_remove["removed"]
+        print(remove_list)
+
+        print("😭👽🤡😭👽🤡😭👽🤡")
 
         #######################################
 
         # 2) ITERABLE ITEMS ADDED
-        print("  2)   ITERABLE ITEMS ADDED ")
-
         for key, value in iterable_items_added.items():
             print(value)
 
-            # needs to be addressed maybe a static method
-            # dsi = DataSchema()
-            # dsi.is_node_schema_valid(node_json=value)
-            # DataSchema.is_node_schema_valid()
-
-            # Use split to parse out the entity name from the key
-            try:
-                entity_name = key.split("['")[1].split("']")[0]
-            except IndexError:
-                entity_name = None
+            # Using regular expression to match the pattern
+            match = re.search(r"\['(.*?)'\]", key)
+            entity_name = match.group(1) if match else None
 
             # Proceed with the rest of the logic as before
             if entity_name:
@@ -688,19 +840,26 @@ class API:
             print("\n__________path")
             print(path)
             print("----------")
-            # Strip "root" and square brackets, then remove quotes
+            # Use regular expression to extract key_name
 
-            # key_name = path.replace("root[", "").replace("]", "").replace("'", "")
-            key_name = path.split("[")[1].replace("]", "").replace("'", "")
-            print("key_name: ", key_name)
-            entities_to_patch_dict[key_name] = cleaned_modified[key_name]
+            match = re.search(r"\[(?:'([^']+)'|([^\]]+))\]", path)
+            if match:
+                key_name = match.group(1) if match.group(1) else match.group(2)
+                print("key_name: ", key_name)
+                # Replace the direct dictionary update with a call to API.add_to_dict
+                API.add_to_dict(entities_to_patch_dict, key=key_name, value=cleaned_modified[key_name])
+            else:
+                print("No key_name found in path")
 
         # 3) REMOVE ITEMS  - UNLINKING
         print("  4)  REMOVE ITEMS  - UNLINKING")
 
         for key, value in iterable_items_removed.items():
+            # come back to fix
+            print("DO I GET TO 4 ??")
             pattern = r"^\w+\['\w+'\]\[\d+\]$"  # like "root['material'][0]"
             if re.match(pattern, key):
+                print("Do i get to 4 regex ??")
                 try:
                     entity_name = key.split("['")[1].split("']")[0]
 
@@ -711,20 +870,23 @@ class API:
                 print(entity_name)
 
                 node_to_remove = next(self.search(node_type=Material, search_mode=SearchModes.EXACT_NAME, value_to_search=value["name"]))
+                # OK come back here
+                # do this the uuid way
 
                 if node_to_remove:
                     uuid_to_remove = node_to_remove.uuid
                     API.add_to_dict(entities_to_remove_dict, key=entity_name, value={"uuid": f"{uuid_to_remove}"})
+                    # remove_list.append({"uuid": uuid_to_remove})
                 else:
                     print("uuid is None")
                     print(value)
             else:
                 print("warning no entity name")
 
-        # entities_to_remove_dict["node"] = new_node.node
+        entities_to_remove_dict["node"] = new_node.node
         entities_to_patch_dict["node"] = new_node.node
 
-        payload_remove = entities_to_remove_dict
+        payload_remove = entities_to_remove_dict  # remove_list
         payload_patch = entities_to_patch_dict
 
         print("\n\n____payload_patch_remove")
@@ -773,18 +935,20 @@ class API:
         print("\nentities_to_remove_dict: ", entities_to_remove_dict)
 
         if payload_remove != {"node": new_node.node}:  # if its just this for payload remove
+            print("patch remove url_path2: ", url_path)
             remove_response = self._capsule_request(url_path=url_path, method="DELETE", data=json.dumps(payload_remove))
             print("\n\n___patch_remove_response")
             print(remove_response.json())
-            print("patch remove url_path: ", url_path)
+            # print("patch remove url_path: ", url_path)
 
             if remove_response.status_code in [400, 409]:
+                print("are we here")
                 print("failed to remove these: ", remove_response.json())
                 raise (remove_response.json())
                 # raise ("error")
 
         # print("\n ... ")
-        # return url_path
+        return url_path
 
     # ======================================================================================================
     def save(self, project: Project) -> None:

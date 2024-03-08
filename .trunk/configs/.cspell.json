@@ -121,6 +121,7 @@
     "doctest",
     "Doctest",
     "Doctests",
-    "linenums"
+    "linenums",
+    "chrom"
   ]
 }

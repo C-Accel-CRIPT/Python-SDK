@@ -219,7 +219,7 @@ def simple_material_node() -> cript.Material:
     simple material node to use between tests
     """
     # Use a unique name
-    my_material = cript.Material(name="my test material " + str(uuid.uuid4()), bigsmiles="{[][$]CC[$][]}")
+    my_material = cript.Material(name="my test material " + str(uuid.uuid4()), bigsmiles="{[][$]COC[$][]}")
 
     return my_material
 

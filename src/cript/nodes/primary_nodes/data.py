@@ -459,7 +459,7 @@ class Data(PrimaryBaseNode):
         ...    data_dictionary="my file's data dictionary"
         ... )
         >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
-        >>> my_material = cript.Material(name="my material name", bigsmiles = 123456)
+        >>> my_material = cript.Material(name="my material name", bigsmiles = "123456")
         >>> my_data.material = [my_material]
 
         Returns

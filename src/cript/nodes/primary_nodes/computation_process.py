@@ -368,7 +368,7 @@ class ComputationProcess(PrimaryBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_material = cript.Material(name="my material", "bigsmiles" = "my bigsmiles")
+        >>> my_material = cript.Material(name="my material", bigsmiles = "my bigsmiles")
         >>> my_quantity = cript.Quantity(
         ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
         ... )

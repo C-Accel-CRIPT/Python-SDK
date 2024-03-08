@@ -373,7 +373,7 @@ class Material(PrimaryBaseNode):
         >>> my_mixed_material = cript.Material(
         ...     name="my material",
         ...     component=my_components,
-        ...     "bigsmiles" = "123456",
+        ...     bigsmiles = "123456",
         ... )
 
         Returns
@@ -486,7 +486,7 @@ class Material(PrimaryBaseNode):
         --------
         >>> import cript
         >>> my_material = cript.Material(
-        ... name="my material", "inchi" = "my material inchi"
+        ... name="my material", inchi = "my material inchi"
         ... )
         >>> my_material.keyword = ["acetylene", "acrylate", "alternating"]
 
@@ -536,7 +536,7 @@ class Material(PrimaryBaseNode):
         >>> import cript
         >>> my_material = cript.Material(
         ...     name="my component material 1",
-        ...     "smiles" = "component 1 smiles",
+        ...     smiles = "component 1 smiles",
         ... )
         >>> my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
         >>> my_material.property = [my_property]

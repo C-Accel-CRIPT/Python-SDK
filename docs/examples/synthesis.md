@@ -129,7 +129,7 @@ Similarly, we can create more initial materials.
 toluene = cript.Material(name="toluene", smiles="Cc1ccccc1", pubchem_cid = 1140)
 styrene = cript.Material(name="styrene", smiles = "c1ccccc1C=C", inchi = "InChI=1S/C8H8/c1-2-8-6-4-3-5-7-8/h2-7H,1H2")
 butanol = cript.Material(name="1-butanol", smiles = "OCCCC", inchi_key = "InChIKey=LRHPLDYGYMQRHN-UHFFFAOYSA-N")
-methanol = cript.Material(name="methanol", smiles = "CO", names = ["Butan-1-ol", "Butyric alcohol", "Methylolpropane", "n-Butan-1-ol", "methanol"]}])
+methanol = cript.Material(name="methanol", smiles = "CO", names = ["Butan-1-ol", "Butyric alcohol", "Methylolpropane", "n-Butan-1-ol", "methanol"])
 ```
 
 Now that we defined those materials, we can combine them into an inventory

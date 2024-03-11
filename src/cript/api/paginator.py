@@ -142,9 +142,9 @@ class Paginator:
 
         if api_response["code"] == 404 and api_response["error"] == "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.":
             current_page_results = []
-
+            self._api.logger.debug(f"The paginator hit a 404 HTTP for requesting this {temp_url_path} with GET. We interpret it as no nodes present, but this is brittle at the moment.")
         # if API response is not 200 raise error for the user to debug
-        if api_response["code"] != 200:
+        elif api_response["code"] != 200:
             raise APIError(api_error=str(response.json()), http_method="GET", api_url=temp_url_path)
 
         # Here we only load the JSON into the temporary results.

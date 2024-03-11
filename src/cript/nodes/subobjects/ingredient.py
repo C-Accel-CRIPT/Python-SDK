@@ -106,8 +106,8 @@ class Ingredient(UUIDBaseNode):
         super().__init__(**kwargs)
         if keyword is None:
             keyword = []
-        self._json_attrs = replace(self._json_attrs, material=material, quantity=quantity, keyword=keyword)
-        self.validate()
+        new_json_attrs = replace(self._json_attrs, material=material, quantity=quantity, keyword=keyword)
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @classmethod
     def _from_json(cls, json_dict: dict):

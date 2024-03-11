@@ -94,8 +94,8 @@ class Equipment(UUIDBaseNode):
         if citation is None:
             citation = []
         super().__init__(**kwargs)
-        self._json_attrs = replace(self._json_attrs, key=key, description=description, condition=condition, file=file, citation=citation)
-        self.validate()
+        new_json_attrs = replace(self._json_attrs, key=key, description=description, condition=condition, file=file, citation=citation)
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype

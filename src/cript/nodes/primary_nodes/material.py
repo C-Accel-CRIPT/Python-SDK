@@ -126,7 +126,7 @@ class Material(PrimaryBaseNode):
         if keyword is None:
             keyword = []
 
-        self._json_attrs = replace(
+        new_json_attrs = replace(
             self._json_attrs,
             name=name,
             identifier=identifier,
@@ -137,6 +137,7 @@ class Material(PrimaryBaseNode):
             computational_forcefield=computational_forcefield,
             keyword=keyword,
         )
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype

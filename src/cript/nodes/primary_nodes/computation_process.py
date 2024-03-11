@@ -154,7 +154,7 @@ class ComputationProcess(PrimaryBaseNode):
         >>> input_data = cript.Data(name="my data name", type="afm_amp", file=[data_files])
         >>> my_material = cript.Material(
         ...     name="my material",
-        ...     identifier=[{"alternative_names": "my material alternative name"}]
+        ...     identifier=[{"names": ["my material alternative name"]}]
         ... )
         >>> my_quantity = cript.Quantity(key="mass", value=1.23, unit="kg")
         >>> ingredient = cript.Ingredient(
@@ -220,7 +220,7 @@ class ComputationProcess(PrimaryBaseNode):
         if citation is None:
             citation = []
 
-        self._json_attrs = replace(
+        new_json_attrs = replace(
             self._json_attrs,
             type=type,
             input_data=input_data,
@@ -231,8 +231,7 @@ class ComputationProcess(PrimaryBaseNode):
             property=property,
             citation=citation,
         )
-
-        # self.validate()
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype

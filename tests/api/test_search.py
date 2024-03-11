@@ -24,6 +24,8 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
 
     # test search results
     assert isinstance(materials_paginator, Paginator)
+    materials_paginator.skip_pages(3)
+    materials_paginator.limit_page_fetches(3)
     materials_list = []
     while True:
         try:
@@ -39,12 +41,9 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
                 materials_paginator.auto_load_nodes = True
         except StopIteration:
             break
-        # We don't need to search for a million pages here.
-        if materials_paginator._number_fetched_pages > 6:
-            break
 
     # Assure that we paginated more then one page
-    assert materials_paginator._number_fetched_pages > 0
+    assert materials_paginator.page_number == 6
     assert len(materials_list) > 5
     first_page_first_result = materials_list[0].name
     # just checking that the word has a few characters in it
@@ -102,6 +101,25 @@ def test_api_search_uuid(cript_api: cript.API, dynamic_material_data) -> None:
     assert len(uuid_list) == 1
     assert uuid_list[0].name == dynamic_material_data["name"]
     assert str(uuid_list[0].uuid) == dynamic_material_data["uuid"]
+
+
+@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
+def test_empty_paginator(cript_api: cript.API) -> None:
+    non_existent_name = "This is an nonsensical name for a material and should never exist. %^&*()_"
+    exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=non_existent_name)
+    with pytest.raises(StopIteration):
+        next(exact_name_paginator)
+    exact_name_paginator.auto_load_nodes = False
+    with pytest.raises(StopIteration):
+        next(exact_name_paginator)
+
+    # Special 0 UUID should not exist
+    uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search="00000000-0000-0000-0000-000000000000")
+    with pytest.raises(StopIteration):
+        next(uuid_paginator)
+    exact_name_paginator.auto_load_nodes = False
+    with pytest.raises(StopIteration):
+        next(uuid_paginator)
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")

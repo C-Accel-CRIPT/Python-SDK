@@ -59,10 +59,10 @@ class API:
     _host: str = ""
     _api_token: str = ""
     _storage_token: str = ""
-    _http_headers: dict = {}
     _db_schema: Optional[DataSchema] = None
     _api_prefix: str = "api"
     _api_version: str = "v1"
+    _api_request_session: Union[None, requests.Session] = None
 
     # trunk-ignore-begin(cspell)
     # AWS S3 constants
@@ -213,9 +213,6 @@ class API:
         self._api_token = api_token  # type: ignore
         self._storage_token = storage_token  # type: ignore
 
-        # add Bearer to token for HTTP requests
-        self._http_headers = {"Authorization": f"Bearer {self._api_token}", "Content-Type": "application/json"}
-
         # set a logger instance to use for the class logs
         self._init_logger(default_log_level)
 
@@ -322,6 +319,14 @@ class API:
         CRIPTConnectionError
             raised when the host does not give the expected response
         """
+
+        # Establish a requests session object
+        if self._api_request_session:
+            self.disconnect()
+        self._api_request_session = requests.Session()
+        # add Bearer to token for HTTP requests
+        self._api_request_session.headers = {"Authorization": f"Bearer {self._api_token}", "Content-Type": "application/json"}
+
         # As a form to check our connection, we pull and establish the data schema
         try:
             self._db_schema = DataSchema(self)
@@ -344,6 +349,10 @@ class API:
 
         For manual connection: nested API object are discouraged.
         """
+        # Disconnect request session
+        if self._api_request_session:
+            self._api_request_session.close()
+
         # Restore the previously active global API (might be None)
         global _global_cached_api
         _global_cached_api = self._previous_global_cached_api
@@ -946,7 +955,7 @@ class API:
 
         self.logger.info(f"Deleted '{node_type.title()}' with UUID of '{node_uuid}' from CRIPT API.")
 
-    def _capsule_request(self, url_path: str, method: str, api_request: bool = True, headers: Optional[Dict] = None, timeout: int = _API_TIMEOUT, **kwargs) -> requests.Response:
+    def _capsule_request(self, url_path: str, method: str, api_request: bool = True, timeout: int = _API_TIMEOUT, **kwargs) -> requests.Response:
         """Helper function that capsules every request call we make against the backend.
 
         Please *always* use this methods instead of `requests` directly.
@@ -971,9 +980,6 @@ class API:
           additional keyword arguments that are passed to `request.request`
         """
 
-        if headers is None:
-            headers = self._http_headers
-
         url: str = self.host
         if api_request:
             url += f"/{self.api_prefix}/{self.api_version}"
@@ -985,7 +991,9 @@ class API:
         pre_log_message += "..."
         self.logger.debug(pre_log_message)
 
-        response: requests.Response = requests.request(url=url, method=method, headers=headers, timeout=timeout, **kwargs)
+        if self._api_request_session is None:
+            raise CRIPTAPIRequiredError
+        response: requests.Response = self._api_request_session.request(url=url, method=method, timeout=timeout, **kwargs)
         post_log_message: str = f"Request return with {response.status_code}"
         if self.extra_api_log_debug_info:
             post_log_message += f" {response.text}"

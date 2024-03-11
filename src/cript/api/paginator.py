@@ -33,6 +33,8 @@ class Paginator:
     _current_position: int
     _fetched_nodes: list
     _number_fetched_pages: int = 0
+    _limit_page_fetches: Union[int, None] = None
+    _num_skip_pages: int = 0
     auto_load_nodes: bool = True
 
     @beartype
@@ -103,11 +105,15 @@ class Paginator:
              None
         """
 
+        # Check if we are supposed to fetch more pages
+        if self._limit_page_fetches and self._number_fetched_pages >= self._limit_page_fetches:
+            raise StopIteration
+
         # Composition of the query URL
         temp_url_path: str = self._url_path
         temp_url_path += f"/?q={self._query}"
         if self._initial_page_number is not None:
-            temp_url_path += f"&page={self._initial_page_number + self._number_fetched_pages}"
+            temp_url_path += f"&page={self.page_number}"
         self._number_fetched_pages += 1
 
         response: requests.Response = self._api._capsule_request(url_path=temp_url_path, method="GET")
@@ -136,9 +142,9 @@ class Paginator:
 
         if api_response["code"] == 404 and api_response["error"] == "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.":
             current_page_results = []
-
+            self._api.logger.debug(f"The paginator hit a 404 HTTP for requesting this {temp_url_path} with GET. We interpret it as no nodes present, but this is brittle at the moment.")
         # if API response is not 200 raise error for the user to debug
-        if api_response["code"] != 200:
+        elif api_response["code"] != 200:
             raise APIError(api_error=str(response.json()), http_method="GET", api_url=temp_url_path)
 
         # Here we only load the JSON into the temporary results.
@@ -174,3 +180,66 @@ class Paginator:
     def __iter__(self):
         self._current_position = 0
         return self
+
+    @property
+    def page_number(self) -> Union[int, None]:
+        """Obtain the current page number the paginator is fetching next.
+
+        Returns
+        -------
+        int
+          positive number of the next page this paginator is fetching.
+        None
+          if no page number is associated with the pagination
+        """
+        page_number = self._num_skip_pages + self._number_fetched_pages
+        if self._initial_page_number is not None:
+            page_number += self._initial_page_number
+        return page_number
+
+    @beartype
+    def limit_page_fetches(self, max_num_pages: Union[int, None]) -> None:
+        """Limit pagination to a maximum number of pages.
+
+        This can be used for very large searches with the paginator, so the search can be split into
+        smaller portions.
+
+        Parameters
+        ----------
+        max_num_pages: Union[int, None],
+          positive integer with maximum number of page fetches.
+          or None, indicating unlimited number of page fetches are permitted.
+        """
+        self._limit_page_fetches = max_num_pages
+
+    def skip_pages(self, skip_pages: int) -> int:
+        """Skip pages in the pagination.
+
+        Warning this function is advanced usage and may not produce the results you expect.
+        In particular, every search is different, even if we search for the same values there is
+        no guarantee that the results are in the same order. (And results can change if data is
+        added or removed from CRIPT.) So if you break up your search with `limit_page_fetches` and
+        `skip_pages` there is no guarantee that it is the same as one continuous search.
+        If the paginator associated search does not accept pages, there is no effect.
+
+        Parameters
+        ----------
+        skip_pages:int
+          Number of pages that the paginator skips now before fetching the next page.
+          The parameter is added to the internal state, so repeated calls skip more pages.
+
+        Returns
+        -------
+        int
+          The number this paginator is skipping. Internal skip count.
+
+        Raises
+        ------
+        RuntimeError
+          If the total number of skipped pages is negative.
+        """
+        num_skip_pages = self._num_skip_pages + skip_pages
+        if self._num_skip_pages < 0:
+            RuntimeError(f"Invalid number of skipped pages. The total number of pages skipped is negative {num_skip_pages}, requested to skip {skip_pages}.")
+        self._num_skip_pages = num_skip_pages
+        return self._num_skip_pages

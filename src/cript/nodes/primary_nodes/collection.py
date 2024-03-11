@@ -105,7 +105,7 @@ class Collection(PrimaryBaseNode):
         if citation is None:
             citation = []
 
-        self._json_attrs = replace(
+        new_json_attrs = replace(
             self._json_attrs,
             name=name,
             experiment=experiment,
@@ -113,8 +113,7 @@ class Collection(PrimaryBaseNode):
             doi=doi,
             citation=citation,
         )
-
-        self.validate()
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype

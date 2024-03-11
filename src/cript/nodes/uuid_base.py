@@ -76,3 +76,7 @@ class UUIDBaseNode(BaseNode, ABC):
     @property
     def created_at(self):
         return self._json_attrs.created_at
+
+    def __iter__(self) -> NodeIterator:
+        """Enables DFS iteration over all children."""
+        return NodeIterator(self)

@@ -7,6 +7,18 @@ import cript
 from conftest import HAS_INTEGRATION_TESTS_ENABLED
 from cript.nodes.uuid_base import UUIDBaseNode
 
+# import requests
+
+
+# def _create_node(cript_api: cript.API, node_type, data):
+#     if node_type == "project":  # elif node type is something else it will have a parent
+#         # headers = {"Authorization": f"Bearer {Config.api_token}", "Content-Type": "application/json"}
+#         headers = cript_api._http_headers
+#         url = "https://lb-stage.mycriptapp.org/api/v1/project/"
+
+#         response = requests.post(url, json=data, headers=headers)
+#         return response
+
 
 def save_integration_node_helper(cript_api: cript.API, project_node: cript.Project):
     """
@@ -52,7 +64,7 @@ def save_integration_node_helper(cript_api: cript.API, project_node: cript.Proje
     print(project_node.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json)
     print("==============================================================")
 
-    cript_api.save(project_node)
+    cript_api.save(project_node)  # cript_api.save_node(project_node) (if this passes then great!)
 
     # get the project that was just saved
     my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=project_node.name)

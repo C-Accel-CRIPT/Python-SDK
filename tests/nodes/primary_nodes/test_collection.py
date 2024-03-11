@@ -1,6 +1,9 @@
 import copy
 import json
+import time
 import uuid
+
+import pytest
 
 import cript
 from tests.utils.integration_test_helper import (
@@ -188,3 +191,89 @@ def test_integration_collection(cript_api, simple_project_node, simple_collectio
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_collection_node)
+
+
+@pytest.mark.skip(reason="api and WIP")
+def test_collection_inventory_node_change(cript_api) -> None:
+    """
+    pytest nodes/primary_nodes/test_material.py::test_material_property_node_change
+
+    WIP
+    change the inventory by changing the list of inventory objects
+    an  inventory object will have a field "materials" a list of material nodes
+    """
+
+    epoch_time = int(time.time())
+    name_1 = f"my_proj_ali_{epoch_time}"
+    mat_1 = f"my_mat__{epoch_time}"
+
+    url_path = "/project/"
+    create_payload = {"node": ["Project"], "name": name_1, "inventory": [{"node": ["Inventory"], "name": "inventory_" + mat_1, "material": [{"node": ["Material"], "name": mat_1 + "mat"}]}]}
+
+    try:
+        create_response = cript_api._capsule_request(url_path=url_path, method="POST", data=json.dumps(create_payload))
+        print(create_response)
+    except Exception as e:
+        print(e)
+
+    print(create_response.json())
+    cr_res_list = create_response.json()["data"]["result"]
+
+    if create_response.json()["code"] in [409, 400, 401]:
+        print("---create_response")
+        print(create_response)
+        raise ValueError(create_response)
+
+    elif create_response.json()["code"] in [201, 200]:
+        print("---create_response")
+        print(create_response.json())
+
+        uuid = None
+        for item in cr_res_list:
+            if item["node"] == ["Material"]:
+                uuid = item["uuid"]
+            if item["node"] == ["Project"]:
+                uuid = item["uuid"]
+            if item["node"] == ["Colection"]:
+                uuid = item["uuid"]
+            # do inventory here
+        if uuid is None:
+            raise ValueError("no material node")
+
+        get_url1 = f"/material/{uuid}"
+        print("---get_url1: ", get_url1)
+
+        result = cript_api._capsule_request(url_path=get_url1, method="GET")
+
+        result_json_dict = result.json()
+        print("\nresult_json_dict :", result_json_dict)
+
+        my_mat_from_res_data_dict = result_json_dict["data"][0]
+
+        mat_list = cript.load_nodes_from_json(nodes_json=json.dumps(my_mat_from_res_data_dict))
+        mat_loaded = mat_list
+
+        print("mat_loaded")
+        print(mat_loaded)
+
+        # create a color property
+        # property_001 = cript.Property(name=mat_1, identifier=[])
+        color = cript.Property(key="color", value="white", type="none", unit=None)
+
+        print("TOTAL RESET ON THIS")
+        mat_loaded.property = [color]
+
+        """
+        1 - get existing material node by uuid - paginator
+          - or create material node with a property
+
+        2 - make an edit to a child node (property or process or component)
+        3 - save the node
+        """
+
+        print("\n~~~~~~~~~~~~ SAVING NOW ~~~~~~~~~~~")
+        print(mat_loaded)  # material_loaded
+        print("--//--")
+        # print(dir(mat_loaded))
+
+        url_path = cript_api.save_node(mat_loaded)  # material_loaded

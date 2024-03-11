@@ -463,7 +463,11 @@ class BaseNode(ABC):
         NodeEncoder.condense_to_uuid = condense_to_uuid
 
         try:
-            return ReturnTuple(json.dumps(self, cls=NodeEncoder, **kwargs), NodeEncoder.handled_ids)
+            tmp_json = json.dumps(self, cls=NodeEncoder, **kwargs)
+            if is_patch:
+                del tmp_json["uuid"]  # patches do not allow UUID is the parent most node
+            tmp_dict = json.loads(tmp_json)
+            return ReturnTuple(tmp_dict, NodeEncoder.handled_ids)
         except Exception as exc:
             # TODO this handling that doesn't tell the user what happened and how they can fix it
             #   this just tells the user that something is wrong

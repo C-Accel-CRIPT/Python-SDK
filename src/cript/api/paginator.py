@@ -192,8 +192,10 @@ class Paginator:
         None
           if no page number is associated with the pagination
         """
+        page_number = self._num_skip_pages + self._number_fetched_pages
         if self._initial_page_number is not None:
-            return self._num_skip_pages + self._initial_page_number + self._number_fetched_pages
+            page_number += self._initial_page_number
+        return page_number
 
     @beartype
     def limit_page_fetches(self, max_num_pages: Union[int, None]) -> None:

@@ -244,7 +244,7 @@ class Experiment(PrimaryBaseNode):
         ... )
         >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
         >>> my_material = cript.Material(
-        ...     name="my material name", identifier=[{"bigsmiles": "123456"}]
+        ...     name="my material name", bigsmiles = "123456"
         ... )
         >>> my_quantity = cript.Quantity(
         ... key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"

@@ -47,7 +47,7 @@ def test_load_node_from_json_dict_argument() -> None:
     # assert material is correctly deserialized from JSON dict to Material Python object
     assert type(my_material_node_from_dict) == cript.Material
     assert my_material_node_from_dict.name == material_name
-    assert my_material_node_from_dict.identifier[0]["bigsmiles"] == "my bigsmiles"
+    assert my_material_node_from_dict.bigsmiles == "my bigsmiles"
 
     # convert UUID object to UUID str and compare
     assert str(my_material_node_from_dict.uuid) == material_uuid

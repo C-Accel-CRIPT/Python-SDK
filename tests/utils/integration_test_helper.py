@@ -58,7 +58,7 @@ def save_integration_node_helper(cript_api: cript.API, project_node: cript.Proje
     my_paginator = cript_api.search(node_type=cript.Project, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=project_node.name)
 
     # get the project from paginator
-    my_project_from_api_node = my_paginator.next()
+    my_project_from_api_node = next(my_paginator)
 
     print("\n\n================= API Response Node ============================")
     print(json.dumps(my_project_from_api_node.json, sort_keys=False, indent=2))

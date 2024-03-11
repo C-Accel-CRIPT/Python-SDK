@@ -177,7 +177,7 @@ def complex_process_node(complex_ingredient_node, simple_equipment_node, complex
     my_process_description = "my simple material description"
 
     process_waste = [
-        cript.Material(name="my process waste material 1", identifier=[{"bigsmiles": "process waste bigsmiles"}]),
+        cript.Material(name="my process waste material 1", bigsmiles="CC{[$][$]COC[$][]}"),
     ]
 
     my_process_keywords = [
@@ -218,9 +218,8 @@ def simple_material_node() -> cript.Material:
     """
     simple material node to use between tests
     """
-    identifier = [{"bigsmiles": "123456"}]
     # Use a unique name
-    my_material = cript.Material(name="my test material " + str(uuid.uuid4()), identifier=identifier)
+    my_material = cript.Material(name="my test material " + str(uuid.uuid4()), bigsmiles="{[][$]COC[$][]}")
 
     return my_material
 
@@ -231,7 +230,7 @@ def simple_material_dict() -> dict:
     the dictionary that `simple_material_node` produces
     putting it in one location to make updating it easy
     """
-    simple_material_dict: dict = {"node": ["Material"], "name": "my material", "bigsmiles": "123456"}
+    simple_material_dict: dict = {"node": ["Material"], "name": "my material", "bigsmiles": "{[][$]COC[$][]}"}
 
     return simple_material_dict
 
@@ -249,7 +248,7 @@ def complex_material_dict(simple_property_node, simple_process_node, complex_com
     material_dict["process"] = json.loads(simple_process_node.get_json(condense_to_uuid={}).json)
     material_dict["parent_material"] = json.loads(simple_material_node.get_json(condense_to_uuid={}).json)
     material_dict["computational_forcefield"] = json.loads(complex_computational_forcefield_node.get_json(condense_to_uuid={}).json)
-    material_dict["bigsmiles"] = "my complex_material_node"
+    material_dict["bigsmiles"] = "{[][$]CC[$][]}"
     material_dict["keyword"] = my_material_keyword
 
     return strip_uid_from_dict(material_dict)
@@ -260,12 +259,11 @@ def complex_material_node(simple_property_node, simple_process_node, complex_com
     """
     complex Material node with all possible attributes filled
     """
-    my_identifier = [{"bigsmiles": "my complex_material_node"}]
     my_material_keyword = ["acetylene"]
 
     my_complex_material = cript.Material(
         name="my complex material",
-        identifier=my_identifier,
+        bigsmiles="{[][$]CC[$][]}",
         property=[simple_property_node],
         process=copy.deepcopy(simple_process_node),
         parent_material=simple_material_node,
@@ -283,7 +281,7 @@ def simple_inventory_node(simple_material_node) -> None:
     """
     # set up inventory node
 
-    material_2 = cript.Material(name="material 2 " + str(uuid.uuid4()), identifier=[{"bigsmiles": "my big smiles"}])
+    material_2 = cript.Material(name="material 2 " + str(uuid.uuid4()), bigsmiles="{[][$]COC[$][]}")
 
     my_inventory = cript.Inventory(name="my inventory name", material=[simple_material_node, material_2])
 

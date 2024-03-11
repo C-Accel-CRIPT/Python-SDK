@@ -196,10 +196,6 @@ class NodeEncoder(json.JSONEncoder):
                         processed_attribute = process_attribute(attribute_to_condense)
                         serialize_dict[attribute] = processed_attribute
 
-        # Check if the node is "Material" and convert the identifiers list to JSON fields
-        if serialize_dict["node"] == ["Material"]:
-            serialize_dict = _material_identifiers_list_to_json_fields(serialize_dict)
-
         return serialize_dict, uid_of_condensed
 
 
@@ -354,52 +350,6 @@ def load_nodes_from_json(nodes_json: Union[str, Dict]):
     if not isinstance(nodes_json, str):
         nodes_json = json.dumps(nodes_json)
     return json.loads(nodes_json, object_hook=node_json_hook)
-
-
-def _material_identifiers_list_to_json_fields(serialize_dict: Dict) -> Dict:
-    """
-    input:
-    ```json
-        {
-            "node":["Material"],
-            "name":"my material",
-            "identifier":[ {"cas":"my material cas"} ],
-            "uid":"_:a78203cb-82ea-4376-910e-dee74088cd37"
-        }
-    ```
-
-    output:
-    ```json
-    {
-        "node":["Material"],
-        "name":"my material",
-        "cas":"my material cas",
-        "uid":"_:08018f4a-e8e3-4ac0-bdad-fa704fdc0145"
-    }
-    ```
-
-    Parameters
-    ----------
-    serialize_dict: Dict
-        the serialized dictionary of the node
-
-    Returns
-    -------
-    serialized_dict = Dict
-        new dictionary that has converted the list of dictionary identifiers into the dictionary as fields
-
-    """
-
-    # TODO this if statement might not be needed in future
-    if "identifier" in serialize_dict:
-        for identifier in serialize_dict["identifier"]:
-            for key, value in identifier.items():
-                serialize_dict[key] = value
-
-        # remove identifiers list of objects after it has been flattened
-        del serialize_dict["identifier"]
-
-    return serialize_dict
 
 
 def _rename_field(serialize_dict: Dict, old_name: str, new_name: str) -> Dict:

@@ -293,10 +293,10 @@ class BaseNode(ABC):
         >>> my_project = cript.Project(name=f"my_Project")
         >>> my_collection = cript.Collection(name="my collection")
         >>> my_material_1 = cript.Material(
-        ...     name="my material 1", identifier=[{"bigsmiles": "my material 1 bigsmiles"}]
+        ...     name="my material 1", bigsmiles = "my material 1 bigsmiles"
         ... )
         >>> my_material_2 = cript.Material(
-        ...     name="my material 2", identifier=[{"bigsmiles": "my material 2 bigsmiles"}]
+        ...     name="my material 2", bigsmiles = "my material 2 bigsmiles"
         ... )
         >>> my_inventory = cript.Inventory(
         ...     name="my inventory", material=[my_material_1, my_material_2]
@@ -511,10 +511,10 @@ class BaseNode(ABC):
         >>> my_project = cript.Project(name=f"my_Project")
         >>> my_collection = cript.Collection(name="my collection")
         >>> my_material_1 = cript.Material(
-        ...     name="my material 1", identifier=[{"bigsmiles": "my material 1 bigsmiles"}]
+        ...     name="my material 1", bigsmiles = "my material 1 bigsmiles"
         ... )
         >>> my_material_2 = cript.Material(
-        ...     name="my material 2", identifier=[{"bigsmiles": "my material 2 bigsmiles"}]
+        ...     name="my material 2", bigsmiles = "my material 2 bigsmiles"
         ... )
         >>> my_inventory = cript.Inventory(
         ...     name="my inventory", material=[my_material_1, my_material_2]

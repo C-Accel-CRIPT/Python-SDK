@@ -206,8 +206,7 @@ class Project(PrimaryBaseNode):
         --------
         >>> import cript
         >>> my_project = cript.Project(name="my Project name")
-        >>> identifier = [{"bigsmiles": "my big smiles"}]
-        >>> my_material = cript.Material(name="my material", identifier=identifier)
+        >>> my_material = cript.Material(name="my material", bigsmiles="my bigsmiles")
         >>> my_project.material = [my_material]
 
         Returns

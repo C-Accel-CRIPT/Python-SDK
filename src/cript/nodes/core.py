@@ -203,7 +203,7 @@ class BaseNode(ABC):
             pass
 
         try:
-            attrs = replace(attrs, uuid=str(attrs.uuid))
+            attrs = replace(attrs, uuid=str(attrs.uuid))  # type: ignore
         except AttributeError:
             pass
 

@@ -105,9 +105,6 @@ class BaseNode(ABC):
         """
         return str(asdict(self._json_attrs))
 
-    def __iter__(self):
-        return NodeIterator(self)
-
     @property
     def uid(self):
         return self._json_attrs.uid

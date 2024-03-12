@@ -18,132 +18,133 @@ from cript.nodes.exceptions import (
 )
 from tests.utils.util import strip_uid_from_dict
 
-# def test_removing_nodes(simple_algorithm_node, complex_parameter_node, simple_algorithm_dict):
-#     a = simple_algorithm_node
-#     p = complex_parameter_node
-#     a.parameter += [p]
-#     assert strip_uid_from_dict(json.loads(a.json)) != simple_algorithm_dict
-#     a.remove_child(p)
-#     assert strip_uid_from_dict(json.loads(a.json)) == simple_algorithm_dict
+
+def test_removing_nodes(simple_algorithm_node, complex_parameter_node, simple_algorithm_dict):
+    a = simple_algorithm_node
+    p = complex_parameter_node
+    a.parameter += [p]
+    assert strip_uid_from_dict(json.loads(a.json)) != simple_algorithm_dict
+    a.remove_child(p)
+    assert strip_uid_from_dict(json.loads(a.json)) == simple_algorithm_dict
 
 
-# def test_uid_deserialization(simple_algorithm_node, complex_parameter_node, simple_algorithm_dict):
-#     material = cript.Material(name="my material", bigsmiles="{[][$]CC[$][]}")
+def test_uid_deserialization(simple_algorithm_node, complex_parameter_node, simple_algorithm_dict):
+    material = cript.Material(name="my material", bigsmiles="{[][$]CC[$][]}")
 
-#     computation = cript.Computation(name="my computation name", type="analysis")
-#     property1 = cript.Property("modulus_shear", "value", 5.0, "GPa", computation=[computation])
-#     property2 = cript.Property("modulus_loss", "value", 5.0, "GPa", computation=[computation])
-#     material.property = [property1, property2]
+    computation = cript.Computation(name="my computation name", type="analysis")
+    property1 = cript.Property("modulus_shear", "value", 5.0, "GPa", computation=[computation])
+    property2 = cript.Property("modulus_loss", "value", 5.0, "GPa", computation=[computation])
+    material.property = [property1, property2]
 
-#     material2 = cript.load_nodes_from_json(material.json)
-#     assert json.loads(material.json) == json.loads(material2.json)
+    material2 = cript.load_nodes_from_json(material.json)
+    assert json.loads(material.json) == json.loads(material2.json)
 
-#     material3_dict = {
-#         "node": ["Material"],
-#         "uid": "_:f6d56fdc-9df7-49a1-a843-cf92681932ad",
-#         "uuid": "f6d56fdc-9df7-49a1-a843-cf92681932ad",
-#         "name": "my material",
-#         "property": [
-#             {
-#                 "node": ["Property"],
-#                 "uid": "_:82e7270e-9f35-4b35-80a2-faa6e7f670be",
-#                 "uuid": "82e7270e-9f35-4b35-80a2-faa6e7f670be",
-#                 "key": "modulus_shear",
-#                 "type": "value",
-#                 "value": 5.0,
-#                 "unit": "GPa",
-#                 "computation": [{"uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef"}],
-#             },
-#             {
-#                 "node": ["Property"],
-#                 "uid": "_:fc4dfa5e-742c-4d0b-bb66-2185461f4582",
-#                 "uuid": "fc4dfa5e-742c-4d0b-bb66-2185461f4582",
-#                 "key": "modulus_loss",
-#                 "type": "value",
-#                 "value": 5.0,
-#                 "unit": "GPa",
-#                 "computation": [
-#                     {
-#                         "uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef",
-#                     }
-#                 ],
-#             },
-#         ],
-#         "bigsmiles": "123456",
-#     }
+    material3_dict = {
+        "node": ["Material"],
+        "uid": "_:f6d56fdc-9df7-49a1-a843-cf92681932ad",
+        "uuid": "f6d56fdc-9df7-49a1-a843-cf92681932ad",
+        "name": "my material",
+        "property": [
+            {
+                "node": ["Property"],
+                "uid": "_:82e7270e-9f35-4b35-80a2-faa6e7f670be",
+                "uuid": "82e7270e-9f35-4b35-80a2-faa6e7f670be",
+                "key": "modulus_shear",
+                "type": "value",
+                "value": 5.0,
+                "unit": "GPa",
+                "computation": [{"uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef"}],
+            },
+            {
+                "node": ["Property"],
+                "uid": "_:fc4dfa5e-742c-4d0b-bb66-2185461f4582",
+                "uuid": "fc4dfa5e-742c-4d0b-bb66-2185461f4582",
+                "key": "modulus_loss",
+                "type": "value",
+                "value": 5.0,
+                "unit": "GPa",
+                "computation": [
+                    {
+                        "uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef",
+                    }
+                ],
+            },
+        ],
+        "bigsmiles": "123456",
+    }
 
-#     with pytest.raises(cript.nodes.exceptions.CRIPTDeserializationUIDError):
-#         cript.load_nodes_from_json(json.dumps(material3_dict))
+    with pytest.raises(cript.nodes.exceptions.CRIPTDeserializationUIDError):
+        cript.load_nodes_from_json(json.dumps(material3_dict))
 
-#     # TODO convince beartype to allow _ProxyUID as well
-#     # material4_dict = {
-#     #     "node": [
-#     #         "Material"
-#     #     ],
-#     #     "uid": "_:f6d56fdc-9df7-49a1-a843-cf92681932ad",
-#     #     "uuid": "f6d56fdc-9df7-49a1-a843-cf92681932ad",
-#     #     "name": "my material",
-#     #     "property": [
-#     #         {
-#     #             "node": [
-#     #                 "Property"
-#     #             ],
-#     #             "uid": "_:82e7270e-9f35-4b35-80a2-faa6e7f670be",
-#     #             "uuid": "82e7270e-9f35-4b35-80a2-faa6e7f670be",
-#     #             "key": "modulus_shear",
-#     #             "type": "value",
-#     #             "value": 5.0,
-#     #             "unit": "GPa",
-#     #             "computation": [
-#     #                 {
-#     #                     "node": [
-#     #                         "Computation"
-#     #                     ],
-#     #                     "uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef"
-#     #                 }
-#     #             ]
-#     #         },
-#     #         {
-#     #             "node": [
-#     #                 "Property"
-#     #             ],
-#     #             "uid": "_:fc4dfa5e-742c-4d0b-bb66-2185461f4582",
-#     #             "uuid": "fc4dfa5e-742c-4d0b-bb66-2185461f4582",
-#     #             "key": "modulus_loss",
-#     #             "type": "value",
-#     #             "value": 5.0,
-#     #             "unit": "GPa",
-#     #             "computation": [
-#     #                 {
-#     #                     "node": [
-#     #                         "Computation"
-#     #                     ],
-#     #                     "uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef",
-#     #                     "uuid": "9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef",
-#     #                     "name": "my computation name",
-#     #                     "type": "analysis",
-#     #                     "citation": []
-#     #                 }
-#     #             ]
-#     #         }
-#     #     ],
-#     #     "bigsmiles": "123456"
-#     # }
+    # TODO convince beartype to allow _ProxyUID as well
+    # material4_dict = {
+    #     "node": [
+    #         "Material"
+    #     ],
+    #     "uid": "_:f6d56fdc-9df7-49a1-a843-cf92681932ad",
+    #     "uuid": "f6d56fdc-9df7-49a1-a843-cf92681932ad",
+    #     "name": "my material",
+    #     "property": [
+    #         {
+    #             "node": [
+    #                 "Property"
+    #             ],
+    #             "uid": "_:82e7270e-9f35-4b35-80a2-faa6e7f670be",
+    #             "uuid": "82e7270e-9f35-4b35-80a2-faa6e7f670be",
+    #             "key": "modulus_shear",
+    #             "type": "value",
+    #             "value": 5.0,
+    #             "unit": "GPa",
+    #             "computation": [
+    #                 {
+    #                     "node": [
+    #                         "Computation"
+    #                     ],
+    #                     "uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef"
+    #                 }
+    #             ]
+    #         },
+    #         {
+    #             "node": [
+    #                 "Property"
+    #             ],
+    #             "uid": "_:fc4dfa5e-742c-4d0b-bb66-2185461f4582",
+    #             "uuid": "fc4dfa5e-742c-4d0b-bb66-2185461f4582",
+    #             "key": "modulus_loss",
+    #             "type": "value",
+    #             "value": 5.0,
+    #             "unit": "GPa",
+    #             "computation": [
+    #                 {
+    #                     "node": [
+    #                         "Computation"
+    #                     ],
+    #                     "uid": "_:9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef",
+    #                     "uuid": "9ddda2c0-ff8c-4ce3-beb0-e0cafb6169ef",
+    #                     "name": "my computation name",
+    #                     "type": "analysis",
+    #                     "citation": []
+    #                 }
+    #             ]
+    #         }
+    #     ],
+    #     "bigsmiles": "123456"
+    # }
 
-#     # material4 = cript.load_nodes_from_json(json.dumps(material4_dict))
-#     # assert json.loads(material.json) == json.loads(material4.json)
+    # material4 = cript.load_nodes_from_json(json.dumps(material4_dict))
+    # assert json.loads(material.json) == json.loads(material4.json)
 
 
-# def test_json_error(complex_parameter_node):
-#     parameter = complex_parameter_node
-#     # Let's break the node by violating the data model
-#     parameter._json_attrs = replace(parameter._json_attrs, value="abc")
-#     with pytest.raises(CRIPTNodeSchemaError):
-#         parameter.validate()
-#     # Let's break it completely
-#     parameter._json_attrs = None
-#     with pytest.raises(CRIPTJsonSerializationError):
-#         parameter.json
+def test_json_error(complex_parameter_node):
+    parameter = complex_parameter_node
+    # Let's break the node by violating the data model
+    parameter._json_attrs = replace(parameter._json_attrs, value="abc")
+    with pytest.raises(CRIPTNodeSchemaError):
+        parameter.validate()
+    # Let's break it completely
+    parameter._json_attrs = None
+    with pytest.raises(CRIPTJsonSerializationError):
+        parameter.json
 
 
 def test_local_search(simple_algorithm_node, complex_parameter_node):
@@ -195,140 +196,140 @@ def test_local_search(simple_algorithm_node, complex_parameter_node):
     assert find_parameter == []
 
 
-# def test_cycles(complex_data_node, simple_computation_node):
-#     # We create a wrong cycle with parameters here.
-#     # TODO replace this with nodes that actually can form a cycle
-#     d = copy.deepcopy(complex_data_node)
-#     c = copy.deepcopy(simple_computation_node)
-#     d.computation += [c]
-#     # Using input and output data guarantees a cycle here.
-#     c.output_data += [d]
-#     c.input_data += [d]
+def test_cycles(complex_data_node, simple_computation_node):
+    # We create a wrong cycle with parameters here.
+    # TODO replace this with nodes that actually can form a cycle
+    d = copy.deepcopy(complex_data_node)
+    c = copy.deepcopy(simple_computation_node)
+    d.computation += [c]
+    # Using input and output data guarantees a cycle here.
+    c.output_data += [d]
+    c.input_data += [d]
 
-#     # # Test the repetition of a citation.
-#     # # Notice that we do not use a deepcopy here, as we want the citation to be the exact same node.
-#     # citation = d.citation[0]
-#     # # c._json_attrs.citation.append(citation)
-#     # c.citation += [citation]
-#     # # print(c.get_json(indent=2).json)
-#     # # c.validate()
+    # # Test the repetition of a citation.
+    # # Notice that we do not use a deepcopy here, as we want the citation to be the exact same node.
+    # citation = d.citation[0]
+    # # c._json_attrs.citation.append(citation)
+    # c.citation += [citation]
+    # # print(c.get_json(indent=2).json)
+    # # c.validate()
 
-#     # Generate json with an implicit cycle
-#     c.json
-#     d.json
-
-
-# def test_uid_serial(simple_inventory_node):
-#     simple_inventory_node.material += simple_inventory_node.material
-#     json_dict = json.loads(simple_inventory_node.get_json(condense_to_uuid={}).json)
-#     assert len(json_dict["material"]) == 4
-#     assert isinstance(json_dict["material"][2]["uid"], str)
-#     assert json_dict["material"][2]["uid"].startswith("_:")
-#     assert len(json_dict["material"][2]["uid"]) == len(get_new_uid())
-#     assert isinstance(json_dict["material"][3]["uid"], str)
-#     assert json_dict["material"][3]["uid"].startswith("_:")
-#     assert len(json_dict["material"][3]["uid"]) == len(get_new_uid())
-#     assert json_dict["material"][3]["uid"] != json_dict["material"][2]["uid"]
+    # Generate json with an implicit cycle
+    c.json
+    d.json
 
 
-# def test_invalid_json_load():
-#     def raise_node_dict(node_dict):
-#         node_str = json.dumps(node_dict)
-#         with pytest.raises(CRIPTJsonNodeError):
-#             cript.load_nodes_from_json(node_str)
-
-#     node_dict = {"node": "Computation"}
-#     raise_node_dict(node_dict)
-#     node_dict = {"node": []}
-#     raise_node_dict(node_dict)
-#     node_dict = {"node": ["asdf", "asdf"]}
-#     raise_node_dict(node_dict)
-#     node_dict = {"node": [None]}
-#     raise_node_dict(node_dict)
+def test_uid_serial(simple_inventory_node):
+    simple_inventory_node.material += simple_inventory_node.material
+    json_dict = json.loads(simple_inventory_node.get_json(condense_to_uuid={}).json)
+    assert len(json_dict["material"]) == 4
+    assert isinstance(json_dict["material"][2]["uid"], str)
+    assert json_dict["material"][2]["uid"].startswith("_:")
+    assert len(json_dict["material"][2]["uid"]) == len(get_new_uid())
+    assert isinstance(json_dict["material"][3]["uid"], str)
+    assert json_dict["material"][3]["uid"].startswith("_:")
+    assert len(json_dict["material"][3]["uid"]) == len(get_new_uid())
+    assert json_dict["material"][3]["uid"] != json_dict["material"][2]["uid"]
 
 
-# def test_invalid_project_graphs(simple_project_node, simple_material_node, simple_process_node, simple_property_node, simple_data_node, simple_computation_node, simple_computation_process_node):
-#     project = copy.deepcopy(simple_project_node)
-#     process = copy.deepcopy(simple_process_node)
-#     material = copy.deepcopy(simple_material_node)
+def test_invalid_json_load():
+    def raise_node_dict(node_dict):
+        node_str = json.dumps(node_dict)
+        with pytest.raises(CRIPTJsonNodeError):
+            cript.load_nodes_from_json(node_str)
 
-#     ingredient = cript.Ingredient(material=material, quantity=[cript.Quantity(key="mass", value=1.23, unit="kg")])
-#     process.ingredient += [ingredient]
+    node_dict = {"node": "Computation"}
+    raise_node_dict(node_dict)
+    node_dict = {"node": []}
+    raise_node_dict(node_dict)
+    node_dict = {"node": ["asdf", "asdf"]}
+    raise_node_dict(node_dict)
+    node_dict = {"node": [None]}
+    raise_node_dict(node_dict)
 
-#     # Add the process to the experiment, but not in inventory or materials
-#     # Invalid graph
-#     project.collection[0].experiment[0].process += [process]
-#     with pytest.raises(CRIPTOrphanedMaterialError):
-#         project.validate()
 
-#     # First fix add material to inventory
-#     project.collection[0].inventory += [cript.Inventory("test_inventory", material=[material])]
-#     project.validate()
-#     # Reverse this fix
-#     project.collection[0].inventory = []
-#     with pytest.raises(CRIPTOrphanedMaterialError):
-#         project.validate()
+def test_invalid_project_graphs(simple_project_node, simple_material_node, simple_process_node, simple_property_node, simple_data_node, simple_computation_node, simple_computation_process_node):
+    project = copy.deepcopy(simple_project_node)
+    process = copy.deepcopy(simple_process_node)
+    material = copy.deepcopy(simple_material_node)
 
-#     # Fix by add to the materials list instead.
-#     # Using the util helper function for this.
-#     cript.add_orphaned_nodes_to_project(project, active_experiment=None, max_iteration=10)
-#     project.validate()
+    ingredient = cript.Ingredient(material=material, quantity=[cript.Quantity(key="mass", value=1.23, unit="kg")])
+    process.ingredient += [ingredient]
 
-#     # Now add an orphan process to the graph
-#     process2 = copy.deepcopy(simple_process_node)
-#     process.prerequisite_process += [process2]
-#     with pytest.raises(CRIPTOrphanedProcessError):
-#         project.validate()
+    # Add the process to the experiment, but not in inventory or materials
+    # Invalid graph
+    project.collection[0].experiment[0].process += [process]
+    with pytest.raises(CRIPTOrphanedMaterialError):
+        project.validate()
 
-#     # Wrong fix it helper node
-#     dummy_experiment = copy.deepcopy(project.collection[0].experiment[0])
-#     with pytest.raises(RuntimeError):
-#         cript.add_orphaned_nodes_to_project(project, dummy_experiment)
-#     # Problem still persists
-#     with pytest.raises(CRIPTOrphanedProcessError):
-#         project.validate()
-#     # Fix by using the helper function correctly
-#     cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
-#     project.validate()
+    # First fix add material to inventory
+    project.collection[0].inventory += [cript.Inventory("test_inventory", material=[material])]
+    project.validate()
+    # Reverse this fix
+    project.collection[0].inventory = []
+    with pytest.raises(CRIPTOrphanedMaterialError):
+        project.validate()
 
-#     # We add property to the material, because that adds the opportunity for orphaned data and computation
-#     property = copy.deepcopy(simple_property_node)
-#     material.property += [property]
-#     project.validate()
-#     # Now add an orphan data
-#     data = copy.deepcopy(simple_data_node)
-#     property.data = [data]
-#     with pytest.raises(CRIPTOrphanedDataError):
-#         project.validate()
-#     # Fix with the helper function
-#     cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
-#     project.validate()
+    # Fix by add to the materials list instead.
+    # Using the util helper function for this.
+    cript.add_orphaned_nodes_to_project(project, active_experiment=None, max_iteration=10)
+    project.validate()
 
-#     # Add an orphan Computation
-#     computation = copy.deepcopy(simple_computation_node)
-#     property.computation += [computation]
-#     with pytest.raises(CRIPTOrphanedComputationError):
-#         project.validate()
-#     # Fix with the helper function
-#     cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
-#     project.validate()
+    # Now add an orphan process to the graph
+    process2 = copy.deepcopy(simple_process_node)
+    process.prerequisite_process += [process2]
+    with pytest.raises(CRIPTOrphanedProcessError):
+        project.validate()
 
-#     # Add orphan computational process
-#     comp_proc = copy.deepcopy(simple_computation_process_node)
-#     data.computation_process += [comp_proc]
-#     with pytest.raises(CRIPTOrphanedComputationalProcessError):
-#         while True:
-#             try:  # Do trigger not orphan materials
-#                 project.validate()
-#             except CRIPTOrphanedMaterialError as exc:
-#                 project._json_attrs.material.append(exc.orphaned_node)
-#             except CRIPTOrphanedProcessError as exc:
-#                 project.collection[0].experiment[0]._json_attrs.process.append(exc.orphaned_node)
-#             else:
-#                 break
+    # Wrong fix it helper node
+    dummy_experiment = copy.deepcopy(project.collection[0].experiment[0])
+    with pytest.raises(RuntimeError):
+        cript.add_orphaned_nodes_to_project(project, dummy_experiment)
+    # Problem still persists
+    with pytest.raises(CRIPTOrphanedProcessError):
+        project.validate()
+    # Fix by using the helper function correctly
+    cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
+    project.validate()
 
-#     cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
-#     project.validate()
+    # We add property to the material, because that adds the opportunity for orphaned data and computation
+    property = copy.deepcopy(simple_property_node)
+    material.property += [property]
+    project.validate()
+    # Now add an orphan data
+    data = copy.deepcopy(simple_data_node)
+    property.data = [data]
+    with pytest.raises(CRIPTOrphanedDataError):
+        project.validate()
+    # Fix with the helper function
+    cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
+    project.validate()
+
+    # Add an orphan Computation
+    computation = copy.deepcopy(simple_computation_node)
+    property.computation += [computation]
+    with pytest.raises(CRIPTOrphanedComputationError):
+        project.validate()
+    # Fix with the helper function
+    cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
+    project.validate()
+
+    # Add orphan computational process
+    comp_proc = copy.deepcopy(simple_computation_process_node)
+    data.computation_process += [comp_proc]
+    with pytest.raises(CRIPTOrphanedComputationalProcessError):
+        while True:
+            try:  # Do trigger not orphan materials
+                project.validate()
+            except CRIPTOrphanedMaterialError as exc:
+                project._json_attrs.material.append(exc.orphaned_node)
+            except CRIPTOrphanedProcessError as exc:
+                project.collection[0].experiment[0]._json_attrs.process.append(exc.orphaned_node)
+            else:
+                break
+
+    cript.add_orphaned_nodes_to_project(project, project.collection[0].experiment[0], 10)
+    project.validate()
 
 
 def test_expanded_json(complex_project_node):

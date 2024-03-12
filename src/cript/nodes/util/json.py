@@ -14,6 +14,7 @@ from cript.nodes.exceptions import (
     CRIPTJsonDeserializationError,
     CRIPTJsonNodeError,
 )
+from cript.nodes.uuid_base import UUIDBaseNode
 
 
 class NodeEncoder(json.JSONEncoder):
@@ -294,7 +295,7 @@ class _NodeDecoderHook:
         return node_dict
 
 
-def load_nodes_from_json(nodes_json: Union[str, Dict]):
+def load_nodes_from_json(nodes_json: Union[str, Dict], _use_uuid_cache: Optional[Dict] = None):
     """
     User facing function, that return a node and all its children from a json string input.
 
@@ -349,7 +350,22 @@ def load_nodes_from_json(nodes_json: Union[str, Dict]):
     # but catches a lot of odd cases. And at the moment performance is not bottle necked here
     if not isinstance(nodes_json, str):
         nodes_json = json.dumps(nodes_json)
-    return json.loads(nodes_json, object_hook=node_json_hook)
+
+    # Store previous UUIDBaseNode Cache state
+    previous_uuid_cache = UUIDBaseNode._uuid_cache
+
+    if _use_uuid_cache is not None:  # If requested use a custom cache.
+        UUIDBaseNode._uuid_cache = _use_uuid_cache
+
+    try:
+        loaded_nodes = json.loads(nodes_json, object_hook=node_json_hook)
+    finally:
+        # Definitively restore the old cache state
+        UUIDBaseNode._uuid_cache = previous_uuid_cache
+
+    if _use_uuid_cache is not None:
+        return loaded_nodes, _use_uuid_cache
+    return loaded_nodes
 
 
 def _rename_field(serialize_dict: Dict, old_name: str, new_name: str) -> Dict:

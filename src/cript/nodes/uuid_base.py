@@ -1,13 +1,10 @@
 import uuid
 from abc import ABC
 from dataclasses import dataclass, field, replace
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from cript.nodes.core import BaseNode
-
-
-def get_uuid_from_uid(uid):
-    return str(uuid.UUID(uid[2:]))
+from cript.nodes.exceptions import CRIPTUUIDException
 
 
 class UUIDBaseNode(BaseNode, ABC):
@@ -32,16 +29,26 @@ class UUIDBaseNode(BaseNode, ABC):
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
+    def __new__(cls, *args, **kwargs):
+        uuid: Optional[str] = kwargs.get("uuid")
+        if uuid and uuid in UUIDBaseNode._uuid_cache:
+            existing_node_to_overwrite = UUIDBaseNode._uuid_cache[uuid]
+            if type(existing_node_to_overwrite) is not cls:
+                raise CRIPTUUIDException(uuid, type(existing_node_to_overwrite), cls)
+            return existing_node_to_overwrite
+        new_uuid_node = super().__new__(cls)
+        return new_uuid_node
+
     def __init__(self, **kwargs):
+        from cript.nodes.util.core import get_uuid_from_uid
+
         # initialize Base class with node
         super().__init__(**kwargs)
         # Respect uuid if passed as argument, otherwise construct uuid from uid
-        uuid = kwargs.get("uuid", get_uuid_from_uid(self.uid))
+        uuid: str = kwargs.get("uuid", get_uuid_from_uid(self.uid))
         # replace name and notes within PrimaryBase
         self._json_attrs = replace(self._json_attrs, uuid=uuid)
-
-        # Place successfully created node in the UUID cache
-        self._uuid_cache[uuid] = self
+        UUIDBaseNode._uuid_cache[uuid] = self
 
     @property
     def uuid(self) -> uuid.UUID:
@@ -53,11 +60,6 @@ class UUIDBaseNode(BaseNode, ABC):
 
         api = _get_global_cached_api()
         return f"{api.host}/{api.api_prefix}/{api.api_version}/{self.uuid}"
-
-    def __deepcopy__(self, memo):
-        node = super().__deepcopy__(memo)
-        node._json_attrs = replace(node._json_attrs, uuid=get_uuid_from_uid(node.uid))
-        return node
 
     @property
     def updated_by(self):

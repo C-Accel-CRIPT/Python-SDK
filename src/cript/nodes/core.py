@@ -179,20 +179,13 @@ class BaseNode(ABC):
             if field_name not in arguments:
                 arguments[field_name] = getattr(default_dataclass, field_name)
 
-        # If a node with this UUID already exists, we don't create a new node.
-        # Instead we use the existing node from the cache and just update it.
-        from cript.nodes.uuid_base import UUIDBaseNode
-
-        if "uuid" in json_dict and json_dict["uuid"] in UUIDBaseNode._uuid_cache:
-            node = UUIDBaseNode._uuid_cache[json_dict["uuid"]]
-        else:  # Create a new node
-            try:
-                node = cls(**arguments)
-            # TODO we should not catch all exceptions if we are handling them, and instead let it fail
-            #  to create a good error message that points to the correct place that it failed to make debugging easier
-            except Exception as exc:
-                print(cls, arguments)
-                raise exc
+        try:
+            node = cls(**arguments)
+        # TODO we should not catch all exceptions if we are handling them, and instead let it fail
+        #  to create a good error message that points to the correct place that it failed to make debugging easier
+        except Exception as exc:
+            print(cls, arguments)
+            raise exc
 
         attrs = cls.JsonAttributes(**arguments)
 
@@ -213,6 +206,8 @@ class BaseNode(ABC):
         return node
 
     def __deepcopy__(self, memo):
+        from cript.nodes.util.core import get_uuid_from_uid
+
         # Ideally I would call `asdict`, but that is not allowed inside a deepcopy chain.
         # Making a manual transform into a dictionary here.
         arguments = {}
@@ -224,6 +219,8 @@ class BaseNode(ABC):
         # a new uid will prompt the creation of a new matching uuid.
         uid = get_new_uid()
         arguments["uid"] = uid
+        if "uuid" in arguments:
+            arguments["uuid"] = get_uuid_from_uid(uid)
 
         # Create node and init constructor attributes
         node = self.__class__(**arguments)

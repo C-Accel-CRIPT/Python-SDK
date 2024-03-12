@@ -344,3 +344,23 @@ def test_expanded_json(complex_project_node):
     # raise CRIPTJsonDeserializationError
     with pytest.raises(cript.nodes.exceptions.CRIPTJsonDeserializationError):
         cript.load_nodes_from_json(condensed_json)
+
+
+def test_uuid_cache_override(complex_project_node):
+    normal_serial = complex_project_node.get_expanded_json()
+    reloaded_project = cript.load_nodes_from_json(normal_serial)
+
+    # For a normal load, the reloaded node as to be the same as before.
+    assert reloaded_project is complex_project_node
+
+    # Load with custom cache override
+    custom_project, cache = cript.load_nodes_from_json(normal_serial, _use_uuid_cache=dict())
+
+    assert custom_project is not reloaded_project
+
+    # Make sure that the nodes in the different caches are different
+    for key in cache:
+        old_node = cript.nodes.uuid_base.UUIDBaseNode._uuid_cache[key]
+        new_node = cache[key]
+        assert old_node.uuid == new_node.uuid
+        assert old_node is not new_node

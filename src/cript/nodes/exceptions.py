@@ -4,6 +4,19 @@ from typing import List
 from cript.exceptions import CRIPTException
 
 
+class CRIPTUUIDException(CRIPTException):
+    def __init__(self, uuid: str, old_type: str, new_type: str):
+        self.uuid = uuid
+        self.old_type = old_type
+        self.new_type = new_type
+
+    def __str__(self) -> str:
+        return_msg = f"UUID collision error. A new node with UUID {self.uuid} is created of type {self.new_type},"
+        return_msg += f" but a node with the same UUID exists already as type {self.old_type}."
+        return_msg += " Please report the error on https://github.com/C-Accel-CRIPT/Python-SDK/issues , thank you."
+        return return_msg
+
+
 class CRIPTNodeSchemaError(CRIPTException):
     """
     ## Definition
@@ -333,27 +346,6 @@ class CRIPTOrphanedExperimentError(CRIPTOrphanedNodesError):
         ret_string += f"Please add the node like: `your_experiment.{node_name} += [orphaned_{node_name}]`. "
         ret_string += f"The orphaned {node_name} was {self.orphaned_node}."
         return ret_string
-
-
-def get_orphaned_experiment_exception(orphaned_node):
-    """
-    Return the correct specific Exception based in the orphaned node type for nodes not correctly listed in experiment.
-    """
-    from cript.nodes.primary_nodes.computation import Computation
-    from cript.nodes.primary_nodes.computation_process import ComputationProcess
-    from cript.nodes.primary_nodes.data import Data
-    from cript.nodes.primary_nodes.process import Process
-
-    if isinstance(orphaned_node, Data):
-        return CRIPTOrphanedDataError(orphaned_node)
-    if isinstance(orphaned_node, Process):
-        return CRIPTOrphanedProcessError(orphaned_node)
-    if isinstance(orphaned_node, Computation):
-        return CRIPTOrphanedComputationError(orphaned_node)
-    if isinstance(orphaned_node, ComputationProcess):
-        return CRIPTOrphanedComputationalProcessError(orphaned_node)
-    # Base case raise the parent exception. TODO add bug warning.
-    return CRIPTOrphanedExperimentError(orphaned_node)
 
 
 class CRIPTOrphanedDataError(CRIPTOrphanedExperimentError):

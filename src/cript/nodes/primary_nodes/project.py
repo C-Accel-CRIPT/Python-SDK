@@ -105,10 +105,8 @@ class Project(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_json_attrs)
 
     def validate(self, api=None, is_patch=False, force_validation: bool = False):
-        from cript.nodes.exceptions import (
-            CRIPTOrphanedMaterialError,
-            get_orphaned_experiment_exception,
-        )
+        from cript.nodes.exceptions import CRIPTOrphanedMaterialError
+        from cript.nodes.util.core import get_orphaned_experiment_exception
 
         # First validate like other nodes
         super().validate(api=api, is_patch=is_patch, force_validation=force_validation)

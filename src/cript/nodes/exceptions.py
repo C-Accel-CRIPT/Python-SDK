@@ -4,6 +4,19 @@ from typing import List
 from cript.exceptions import CRIPTException
 
 
+class CRIPTUUIDException(CRIPTException):
+    def __init__(self, uuid: str, old_type: str, new_type: str):
+        self.uuid = uuid
+        self.old_type = old_type
+        self.new_type = new_type
+
+    def __str__(self) -> str:
+        return_msg = f"UUID collision error. A new node with UUID {self.uuid} is created of type {self.new_type},"
+        return_msg += f" but a node with the same UUID exists already as type {self.old_type}."
+        return_msg += " Please report the error on https://github.com/C-Accel-CRIPT/Python-SDK/issues , thank you."
+        return return_msg
+
+
 class CRIPTNodeSchemaError(CRIPTException):
     """
     ## Definition

@@ -213,6 +213,8 @@ class BaseNode(ABC):
         return node
 
     def __deepcopy__(self, memo):
+        from cript.nodes.util.core import get_uuid_from_uid
+
         # Ideally I would call `asdict`, but that is not allowed inside a deepcopy chain.
         # Making a manual transform into a dictionary here.
         arguments = {}
@@ -224,6 +226,8 @@ class BaseNode(ABC):
         # a new uid will prompt the creation of a new matching uuid.
         uid = get_new_uid()
         arguments["uid"] = uid
+        if "uuid" in arguments:
+            arguments["uuid"] = get_uuid_from_uid(uid)
 
         # Create node and init constructor attributes
         node = self.__class__(**arguments)

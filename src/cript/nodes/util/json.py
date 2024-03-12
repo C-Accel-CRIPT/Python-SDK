@@ -354,13 +354,13 @@ def load_nodes_from_json(nodes_json: Union[str, Dict], _use_uuid_cache: Optional
     # Store previous UUIDBaseNode Cache state
     previous_uuid_cache = UUIDBaseNode._uuid_cache
 
-    if not (_use_uuid_cache is None):  # If requested use a custom cache.
+    if _use_uuid_cache is not None:  # If requested use a custom cache.
         UUIDBaseNode._uuid_cache = _use_uuid_cache
 
     try:
         loaded_nodes = json.loads(nodes_json, object_hook=node_json_hook)
     finally:
-        # Definitively restore the old cachse state
+        # Definitively restore the old cache state
         UUIDBaseNode._uuid_cache = previous_uuid_cache
 
     if _use_uuid_cache is not None:

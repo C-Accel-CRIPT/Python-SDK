@@ -348,27 +348,6 @@ class CRIPTOrphanedExperimentError(CRIPTOrphanedNodesError):
         return ret_string
 
 
-def get_orphaned_experiment_exception(orphaned_node):
-    """
-    Return the correct specific Exception based in the orphaned node type for nodes not correctly listed in experiment.
-    """
-    from cript.nodes.primary_nodes.computation import Computation
-    from cript.nodes.primary_nodes.computation_process import ComputationProcess
-    from cript.nodes.primary_nodes.data import Data
-    from cript.nodes.primary_nodes.process import Process
-
-    if isinstance(orphaned_node, Data):
-        return CRIPTOrphanedDataError(orphaned_node)
-    if isinstance(orphaned_node, Process):
-        return CRIPTOrphanedProcessError(orphaned_node)
-    if isinstance(orphaned_node, Computation):
-        return CRIPTOrphanedComputationError(orphaned_node)
-    if isinstance(orphaned_node, ComputationProcess):
-        return CRIPTOrphanedComputationalProcessError(orphaned_node)
-    # Base case raise the parent exception. TODO add bug warning.
-    return CRIPTOrphanedExperimentError(orphaned_node)
-
-
 class CRIPTOrphanedDataError(CRIPTOrphanedExperimentError):
     """
     ## Definition

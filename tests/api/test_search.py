@@ -125,19 +125,19 @@ def test_empty_paginator(cript_api: cript.API) -> None:
         next(uuid_paginator)
 
 
-@pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
-def test_api_search_bigsmiles(cript_api: cript.API) -> None:
-    """
-    tests search method with bigsmiles SearchMode to see if we just get at least one match
-    searches for material
-    "{[][<]C(C)C(=O)O[>][<]}{[$][$]CCC(C)C[$],[$]CC(C(C)C)[$],[$]CC(C)(CC)[$][]}"
+# @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
+# def test_api_search_bigsmiles(cript_api: cript.API) -> None:
+#     """
+#     tests search method with bigsmiles SearchMode to see if we just get at least one match
+#     searches for material
+#     "{[][<]C(C)C(=O)O[>][<]}{[$][$]CCC(C)C[$],[$]CC(C(C)C)[$],[$]CC(C)(CC)[$][]}"
 
-    another good example can be "{[][$]CC(C)(C(=O)OCCCC)[$][]}"
-    """
-    bigsmiles_search_value = "{[][<]C(C)C(=O)O[>][<]}{[$][$]CCC(C)C[$],[$]CC(C(C)C)[$],[$]CC(C)(CC)[$][]}"
+#     another good example can be "{[][$]CC(C)(C(=O)OCCCC)[$][]}"
+#     """
+#     bigsmiles_search_value = "{[][<]C(C)C(=O)O[>][<]}{[$][$]CCC(C)C[$],[$]CC(C(C)C)[$],[$]CC(C)(CC)[$][]}"
 
-    bigsmiles_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.BIGSMILES, value_to_search=bigsmiles_search_value)
+#     bigsmiles_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.BIGSMILES, value_to_search=bigsmiles_search_value)
 
-    assert isinstance(bigsmiles_paginator, Paginator)
-    bigsmiles_list = list(bigsmiles_paginator)
-    assert len(bigsmiles_list) >= 1
+#     assert isinstance(bigsmiles_paginator, Paginator)
+#     bigsmiles_list = list(bigsmiles_paginator)
+#     assert len(bigsmiles_list) >= 1

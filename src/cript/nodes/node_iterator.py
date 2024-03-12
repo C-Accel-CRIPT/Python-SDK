@@ -36,7 +36,7 @@ class NodeIterator:
 
         field_names = [field.name for field in fields(node._json_attrs)]
         for attr_name in sorted(field_names):
-            attr = getattr(node._json_attrs, str(attr_name.name))
+            attr = getattr(node._json_attrs, attr_name)
             node_added = self._handle_child_node(attr, recursion_depth)
             if node_added:
                 self._depth_first(node, recursion_depth + 1)

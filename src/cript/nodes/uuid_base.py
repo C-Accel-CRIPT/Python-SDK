@@ -5,6 +5,7 @@ from typing import Any, Dict, Optional
 
 from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import CRIPTUUIDException
+from cript.nodes.node_iterator import NodeIterator
 
 
 class UUIDBaseNode(BaseNode, ABC):

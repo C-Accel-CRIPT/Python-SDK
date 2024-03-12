@@ -38,14 +38,12 @@ class NodeIterator:
             attr = getattr(node._json_attrs, str(attr_name.name))
             node_added = self._handle_child_node(attr, recursion_depth)
             if node_added:
-                print("A", attr.uuid, node_added)
                 self._depth_first(node, recursion_depth + 1)
             else:
                 if isinstance(attr, list):
                     for list_attr in attr:
                         node_added = self._handle_child_node(list_attr, recursion_depth)
                         if node_added:
-                            print("B", list_attr.uuid, node_added)
                             self._depth_first(list_attr, recursion_depth + 1)
 
     def __next__(self):

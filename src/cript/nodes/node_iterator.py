@@ -34,7 +34,8 @@ class NodeIterator:
         if self._max_recursion_depth >= 0 and recursion_depth >= self._max_recursion_depth:
             return
 
-        for attr_name in fields(node._json_attrs):
+        field_names = [field.name for field in fields(node._json_attrs)]
+        for attr_name in sorted(field_names):
             attr = getattr(node._json_attrs, str(attr_name.name))
             node_added = self._handle_child_node(attr, recursion_depth)
             if node_added:

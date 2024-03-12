@@ -179,20 +179,13 @@ class BaseNode(ABC):
             if field_name not in arguments:
                 arguments[field_name] = getattr(default_dataclass, field_name)
 
-        # If a node with this UUID already exists, we don't create a new node.
-        # Instead we use the existing node from the cache and just update it.
-        from cript.nodes.uuid_base import UUIDBaseNode
-
-        if "uuid" in json_dict and json_dict["uuid"] in UUIDBaseNode._uuid_cache:
-            node = UUIDBaseNode._uuid_cache[json_dict["uuid"]]
-        else:  # Create a new node
-            try:
-                node = cls(**arguments)
-            # TODO we should not catch all exceptions if we are handling them, and instead let it fail
-            #  to create a good error message that points to the correct place that it failed to make debugging easier
-            except Exception as exc:
-                print(cls, arguments)
-                raise exc
+        try:
+            node = cls(**arguments)
+        # TODO we should not catch all exceptions if we are handling them, and instead let it fail
+        #  to create a good error message that points to the correct place that it failed to make debugging easier
+        except Exception as exc:
+            print(cls, arguments)
+            raise exc
 
         attrs = cls.JsonAttributes(**arguments)
 

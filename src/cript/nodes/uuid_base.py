@@ -31,7 +31,7 @@ class UUIDBaseNode(BaseNode, ABC):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __new__(cls, *args, **kwargs):
-        uuid: Optional[str] = kwargs.get("uuid")
+        uuid: Optional[str] = str(kwargs.get("uuid"))
         if uuid and uuid in UUIDBaseNode._uuid_cache:
             existing_node_to_overwrite = UUIDBaseNode._uuid_cache[uuid]
             if type(existing_node_to_overwrite) is not cls:

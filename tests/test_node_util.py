@@ -299,6 +299,7 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
     # Now add an orphan data
     data = copy.deepcopy(simple_data_node)
     property.data = [data]
+
     with pytest.raises(CRIPTOrphanedDataError):
         project.validate()
     # Fix with the helper function

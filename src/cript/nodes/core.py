@@ -4,7 +4,7 @@ import json
 import re
 import uuid
 from abc import ABC
-from dataclasses import asdict, dataclass, replace
+from dataclasses import dataclass, replace
 from typing import Dict, List, Optional, Set
 
 from cript.nodes.exceptions import (
@@ -103,7 +103,7 @@ class BaseNode(ABC):
         str
             A string representation of the node.
         """
-        return str(asdict(self._json_attrs))
+        return str(self._json_attrs)
 
     @property
     def uid(self):
@@ -201,6 +201,12 @@ class BaseNode(ABC):
                 attrs = replace(attrs, uid="_:" + attrs.uid)
         except AttributeError:
             pass
+
+        try:
+            attrs = replace(attrs, uuid=str(attrs.uuid))
+        except AttributeError:
+            pass
+
         # But here we force even usually unwritable fields to be set.
         node._update_json_attrs_if_valid(attrs)
 

@@ -5,13 +5,18 @@ from typing import Any, List, Set
 class NodeIterator:
     def __init__(self, root, max_recursion_depth=-1):
         self._iter_position: int = 0
-        self._uuid_visited: Set[str] = set(str(root.uuid))
-        self._stack: List[Any] = [root]
-        self._recursion_depth = [0]
+        self._uuid_visited: Set[str] = set()
+        self._stack: List[Any] = []
+        self._recursion_depth = []
         self._max_recursion_depth = max_recursion_depth
         self._depth_first(root, 0)
 
-    def _handle_child_node(self, child_node, recursion_depth: int) -> bool:
+    def _add_node(self, child_node, recursion_depth: int):
+        self._stack.append(child_node)
+        self._recursion_depth.append(recursion_depth)
+        self._uuid_visited.add(child_node.uuid)
+
+    def _check_recursion(self, child_node) -> bool:
         """Helper function that adds a child to the stack.
 
         This function can be called for both listed children and regular children attributes
@@ -22,14 +27,12 @@ class NodeIterator:
             return False
 
         if uuid not in self._uuid_visited:
-            self._stack.append(child_node)
-            self._uuid_visited.add(str(child_node.uuid))
-            self._recursion_depth.append(recursion_depth)
             return True
         return False
 
     def _depth_first(self, node, recursion_depth: int) -> None:
         """Helper function that does the traversal in depth first order and stores result in stack"""
+        self._add_node(node, recursion_depth)
 
         if self._max_recursion_depth >= 0 and recursion_depth >= self._max_recursion_depth:
             return
@@ -37,15 +40,11 @@ class NodeIterator:
         field_names = [field.name for field in fields(node._json_attrs)]
         for attr_name in sorted(field_names):
             attr = getattr(node._json_attrs, attr_name)
-            node_added = self._handle_child_node(attr, recursion_depth)
-            if node_added:
-                self._depth_first(node, recursion_depth + 1)
-            else:
-                if isinstance(attr, list):
-                    for list_attr in attr:
-                        node_added = self._handle_child_node(list_attr, recursion_depth)
-                        if node_added:
-                            self._depth_first(list_attr, recursion_depth + 1)
+            if not isinstance(attr, list):
+                attr = [attr]
+            for list_attr in attr:
+                if self._check_recursion(list_attr):
+                    self._depth_first(list_attr, recursion_depth + 1)
 
     def __next__(self):
         if self._iter_position >= len(self._stack):

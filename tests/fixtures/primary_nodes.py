@@ -26,15 +26,15 @@ def complex_project_dict(complex_collection_node, simple_material_node, complex_
     project_dict = {"node": ["Project"]}
     project_dict["locked"] = True
     project_dict["model_version"] = "1.0.0"
-    project_dict["updated_by"] = json.loads(copy.deepcopy(complex_user_node).get_json(condense_to_uuid={}).json)
-    project_dict["created_by"] = json.loads(complex_user_node.get_json(condense_to_uuid={}).json)
+    project_dict["updated_by"] = json.loads(copy.deepcopy(complex_user_node).get_expanded_json())
+    project_dict["created_by"] = json.loads(complex_user_node.get_expanded_json())
     project_dict["public"] = True
     project_dict["name"] = "my project name"
     project_dict["notes"] = "my project notes"
-    project_dict["member"] = [json.loads(complex_user_node.get_json(condense_to_uuid={}).json)]
-    project_dict["admin"] = [json.loads(complex_user_node.get_json(condense_to_uuid={}).json)]
-    project_dict["collection"] = [json.loads(complex_collection_node.get_json(condense_to_uuid={}).json)]
-    project_dict["material"] = [json.loads(copy.deepcopy(simple_material_node).get_json(condense_to_uuid={}).json)]
+    project_dict["member"] = [json.loads(complex_user_node.get_expanded_json())]
+    project_dict["admin"] = [json.loads(complex_user_node.get_expanded_json())]
+    project_dict["collection"] = [json.loads(complex_collection_node.get_expanded_json())]
+    project_dict["material"] = [json.loads(copy.deepcopy(simple_material_node).get_expanded_json())]
     return project_dict
 
 

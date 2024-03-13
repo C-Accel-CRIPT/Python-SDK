@@ -3,6 +3,8 @@ from abc import ABC
 from dataclasses import dataclass, field, replace
 from typing import Any, Dict, Optional
 
+from beartype import beartype
+
 from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import CRIPTUUIDException
 from cript.nodes.node_iterator import NodeIterator
@@ -51,9 +53,14 @@ class UUIDBaseNode(BaseNode, ABC):
         self._json_attrs = replace(self._json_attrs, uuid=uuid)
         UUIDBaseNode._uuid_cache[uuid] = self
 
+    @beartype
     @property
-    def uuid(self) -> uuid.UUID:
-        return uuid.UUID(self._json_attrs.uuid)
+    def uuid(self) -> str:
+        if not isinstance(self._json_attrs.uuid, str):
+            # Some JSON decoding automatically converted this to UUID objects, which we don't want
+            self._json_attrs = replace(self._json_attrs, uuid=str(self._json_attrs.uuid))
+
+        return self._json_attrs.uuid
 
     @property
     def url(self):

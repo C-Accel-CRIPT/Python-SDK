@@ -12,7 +12,7 @@ class NodeIterator:
         self._depth_first(root, 0)
 
     def _add_node(self, child_node, recursion_depth: int):
-        if str(child_node.uuid) not in self._uuid_visited:
+        if child_node.uuid not in self._uuid_visited:
             self._stack.append(child_node)
             self._recursion_depth.append(recursion_depth)
             self._uuid_visited.add(child_node.uuid)
@@ -25,7 +25,7 @@ class NodeIterator:
         This function can be called for both listed children and regular children attributes
         """
         try:
-            uuid = str(child_node.uuid)
+            uuid = child_node.uuid
         except AttributeError:
             return False
 

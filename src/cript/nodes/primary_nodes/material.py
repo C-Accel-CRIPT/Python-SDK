@@ -6,6 +6,7 @@ from beartype import beartype
 from cript.nodes.exceptions import CRIPTMaterialIdentifierError
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.process import Process
+from cript.nodes.util.json import NodeUID
 
 
 class Material(PrimaryBaseNode):
@@ -74,11 +75,11 @@ class Material(PrimaryBaseNode):
         """
 
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        component: List["Material"] = field(default_factory=list)
-        process: Optional[Process] = None
-        property: List[Any] = field(default_factory=list)
-        parent_material: Optional["Material"] = None
-        computational_forcefield: Optional[Any] = None
+        component: List[NodeUID["Material"]] = field(default_factory=list)
+        process: Optional[NodeUID[Process]] = None
+        property: List[NodeUID[Any]] = field(default_factory=list)
+        parent_material: Optional[NodeUID["Material"]] = None
+        computational_forcefield: Optional[NodeUID[Any]] = None
         keyword: List[str] = field(default_factory=list)
         amino_acid: Optional[str] = None
         bigsmiles: Optional[str] = None
@@ -99,11 +100,11 @@ class Material(PrimaryBaseNode):
     def __init__(
         self,
         name: str,
-        component: Optional[List["Material"]] = None,
-        process: Optional[Process] = None,
-        property: Optional[List[Any]] = None,
-        parent_material: Optional["Material"] = None,
-        computational_forcefield: Optional[Any] = None,
+        component: Optional[List[NodeUID["Material"]]] = None,
+        process: Optional[NodeUID[Process]] = None,
+        property: Optional[List[NodeUID[Any]]] = None,
+        parent_material: Optional[NodeUID["Material"]] = None,
+        computational_forcefield: Optional[NodeUID[Any]] = None,
         keyword: Optional[List[str]] = None,
         amino_acid: Optional[str] = None,
         bigsmiles: Optional[str] = None,

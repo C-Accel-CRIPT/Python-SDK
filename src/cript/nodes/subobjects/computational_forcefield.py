@@ -5,6 +5,7 @@ from beartype import beartype
 
 from cript.nodes.primary_nodes.data import Data
 from cript.nodes.subobjects.citation import Citation
+from cript.nodes.util.json import NodeUID
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -88,13 +89,24 @@ class ComputationalForcefield(UUIDBaseNode):
         implicit_solvent: str = ""
         source: str = ""
         description: str = ""
-        data: List[Data] = field(default_factory=list)
-        citation: List[Citation] = field(default_factory=list)
+        data: List[NodeUID[Data]] = field(default_factory=list)
+        citation: List[NodeUID[Citation]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, key: str, building_block: str, coarse_grained_mapping: str = "", implicit_solvent: str = "", source: str = "", description: str = "", data: Optional[List[Data]] = None, citation: Optional[List[Citation]] = None, **kwargs):
+    def __init__(
+        self,
+        key: str,
+        building_block: str,
+        coarse_grained_mapping: str = "",
+        implicit_solvent: str = "",
+        source: str = "",
+        description: str = "",
+        data: Optional[List[NodeUID[Data]]] = None,
+        citation: Optional[List[NodeUID[Citation]]] = None,
+        **kwargs
+    ):
         """
         instantiate a computational_forcefield subobject
 

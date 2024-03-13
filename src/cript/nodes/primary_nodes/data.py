@@ -4,6 +4,7 @@ from typing import Any, List, Optional, Union
 from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.util.json import NodeUID
 
 
 class Data(PrimaryBaseNode):
@@ -74,13 +75,13 @@ class Data(PrimaryBaseNode):
 
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        file: List[Any] = field(default_factory=list)
-        sample_preparation: Any = field(default_factory=list)
-        computation: List[Any] = field(default_factory=list)
-        computation_process: Any = field(default_factory=list)
-        material: List[Any] = field(default_factory=list)
-        process: List[Any] = field(default_factory=list)
-        citation: List[Any] = field(default_factory=list)
+        file: List[NodeUID[Any]] = field(default_factory=list)
+        sample_preparation: NodeUID[Any] = field(default_factory=list)
+        computation: List[NodeUID[Any]] = field(default_factory=list)
+        computation_process: NodeUID[Any] = field(default_factory=list)
+        material: List[NodeUID[Any]] = field(default_factory=list)
+        process: List[NodeUID[Any]] = field(default_factory=list)
+        citation: List[NodeUID[Any]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -89,13 +90,13 @@ class Data(PrimaryBaseNode):
         self,
         name: str,
         type: str,
-        file: List[Any],
-        sample_preparation: Any = None,
-        computation: Optional[List[Any]] = None,
-        computation_process: Optional[Any] = None,
-        material: Optional[List[Any]] = None,
-        process: Optional[List[Any]] = None,
-        citation: Optional[List[Any]] = None,
+        file: List[NodeUID[Any]],
+        sample_preparation: NodeUID[Any] = None,
+        computation: Optional[List[NodeUID[Any]]] = None,
+        computation_process: Optional[NodeUID[Any]] = None,
+        material: Optional[List[NodeUID[Any]]] = None,
+        process: Optional[List[NodeUID[Any]]] = None,
+        citation: Optional[List[NodeUID[Any]]] = None,
         notes: str = "",
         **kwargs
     ) -> None:

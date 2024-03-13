@@ -10,6 +10,7 @@ from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.process import Process
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.condition import Condition
+from cript.nodes.util.json import NodeUID
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -76,14 +77,14 @@ class Property(UUIDBaseNode):
         unit: Optional[str] = ""
         uncertainty: Optional[Number] = None
         uncertainty_type: str = ""
-        component: List[Material] = field(default_factory=list)
+        component: List[NodeUID[Material]] = field(default_factory=list)
         structure: str = ""
         method: str = ""
-        sample_preparation: Optional[Process] = None
-        condition: List[Condition] = field(default_factory=list)
+        sample_preparation: Optional[NodeUID[Process]] = None
+        condition: List[NodeUID[Condition]] = field(default_factory=list)
         data: List[Data] = field(default_factory=list)
-        computation: List[Computation] = field(default_factory=list)
-        citation: List[Citation] = field(default_factory=list)
+        computation: List[NodeUID[Computation]] = field(default_factory=list)
+        citation: List[NodeUID[Citation]] = field(default_factory=list)
         notes: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -97,14 +98,14 @@ class Property(UUIDBaseNode):
         unit: Union[str, None],
         uncertainty: Optional[Number] = None,
         uncertainty_type: str = "",
-        component: Optional[List[Material]] = None,
+        component: Optional[List[NodeUID[Material]]] = None,
         structure: str = "",
         method: str = "",
-        sample_preparation: Optional[Process] = None,
-        condition: Optional[List[Condition]] = None,
-        data: Optional[List[Data]] = None,
-        computation: Optional[List[Computation]] = None,
-        citation: Optional[List[Citation]] = None,
+        sample_preparation: Optional[NodeUID[Process]] = None,
+        condition: Optional[List[NodeUID[Condition]]] = None,
+        data: Optional[List[NodeUID[Data]]] = None,
+        computation: Optional[List[NodeUID[Computation]]] = None,
+        citation: Optional[List[NodeUID[Citation]]] = None,
         notes: str = "",
         **kwargs
     ):

@@ -4,6 +4,7 @@ from typing import Any, List, Optional
 from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.util.json import NodeUID
 
 
 class Process(PrimaryBaseNode):
@@ -61,16 +62,16 @@ class Process(PrimaryBaseNode):
 
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        ingredient: List[Any] = field(default_factory=list)
+        ingredient: List[NodeUID[Any]] = field(default_factory=list)
         description: str = ""
-        equipment: List[Any] = field(default_factory=list)
-        product: List[Any] = field(default_factory=list)
-        waste: List[Any] = field(default_factory=list)
-        prerequisite_process: List["Process"] = field(default_factory=list)
-        condition: List[Any] = field(default_factory=list)
-        property: List[Any] = field(default_factory=list)
+        equipment: List[NodeUID[Any]] = field(default_factory=list)
+        product: List[NodeUID[Any]] = field(default_factory=list)
+        waste: List[NodeUID[Any]] = field(default_factory=list)
+        prerequisite_process: List[NodeUID["Process"]] = field(default_factory=list)
+        condition: List[NodeUID[Any]] = field(default_factory=list)
+        property: List[NodeUID[Any]] = field(default_factory=list)
         keyword: List[str] = field(default_factory=list)
-        citation: List[Any] = field(default_factory=list)
+        citation: List[NodeUID[Any]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -79,16 +80,16 @@ class Process(PrimaryBaseNode):
         self,
         name: str,
         type: str,
-        ingredient: Optional[List[Any]] = None,
+        ingredient: Optional[List[NodeUID[Any]]] = None,
         description: str = "",
-        equipment: Optional[List[Any]] = None,
-        product: Optional[List[Any]] = None,
-        waste: Optional[List[Any]] = None,
-        prerequisite_process: Optional[List[Any]] = None,
-        condition: Optional[List[Any]] = None,
-        property: Optional[List[Any]] = None,
+        equipment: Optional[List[NodeUID[Any]]] = None,
+        product: Optional[List[NodeUID[Any]]] = None,
+        waste: Optional[List[NodeUID[Any]]] = None,
+        prerequisite_process: Optional[List[NodeUID["Process"]]] = None,
+        condition: Optional[List[NodeUID[Any]]] = None,
+        property: Optional[List[NodeUID[Any]]] = None,
         keyword: Optional[List[str]] = None,
-        citation: Optional[List[Any]] = None,
+        citation: Optional[List[NodeUID[Any]]] = None,
         notes: str = "",
         **kwargs
     ) -> None:

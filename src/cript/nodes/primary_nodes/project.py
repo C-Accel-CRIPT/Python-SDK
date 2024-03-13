@@ -7,6 +7,7 @@ from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.supporting_nodes import User
+from cript.nodes.util.json import NodeUID
 
 
 class Project(PrimaryBaseNode):
@@ -59,15 +60,15 @@ class Project(PrimaryBaseNode):
         all Project attributes
         """
 
-        member: List[User] = field(default_factory=list)
-        admin: List[User] = field(default_factory=list)
-        collection: List[Collection] = field(default_factory=list)
-        material: List[Material] = field(default_factory=list)
+        member: List[NodeUID[User]] = field(default_factory=list)
+        admin: List[NodeUID[User]] = field(default_factory=list)
+        collection: List[NodeUID[Collection]] = field(default_factory=list)
+        material: List[NodeUID[Material]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, name: str, collection: Optional[List[Collection]] = None, material: Optional[List[Material]] = None, notes: str = "", **kwargs):
+    def __init__(self, name: str, collection: Optional[List[NodeUID[Collection]]] = None, material: Optional[List[NodeUID[Material]]] = None, notes: str = "", **kwargs):
         """
         Create a Project node with Project name
 

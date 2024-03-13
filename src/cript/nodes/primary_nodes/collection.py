@@ -5,6 +5,7 @@ from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.supporting_nodes import User
+from cript.nodes.util.json import NodeUID
 
 
 class Collection(PrimaryBaseNode):
@@ -56,17 +57,17 @@ class Collection(PrimaryBaseNode):
         """
 
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        member: List[User] = field(default_factory=list)
-        admin: List[User] = field(default_factory=list)
-        experiment: List[Any] = field(default_factory=list)
-        inventory: List[Any] = field(default_factory=list)
+        member: List[NodeUID[User]] = field(default_factory=list)
+        admin: List[NodeUID[User]] = field(default_factory=list)
+        experiment: List[NodeUID[Any]] = field(default_factory=list)
+        inventory: List[NodeUID[Any]] = field(default_factory=list)
         doi: str = ""
-        citation: List[Any] = field(default_factory=list)
+        citation: List[NodeUID[Any]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, name: str, experiment: Optional[List[Any]] = None, inventory: Optional[List[Any]] = None, doi: str = "", citation: Optional[List[Any]] = None, notes: str = "", **kwargs) -> None:
+    def __init__(self, name: str, experiment: Optional[List[NodeUID[Any]]] = None, inventory: Optional[List[NodeUID[Any]]] = None, doi: str = "", citation: Optional[List[NodeUID[Any]]] = None, notes: str = "", **kwargs) -> None:
         """
         create a Collection with a name
         add list of experiment, inventory, citation, doi, and notes if available.

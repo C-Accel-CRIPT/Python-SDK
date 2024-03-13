@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.parameter import Parameter
+from cript.nodes.util.json import NodeUID
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -69,12 +70,12 @@ class Algorithm(UUIDBaseNode):
         key: str = ""
         type: str = ""
 
-        parameter: List[Parameter] = field(default_factory=list)
-        citation: List[Citation] = field(default_factory=list)
+        parameter: List[NodeUID[Parameter]] = field(default_factory=list)
+        citation: List[NodeUID[Citation]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, key: str, type: str, parameter: Optional[List[Parameter]] = None, citation: Optional[List[Citation]] = None, **kwargs):  # ignored
+    def __init__(self, key: str, type: str, parameter: Optional[List[NodeUID[Parameter]]] = None, citation: Optional[List[NodeUID[Citation]]] = None, **kwargs):  # ignored
         """
         Create algorithm sub-object
 

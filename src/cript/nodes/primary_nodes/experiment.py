@@ -4,6 +4,7 @@ from typing import Any, List, Optional
 from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.util.json import NodeUID
 
 
 class Experiment(PrimaryBaseNode):
@@ -65,12 +66,12 @@ class Experiment(PrimaryBaseNode):
         all Collection attributes
         """
 
-        process: List[Any] = field(default_factory=list)
-        computation: List[Any] = field(default_factory=list)
-        computation_process: List[Any] = field(default_factory=list)
-        data: List[Any] = field(default_factory=list)
+        process: List[NodeUID[Any]] = field(default_factory=list)
+        computation: List[NodeUID[Any]] = field(default_factory=list)
+        computation_process: List[NodeUID[Any]] = field(default_factory=list)
+        data: List[NodeUID[Any]] = field(default_factory=list)
         funding: List[str] = field(default_factory=list)
-        citation: List[Any] = field(default_factory=list)
+        citation: List[NodeUID[Any]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -78,12 +79,12 @@ class Experiment(PrimaryBaseNode):
     def __init__(
         self,
         name: str,
-        process: Optional[List[Any]] = None,
-        computation: Optional[List[Any]] = None,
-        computation_process: Optional[List[Any]] = None,
-        data: Optional[List[Any]] = None,
+        process: Optional[List[NodeUID[Any]]] = None,
+        computation: Optional[List[NodeUID[Any]]] = None,
+        computation_process: Optional[List[NodeUID[Any]]] = None,
+        data: Optional[List[NodeUID[Any]]] = None,
         funding: Optional[List[str]] = None,
-        citation: Optional[List[Any]] = None,
+        citation: Optional[List[NodeUID[Any]]] = None,
         notes: str = "",
         **kwargs
     ):

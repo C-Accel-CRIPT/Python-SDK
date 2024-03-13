@@ -5,6 +5,7 @@ from typing import List, Optional, Union
 from beartype import beartype
 
 from cript.nodes.primary_nodes.data import Data
+from cript.nodes.util.json import NodeUID
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -86,7 +87,7 @@ class Condition(UUIDBaseNode):
         uncertainty_type: str = ""
         set_id: Optional[int] = None
         measurement_id: Optional[int] = None
-        data: List[Data] = field(default_factory=list)
+        data: List[NodeUID[Data]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -102,7 +103,7 @@ class Condition(UUIDBaseNode):
         uncertainty_type: str = "",
         set_id: Optional[int] = None,
         measurement_id: Optional[int] = None,
-        data: Optional[List[Data]] = None,
+        data: Optional[List[NodeUID[Data]]] = None,
         **kwargs
     ):
         """

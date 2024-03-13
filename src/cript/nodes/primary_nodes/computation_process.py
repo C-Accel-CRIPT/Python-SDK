@@ -4,6 +4,7 @@ from typing import Any, List, Optional
 from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.util.json import NodeUID
 
 
 class ComputationProcess(PrimaryBaseNode):
@@ -113,13 +114,13 @@ class ComputationProcess(PrimaryBaseNode):
 
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        input_data: List[Any] = field(default_factory=list)
-        output_data: List[Any] = field(default_factory=list)
-        ingredient: List[Any] = field(default_factory=list)
-        software_configuration: List[Any] = field(default_factory=list)
-        condition: List[Any] = field(default_factory=list)
-        property: List[Any] = field(default_factory=list)
-        citation: List[Any] = field(default_factory=list)
+        input_data: List[NodeUID[Any]] = field(default_factory=list)
+        output_data: List[NodeUID[Any]] = field(default_factory=list)
+        ingredient: List[NodeUID[Any]] = field(default_factory=list)
+        software_configuration: List[NodeUID[Any]] = field(default_factory=list)
+        condition: List[NodeUID[Any]] = field(default_factory=list)
+        property: List[NodeUID[Any]] = field(default_factory=list)
+        citation: List[NodeUID[Any]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -128,13 +129,13 @@ class ComputationProcess(PrimaryBaseNode):
         self,
         name: str,
         type: str,
-        input_data: List[Any],
-        ingredient: List[Any],
-        output_data: Optional[List[Any]] = None,
-        software_configuration: Optional[List[Any]] = None,
-        condition: Optional[List[Any]] = None,
-        property: Optional[List[Any]] = None,
-        citation: Optional[List[Any]] = None,
+        input_data: List[NodeUID[Any]],
+        ingredient: List[NodeUID[Any]],
+        output_data: Optional[List[NodeUID[Any]]] = None,
+        software_configuration: Optional[List[NodeUID[Any]]] = None,
+        condition: Optional[List[NodeUID[Any]]] = None,
+        property: Optional[List[NodeUID[Any]]] = None,
+        citation: Optional[List[NodeUID[Any]]] = None,
         notes: str = "",
         **kwargs
     ):

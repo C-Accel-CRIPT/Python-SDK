@@ -1,11 +1,12 @@
 from dataclasses import dataclass, field, replace
-from typing import List, Union
+from typing import List, Optional
 
 from beartype import beartype
 
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.condition import Condition
 from cript.nodes.supporting_nodes.file import File
+from cript.nodes.util.json import NodeUID
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -53,14 +54,14 @@ class Equipment(UUIDBaseNode):
     class JsonAttributes(UUIDBaseNode.JsonAttributes):
         key: str = ""
         description: str = ""
-        condition: List[Condition] = field(default_factory=list)
-        file: List[File] = field(default_factory=list)
-        citation: List[Citation] = field(default_factory=list)
+        condition: List[NodeUID[Condition]] = field(default_factory=list)
+        file: List[NodeUID[File]] = field(default_factory=list)
+        citation: List[NodeUID[Citation]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, key: str, description: str = "", condition: Union[List[Condition], None] = None, file: Union[List[File], None] = None, citation: Union[List[Citation], None] = None, **kwargs) -> None:
+    def __init__(self, key: str, description: str = "", condition: Optional[List[NodeUID[Condition]]] = None, file: Optional[List[NodeUID[File]]] = None, citation: Optional[List[NodeUID[Citation]]] = None, **kwargs) -> None:
         """
         create equipment sub-object
 

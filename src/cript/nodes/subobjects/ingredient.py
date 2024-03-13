@@ -5,6 +5,7 @@ from beartype import beartype
 
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.subobjects.quantity import Quantity
+from cript.nodes.util.json import NodeUID
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -65,14 +66,14 @@ class Ingredient(UUIDBaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(UUIDBaseNode.JsonAttributes):
-        material: Optional[Material] = None
-        quantity: List[Quantity] = field(default_factory=list)
+        material: Optional[NodeUID[Material]] = None
+        quantity: List[NodeUID[Quantity]] = field(default_factory=list)
         keyword: List[str] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, material: Material, quantity: List[Quantity], keyword: Optional[List[str]] = None, **kwargs):
+    def __init__(self, material: NodeUID[Material], quantity: List[NodeUID[Quantity]], keyword: Optional[List[str]] = None, **kwargs):
         """
         create an ingredient sub-object
 

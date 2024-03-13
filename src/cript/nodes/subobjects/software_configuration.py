@@ -6,6 +6,7 @@ from beartype import beartype
 from cript.nodes.subobjects.algorithm import Algorithm
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.software import Software
+from cript.nodes.util.json import NodeUID
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -57,15 +58,15 @@ class SoftwareConfiguration(UUIDBaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(UUIDBaseNode.JsonAttributes):
-        software: Union[Software, None] = None
-        algorithm: List[Algorithm] = field(default_factory=list)
+        software: Optional[NodeUID[Software]] = None
+        algorithm: List[NodeUID[Algorithm]] = field(default_factory=list)
         notes: str = ""
-        citation: List[Citation] = field(default_factory=list)
+        citation: List[NodeUID[Citation]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, software: Software, algorithm: Optional[List[Algorithm]] = None, notes: str = "", citation: Union[List[Citation], None] = None, **kwargs):
+    def __init__(self, software: NodeUID[Software], algorithm: Optional[List[NodeUID[Algorithm]]] = None, notes: str = "", citation: Union[List[NodeUID[Citation]], None] = None, **kwargs):
         """
         Create Software_Configuration sub-object
 

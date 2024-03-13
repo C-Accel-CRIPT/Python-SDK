@@ -5,6 +5,7 @@ from beartype import beartype
 
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.util.json import NodeUID
 
 
 class Inventory(PrimaryBaseNode):
@@ -59,12 +60,12 @@ class Inventory(PrimaryBaseNode):
         all Inventory attributes
         """
 
-        material: List[Material] = field(default_factory=list)
+        material: List[NodeUID[Material]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, name: str, material: List[Material], notes: str = "", **kwargs) -> None:
+    def __init__(self, name: str, material: List[NodeUID[Material]], notes: str = "", **kwargs) -> None:
         """
         Instantiate an inventory node
 

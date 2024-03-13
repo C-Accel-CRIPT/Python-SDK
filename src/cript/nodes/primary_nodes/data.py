@@ -4,7 +4,7 @@ from typing import Any, List, Optional, Union
 from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
-from cript.nodes.util.json import NodeUID
+from cript.nodes.util.json import UIDProxy
 
 
 class Data(PrimaryBaseNode):
@@ -75,13 +75,13 @@ class Data(PrimaryBaseNode):
 
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        file: List[NodeUID[Any]] = field(default_factory=list)
-        sample_preparation: NodeUID[Any] = field(default_factory=list)
-        computation: List[NodeUID[Any]] = field(default_factory=list)
-        computation_process: NodeUID[Any] = field(default_factory=list)
-        material: List[NodeUID[Any]] = field(default_factory=list)
-        process: List[NodeUID[Any]] = field(default_factory=list)
-        citation: List[NodeUID[Any]] = field(default_factory=list)
+        file: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        sample_preparation: Union[Any, UIDProxy] = field(default_factory=list)
+        computation: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        computation_process: Union[Any, UIDProxy] = field(default_factory=list)
+        material: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        process: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        citation: List[Union[Any, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -90,13 +90,13 @@ class Data(PrimaryBaseNode):
         self,
         name: str,
         type: str,
-        file: List[NodeUID[Any]],
-        sample_preparation: NodeUID[Any] = None,
-        computation: Optional[List[NodeUID[Any]]] = None,
-        computation_process: Optional[NodeUID[Any]] = None,
-        material: Optional[List[NodeUID[Any]]] = None,
-        process: Optional[List[NodeUID[Any]]] = None,
-        citation: Optional[List[NodeUID[Any]]] = None,
+        file: List[Union[Any, UIDProxy]],
+        sample_preparation: Union[Any, UIDProxy] = None,
+        computation: Optional[List[Union[Any, UIDProxy]]] = None,
+        computation_process: Optional[Union[Any, UIDProxy]] = None,
+        material: Optional[List[Union[Any, UIDProxy]]] = None,
+        process: Optional[List[Union[Any, UIDProxy]]] = None,
+        citation: Optional[List[Union[Any, UIDProxy]]] = None,
         notes: str = "",
         **kwargs
     ) -> None:

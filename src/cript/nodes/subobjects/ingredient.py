@@ -5,7 +5,7 @@ from beartype import beartype
 
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.subobjects.quantity import Quantity
-from cript.nodes.util.json import NodeUID
+from cript.nodes.util.json import UIDProxy
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -66,14 +66,14 @@ class Ingredient(UUIDBaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(UUIDBaseNode.JsonAttributes):
-        material: Optional[NodeUID[Material]] = None
-        quantity: List[NodeUID[Quantity]] = field(default_factory=list)
+        material: Optional[Union[Material, UIDProxy]] = None
+        quantity: List[Union[Quantity, UIDProxy]] = field(default_factory=list)
         keyword: List[str] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, material: NodeUID[Material], quantity: List[NodeUID[Quantity]], keyword: Optional[List[str]] = None, **kwargs):
+    def __init__(self, material: Union[Material, UIDProxy], quantity: List[Union[Quantity, UIDProxy]], keyword: Optional[List[str]] = None, **kwargs):
         """
         create an ingredient sub-object
 
@@ -118,7 +118,7 @@ class Ingredient(UUIDBaseNode):
 
     @property
     @beartype
-    def material(self) -> Union[Material, None]:
+    def material(self) -> Union[Material, None, UIDProxy]:
         """
         current material in this ingredient sub-object
 
@@ -131,7 +131,7 @@ class Ingredient(UUIDBaseNode):
 
     @property
     @beartype
-    def quantity(self) -> List[Quantity]:
+    def quantity(self) -> List[Union[Quantity, UIDProxy]]:
         """
         quantity for the ingredient sub-object
 
@@ -143,7 +143,7 @@ class Ingredient(UUIDBaseNode):
         return self._json_attrs.quantity.copy()
 
     @beartype
-    def set_material(self, new_material: Material, new_quantity: List[Quantity]) -> None:
+    def set_material(self, new_material: Union[Material, UIDProxy], new_quantity: List[Union[Quantity, UIDProxy]]) -> None:
         """
         update ingredient sub-object with new material and new list of quantities
 

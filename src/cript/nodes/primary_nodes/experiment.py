@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
-from cript.nodes.util.json import NodeUID
+from cript.nodes.util.json import UIDProxy
 
 
 class Experiment(PrimaryBaseNode):
@@ -66,12 +66,12 @@ class Experiment(PrimaryBaseNode):
         all Collection attributes
         """
 
-        process: List[NodeUID[Any]] = field(default_factory=list)
-        computation: List[NodeUID[Any]] = field(default_factory=list)
-        computation_process: List[NodeUID[Any]] = field(default_factory=list)
-        data: List[NodeUID[Any]] = field(default_factory=list)
+        process: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        computation: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        computation_process: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        data: List[Union[Any, UIDProxy]] = field(default_factory=list)
         funding: List[str] = field(default_factory=list)
-        citation: List[NodeUID[Any]] = field(default_factory=list)
+        citation: List[Union[Any, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -79,12 +79,12 @@ class Experiment(PrimaryBaseNode):
     def __init__(
         self,
         name: str,
-        process: Optional[List[NodeUID[Any]]] = None,
-        computation: Optional[List[NodeUID[Any]]] = None,
-        computation_process: Optional[List[NodeUID[Any]]] = None,
-        data: Optional[List[NodeUID[Any]]] = None,
+        process: Optional[List[Union[Any, UIDProxy]]] = None,
+        computation: Optional[List[Union[Any, UIDProxy]]] = None,
+        computation_process: Optional[List[Union[Any, UIDProxy]]] = None,
+        data: Optional[List[Union[Any, UIDProxy]]] = None,
         funding: Optional[List[str]] = None,
-        citation: Optional[List[NodeUID[Any]]] = None,
+        citation: Optional[List[Union[Any, UIDProxy]]] = None,
         notes: str = "",
         **kwargs
     ):

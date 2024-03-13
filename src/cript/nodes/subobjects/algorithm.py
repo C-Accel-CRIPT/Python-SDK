@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field, replace
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.parameter import Parameter
-from cript.nodes.util.json import NodeUID
+from cript.nodes.util.json import UIDProxy
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -70,12 +70,12 @@ class Algorithm(UUIDBaseNode):
         key: str = ""
         type: str = ""
 
-        parameter: List[NodeUID[Parameter]] = field(default_factory=list)
-        citation: List[NodeUID[Citation]] = field(default_factory=list)
+        parameter: List[Union[Parameter, UIDProxy]] = field(default_factory=list)
+        citation: List[Union[Citation, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
-    def __init__(self, key: str, type: str, parameter: Optional[List[NodeUID[Parameter]]] = None, citation: Optional[List[NodeUID[Citation]]] = None, **kwargs):  # ignored
+    def __init__(self, key: str, type: str, parameter: Optional[List[Union[Parameter, UIDProxy]]] = None, citation: Optional[List[Union[Citation, UIDProxy]]] = None, **kwargs):  # ignored
         """
         Create algorithm sub-object
 
@@ -173,7 +173,7 @@ class Algorithm(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def parameter(self) -> List[Parameter]:
+    def parameter(self) -> List[Union[Parameter, UIDProxy]]:
         """
         list of [Parameter](../parameter) sub-objects for the algorithm sub-object
 
@@ -195,7 +195,7 @@ class Algorithm(UUIDBaseNode):
         return self._json_attrs.parameter.copy()
 
     @parameter.setter
-    def parameter(self, new_parameter: List[Parameter]) -> None:
+    def parameter(self, new_parameter: List[Union[Parameter, UIDProxy]]) -> None:
         """
         set a list of cript.Parameter sub-objects
 
@@ -212,7 +212,7 @@ class Algorithm(UUIDBaseNode):
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
-    def citation(self) -> Citation:
+    def citation(self) -> List[Union[Citation, UIDProxy]]:
         """
         [citation](../citation) subobject for algorithm subobject
 
@@ -248,7 +248,7 @@ class Algorithm(UUIDBaseNode):
         return self._json_attrs.citation.copy()  # type: ignore
 
     @citation.setter
-    def citation(self, new_citation: List[Citation]) -> None:
+    def citation(self, new_citation: List[Union[Citation, UIDProxy]]) -> None:
         """
         set the algorithm citation subobject
 

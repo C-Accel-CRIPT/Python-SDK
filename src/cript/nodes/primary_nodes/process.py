@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
-from cript.nodes.util.json import NodeUID
+from cript.nodes.util.json import UIDProxy
 
 
 class Process(PrimaryBaseNode):
@@ -62,16 +62,16 @@ class Process(PrimaryBaseNode):
 
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        ingredient: List[NodeUID[Any]] = field(default_factory=list)
+        ingredient: List[Union[Any, UIDProxy]] = field(default_factory=list)
         description: str = ""
-        equipment: List[NodeUID[Any]] = field(default_factory=list)
-        product: List[NodeUID[Any]] = field(default_factory=list)
-        waste: List[NodeUID[Any]] = field(default_factory=list)
-        prerequisite_process: List[NodeUID["Process"]] = field(default_factory=list)
-        condition: List[NodeUID[Any]] = field(default_factory=list)
-        property: List[NodeUID[Any]] = field(default_factory=list)
+        equipment: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        product: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        waste: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        prerequisite_process: List[Union["Process", UIDProxy]] = field(default_factory=list)
+        condition: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        property: List[Union[Any, UIDProxy]] = field(default_factory=list)
         keyword: List[str] = field(default_factory=list)
-        citation: List[NodeUID[Any]] = field(default_factory=list)
+        citation: List[Union[Any, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -80,16 +80,16 @@ class Process(PrimaryBaseNode):
         self,
         name: str,
         type: str,
-        ingredient: Optional[List[NodeUID[Any]]] = None,
+        ingredient: Optional[List[Union[Any, UIDProxy]]] = None,
         description: str = "",
-        equipment: Optional[List[NodeUID[Any]]] = None,
-        product: Optional[List[NodeUID[Any]]] = None,
-        waste: Optional[List[NodeUID[Any]]] = None,
-        prerequisite_process: Optional[List[NodeUID["Process"]]] = None,
-        condition: Optional[List[NodeUID[Any]]] = None,
-        property: Optional[List[NodeUID[Any]]] = None,
+        equipment: Optional[List[Union[Any, UIDProxy]]] = None,
+        product: Optional[List[Union[Any, UIDProxy]]] = None,
+        waste: Optional[List[Union[Any, UIDProxy]]] = None,
+        prerequisite_process: Optional[List[Union["Process", UIDProxy]]] = None,
+        condition: Optional[List[Union[Any, UIDProxy]]] = None,
+        property: Optional[List[Union[Any, UIDProxy]]] = None,
         keyword: Optional[List[str]] = None,
-        citation: Optional[List[NodeUID[Any]]] = None,
+        citation: Optional[List[Union[Any, UIDProxy]]] = None,
         notes: str = "",
         **kwargs
     ) -> None:
@@ -417,7 +417,7 @@ class Process(PrimaryBaseNode):
 
     @property
     @beartype
-    def prerequisite_process(self) -> List["Process"]:
+    def prerequisite_process(self) -> List[Union["Process", UIDProxy]]:
         """
         list of prerequisite process nodes
 
@@ -440,7 +440,7 @@ class Process(PrimaryBaseNode):
 
     @prerequisite_process.setter
     @beartype
-    def prerequisite_process(self, new_prerequisite_process_list: List["Process"]) -> None:
+    def prerequisite_process(self, new_prerequisite_process_list: List[Union["Process", UIDProxy]]) -> None:
         """
         set the prerequisite_process for the process node
 

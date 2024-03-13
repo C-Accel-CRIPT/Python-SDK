@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.supporting_nodes import User
-from cript.nodes.util.json import NodeUID
+from cript.nodes.util.json import UIDProxy
 
 
 class Collection(PrimaryBaseNode):
@@ -57,17 +57,19 @@ class Collection(PrimaryBaseNode):
         """
 
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        member: List[NodeUID[User]] = field(default_factory=list)
-        admin: List[NodeUID[User]] = field(default_factory=list)
-        experiment: List[NodeUID[Any]] = field(default_factory=list)
-        inventory: List[NodeUID[Any]] = field(default_factory=list)
+        member: List[Union[User, UIDProxy]] = field(default_factory=list)
+        admin: List[Union[User, UIDProxy]] = field(default_factory=list)
+        experiment: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        inventory: List[Union[Any, UIDProxy]] = field(default_factory=list)
         doi: str = ""
-        citation: List[NodeUID[Any]] = field(default_factory=list)
+        citation: List[Union[Any, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, name: str, experiment: Optional[List[NodeUID[Any]]] = None, inventory: Optional[List[NodeUID[Any]]] = None, doi: str = "", citation: Optional[List[NodeUID[Any]]] = None, notes: str = "", **kwargs) -> None:
+    def __init__(
+        self, name: str, experiment: Optional[List[Union[Any, UIDProxy]]] = None, inventory: Optional[List[Union[Any, UIDProxy]]] = None, doi: str = "", citation: Optional[List[Union[Any, UIDProxy]]] = None, notes: str = "", **kwargs
+    ) -> None:
         """
         create a Collection with a name
         add list of experiment, inventory, citation, doi, and notes if available.
@@ -118,12 +120,12 @@ class Collection(PrimaryBaseNode):
 
     @property
     @beartype
-    def member(self) -> List[User]:
+    def member(self) -> List[Union[User, UIDProxy]]:
         return self._json_attrs.member.copy()
 
     @property
     @beartype
-    def admin(self) -> List[User]:
+    def admin(self) -> List[Union[User, UIDProxy]]:
         return self._json_attrs.admin
 
     @property

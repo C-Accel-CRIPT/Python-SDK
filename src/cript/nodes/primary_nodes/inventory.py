@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field, replace
-from typing import List
+from typing import List, Union
 
 from beartype import beartype
 
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
-from cript.nodes.util.json import NodeUID
+from cript.nodes.util.json import UIDProxy
 
 
 class Inventory(PrimaryBaseNode):
@@ -60,12 +60,12 @@ class Inventory(PrimaryBaseNode):
         all Inventory attributes
         """
 
-        material: List[NodeUID[Material]] = field(default_factory=list)
+        material: List[Union[Material, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, name: str, material: List[NodeUID[Material]], notes: str = "", **kwargs) -> None:
+    def __init__(self, name: str, material: List[Union[Material, UIDProxy]], notes: str = "", **kwargs) -> None:
         """
         Instantiate an inventory node
 
@@ -105,7 +105,7 @@ class Inventory(PrimaryBaseNode):
 
     @property
     @beartype
-    def material(self) -> List[Material]:
+    def material(self) -> List[Union[Material, UIDProxy]]:
         """
         List of [material](../material) in this inventory
 
@@ -132,7 +132,7 @@ class Inventory(PrimaryBaseNode):
 
     @material.setter
     @beartype
-    def material(self, new_material_list: List[Material]):
+    def material(self, new_material_list: List[Union[Material, UIDProxy]]):
         """
         set the list of material for this inventory node
 

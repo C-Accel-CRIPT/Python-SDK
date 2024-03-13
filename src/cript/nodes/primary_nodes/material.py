@@ -6,7 +6,7 @@ from beartype import beartype
 from cript.nodes.exceptions import CRIPTMaterialIdentifierError
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.process import Process
-from cript.nodes.util.json import NodeUID
+from cript.nodes.util.json import UIDProxy
 
 
 class Material(PrimaryBaseNode):
@@ -75,11 +75,11 @@ class Material(PrimaryBaseNode):
         """
 
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        component: List[NodeUID["Material"]] = field(default_factory=list)
-        process: Optional[NodeUID[Process]] = None
-        property: List[NodeUID[Any]] = field(default_factory=list)
-        parent_material: Optional[NodeUID["Material"]] = None
-        computational_forcefield: Optional[NodeUID[Any]] = None
+        component: List[Union["Material", UIDProxy]] = field(default_factory=list)
+        process: Optional[Union[Process, UIDProxy]] = None
+        property: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        parent_material: Optional[Union["Material", UIDProxy]] = None
+        computational_forcefield: Optional[Union[Any, UIDProxy]] = None
         keyword: List[str] = field(default_factory=list)
         amino_acid: Optional[str] = None
         bigsmiles: Optional[str] = None
@@ -100,11 +100,11 @@ class Material(PrimaryBaseNode):
     def __init__(
         self,
         name: str,
-        component: Optional[List[NodeUID["Material"]]] = None,
-        process: Optional[NodeUID[Process]] = None,
-        property: Optional[List[NodeUID[Any]]] = None,
-        parent_material: Optional[NodeUID["Material"]] = None,
-        computational_forcefield: Optional[NodeUID[Any]] = None,
+        component: Optional[List[Union["Material", UIDProxy]]] = None,
+        process: Optional[Union[Process, UIDProxy]] = None,
+        property: Optional[List[Union[Any, UIDProxy]]] = None,
+        parent_material: Optional[Union["Material", UIDProxy]] = None,
+        computational_forcefield: Optional[Union[Any, UIDProxy]] = None,
         keyword: Optional[List[str]] = None,
         amino_acid: Optional[str] = None,
         bigsmiles: Optional[str] = None,
@@ -354,7 +354,7 @@ class Material(PrimaryBaseNode):
 
     @property
     @beartype
-    def component(self) -> List["Material"]:
+    def component(self) -> List[Union["Material", UIDProxy]]:
         """
         list of components ([material nodes](./)) that make up this material
 
@@ -386,7 +386,7 @@ class Material(PrimaryBaseNode):
 
     @component.setter
     @beartype
-    def component(self, new_component_list: List["Material"]) -> None:
+    def component(self, new_component_list: List[Union["Material", UIDProxy]]) -> None:
         """
         set the list of component (material nodes) that make up this material
 
@@ -403,7 +403,7 @@ class Material(PrimaryBaseNode):
 
     @property
     @beartype
-    def parent_material(self) -> Optional["Material"]:
+    def parent_material(self) -> Optional[Union["Material", UIDProxy]]:
         """
         List of parent materials
 
@@ -416,7 +416,7 @@ class Material(PrimaryBaseNode):
 
     @parent_material.setter
     @beartype
-    def parent_material(self, new_parent_material: Optional["Material"]) -> None:
+    def parent_material(self, new_parent_material: Optional[Union["Material", UIDProxy]]) -> None:
         """
         set the [parent materials](./) for this material
 
@@ -459,19 +459,19 @@ class Material(PrimaryBaseNode):
 
     @computational_forcefield.setter
     @beartype
-    def computational_forcefield(self, new_computational_forcefield_list: Any) -> None:
+    def computational_forcefield(self, new_computational_forcefield: Any) -> None:
         """
         sets the list of computational forcefields for this material
 
         Parameters
         ----------
-        new_computation_forcefield_list: List[ComputationalForcefield]
+        new_computation_forcefield: ComputationalForcefield
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, computational_forcefield=new_computational_forcefield_list)
+        new_attrs = replace(self._json_attrs, computational_forcefield=new_computational_forcefield)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -519,11 +519,11 @@ class Material(PrimaryBaseNode):
 
     @property
     @beartype
-    def process(self) -> Optional[Process]:
+    def process(self) -> Optional[Union[Process, UIDProxy]]:
         return self._json_attrs.process  # type: ignore
 
     @process.setter
-    def process(self, new_process: Process) -> None:
+    def process(self, new_process: Union[Process, UIDProxy]) -> None:
         new_attrs = replace(self._json_attrs, process=new_process)
         self._update_json_attrs_if_valid(new_attrs)
 

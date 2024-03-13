@@ -5,7 +5,7 @@ import dataclasses
 import inspect
 import json
 import uuid
-from typing import Dict, List, Optional, Set, Union, _SpecialForm, _type_check
+from typing import Dict, List, Optional, Set, Union
 
 import cript.nodes
 from cript.nodes.core import BaseNode
@@ -215,13 +215,6 @@ class NodeEncoder(json.JSONEncoder):
         return serialize_dict, uid_of_condensed
 
 
-@_SpecialForm
-def NodeUID(self, parameters):
-    """Node[X] is equivalent to Union[X, UIDProxy]. (Implementation from CPython.typing.Optional)"""
-    arg = _type_check(parameters, f"{self} requires a single type.")
-    return Union[arg, UIDProxy]
-
-
 class _NodeDecoderHook:
     def __init__(self, uid_cache: Optional[Dict] = None):
         """
@@ -247,7 +240,7 @@ class _NodeDecoderHook:
     def uid_cache(self):
         return self._uid_cache
 
-    def __call__(self, node_str: Union[Dict, str]) -> Dict:
+    def __call__(self, node_str: Union[Dict, str]) -> Union[Dict, UIDProxy]:
         """
         Internal function, used as a hook for json deserialization.
 

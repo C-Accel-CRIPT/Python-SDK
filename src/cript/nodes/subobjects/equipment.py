@@ -1,12 +1,12 @@
 from dataclasses import dataclass, field, replace
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from beartype import beartype
 
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.condition import Condition
 from cript.nodes.supporting_nodes.file import File
-from cript.nodes.util.json import NodeUID
+from cript.nodes.util.json import UIDProxy
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -54,14 +54,14 @@ class Equipment(UUIDBaseNode):
     class JsonAttributes(UUIDBaseNode.JsonAttributes):
         key: str = ""
         description: str = ""
-        condition: List[NodeUID[Condition]] = field(default_factory=list)
-        file: List[NodeUID[File]] = field(default_factory=list)
-        citation: List[NodeUID[Citation]] = field(default_factory=list)
+        condition: List[Union[Condition, UIDProxy]] = field(default_factory=list)
+        file: List[Union[File, UIDProxy]] = field(default_factory=list)
+        citation: List[Union[Citation, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, key: str, description: str = "", condition: Optional[List[NodeUID[Condition]]] = None, file: Optional[List[NodeUID[File]]] = None, citation: Optional[List[NodeUID[Citation]]] = None, **kwargs) -> None:
+    def __init__(self, key: str, description: str = "", condition: Optional[List[Union[Condition, UIDProxy]]] = None, file: Optional[List[Union[File, UIDProxy]]] = None, citation: Optional[List[Union[Citation, UIDProxy]]] = None, **kwargs) -> None:
         """
         create equipment sub-object
 
@@ -175,7 +175,7 @@ class Equipment(UUIDBaseNode):
 
     @property
     @beartype
-    def condition(self) -> List[Condition]:
+    def condition(self) -> List[Union[Condition, UIDProxy]]:
         """
         conditions under which the property was measured
 
@@ -200,7 +200,7 @@ class Equipment(UUIDBaseNode):
 
     @condition.setter
     @beartype
-    def condition(self, new_condition: List[Condition]) -> None:
+    def condition(self, new_condition: List[Union[Condition, UIDProxy]]) -> None:
         """
         set a list of Conditions for the equipment sub-object
 
@@ -218,7 +218,7 @@ class Equipment(UUIDBaseNode):
 
     @property
     @beartype
-    def file(self) -> List[File]:
+    def file(self) -> List[Union[File, UIDProxy]]:
         """
         list of file nodes to link to calibration or equipment specification documents
 
@@ -243,7 +243,7 @@ class Equipment(UUIDBaseNode):
 
     @file.setter
     @beartype
-    def file(self, new_file: List[File]) -> None:
+    def file(self, new_file: List[Union[File, UIDProxy]]) -> None:
         """
         set the file node for the equipment subobject
 
@@ -261,7 +261,7 @@ class Equipment(UUIDBaseNode):
 
     @property
     @beartype
-    def citation(self) -> List[Citation]:
+    def citation(self) -> List[Union[Citation, UIDProxy]]:
         """
         reference to a book, paper, or scholarly work
 
@@ -297,7 +297,7 @@ class Equipment(UUIDBaseNode):
 
     @citation.setter
     @beartype
-    def citation(self, new_citation: List[Citation]) -> None:
+    def citation(self, new_citation: List[Union[Citation, UIDProxy]]) -> None:
         """
         set the citation subobject for this equipment subobject
 

@@ -22,7 +22,11 @@ from cript.nodes.uuid_base import UUIDBaseNode
 class UIDProxy:
     """Helper class that store temporarily unresolved UIDs."""
 
-    uid: str = ""
+    uid: Optional[str] = None
+
+    def __post_init__(self):
+        if self.uid is None:
+            raise RuntimeError("UID needs to be initialized")
 
 
 class NodeEncoder(json.JSONEncoder):
@@ -103,8 +107,7 @@ class NodeEncoder(json.JSONEncoder):
             return str(obj)
 
         if isinstance(obj, UIDProxy):
-            print(UIDProxy)
-            return UIDProxy.uid
+            return obj.uid
 
         if isinstance(obj, BaseNode):
             try:
@@ -290,7 +293,9 @@ class _NodeDecoderHook:
                 return self._uid_cache[node_dict["uid"]]
             except KeyError:
                 # raise CRIPTDeserializationUIDError("Unknown", node_dict["uid"])
-                return UIDProxy(uid=node_dict["uid"])
+                proxy = UIDProxy(uid=node_dict["uid"])
+                return proxy
+
         try:
             node_type_list = node_dict["node"]
         except KeyError:  # Not a node, just a regular dictionary
@@ -316,18 +321,30 @@ class _NodeDecoderHook:
         return node_dict
 
     def resolve_unresolved_uids(self, node_iter):
-        for node in iterate_leaves(node_iter):
-            field_names = [field.name for field in dataclasses.fields(node._json_attrs)]
-            for field_name in field_names:
-                field_attr = getattr(node._json_attrs, field_name)
-                if isinstance(field_attr, UIDProxy):
-                    unresolved_uid = field_attr.uid
-                    try:
-                        uid_node = self.uid_cache[unresolved_uid]
-                    except KeyError as exc:
-                        raise CRIPTDeserializationUIDError("Unknown", unresolved_uid) from exc
-                    updated_attrs = dataclasses.replace(node._json_attrs, **{field_name: uid_node})
-                    node._update_json_attrs_if_valid(updated_attrs)
+        def handle_uid_replacement(node, name, attr):
+            if isinstance(attr, UIDProxy):
+                unresolved_uid = attr.uid
+                try:
+                    uid_node = self.uid_cache[unresolved_uid]
+                except KeyError as exc:
+                    raise CRIPTDeserializationUIDError("Unknown", unresolved_uid) from exc
+                updated_attrs = dataclasses.replace(node._json_attrs, **{name: uid_node})
+                node._update_json_attrs_if_valid(updated_attrs)
+
+        for node_leaves in iterate_leaves(node_iter):
+            if isinstance(node_leaves, BaseNode):
+                for node in node_leaves:
+                    field_names = [field.name for field in dataclasses.fields(node._json_attrs)]
+                    for field_name in field_names:
+                        field_attr = getattr(node._json_attrs, field_name)
+                        handle_uid_replacement(node, field_name, field_attr)
+                        if isinstance(field_attr, list):
+                            for i in range(len(field_attr)):
+                                if isinstance(field_attr[i], UIDProxy):
+                                    try:
+                                        field_attr[i] = self.uid_cache[field_attr[i].uid]
+                                    except KeyError as exc:
+                                        raise CRIPTDeserializationUIDError("Unknown", field_attr[i].uid) from exc
         return node_iter
 
 

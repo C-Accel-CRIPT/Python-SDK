@@ -48,6 +48,387 @@ def complex_project_node(complex_project_dict) -> cript.Project:
 
 
 @pytest.fixture(scope="function")
+def fixed_cyclic_project_node() -> cript.Project:
+    project_json_string: str = "{\n"
+    project_json_string += '"node": ["Project"],\n'
+    project_json_string += '"uid": "_:0e487131-1dbf-4c6c-9ee0-650df148b06e",\n'
+    project_json_string += '"uuid": "55a41f23-4791-4dc7-bf2c-48fd2b6fc90b",\n'
+    project_json_string += '"updated_by": {\n'
+    project_json_string += '"node": ["User"],\n'
+    project_json_string += '"uid": "_:5838e9cc-f01d-468e-96de-93bfe6fb758f",\n'
+    project_json_string += '"uuid": "5838e9cc-f01d-468e-96de-93bfe6fb758f",\n'
+    project_json_string += '"created_at": "2024-03-12 15:58:12.486673",\n'
+    project_json_string += '"updated_at": "2024-03-12 15:58:12.486681",\n'
+    project_json_string += '"email": "test@emai.com",\n'
+    project_json_string += '"model_version": "1.0.0",\n'
+    project_json_string += '"orcid": "0000-0002-0000-0000",\n'
+    project_json_string += '"picture": "/my/picture/path",\n'
+    project_json_string += '"username": "testuser"\n'
+    project_json_string += "},\n"
+    project_json_string += '"created_by": {\n'
+    project_json_string += '"node": ["User"],\n'
+    project_json_string += '"uid": "_:2bb1fc16-6e72-480d-a3df-b74eac4d32e8",\n'
+    project_json_string += '"uuid": "ab385d26-6ee5-40d4-9095-2d623616a162",\n'
+    project_json_string += '"created_at": "2024-03-12 15:58:12.486673",\n'
+    project_json_string += '"updated_at": "2024-03-12 15:58:12.486681",\n'
+    project_json_string += '"email": "test@emai.com",\n'
+    project_json_string += '"model_version": "1.0.0",\n'
+    project_json_string += '"orcid": "0000-0002-0000-0000",\n'
+    project_json_string += '"picture": "/my/picture/path",\n'
+    project_json_string += '"username": "testuser"\n'
+    project_json_string += "},\n"
+    project_json_string += '"locked": true,\n'
+    project_json_string += '"model_version": "1.0.0",\n'
+    project_json_string += '"public": true,\n'
+    project_json_string += '"name": "my project name",\n'
+    project_json_string += '"notes": "my project notes",\n'
+    project_json_string += '"member": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:2bb1fc16-6e72-480d-a3df-b74eac4d32e8"\n'
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"admin": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:2bb1fc16-6e72-480d-a3df-b74eac4d32e8"\n'
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"collection": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Collection"],\n'
+    project_json_string += '"uid": "_:61a99328-108b-4307-bfcb-fccd12a5dd91",\n'
+    project_json_string += '"uuid": "61a99328-108b-4307-bfcb-fccd12a5dd91",\n'
+    project_json_string += '"name": "my complex collection name",\n'
+    project_json_string += '"experiment": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Experiment"],\n'
+    project_json_string += '"uid": "_:d2b3169d-c200-4143-811a-a0d07439dd96",\n'
+    project_json_string += '"uuid": "d2b3169d-c200-4143-811a-a0d07439dd96",\n'
+    project_json_string += '"name": "my experiment name",\n'
+    project_json_string += '"process": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Process"],\n'
+    project_json_string += '"uid": "_:5d649b93-8f2c-4509-9aa7-311213df9405",\n'
+    project_json_string += '"uuid": "5d649b93-8f2c-4509-9aa7-311213df9405",\n'
+    project_json_string += '"name": "my process name",\n'
+    project_json_string += '"type": "affinity_pure",\n'
+    project_json_string += '"ingredient": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Ingredient"],\n'
+    project_json_string += '"uid": "_:21601ad5-c225-4626-8baa-3a7c1d64cafa",\n'
+    project_json_string += '"uuid": "21601ad5-c225-4626-8baa-3a7c1d64cafa",\n'
+    project_json_string += '"material": {\n'
+    project_json_string += '"node": ["Material"],\n'
+    project_json_string += '"uid": "_:ea9ad3e7-84a7-475f-82a8-16f5b9241e37",\n'
+    project_json_string += '"uuid": "ea9ad3e7-84a7-475f-82a8-16f5b9241e37",\n'
+    project_json_string += '"name": "my test material 9221be1d-247c-4f67-8a0a-fe1ec657705b",\n'
+    project_json_string += '"property": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Property"],\n'
+    project_json_string += '"uid": "_:fc504202-6fdd-43c7-830d-40c7d3f0cb8c",\n'
+    project_json_string += '"uuid": "fc504202-6fdd-43c7-830d-40c7d3f0cb8c",\n'
+    project_json_string += '"key": "modulus_shear",\n'
+    project_json_string += '"type": "value",\n'
+    project_json_string += '"value": 5.0,\n'
+    project_json_string += '"unit": "GPa",\n'
+    project_json_string += '"computation": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Computation"],\n'
+    project_json_string += '"uid": "_:175708fa-cc29-4442-be7f-adf85e995330",\n'
+    project_json_string += '"uuid": "175708fa-cc29-4442-be7f-adf85e995330",\n'
+    project_json_string += '"name": "my computation name",\n'
+    project_json_string += '"type": "analysis",\n'
+    project_json_string += '"input_data": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Data"],\n'
+    project_json_string += '"uid": "_:dcb516a1-951d-461a-beb6-bdf2aecd0778",\n'
+    project_json_string += '"uuid": "dcb516a1-951d-461a-beb6-bdf2aecd0778",\n'
+    project_json_string += '"name": "my data name",\n'
+    project_json_string += '"type": "afm_amp",\n'
+    project_json_string += '"file": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["File"],\n'
+    project_json_string += '"uid": "_:c94aba31-adf2-4eeb-b51e-8c70568c2eb0",\n'
+    project_json_string += '"uuid": "c94aba31-adf2-4eeb-b51e-8c70568c2eb0",\n'
+    project_json_string += '"name": "my complex file node fixture",\n'
+    project_json_string += '"source": "https://criptapp.org",\n'
+    project_json_string += '"type": "calibration",\n'
+    project_json_string += '"extension": ".csv",\n'
+    project_json_string += '"data_dictionary": "my file\'s data dictionary"\n'
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"output_data": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Data"],\n'
+    project_json_string += '"uid": "_:6a2e81af-861b-4c66-96fd-b969a38b81b1",\n'
+    project_json_string += '"uuid": "6a2e81af-861b-4c66-96fd-b969a38b81b1",\n'
+    project_json_string += '"name": "my data name",\n'
+    project_json_string += '"type": "afm_amp",\n'
+    project_json_string += '"file": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["File"],\n'
+    project_json_string += '"uid": "_:ce01ba93-cfc5-4265-a6d6-8c38397deb43",\n'
+    project_json_string += '"uuid": "ce01ba93-cfc5-4265-a6d6-8c38397deb43",\n'
+    project_json_string += '"name": "my complex file node fixture",\n'
+    project_json_string += '"source": "https://criptapp.org",\n'
+    project_json_string += '"type": "calibration",\n'
+    project_json_string += '"extension": ".csv",\n'
+    project_json_string += '"data_dictionary": "my file\'s data dictionary"\n'
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "},\n"
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Computation"],\n'
+    project_json_string += '"uid": "_:1aa11462-b394-4c35-906e-d0e9198be6da",\n'
+    project_json_string += '"uuid": "1aa11462-b394-4c35-906e-d0e9198be6da",\n'
+    project_json_string += '"name": "my computation name",\n'
+    project_json_string += '"type": "analysis",\n'
+    project_json_string += '"input_data": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:dcb516a1-951d-461a-beb6-bdf2aecd0778"\n'
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"output_data": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:6a2e81af-861b-4c66-96fd-b969a38b81b1"\n'
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"parent_material": {\n'
+    project_json_string += '"node": ["Material"],\n'
+    project_json_string += '"uid": "_:2ee56671-5efb-4f99-a7ea-d659f5b5dd9a",\n'
+    project_json_string += '"uuid": "2ee56671-5efb-4f99-a7ea-d659f5b5dd9a",\n'
+    project_json_string += '"name": "my test material 9221be1d-247c-4f67-8a0a-fe1ec657705b",\n'
+    project_json_string += '"process": {\n'
+    project_json_string += '"uid": "_:5d649b93-8f2c-4509-9aa7-311213df9405"\n'
+    project_json_string += "},\n"
+    project_json_string += '"property": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Property"],\n'
+    project_json_string += '"uid": "_:fde629f5-8d3a-4546-8cd3-9de63b990187",\n'
+    project_json_string += '"uuid": "fde629f5-8d3a-4546-8cd3-9de63b990187",\n'
+    project_json_string += '"key": "modulus_shear",\n'
+    project_json_string += '"type": "value",\n'
+    project_json_string += '"value": 5.0,\n'
+    project_json_string += '"unit": "GPa",\n'
+    project_json_string += '"computation": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Computation"],\n'
+    project_json_string += '"uid": "_:2818ed85-2758-45f9-9f30-5c3dfedd3d33",\n'
+    project_json_string += '"uuid": "2818ed85-2758-45f9-9f30-5c3dfedd3d33",\n'
+    project_json_string += '"name": "my computation name",\n'
+    project_json_string += '"type": "analysis",\n'
+    project_json_string += '"input_data": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Data"],\n'
+    project_json_string += '"uid": "_:0a88e09d-488f-45ed-ad9c-14873792b8fd",\n'
+    project_json_string += '"uuid": "0a88e09d-488f-45ed-ad9c-14873792b8fd",\n'
+    project_json_string += '"name": "my data name",\n'
+    project_json_string += '"type": "afm_amp",\n'
+    project_json_string += '"file": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["File"],\n'
+    project_json_string += '"uid": "_:1fc95012-2845-46ac-a8e3-7178fe19afcd",\n'
+    project_json_string += '"uuid": "1fc95012-2845-46ac-a8e3-7178fe19afcd",\n'
+    project_json_string += '"name": "my complex file node fixture",\n'
+    project_json_string += '"source": "https://criptapp.org",\n'
+    project_json_string += '"type": "calibration",\n'
+    project_json_string += '"extension": ".csv",\n'
+    project_json_string += '"data_dictionary": "my file\'s data dictionary"\n'
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"output_data": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Data"],\n'
+    project_json_string += '"uid": "_:309b0d7b-027c-4422-ab5f-58069fe4adb1",\n'
+    project_json_string += '"uuid": "309b0d7b-027c-4422-ab5f-58069fe4adb1",\n'
+    project_json_string += '"name": "my data name",\n'
+    project_json_string += '"type": "afm_amp",\n'
+    project_json_string += '"file": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["File"],\n'
+    project_json_string += '"uid": "_:e78cf3cf-de6c-4364-93c4-4fb3d352bde2",\n'
+    project_json_string += '"uuid": "e78cf3cf-de6c-4364-93c4-4fb3d352bde2",\n'
+    project_json_string += '"name": "my complex file node fixture",\n'
+    project_json_string += '"source": "https://criptapp.org",\n'
+    project_json_string += '"type": "calibration",\n'
+    project_json_string += '"extension": ".csv",\n'
+    project_json_string += '"data_dictionary": "my file\'s data dictionary"\n'
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "},\n"
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Computation"],\n'
+    project_json_string += '"uid": "_:09cf72a4-a397-4953-baa6-7cdf5be067c4",\n'
+    project_json_string += '"uuid": "09cf72a4-a397-4953-baa6-7cdf5be067c4",\n'
+    project_json_string += '"name": "my computation name",\n'
+    project_json_string += '"type": "analysis",\n'
+    project_json_string += '"input_data": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:0a88e09d-488f-45ed-ad9c-14873792b8fd"\n'
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"output_data": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:309b0d7b-027c-4422-ab5f-58069fe4adb1"\n'
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"bigsmiles": "{[][$]COC[$][]}"\n'
+    project_json_string += "},\n"
+    project_json_string += '"bigsmiles": "{[][$]COC[$][]}"\n'
+    project_json_string += "}\n"
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"product": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:ea9ad3e7-84a7-475f-82a8-16f5b9241e37"\n'
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"computation": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:2818ed85-2758-45f9-9f30-5c3dfedd3d33"\n'
+    project_json_string += "},\n"
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:09cf72a4-a397-4953-baa6-7cdf5be067c4"\n'
+    project_json_string += "},\n"
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:175708fa-cc29-4442-be7f-adf85e995330"\n'
+    project_json_string += "},\n"
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:1aa11462-b394-4c35-906e-d0e9198be6da"\n'
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"data": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:0a88e09d-488f-45ed-ad9c-14873792b8fd"\n'
+    project_json_string += "},\n"
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:309b0d7b-027c-4422-ab5f-58069fe4adb1"\n'
+    project_json_string += "},\n"
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:dcb516a1-951d-461a-beb6-bdf2aecd0778"\n'
+    project_json_string += "},\n"
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:6a2e81af-861b-4c66-96fd-b969a38b81b1"\n'
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"inventory": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Inventory"],\n'
+    project_json_string += '"uid": "_:1ff50987-e0a2-4aa3-a1a2-bdcefd54693d",\n'
+    project_json_string += '"uuid": "1ff50987-e0a2-4aa3-a1a2-bdcefd54693d",\n'
+    project_json_string += '"name": "my inventory name",\n'
+    project_json_string += '"material": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:ea9ad3e7-84a7-475f-82a8-16f5b9241e37"\n'
+    project_json_string += "},\n"
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Material"],\n'
+    project_json_string += '"uid": "_:845c90c1-5a93-416f-9c42-1bac1de0bd9a",\n'
+    project_json_string += '"uuid": "845c90c1-5a93-416f-9c42-1bac1de0bd9a",\n'
+    project_json_string += '"name": "material 2 730f2483-f018-4583-82d3-beb27947d470",\n'
+    project_json_string += '"process": {\n'
+    project_json_string += '"uid": "_:5d649b93-8f2c-4509-9aa7-311213df9405"\n'
+    project_json_string += "},\n"
+    project_json_string += '"property": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:fc504202-6fdd-43c7-830d-40c7d3f0cb8c"\n'
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"bigsmiles": "{[][$]COC[$][]}"\n'
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"doi": "10.1038/1781168a0",\n'
+    project_json_string += '"citation": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"node": ["Citation"],\n'
+    project_json_string += '"uid": "_:1232d7be-d870-4357-bf41-f53a09707cca",\n'
+    project_json_string += '"uuid": "1232d7be-d870-4357-bf41-f53a09707cca",\n'
+    project_json_string += '"type": "reference",\n'
+    project_json_string += '"reference": {\n'
+    project_json_string += '"node": ["Reference"],\n'
+    project_json_string += '"uid": "_:3fb7801f-7253-4d6b-813b-f1d2d25b6316",\n'
+    project_json_string += '"uuid": "3fb7801f-7253-4d6b-813b-f1d2d25b6316",\n'
+    project_json_string += '"type": "journal_article",\n'
+    project_json_string += '"title": "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: SOft coarse grained Monte-Carlo Acceleration (SOMA)",\n'
+    project_json_string += '"author": ["Ludwig Schneider", "Marcus M\u00fcller"],\n'
+    project_json_string += '"journal": "Computer Physics Communications",\n'
+    project_json_string += '"publisher": "Elsevier",\n'
+    project_json_string += '"year": 2019,\n'
+    project_json_string += '"pages": [463, 476],\n'
+    project_json_string += '"doi": "10.1016/j.cpc.2018.08.011",\n'
+    project_json_string += '"issn": "0010-4655",\n'
+    project_json_string += '"website": "https://www.sciencedirect.com/science/article/pii/S0010465518303072"\n'
+    project_json_string += "}\n"
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "}\n"
+    project_json_string += "],\n"
+    project_json_string += '"material": [\n'
+    project_json_string += "{\n"
+    project_json_string += '"uid": "_:2ee56671-5efb-4f99-a7ea-d659f5b5dd9a"\n'
+    project_json_string += "}\n"
+    project_json_string += "]\n"
+    project_json_string += "}\n"
+
+    return cript.load_nodes_from_json(project_json_string)
+
+
+@pytest.fixture(scope="function")
+def fixed_cyclic_project_dfs_uuid_order():
+    expected_list = [
+        "55a41f23-4791-4dc7-bf2c-48fd2b6fc90b",
+        "ab385d26-6ee5-40d4-9095-2d623616a162",
+        "61a99328-108b-4307-bfcb-fccd12a5dd91",
+        "1232d7be-d870-4357-bf41-f53a09707cca",
+        "3fb7801f-7253-4d6b-813b-f1d2d25b6316",
+        "d2b3169d-c200-4143-811a-a0d07439dd96",
+        "2818ed85-2758-45f9-9f30-5c3dfedd3d33",
+        "0a88e09d-488f-45ed-ad9c-14873792b8fd",
+        "1fc95012-2845-46ac-a8e3-7178fe19afcd",
+        "309b0d7b-027c-4422-ab5f-58069fe4adb1",
+        "e78cf3cf-de6c-4364-93c4-4fb3d352bde2",
+        "09cf72a4-a397-4953-baa6-7cdf5be067c4",
+        "175708fa-cc29-4442-be7f-adf85e995330",
+        "dcb516a1-951d-461a-beb6-bdf2aecd0778",
+        "c94aba31-adf2-4eeb-b51e-8c70568c2eb0",
+        "6a2e81af-861b-4c66-96fd-b969a38b81b1",
+        "ce01ba93-cfc5-4265-a6d6-8c38397deb43",
+        "1aa11462-b394-4c35-906e-d0e9198be6da",
+        "5d649b93-8f2c-4509-9aa7-311213df9405",
+        "21601ad5-c225-4626-8baa-3a7c1d64cafa",
+        "ea9ad3e7-84a7-475f-82a8-16f5b9241e37",
+        "2ee56671-5efb-4f99-a7ea-d659f5b5dd9a",
+        "fde629f5-8d3a-4546-8cd3-9de63b990187",
+        "fc504202-6fdd-43c7-830d-40c7d3f0cb8c",
+        "1ff50987-e0a2-4aa3-a1a2-bdcefd54693d",
+        "845c90c1-5a93-416f-9c42-1bac1de0bd9a",
+        "5838e9cc-f01d-468e-96de-93bfe6fb758f",
+    ]
+    return expected_list
+
+
+@pytest.fixture(scope="function")
 def simple_collection_node(simple_experiment_node) -> cript.Collection:
     """
     create a simple collection node for other tests to be able to easily and cleanly reuse

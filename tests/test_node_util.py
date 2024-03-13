@@ -196,27 +196,13 @@ def test_local_search(simple_algorithm_node, complex_parameter_node):
     assert find_parameter == []
 
 
-def test_cycles(complex_data_node, simple_computation_node):
-    # We create a wrong cycle with parameters here.
-    # TODO replace this with nodes that actually can form a cycle
-    d = copy.deepcopy(complex_data_node)
-    c = copy.deepcopy(simple_computation_node)
-    d.computation += [c]
-    # Using input and output data guarantees a cycle here.
-    c.output_data += [d]
-    c.input_data += [d]
+def test_cycles(fixed_cyclic_project_node):
+    new_project = fixed_cyclic_project_node
+    new_json = new_project.get_expanded_json()
 
-    # # Test the repetition of a citation.
-    # # Notice that we do not use a deepcopy here, as we want the citation to be the exact same node.
-    # citation = d.citation[0]
-    # # c._json_attrs.citation.append(citation)
-    # c.citation += [citation]
-    # # print(c.get_json(indent=2).json)
-    # # c.validate()
-
-    # Generate json with an implicit cycle
-    c.json
-    d.json
+    reloaded_project, cache = cript.load_nodes_from_json(new_json, _use_uuid_cache=dict())
+    assert reloaded_project is not new_project
+    assert reloaded_project.uuid == new_project.uuid
 
 
 def test_uid_serial(simple_inventory_node):
@@ -373,3 +359,8 @@ def test_uuid_cache_override(complex_project_node):
         new_node = cache[key]
         assert old_node.uuid == new_node.uuid
         assert old_node is not new_node
+
+
+def test_dfs_order(fixed_cyclic_project_node, fixed_cyclic_project_dfs_uuid_order):
+    for i, node in enumerate(fixed_cyclic_project_node):
+        assert node.uuid == fixed_cyclic_project_dfs_uuid_order[i]

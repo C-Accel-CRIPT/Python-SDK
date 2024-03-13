@@ -53,8 +53,8 @@ class UUIDBaseNode(BaseNode, ABC):
         self._json_attrs = replace(self._json_attrs, uuid=uuid)
         UUIDBaseNode._uuid_cache[uuid] = self
 
-    @beartype
     @property
+    @beartype
     def uuid(self) -> str:
         if not isinstance(self._json_attrs.uuid, str):
             # Some JSON decoding automatically converted this to UUID objects, which we don't want

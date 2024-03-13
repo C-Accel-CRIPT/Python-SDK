@@ -221,7 +221,7 @@ class BaseNode(ABC):
         # a new uid will prompt the creation of a new matching uuid.
         uid = get_new_uid()
         arguments["uid"] = uid
-        if "uuid" not in arguments:
+        if "uuid" in arguments:
             arguments["uuid"] = get_uuid_from_uid(uid)
 
         # Create node and init constructor attributes

@@ -4,7 +4,7 @@ import json
 import re
 import uuid
 from abc import ABC
-from dataclasses import asdict, dataclass, replace
+from dataclasses import dataclass, replace
 from typing import Dict, List, Optional, Set
 
 from cript.nodes.exceptions import (
@@ -12,6 +12,7 @@ from cript.nodes.exceptions import (
     CRIPTExtraJsonAttributes,
     CRIPTJsonSerializationError,
 )
+from cript.nodes.node_iterator import NodeIterator
 
 tolerated_extra_json = []
 
@@ -102,7 +103,7 @@ class BaseNode(ABC):
         str
             A string representation of the node.
         """
-        return str(asdict(self._json_attrs))
+        return str(self._json_attrs)
 
     @property
     def uid(self):
@@ -200,6 +201,7 @@ class BaseNode(ABC):
                 attrs = replace(attrs, uid="_:" + attrs.uid)
         except AttributeError:
             pass
+
         # But here we force even usually unwritable fields to be set.
         node._update_json_attrs_if_valid(attrs)
 
@@ -466,7 +468,7 @@ class BaseNode(ABC):
             if is_patch:
                 del tmp_dict["uuid"]  # patches do not allow UUID is the parent most node
 
-            return ReturnTuple(json.dumps(tmp_dict), tmp_dict, NodeEncoder.handled_ids)
+            return ReturnTuple(json.dumps(tmp_dict, **kwargs), tmp_dict, NodeEncoder.handled_ids)
         except Exception as exc:
             # TODO this handling that doesn't tell the user what happened and how they can fix it
             #   this just tells the user that something is wrong
@@ -600,40 +602,18 @@ class BaseNode(ABC):
         if handled_nodes is None:
             handled_nodes = []
 
-        # Protect against cycles in graph, by handling every instance of a node only once
-        if self in handled_nodes:
-            return []
-        handled_nodes += [self]
-
         found_children = []
 
-        # In this search we include the calling node itself.
-        # We check for this node if all specified attributes are present by counting them (AND condition).
-        found_attr = 0
-        for key, value in search_attr.items():
-            if is_attr_present(self, key, value):
-                found_attr += 1
-        # If exactly all attributes are found, it matches the search criterion
-        if found_attr == len(search_attr):
-            found_children += [self]
+        node_iterator = NodeIterator(self, search_depth)
+        for node in node_iterator:
+            found_attr = 0
+            for key, value in search_attr.items():
+                if is_attr_present(node, key, value):
+                    found_attr += 1
+            # If exactly all attributes are found, it matches the search criterion
+            if found_attr == len(search_attr):
+                found_children += [node]
 
-        # Recursion according to the recursion depth for all node children.
-        if search_depth != 0:
-            # Loop over all attributes, runtime contribution (none, or constant (max number of attributes of a node)
-            for field in self._json_attrs.__dataclass_fields__:
-                value = getattr(self._json_attrs, field)
-                # To save code paths, I convert non-lists into lists with one element.
-                if not isinstance(value, list):
-                    value = [value]
-                # Run time contribution: number of elements in the attribute list.
-                for v in value:
-                    try:  # Try every attribute for recursion (duck-typing)
-                        found_children += v.find_children(search_attr, search_depth - 1, handled_nodes=handled_nodes)
-                    except AttributeError:
-                        pass
-        # Total runtime, of non-recursive call: O(m*h) + O(k) where k is the number of children for this node,
-        #   h being the depth of the search dictionary, m being the number of nodes in the attribute list.
-        # Total runtime, with recursion: O(n*(k+m*h). A full graph traversal O(n) with a cost per node, that scales with the number of children per node and the search depth of the search dictionary.
         return found_children
 
     def remove_child(self, child) -> bool:

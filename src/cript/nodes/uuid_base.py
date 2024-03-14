@@ -3,8 +3,11 @@ from abc import ABC
 from dataclasses import dataclass, field, replace
 from typing import Any, Dict, Optional
 
+from beartype import beartype
+
 from cript.nodes.core import BaseNode
 from cript.nodes.exceptions import CRIPTUUIDException
+from cript.nodes.node_iterator import NodeIterator
 
 
 class UUIDBaseNode(BaseNode, ABC):
@@ -30,7 +33,7 @@ class UUIDBaseNode(BaseNode, ABC):
     _json_attrs: JsonAttributes = JsonAttributes()
 
     def __new__(cls, *args, **kwargs):
-        uuid: Optional[str] = kwargs.get("uuid")
+        uuid: Optional[str] = str(kwargs.get("uuid"))
         if uuid and uuid in UUIDBaseNode._uuid_cache:
             existing_node_to_overwrite = UUIDBaseNode._uuid_cache[uuid]
             if type(existing_node_to_overwrite) is not cls:
@@ -51,8 +54,13 @@ class UUIDBaseNode(BaseNode, ABC):
         UUIDBaseNode._uuid_cache[uuid] = self
 
     @property
-    def uuid(self) -> uuid.UUID:
-        return uuid.UUID(self._json_attrs.uuid)
+    @beartype
+    def uuid(self) -> str:
+        if not isinstance(self._json_attrs.uuid, str):
+            # Some JSON decoding automatically converted this to UUID objects, which we don't want
+            self._json_attrs = replace(self._json_attrs, uuid=str(self._json_attrs.uuid))
+
+        return self._json_attrs.uuid
 
     @property
     def url(self):
@@ -76,3 +84,7 @@ class UUIDBaseNode(BaseNode, ABC):
     @property
     def created_at(self):
         return self._json_attrs.created_at
+
+    def __iter__(self) -> NodeIterator:
+        """Enables DFS iteration over all children."""
+        return NodeIterator(self)

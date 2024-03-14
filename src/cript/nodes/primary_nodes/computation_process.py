@@ -1,9 +1,10 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.util.json import UIDProxy
 
 
 class ComputationProcess(PrimaryBaseNode):
@@ -113,13 +114,13 @@ class ComputationProcess(PrimaryBaseNode):
 
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        input_data: List[Any] = field(default_factory=list)
-        output_data: List[Any] = field(default_factory=list)
-        ingredient: List[Any] = field(default_factory=list)
-        software_configuration: List[Any] = field(default_factory=list)
-        condition: List[Any] = field(default_factory=list)
-        property: List[Any] = field(default_factory=list)
-        citation: List[Any] = field(default_factory=list)
+        input_data: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        output_data: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        ingredient: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        software_configuration: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        condition: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        property: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        citation: List[Union[Any, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -128,13 +129,13 @@ class ComputationProcess(PrimaryBaseNode):
         self,
         name: str,
         type: str,
-        input_data: List[Any],
-        ingredient: List[Any],
-        output_data: Optional[List[Any]] = None,
-        software_configuration: Optional[List[Any]] = None,
-        condition: Optional[List[Any]] = None,
-        property: Optional[List[Any]] = None,
-        citation: Optional[List[Any]] = None,
+        input_data: List[Union[Any, UIDProxy]],
+        ingredient: List[Union[Any, UIDProxy]],
+        output_data: Optional[List[Union[Any, UIDProxy]]] = None,
+        software_configuration: Optional[List[Union[Any, UIDProxy]]] = None,
+        condition: Optional[List[Union[Any, UIDProxy]]] = None,
+        property: Optional[List[Union[Any, UIDProxy]]] = None,
+        citation: Optional[List[Union[Any, UIDProxy]]] = None,
         notes: str = "",
         **kwargs
     ):

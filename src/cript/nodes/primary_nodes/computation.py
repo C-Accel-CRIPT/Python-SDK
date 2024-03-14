@@ -1,9 +1,10 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.util.json import UIDProxy
 
 
 class Computation(PrimaryBaseNode):
@@ -64,12 +65,12 @@ class Computation(PrimaryBaseNode):
 
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        input_data: List[Any] = field(default_factory=list)
-        output_data: List[Any] = field(default_factory=list)
-        software_configuration: List[Any] = field(default_factory=list)
-        condition: List[Any] = field(default_factory=list)
-        prerequisite_computation: Optional["Computation"] = None
-        citation: List[Any] = field(default_factory=list)
+        input_data: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        output_data: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        software_configuration: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        condition: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        prerequisite_computation: Optional[Union["Computation", UIDProxy]] = None
+        citation: List[Union[Any, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -78,12 +79,12 @@ class Computation(PrimaryBaseNode):
         self,
         name: str,
         type: str,
-        input_data: Optional[List[Any]] = None,
-        output_data: Optional[List[Any]] = None,
-        software_configuration: Optional[List[Any]] = None,
-        condition: Optional[List[Any]] = None,
-        prerequisite_computation: Optional["Computation"] = None,
-        citation: Optional[List[Any]] = None,
+        input_data: Optional[List[Union[Any, UIDProxy]]] = None,
+        output_data: Optional[List[Union[Any, UIDProxy]]] = None,
+        software_configuration: Optional[List[Union[Any, UIDProxy]]] = None,
+        condition: Optional[List[Union[Any, UIDProxy]]] = None,
+        prerequisite_computation: Optional[Union["Computation", UIDProxy]] = None,
+        citation: Optional[List[Union[Any, UIDProxy]]] = None,
         notes: str = "",
         **kwargs
     ) -> None:
@@ -364,7 +365,7 @@ class Computation(PrimaryBaseNode):
 
     @property
     @beartype
-    def prerequisite_computation(self) -> Optional["Computation"]:
+    def prerequisite_computation(self) -> Optional[Union["Computation", UIDProxy]]:
         """
         prerequisite computation
 
@@ -386,7 +387,7 @@ class Computation(PrimaryBaseNode):
 
     @prerequisite_computation.setter
     @beartype
-    def prerequisite_computation(self, new_prerequisite_computation: Optional["Computation"]) -> None:
+    def prerequisite_computation(self, new_prerequisite_computation: Optional[Union["Computation", UIDProxy]]) -> None:
         """
         set new prerequisite_computation
 

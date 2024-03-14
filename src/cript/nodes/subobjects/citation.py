@@ -4,6 +4,7 @@ from typing import Optional, Union
 from beartype import beartype
 
 from cript.nodes.primary_nodes.reference import Reference
+from cript.nodes.util.json import UIDProxy
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -60,12 +61,12 @@ class Citation(UUIDBaseNode):
     @dataclass(frozen=True)
     class JsonAttributes(UUIDBaseNode.JsonAttributes):
         type: str = ""
-        reference: Optional[Reference] = None
+        reference: Optional[Union[Reference, UIDProxy]] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, type: str, reference: Reference, **kwargs):
+    def __init__(self, type: str, reference: Union[Reference, UIDProxy], **kwargs):
         """
         create a Citation subobject
 
@@ -164,7 +165,7 @@ class Citation(UUIDBaseNode):
 
     @property
     @beartype
-    def reference(self) -> Union[Reference, None]:
+    def reference(self) -> Union[Reference, None, UIDProxy]:
         """
         citation reference node
 

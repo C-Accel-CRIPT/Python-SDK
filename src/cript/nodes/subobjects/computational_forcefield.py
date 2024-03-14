@@ -1,10 +1,11 @@
 from dataclasses import dataclass, field, replace
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from beartype import beartype
 
 from cript.nodes.primary_nodes.data import Data
 from cript.nodes.subobjects.citation import Citation
+from cript.nodes.util.json import UIDProxy
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -88,13 +89,24 @@ class ComputationalForcefield(UUIDBaseNode):
         implicit_solvent: str = ""
         source: str = ""
         description: str = ""
-        data: List[Data] = field(default_factory=list)
-        citation: List[Citation] = field(default_factory=list)
+        data: List[Union[Data, UIDProxy]] = field(default_factory=list)
+        citation: List[Union[Citation, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, key: str, building_block: str, coarse_grained_mapping: str = "", implicit_solvent: str = "", source: str = "", description: str = "", data: Optional[List[Data]] = None, citation: Optional[List[Citation]] = None, **kwargs):
+    def __init__(
+        self,
+        key: str,
+        building_block: str,
+        coarse_grained_mapping: str = "",
+        implicit_solvent: str = "",
+        source: str = "",
+        description: str = "",
+        data: Optional[List[Union[Data, UIDProxy]]] = None,
+        citation: Optional[List[Union[Citation, UIDProxy]]] = None,
+        **kwargs
+    ):
         """
         instantiate a computational_forcefield subobject
 
@@ -393,7 +405,7 @@ class ComputationalForcefield(UUIDBaseNode):
 
     @property
     @beartype
-    def data(self) -> List[Data]:
+    def data(self) -> List[Union[Data, UIDProxy]]:
         """
         details of mapping schema and forcefield parameters
 
@@ -426,7 +438,7 @@ class ComputationalForcefield(UUIDBaseNode):
 
     @data.setter
     @beartype
-    def data(self, new_data: List[Data]) -> None:
+    def data(self, new_data: List[Union[Data, UIDProxy]]) -> None:
         """
         set the data attribute of this computational_forcefield node
 
@@ -444,7 +456,7 @@ class ComputationalForcefield(UUIDBaseNode):
 
     @property
     @beartype
-    def citation(self) -> List[Citation]:
+    def citation(self) -> List[Union[Citation, UIDProxy]]:
         """
         reference to a book, paper, or scholarly work
 
@@ -483,7 +495,7 @@ class ComputationalForcefield(UUIDBaseNode):
 
     @citation.setter
     @beartype
-    def citation(self, new_citation: List[Citation]) -> None:
+    def citation(self, new_citation: List[Union[Citation, UIDProxy]]) -> None:
         """
         set the citation subobject of the computational_forcefield subobject
 

@@ -5,6 +5,7 @@ from typing import List, Optional, Union
 from beartype import beartype
 
 from cript.nodes.primary_nodes.data import Data
+from cript.nodes.util.json import UIDProxy
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -86,7 +87,7 @@ class Condition(UUIDBaseNode):
         uncertainty_type: str = ""
         set_id: Optional[int] = None
         measurement_id: Optional[int] = None
-        data: List[Data] = field(default_factory=list)
+        data: List[Union[Data, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -102,7 +103,7 @@ class Condition(UUIDBaseNode):
         uncertainty_type: str = "",
         set_id: Optional[int] = None,
         measurement_id: Optional[int] = None,
-        data: Optional[List[Data]] = None,
+        data: Optional[List[Union[Data, UIDProxy]]] = None,
         **kwargs
     ):
         """
@@ -504,7 +505,7 @@ class Condition(UUIDBaseNode):
 
     @property
     @beartype
-    def data(self) -> List[Data]:
+    def data(self) -> List[Union[Data, UIDProxy]]:
         """
         detailed data associated with the condition
 
@@ -539,7 +540,7 @@ class Condition(UUIDBaseNode):
 
     @data.setter
     @beartype
-    def data(self, new_data: List[Data]) -> None:
+    def data(self, new_data: List[Union[Data, UIDProxy]]) -> None:
         """
         set the data node for this Condition Subobject
 

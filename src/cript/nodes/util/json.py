@@ -14,7 +14,19 @@ from cript.nodes.exceptions import (
     CRIPTJsonDeserializationError,
     CRIPTJsonNodeError,
 )
+from cript.nodes.util.core import iterate_leaves
 from cript.nodes.uuid_base import UUIDBaseNode
+
+
+@dataclasses.dataclass(frozen=True)
+class UIDProxy:
+    """Helper class that store temporarily unresolved UIDs."""
+
+    uid: Optional[str] = None
+
+    def __post_init__(self):
+        if self.uid is None:
+            raise RuntimeError("UID needs to be initialized")
 
 
 class NodeEncoder(json.JSONEncoder):
@@ -93,6 +105,10 @@ class NodeEncoder(json.JSONEncoder):
         """
         if isinstance(obj, uuid.UUID):
             return str(obj)
+
+        if isinstance(obj, UIDProxy):
+            return obj.uid
+
         if isinstance(obj, BaseNode):
             try:
                 uid = obj.uid
@@ -136,21 +152,20 @@ class NodeEncoder(json.JSONEncoder):
 
     def _apply_modifications(self, serialize_dict: Dict):
         """
-                Checks the serialize_dict to see if any other operations are required before it
-                can be considered done. If other operations are required, then it passes it to the other operations
-                and at the end returns the fully finished dict.
+        Checks the serialize_dict to see if any other operations are required before it
+        can be considered done. If other operations are required, then it passes it to the other operations
+        and at the end returns the fully finished dict.
 
-                This function is essentially a big switch case that checks the node type
-                and determines what other operations are required for it.
+        This function is essentially a big switch case that checks the node type
+        and determines what other operations are required for it.
 
-                Parameters
-                ----------
-        <<<<<<< HEAD
-                serialize_dict: Dict
+        Parameters
+        ----------
+        serialize_dict: Dict
 
-                Returns
-                -------
-                serialize_dict: Dict
+        Returns
+        -------
+        serialize_dict: Dict
         """
 
         def process_attribute(attribute):
@@ -221,7 +236,11 @@ class _NodeDecoderHook:
             uid_cache = {}
         self._uid_cache = uid_cache
 
-    def __call__(self, node_str: Union[Dict, str]) -> Dict:
+    @property
+    def uid_cache(self):
+        return self._uid_cache
+
+    def __call__(self, node_str: Union[Dict, str]) -> Union[Dict, UIDProxy]:
         """
         Internal function, used as a hook for json deserialization.
 
@@ -266,9 +285,9 @@ class _NodeDecoderHook:
             try:
                 return self._uid_cache[node_dict["uid"]]
             except KeyError:
-                # TODO if we convince beartype to accept Proxy temporarily, enable return instead of raise
-                raise CRIPTDeserializationUIDError("Unknown", node_dict["uid"])
-                # return _UIDProxy(node_dict["uid"])
+                # raise CRIPTDeserializationUIDError("Unknown", node_dict["uid"])
+                proxy = UIDProxy(uid=node_dict["uid"])
+                return proxy
 
         try:
             node_type_list = node_dict["node"]
@@ -294,8 +313,35 @@ class _NodeDecoderHook:
         # Fall back
         return node_dict
 
+    def resolve_unresolved_uids(self, node_iter):
+        def handle_uid_replacement(node, name, attr):
+            if isinstance(attr, UIDProxy):
+                unresolved_uid = attr.uid
+                try:
+                    uid_node = self.uid_cache[unresolved_uid]
+                except KeyError as exc:
+                    raise CRIPTDeserializationUIDError("Unknown", unresolved_uid) from exc
+                updated_attrs = dataclasses.replace(node._json_attrs, **{name: uid_node})
+                node._update_json_attrs_if_valid(updated_attrs)
 
-def load_nodes_from_json(nodes_json: Union[str, Dict], _use_uuid_cache: Optional[Dict] = None):
+        for node_leaves in iterate_leaves(node_iter):
+            if isinstance(node_leaves, BaseNode):
+                for node in node_leaves:
+                    field_names = [field.name for field in dataclasses.fields(node._json_attrs)]
+                    for field_name in field_names:
+                        field_attr = getattr(node._json_attrs, field_name)
+                        handle_uid_replacement(node, field_name, field_attr)
+                        if isinstance(field_attr, list):
+                            for i in range(len(field_attr)):
+                                if isinstance(field_attr[i], UIDProxy):
+                                    try:
+                                        field_attr[i] = self.uid_cache[field_attr[i].uid]
+                                    except KeyError as exc:
+                                        raise CRIPTDeserializationUIDError("Unknown", field_attr[i].uid) from exc
+        return node_iter
+
+
+def load_nodes_from_json(nodes_json: Union[str, Dict], api=None, _use_uuid_cache: Optional[Dict] = None, skip_validation: bool = False):
     """
     User facing function, that return a node and all its children from a json string input.
 
@@ -343,6 +389,11 @@ def load_nodes_from_json(nodes_json: Union[str, Dict], _use_uuid_cache: Optional
         Typically returns a single CRIPT node,
         but if given a list of nodes, then it will serialize them and return a list of CRIPT nodes
     """
+    from cript.api.api import _get_global_cached_api
+
+    if api is None:
+        api = _get_global_cached_api()
+
     # Initialize the custom decoder hook for JSON deserialization
     node_json_hook = _NodeDecoderHook()
 
@@ -357,11 +408,22 @@ def load_nodes_from_json(nodes_json: Union[str, Dict], _use_uuid_cache: Optional
     if _use_uuid_cache is not None:  # If requested use a custom cache.
         UUIDBaseNode._uuid_cache = _use_uuid_cache
 
+    previous_skip_validation = api.schema.skip_validation
+    # Temporarily disable validation while loading nodes from JSON
+    api.schema.skip_validation = True
     try:
         loaded_nodes = json.loads(nodes_json, object_hook=node_json_hook)
+        loaded_nodes = node_json_hook.resolve_unresolved_uids(loaded_nodes)
     finally:
         # Definitively restore the old cache state
         UUIDBaseNode._uuid_cache = previous_uuid_cache
+        api.schema.skip_validation = previous_skip_validation
+
+    # If nodes are actually expected to be checked, do it now
+    if not previous_skip_validation and not skip_validation:
+        for node in iterate_leaves(loaded_nodes):
+            if isinstance(node, BaseNode):
+                node.validate()
 
     if _use_uuid_cache is not None:
         return loaded_nodes, _use_uuid_cache
@@ -399,41 +461,3 @@ def _is_node_field_valid(node_type_list: List) -> bool:
         return True
     else:
         return False
-
-
-# class _UIDProxy:
-#     """
-#     Proxy class for unresolvable UID nodes.
-#     This is going to be replaced by actual nodes.
-
-#     Report a bug if you find this class in production.
-#     """
-
-#     def __init__(self, uid: str):
-#         self.uid = uid
-#         print("proxy", uid)
-
-# TODO: enable this logic to replace proxies, once beartype is OK with that.
-# def recursive_proxy_replacement(node, handled_nodes):
-#     if isinstance(node, _UIDProxy):
-#         try:
-#             node = node_json_hook._uid_cache[node.uid]
-#         except KeyError as exc:
-#             raise CRIPTDeserializationUIDError(node.node_type, node.uid)
-#         return node
-#     handled_nodes.add(node.uid)
-#     for field in node._json_attrs.__dict__:
-#         child_node = getattr(node._json_attrs, field)
-#         if not isinstance(child_node, List):
-#             if hasattr(cn, "__bases__") and BaseNode in child_node.__bases__:
-#                 child_node = recursive_proxy_replacement(child_node, handled_nodes)
-#                 node._json_attrs = replace(node._json_attrs, field=child_node)
-#         else:
-#             for i, cn in enumerate(child_node):
-#                 if hasattr(cn, "__bases__") and BaseNode in cn.__bases__:
-#                     if cn.uid not in handled_nodes:
-#                         child_node[i] = recursive_proxy_replacement(cn, handled_nodes)
-
-#     return node
-# handled_nodes = set()
-# recursive_proxy_replacement(json_nodes, handled_nodes)

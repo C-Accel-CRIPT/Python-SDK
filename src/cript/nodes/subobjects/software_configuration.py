@@ -6,6 +6,7 @@ from beartype import beartype
 from cript.nodes.subobjects.algorithm import Algorithm
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.software import Software
+from cript.nodes.util.json import UIDProxy
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -57,15 +58,15 @@ class SoftwareConfiguration(UUIDBaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(UUIDBaseNode.JsonAttributes):
-        software: Union[Software, None] = None
-        algorithm: List[Algorithm] = field(default_factory=list)
+        software: Optional[Union[Software, UIDProxy]] = None
+        algorithm: List[Union[Algorithm, UIDProxy]] = field(default_factory=list)
         notes: str = ""
-        citation: List[Citation] = field(default_factory=list)
+        citation: List[Union[Citation, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, software: Software, algorithm: Optional[List[Algorithm]] = None, notes: str = "", citation: Union[List[Citation], None] = None, **kwargs):
+    def __init__(self, software: Union[Software, UIDProxy], algorithm: Optional[List[Union[Algorithm, UIDProxy]]] = None, notes: str = "", citation: Union[List[Union[Citation, UIDProxy]], None] = None, **kwargs):
         """
         Create Software_Configuration sub-object
 
@@ -102,7 +103,7 @@ class SoftwareConfiguration(UUIDBaseNode):
 
     @property
     @beartype
-    def software(self) -> Union[Software, None]:
+    def software(self) -> Union[Software, None, UIDProxy]:
         """
         Software used
 
@@ -122,7 +123,7 @@ class SoftwareConfiguration(UUIDBaseNode):
 
     @software.setter
     @beartype
-    def software(self, new_software: Union[Software, None]) -> None:
+    def software(self, new_software: Union[Software, None, UIDProxy]) -> None:
         """
         set the Software used
 
@@ -140,7 +141,7 @@ class SoftwareConfiguration(UUIDBaseNode):
 
     @property
     @beartype
-    def algorithm(self) -> List[Algorithm]:
+    def algorithm(self) -> List[Union[Algorithm, UIDProxy]]:
         """
         list of Algorithms used
 
@@ -161,7 +162,7 @@ class SoftwareConfiguration(UUIDBaseNode):
 
     @algorithm.setter
     @beartype
-    def algorithm(self, new_algorithm: List[Algorithm]) -> None:
+    def algorithm(self, new_algorithm: List[Union[Algorithm, UIDProxy]]) -> None:
         """
         set the list of Algorithms
 
@@ -224,7 +225,7 @@ class SoftwareConfiguration(UUIDBaseNode):
 
     @property
     @beartype
-    def citation(self) -> List[Citation]:
+    def citation(self) -> List[Union[Citation, UIDProxy]]:
         """
         list of Citation sub-objects for the Software_Configuration
 
@@ -261,7 +262,7 @@ class SoftwareConfiguration(UUIDBaseNode):
 
     @citation.setter
     @beartype
-    def citation(self, new_citation: List[Citation]) -> None:
+    def citation(self, new_citation: List[Union[Citation, UIDProxy]]) -> None:
         """
         set the Citation sub-object
 

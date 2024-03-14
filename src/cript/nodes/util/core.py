@@ -67,3 +67,16 @@ def get_orphaned_experiment_exception(orphaned_node):
         return CRIPTOrphanedComputationalProcessError(orphaned_node)
     # Base case raise the parent exception. TODO add bug warning.
     return CRIPTOrphanedExperimentError(orphaned_node)
+
+
+def iterate_leaves(obj):
+    """Helper function that iterates over all leaves of nested dictionaries or lists."""
+
+    if isinstance(obj, dict):
+        for value in obj.values():
+            yield from iterate_leaves(value)
+    elif isinstance(obj, list):
+        for item in obj:
+            yield from iterate_leaves(item)
+    else:
+        yield obj

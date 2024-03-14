@@ -468,7 +468,7 @@ class BaseNode(ABC):
             if is_patch:
                 del tmp_dict["uuid"]  # patches do not allow UUID is the parent most node
 
-            return ReturnTuple(json.dumps(tmp_dict), tmp_dict, NodeEncoder.handled_ids)
+            return ReturnTuple(json.dumps(tmp_dict, **kwargs), tmp_dict, NodeEncoder.handled_ids)
         except Exception as exc:
             # TODO this handling that doesn't tell the user what happened and how they can fix it
             #   this just tells the user that something is wrong

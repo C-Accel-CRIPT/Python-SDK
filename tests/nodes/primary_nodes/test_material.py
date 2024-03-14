@@ -161,7 +161,7 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_material_node)
 
 
-@pytest.mark.skip(reason="api")
+# @pytest.mark.skip(reason="api")
 def test_material_property_node_add(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_material.py::test_material_property_node_add
@@ -220,6 +220,7 @@ def test_material_property_node_add(cript_api) -> None:
         my_mat_from_res_data_dict = result_json_dict["data"][0]
 
         mat_list = cript.load_nodes_from_json(nodes_json=json.dumps(my_mat_from_res_data_dict))
+        # thhis will load an orphan because getting the material will not return the project...
         mat_loaded = mat_list
 
         print("mat_loaded")
@@ -300,7 +301,7 @@ def test_material_property_node_add(cript_api) -> None:
         # assert del_res.json()["code"] == 200
 
 
-@pytest.mark.skip(reason="api")
+# @pytest.mark.skip(reason="api")
 def test_material_property_node_change(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_material.py::test_material_property_node_change
@@ -316,6 +317,7 @@ def test_material_property_node_change(cript_api) -> None:
 
     try:
         create_response = cript_api._capsule_request(url_path=url_path, method="POST", data=json.dumps(create_payload))
+        print("HELLO")
         print(create_response)
     except Exception as e:
         print(e)
@@ -329,12 +331,13 @@ def test_material_property_node_change(cript_api) -> None:
         raise ValueError(create_response)
 
     elif create_response.json()["code"] in [201, 200]:
-        print("---create_response")
+        print("---aaa create_response")
         print(create_response.json())
 
         uuid = None
         for item in cr_res_list:
             if item["node"] == ["Material"]:
+                print("AAAAAAAAAAAAAAAA")
                 uuid = item["uuid"]
             if item["node"] == ["Project"]:
                 item["uuid"]
@@ -351,8 +354,13 @@ def test_material_property_node_change(cript_api) -> None:
 
         my_mat_from_res_data_dict = result_json_dict["data"][0]
 
-        mat_list = cript.load_nodes_from_json(nodes_json=json.dumps(my_mat_from_res_data_dict))
-        mat_loaded = mat_list
+        mat_loaded = cript.load_nodes_from_json(nodes_json=json.dumps(my_mat_from_res_data_dict))
+
+        # this "cript.load_nodes_from_json" ^ it doesnt load the parentas part of the node,
+        # for example this is missing a "project"
+        # wait a material can have multiple parents...
+
+        # mat_loaded = mat_list
 
         print("mat_loaded")
         print(mat_loaded)

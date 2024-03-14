@@ -1,3 +1,4 @@
+import dataclasses
 import json
 import time
 import uuid
@@ -103,10 +104,10 @@ def test_integration_project(cript_api, simple_project_node):
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_project_node)
 
 
-@pytest.mark.skip(reason="api")
+# @pytest.mark.skip(reason="api")
 def test_update_project_change_or_reset_newly_made_materials(cript_api) -> None:
     """
-    pytest nodes/primary_nodes/test_project.py::test_update_project_change_or_reset_materials_newly_made
+    pytest nodes/primary_nodes/test_project.py::test_update_project_change_or_reset_newly_made_materials
 
     """
 
@@ -162,7 +163,7 @@ def test_update_project_change_or_reset_newly_made_materials(cript_api) -> None:
 
         project_loaded.material = [material_001]  # [material_001]
 
-        project_loaded.collection = [collection]
+        # project_loaded.collection = [collection]
 
         # print("\n~~~~~~~~~~~~ SAVING NOW ~~~~~~~~~~~")
         cript_api.save_node(project_loaded)
@@ -193,23 +194,56 @@ def test_update_project_change_or_reset_newly_made_materials(cript_api) -> None:
         assert del_res.json()["code"] == 200
 
 
-@pytest.mark.skip(reason="api")
-def test_update_project_change_or_reset_material_to_existing_materials(cript_api) -> None:
+# @pytest.mark.skip(reason="api")
+def test_update_project_change_or_reset_material_to_existing_materials(cript_api, simple_material_node, simple_project_node, complex_project_node) -> None:
     """
     pytest nodes/primary_nodes/test_project.py::test_update_project_change_or_reset_material_to_existing_materials
 
     """
 
+    # pj_node = complex_project_node
+    # field_list = []
+    # for field in dataclasses.fields(pj_node._json_attrs):
+    #     field_list.append(field.name)
+    #     # print(type(field))
+    #     # node_dict[field] = json.loads(getattr(pj_node._json_args, field))
+    #     # node_dict[field] = json.loads(getattr(pj_node._json_attrs, field))
+
+    # print(field_list)
+    # quit()
+
     epoch_time = int(time.time())
     name_1 = f"my_proj_ali_{epoch_time}"
     col_name = f"031o0col__{epoch_time}"
 
+    # pj_node = simple_project_node
+    # mat_node = simple_material_node
+
+    # cript_api.save_node(pj_node)
+
+    # pj_node.name = name_1
+    # pj_node.material = mat_node
+
+    # cript_api.save_node(pj_node)
+
+    # quit()
+
     url_path = "/project/"
-    create_payload = {"node": ["Project"], "name": name_1, "material": [{"uuid": "1809330c-31d2-4a80-af72-77b84070ee1d"}, {"uuid": "ea8f957c-b6e5-4668-b306-e0d6b0d05d9a"}]}
+
+    # material_001 = cript.Material(name=mat_1, identifier=[])
+    create_payload = {
+        "node": ["Project"],
+        "name": name_1,
+        # "material": [{"node": ["Material"], "name": f"unique_mat_{epoch_time}", "property": [{"node": ["Property"], "key": "air_flow", "method": "prescribed", "type": "value"}]}],
+        "material": [{"uuid": "1809330c-31d2-4a80-af72-77b84070ee1d"}, {"uuid": "ea8f957c-b6e5-4668-b306-e0d6b0d05d9a"}],
+    }
+    # {"uuid": "1809330c-31d2-4a80-af72-77b84070ee1d"}]}  # , {"uuid": "ea8f957c-b6e5-4668-b306-e0d6b0d05d9a"}]}
 
     try:
         create_response = cript_api._capsule_request(url_path=url_path, method="POST", data=json.dumps(create_payload))
-        # print(create_response)
+        print(create_response)
+        print(create_response.json())
+
     except Exception as e:
         print(e)
         raise ValueError(e)
@@ -245,8 +279,30 @@ def test_update_project_change_or_reset_material_to_existing_materials(cript_api
 
         collection = cript.Collection(name=col_name)
 
-        project_loaded.material = [toluene, styrene]
+        # prop1 = cript.Material.property(key="air_flow", method="prescribed", type="value")
+        # create a phase property
+
+        phase = cript.Property(key="phase", value="solid", type="none", unit=None)
+        # create a color property
+        color = cript.Property(key="color", value="white", type="none", unit=None)
+
+        # add the properties to the material
+        # polystyrene.property += [phase, color]
+
+        # material_001 = cript.Material(name=mat_1, identifier=[])
+
+        project_loaded.material = [project_loaded.material[0], toluene, styrene]
+
+        print("\nPROPS")
+        print(project_loaded.material[0])
+        print(project_loaded.material[0].property)
+        project_loaded.material[0].property += [phase, color]
+        print(project_loaded.material[0].property)
+        # quit()
+
         project_loaded.collection = [collection]
+        experiment = cript.Experiment(name="Anionic Polymerization of Styrene with SecBuLi")
+        project_loaded.collection[0].experiment += [experiment]
 
         # SAVE_NODE CALL HERE
         cript_api.save_node(project_loaded)

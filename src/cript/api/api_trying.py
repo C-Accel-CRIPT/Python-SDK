@@ -13,6 +13,7 @@ import boto3
 import requests
 from beartype import beartype
 from deepdiff import DeepDiff
+from requests.exceptions import HTTPError
 
 from cript.api.api_config import _API_TIMEOUT
 from cript.api.data_schema import DataSchema
@@ -82,7 +83,14 @@ class API:
     extra_api_log_debug_info: bool = False
 
     @beartype
-    def __init__(self, host: Union[str, None] = None, api_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: Union[str, Path] = "", default_log_level=logging.INFO):
+    def __init__(
+        self,
+        host: Union[str, None] = None,
+        api_token: Union[str, None] = None,
+        storage_token: Union[str, None] = None,
+        config_file_path: Union[str, Path] = "",
+        default_log_level=logging.INFO,
+    ):
         """
         Initialize CRIPT API client with host and token.
         Additionally, you can  use a config.json file and specify the file path.
@@ -208,7 +216,12 @@ class API:
 
         # if there is a config.json file or any of the parameters are None, then get the variables from file or env vars
         if config_file_path or (host is None or api_token is None or storage_token is None):
-            authentication_dict: Dict[str, str] = resolve_host_and_token(host, api_token=api_token, storage_token=storage_token, config_file_path=config_file_path)
+            authentication_dict: Dict[str, str] = resolve_host_and_token(
+                host,
+                api_token=api_token,
+                storage_token=storage_token,
+                config_file_path=config_file_path,
+            )
 
             host = authentication_dict["host"]
             api_token = authentication_dict["api_token"]
@@ -219,7 +232,10 @@ class API:
         self._storage_token = storage_token  # type: ignore
 
         # add Bearer to token for HTTP requests
-        self._http_headers = {"Authorization": f"Bearer {self._api_token}", "Content-Type": "application/json"}
+        self._http_headers = {
+            "Authorization": f"Bearer {self._api_token}",
+            "Content-Type": "application/json",
+        }
 
         # set a logger instance to use for the class logs
         self._init_logger(default_log_level)
@@ -300,7 +316,12 @@ class API:
             fully prepared and authenticated s3 client ready to be used throughout the script
         """
         if self._internal_s3_client is None:
-            self._internal_s3_client = get_s3_client(region_name=self._REGION_NAME, identity_pool_id=self._IDENTITY_POOL_ID, cognito_login_provider=self._COGNITO_LOGIN_PROVIDER, storage_token=self._storage_token)
+            self._internal_s3_client = get_s3_client(
+                region_name=self._REGION_NAME,
+                identity_pool_id=self._IDENTITY_POOL_ID,
+                cognito_login_provider=self._COGNITO_LOGIN_PROVIDER,
+                storage_token=self._storage_token,
+            )
 
         return self._internal_s3_client
 
@@ -401,8 +422,7 @@ class API:
     def remove_keys_from_dict(
         dictionary,
         keys_to_remove=[
-            "admin",
-            # "uuid",
+            "uid",
             "experiment_count",
             "inventory_count",
             "public",
@@ -418,15 +438,6 @@ class API:
             "locked",
             "material_count",
             "member_count",
-            "component_count",
-            "computational_forcefield_count",
-            "identifier_count",
-            "computation_count",
-            "component_count",
-            "citation_count",
-            "condition_count",
-            "sample_preparation_count",
-            "property_count",
         ],
     ):
         """Recursively remove keys from a dictionary."""
@@ -473,14 +484,15 @@ class API:
 
         # this will probably be converted for every child node
         # this will
+        print("\n")
         if "property" in obj and isinstance(obj["property"], list):
-            print("Before preprocessing:", obj["property"])
+            print("\nBefore preprocessing:", obj["property"])
             # obj["property"] = [item.get_json() for item in obj["property"]]
             obj["property"] = json.dumps(obj["property"], sort_keys=True)
             print("After preprocessing:", obj["property"])
 
         if "material" in obj and isinstance(obj["material"], list):
-            print("Before preprocessing:", obj["material"])
+            print("\nBefore preprocessing:", obj["material"])
             # obj["property"] = [item.get_json() for item in obj["property"]]
             obj["material"] = json.dumps(obj["material"], sort_keys=True)
             print("After preprocessing:", obj["material"])
@@ -519,7 +531,6 @@ class API:
         return {"added": added_dicts, "removed": removed_dicts}
 
     # ================================== ADD EXISTING NODES-NAMES===================================
-    @staticmethod
     def add_existing_nodes_by_name(
         self,
         parent_node: PrimaryBaseNode,
@@ -550,7 +561,13 @@ class API:
             # print(name.strip())
             # name = name.strip()
 
-            existing_node = next(self.search(child_class_object, search_mode=SearchModes.EXACT_NAME, value_to_search=name.strip()))
+            existing_node = next(
+                self.search(
+                    child_class_object,
+                    search_mode=SearchModes.EXACT_NAME,
+                    value_to_search=name.strip(),
+                )
+            )
             existing_uuid = str(existing_node.uuid)
 
             parent_node_type = parent_node.node[0].lower()
@@ -564,7 +581,7 @@ class API:
             # print(patch_response.json())
             return patch_response
         else:
-            raise ("error in patching existing item")
+            raise RuntimeError("error in patching existing item")
 
     def remove_nodes_by_name(
         self,
@@ -596,7 +613,13 @@ class API:
             # print(name.strip())
             name = name.strip().lower()
 
-            existing_node = next(self.search(child_class_object, search_mode=SearchModes.EXACT_NAME, value_to_search=name.strip()))
+            existing_node = next(
+                self.search(
+                    child_class_object,
+                    search_mode=SearchModes.EXACT_NAME,
+                    value_to_search=name.strip(),
+                )
+            )
             existing_uuid = str(existing_node.uuid)
 
             parent_node_type = parent_node.node[0].lower()
@@ -610,588 +633,127 @@ class API:
             # print(del_response.json())
             return del_response
         else:
-            raise ("error in patching existing item")
+            raise RuntimeError("error in patching existing item")
 
-    # ===========================
-    @staticmethod
-    def log_diff(self, diff, path):
-        # This is a simple logger that prints the difference along with the path
-        # In a real application, you might want to log this to a file or another logging system
-        print(f"Difference found at {path}: {diff}")
-
-    # ===========================
-
-    @staticmethod
-    def extract_patches0(data, parent_uuid0="dummy_parent_uuid", cleaned_modified=None):
-        modified = cleaned_modified
-        patches_dict = {}  # Dictionary to store the condensed patches
-
-        pattern = re.compile(r"root(\['(\w+)'\])(\[(\d+)\])?(\['(\w+)'\])?(\[(\d+)\])?(\['(\w+)'\])?$")
-
-        parent_node = modified["node"][0].lower()
-        parent_uuid = modified["uuid"]
-
-        for path, change in data.get("values_changed", {}).items():
-            match = pattern.match(path)
-            if match:
-                child_node, child_index_str, _, attribute = match.groups()[1], match.groups()[3], match.groups()[5], match.groups()[9]
-                child_index = int(child_index_str) if child_index_str else 0
-
-                # Construct the tree path and print it
-                tree_path = f"['{child_node}'][{child_index}]"
-                print(f"tree_path: modified{tree_path}")
-
-                # Create the patch key and check if it exists in patches_dict
-                patch_key = (parent_node, parent_uuid, child_node)
-                if patch_key not in patches_dict:
-                    patches_dict[patch_key] = {"parent_node": parent_node, "parent_uuid": parent_uuid, "payload_json_patch": {child_node: [{} for _ in range(max(child_index + 1, len(modified.get(child_node, []))))]}}
-
-                # Update the existing patch or create a new one
-                patch = patches_dict[patch_key]
-                patch["payload_json_patch"][child_node][child_index] = modified[child_node][child_index]
-
-                if attribute:
-                    patch["payload_json_patch"][child_node][child_index][attribute] = change["new_value"]
-
-        # Convert the patches_dict dictionary to the desired format (list of patches)
-        final_patches = list(patches_dict.values())
-        return final_patches
-
-    @staticmethod
-    def extract_patches_eh(data, parent_uuid0="dummy_parent_uuid", cleaned_modified=None):
-        modified = cleaned_modified
-        patches = []
-
-        pattern = re.compile(r"root(\['(\w+)'\])(\[(\d+)\])?(\['(\w+)'\])?(\[(\d+)\])?(\['(\w+)'\])?$")
-
-        parent_node = modified["node"][0].lower()
-        parent_uuid = modified["uuid"]
-
-        for path, change in data.get("values_changed", {}).items():
-            match = pattern.match(path)
-            if match:
-                child_node, child_index_str, _, attribute = match.groups()[1], match.groups()[3], match.groups()[5], match.groups()[9]
-                child_index = int(child_index_str) if child_index_str else 0
-                tree_path = f"['{child_node}'][{child_index}]"
-                print(tree_path)  # Printing the tree path
-
-                # Construct the patch
-                patch = {"parent_node": parent_node, "parent_uuid": parent_uuid, "payload_json_patch": {child_node: [modified[child_node][child_index]]}}
-
-                # Add additional attribute changes if they exist
-                if attribute:
-                    patch["payload_json_patch"][child_node][child_index][attribute] = change["new_value"]
-
-                # Append the new patch
-                patches.append(patch)
-
-        # Similar handling for dictionary_item_added and iterable_item_added...
-        return patches
-
-    # ========================
-
-    @staticmethod  # REALLY WORKS
-    def extract_patches_good(
-        data,
-        parent_uuid0="dummy_parent_uuid",
-        cleaned_modified=None,
-    ):
-        modified = cleaned_modified
-        patches = []
-        # patches_dict = {}
-        # This pattern is for capturing the parent and child node along with the indices
-        pattern = re.compile(r"root(\['(\w+)'\])(\[(\d+)\])?(\['(\w+)'\])?(\[(\d+)\])?(\['(\w+)'\])?$")
-
-        parent_node = modified["node"][0].lower()
-        parent_uuid = modified["uuid"]
-
-        # Handle values_changed
-
-        for path, change in data.get("values_changed", {}).items():
-            match = pattern.match(path)
-            if match:
-                child_node, child_index_str, _, attribute = match.groups()[1], match.groups()[3], match.groups()[5], match.groups()[9]
-                child_index = int(child_index_str) if child_index_str else 0
-
-                # Directly access the modified dictionary using the parsed path
-                tree_path = f"['{child_node}'][{child_index}]"
-                print(tree_path)
-
-                # Construct the patch
-                # if parent_data:
-
-                # modified[self.parent_of(child_node)]
-
-                patch = {"parent_node": parent_node, "parent_uuid": parent_uuid, "payload_json_patch": {f"{child_node}": [modified[child_node][child_index]]}, "tree_path": f"modified{tree_path}"}
-
-                # patches.append(patch)
-
-                if attribute:
-                    patch["payload_json_patch"][child_node][child_index][attribute] = change["new_value"]
-
-                if patch not in patches:
-                    patches.append(patch)
-
-        # Handle dictionary_item_added
-        for path in data.get("dictionary_item_added", []):
-            match = pattern.match(path)
-            if match:
-                child_node = match.group(2)
-                tree_path = path.replace("root", "modified")
-                if child_node in modified:
-                    patches.append({"parent_node": parent_node, "parent_uuid": parent_uuid, "payload_json_patch": {child_node: [modified[child_node]]}, "tree_path": tree_path})
-
-        # Handle iterable_item_added
-        for path, item in data.get("iterable_item_added", {}).items():
-            match = pattern.match(path)
-            if match:
-                child_node = match.group(2)
-                tree_path = path.replace("root", "modified")
-                patch = next((p for p in patches if p.get("tree_path") == tree_path), None)
-                if not patch:
-                    patch = {"parent_node": parent_node, "parent_uuid": parent_uuid, "payload_json_patch": {child_node: [item]}, "tree_path": tree_path}
-                    patches.append(patch)
-                else:
-                    patch["payload_json_patch"][child_node].append(item)
-
-        return patches
-
-        # ============ ALI NODE TEST !!!!
-
-        # @staticmethod  # REALLY WORKS
-        # def extract_patches0(
-        #     data,
-        #     parent_uuid0="dummy_parent_uuid",
-        #     modified=None,
-        # ):
-        #     patches = []
-        #     # This pattern is for capturing the parent and child node along with the indices
-        #     pattern = re.compile(r"root(\['(\w+)'\])(\[(\d+)\])?(\['(\w+)'\])?(\[(\d+)\])?(\['(\w+)'\])?$")
-
-        #     parent_node = modified["node"][0].lower()
-        #     parent_uuid = modified["uuid"]
-        #     # Handle values_changed
-        #     # patches = []
-        #     # pattern = re.compile(r"root(\['(\w+)'\])(\[(\d+)\])?(\['(\w+)'\])?(\[(\d+)\])?(\['(\w+)'\])?$")
-
-        #     # Handle values_changed
-
-        #     for path, change in data.get("values_changed", {}).items():
-        #         match = pattern.match(path)
-        #         if match:
-        #             child_node, child_index_str, _, attribute = match.groups()[1], match.groups()[3], match.groups()[5], match.groups()[9]
-        #             child_index = int(child_index_str) if child_index_str else 0
-
-        #             # Directly access the modified dictionary using the parsed path
-        #             tree_path = f"['{child_node}'][{child_index}]"
-        #             # parent_data = modified[child_node][child_index] if child_node in modified and child_index < len(modified[child_node]) else None
-
-        #             # Construct the patch
-        #             # if parent_data:
-
-        #             # modified[self.parent_of(child_node)]
-
-        #             patch = {"parent_node": parent_node, "parent_uuid": parent_uuid, "payload_json_patch": {f"{child_node}": [modified[child_node][child_index]]}, "tree_path": f"modified{tree_path}"}
-
-        #             # patches.append(patch)
-
-        #             if attribute:
-        #                 patch["payload_json_patch"][child_node][child_index][attribute] = change["new_value"]
-
-        #             if patch not in patches:
-        #                 patches.append(patch)
-
-        #     # val changed
-        #     # for path, change in data.get("values_changed", {}).items():
-        #     #     match = pattern.match(path)
-        #     #     if match:
-        #     #         child_node, child_index_str, _, attribute = match.groups()[1], match.groups()[3], match.groups()[5], match.groups()[9]
-        #     #         child_index = int(child_index_str) if child_index_str else 0
-
-        #     #         tree_path = modified[f"{child_node}"][f"{child_index}"]  # if child_index_str else ''}"
-
-        #     #         patch = next((p for p in patches if p.get("tree_path") == tree_path), None)
-        #     #         if not patch:
-        #     #             patch = {"parent_node": child_node, "parent_uuid": parent_uuid0, "payload_json_patch": ast.literal_eval(f"{{'{child_node}': [{{}} for _ in range({child_index + 1})]}}"), "tree_path": tree_path}
-        #     #             patches.append(patch)
-
-        #     #         if attribute:
-        #     #             eval_str = f"{{'{attribute}': {repr(change['new_value'])}}}"
-        #     #             patch["payload_json_patch"][child_node][child_index] = ast.literal_eval(eval_str)
-
-        #     # for path, change in data.get("values_changed", {}).items():
-        #     #     print("path")
-        #     #     print(path)
-        #     #     match = pattern.match(path)
-        #     #     if match:
-        #     #         # Capturing groups for parent and potential child nodes
-        #     #         child_node, parent_index_str, _, attribute = match.group(2), match.group(4), match.group(6), match.group(10)
-        #     #         child_index = int(parent_index_str) if parent_index_str else 0
-
-        #     #         # Construct the tree_path dynamically
-        #     #         tree_path = f"modified['{child_node}']{f'[{child_index}]' if parent_index_str else ''}"
-
-        #     #         thisval = ast.literal_eval(tree_path)
-
-        #     #         # Find or create a new patch entry
-        #     #         patch = next((p for p in patches if p.get("tree_path") == tree_path), None)
-        #     #         if not patch:
-        #     #             patch = {"parent_node": child_node, "parent_uuid": parent_uuid0, "payload_json_patch": {child_node: [{} for _ in range(child_index + 1)]}, "tree_path": tree_path}
-        #     #             patches.append(patch)
-
-        #     #         # Apply the change
-        #     #         patch["payload_json_patch"][child_node][child_index][attribute] = change["new_value"]
-
-        #     # Handle dictionary_item_added
-        #     for path in data.get("dictionary_item_added", []):
-        #         match = pattern.match(path)
-        #         if match:
-        #             child_node = match.group(2)
-        #             tree_path = path.replace("root", "modified")
-        #             if child_node in modified:
-        #                 patches.append({"parent_node": parent_node, "parent_uuid": parent_uuid, "payload_json_patch": {child_node: [modified[child_node]]}, "tree_path": tree_path})
-
-        #     # Handle iterable_item_added
-        #     for path, item in data.get("iterable_item_added", {}).items():
-        #         match = pattern.match(path)
-        #         if match:
-        #             child_node = match.group(2)
-        #             tree_path = path.replace("root", "modified")
-        #             patch = next((p for p in patches if p.get("tree_path") == tree_path), None)
-        #             if not patch:
-        #                 patch = {"parent_node": parent_node, "parent_uuid": parent_uuid, "payload_json_patch": {child_node: [item]}, "tree_path": tree_path}
-        #                 patches.append(patch)
-        #             else:
-        #                 patch["payload_json_patch"][child_node].append(item)
-
-        #     return patches
-
-        # def test_uuid_traversa_for_project(node_to_map):  # pass in "clean _modified" above
-        uuid_1 = "18a92a99-1528-4a49-84fc-5c3defae1392"  # project
-        uuid_2 = "2788ea52-a941-4c79-99f6-af7626789579"  # collection
-        uuid_3 = "e5f7b180-0b97-4cf0-9d1d-3a69ad32bb0d"  # experiment
-        uuid_4 = "d6cc1453-3226-44ab-b077-36838492a8f4"  # material toluene
-        uuid_5 = "5bc1763b-615a-4ac9-b16e-b0ab3b7c82fb"  # material styrene
-
-        uuid_order = [uuid_1, uuid_2, uuid_3, uuid_4, uuid_5]
-
-        """
-        structure is like:
-
-           (1)
-          / \ \
-        (2)   [4, 5]    <-- that is a list of material nodes but they are both on the same level and both children of project node (1)
-         \                  
-          (3)
-        """
-
-        # I'm assuming this iterator will return the queue of which it vistited uuids
-
-        assert node_iterator._depth_first(node_to_map) == uuid_order
-
-    @staticmethod  # OK  pretty good actually - this is our default for now
-    def uuids_stuff(data, cleaned_modified=None):
-        parent_node0 = "project"
-        parent_uuid0 = "123proj456"
-
-        patches = {"parent_node": parent_node0, "parent_uuid": parent_uuid0, "payload_json_patch": {}}
-        pattern = re.compile(r"root(\['\w+'\]\[\d+\])+\['(\w+)'\]")
-
-        # ----------------------------------------
-        data_ = data
-        cleaned_modified_ = cleaned_modified
-
-        added_uuids = []
-        removed_uuids = []
-
-        # Track UUID changes
-        # in values_changed
-        pattern_uuid_change = re.compile(r"root\['(\w+)'\]\[(\d+)\]\['uuid'\]")
-        for path, change in data_.get("values_changed", {}).items():
-            match = pattern_uuid_change.match(path)
-            if match:
-                removed_uuids.append(change["old_value"])
-                added_uuids.append(change["new_value"])
-
-        # Handle iterable_item_added
-        for item in data_.get("iterable_item_added", []):
-            if isinstance(item, dict):  # Check if the item is a dictionary and has a 'path' key
-                for k, v in item:
-                    if re.match(r"root\['(\w+)'\]\[\d+\]", k):
-                        # if k matches the regex str
-                        if "uuid" in v:  # v itself is a dict so if uuid in v
-                            added_uuids.append(v["uuid"])
-
-        # Handle iterable_item_removed
-        for item in data_.get("iterable_item_removed", []):
-            if isinstance(item, dict):  # Check if the item is a dictionary and has a 'path' key
-                for k, v in item:
-                    if re.match(r"root\['(\w+)'\]\[\d+\]", k):
-                        # if k matches the regex str
-                        if "uuid" in v:  # v itself is a dict so if uuid in v
-                            removed_uuids.append(v["uuid"])
-
-        # ----------//---------
-        # Handle dictionary_item_added
-        for item in data_.get("dictionary_item_added", []):
-            # if re.match(r"root\['(\w+)'\]", item):
-            #     pass # this doesnt take a uuid
-            pattern = re.compile(r"root\['(\w+)'\]\[(\d+)\]\['uuid'\]")
-            match = pattern.match(item)
-            if match:
-                # if k matches the regex str
-                # if "uuid" in v:  # v itself is a dict so if uuid in v
-                add_uuid = cleaned_modified_[match.group(1)][match.group(2)]["uuid"]
-                added_uuids.append(add_uuid)
-
-        # Handle dictionary_item_removed
-        for item in data_.get("dictionary_item_removed", []):
-            pattern = re.compile(r"root\['(\w+)'\]\[(\d+)\]\['uuid'\]")
-            match = pattern.match(item)
-            if match:
-                # if k matches the regex str
-                # if "uuid" in v:  # v itself is a dict so if uuid in v
-                rem_uuid = cleaned_modified_[match.group(1)][match.group(2)]["uuid"]
-                removed_uuids.add(rem_uuid)
-
-        # Identify unchanged UUIDs
-        unchanged_uuids = set(added_uuids).intersection(removed_uuids)
-        # right now we need to test if attributes are there
-        print("removed_uuids from this node (unlinked)")
-        print(removed_uuids)
-
-    @staticmethod  # OK  pretty good actually - this is our default for now
-    def uuids_stuff(data, cleaned_modified=None):
-        parent_node0 = "project"
-        parent_uuid0 = "123proj456"
-
-        patches = {"parent_node": parent_node0, "parent_uuid": parent_uuid0, "payload_json_patch": {}}
-        pattern = re.compile(r"root(\['\w+'\]\[\d+\])+\['(\w+)'\]")
-
-        # ----------------------------------------
-        data_ = data
-        cleaned_modified_ = cleaned_modified
-
-        added_uuids = []
-        removed_uuids = []
-
-        """
-        # idea is if the uuid was on both the added and removed list then it was not changed but just moved in index
-        # and then we would find the uuid in the new tree or where it is a "new value" store that path
-        # we need to know if dictionary item removed corresponds to uuid that gets changed, then we will ignore
-        # or dictionary item added corresponds to a path of a uuid that gets changed , then we can also ignore and just update the whole node corresponding to uuid
-
-        # but say , if dictionary item added correspond to uuid that are registered as eihter "unchanged" or "unchanged but moved"
-        # then we need to handle changing these attributes
-        # like if "root['material'][0]['chem_formula']" was removed but
-        # root['material'][0]['uuid'] is not found in the keys of values_changed
-        """
-
-        # Track UUID changes
-
-        # in values_changed
-        pattern_uuid_change = re.compile(r"root\['(\w+)'\]\[(\d+)\]\['uuid'\]")
-        for path, change in data_.get("values_changed", {}).items():
-            match = pattern_uuid_change.match(path)
-            if match:
-                # print(change["old_value"])
-                removed_uuids.append(change["old_value"])
-                # print(change["new_value"])
-                added_uuids.append(change["new_value"])
-
-        # Handle iterable_item_added
-        pattern_iterable_item = re.compile(r"root\['(\w+)'\]\[(\d+)\]")
-        iterable_items = data_.get("iterable_item_added", {}).items()
-        # if isinstance(item, dict):  # Check if the item is a dictionary and has a 'path' key
-        for k, v in iterable_items:
-            match = pattern_iterable_item.match(k)
-            if match:
-                # if k matches the regex str
-                if "uuid" in v:  # v itself is a dict so if uuid in v
-                    added_uuids.append(v["uuid"])
-
-        # Handle iterable_item_removed
-        for item in data_.get("iterable_item_removed", []):
-            if isinstance(item, dict):  # Check if the item is a dictionary and has a 'path' key
-                for k, v in item:
-                    if re.match(r"root\['(\w+)'\]\[\d+\]", k):
-                        # if k matches the regex str
-                        if "uuid" in v:  # v itself is a dict so if uuid in v
-                            removed_uuids.append(v["uuid"])
-
-        # ----------//---------
-        # Handle dictionary_item_added
-        for item in data_.get("dictionary_item_added", []):
-            # if re.match(r"root\['(\w+)'\]", item):
-            #     pass # this doesnt take a uuid
-            pattern = re.compile(r"root\['(\w+)'\]\[(\d+)\]\['uuid'\]")
-            match = pattern.match(item)
-            if match:
-                # if k matches the regex str
-                # if "uuid" in v:  # v itself is a dict so if uuid in v
-                add_uuid = cleaned_modified_[match.group(1)][match.group(2)]["uuid"]
-                added_uuids.append(add_uuid)
-
-        # Handle dictionary_item_removed
-        for item in data_.get("dictionary_item_removed", []):
-            pattern = re.compile(r"root\['(\w+)'\]\[(\d+)\]\['uuid'\]")
-            match = pattern.match(item)
-            if match:
-                # if k matches the regex str
-                # if "uuid" in v:  # v itself is a dict so if uuid in v
-                rem_uuid = cleaned_modified_[match.group(1)][match.group(2)]["uuid"]
-                removed_uuids.add(rem_uuid)
-
-        # Identify unchanged UUIDs
-        unchanged_uuids = set(added_uuids).intersection(removed_uuids)
-        # right now we need to test if attributes are there
-        print("removed_uuids and added uuids")
-        print(removed_uuids)
-        print(added_uuids)
-
-    @staticmethod  # OK  pretty good actually - this is our default for now
-    def extract_patches(data, cleaned_modified=None):
-        parent_node0 = "project"
-        parent_uuid0 = "123proj456"
-
-        patches = {"parent_node": parent_node0, "parent_uuid": parent_uuid0, "payload_json_patch": {}}
-        pattern = re.compile(r"root(\['\w+'\]\[\d+\])+\['(\w+)'\]")
-
-        print(
-            """this is gonna be a big test ya know where if we get unchanged uuids
-
-            then we need to go into clean modified and just change attributes for it
-            this coulda been easier like was a uuid ever mentioned twice ??
-            they are either an add or remove, so the values associated
-            unchanged_uuids but thats more rigorous
-            unchanged_uuids"""
-        )
-
-        # ------------------------//-------------------------
-        # Handle values_changed first
-        if "values_changed" in data:
-            for path, change in data["values_changed"].items():
-                # patches = {"diff": "values_changed"}
-                match = pattern.match(path)
-                if match:
-                    nested_path = match.group(1)
-                    attribute = match.group(2)
-
-                    child_match = re.search(r"\['(\w+)'\]\[(\d+)\]$", nested_path)
-                    if child_match:
-                        child_node, index_str = child_match.groups()
-                        index = int(index_str)  # Convert index to integer
-
-                        # Initialize or update the patch structure
-                        if child_node not in patches["payload_json_patch"]:
-                            patches["payload_json_patch"][child_node] = [{} for _ in range(index + 1)]
-                        elif index >= len(patches["payload_json_patch"][child_node]):
-                            patches["payload_json_patch"][child_node].extend([{} for _ in range(index + 1 - len(patches["payload_json_patch"][child_node]))])
-
-                        # Update the specific attribute
-                        patches["payload_json_patch"][child_node][index][attribute] = change["new_value"]
-
-                        # Ensure 'node' attribute is present
-                        if "node" not in patches["payload_json_patch"][child_node][index]:
-                            patches["payload_json_patch"][child_node][index]["node"] = ["Material"]
-
-        # Handle dictionary_item_added for non-indexed additions
-
-        for path in data.get("dictionary_item_added", []):
-            tree_path = path.replace("root", "modified")
-            print(tree_path)
-            # patches = {"diff": "dictionary_item_added"}
-            child_entity_match = re.search(r"root\['(\w+)'\]", path)
-            if child_entity_match:
-                child_node = child_entity_match.group(1)
-                tree_path = path.replace("root", "modified")
-
-                # Check if the child_node is in cleaned_modified to add/update it in the patch
-                if child_node in cleaned_modified:
-                    patches["payload_json_patch"].setdefault(child_node, []).append(cleaned_modified[child_node])
-
-        # Handle iterable_item_added
-        for path, item in data.get("iterable_item_added", {}).items():
-            child_match = re.search(r"root\['(\w+)'\]\[(\d+)\]", path)
-            if child_match:
-                child_node, index_str = child_match.groups()
-                index = int(index_str)
-
-                # Initialize or update the patch structure for the child node
-                if child_node not in patches["payload_json_patch"]:
-                    patches["payload_json_patch"][child_node] = [{} for _ in range(index + 1)]
-                elif index >= len(patches["payload_json_patch"][child_node]):
-                    patches["payload_json_patch"][child_node].extend([{} for _ in range(index + 1 - len(patches["payload_json_patch"][child_node]))])
-
-                # Append the new item to the specific child node list
-                patches["payload_json_patch"][child_node][index] = item
-
-        return patches
-
-    # patches
-    # {"parent_node": "material", "parent_uuid": "placeholder_uuid", "payload_json_patch": {"material": [{"uuid": "1c2a3ba6-4e29-4f73-a7d0-b6a49afef9aa", "node": ["Material"], "name": "toluene", "smiles": "Cc1ccccc1"}]}}
-    # # {'parent_node': 'material', 'parent_uuid': 'placeholder_uuid', 'payload_json_patch': {'material': [{'name': 'toluene', 'node': ['Material']}]}}
-    # # {'parent_node': 'material', 'parent_uuid': 'placeholder_uuid', 'payload_json_patch': {'material': [{'smiles': 'Cc1ccccc1', 'node': ['Material']}]}}
     # ======================================================================================================
 
     def save_node(self, new_node: PrimaryBaseNode, link_existing=True):
         # print("new_node dir")
         # print(dir(new_node))
         # print(new_node.find_children())
-
-        # ================trying
-        node_type = new_node.node_type.lower()
-
-        # print(new_node.json)
-        # print(type(new_node.json))
-        # post_response = self._capsule_request(url_path="/project/", method="POST", data=new_node.json)
-        # res_json = post_response.json()
-        # print(res_json)
-        # quit()
-
         # quit()
 
         # try to create or else fail
         try:
-            node_type = new_node.node[0].lower()
-            get_url = f"/{node_type}/{new_node.uuid}"
-            try:
-                original = self._capsule_request(url_path=get_url, method="GET").json()["data"][0]
-                print("\noriginal 1: ", original)
-            except Exception as e:
-                original = None
-                # raise ValueError(f"No data available in response {response}")
+            # ================trying
+            node_type = new_node.node_type.lower()
 
-            class_type = new_node.node[0]
-            klass = globals().get(class_type.capitalize(), None)
+            # print(new_node.json)
+            # print(type(new_node.json))
+            # post_response = self._capsule_request(url_path="/project/", method="POST", data=new_node.json)
+            # res_json = post_response.json()
+            # print(res_json)
+            # quit()
+
+            # ================
+            # node_type = new_node.node_type.lower()
+            # get_url = f"/{node_type}/{new_node.uuid}"
+            # response = self._capsule_request(url_path=get_url, method="GET")
+
+            # print(response.json())
+            # print("-----")
+
+            # if response.status_code == 404 and node_type == "project":  # then try to load existsing uuid
+            #     klass = globals().get(node_type.capitalize(), None)
+            #     print(new_node.name)
+            #     existing_uuid = self.search(
+            #         klass,
+            #         search_mode=SearchModes.EXACT_NAME,
+            #         value_to_search=new_node.name,
+            #     )  # "return uuid with next"  # self.object_exists(node=node_type, name=new_node.name):
+            #     if existing_uuid:
+            #         raise ValueError("this project name already exists stored under a different uuid, please change the name")
+            # quit()
+            """
+            # quit()
+
+            response.raise_for_status()  # This will raise HTTPError for bad responses
+            # assert response.status_code == 201
+
+            # Process the response assuming it's successful
+            data = response.json().get("data")
+            if not data or len(data) == 0:
+                raise ValueError("No data available in response.")
+
+            original = data[0]
+            print("\noriginal 1: ", original)
+
+            # ======================================
+
+            klass = globals().get(node_type.capitalize(), None)
+            # # print("heeeeere", klass)
+            # # quit()
+            # uuid_iterator = self.search(klass, search_mode=SearchModes.UUID, value_to_search=str(new_node.uuid))
+
+            # uuid_iterator.auto_load_nodes = False
+
+            # print("heeeeere", uuid_iterator)
+            # node_json = next(uuid_iterator)  ## !!!! FAILS AT THIS LINE , i have issues with next
+
+            # print("node_json", node_json)
+            # original = node_json
+            # ======================================
+
+            # existing_uuid = node_json.get("uuid")
+
+            # print(existing_uuid)
+
             # klass = Material or Project depending on node
+
             existing_uuid = self.search(klass, search_mode=SearchModes.EXACT_NAME, value_to_search=new_node.name)  # "return uuid with next"  # self.object_exists(node=node_type, name=new_node.name):
+
             if (original is None) and existing_uuid:
                 raise ValueError("this name already exists stored under a different uuid")
+            """
+        except HTTPError as e:  # if we couldnt load an existing node
+            # klass = globals().get(node_type.capitalize(), None)
+            # existing_uuid = self.search(klass, search_mode=SearchModes.EXACT_NAME, value_to_search=new_node.name)  # "return uuid with next"  # self.object_exists(node=node_type, name=new_node.name):
 
-        except Exception as e:
-            if new_node.node[0].lower() == "project":  # all other nodes must already exist
-                data = {"node": new_node.node, "name": new_node.name}  # , "material": [{"node": ["Material"], "name": Config.material_name}]}  # , "public": Config.is_public}
-                response = self._capsule_request(url_path="/project/", method="POST", data=json.dumps(data))
-                if response.json()["code"] in [409, 400]:
-                    return "already exists"
-                elif response.json()["code"] == 200:
-                    original_dict = response.json()["data"]["result"][0]
-                    original = original_dict
-                    print("\noriginal 2: ", original)
+            if new_node.node_type.lower() == "project":  # all other nodes must already exist
+                # here we will pass datat to creata the node
+                # new_node.json or something like kwargs
+                # also lets use asserts
+                # data = {"node": new_node.node, "name": new_node.name}  # , "material": [{"node": ["Material"], "name": Config.material_name}]}  # , "public": Config.is_public}
+
+                print("-----wait are we here ")
+                print(new_node.json)
+                print(type(new_node.json))
+                post_response = self._capsule_request(url_path="/project/", method="POST", data=new_node.json)
+
+                # if response.json()["code"] in [409, 400]:
+                #     return "already exists"
+                # assert post_response.status_code in [200, 201], f"Unexpected status code: {response.json}"
+
+                # post_response = self._capsule_request(url_path="/project/", method="POST", data=json.dumps(new_node.json))
+                post_response.raise_for_status()
+
+                original_dict = post_response.json()["data"]["result"][0]
+                original = original_dict
+                print("\noriginal 2: ", original)
 
             else:
                 # this would have been fetched above for a non project node
-                print(f"couldn't create or fetch data for {new_node.node}")
+                raise RuntimeError(f"couldn't fetch data for {new_node.node, new_node.name} and POST is only allowed for project node")
 
         modified = json.loads(new_node.get_json().json)  # Assuming this is already a dictionary
 
-        # print("\noriginal 1.1: ", original)
-        # print(original)
-        # quit()
-
         cleaned_original = self.remove_keys_from_dict(original)
         cleaned_modified = self.remove_keys_from_dict(modified)
+
+        print("\n\n\noriginal", sorted(original.keys()))
+        print("\nmodified", sorted(modified.keys()))
+        print("\n\n\noriginal", original)
+        print("\nmodified", modified)
 
         # print("actually these are good for mat at least\n")
         # print(cleaned_original)
@@ -1205,9 +767,8 @@ class API:
         # print(type(cleaned_original))
         # print(type(cleaned_modified))
 
-        # maybe put this back
-        # cleaned_original = self.preprocess_for_diff(cleaned_original)
-        # cleaned_modified = self.preprocess_for_diff(cleaned_modified)
+        cleaned_original = self.preprocess_for_diff(cleaned_original)
+        cleaned_modified = self.preprocess_for_diff(cleaned_modified)
 
         # ------------------___----------_______----
 
@@ -1223,7 +784,7 @@ class API:
         # ------------------___----------_______----
 
         exclude_regex_paths = [
-            # r"root(\[.*\])?\['uuid'\]",
+            # r"root(\[.*\])?\['uuid'\]",  # try with keeping uuid in there
             r"root(\[.*\])?\['uid'\]",
             r"root\['\w+_count'\]",  # All the attributes that end with _count
             r"root(\[.*\])?\['\w+_count'\]",  # All the attributes that end with _count
@@ -1238,91 +799,16 @@ class API:
             r"root(\[.*\])?\['model_version'\]",
         ]
 
-        diff_ = DeepDiff(cleaned_original, cleaned_modified, exclude_regex_paths=exclude_regex_paths)  # ignore_order=True, group_by = id)
+        diff_ = DeepDiff(
+            cleaned_original,
+            cleaned_modified,
+            exclude_regex_paths=exclude_regex_paths,
+            ignore_order=True,
+        )
         diff_dict = diff_.to_dict()
-
-        print("\ncleaned_original")
-        print(cleaned_original)
-        print("\ncleaned_original keys")
-        print(cleaned_original.keys())
-
-        print("\ncleaned_modified")
-        print(cleaned_modified)
-        print("\ncleaned_modified keys")
-        print(cleaned_modified.keys())
 
         print(" \nhere is diff trying to see for process how it changes\n")
         print(diff_dict)
-
-        data = dict(diff_dict)
-
-        print("----uuid shit")
-        print(data)
-
-        uuids_stuff = self.uuids_stuff(data, cleaned_modified=modified)  # because modified is the new
-        # # removals = self.extract_removals(data)
-
-        print("----++🍌++-----")
-        print("uuids_stuff")
-        print(uuids_stuff)
-        # print("\npatches[payload_json_patch]")
-        # print(patches["payload_json_patch"])
-
-        # quit()
-
-        print("----data")
-        print(data)
-
-        patches = self.extract_patches(data, cleaned_modified=modified)  # because modified is the new
-        # # removals = self.extract_removals(data)
-
-        print("----++🍌++-----")
-        print("\npatches")
-        print(patches)
-        # print("\npatches[payload_json_patch]")
-        # print(patches["payload_json_patch"])
-
-        quit()
-        # # Regex pattern to extract the path components
-        # pattern = r"root\['(\w+)'\]\[(\d+)\]\['(\w+)'\]"
-
-        # # Parsing the input string
-        # input_string = str(dict(diff_dict))
-        # matches = re.findall(pattern, input_string)
-
-        # # Initialize dictionaries to keep track of changes
-        # additions = {}
-        # removals = {}
-        # changes = {}
-
-        # # Iterate over matches to populate the dictionaries
-        # for match in matches:
-        #     key, index, sub_key = match
-        #     # Check in which category the match falls
-        #     if "added" in input_string:
-        #         if key not in additions:
-        #             additions[key] = []
-        #         additions[key].append({sub_key: f"original['{key}'][{index}]['{sub_key}']"})
-        #     elif "removed" in input_string:
-        #         if key not in removals:
-        #             removals[key] = []
-        #         removals[key].append({sub_key: f"original['{key}'][{index}]['{sub_key}']"})
-        #     elif "changed" in input_string:
-        #         if key not in changes:
-        #             changes[key] = []
-        #         changes[key].append({sub_key: f"original['{key}'][{index}]['{sub_key}']"})
-
-        # # Extracting new_value and old_value for changes
-        # values_changed_pattern = r"'new_value': '(\w+)', 'old_value': '(\w+)'"
-        # values_changed_matches = re.findall(values_changed_pattern, input_string)
-
-        # for i, change in enumerate(changes.get("property", [])):
-        #     if i < len(values_changed_matches):
-        #         new_value, old_value = values_changed_matches[i]
-        #         change.update({"new_value": new_value, "old_value": old_value})
-
-        # print("-------//------")
-        # print(additions, removals, changes)
 
         # quit()
 
@@ -1335,8 +821,8 @@ class API:
         except Exception as e:
             print(e)
 
-        entities_to_patch_dict = {}
-        entities_to_remove_dict = {}
+        entities_to_patch_dict: dict = {}
+        entities_to_remove_dict: dict = {}
 
         # 1) VALUES CHANGED
         print("  1)   VALUES CHANGED ")
@@ -1345,26 +831,11 @@ class API:
         print(values_changed)
 
         for key, value in values_changed.items():
-            # pattern1 = r"^\w+\['\w+'\]\[\d+\]$"  # which pattern is this for
-            # pattern0 = r"^root\['(.+)'\]$"
             pattern1 = r"^\w+\['(\w+)'\]$"
 
-            # print("\nkey")
-            # print(key)
-
-            # quit()
             match = re.match(pattern1, key)
             if match:
-                # print("\ndoes it match here for this test\n")
-                # print("key")
-                # print(key)
-                entity_name = match.group(1)  # This captures the "material" part
-                # print("entity_name")
-                # print(entity_name)
-                # quit()
-
-                # entity_name = key.split("['")[1].split("']")[0]
-                # value["new_value"]
+                entity_name = match.group(1)
 
                 old_val_node_json = json.loads(value["old_value"])
                 new_val_node_json = json.loads(value["new_value"])
@@ -1393,8 +864,16 @@ class API:
                     # API.add_to_dict(entities_to_remove_dict, key=entity_name, value=remove_list)
 
                     # nodes_to_add = nodes_to_add_remove["added"]  # value["new_value"]  # gotta do a search by uuid on the name and node
-                    API.add_to_dict(entities_to_patch_dict, key=entity_name, value=nodes_to_add_remove["added"])
-                    API.add_to_dict(entities_to_remove_dict, key=entity_name, value=nodes_to_add_remove["removed"])
+                    API.add_to_dict(
+                        entities_to_patch_dict,
+                        key=entity_name,
+                        value=nodes_to_add_remove["added"],
+                    )
+                    API.add_to_dict(
+                        entities_to_remove_dict,
+                        key=entity_name,
+                        value=nodes_to_add_remove["removed"],
+                    )
 
                 # quit()
                 # child_class_type = entity_name
@@ -1431,10 +910,6 @@ class API:
         print(entities_to_patch_dict)
         print("entities_to_remove_dict")
         print(entities_to_remove_dict)
-        print("remove_list")
-
-        remove_list = nodes_to_add_remove["removed"]
-        print(remove_list)
 
         print("😭👽🤡😭👽🤡😭👽🤡")
 
@@ -1456,7 +931,7 @@ class API:
                 else:
                     entities_to_patch_dict[entity_name].append(value)
             else:
-                print("warning no entity name")
+                raise ("warning no entity name though there is a change detected")
 
         # 3) DICT ITEMS ADDED
         print("  3) DICT ITEMS ADDED  ")
@@ -1472,7 +947,11 @@ class API:
                 key_name = match.group(1) if match.group(1) else match.group(2)
                 print("key_name: ", key_name)
                 # Replace the direct dictionary update with a call to API.add_to_dict
-                API.add_to_dict(entities_to_patch_dict, key=key_name, value=cleaned_modified[key_name])
+                API.add_to_dict(
+                    entities_to_patch_dict,
+                    key=key_name,
+                    value=cleaned_modified[key_name],
+                )
             else:
                 print("No key_name found in path")
 
@@ -1493,14 +972,26 @@ class API:
             if entity_name:
                 print(entity_name)
 
-                node_to_remove = next(self.search(node_type=Material, search_mode=SearchModes.EXACT_NAME, value_to_search=value["name"]))
+                # SIMPLIFY if leave uuids in !!!!!
+
+                node_to_remove = next(
+                    self.search(
+                        node_type=Material,
+                        search_mode=SearchModes.EXACT_NAME,
+                        value_to_search=value["name"],
+                    )
+                )
                 # OK come back here
                 # do this the uuid way
 
                 if node_to_remove:
                     uuid_to_remove = node_to_remove.uuid
-                    API.add_to_dict(entities_to_remove_dict, key=entity_name, value={"uuid": f"{uuid_to_remove}"})
-                    # remove_list.append({"uuid": uuid_to_remove})
+                    API.add_to_dict(
+                        entities_to_remove_dict,
+                        key=entity_name,
+                        value={"uuid": f"{uuid_to_remove}"},
+                    )
+
                 else:
                     print("uuid is None")
                     print(value)
@@ -1510,7 +1001,7 @@ class API:
         entities_to_remove_dict["node"] = new_node.node
         entities_to_patch_dict["node"] = new_node.node
 
-        payload_remove = entities_to_remove_dict  # remove_list
+        payload_remove = entities_to_remove_dict
         payload_patch = entities_to_patch_dict
 
         print("\n\n____payload_patch_remove")
@@ -1537,7 +1028,7 @@ class API:
 
                 child_class_type = patch_response.json().get("error").split("item")[1].split("for")[1].strip().lower()
 
-                eval_names = eval(names_list_of_dicts)
+                eval_names = ast.literal_eval(names_list_of_dicts)  # make this safer ast.literal.
                 # print(eval_names)
                 names_list = [name["name"].lower() for name in eval_names]
                 # print("names_list")
@@ -1558,14 +1049,17 @@ class API:
         print("\npayload_remove: ", payload_remove)
         print("\nentities_to_remove_dict: ", entities_to_remove_dict)
 
-        if payload_remove != {"node": new_node.node}:  # if its just this for payload remove
+        if payload_remove != {"node": new_node.node}:  # make this stricter,  # if its just this for payload remove
             print("patch remove url_path2: ", url_path)
             remove_response = self._capsule_request(url_path=url_path, method="DELETE", data=json.dumps(payload_remove))
             print("\n\n___patch_remove_response")
             print(remove_response.json())
             # print("patch remove url_path: ", url_path)
 
-            if remove_response.status_code in [400, 409]:
+            if remove_response.status_code in [
+                400,
+                409,
+            ]:  # make an exception, log a warning
                 print("are we here")
                 print("failed to remove these: ", remove_response.json())
                 raise (remove_response.json())
@@ -1635,7 +1129,10 @@ class API:
             old_save_values = copy.deepcopy(save_values)
             # We assemble the JSON to be saved to back end.
             # Note how we exclude pre-saved uuid nodes.
-            json_data = node.get_json(known_uuid=save_values.saved_uuid, suppress_attributes=save_values.suppress_attributes).json
+            json_data = node.get_json(
+                known_uuid=save_values.saved_uuid,
+                suppress_attributes=save_values.suppress_attributes,
+            ).json
 
             # This checks if the current node exists on the back end.
             # if it does exist we use `patch` if it doesn't `post`.
@@ -1987,7 +1484,12 @@ class API:
         else:
             raise RuntimeError("Internal Error: Failed to recognize any search modes. Please report this bug on https://github.com/C-Accel-CRIPT/Python-SDK/issues.")
 
-        return Paginator(api=self, url_path=api_endpoint, page_number=page_number, query=value_to_search)
+        return Paginator(
+            api=self,
+            url_path=api_endpoint,
+            page_number=page_number,
+            query=value_to_search,
+        )
 
     def delete(self, node) -> None:
         """
@@ -2126,11 +1628,23 @@ class API:
         response: Dict = self._capsule_request(url_path=f"/{node_type.lower()}/{node_uuid}/", method="DELETE").json()
 
         if response["code"] != 200:
-            raise APIError(api_error=str(response), http_method="DELETE", api_url=f"/{node_type.lower()}/{node_uuid}/")
+            raise APIError(
+                api_error=str(response),
+                http_method="DELETE",
+                api_url=f"/{node_type.lower()}/{node_uuid}/",
+            )
 
         self.logger.info(f"Deleted '{node_type.title()}' with UUID of '{node_uuid}' from CRIPT API.")
 
-    def _capsule_request(self, url_path: str, method: str, api_request: bool = True, headers: Optional[Dict] = None, timeout: int = _API_TIMEOUT, **kwargs) -> requests.Response:
+    def _capsule_request(
+        self,
+        url_path: str,
+        method: str,
+        api_request: bool = True,
+        headers: Optional[Dict] = None,
+        timeout: int = _API_TIMEOUT,
+        **kwargs,
+    ) -> requests.Response:
         """Helper function that capsules every request call we make against the backend.
 
         Please *always* use this methods instead of `requests` directly.

@@ -466,66 +466,6 @@ class API:
             # If the value is a list, use it directly; otherwise, create a list with one element
             dictionary[key] = value if isinstance(value, list) else [value]
 
-    @staticmethod
-    def preprocess_for_diff(obj):
-        """
-        this is gonna be more important maybe overtaking the regular expressions.
-        it is making child fields a string a string
-
-        when taking in a parent node, making patch to parent, any child node will want to
-        the idea is that you take both fields, you make them both strings!!
-        that was the secret. and then compare
-        for example in project : material and material children - for original and modified, make them both strings and compare
-        in material : property and property children - for original and modified, make them both strings and compare
-        """
-
-        # this will probably be converted for every child node
-        # this will
-        if "property" in obj and isinstance(obj["property"], list):
-            print("Before preprocessing:", obj["property"])
-            # obj["property"] = [item.get_json() for item in obj["property"]]
-            obj["property"] = json.dumps(obj["property"], sort_keys=True)
-            print("After preprocessing:", obj["property"])
-
-        if "material" in obj and isinstance(obj["material"], list):
-            print("Before preprocessing:", obj["material"])
-            # obj["property"] = [item.get_json() for item in obj["property"]]
-            obj["material"] = json.dumps(obj["material"], sort_keys=True)
-            print("After preprocessing:", obj["material"])
-
-        return obj
-
-    @classmethod
-    def compare_json_lists(cls, old_list, new_list):
-        """
-        return {
-            "added": added_json,
-            "removed": removed_json
-                }
-        """
-        print("😎")
-        for item in old_list:
-            print(type(item))
-
-        # Convert list of dictionaries to list of sorted JSON strings for comparison
-        old_json_strings = {json.dumps(item, sort_keys=True) for item in old_list}
-        new_json_strings = {json.dumps(item, sort_keys=True) for item in new_list}
-
-        # Find differences
-        added = new_json_strings - old_json_strings  # Present in new but not in old
-        removed = old_json_strings - new_json_strings  # Present in old but not in new
-
-        removed_dicts = [{"uuid": json.loads(item).get("uuid")} for item in removed]
-
-        # Convert JSON strings back to dictionaries
-        added_dicts0 = [json.loads(item) for item in added]
-        added_dicts = [API.remove_keys_from_dict(item) for item in added_dicts0]
-
-        print("❤️‍🔥⏳")
-        print(added_dicts)
-
-        return {"added": added_dicts, "removed": removed_dicts}
-
     # ================================== ADD EXISTING NODES-NAMES===================================
     @staticmethod
     def send_api_patch_existing_nodes_by_name(

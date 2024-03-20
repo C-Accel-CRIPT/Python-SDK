@@ -1,0 +1,64 @@
+# use pytest-cov to see what percentage of the code is being covered by tests
+# WARNING: this workflow will fail if any of the tests within it fail
+
+name: Test Coverage
+permissions: read-all
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - trunk-merge/**
+  pull_request:
+    branches:
+      - main
+      - develop
+
+concurrency:
+  # github.workflow: name of the workflow
+  # github.event.pull_request.number || github.ref: pull request number or branch name if not a pull request
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+
+  # Cancel in-progress runs when a new workflow with the same group name is triggered
+  cancel-in-progress: true
+
+jobs:
+  test-coverage:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.12]
+
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Generate Cognito token
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        run: |
+          pip install awscli
+          OUTPUT=$(aws cognito-idp admin-initiate-auth --user-pool-id ${{ secrets.COGNITO_USER_POOL_ID }} --client-id ${{ secrets.COGNITO_CLIENT_ID }} --auth-flow ADMIN_NO_SRP_AUTH --auth-parameters USERNAME=${{ secrets.COGNITO_USERNAME }},PASSWORD=${{ secrets.COGNITO_PASSWORD }})
+          export ACCESS_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.AccessToken' | sed 's/^"\(.*\)"$/\1/')
+          export ID_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.IdToken' | sed 's/^"\(.*\)"$/\1/')
+
+      - name: Install CRIPT Python SDK
+        run: pip install -e .
+
+      - name: Install requirements_dev.txt
+        run: pip install -r requirements_dev.txt
+
+      - name: Test Coverage
+        run: pytest --cov --cov-fail-under=85
+
+    env:
+      CRIPT_HOST: https://lb-stage.mycriptapp.org/
+      CRIPT_TOKEN: ${{ steps.cognito.outputs.ACCESS_TOKEN }}
+      CRIPT_STORAGE_TOKEN: ${{ steps.cognito.outputs.ID_TOKEN }}
+      CRIPT_TESTS: False

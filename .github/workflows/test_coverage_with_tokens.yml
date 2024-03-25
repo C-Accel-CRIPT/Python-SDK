@@ -46,6 +46,10 @@ jobs:
           COGNITO_PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
 
         run: |
+          echo $COGNITO_USER_POOL_ID
+          echo "$COGNITO_USER_POOL_ID"
+          echo ${{ secrets.COGNITO_USER_POOL_ID }}
+          echo "${{ secrets.COGNITO_USER_POOL_ID }}"
           pip install awscli
           OUTPUT=$(aws cognito-idp "$COGNITO_INIT" --user-pool-id "$COGNITO_USER_POOL_ID" --client-id "$COGNITO_CLIENT_ID" --auth-flow "$COGNITO_AUTH_FLOW" --auth-parameters USERNAME="$COGNITO_USERNAME",PASSWORD="$COGNITO_PASSWORD")
           export ACCESS_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.AccessToken' | sed 's/^"\(.*\)"$/\1/')

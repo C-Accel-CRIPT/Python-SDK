@@ -411,6 +411,9 @@ class API:
         keys_to_remove=[
             "admin",
             # "uuid",
+            "updated_by",
+            "created_by",
+            "member",
             "experiment_count",
             "inventory_count",
             "public",
@@ -467,14 +470,14 @@ class API:
             dictionary[key] = value if isinstance(value, list) else [value]
 
     # ================================== ADD EXISTING NODES-NAMES===================================
-    @staticmethod
+    # @staticmethod
     def send_api_patch_existing_nodes_by_name(
         self,
         # parent_node: PrimaryBaseNode,
-        parent_node: str,
-        parent_uuid: str,
-        child_class_type: str,
-        existing_child_node_names: list,  # must be list of strings
+        parent_node,  # : str,
+        parent_uuid,  #: str,
+        child_class_type,  #: str,
+        existing_child_node_names,  #: list,  # must be list of strings
     ):
         """
         this function will take a list of exact names and add them by uuid
@@ -482,12 +485,17 @@ class API:
 
         """
 
+        print("are we here in funktion")
+
         # child_class_type = child_node.node[0]
         child_class_object = globals().get(child_class_type.capitalize(), None)
 
+        print("child_class_object ", child_class_object)
+
         # Check if the class exists
         if child_class_object is None:
-            raise ValueError(f"Class {child_class_type} not found")
+            # raise ValueError(f"Class {child_class_type} not found")
+            return f"Class {child_class_type} not found"
 
         # go through the list of names and create the payload :
         # parent_node_type = parent_node.node[0].lower()
@@ -496,31 +504,53 @@ class API:
         entity_name = f"{child_class_type.lower()}"
         uuid_link_payload = {"node": [parent_node.capitalize()], entity_name: []}
 
+        print("\n hallo")
+        print(uuid_link_payload)
+        # quit()
+        print("existing_child_node_names")
+        print(existing_child_node_names[0:2])
+
         for name in existing_child_node_names:
             # print(name.strip())
             # name = name.strip()
+            print("HEREEEE")
+            try:
+                this = self.search(child_class_object, search_mode=SearchModes.EXACT_NAME, value_to_search=name)
+                print(next(this))
+            except Exception as e:
+                print(e)
 
-            existing_node = next(
-                self.search(
-                    child_class_object,
-                    search_mode=SearchModes.EXACT_NAME,
-                    value_to_search=name.strip(),
-                )
-            )
+            print("---++++++---")
+            existing_node = next(self.search(child_class_object, search_mode=SearchModes.EXACT_NAME, value_to_search=name))
+            print(existing_node)
+
             existing_uuid = str(existing_node.uuid)
+            print(existing_uuid)
 
-            parent_node_type = parent_node.node[0].lower()
+            # parent_node_type = parent_node.node[0].lower()
+
+            print("\n\nuuid_link_payload")
+            print(uuid_link_payload)
+            # quit()
 
             API.add_to_dict(uuid_link_payload, key=entity_name, value={"uuid": f"{existing_uuid}"})
 
+        print(" disss uuid_link_payload")
+        print(uuid_link_payload)
+        # quit()
+
         patch_response = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(uuid_link_payload))
 
-        if patch_response.status_code in [200, 201]:
-            # print("worked")
-            # print(patch_response.json())
-            return patch_response
-        else:
-            raise ("error in patching existing item")
+        print("---did this work", patch_response.json())
+
+        return patch_response
+        # if patch_response.status_code in [200, 201]:
+        #     # print("worked")
+        #     # print(patch_response.json())
+        #     return patch_response
+        # else:
+        #     # raise ("error in patching existing item")
+        #     return f"error in patching existing item"
 
     def remove_nodes_by_name(
         self,
@@ -593,25 +623,6 @@ class API:
 
     ###########################################################################################
     ###########################################################################################
-
-    """
-    ok the way this would work is if I would take in two objects ,
-     - first i map put the paths of the first object, all uuids
-     - then I iterate of all uuids in the second object (I'm walking here) 
-     - then with each uuid I encounter in the second walker node
-     - i find up in the lookup table and do a compare on that as the root , right ?
-        - basically that path would be the spot to get to in the object 
-        - and i would record the patches and removes on each node 
-        - I guess I could log it all to a list and maybe eventually do a group by on it 
-
-     - if I don't find the uuid in the lookup table then it was added
-
-     - also I would need to make sure theres "visited" aspect in the iterator
-
-     - also since this object is just a map , it doesnt matter the order 
-     although we will still probably get it in DFS because thats how iterator is 
-    
-    """
 
     @staticmethod
     def build_uuid_map(obj, path=None, uuid_map=None):
@@ -1011,11 +1022,15 @@ class API:
 
         # print("\n____payload_patch_add")
         # print(payload_patch)
+        """
+        here we go through the list of patches and removes and send them to the API
+        from last to first in the order they were registered
 
-        print("we got into a SENDPATCH")
-        print(list_of_patches_and_removes)
-        print("we want to go through the bottom first")
-        print(" and we go through patches for each node first, then removes for each node ")
+        we got into a SENDPATCH"]
+        list_of_patches_and_removes
+        we want to go through the bottom first"
+        and we go through patches for each node first, then removes for each node
+        """
         for item in reversed(list_of_patches_and_removes):
             parent_node0 = item["parent_node"]
             parent_uuid0 = item["parent_uuid"]
@@ -1035,28 +1050,71 @@ class API:
                         print(patch_response.json())
                         print(patch_response.json().get("error"))
 
-                        names_list_of_dicts = patch_response.json().get("error").split("item")[1].split("for")[0]
+                        child_class_type = patch_response.json().get("error").split("names")[1].split("in")[1].strip().lower()
+                        text = patch_response.json().get("error")
 
-                        child_class_type = patch_response.json().get("error").split("item")[1].split("for")[1].strip().lower()
+                        print("this needs to be refactored with regex also eval needs to be ast lietral")
 
-                        eval_names = eval(names_list_of_dicts)
+                        # Regex pattern to match anything inside square brackets
+                        pattern = r"\[.*?\]"
+
+                        # Using re.search() to find the first occurrence of the pattern in the text
+                        match = re.search(pattern, text)
+
+                        # Extracting the matched content if found
+                        if match:
+                            matched_content = match.group(0)
+                            print("Found content:", matched_content)
+                            matched_content = matched_content.replace("'", '"')
+                            # eval_names = eval(matched_content.strip())
+                            # print(eval_names)
+                            # names_list = [name["name"].lower() for name in eval_names]
+                            names_list = json.loads(matched_content)
+                            print("names_list")
+                            for item in names_list:
+                                print(item)
+                        else:
+                            print("No match found")
+
+                        # quit()
+                        # names_list_of_dicts = patch_response.json().get("error").split("names")[1].split("in")[0]
+
+                        # child_class_type = patch_response.json().get("error").split("names")[1].split("in")[1].strip().lower()
+
+                        # print(child_class_type)
+                        # print("-----//-----")
+
+                        # eval_names = eval(names_list_of_dicts)
                         # print(eval_names)
-                        names_list = [name["name"].lower() for name in eval_names]
+                        # names_list = [name["name"].lower() for name in eval_names]
                         # print("names_list")
 
-                        self.send_api_patch_existing_nodes_by_name(
-                            parent_node=parent_node0,
-                            parent_uuid=parent_uuid0,
-                            child_class_type=child_class_type,
-                            existing_child_node_names=names_list,
-                        )
+                        if names_list:
+                            # print("we are about to send")
+                            # print(parent_node0)
+                            # print(parent_uuid0)
+                            # print(child_class_type)
+                            # print(names_list)
 
-                        # need to retry for collection
-                        payload_patch.pop(child_class_type)  # we just sent the stuff to api above so now pop it off the resposne
-                        patch_response2 = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(payload_patch))
+                            link_response = self.send_api_patch_existing_nodes_by_name(  # self.send_api_patch_existing_nodes_by_name(
+                                parent_node=parent_node0,
+                                parent_uuid=parent_uuid0,
+                                child_class_type=child_class_type,
+                                existing_child_node_names=names_list,
+                            )
+                            # print("---link_response")
+                            # print(link_response)
 
-                        print("\n\n___patch_response2")
-                        print(patch_response2.json())
+                            # need to retry for collection
+                            payload_patch.pop(child_class_type)  # we just sent the stuff to api above so now pop it off the resposne
+                            retry_patch_response2 = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(payload_patch))
+                            # retry_patch_json = retry_patch_response2.json()
+
+                            print("\n\n___retry_patch_response2")
+                            print(retry_patch_response2.json())
+                            # maybe return now - NO because of removal
+                            # if retry_patch_response2.status_code in [200, 201]:
+                            #     return
 
                 if patch_response.status_code in [200]:
                     print("got 200")
@@ -1068,38 +1126,57 @@ class API:
         for item in reversed(list_of_patches_and_removes):
             url_path = f"/{parent_node0}/{parent_uuid0}"
             payload_removes = item["payload_json_removes"]
+            print("payload_removes")
+            print(payload_removes)
             if payload_removes != {}:
                 try:
                     # payload_remove needs --- {"node": new_node.node}:
                     API.add_to_dict(payload_removes, key="node", value=[parent_node0.capitalize()])
                     remove_response = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(payload_removes))
+                    print("remove_response")
+                    print(remove_response)
                 except:
                     print("could not remove")
                     pass
-        # WIP COME BACK
-        # quit()
+
+    # basically I need to write tests for it now ...
 
     ###########################################################################################
+    # """
+    # ok the way this would work is if I would take in two objects ,
+    #  - first i map put the paths of the first object, all uuids
+    #  - then I iterate of all uuids in the second object (I'm walking here)
+    #  - then with each uuid I encounter in the second walker node
+    #  - i find up in the lookup table and do a compare on that as the root , right ?
+    #     - basically that path would be the spot to get to in the object
+    #     - and i would record the patches and removes on each node
+    #     - I guess I could log it all to a list and maybe eventually do a group by on it
 
+    #  - if I don't find the uuid in the lookup table then it was added
+    #  - also I would need to make sure theres "visited" aspect in the iterator
+    #  - also since this object is just a map , it doesnt matter the order
+    #  - we will still probably get it in DFS because thats how iterator is
+
+    # """
     def save_node(self, new_node: PrimaryBaseNode, link_existing=True):
         # ================trying
         list_of_patches_and_removes = []
 
         node_type = new_node.node_type.lower()
-        print("---ARE WE HERE")
+        # print("---ARE WE HERE")
 
         # try to get or else create
         try:
-            print("---ARE WE HERE1")
+            # print("---ARE WE HERE1")
             # node_type = new_node.node[0].lower()
             get_url = f"/{node_type}/{new_node.uuid}"
-            print("get_url---", get_url)
+            # print("get_url---", get_url)
             # quit()
             try:
                 original = self._capsule_request(url_path=get_url, method="GET").json()
                 original = original["data"][0]
-                print("----", original)
-                print("\noriginal 1: ", original)
+                # print("----", original)
+                # print("\noriginal 1: ", original)
 
             except Exception as e:  # except if we could not load by uuid
                 original = None
@@ -1115,18 +1192,18 @@ class API:
                     # paginator.auto_load_nodes = False
                     klass_json = next(paginator)
 
-                    print("22222new_node name", new_node.name)
+                    # print("22222new_node name", new_node.name)
                     # no results, great !
-                    print("existing_uuid", klass_json)
+                    # print("existing_uuid", klass_json)
 
                     if (original is None) and klass_json:
-                        print("original node and bla bla")
-                        print("should we get the object with name from other uuid?")
+                        # print("original node and bla bla")
+                        # print("should we get the object with name from other uuid?")
 
                         raise ValueError("this name already exists stored under a different uuid")
 
         except Exception as e:
-            print("---ARE WE HERE 2")
+            # print("---ARE WE HERE 2")
             # no uuid or name match on project, make a new one
             if node_type == "project":  # all other nodes must already exist
                 # i think we need to pass in "new_node.json" and i'm not sure why this seems like old code
@@ -1137,12 +1214,25 @@ class API:
                 # }  # , "material": [{"node": ["Material"], "name": Config.material_name}]}  # , "public": Config.is_public}
 
                 data = new_node.get_json().json
-                print("-------")
-                print(type(data))
+                # print("-------")
+                # print(type(data))
+                # print("---lodz-data---")
+                # print(type(json.loads(data)))
+                data0 = API.remove_keys_from_dict(json.loads(data))
+                data = json.dumps(data0)
+                # print(data)
+                # print(type(data))
+                # quit()
 
                 response = self._capsule_request(url_path="/project/", method="POST", data=data)  # json.dumps(data))
                 if response.json()["code"] in [400]:
+                    # print("---0-data---")
+                    # print(type(json.loads(data)))
+                    # data = API.remove_keys_from_dict(json.loads(data))
+                    # print(data)
+                    # raise ValueError(f"malformed json data - check string into dumps{response.json()}")
                     print("malformed json data - check string into dumps", response.json())
+                    # quit()
                 elif response.json()["code"] in [409]:
                     print("already exists", response.json())
                 elif response.json()["code"] in [401]:
@@ -1152,8 +1242,8 @@ class API:
                     print("we created a project!")
                     original_dict = response.json()["data"]["result"][0]
                     original = original_dict
-                    print("\noriginal 2: ", original)
-                    print("returning now.\n\n")
+                    # print("\noriginal 2: ", original)
+                    # print("returning now.\n\n")
                     # we created a new node,
                     # asserted it was created, now we can return
                     return

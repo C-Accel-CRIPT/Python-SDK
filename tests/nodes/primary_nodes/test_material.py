@@ -1,5 +1,8 @@
 import json
+import time
 import uuid
+
+import pytest
 
 import cript
 from tests.utils.integration_test_helper import (
@@ -222,259 +225,277 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
 ############################################################################################
 
 
-# @pytest.mark.skip(reason="api")
-# def test_material_property_node_add(cript_api) -> None:
-#     """
-#     pytest nodes/primary_nodes/test_material.py::test_material_property_node_add
-#     """
-
-#     epoch_time = int(time.time())
-#     name_1 = f"my_proj_ali_{epoch_time}"
-#     mat_1 = f"my_mat__{epoch_time}"
-
-#     url_path = "/project/"
-#     create_payload = {"node": ["Project"], "name": name_1, "material": [{"node": ["Material"], "name": mat_1, "property": [{"node": ["Property"], "key": "air_flow", "method": "prescribed", "type": "value"}]}]}
-
-#     try:
-#         create_response = cript_api._capsule_request(url_path=url_path, method="POST", data=json.dumps(create_payload))
-#         print(create_response)
-#     except Exception as e:
-#         print(e)
-
-#     print(create_response.json())
-#     cr_res_list = create_response.json()["data"]["result"]
-
-#     """
-#     1 - get existing material node by uuid - paginator
-#         - or create material node with a property
-
-#     2 - make an edit to a child node (property or process or component)
-#     3 - save the node
-#     """
-
-#     if create_response.json()["code"] in [409, 400, 401]:
-#         print("---create_response")
-#         print(create_response)
-#         raise ValueError(create_response)
-
-#     elif create_response.json()["code"] in [201, 200]:
-#         print("---create_response")
-#         print(create_response.json())
-
-#         uuid = None
-#         for item in cr_res_list:
-#             if item["node"] == ["Material"]:
-#                 uuid = item["uuid"]
-#             if item["node"] == ["Project"]:
-#                 proj_uuid = item["uuid"]
-#         if uuid is None:
-#             raise ValueError("no material node")
-
-#         get_url1 = f"/material/{uuid}"
-#         print("---get_url1: ", get_url1)
-
-#         result = cript_api._capsule_request(url_path=get_url1, method="GET")
-
-#         result_json_dict = result.json()
-#         print("\nresult_json_dict :", result_json_dict)
-
-#         my_mat_from_res_data_dict = result_json_dict["data"][0]
-
-#         mat_list = cript.load_nodes_from_json(nodes_json=json.dumps(my_mat_from_res_data_dict))
-#         # thhis will load an orphan because getting the material will not return the project...
-#         mat_loaded = mat_list
-
-#         print("mat_loaded")
-#         print(mat_loaded)
-
-#         # create a color property
-#         # property_001 = cript.Property(name=mat_1, identifier=[])
-#         color = cript.Property(key="color", value="white", type="none", unit=None)
-
-#         # add the properties to the material
-#         mat_loaded.property += [color]
-
-#         """
-#         1 - get existing material node by uuid - paginator
-#           - or create material node with a property
-
-#         2 - make an edit to a child node (property or process or component)
-#         3 - save the node
-#         """
-
-#         print("\n~~~~~~~~~~~~ SAVING NOW ~~~~~~~~~~~")
-#         print(mat_loaded)  # material_loaded
-#         # print(dir(mat_loaded))
-
-#         url_path = cript_api.save_node(mat_loaded)  # material_loaded
-
-#         # print("node_uuid: ", node_uuid)
-
-#         # payload = {"node": ["Material"], "property": [{"node": ["Property"], "key": "air_flow", "method": "chrom", "type": "value"}]}
-#         # # url1 = f"/material/{uuid}"
-
-#         url_path = url_path
-#         get_response = cript_api._capsule_request(url_path=url_path, method="GET")
-#         print("0~~0~~ \n")
-#         print(" get url_path: ", url_path)
-#         print(get_response.json())
-
-#         assert get_response.status_code == 200
-#         print("\nooooof")
-#         print(get_response.json())
-#         # assert get_response.json()["data"]["result"][0]["node"] == ["Property"]
-
-#         # here delete the project thats created
-#         delete_url = f"/project/{proj_uuid}"
-#         del_response = cript_api._capsule_request(url_path=delete_url, method="DELETE")
-#         assert del_response.status_code == 200
-#         print("~~~~~~~~~~ WE GET HERE ? \n fine yes because get request for a material will not work unless material is public (this one is private), but you cannot delete a material that is public~~~~~~~~~~~~~~~~")
-
-#         # quit()
-#         # cript_api.save_node(mat_loaded)  # material_loaded
-#         # print("\nBASICALLY now WE NEED TO ASSERT ON THE RESPONSE, WITH GET REQUEST EXCEPT ABOVE IS 😕 ")
-#         # print("\n-- probably need to fix save --\n---project after saved")
+@pytest.mark.skip(reason="api")
+def test_material_property_node_add(cript_api) -> None:
+    """
+    pytest nodes/primary_nodes/test_material.py::test_material_property_node_add
+    """
 
-#         # # get_url = f"/material/{uuid}"  # f"/project/{uuid}"
-
-#         # print("get_url1: ", get_url1)
-#         # url_path = f"/{mat_loaded.node[0].lower()}/{mat_loaded.uuid}"
-#         # print("url_path", url_path)
-#         # edited_result = cript_api._capsule_request(url_path=url_path, method="GET")
-#         # print("\n~~~~~~ saved reflected result")
-#         # print(edited_result.json())
-#         # assert len(edited_result.json()["data"]) == 1
-#         # final = edited_result.json()["data"][0]
-#         # assert len(final["property"]) == 2  # styrene and toluene
-#         # set1 = set([final["property"][0]["name"].lower(), final["property"][1]["name"].lower()])
-
-#         # quit()
-#         # set2 = set([json.loads(toluene.property.get_json().json)["name"].lower(), json.loads(styrene.property.get_json().json)["name"].lower()])
-#         # assert set1 == set2  # or material_003toluene.get_json().json)["name"]
+    epoch_time = int(time.time())
+    name_1 = f"my_proj_ali_{epoch_time}"
+    mat_1 = f"my_mat__{epoch_time}"
 
-#         # print("\n___final")
-#         # print(final)
-#         # assert final["collection"][0]["name"] == json.loads(collection.get_json().json)["name"]
-#         # print("now deleting proj and eventually 2 mats")
-#         # print("only issue with this test is the toluene")
+    url_path = "/project/"
+    create_payload = {"node": ["Project"], "name": name_1, "material": [{"node": ["Material"], "name": mat_1, "property": [{"node": ["Property"], "key": "air_flow", "method": "prescribed", "type": "value"}]}]}
 
-#         # del_res = cript_api._capsule_request(url_path=f"/material/{uuid}", method="DELETE")
-#         # assert del_res.json()["code"] == 200
+    try:
+        create_response = cript_api._capsule_request(url_path=url_path, method="POST", data=json.dumps(create_payload))
+        print(create_response)
+    except Exception as e:
+        print(e)
 
+    print(create_response.json())
+    cr_res_list = create_response.json()["data"]["result"]
 
-# @pytest.mark.skip(reason="api")
-# def test_material_property_node_change(cript_api) -> None:
-#     """
-#     pytest nodes/primary_nodes/test_material.py::test_material_property_node_change
+    """
+    1 - get existing material node by uuid - paginator
+        - or create material node with a property
+
+    2 - make an edit to a child node (property or process or component)
+    3 - save the node
+    """
+
+    if create_response.json()["code"] in [409, 400, 401]:
+        print("---create_response")
+        print(create_response)
+        raise ValueError(create_response)
 
-#     """
+    elif create_response.json()["code"] in [201, 200]:
+        print("---create_response")
+        print(create_response.json())
+
+        uuid = None
+        for item in cr_res_list:
+            if item["node"] == ["I"]:
+                uuid = item["uuid"]
+            if item["node"] == ["Project"]:
+                proj_uuid = item["uuid"]
+        if uuid is None:
+            raise ValueError("no material node")
+
+        get_url1 = f"/material/{uuid}"
+        print("---get_url1: ", get_url1)
+
+        result = cript_api._capsule_request(url_path=get_url1, method="GET")
+
+        result_json_dict = result.json()
+        print("\nresult_json_dict :", result_json_dict)
+
+        my_mat_from_res_data_dict = result_json_dict["data"][0]
+
+        print("\n--\n\nmy_mat_from_res_data_dict")
+        # my_mat_from_res_data_dict = cript_api.remove_keys_from_dict(my_mat_from_res_data_dict)
+        print(my_mat_from_res_data_dict)
+        print("\n--- type ")
+        print(type(my_mat_from_res_data_dict))
+        # my_mat_from_res_data_dict.pop("uuid")
+        # my_mat_from_res_data_dict.pop("project")
+        print("send to load_nodes()  --- my_mat_from_res_data_dict")
+        print(my_mat_from_res_data_dict)
+        print("---\n")
+
+        mat_list = cript.load_nodes_from_json(nodes_json=json.dumps(my_mat_from_res_data_dict))
+
+        # SOS - was the cache update breaking this?
+        # maybe getting a uuid screws this up
+        # now this is getting a bit weird so , maybe its the cache?
+        # thhis will load an orphan because getting the material will not return the project...
+
+        mat_loaded = mat_list
+
+        print("\n--- \nmat_loaded")
+        print(mat_loaded)
+
+        # create a color property
+        # property_001 = cript.Property(name=mat_1, identifier=[])
+
+        color = cript.Property(key="color", value="white", type="none", unit=None)
+
+        # add the properties to the material
+
+        mat_loaded.property += [color]
+
+        """
+        1 - get existing material node by uuid - paginator
+          - or create material node with a property
+
+        2 - make an edit to a child node (property or process or component)
+        3 - save the node
+        """
+
+        print("\n~~~~~~~~~~~~ SAVING NOW ~~~~~~~~~~~")
+        print(mat_loaded)  # material_loaded
+        # print(dir(mat_loaded))
+
+        url_path = cript_api.save_node(mat_loaded)  # material_loaded
+
+        # print("node_uuid: ", node_uuid)
+
+        # payload = {"node": ["Material"], "property": [{"node": ["Property"], "key": "air_flow", "method": "chrom", "type": "value"}]}
+        # # url1 = f"/material/{uuid}"
+
+        url_path = url_path
+        get_response = cript_api._capsule_request(url_path=url_path, method="GET")
+        print("0~~0~~ \n")
+        print(" get url_path: ", url_path)
+        print(get_response.json())
+
+        assert get_response.status_code == 200
+        print("\nooooof")
+        print(get_response.json())
+        # assert get_response.json()["data"]["result"][0]["node"] == ["Property"]
 
-#     epoch_time = int(time.time())
-#     name_1 = f"my_proj_ali_{epoch_time}"
-#     mat_1 = f"my_mat__{epoch_time}"
+        # here delete the project thats created
+        delete_url = f"/project/{proj_uuid}"
+        del_response = cript_api._capsule_request(url_path=delete_url, method="DELETE")
+        assert del_response.status_code == 200
+        print("~~~~~~~~~~ WE GET HERE ? \n fine yes because get request for a material will not work unless material is public (this one is private), but you cannot delete a material that is public~~~~~~~~~~~~~~~~")
+
+        # quit()
+        # cript_api.save_node(mat_loaded)  # material_loaded
+        # print("\nBASICALLY now WE NEED TO ASSERT ON THE RESPONSE, WITH GET REQUEST EXCEPT ABOVE IS 😕 ")
+        # print("\n-- probably need to fix save --\n---project after saved")
 
-#     url_path = "/project/"
-#     create_payload = {"node": ["Project"], "name": name_1, "material": [{"node": ["Material"], "name": mat_1, "property": [{"node": ["Property"], "key": "air_flow", "method": "prescribed", "type": "value"}]}]}
+        # # get_url = f"/material/{uuid}"  # f"/project/{uuid}"
 
-#     try:
-#         create_response = cript_api._capsule_request(url_path=url_path, method="POST", data=json.dumps(create_payload))
-#         print("HELLO")
-#         print(create_response)
-#     except Exception as e:
-#         print(e)
+        # print("get_url1: ", get_url1)
+        # url_path = f"/{mat_loaded.node[0].lower()}/{mat_loaded.uuid}"
+        # print("url_path", url_path)
+        # edited_result = cript_api._capsule_request(url_path=url_path, method="GET")
+        # print("\n~~~~~~ saved reflected result")
+        # print(edited_result.json())
+        # assert len(edited_result.json()["data"]) == 1
+        # final = edited_result.json()["data"][0]
+        # assert len(final["property"]) == 2  # styrene and toluene
+        # set1 = set([final["property"][0]["name"].lower(), final["property"][1]["name"].lower()])
 
-#     print(create_response.json())
-#     cr_res_list = create_response.json()["data"]["result"]
+        # quit()
+        # set2 = set([json.loads(toluene.property.get_json().json)["name"].lower(), json.loads(styrene.property.get_json().json)["name"].lower()])
+        # assert set1 == set2  # or material_003toluene.get_json().json)["name"]
 
-#     if create_response.json()["code"] in [409, 400, 401]:
-#         print("---create_response")
-#         print(create_response)
-#         raise ValueError(create_response)
+        # print("\n___final")
+        # print(final)
+        # assert final["collection"][0]["name"] == json.loads(collection.get_json().json)["name"]
+        # print("now deleting proj and eventually 2 mats")
+        # print("only issue with this test is the toluene")
 
-#     elif create_response.json()["code"] in [201, 200]:
-#         print("---aaa create_response")
-#         print(create_response.json())
+        # del_res = cript_api._capsule_request(url_path=f"/material/{uuid}", method="DELETE")
+        # assert del_res.json()["code"] == 200
 
-#         uuid = None
-#         for item in cr_res_list:
-#             if item["node"] == ["Material"]:
-#                 print("AAAAAAAAAAAAAAAA")
-#                 uuid = item["uuid"]
-#             if item["node"] == ["Project"]:
-#                 item["uuid"]
-#         if uuid is None:
-#             raise ValueError("no material node")
 
-#         get_url1 = f"/material/{uuid}"
-#         print("---get_url1: ", get_url1)
+@pytest.mark.skip(reason="api")
+def test_material_property_node_change(cript_api) -> None:
+    """
+    pytest nodes/primary_nodes/test_material.py::test_material_property_node_change
 
-#         result = cript_api._capsule_request(url_path=get_url1, method="GET")
+    """
 
-#         result_json_dict = result.json()
-#         print("\nresult_json_dict :", result_json_dict)
+    epoch_time = int(time.time())
+    name_1 = f"my_proj_ali_{epoch_time}"
+    mat_1 = f"my_mat__{epoch_time}"
 
-#         my_mat_from_res_data_dict = result_json_dict["data"][0]
+    url_path = "/project/"
+    create_payload = {"node": ["Project"], "name": name_1, "material": [{"node": ["Material"], "name": mat_1, "property": [{"node": ["Property"], "key": "air_flow", "method": "prescribed", "type": "value"}]}]}
 
-#         mat_loaded = cript.load_nodes_from_json(nodes_json=json.dumps(my_mat_from_res_data_dict))
+    try:
+        create_response = cript_api._capsule_request(url_path=url_path, method="POST", data=json.dumps(create_payload))
+        print("HELLO")
+        print(create_response)
+    except Exception as e:
+        print(e)
 
-#         # this "cript.load_nodes_from_json" ^ it doesnt load the parentas part of the node,
-#         # for example this is missing a "project"
-#         # wait a material can have multiple parents...
+    print(create_response.json())
+    cr_res_list = create_response.json()["data"]["result"]
 
-#         # mat_loaded = mat_list
+    if create_response.json()["code"] in [409, 400, 401]:
+        print("---create_response")
+        print(create_response)
+        raise ValueError(create_response)
 
-#         print("mat_loaded")
-#         print(mat_loaded)
+    elif create_response.json()["code"] in [201, 200]:
+        print("---aaa create_response")
+        print(create_response.json())
 
-#         # create a color property
-#         # property_001 = cript.Property(name=mat_1, identifier=[])
-#         color = cript.Property(key="color", value="white", type="none", unit=None)
+        uuid = None
+        for item in cr_res_list:
+            if item["node"] == ["Material"]:
+                print("AAAAAAAAAAAAAAAA")
+                uuid = item["uuid"]
+            if item["node"] == ["Project"]:
+                item["uuid"]
+        if uuid is None:
+            raise ValueError("no material node")
 
-#         print("TOTAL RESET ON THIS")
-#         mat_loaded.property = [color]
+        get_url1 = f"/material/{uuid}"
+        print("---get_url1: ", get_url1)
 
-#         """
-#         1 - get existing material node by uuid - paginator
-#           - or create material node with a property
+        result = cript_api._capsule_request(url_path=get_url1, method="GET")
 
-#         2 - make an edit to a child node (property or process or component)
-#         3 - save the node
-#         """
+        result_json_dict = result.json()
+        print("\nresult_json_dict :", result_json_dict)
 
-#         print("\n~~~~~~~~~~~~ SAVING NOW ~~~~~~~~~~~")
-#         print(mat_loaded)  # material_loaded
-#         print("--//--")
-#         # print(dir(mat_loaded))
+        my_mat_from_res_data_dict = result_json_dict["data"][0]
 
-#         url_path = cript_api.save_node(mat_loaded)  # material_loaded
+        mat_loaded = cript.load_nodes_from_json(nodes_json=json.dumps(my_mat_from_res_data_dict))
 
-#         # print("node_uuid: ", node_uuid)
+        # this "cript.load_nodes_from_json" ^ it doesnt load the parentas part of the node,
+        # for example this is missing a "project"
+        # wait a material can have multiple parents...
 
-#         # payload = {"node": ["Material"], "property": [{"node": ["Property"], "key": "air_flow", "method": "chrom", "type": "value"}]}
-#         # # url1 = f"/material/{uuid}"
+        # mat_loaded = mat_list
 
-#         # url_path = url_path
+        print("mat_loaded")
+        print(mat_loaded)
 
-#         print("------````------`-`-`--`---")
+        # create a color property
+        # property_001 = cript.Property(name=mat_1, identifier=[])
+        color = cript.Property(key="color", value="white", type="none", unit=None)
 
-#         url_path1 = get_url1
+        print("TOTAL RESET ON THIS")
+        mat_loaded.property = [color]
 
-#         print("url_path1: ", url_path1)
+        """
+        1 - get existing material node by uuid - paginator
+          - or create material node with a property
 
-#         get_response = cript_api._capsule_request(url_path=url_path1, method="GET")
-#         print("\n___get_response")
-#         print(" get url_path: ", url_path1)
-#         print(get_response.json())
+        2 - make an edit to a child node (property or process or component)
+        3 - save the node
+        """
 
-#         assert get_response.status_code == 200
-#         print("oooof")
-#         print(get_response.json()["data"])
-#         # assert get_response.json()["data"]["result"][0]["node"] == ["Property"]
+        print("\n~~~~~~~~~~~~ SAVING NOW ~~~~~~~~~~~")
+        print(mat_loaded)  # material_loaded
+        print("--//--")
+        # print(dir(mat_loaded))
 
-#         # here delete the project thats created
-#         # delete_url = f"/project/{proj_uuid}"
-#         # del_response = cript_api._capsule_request(url_path=delete_url, method="DELETE")
-#         # assert del_response.status_code == 200
-#         print("~~~~~~~~~~ WE GET HERE ? \n fine yes because get request for a material will not work unless material is public (this one is private), but you cannot delete a material that is public~~~~~~~~~~~~~~~~")
+        url_path = cript_api.save_node(mat_loaded)  # material_loaded
 
-#         quit()
+        # print("node_uuid: ", node_uuid)
+
+        # payload = {"node": ["Material"], "property": [{"node": ["Property"], "key": "air_flow", "method": "chrom", "type": "value"}]}
+        # # url1 = f"/material/{uuid}"
+
+        # url_path = url_path
+
+        print("------````------`-`-`--`---")
+
+        url_path1 = get_url1
+
+        print("url_path1: ", url_path1)
+
+        get_response = cript_api._capsule_request(url_path=url_path1, method="GET")
+        print("\n___get_response")
+        print(" get url_path: ", url_path1)
+        print(get_response.json())
+
+        assert get_response.status_code == 200
+        print("oooof")
+        print(get_response.json()["data"])
+        # assert get_response.json()["data"]["result"][0]["node"] == ["Property"]
+
+        # here delete the project thats created
+        # delete_url = f"/project/{proj_uuid}"
+        # del_response = cript_api._capsule_request(url_path=delete_url, method="DELETE")
+        # assert del_response.status_code == 200
+        print("~~~~~~~~~~ WE GET HERE ? \n fine yes because get request for a material will not work unless material is public (this one is private), but you cannot delete a material that is public~~~~~~~~~~~~~~~~")
+
+        quit()

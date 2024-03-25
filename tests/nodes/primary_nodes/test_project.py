@@ -331,47 +331,22 @@ def test_update_project_change_or_reset_material_to_existing_materials(cript_api
 
 
 @pytest.mark.skip(reason="api")
-def test_update_project_change_or_reset_material_to_existing_materials2(cript_api, simple_material_node, simple_project_node, complex_project_node, complex_material_node) -> None:
+def test_sending_fixtures(cript_api, simple_material_node, simple_project_node, complex_project_node, complex_material_node) -> None:
     """
     pytest nodes/primary_nodes/test_project.py::test_update_project_change_or_reset_material_to_existing_materials2
 
     """
 
-    # pj_node = complex_project_node
-    # field_list = []
-    # for field in dataclasses.fields(pj_node._json_attrs):
-    #     field_list.append(field.name)
-    #     # print(type(field))
-    #     # node_dict[field] = json.loads(getattr(pj_node._json_args, field))
-    #     # node_dict[field] = json.loads(getattr(pj_node._json_attrs, field))
-
-    # print(field_list)
-    # quit()
-
     epoch_time = int(time.time())
     name_1 = f"my_proj_thisali_{epoch_time}"
-    col_name = f"031o0col__{epoch_time}"
+    # collection_name = f"031o0col__{epoch_time}"
 
     pj_node = copy.deepcopy(complex_project_node)
-    pj_node.material = [complex_material_node, simple_material_node]
 
-    # pj_node.material = [material1, material2]
+    # just an equal sign because we want to reset it !
+    pj_node.material = [simple_material_node]  # [complex_material_node, simple_material_node]
 
     pj_node.name = name_1
-    ############################################################################
-
-    # pj_node2 = copy.deepcopy(simple_project_node)  # , uuid=project1.uuid)
-    # project2.uuid = project1.uuid
-
-    print("---//----")
-    print("pj_node")
-    print(pj_node)
-    # quit()
-
-    # pj_node = simple_project_node
-    # pj_node2 = simple_project_node
-
-    # mat_node = simple_material_node
 
     cript_api.save_node(pj_node)  # to create it, if there is no diff, just return
 
@@ -379,112 +354,12 @@ def test_update_project_change_or_reset_material_to_existing_materials2(cript_ap
     material1 = complex_material_node
     material2 = simple_material_node
 
-    pj_node.material = [material1, material2]
+    # now we want to add, but could also reset with just an equal sign
+    pj_node.material += [material1, material2]
 
     cript_api.save_node(pj_node)  # bear type, must be list
 
     quit()
-    ############################################################################
-
-    # url_path = "/project/"
-
-    # # material_001 = cript.Material(name=mat_1, identifier=[])
-    # create_payload = {
-    #     "node": ["Project"],
-    #     "name": name_1,
-    #     # "material": [{"node": ["Material"], "name": f"unique_mat_{epoch_time}", "property": [{"node": ["Property"], "key": "air_flow", "method": "prescribed", "type": "value"}]}],
-    #     # "material": [{"uuid": "1809330c-31d2-4a80-af72-77b84070ee1d"}, {"uuid": "ea8f957c-b6e5-4668-b306-e0d6b0d05d9a"}],
-    # }
-    # # {"uuid": "1809330c-31d2-4a80-af72-77b84070ee1d"}]}  # , {"uuid": "ea8f957c-b6e5-4668-b306-e0d6b0d05d9a"}]}
-
-    # try:
-    #     create_response = cript_api._capsule_request(url_path=url_path, method="POST", data=json.dumps(create_payload))
-    #     print(create_response)
-    #     print(create_response.json())
-
-    # except Exception as e:
-    #     print(e)
-    #     raise ValueError(e)
-
-    # cr_res_list = create_response.json()["data"]["result"]
-
-    # if create_response.json()["code"] in [409, 400, 401]:
-    #     # print("---create_response")
-    #     # print(create_response)
-    #     raise ValueError(create_response)
-
-    # elif create_response.json()["code"] in [201, 200]:
-    #     uuid = None
-    #     for item in cr_res_list:
-    #         if item["node"] == ["Project"]:
-    #             uuid = item["uuid"]
-    #     if uuid is None:
-    #         raise ValueError("no project node")
-
-    #     get_url = f"/project/{uuid}"
-
-    #     result = cript_api._capsule_request(url_path=get_url, method="GET")
-
-    #     result_json_dict = result.json()
-
-    #     my_project_from_res_data_dict = result_json_dict["data"][0]
-
-    #     project_list = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_res_data_dict))
-    #     project_loaded = project_list
-
-    #     toluene = cript.Material(name="toluene", bigsmiles="smile")  # , {"pubchem_id": 1140}])
-    #     styrene = cript.Material(name="styrene", bigsmiles="smile")  # , identifier=[{"smiles": "Cc1ccccc1"}])
-
-    #     collection = cript.Collection(name=col_name)
-
-    #     # prop1 = cript.Material.property(key="air_flow", method="prescribed", type="value")
-    #     # create a phase property
-
-    #     phase = cript.Property(key="phase", value="solid", type="none", unit=None)
-    #     # create a color property
-    #     color = cript.Property(key="color", value="white", type="none", unit=None)
-
-    #     # add the properties to the material
-    #     # polystyrene.property += [phase, color]
-
-    #     # material_001 = cript.Material(name=mat_1, identifier=[])
-
-    #     project_loaded.material = [project_loaded.material[0], toluene, styrene]
-
-    #     print("\nPROPS")
-    #     print(project_loaded.material[0])
-    #     print(project_loaded.material[0].property)
-    #     project_loaded.material[0].property += [phase, color]
-    #     print(project_loaded.material[0].property)
-    #     # quit()
-
-    #     project_loaded.collection = [collection]
-    #     experiment = cript.Experiment(name="Anionic Polymerization of Styrene with SecBuLi")
-    #     project_loaded.collection[0].experiment += [experiment]
-
-    #     # SAVE_NODE CALL HERE
-    #     cript_api.save_node(project_loaded)
-
-    #     get_url = f"/project/{uuid}"
-    #     edited_result = cript_api._capsule_request(url_path=get_url, method="GET")
-
-    #     assert len(edited_result.json()["data"]) == 1
-
-    #     final = edited_result.json()["data"][0]
-
-    #     assert len(final["material"]) == 2  # styrene and toluene
-
-    #     set1 = set([final["material"][0]["name"].lower(), final["material"][1]["name"].lower()])
-
-    #     set2 = set([json.loads(toluene.get_json().json)["name"].lower(), json.loads(styrene.get_json().json)["name"].lower()])
-
-    #     assert set1 == set2  # or material_003toluene.get_json().json)["name"]
-
-    #     assert final["collection"][0]["name"] == json.loads(collection.get_json().json)["name"]
-
-    #     del_res = cript_api._capsule_request(url_path=f"/project/{uuid}", method="DELETE")
-
-    #     assert del_res.json()["code"] == 200
 
 
 @pytest.mark.skip(reason="api")

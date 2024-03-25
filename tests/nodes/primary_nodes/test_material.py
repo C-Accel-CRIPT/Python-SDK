@@ -229,6 +229,7 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
 def test_material_property_node_add(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_material.py::test_material_property_node_add
+
     """
 
     epoch_time = int(time.time())
@@ -266,7 +267,7 @@ def test_material_property_node_add(cript_api) -> None:
 
         uuid = None
         for item in cr_res_list:
-            if item["node"] == ["I"]:
+            if item["node"] == ["Material"]:
                 uuid = item["uuid"]
             if item["node"] == ["Project"]:
                 proj_uuid = item["uuid"]

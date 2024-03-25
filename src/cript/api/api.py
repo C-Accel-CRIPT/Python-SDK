@@ -1220,8 +1220,8 @@ class API:
                 # print(type(json.loads(data)))
                 data0 = API.remove_keys_from_dict(json.loads(data))
                 data = json.dumps(data0)
-                # print(data)
-                # print(type(data))
+                print(data)
+                print(type(data))
                 # quit()
 
                 response = self._capsule_request(url_path="/project/", method="POST", data=data)  # json.dumps(data))
@@ -1231,8 +1231,8 @@ class API:
                     # data = API.remove_keys_from_dict(json.loads(data))
                     # print(data)
                     # raise ValueError(f"malformed json data - check string into dumps{response.json()}")
-                    print("malformed json data - check string into dumps", response.json())
-                    # quit()
+                    print("\nmalformed json data - check string into dumps", response.json())
+                    quit()
                 elif response.json()["code"] in [409]:
                     print("already exists", response.json())
                 elif response.json()["code"] in [401]:
@@ -1277,6 +1277,8 @@ class API:
         # then we will send all these and thats where we will have a flag for link existing
 
         self.send_patches_to_api(list_of_patches_and_removes=list_of_patches_and_removes, link_existing=link_existing)
+
+        return get_url
 
     ###########################################################################################
     ###########################################################################################

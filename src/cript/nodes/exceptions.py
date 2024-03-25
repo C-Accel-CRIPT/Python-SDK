@@ -67,19 +67,6 @@ class CRIPTNodeSchemaError(CRIPTException):
         return error_message
 
 
-class CRIPTMaterialIdentifierError(CRIPTException):
-    """Every material node needs to have at least one identifier set."""
-
-    def __init__(self, material_node):
-        self.material_node = material_node
-
-    def __str__(self) -> str:
-        error_message = "Every Material node needs at least one identifier from "
-        error_message += " [ 'amino_acid', 'bigsmiles', 'chem_formula', 'chem_repeat', 'chemical_id', 'inchi', 'lot_number', 'names', 'pubchem_cid', 'smiles','vendor'] set."
-        error_message += f" This node {self.material_node} has none set."
-        return error_message
-
-
 class CRIPTJsonDeserializationError(CRIPTException):
     """
     ## Definition

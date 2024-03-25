@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from cript.exceptions import CRIPTException
+from cript.exceptions import CRIPTException, CRIPTWarning
 
 
 class CRIPTUUIDException(CRIPTException):
@@ -67,7 +67,7 @@ class CRIPTNodeSchemaError(CRIPTException):
         return error_message
 
 
-class CRIPTMaterialIdentifierError(CRIPTException):
+class CRIPTMaterialIdentifierWarning(CRIPTWarning):
     """Every material node needs to have at least one identifier set."""
 
     def __init__(self, material_node):
@@ -281,14 +281,14 @@ class CRIPTExtraJsonAttributes(CRIPTException):
         )
 
 
-class CRIPTOrphanedNodesError(CRIPTException, ABC):
+class CRIPTOrphanedNodesWarning(CRIPTWarning, ABC):
     """
     ## Definition
     This error is raised when a child node is not attached to the
     appropriate parent node. For example, all material nodes used
     within a project must belong to the project inventory or are explicitly listed as material of that project.
     If there is a material node that is used within a project but not a part of the
-    inventory and the validation code finds it then it raises an `CRIPTOrphanedNodeError`
+    inventory and the validation code finds it then it raises an `CRIPTOrphanedNodeWarning`
 
     ## Troubleshooting
     Fixing this is simple and easy, just take the node that CRIPT Python SDK
@@ -307,10 +307,10 @@ class CRIPTOrphanedNodesError(CRIPTException, ABC):
         pass
 
 
-class CRIPTOrphanedMaterialError(CRIPTOrphanedNodesError):
+class CRIPTOrphanedMaterialWarning(CRIPTOrphanedNodesWarning):
     """
     ## Definition
-    CRIPTOrphanedNodesError, but specific for orphaned materials.
+    CRIPTOrphanedNodesWarning, but specific for orphaned materials.
 
     ## Troubleshooting
     Handle this error by adding the orphaned materials into the parent project or its inventories.
@@ -327,10 +327,10 @@ class CRIPTOrphanedMaterialError(CRIPTOrphanedNodesError):
         return ret_string
 
 
-class CRIPTOrphanedExperimentError(CRIPTOrphanedNodesError):
+class CRIPTOrphanedExperimentWarning(CRIPTOrphanedNodesWarning):
     """
     ## Definition
-    CRIPTOrphanedNodesError, but specific for orphaned nodes that should be listed in one of the experiments.
+    CRIPTOrphanedNodesWarning, but specific for orphaned nodes that should be listed in one of the experiments.
 
     ## Troubleshooting
     Handle this error by adding the orphaned node into one the parent project's experiments.
@@ -348,10 +348,10 @@ class CRIPTOrphanedExperimentError(CRIPTOrphanedNodesError):
         return ret_string
 
 
-class CRIPTOrphanedDataError(CRIPTOrphanedExperimentError):
+class CRIPTOrphanedDataWarning(CRIPTOrphanedExperimentWarning):
     """
     ## Definition
-    CRIPTOrphanedExperimentError, but specific for orphaned Data node that should be listed in one of the experiments.
+    CRIPTOrphanedExperimentWarning, but specific for orphaned Data node that should be listed in one of the experiments.
 
     ## Troubleshooting
     Handle this error by adding the orphaned node into one the parent project's experiments `data` attribute.
@@ -361,10 +361,10 @@ class CRIPTOrphanedDataError(CRIPTOrphanedExperimentError):
         super().__init__(orphaned_node)
 
 
-class CRIPTOrphanedProcessError(CRIPTOrphanedExperimentError):
+class CRIPTOrphanedProcessWarning(CRIPTOrphanedExperimentWarning):
     """
     ## Definition
-    CRIPTOrphanedExperimentError, but specific for orphaned Process node that should be
+    CRIPTOrphanedExperimentWarning, but specific for orphaned Process node that should be
     listed in one of the experiments.
 
     ## Troubleshooting
@@ -376,10 +376,10 @@ class CRIPTOrphanedProcessError(CRIPTOrphanedExperimentError):
         super().__init__(orphaned_node)
 
 
-class CRIPTOrphanedComputationError(CRIPTOrphanedExperimentError):
+class CRIPTOrphanedComputationWarning(CRIPTOrphanedExperimentWarning):
     """
     ## Definition
-    CRIPTOrphanedExperimentError, but specific for orphaned Computation node that should be
+    CRIPTOrphanedExperimentWarning, but specific for orphaned Computation node that should be
     listed in one of the experiments.
 
     ## Troubleshooting
@@ -391,10 +391,10 @@ class CRIPTOrphanedComputationError(CRIPTOrphanedExperimentError):
         super().__init__(orphaned_node)
 
 
-class CRIPTOrphanedComputationalProcessError(CRIPTOrphanedExperimentError):
+class CRIPTOrphanedComputationalProcessWarning(CRIPTOrphanedExperimentWarning):
     """
     ## Definition
-    CRIPTOrphanedExperimentError, but specific for orphaned ComputationalProcess
+    CRIPTOrphanedExperimentWarning, but specific for orphaned ComputationalProcess
     node that should be listed in one of the experiments.
 
     ## Troubleshooting

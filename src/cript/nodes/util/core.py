@@ -1,12 +1,13 @@
 import uuid
+import warnings
 
 from cript.nodes.exceptions import (
-    CRIPTOrphanedComputationalProcessError,
-    CRIPTOrphanedComputationError,
-    CRIPTOrphanedDataError,
-    CRIPTOrphanedExperimentError,
-    CRIPTOrphanedMaterialError,
-    CRIPTOrphanedProcessError,
+    CRIPTOrphanedComputationalProcessWarning,
+    CRIPTOrphanedComputationWarning,
+    CRIPTOrphanedDataWarning,
+    CRIPTOrphanedExperimentWarning,
+    CRIPTOrphanedMaterialWarning,
+    CRIPTOrphanedProcessWarning,
 )
 
 
@@ -27,25 +28,28 @@ def add_orphaned_nodes_to_project(project, active_experiment, max_iteration: int
         raise RuntimeError(f"The provided active experiment {active_experiment} is not part of the project graph. Choose an active experiment that is part of a collection of this project.")
 
     counter = 0
-    while True:
-        if counter > max_iteration >= 0:
-            break  # Emergency stop
-        try:
-            project.validate()
-        except CRIPTOrphanedMaterialError as exc:
-            # because calling the setter calls `validate` we have to force add the material.
-            project._json_attrs.material.append(exc.orphaned_node)
-        except CRIPTOrphanedDataError as exc:
-            active_experiment.data += [exc.orphaned_node]
-        except CRIPTOrphanedProcessError as exc:
-            active_experiment.process += [exc.orphaned_node]
-        except CRIPTOrphanedComputationError as exc:
-            active_experiment.computation += [exc.orphaned_node]
-        except CRIPTOrphanedComputationalProcessError as exc:
-            active_experiment.computation_process += [exc.orphaned_node]
-        else:
-            break
-        counter += 1
+    # Convert Errors into exceptions, so we can catch and fix them
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        while True:
+            if counter > max_iteration >= 0:
+                break  # Emergency stop
+            try:
+                project.validate()
+            except CRIPTOrphanedMaterialWarning as exc:
+                # because calling the setter calls `validate` we have to force add the material.
+                project._json_attrs.material.append(exc.orphaned_node)
+            except CRIPTOrphanedDataWarning as exc:
+                active_experiment.data += [exc.orphaned_node]
+            except CRIPTOrphanedProcessWarning as exc:
+                active_experiment.process += [exc.orphaned_node]
+            except CRIPTOrphanedComputationWarning as exc:
+                active_experiment.computation += [exc.orphaned_node]
+            except CRIPTOrphanedComputationalProcessWarning as exc:
+                active_experiment.computation_process += [exc.orphaned_node]
+            else:
+                break
+            counter += 1
 
 
 def get_orphaned_experiment_exception(orphaned_node):
@@ -58,15 +62,15 @@ def get_orphaned_experiment_exception(orphaned_node):
     from cript.nodes.primary_nodes.process import Process
 
     if isinstance(orphaned_node, Data):
-        return CRIPTOrphanedDataError(orphaned_node)
+        return CRIPTOrphanedDataWarning(orphaned_node)
     if isinstance(orphaned_node, Process):
-        return CRIPTOrphanedProcessError(orphaned_node)
+        return CRIPTOrphanedProcessWarning(orphaned_node)
     if isinstance(orphaned_node, Computation):
-        return CRIPTOrphanedComputationError(orphaned_node)
+        return CRIPTOrphanedComputationWarning(orphaned_node)
     if isinstance(orphaned_node, ComputationProcess):
-        return CRIPTOrphanedComputationalProcessError(orphaned_node)
+        return CRIPTOrphanedComputationalProcessWarning(orphaned_node)
     # Base case raise the parent exception. TODO add bug warning.
-    return CRIPTOrphanedExperimentError(orphaned_node)
+    return CRIPTOrphanedExperimentWarning(orphaned_node)
 
 
 def iterate_leaves(obj):

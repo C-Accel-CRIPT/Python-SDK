@@ -258,6 +258,9 @@ class API:
 
         logger.setLevel(log_level)
 
+        # Activate Warning handling
+        logging.captureWarnings(True)
+
         # Create a console handler
         console_handler = logging.StreamHandler()
 

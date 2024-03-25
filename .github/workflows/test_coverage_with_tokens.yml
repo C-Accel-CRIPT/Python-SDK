@@ -32,12 +32,8 @@ jobs:
         python-version: [3.12]
 
     steps:
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.11
-
       - name: Generate Cognito token
+        id: cognito
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -48,6 +44,11 @@ jobs:
           export ACCESS_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.AccessToken' | sed 's/^"\(.*\)"$/\1/')
           export ID_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.IdToken' | sed 's/^"\(.*\)"$/\1/')
 
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
       - name: Install CRIPT Python SDK
         run: pip install -e .
 
@@ -56,9 +57,8 @@ jobs:
 
       - name: Test Coverage
         run: pytest --cov --cov-fail-under=85
-
-    env:
-      CRIPT_HOST: https://lb-stage.mycriptapp.org/
-      CRIPT_TOKEN: ${{ steps.cognito.outputs.ID_TOKEN }}
-      CRIPT_STORAGE_TOKEN: ${{ steps.cognito.outputs.ACCESS_TOKEN }}
-      CRIPT_TESTS: False
+        env:
+          CRIPT_HOST: https://lb-stage.mycriptapp.org/
+          CRIPT_TOKEN: ${{ steps.cognito.outputs.ID_TOKEN }}
+          CRIPT_STORAGE_TOKEN: ${{ steps.cognito.outputs.ACCESS_TOKEN }}
+          CRIPT_TESTS: False

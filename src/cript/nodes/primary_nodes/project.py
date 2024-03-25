@@ -1,3 +1,4 @@
+import warnings
 from dataclasses import dataclass, field, replace
 from typing import List, Optional, Union
 
@@ -106,7 +107,7 @@ class Project(PrimaryBaseNode):
         self._update_json_attrs_if_valid(new_json_attrs)
 
     def validate(self, api=None, is_patch=False, force_validation: bool = False):
-        from cript.nodes.exceptions import CRIPTOrphanedMaterialError
+        from cript.nodes.exceptions import CRIPTOrphanedMaterialWarning
         from cript.nodes.util.core import get_orphaned_experiment_exception
 
         # First validate like other nodes
@@ -122,7 +123,7 @@ class Project(PrimaryBaseNode):
                 project_inventory_materials.append(material)
         for material in project_graph_materials:
             if material not in self.material and material not in project_inventory_materials:
-                raise CRIPTOrphanedMaterialError(material)
+                warnings.warn(CRIPTOrphanedMaterialWarning(material))
 
         # Check graph for orphaned nodes, that should be listed in the experiments
         project_experiments = self.find_children({"node": ["Experiment"]})
@@ -145,7 +146,7 @@ class Project(PrimaryBaseNode):
                     experiment_nodes.append(ex_node)
             for node in project_graph_nodes:
                 if node not in experiment_nodes:
-                    raise get_orphaned_experiment_exception(node)
+                    warnings.warn(get_orphaned_experiment_exception(node))
 
     @property
     @beartype

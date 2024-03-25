@@ -37,13 +37,17 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         python-version: [3.8, 3.12]
 
-    env:
-      CRIPT_HOST: https://lb-stage.mycriptapp.org/
-      CRIPT_TOKEN: 123456789
-      CRIPT_STORAGE_TOKEN: 987654321
-      CRIPT_TESTS: False
-
     steps:
+      - name: Generate Cognito token
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        run: |
+          pip install awscli
+          OUTPUT=$(aws cognito-idp ${{ secrets.COGNITO_INIT }} --user-pool-id ${{ secrets.COGNITO_USER_POOL_ID }} --client-id ${{ secrets.COGNITO_CLIENT_ID }} --auth-flow ${{ secrets.COGNITO_AUTH_FLOW }} --auth-parameters USERNAME=${{ secrets.COGNITO_USERNAME }},PASSWORD=${{ secrets.COGNITO_PASSWORD }})
+          export ACCESS_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.AccessToken' | sed 's/^"\(.*\)"$/\1/')
+          export ID_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.IdToken' | sed 's/^"\(.*\)"$/\1/')
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
@@ -59,3 +63,9 @@ jobs:
 
       - name: Run pytest on tests/
         run: python${{ matrix.python-version }} -m pytest ./tests/
+
+    env:
+      CRIPT_HOST: https://lb-stage.mycriptapp.org/
+      CRIPT_TOKEN: ${{ steps.cognito.outputs.ID_TOKEN }}
+      CRIPT_STORAGE_TOKEN: ${{ steps.cognito.outputs.ACCESS_TOKEN }}
+      CRIPT_TESTS: True

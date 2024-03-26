@@ -51,7 +51,7 @@ jobs:
 
       - name: Install CRIPT Python SDK
         run: |
-          ls -a
+          ls -la /home/runner/work/Python-SDK/Python-SDK
           pip install -e .
 
       - name: Install requirements_dev.txt

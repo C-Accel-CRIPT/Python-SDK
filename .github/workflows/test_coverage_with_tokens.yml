@@ -40,14 +40,9 @@ jobs:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
           
         run: |
-          pip install awscli
           OUTPUT=$(aws cognito-idp "${{ secrets.COGNITO_INIT }}" --user-pool-id "${{ secrets.COGNITO_USER_POOL_ID }}" --client-id "${{ secrets.COGNITO_CLIENT_ID }}" --auth-flow "${{ secrets.COGNITO_AUTH_FLOW }}" --auth-parameters USERNAME="${{ secrets.COGNITO_USERNAME }}",PASSWORD=${{ secrets.COGNITO_PASSWORD }})
           ACCESS_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.AccessToken' | sed 's/^"\(.*\)"$/\1/')
-          EXPIRES=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.ExpiresIn' | sed 's/^"\(.*\)"$/\1/')
           ID_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.IdToken' | sed 's/^"\(.*\)"$/\1/')
-          echo $ACCESS_TOKEN
-          echo $EXPIRES
-          echo $ID_TOKEN
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -55,7 +50,9 @@ jobs:
           python-version: 3.11
 
       - name: Install CRIPT Python SDK
-        run: pip install -e .
+        run: |
+          ls -a
+          pip install -e .
 
       - name: Install requirements_dev.txt
         run: pip install -r requirements_dev.txt

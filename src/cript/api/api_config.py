@@ -6,4 +6,4 @@ These constants are used to customize various aspects of the API requests and be
 """
 
 # Default maximum time in seconds for all API requests to wait for a response from the backend
-_API_TIMEOUT: int = 120
+_API_TIMEOUT: int = 6 * 150

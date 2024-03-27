@@ -82,8 +82,8 @@ class Software(UUIDBaseNode):
         """
         super().__init__(**kwargs)
 
-        self._json_attrs = replace(self._json_attrs, name=name, version=version, source=source)
-        self.validate()
+        new_json_attrs = replace(self._json_attrs, name=name, version=version, source=source)
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype

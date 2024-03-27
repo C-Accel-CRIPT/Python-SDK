@@ -168,7 +168,6 @@ class Reference(UUIDBaseNode):
         new_attrs = replace(self._json_attrs, type=type, title=title, author=author, journal=journal, publisher=publisher, year=year, volume=volume, issue=issue, pages=pages, doi=doi, issn=issn, arxiv_id=arxiv_id, pmid=pmid, website=website)
 
         self._update_json_attrs_if_valid(new_attrs)
-        self.validate()
 
     @property
     @beartype

@@ -178,7 +178,7 @@ class File(PrimaryBaseNode):
         super().__init__(name=name, notes=notes, **kwargs)
 
         # setting every attribute except for source, which will be handled via setter
-        self._json_attrs = replace(
+        new_json_attrs = replace(
             self._json_attrs,
             type=type,
             # always giving the function the required str regardless if the input `Path` or `str`
@@ -186,8 +186,7 @@ class File(PrimaryBaseNode):
             extension=extension,
             data_dictionary=data_dictionary,
         )
-
-        self.validate()
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     def ensure_uploaded(self, api=None):
         """

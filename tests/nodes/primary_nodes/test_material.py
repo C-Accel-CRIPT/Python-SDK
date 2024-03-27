@@ -9,40 +9,75 @@ from tests.utils.integration_test_helper import (
 from tests.utils.util import strip_uid_from_dict
 
 
-def test_create_complex_material(simple_material_node, simple_computational_forcefield_node, simple_process_node) -> None:
+def test_create_complex_material(cript_api, simple_material_node, simple_computational_forcefield_node, simple_process_node) -> None:
     """
     tests that a simple material can be created with only the required arguments
     """
 
     material_name = "my material name"
-    identifier = [{"bigsmiles": "1234"}, {"bigsmiles": "4567"}]
     keyword = ["acetylene"]
     material_notes = "my material notes"
 
+    amino_acid = "adenosine"
+    bigsmiles = "NC{[$][$]CC[$][]}"
+    chem_formula = "NC5"
+    chem_repeat = ["CC"]
+    chemical_id = "my chemical_id"
+    inchi = "my inchi"
+    lot_number = "lot 1"
+    names = ["polyethylene"]
+    pubchem_cid = 155
+    smiles = "*CC*"
+    vendor = "my vendor"
+    inchi_key = "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
+
     component = [simple_material_node]
-    forcefield = [simple_computational_forcefield_node]
+    forcefield = simple_computational_forcefield_node
 
     my_property = [cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")]
 
-    my_material = cript.Material(name=material_name, identifier=identifier, keyword=keyword, component=component, process=simple_process_node, property=my_property, computational_forcefield=forcefield, notes=material_notes)
+    my_material = cript.Material(
+        name=material_name,
+        keyword=keyword,
+        component=component,
+        process=simple_process_node,
+        property=my_property,
+        computational_forcefield=forcefield,
+        notes=material_notes,
+        amino_acid=amino_acid,
+        bigsmiles=bigsmiles,
+        chem_formula=chem_formula,
+        chemical_id=chemical_id,
+        chem_repeat=chem_repeat,
+        inchi=inchi,
+        inchi_key=inchi_key,
+        lot_number=lot_number,
+        names=names,
+        pubchem_cid=pubchem_cid,
+        smiles=smiles,
+        vendor=vendor,
+    )
 
     assert isinstance(my_material, cript.Material)
     assert my_material.name == material_name
-    assert my_material.identifier == identifier
     assert my_material.keyword == keyword
     assert my_material.component == component
     assert my_material.process == simple_process_node
     assert my_material.property == my_property
     assert my_material.computational_forcefield == forcefield
     assert my_material.notes == material_notes
-
-
-def test_invalid_material_keywords() -> None:
-    """
-    tries to create a material with invalid keywords and expects to get an Exception
-    """
-    # with pytest.raises(InvalidVocabulary):
-    pass
+    assert my_material.amino_acid == amino_acid
+    assert my_material.bigsmiles == bigsmiles
+    assert my_material.chem_formula == chem_formula
+    assert my_material.chem_repeat == chem_repeat
+    assert my_material.chemical_id == chemical_id
+    assert my_material.inchi == inchi
+    assert my_material.inchi_key == inchi_key
+    assert my_material.lot_number == lot_number
+    assert my_material.names == names
+    assert my_material.pubchem_cid == pubchem_cid
+    assert my_material.smiles == smiles
+    assert my_material.vendor == vendor
 
 
 def test_all_getters_and_setters(simple_material_node, simple_property_node, simple_process_node, simple_computational_forcefield_node) -> None:
@@ -57,13 +92,9 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     new_name = "new material name"
     new_notes = "new material notes"
 
-    new_identifier = [{"bigsmiles": "6789"}]
-
     new_parent_material = cript.Material(
         name="my parent material",
-        identifier=[
-            {"bigsmiles": "9876"},
-        ],
+        smiles="CC",
     )
 
     new_material_keywords = ["acetylene"]
@@ -71,31 +102,61 @@ def test_all_getters_and_setters(simple_material_node, simple_property_node, sim
     new_components = [
         cript.Material(
             name="my component material 1",
-            identifier=[
-                {"bigsmiles": "654321"},
-            ],
+            smiles="CC",
         ),
     ]
 
+    amino_acid = "adenosine"
+    bigsmiles = "NC{[$][$]CC[$][]}"
+    chem_formula = "NC5"
+    chem_repeat = ["CC"]
+    chemical_id = "my chemical_id"
+    inchi = "my inchi"
+    lot_number = "lot 1"
+    names = ["polyethylene"]
+    pubchem_cid = 155
+    smiles = "*CC*"
+    vendor = "my vendor"
+
     # set all attributes for Material node
     simple_material_node.name = new_name
-    simple_material_node.identifier = new_identifier
     simple_material_node.property = [simple_property_node]
     simple_material_node.parent_material = new_parent_material
     simple_material_node.computational_forcefield = simple_computational_forcefield_node
     simple_material_node.keyword = new_material_keywords
     simple_material_node.component = new_components
     simple_material_node.notes = new_notes
+    simple_material_node.amino_acid = amino_acid
+    simple_material_node.bigsmiles = bigsmiles
+    simple_material_node.chem_formula = chem_formula
+    simple_material_node.chem_repeat = chem_repeat
+    simple_material_node.chemical_id = chemical_id
+    simple_material_node.inchi = inchi
+    simple_material_node.lot_number = lot_number
+    simple_material_node.names = names
+    simple_material_node.pubchem_cid = pubchem_cid
+    simple_material_node.smiles = smiles
+    simple_material_node.vendor = vendor
 
     # get all attributes and assert that they are equal to the setter
     assert simple_material_node.name == new_name
-    assert simple_material_node.identifier == new_identifier
     assert simple_material_node.property == [simple_property_node]
     assert simple_material_node.parent_material == new_parent_material
     assert simple_material_node.computational_forcefield == simple_computational_forcefield_node
     assert simple_material_node.keyword == new_material_keywords
     assert simple_material_node.component == new_components
     assert simple_material_node.notes == new_notes
+    assert simple_material_node.amino_acid == amino_acid
+    assert simple_material_node.bigsmiles == bigsmiles
+    assert simple_material_node.chem_formula == chem_formula
+    assert simple_material_node.chem_repeat == chem_repeat
+    assert simple_material_node.chemical_id == chemical_id
+    assert simple_material_node.inchi == inchi
+    assert simple_material_node.lot_number == lot_number
+    assert simple_material_node.names == names
+    assert simple_material_node.pubchem_cid == pubchem_cid
+    assert simple_material_node.smiles == smiles
+    assert simple_material_node.vendor == vendor
 
     # remove optional attributes
     simple_material_node.property = []
@@ -150,7 +211,7 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
 
     # ========= test update =========
     # update material attribute to trigger update
-    simple_project_node.material[0].identifier = [{"bigsmiles": "my bigsmiles UPDATED"}]
+    simple_project_node.material[0].bigsmiles = "CC{[$][$]CC[$][]} UPDATED"
 
     save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 

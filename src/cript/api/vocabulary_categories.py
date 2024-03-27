@@ -65,7 +65,7 @@ class VocabCategories(Enum):
     Examples
     --------
     >>> import cript
-    >>> algorithm_vocabulary = api.get_vocab_by_category(
+    >>> algorithm_vocabulary = api.schema.get_vocab_by_category(
     ...     cript.VocabCategories.ALGORITHM_KEY
     ... )
     """

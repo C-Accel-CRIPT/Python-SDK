@@ -16,7 +16,7 @@ class SearchModes(Enum):
     UUID : str
         Search by node UUID.
     BIGSMILES: str
-        search materials by bigsmiles identifier.
+        search materials by bigsmiles.
 
     Examples
     -------

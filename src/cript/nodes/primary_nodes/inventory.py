@@ -1,10 +1,11 @@
 from dataclasses import dataclass, field, replace
-from typing import List
+from typing import List, Union
 
 from beartype import beartype
 
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.util.json import UIDProxy
 
 
 class Inventory(PrimaryBaseNode):
@@ -59,12 +60,12 @@ class Inventory(PrimaryBaseNode):
         all Inventory attributes
         """
 
-        material: List[Material] = field(default_factory=list)
+        material: List[Union[Material, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, name: str, material: List[Material], notes: str = "", **kwargs) -> None:
+    def __init__(self, name: str, material: List[Union[Material, UIDProxy]], notes: str = "", **kwargs) -> None:
         """
         Instantiate an inventory node
 
@@ -73,11 +74,11 @@ class Inventory(PrimaryBaseNode):
         >>> import cript
         >>> material_1 = cript.Material(
         ...    name="material 1",
-        ...    identifier=[{"bigsmiles": "material 1 bigsmiles"}],
+        ...    bigsmiles = "material 1 bigsmiles",
         ... )
         >>> material_2 = cript.Material(
         ...    name="material 2",
-        ...    identifier=[{"bigsmiles": "material 2 bigsmiles"}],
+        ...    bigsmiles = "material 2 bigsmiles",
         ... )
         >>> my_inventory = cript.Inventory(
         ...    name="my inventory name", material=[material_1, material_2]
@@ -99,11 +100,12 @@ class Inventory(PrimaryBaseNode):
 
         super().__init__(name=name, notes=notes, **kwargs)
 
-        self._json_attrs = replace(self._json_attrs, material=material)
+        new_json_attrs = replace(self._json_attrs, material=material)
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype
-    def material(self) -> List[Material]:
+    def material(self) -> List[Union[Material, UIDProxy]]:
         """
         List of [material](../material) in this inventory
 
@@ -112,12 +114,12 @@ class Inventory(PrimaryBaseNode):
         >>> import cript
         >>> my_material = cript.Material(
         ...    name="my material",
-        ...    identifier=[{"bigsmiles": "my bigsmiles"}],
+        ...    bigsmiles = "my bigsmiles",
         ... )
         >>> my_inventory = cript.Inventory(name="my inventory", material=[my_material])
         >>> new_material = cript.Material(
         ...    name="new material",
-        ...    identifier=[{"bigsmiles": "my bigsmiles"}],
+        ...    bigsmiles = "my bigsmiles",
         ... )
         >>> my_inventory.material = [new_material]
 
@@ -130,7 +132,7 @@ class Inventory(PrimaryBaseNode):
 
     @material.setter
     @beartype
-    def material(self, new_material_list: List[Material]):
+    def material(self, new_material_list: List[Union[Material, UIDProxy]]):
         """
         set the list of material for this inventory node
 

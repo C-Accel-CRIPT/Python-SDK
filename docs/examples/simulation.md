@@ -361,22 +361,12 @@ bulk.output_data = [final_data]
 
 ## Create a virtual Material
 
-First, we'll create a virtual material and add some
-[`Identifiers`](../../nodes/primary_nodes/material/#cript.nodes.primary_nodes.material.Material.identifier)
-to the material to make it easier to identify and search.
+First, we'll create a virtual material with identifiers to make it easier to search for.
 
 ```python
-# create identifier dictionaries and put it in `identifiers` variable
-identifiers = [{"names": ["poly(styrene)", "poly(vinylbenzene)"]}]
-identifiers += [{"bigsmiles": "[H]{[>][<]C(C[>])c1ccccc1[<]}C(C)CC"}]
-identifiers += [{"chem_repeat": ["C8H8"]}]
-
 # create a material node object with identifiers
-polystyrene = cript.Material(name="virtual polystyrene", identifier=identifiers)
+polystyrene = cript.Material(name="virtual polystyrene", bigsmiles="[H]{[>][<]C(C[>])c1ccccc1[<]}C(C)CC", names = ["poly(styrene)", "poly(vinylbenzene)"], chem_repeat= ["C8H8"])
 ```
-
-!!! note "Identifier keys"
-    The allowed [`Identifiers`](../../nodes/primary_nodes/material/#cript.nodes.primary_nodes.material.Material.identifier) keys are listed in the [material identifier keys](https://app.criptapp.org/vocab/material_identifier_key) in the CRIPT controlled vocabulary.
 
 ## Add [`Property`](../../nodes/subobjects/property) sub-objects
 Let's also add some [`Property`](../../nodes/subobjects/property) nodes to the [`Material`](../../nodes/primary_nodes/material), which represent its physical or virtual (in the case of a simulated material) properties.

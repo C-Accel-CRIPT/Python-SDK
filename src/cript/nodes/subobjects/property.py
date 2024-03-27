@@ -10,6 +10,7 @@ from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.process import Process
 from cript.nodes.subobjects.citation import Citation
 from cript.nodes.subobjects.condition import Condition
+from cript.nodes.util.json import UIDProxy
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -76,14 +77,14 @@ class Property(UUIDBaseNode):
         unit: Optional[str] = ""
         uncertainty: Optional[Number] = None
         uncertainty_type: str = ""
-        component: List[Material] = field(default_factory=list)
+        component: List[Union[Material, UIDProxy]] = field(default_factory=list)
         structure: str = ""
         method: str = ""
-        sample_preparation: Optional[Process] = None
-        condition: List[Condition] = field(default_factory=list)
-        data: List[Data] = field(default_factory=list)
-        computation: List[Computation] = field(default_factory=list)
-        citation: List[Citation] = field(default_factory=list)
+        sample_preparation: Optional[Union[Process, UIDProxy]] = None
+        condition: List[Union[Condition, UIDProxy]] = field(default_factory=list)
+        data: List[Union[Data, UIDProxy]] = field(default_factory=list)
+        computation: List[Union[Computation, UIDProxy]] = field(default_factory=list)
+        citation: List[Union[Citation, UIDProxy]] = field(default_factory=list)
         notes: str = ""
 
     _json_attrs: JsonAttributes = JsonAttributes()
@@ -97,14 +98,14 @@ class Property(UUIDBaseNode):
         unit: Union[str, None],
         uncertainty: Optional[Number] = None,
         uncertainty_type: str = "",
-        component: Optional[List[Material]] = None,
+        component: Optional[List[Union[Material, UIDProxy]]] = None,
         structure: str = "",
         method: str = "",
-        sample_preparation: Optional[Process] = None,
-        condition: Optional[List[Condition]] = None,
-        data: Optional[List[Data]] = None,
-        computation: Optional[List[Computation]] = None,
-        citation: Optional[List[Citation]] = None,
+        sample_preparation: Optional[Union[Process, UIDProxy]] = None,
+        condition: Optional[List[Union[Condition, UIDProxy]]] = None,
+        data: Optional[List[Union[Data, UIDProxy]]] = None,
+        computation: Optional[List[Union[Computation, UIDProxy]]] = None,
+        citation: Optional[List[Union[Citation, UIDProxy]]] = None,
         notes: str = "",
         **kwargs
     ):
@@ -167,7 +168,7 @@ class Property(UUIDBaseNode):
             citation = []
 
         super().__init__(**kwargs)
-        self._json_attrs = replace(
+        new_json_attrs = replace(
             self._json_attrs,
             key=key,
             type=type,
@@ -185,7 +186,7 @@ class Property(UUIDBaseNode):
             citation=citation,
             notes=notes,
         )
-        self.validate()
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype
@@ -372,7 +373,7 @@ class Property(UUIDBaseNode):
 
     @property
     @beartype
-    def component(self) -> List[Material]:
+    def component(self) -> List[Union[Material, UIDProxy]]:
         """
         list of Materials that the Property relates to
 
@@ -380,7 +381,7 @@ class Property(UUIDBaseNode):
         ---------
         >>> import cript
         >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
-        >>> my_material = cript.Material(name="my material", identifier=[{"bigsmiles": "123456"}])
+        >>> my_material = cript.Material(name="my material", bigsmiles = "123456")
         >>> my_property.component = [my_material]
 
         Returns
@@ -392,7 +393,7 @@ class Property(UUIDBaseNode):
 
     @component.setter
     @beartype
-    def component(self, new_component: List[Material]) -> None:
+    def component(self, new_component: List[Union[Material, UIDProxy]]) -> None:
         """
         set the list of Materials as components for the Property subobject
 
@@ -486,7 +487,7 @@ class Property(UUIDBaseNode):
 
     @property
     @beartype
-    def sample_preparation(self) -> Union[Process, None]:
+    def sample_preparation(self) -> Union[Process, None, UIDProxy]:
         """
         sample_preparation
 
@@ -506,7 +507,7 @@ class Property(UUIDBaseNode):
 
     @sample_preparation.setter
     @beartype
-    def sample_preparation(self, new_sample_preparation: Union[Process, None]) -> None:
+    def sample_preparation(self, new_sample_preparation: Union[Process, None, UIDProxy]) -> None:
         """
         set the sample_preparation for the Property subobject
 
@@ -524,7 +525,7 @@ class Property(UUIDBaseNode):
 
     @property
     @beartype
-    def condition(self) -> List[Condition]:
+    def condition(self) -> List[Union[Condition, UIDProxy]]:
         """
         list of Conditions under which the property was measured
 
@@ -544,7 +545,7 @@ class Property(UUIDBaseNode):
 
     @condition.setter
     @beartype
-    def condition(self, new_condition: List[Condition]) -> None:
+    def condition(self, new_condition: List[Union[Condition, UIDProxy]]) -> None:
         """
         set the list of Conditions for this property subobject
 
@@ -562,7 +563,7 @@ class Property(UUIDBaseNode):
 
     @property
     @beartype
-    def data(self) -> List[Data]:
+    def data(self) -> List[Union[Data, UIDProxy]]:
         """
         List of Data nodes for this Property subobjects
 
@@ -589,7 +590,7 @@ class Property(UUIDBaseNode):
 
     @data.setter
     @beartype
-    def data(self, new_data: List[Data]) -> None:
+    def data(self, new_data: List[Union[Data, UIDProxy]]) -> None:
         """
         set the Data node for the Property subobject
 
@@ -607,7 +608,7 @@ class Property(UUIDBaseNode):
 
     @property
     @beartype
-    def computation(self) -> List[Computation]:
+    def computation(self) -> List[Union[Computation, UIDProxy]]:
         """
         list of Computation nodes that produced this property
 
@@ -627,7 +628,7 @@ class Property(UUIDBaseNode):
 
     @computation.setter
     @beartype
-    def computation(self, new_computation: List[Computation]) -> None:
+    def computation(self, new_computation: List[Union[Computation, UIDProxy]]) -> None:
         """
         set the list of Computation nodes that produced this property
 
@@ -645,7 +646,7 @@ class Property(UUIDBaseNode):
 
     @property
     @beartype
-    def citation(self) -> List[Citation]:
+    def citation(self) -> List[Union[Citation, UIDProxy]]:
         """
         list of Citation subobjects for this Property subobject
 
@@ -681,7 +682,7 @@ class Property(UUIDBaseNode):
 
     @citation.setter
     @beartype
-    def citation(self, new_citation: List[Citation]) -> None:
+    def citation(self, new_citation: List[Union[Citation, UIDProxy]]) -> None:
         """
         set the list of Citation subobjects for the Property subobject
 

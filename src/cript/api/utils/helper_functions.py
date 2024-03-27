@@ -2,7 +2,7 @@ import json
 from typing import Dict, List, Union
 
 from cript.nodes.exceptions import CRIPTJsonNodeError
-from cript.nodes.util import _is_node_field_valid
+from cript.nodes.util.json import _is_node_field_valid
 
 
 def _get_node_type_from_json(node_json: Union[Dict, str]) -> str:

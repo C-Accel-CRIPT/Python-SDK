@@ -1,10 +1,11 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.supporting_nodes import User
+from cript.nodes.util.json import UIDProxy
 
 
 class Collection(PrimaryBaseNode):
@@ -56,17 +57,19 @@ class Collection(PrimaryBaseNode):
         """
 
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        member: List[User] = field(default_factory=list)
-        admin: List[User] = field(default_factory=list)
-        experiment: List[Any] = field(default_factory=list)
-        inventory: List[Any] = field(default_factory=list)
+        member: List[Union[User, UIDProxy]] = field(default_factory=list)
+        admin: List[Union[User, UIDProxy]] = field(default_factory=list)
+        experiment: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        inventory: List[Union[Any, UIDProxy]] = field(default_factory=list)
         doi: str = ""
-        citation: List[Any] = field(default_factory=list)
+        citation: List[Union[Any, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, name: str, experiment: Optional[List[Any]] = None, inventory: Optional[List[Any]] = None, doi: str = "", citation: Optional[List[Any]] = None, notes: str = "", **kwargs) -> None:
+    def __init__(
+        self, name: str, experiment: Optional[List[Union[Any, UIDProxy]]] = None, inventory: Optional[List[Union[Any, UIDProxy]]] = None, doi: str = "", citation: Optional[List[Union[Any, UIDProxy]]] = None, notes: str = "", **kwargs
+    ) -> None:
         """
         create a Collection with a name
         add list of experiment, inventory, citation, doi, and notes if available.
@@ -105,7 +108,7 @@ class Collection(PrimaryBaseNode):
         if citation is None:
             citation = []
 
-        self._json_attrs = replace(
+        new_json_attrs = replace(
             self._json_attrs,
             name=name,
             experiment=experiment,
@@ -113,17 +116,16 @@ class Collection(PrimaryBaseNode):
             doi=doi,
             citation=citation,
         )
-
-        self.validate()
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype
-    def member(self) -> List[User]:
+    def member(self) -> List[Union[User, UIDProxy]]:
         return self._json_attrs.member.copy()
 
     @property
     @beartype
-    def admin(self) -> List[User]:
+    def admin(self) -> List[Union[User, UIDProxy]]:
         return self._json_attrs.admin
 
     @property
@@ -176,11 +178,11 @@ class Collection(PrimaryBaseNode):
         >>> my_collection = cript.Collection(name="my collection name")
         >>> material_1 = cript.Material(
         ...     name="material 1",
-        ...     identifier=[{"bigsmiles": "material 1 bigsmiles"}],
+        ...     bigsmiles = "material 1 bigsmiles",
         ... )
         >>> material_2 = cript.Material(
         ...     name="material 2",
-        ...     identifier=[{"bigsmiles": "material 2 bigsmiles"}],
+        ...     bigsmiles = "material 2 bigsmiles",
         ... )
         >>> my_inventory = cript.Inventory(
         ...     name="my inventory name", material=[material_1, material_2]

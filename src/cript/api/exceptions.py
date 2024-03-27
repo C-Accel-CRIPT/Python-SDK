@@ -68,6 +68,8 @@ class CRIPTAPIRequiredError(CRIPTException):
     """
     ## Definition
     Exception to be raised when the API object is requested, but no cript.API object exists yet.
+    Also make sure to use it in a context manager `with cript.API as api:` or  manually call
+    `connect` and `disconnect`.
 
     The CRIPT Python SDK relies on a cript.API object for creation, validation, and modification of nodes.
     The cript.API object may be explicitly called by the user to perform operations to the API, or
@@ -83,6 +85,9 @@ class CRIPTAPIRequiredError(CRIPTException):
     my_token = "123456" # To use your token securely, please consider using environment variables
 
     my_api = cript.API(host=my_host, token=my_token)
+    my_api.connect()
+    # Your code
+    my_api.disconnect()
     ```
     """
 
@@ -90,7 +95,11 @@ class CRIPTAPIRequiredError(CRIPTException):
         pass
 
     def __str__(self) -> str:
-        error_message = "cript.API object is required for an operation, but it does not exist." "Please instantiate a cript.API object to continue." "See the documentation for more details."
+        error_message = (
+            "cript.API object is required for an operation, but it does not exist."
+            "Please instantiate a cript.API object and connect it to API for example with a context manager `with cript.API() as api:` to continue."
+            "See the documentation for more details."
+        )
 
         return error_message
 

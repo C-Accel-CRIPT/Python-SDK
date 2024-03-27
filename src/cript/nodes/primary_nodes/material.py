@@ -1,22 +1,23 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
+from cript.nodes.exceptions import CRIPTMaterialIdentifierError
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.process import Process
+from cript.nodes.util.json import UIDProxy
 
 
 class Material(PrimaryBaseNode):
     """
     ## Definition
     A [Material node](https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf#page=10)
-    is a collection of the identifiers and properties of a chemical, mixture, or substance.
+    is a collection of the properties of a chemical, mixture, or substance.
 
     ## Attributes
     | attribute                 | type                                                                 | example                                           | description                                         | required    | vocab |
     |---------------------------|----------------------------------------------------------------------|---------------------------------------------------|-----------------------------------------------------|-------------|-------|
-    | identifier                | list[Identifier]                                                     |                                                   | material identifiers                                | True        |       |
     | component                 | list[[Material](./)]                                                 |                                                   | list of component that make up the mixture          |             |       |
     | property                  | list[[Property](../../subobjects/property)]                          |                                                   | material properties                                 |             |       |
     | process                   | [Process](../process)                                                |                                                   | process node that made this material                |             |       |
@@ -24,13 +25,25 @@ class Material(PrimaryBaseNode):
     | computational_forcefield  | [Computation  Forcefield](../../subobjects/computational_forcefield) |                                                   | computation forcefield                              | Conditional |       |
     | keyword                   | list[str]                                                            | [thermoplastic, homopolymer, linear, polyolefins] | words that classify the material                    |             | True  |
     | notes                     | str                                                                  | "my awesome notes"                                | miscellaneous information, or custom data structure |             | True  |
+    | amino_acid                | str                                                                  | "LeuProHis"                                       | if the material is an amino acid sequence, list it. | Conditional |       |
+    | bigsmiles                 | str                                                                  | "CC{[$][$]CC[$][]}"                               | BigSMILES string for polymer                        | Conditional |       |
+    | chem_formula              | str                                                                  | "C22H33NO10"                                      | Chemical formula of the material or monomer        | Conditional |       |
+    | chem_repeat               | str                                                                  | "C=Cc1ccccc1"                                     | Chemical formula of the repeat unit                | Conditional |       |
+    | chemical_id               | str                                                                  | "126094"                                          | Unique chemical ID                                  | Conditional |       |
+    | inchi                     | str                                                                  | "InChI=1S/H2O/h1H2"                               | InChI string of the chemical                        | Conditional |       |
+    | inchi_key                 | str                                                                  | "XLYOFNOQVPJJNP-UHFFFAOYSA-N"                     | InChI key of the chemical                           | Conditional |       |
+    | lot_number                | str                                                                  | "123"                                             | Lot number of the chemical                          | Conditional |       |
+    | names                     | list[str]                                                            | ["water", "Hydrogen oxide"]                       | Alternative names that are being used               | Conditional |       |
+    | pubchem_cid               | int                                                                  | 962                                               | PubChemID of the chemical                           | Conditional |       |
+    | smiles                    | str                                                                  | "O"                                               | Smiles string of the chemical                       | Conditional |       |
+    | vendor                    | str                                                                  | "fisher scientific"                               | Vendor the chemical was purchased from              | Conditional |       |
+
 
     ## Navigating to Material
     Materials can be easily found on the [CRIPT](https://app.criptapp.org) home screen in the
     under the navigation within the [Materials link](https://app.criptapp.org/material/)
 
     ## Available Sub-Objects for Material
-    * [Identifier](../../subobjects/identifier)
     * [Property](../../subobjects/property)
     * [Computational_forcefield](../../subobjects/computational_forcefield)
 
@@ -61,15 +74,25 @@ class Material(PrimaryBaseNode):
         all Material attributes
         """
 
-        # identifier sub-object for the material
-        identifier: List[Dict[str, str]] = field(default_factory=dict)  # type: ignore
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        component: List["Material"] = field(default_factory=list)
-        process: Optional[Process] = None
-        property: List[Any] = field(default_factory=list)
-        parent_material: Optional["Material"] = None
-        computational_forcefield: Optional[Any] = None
+        component: List[Union["Material", UIDProxy]] = field(default_factory=list)
+        process: Optional[Union[Process, UIDProxy]] = None
+        property: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        parent_material: Optional[Union["Material", UIDProxy]] = None
+        computational_forcefield: Optional[Union[Any, UIDProxy]] = None
         keyword: List[str] = field(default_factory=list)
+        amino_acid: Optional[str] = None
+        bigsmiles: Optional[str] = None
+        chem_formula: Optional[str] = None
+        chem_repeat: List[str] = field(default_factory=list)
+        chemical_id: Optional[str] = None
+        inchi: Optional[str] = None
+        inchi_key: Optional[str] = None
+        lot_number: Optional[str] = None
+        names: List[str] = field(default_factory=list)
+        pubchem_cid: Optional[int] = None
+        smiles: Optional[str] = None
+        vendor: Optional[str] = None
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -77,13 +100,24 @@ class Material(PrimaryBaseNode):
     def __init__(
         self,
         name: str,
-        identifier: List[Dict[str, str]],
-        component: Optional[List["Material"]] = None,
-        process: Optional[Process] = None,
-        property: Optional[List[Any]] = None,
-        parent_material: Optional["Material"] = None,
-        computational_forcefield: Optional[Any] = None,
+        component: Optional[List[Union["Material", UIDProxy]]] = None,
+        process: Optional[Union[Process, UIDProxy]] = None,
+        property: Optional[List[Union[Any, UIDProxy]]] = None,
+        parent_material: Optional[Union["Material", UIDProxy]] = None,
+        computational_forcefield: Optional[Union[Any, UIDProxy]] = None,
         keyword: Optional[List[str]] = None,
+        amino_acid: Optional[str] = None,
+        bigsmiles: Optional[str] = None,
+        chem_formula: Optional[str] = None,
+        chem_repeat: Optional[List[str]] = None,
+        chemical_id: Optional[str] = None,
+        inchi: Optional[str] = None,
+        inchi_key: Optional[str] = None,
+        lot_number: Optional[str] = None,
+        names: Optional[List[str]] = None,
+        pubchem_cid: Optional[int] = None,
+        smiles: Optional[str] = None,
+        vendor: Optional[str] = None,
         notes: str = "",
         **kwargs
     ):
@@ -95,19 +129,30 @@ class Material(PrimaryBaseNode):
         >>> import cript
         >>> my_material = cript.Material(
         ...     name="my component material 1",
-        ...     identifier=[{"amino_acid": "component 1 alternative name"}],
+        ...     amino_acid = "component 1 alternative name",
         ... )
 
         Parameters
         ----------
         name: str
-        identifier: List[Dict[str, str]]
         component: List["Material"], default=None
         property: Optional[Process], default=None
         process: List[Process], default=None
         parent_material: "Material", default=None
         computational_forcefield: ComputationalForcefield, default=None
         keyword: List[str], default=None
+        amino_acid: Optional[str] = None,
+        bigsmiles: Optional[str] = None,
+        chem_formula: Optional[str] = None,
+        chem_repeat: Optional[List[str]] = None,
+        chemical_id: Optional[str] = None,
+        inchi: Optional[str] = None,
+        inchi_key: Optional[str] = None,
+        lot_number: Optional[str] = None,
+        names: Optional[List[str]] = None,
+        pubchem_cid: Optional[int] = None,
+        smiles: Optional[str] = None,
+        vendor: Optional[str] = None,
 
         Returns
         -------
@@ -126,66 +171,190 @@ class Material(PrimaryBaseNode):
         if keyword is None:
             keyword = []
 
-        self._json_attrs = replace(
+        if chem_repeat is None:
+            chem_repeat = []
+
+        if names is None:
+            names = []
+
+        new_json_attrs = replace(
             self._json_attrs,
             name=name,
-            identifier=identifier,
             component=component,
             process=process,
             property=property,
             parent_material=parent_material,
             computational_forcefield=computational_forcefield,
             keyword=keyword,
+            amino_acid=amino_acid,
+            bigsmiles=bigsmiles,
+            chem_formula=chem_formula,
+            chem_repeat=chem_repeat,
+            chemical_id=chemical_id,
+            inchi=inchi,
+            inchi_key=inchi_key,
+            lot_number=lot_number,
+            names=names,
+            pubchem_cid=pubchem_cid,
+            smiles=smiles,
+            vendor=vendor,
         )
+        self._update_json_attrs_if_valid(new_json_attrs)
+
+    def validate(self, api=None, is_patch: bool = False, force_validation: bool = False) -> None:
+        super().validate(api=api, is_patch=is_patch, force_validation=force_validation)
+
+        if (
+            self.amino_acid is None
+            and self.bigsmiles is None
+            and self.chem_formula is None
+            and len(self.chem_repeat) == 0
+            and self.chemical_id is None
+            and self.inchi_key is None
+            and self.inchi is None
+            and self.lot_number is None
+            and len(self.names) == 0
+            and self.pubchem_cid is None
+            and self.smiles is None
+            and self.vendor is None
+        ):
+            raise CRIPTMaterialIdentifierError(self)
 
     @property
     @beartype
-    def identifier(self) -> List[Dict[str, str]]:
-        """
-        get the identifiers for this material
+    def amino_acid(self) -> Union[str, None]:
+        return self._json_attrs.amino_acid
 
-        Examples
-        --------
-        >>> import cript
-        >>> my_material = cript.Material(
-        ...     name="my component material 1",
-        ...     identifier=[{"smiles": "component 1 smiles"}],
-        ... )
-        >>> my_material.identifier = [{"smiles": "my material alternative name"}]
-
-        [material identifier key](https://app.criptapp.org/vocab/material_identifier_key)
-        must come from CRIPT controlled vocabulary
-
-        Returns
-        -------
-        List[Dict[str, str]]
-            list of dictionary that has identifiers for this material
-        """
-        return self._json_attrs.identifier.copy()
-
-    @identifier.setter
+    @amino_acid.setter
     @beartype
-    def identifier(self, new_identifier_list: List[Dict[str, str]]) -> None:
-        """
-        set the list of identifiers for this material
-
-        the identifier keys must come from the
-        material identifiers keyword within the CRIPT controlled vocabulary
-
-        Parameters
-        ----------
-        new_identifier_list: List[Dict[str, str]]
-
-        Returns
-        -------
-        None
-        """
-        new_attrs = replace(self._json_attrs, identifier=new_identifier_list)
+    def amino_acid(self, new_amino_acid: str) -> None:
+        new_attrs = replace(self._json_attrs, amino_acid=new_amino_acid)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
     @beartype
-    def component(self) -> List["Material"]:
+    def bigsmiles(self) -> Union[str, None]:
+        return self._json_attrs.bigsmiles
+
+    @bigsmiles.setter
+    @beartype
+    def bigsmiles(self, new_bigsmiles: str) -> None:
+        new_attrs = replace(self._json_attrs, bigsmiles=new_bigsmiles)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def chem_formula(self) -> Union[str, None]:
+        return self._json_attrs.chem_formula
+
+    @chem_formula.setter
+    @beartype
+    def chem_formula(self, new_chem_formula: str) -> None:
+        new_attrs = replace(self._json_attrs, chem_formula=new_chem_formula)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def chemical_id(self) -> Union[str, None]:
+        return self._json_attrs.chemical_id
+
+    @chemical_id.setter
+    @beartype
+    def chemical_id(self, new_chemical_id: str) -> None:
+        new_attrs = replace(self._json_attrs, chemical_id=new_chemical_id)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def inchi(self) -> Union[str, None]:
+        return self._json_attrs.inchi
+
+    @inchi.setter
+    @beartype
+    def inchi(self, new_inchi: str) -> None:
+        new_attrs = replace(self._json_attrs, inchi=new_inchi)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def inchi_key(self) -> Union[str, None]:
+        return self._json_attrs.inchi_key
+
+    @inchi_key.setter
+    @beartype
+    def inchi_key(self, new_inchi_key: str) -> None:
+        new_attrs = replace(self._json_attrs, inchi_key=new_inchi_key)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def lot_number(self) -> Union[str, None]:
+        return self._json_attrs.lot_number
+
+    @lot_number.setter
+    @beartype
+    def lot_number(self, new_lot_number: str) -> None:
+        new_attrs = replace(self._json_attrs, lot_number=new_lot_number)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def smiles(self) -> Union[str, None]:
+        return self._json_attrs.smiles
+
+    @smiles.setter
+    @beartype
+    def smiles(self, new_smiles: str) -> None:
+        new_attrs = replace(self._json_attrs, smiles=new_smiles)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def vendor(self) -> Union[str, None]:
+        return self._json_attrs.vendor
+
+    @vendor.setter
+    @beartype
+    def vendor(self, new_vendor: str) -> None:
+        new_attrs = replace(self._json_attrs, vendor=new_vendor)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def chem_repeat(self) -> List[str]:
+        return self._json_attrs.chem_repeat.copy()
+
+    @chem_repeat.setter
+    @beartype
+    def chem_repeat(self, new_chem_repeat: List[str]) -> None:
+        new_attrs = replace(self._json_attrs, chem_repeat=new_chem_repeat)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def names(self) -> List[str]:
+        return self._json_attrs.names.copy()
+
+    @names.setter
+    @beartype
+    def names(self, new_names: List[str]) -> None:
+        new_attrs = replace(self._json_attrs, names=new_names)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def pubchem_cid(self) -> Union[int, None]:
+        return self._json_attrs.pubchem_cid
+
+    @pubchem_cid.setter
+    @beartype
+    def pubchem_cid(self, new_pubchem_cid: int) -> None:
+        new_attrs = replace(self._json_attrs, pubchem_cid=new_pubchem_cid)
+        self._update_json_attrs_if_valid(new_attrs)
+
+    @property
+    @beartype
+    def component(self) -> List[Union["Material", UIDProxy]]:
         """
         list of components ([material nodes](./)) that make up this material
 
@@ -195,17 +364,17 @@ class Material(PrimaryBaseNode):
         >>> my_components = [
         ...     cript.Material(
         ...         name="my component material 1",
-        ...         identifier=[{"smiles": "my material smiles"}],
+        ...         smiles="my material smiles",
         ...     ),
         ...     cript.Material(
         ...         name="my component material 2",
-        ...         identifier=[{"vendor": "my material vendor"}],
+        ...         vendor= "my material vendor",
         ...     ),
         ... ]
         >>> my_mixed_material = cript.Material(
         ...     name="my material",
         ...     component=my_components,
-        ...     identifier=[{"bigsmiles": "123456"}]
+        ...     bigsmiles = "123456",
         ... )
 
         Returns
@@ -217,7 +386,7 @@ class Material(PrimaryBaseNode):
 
     @component.setter
     @beartype
-    def component(self, new_component_list: List["Material"]) -> None:
+    def component(self, new_component_list: List[Union["Material", UIDProxy]]) -> None:
         """
         set the list of component (material nodes) that make up this material
 
@@ -234,7 +403,7 @@ class Material(PrimaryBaseNode):
 
     @property
     @beartype
-    def parent_material(self) -> Optional["Material"]:
+    def parent_material(self) -> Optional[Union["Material", UIDProxy]]:
         """
         List of parent materials
 
@@ -247,7 +416,7 @@ class Material(PrimaryBaseNode):
 
     @parent_material.setter
     @beartype
-    def parent_material(self, new_parent_material: Optional["Material"]) -> None:
+    def parent_material(self, new_parent_material: Optional[Union["Material", UIDProxy]]) -> None:
         """
         set the [parent materials](./) for this material
 
@@ -273,7 +442,7 @@ class Material(PrimaryBaseNode):
         --------
         >>> import cript
         >>> my_material = cript.Material(
-        ...     name="my component material 1", identifier=[{"smiles": "my smiles"}]
+        ...     name="my component material 1", smiles= "my smiles"
         ... )
         >>> my_computational_forcefield = cript.ComputationalForcefield(
         ...     key="opls_aa",
@@ -290,19 +459,19 @@ class Material(PrimaryBaseNode):
 
     @computational_forcefield.setter
     @beartype
-    def computational_forcefield(self, new_computational_forcefield_list: Any) -> None:
+    def computational_forcefield(self, new_computational_forcefield: Any) -> None:
         """
         sets the list of computational forcefields for this material
 
         Parameters
         ----------
-        new_computation_forcefield_list: List[ComputationalForcefield]
+        new_computation_forcefield: ComputationalForcefield
 
         Returns
         -------
         None
         """
-        new_attrs = replace(self._json_attrs, computational_forcefield=new_computational_forcefield_list)
+        new_attrs = replace(self._json_attrs, computational_forcefield=new_computational_forcefield)
         self._update_json_attrs_if_valid(new_attrs)
 
     @property
@@ -318,7 +487,7 @@ class Material(PrimaryBaseNode):
         --------
         >>> import cript
         >>> my_material = cript.Material(
-        ... name="my material", identifier=[{"inchi": "my material inchi"}]
+        ... name="my material", inchi = "my material inchi"
         ... )
         >>> my_material.keyword = ["acetylene", "acrylate", "alternating"]
 
@@ -350,11 +519,11 @@ class Material(PrimaryBaseNode):
 
     @property
     @beartype
-    def process(self) -> Optional[Process]:
+    def process(self) -> Optional[Union[Process, UIDProxy]]:
         return self._json_attrs.process  # type: ignore
 
     @process.setter
-    def process(self, new_process: Process) -> None:
+    def process(self, new_process: Union[Process, UIDProxy]) -> None:
         new_attrs = replace(self._json_attrs, process=new_process)
         self._update_json_attrs_if_valid(new_attrs)
 
@@ -368,7 +537,7 @@ class Material(PrimaryBaseNode):
         >>> import cript
         >>> my_material = cript.Material(
         ...     name="my component material 1",
-        ...     identifier=[{"smiles": "component 1 smiles"}],
+        ...     smiles = "component 1 smiles",
         ... )
         >>> my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
         >>> my_material.property = [my_property]
@@ -396,37 +565,3 @@ class Material(PrimaryBaseNode):
         """
         new_attrs = replace(self._json_attrs, property=new_property_list)
         self._update_json_attrs_if_valid(new_attrs)
-
-    @classmethod
-    @beartype
-    def _from_json(cls, json_dict: Dict):
-        """
-        Create a new instance of a node from a JSON representation.
-
-        Parameters
-        ----------
-        json_dict : Dict
-            A JSON dictionary representing a node
-
-        Returns
-        -------
-        node
-            A new instance of a node.
-
-        Notes
-        -----
-        required fields in JSON:
-        * `name`: The name of the node
-
-        optional fields in JSON:
-        * `identifier`: A list of material identifiers.
-            * If the `identifier` property is not present in the JSON dictionary,
-            it will be set to an empty list.
-        """
-        from cript.nodes.util.material_deserialization import (
-            _deserialize_flattened_material_identifiers,
-        )
-
-        json_dict = _deserialize_flattened_material_identifiers(json_dict)
-
-        return super()._from_json(json_dict)

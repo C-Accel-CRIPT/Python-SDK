@@ -8,6 +8,7 @@ and keeping all nodes in one file makes it easier/cleaner to create tests.
 
 The fixtures are all functional fixtures that stay consistent between all tests.
 """
+import logging
 import os
 
 import pytest
@@ -49,7 +50,7 @@ def cript_api():
     """
     storage_token = os.getenv("CRIPT_STORAGE_TOKEN")
 
-    with cript.API(host=None, api_token=None, storage_token=storage_token) as api:
+    with cript.API(host=None, api_token=None, storage_token=storage_token, default_log_level=logging.DEBUG) as api:
         # overriding AWS S3 cognito variables to be sure we do not upload test data to production storage
         # staging AWS S3 cognito storage variables
         api._IDENTITY_POOL_ID = "us-east-1:25043452-a922-43af-b8a6-7e938a9e55c1"
@@ -57,6 +58,7 @@ def cript_api():
         api._BUCKET_NAME = "cript-stage-user-data"
         # using the tests folder name within our cloud storage
         api._BUCKET_DIRECTORY_NAME = "tests"
+        api.extra_api_log_debug_info = True
 
         yield api
 

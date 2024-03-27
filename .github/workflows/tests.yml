@@ -40,20 +40,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
       - name: Generate Cognito token
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
         run: |
-          pip install awscli
-          OUTPUT=$(aws cognito-idp ${{ secrets.COGNITO_INIT }} --user-pool-id ${{ secrets.COGNITO_USER_POOL_ID }} --client-id ${{ secrets.COGNITO_CLIENT_ID }} --auth-flow ${{ secrets.COGNITO_AUTH_FLOW }} --auth-parameters USERNAME=${{ secrets.COGNITO_USERNAME }},PASSWORD=${{ secrets.COGNITO_PASSWORD }})
-          export ACCESS_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.AccessToken' | sed 's/^"\(.*\)"$/\1/')
-          export ID_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.IdToken' | sed 's/^"\(.*\)"$/\1/')
+          OUTPUT=$(aws cognito-idp "${{ secrets.COGNITO_INIT }}" --user-pool-id "${{ secrets.COGNITO_USER_POOL_ID }}" --client-id "${{ secrets.COGNITO_CLIENT_ID }}" --auth-flow "${{ secrets.COGNITO_AUTH_FLOW }}" --auth-parameters USERNAME="${{ secrets.COGNITO_USERNAME }}",PASSWORD=${{ secrets.COGNITO_PASSWORD }})
+          ACCESS_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.AccessToken' | sed 's/^"\(.*\)"$/\1/')
+          ID_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.IdToken' | sed 's/^"\(.*\)"$/\1/')
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
 
       - name: pip install CRIPT Python SDK local package
         run: python${{ matrix.python-version }} -m pip install .
@@ -63,9 +64,8 @@ jobs:
 
       - name: Run pytest on tests/
         run: python${{ matrix.python-version }} -m pytest ./tests/
-
-    env:
-      CRIPT_HOST: https://lb-stage.mycriptapp.org/
-      CRIPT_TOKEN: ${{ steps.cognito.outputs.ID_TOKEN }}
-      CRIPT_STORAGE_TOKEN: ${{ steps.cognito.outputs.ACCESS_TOKEN }}
-      CRIPT_TESTS: True
+        env:
+          CRIPT_HOST: https://lb-stage.mycriptapp.org/
+          CRIPT_TOKEN: $ID_TOKEN
+          CRIPT_STORAGE_TOKEN: $ACCESS_TOKEN
+          CRIPT_TESTS: True

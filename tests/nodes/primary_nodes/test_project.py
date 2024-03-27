@@ -106,7 +106,7 @@ def test_integration_project(cript_api, simple_project_node):
 ########################################################################
 
 
-# @pytest.mark.skip(reason="api")
+@pytest.mark.skip(reason="api")
 def test_update_project_change_or_reset_newly_made_materials(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_project.py::test_update_project_change_or_reset_newly_made_materials
@@ -196,7 +196,7 @@ def test_update_project_change_or_reset_newly_made_materials(cript_api) -> None:
         assert del_res.json()["code"] == 200
 
 
-# @pytest.mark.skip(reason="api")
+@pytest.mark.skip(reason="api")
 def test_update_project_change_or_reset_material_to_existing_materials(cript_api, simple_material_node, simple_project_node, complex_project_node, complex_material_node) -> None:
     """
     pytest nodes/primary_nodes/test_project.py::test_update_project_change_or_reset_material_to_existing_materials
@@ -312,7 +312,7 @@ def test_update_project_change_or_reset_material_to_existing_materials(cript_api
         assert del_res.json()["code"] == 200
 
 
-# @pytest.mark.skip(reason="api")
+@pytest.mark.skip(reason="api")
 def test_sending_fixtures(cript_api, simple_material_node, simple_project_node, complex_project_node_without_inventory, complex_project_node, complex_material_node) -> None:
     """
     pytest nodes/primary_nodes/test_project.py::test_sending_fixtures

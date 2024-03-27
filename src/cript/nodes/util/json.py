@@ -1,6 +1,7 @@
 """
 This module contains classes and functions that help with the json serialization and deserialization of nodes.
 """
+
 import dataclasses
 import inspect
 import json

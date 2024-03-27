@@ -225,7 +225,7 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
 ############################################################################################
 
 
-# @pytest.mark.skip(reason="api")
+@pytest.mark.skip(reason="api")
 def test_material_property_node_add(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_material.py::test_material_property_node_add
@@ -300,7 +300,7 @@ def test_material_property_node_add(cript_api) -> None:
         # SOS - was the cache update breaking this?
         # maybe getting a uuid screws this up
         # now this is getting a bit weird so , maybe its the cache?
-        # thhis will load an orphan because getting the material will not return the project...
+        # this will load an orphan because getting the material will not return the project...
 
         mat_loaded = mat_list
 
@@ -342,7 +342,7 @@ def test_material_property_node_add(cript_api) -> None:
         print(get_response.json())
 
         assert get_response.status_code == 200
-        print("\nooooof")
+        print("\n~~~~!~~~~")
         print(get_response.json())
         # assert get_response.json()["data"]["result"][0]["node"] == ["Property"]
 
@@ -384,7 +384,7 @@ def test_material_property_node_add(cript_api) -> None:
         # assert del_res.json()["code"] == 200
 
 
-# @pytest.mark.skip(reason="api")
+@pytest.mark.skip(reason="api")
 def test_material_property_node_change(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_material.py::test_material_property_node_change
@@ -439,7 +439,7 @@ def test_material_property_node_change(cript_api) -> None:
 
         mat_loaded = cript.load_nodes_from_json(nodes_json=json.dumps(my_mat_from_res_data_dict))
 
-        # this "cript.load_nodes_from_json" ^ it doesnt load the parentas part of the node,
+        # this "cript.load_nodes_from_json" ^ it doesnt load the parents part of the node,
         # for example this is missing a "project"
         # wait a material can have multiple parents...
 
@@ -491,7 +491,7 @@ def test_material_property_node_change(cript_api) -> None:
         # print(" get url_path: ", url_path1)
 
         assert get_response.status_code == 200
-        print("oooof")
+        print("99 red balloons")
         print(get_response.json()["data"])
         # assert get_response.json()["data"]["result"][0]["node"] == ["Property"]
 

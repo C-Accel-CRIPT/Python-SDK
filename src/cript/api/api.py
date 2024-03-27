@@ -488,8 +488,6 @@ class API:
 
         """
 
-        print("are we here in funktion")
-
         # child_class_type = child_node.node[0]
         child_class_object = globals().get(child_class_type.capitalize(), None)
 
@@ -516,7 +514,7 @@ class API:
         for name in existing_child_node_names:
             # print(name.strip())
             # name = name.strip()
-            # print("HEREEEE")
+            #
             # try:
             #     this = self.search(child_class_object, search_mode=SearchModes.EXACT_NAME, value_to_search=name)
             #     print(next(this))
@@ -666,16 +664,6 @@ class API:
         }
         pattern = re.compile(r"root(\['\w+'\]\[\d+\])+\['(\w+)'\]")
 
-        # print(
-        #     """this is gonna be a big test ya know where if we get unchanged uuids
-
-        #     then we need to go into clean modified and just change attributes for it
-        #     this coulda been easier like was a uuid ever mentioned twice ??
-        #     they are either an add or remove, so the values associated
-        #     unchanged_uuids but thats more rigorous
-        #     unchanged_uuids"""
-        # )
-
         # ------------------------//-------------------------
         # Handle values_changed first
         if "values_changed" in data:
@@ -715,7 +703,7 @@ class API:
                             # print("\n")
 
         for path in data.get("dictionary_item_added", []):
-            tree_path = path.replace("root", "modified")
+            # tree_path = path.replace("root", "modified")
             # print("===== here")
             # print(tree_path)
             # patches = {"diff": "dictionary_item_added"}
@@ -740,7 +728,7 @@ class API:
                     # print("--now")
                     # print(patches["payload_json_patch"])
                     # print("-------")
-                    # print("✅✅✅✅HEEEEEE55555")
+                    # print("✅✅✅✅")
                     # quit()
 
         # Handle iterable_item_added
@@ -785,7 +773,7 @@ class API:
         # we need to know if dictionary item removed corresponds to uuid that gets changed, then we will ignore
         # or dictionary item added corresponds to a path of a uuid that gets changed , then we can also ignore and just update the whole node corresponding to uuid
 
-        # but say , if dictionary item added correspond to uuid that are registered as eihter "unchanged" or "unchanged but moved"
+        # but say , if dictionary item added correspond to uuid that are registered as either "unchanged" or "unchanged but moved"
         # then we need to handle changing these attributes
         # like if "root['material'][0]['chem_formula']" was removed but
         # root['material'][0]['uuid'] is not found in the keys of values_changed
@@ -841,8 +829,9 @@ class API:
         # ----------//---------
         # Handle dictionary_item_added
         for item in data_.get("dictionary_item_added", []):
+            # TODO: come back to this : if its just bracket with nothing else after
             # if re.match(r"root\['(\w+)'\]", item):
-            #     pass # this doesnt take a uuid
+            #     pass # this doesn't take a uuid
             pattern = re.compile(r"root\['(\w+)'\]\[(\d+)\]\['uuid'\]")
             match = pattern.match(item)
             if match:
@@ -880,7 +869,7 @@ class API:
                 API.add_to_dict(removes["payload_json_removes"], child_node, this)
 
         # Identify unchanged UUIDs
-        unchanged_uuids = set(added_uuids).intersection(removed_uuids)
+        # NOTE: may need to implement # unchanged_uuids = set(added_uuids).intersection(removed_uuids)
         # right now we need to test if attributes are there
 
         # print("removed_uuids and added uuids")
@@ -943,7 +932,7 @@ class API:
             if node2_uuid not in uuid_map1:
                 """
                 ---situation where this node is not in map
-                this node: {node2_uuid} was added in a patch to an earleir node so had no comparison
+                this node: {node2_uuid} was added in a patch to an earlier node so had no comparison
                 """
                 continue
             else:  # if in uuid
@@ -1006,7 +995,7 @@ class API:
         here we go through the list of patches and removes and send them to the API
         from last to first in the order they were registered
 
-        we got into a SENDPATCH"]
+        we got into a SEND PATCH"]
         list_of_patches_and_removes
         we want to go through the bottom first"
         and we go through patches for each node first, then removes for each node
@@ -1057,7 +1046,8 @@ class API:
                             print("No match found")
 
                         if names_list:
-                            link_response = self.send_api_patch_existing_nodes_by_name(  # self.send_api_patch_existing_nodes_by_name(
+                            # link_response =
+                            self.send_api_patch_existing_nodes_by_name(  # self.send_api_patch_existing_nodes_by_name(
                                 parent_node=parent_node0,
                                 parent_uuid=parent_uuid0,
                                 child_class_type=child_class_type,
@@ -1067,7 +1057,7 @@ class API:
                             # print(link_response)
 
                             # need to retry for the rest
-                            payload_patch.pop(child_class_type)  # we just sent the stuff to api above so now pop it off the resposne
+                            payload_patch.pop(child_class_type)  # we just sent the stuff to api above so now pop it off the response
                             self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(payload_patch))
                             # retry_patch_response2 = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(payload_patch))
 
@@ -1110,7 +1100,7 @@ class API:
 
     #  - if I don't find the uuid in the lookup table then it was added
     #  - also I would need to make sure theres "visited" aspect in the iterator
-    #  - also since this object is just a map , it doesnt matter the order
+    #  - also since this object is just a map , it doesn't matter the order
     #  - we will still probably get it in DFS because thats how iterator is
 
     # """

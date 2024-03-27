@@ -101,24 +101,6 @@ def test_integration_project(cript_api, simple_project_node):
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_project_node)
 
     ########################################################################
-    """
-    ok the way this would work is if I would take in two objects ,
-     - first i map put the paths of the first object, all uuids
-     - then I iterate of all uuids in the second object (I'm walking here) 
-     - then with each uuid I encounter in the second walker node
-     - i find up in the lookup table and do a compare on that as the root , right ?
-        - basically that path would be the spot to get to in the object 
-        - and i would record the patches and removes on each node 
-        - I guess I could log it all to a list and maybe eventually do a group by on it 
-
-     - if I don't find the uuid in the lookup table then it was added
-
-     - also I would need to make sure theres "visited" aspect in the iterator
-
-     - also since this object is just a map , it doesnt matter the order 
-     although we will still probably get it in DFS because thats how iterator is 
-    
-    """
 
 
 ########################################################################
@@ -224,7 +206,7 @@ def test_update_project_change_or_reset_material_to_existing_materials(cript_api
     #########################################################
 
     epoch_time = int(time.time())
-    name_1 = f"my_proj_thisali_{epoch_time}"
+    name_1 = f"my_proj_this_time_{epoch_time}"
     col_name = f"031o0col__{epoch_time}"
 
     url_path = "/project/"

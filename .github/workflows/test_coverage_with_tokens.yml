@@ -51,6 +51,8 @@ jobs:
 
       - name: Install CRIPT Python SDK
         run: |
+          pwd
+          ls -la
           ls -la /home/runner/work/Python-SDK/Python-SDK
           pip install -e .
 

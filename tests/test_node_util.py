@@ -254,7 +254,6 @@ def test_invalid_project_graphs(simple_project_node, simple_material_node, simpl
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         project.validate()
-
     # Reverse this fix
     project.collection[0].inventory = []
     with pytest.warns(CRIPTOrphanedMaterialWarning):

@@ -351,7 +351,8 @@ class CRIPTOrphanedExperimentWarning(CRIPTOrphanedNodesWarning):
 class CRIPTOrphanedDataWarning(CRIPTOrphanedExperimentWarning):
     """
     ## Definition
-    CRIPTOrphanedExperimentError, but specific for orphaned Data node that should be listed in one of the experiments.
+    CRIPTOrphanedExperimentWarning, but specific for orphaned Data node that should be listed in one of the experiments.
+
     ## Troubleshooting
     Handle this error by adding the orphaned node into one the parent project's experiments `data` attribute.
     """

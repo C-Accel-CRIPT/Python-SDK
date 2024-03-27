@@ -320,7 +320,7 @@ def test_sending_fixtures(cript_api, simple_material_node, simple_project_node, 
     """
 
     epoch_time = int(time.time())
-    name_1 = f"my_proj_thisali_{epoch_time}"
+    name_1 = f"my_proj_this_time_{epoch_time}"
     # collection_name = f"031o0col__{epoch_time}"
 
     pj_node = copy.deepcopy(complex_project_node_without_inventory)

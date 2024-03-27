@@ -439,7 +439,7 @@ def test_material_property_node_change(cript_api) -> None:
 
         mat_loaded = cript.load_nodes_from_json(nodes_json=json.dumps(my_mat_from_res_data_dict))
 
-        # this "cript.load_nodes_from_json" ^ it doesnt load the parents part of the node,
+        # this "cript.load_nodes_from_json" ^ it doesn't load the parents part of the node,
         # for example this is missing a "project"
         # wait a material can have multiple parents...
 

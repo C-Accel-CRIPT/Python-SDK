@@ -32,7 +32,9 @@ from cript.api.utils.save_helper import (
 )
 from cript.api.utils.web_file_downloader import download_file_from_url
 from cript.api.valid_search_modes import SearchModes
-from cript.nodes.primary_nodes.material import Material
+from cript.nodes.primary_nodes.material import (
+    Material,  # this will be accessed by "klass", this needs to stay
+)
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
 

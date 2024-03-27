@@ -67,4 +67,4 @@ jobs:
           CRIPT_HOST: https://lb-stage.mycriptapp.org/
           CRIPT_TOKEN: $ID_TOKEN
           CRIPT_STORAGE_TOKEN: $ACCESS_TOKEN
-          CRIPT_TESTS: False
+          CRIPT_TESTS: True

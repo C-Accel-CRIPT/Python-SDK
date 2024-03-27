@@ -1,9 +1,10 @@
+import warnings
 from dataclasses import dataclass, field, replace
 from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
-from cript.nodes.exceptions import CRIPTMaterialIdentifierError
+from cript.nodes.exceptions import CRIPTMaterialIdentifierWarning
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.process import Process
 from cript.nodes.util.json import UIDProxy
@@ -219,7 +220,7 @@ class Material(PrimaryBaseNode):
         #     and self.smiles is None
         #     and self.vendor is None
         # ):
-        #     raise CRIPTMaterialIdentifierError(self)
+        #     warnings.warn(CRIPTMaterialIdentifierWarning(self)) #raise CRIPTMaterialIdentifierError(self)
 
     @property
     @beartype

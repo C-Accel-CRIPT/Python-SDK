@@ -43,6 +43,7 @@
 
 ### Health Report
 
+```shell
 =============================================================================================== test session starts ===============================================================================================
 platform linux -- Python 3.11.2, pytest-7.4.3
 plugins: cov-4.1.0
@@ -101,3 +102,4 @@ FAILED tests/nodes/subobjects/test_software.py::test_integration_software - Attr
 FAILED tests/nodes/subobjects/test_software_configuration.py::test_integration_software_configuration - AttributeError: 'list' object has no attribute 'starts with'
 FAILED tests/nodes/supporting_nodes/test_file.py::test_integration_file - AttributeError: 'list' object has no attribute 'starts with'
 ======================================================================== 23 failed, 100 passed, 1 skipped, 1 warning in 905.51s (0:15:05) =========================================================================
+```

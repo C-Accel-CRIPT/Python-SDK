@@ -262,6 +262,9 @@ class API:
 
         logger.setLevel(log_level)
 
+        # Activate Warning handling
+        logging.captureWarnings(True)
+
         # Create a console handler
         console_handler = logging.StreamHandler()
 
@@ -622,6 +625,7 @@ class API:
     # ===========================
 
     ###########################################################################################
+
     ###########################################################################################
 
     @staticmethod
@@ -690,32 +694,73 @@ class API:
                         # Initialize or update the patch structure
                         if child_node not in patches["payload_json_patch"]:
                             patches["payload_json_patch"][child_node] = [{} for _ in range(index + 1)]
+                            print("\npatches 1")
+                            print(patches)
+                            print("\n")
                         elif index >= len(patches["payload_json_patch"][child_node]):
                             patches["payload_json_patch"][child_node].extend([{} for _ in range(index + 1 - len(patches["payload_json_patch"][child_node]))])
-
+                            print("\npatches 2")
+                            print(patches)
+                            print("\n")
                         # Update the specific attribute
                         patches["payload_json_patch"][child_node][index][attribute] = change["new_value"]
-
+                        print("\npatches 2.5")
+                        print(patches)
+                        print("\n")
                         # Ensure 'node' attribute is present
                         if "node" not in patches["payload_json_patch"][child_node][index]:
-                            patches["payload_json_patch"][child_node][index]["node"] = ["Material"]
-
+                            patches["payload_json_patch"][child_node][index]["node"] = [child_node.capitalize()]
+                            print("\npatches 3")
+                            print(patches)
+                            print("\n")
         # Handle dictionary_item_added for non-indexed additions
+        # print("555++++++++++++++")
+        # print(data.get("values_changed", []))
+        # print("555++++++++++++++")
+        # print(data.get("dictionary_item_added", []))
 
         for path in data.get("dictionary_item_added", []):
             tree_path = path.replace("root", "modified")
+            print("===== here")
             print(tree_path)
             # patches = {"diff": "dictionary_item_added"}
-            child_entity_match = re.search(r"root\['(\w+)'\]", path)
+            child_entity_match = re.search(r"root\['(\w+)'\]\[(\d+)\]\['(\w+)'\]", path)
             if child_entity_match:
                 child_node = child_entity_match.group(1)
-                tree_path = path.replace("root", "modified")
+                idx = int(child_entity_match.group(2))
+                attr = child_entity_match.group(3)
+                print("🤡child_node")
+                print(child_node)
+                print("\npatches 0.0")
+                print(patches)
+                print(child_entity_match)
+                print("\n")
+
+                if child_node in patches["payload_json_patch"]:
+                    print(patches["payload_json_patch"][child_node][idx])
+                    print(attr)
+                    print(cleaned_modified[child_node][idx][attr])
+                    patches["payload_json_patch"][child_node][idx][attr] = cleaned_modified[child_node][idx][attr]
+                    # API.add_to_dict(patches["payload_json_patch"][child_node][idx], attr, cleaned_modified[child_node][idx][attr])
+                    print("--now")
+                    print(patches["payload_json_patch"])
+                    print("-------")
+                    print("✅✅✅✅HEEEEEE55555")
+                    # quit()
 
                 # Check if the child_node is in cleaned_modified to add/update it in the patch
-                if child_node in cleaned_modified:
-                    # patches["payload_json_patch"][child_node].append(cleaned_modified[child_node])
-                    API.add_to_dict(patches["payload_json_patch"], "material", cleaned_modified[child_node])
-                    # patches["payload_json_patch"].setdefault(child_node, []).append(cleaned_modified[child_node])
+                # if child_node in cleaned_modified:
+                #     print("❤️‍🔥")
+                #     if child_node in patches["payload_json_patch"]:
+                #         API.add_to_dict(patches["payload_json_patch"][child_node][idx], attr, cleaned_modified[child_node][idx][attr])
+                #         print("✅✅✅✅HEEEEEE55555")
+                #         quit()
+                #     # patches["payload_json_patch"][child_node].append(cleaned_modified[child_node])
+                #     API.add_to_dict(patches["payload_json_patch"], child_node, cleaned_modified[child_node])
+                #     # patches["payload_json_patch"].setdefault(child_node, []).append(cleaned_modified[child_node])
+                #     print("\npatches 4")
+                #     print(patches)
+                #     print("\n")
 
         # Handle iterable_item_added
         for path, item in data.get("iterable_item_added", {}).items():
@@ -732,7 +777,9 @@ class API:
 
                 # Append the new item to the specific child node list
                 patches["payload_json_patch"][child_node][index] = item
-
+                print("\npatches 5")
+                print(patches)
+                print("\n")
         return patches
 
     @staticmethod  # OK  default - return removes
@@ -768,14 +815,22 @@ class API:
 
         # in values_changed
         pattern_uuid_change = re.compile(r"root\['(\w+)'\]\[(\d+)\]\['uuid'\]")
+        # pattern = re.compile(r"root\['(\w+)'\]\[(\d+)\]\['uuid'\]")
+
         for path, change in data_.get("values_changed", {}).items():
             match = pattern_uuid_change.match(path)
+
             if match:
+                child_node = match.group(1)
                 # print(change["old_value"])
                 removed_uuids.append(change["old_value"])
+                this = {"uuid": change["old_value"]}
+                API.add_to_dict(removes["payload_json_removes"], child_node, this)
 
                 # print(change["new_value"])
                 added_uuids.append(change["new_value"])
+                # this = {"uuid": change["new_value"]}
+                # API.add_to_dict(removes["payload_json_patch"], child_node, this)
 
         # Handle iterable_item_added
         pattern_iterable_item = re.compile(r"root\['(\w+)'\]\[(\d+)\]")
@@ -967,12 +1022,16 @@ class API:
                     print(" 5555patches WE ARE HERE \n\n\n ------")
 
                     removes = API.extract_removes(data, cleaned_modified=cleaned_modified)
+                    print("----11---removes")
                     print(removes)
                     print(" 5555removes WE ARE HERE \n\n\n ------")
 
                     print("\n we should do a groupby on the removes and patches ")
 
                     data = [patches, removes]
+
+                    print("--11--data")
+                    print(data)
 
                     grouped_data = {}
 
@@ -1030,19 +1089,31 @@ class API:
         list_of_patches_and_removes
         we want to go through the bottom first"
         and we go through patches for each node first, then removes for each node
+
         """
+        print("-----511--list_of_patches_and_removes--")
+        print(list_of_patches_and_removes)
+        print("----keep going-----")
+        # quit()
+
         for item in reversed(list_of_patches_and_removes):
             parent_node0 = item["parent_node"]
             parent_uuid0 = item["parent_uuid"]
             url_path = f"/{parent_node0}/{parent_uuid0}"
             payload_patch = item["payload_json_patch"]
             print(url_path)
+            print("\n-----11")
             print("payload_patch", json.dumps(payload_patch))
             API.add_to_dict(payload_patch, "node", [parent_node0.capitalize()])
             print("payload_patch2", json.dumps(payload_patch))
             try:
                 patch_response = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(payload_patch))  # json.dumps(payload_patch))
+                print("\n--11----")
+                print(url_path)
+                print(payload_patch)
                 print(patch_response.json())
+                print("\n---💚🪲---")
+                # quit()
                 if patch_response.status_code in [400, 409]:
                     print("""take the things that exist and link it , then resend the other materials""")
 

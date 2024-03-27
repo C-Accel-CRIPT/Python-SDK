@@ -177,7 +177,7 @@ def test_update_project_change_or_reset_newly_made_materials(cript_api) -> None:
         project_list = cript.load_nodes_from_json(nodes_json=json.dumps(my_project_from_res_data_dict))
         project_loaded = project_list
 
-        material_001 = cript.Material(name=mat_1, identifier=[])
+        material_001 = cript.Material(name=mat_1)
 
         collection = cript.Collection(name=col_name)
 
@@ -330,10 +330,10 @@ def test_update_project_change_or_reset_material_to_existing_materials(cript_api
         assert del_res.json()["code"] == 200
 
 
-@pytest.mark.skip(reason="api")
-def test_sending_fixtures(cript_api, simple_material_node, simple_project_node, complex_project_node, complex_material_node) -> None:
+# @pytest.mark.skip(reason="api")
+def test_sending_fixtures(cript_api, simple_material_node, simple_project_node, complex_project_node_without_inventory, complex_project_node, complex_material_node) -> None:
     """
-    pytest nodes/primary_nodes/test_project.py::test_update_project_change_or_reset_material_to_existing_materials2
+    pytest nodes/primary_nodes/test_project.py::test_sending_fixtures
 
     """
 
@@ -341,7 +341,10 @@ def test_sending_fixtures(cript_api, simple_material_node, simple_project_node, 
     name_1 = f"my_proj_thisali_{epoch_time}"
     # collection_name = f"031o0col__{epoch_time}"
 
-    pj_node = copy.deepcopy(complex_project_node)
+    pj_node = copy.deepcopy(complex_project_node_without_inventory)
+    # print("---inventory---")
+    # print(pj_node.collection[0].get_json().json)
+    # quit()
 
     # just an equal sign because we want to reset it !
     pj_node.material = [simple_material_node]  # [complex_material_node, simple_material_node]
@@ -357,7 +360,11 @@ def test_sending_fixtures(cript_api, simple_material_node, simple_project_node, 
     # now we want to add, but could also reset with just an equal sign
     pj_node.material += [material1, material2]
 
+    print("pj_node")
+    print(pj_node)
+
     cript_api.save_node(pj_node)  # bear type, must be list
+    print("did we ???")
 
     quit()
 

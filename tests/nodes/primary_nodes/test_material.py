@@ -225,7 +225,7 @@ def test_integration_material(cript_api, simple_project_node, simple_material_no
 ############################################################################################
 
 
-@pytest.mark.skip(reason="api")
+# @pytest.mark.skip(reason="api")
 def test_material_property_node_add(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_material.py::test_material_property_node_add
@@ -384,7 +384,7 @@ def test_material_property_node_add(cript_api) -> None:
         # assert del_res.json()["code"] == 200
 
 
-@pytest.mark.skip(reason="api")
+# @pytest.mark.skip(reason="api")
 def test_material_property_node_change(cript_api) -> None:
     """
     pytest nodes/primary_nodes/test_material.py::test_material_property_node_change
@@ -464,11 +464,14 @@ def test_material_property_node_change(cript_api) -> None:
         """
 
         print("\n~~~~~~~~~~~~ SAVING NOW ~~~~~~~~~~~")
-        print(mat_loaded)  # material_loaded
+        print(mat_loaded.get_json().json)  # material_loaded
         print("--//--")
         # print(dir(mat_loaded))
 
         url_path = cript_api.save_node(mat_loaded)  # material_loaded
+
+        # print("url_path")
+        # print(url_path)
 
         # print("node_uuid: ", node_uuid)
 
@@ -481,12 +484,11 @@ def test_material_property_node_change(cript_api) -> None:
 
         url_path1 = get_url1
 
-        print("url_path1: ", url_path1)
+        # print("url_path1: ", url_path1)
 
         get_response = cript_api._capsule_request(url_path=url_path1, method="GET")
-        print("\n___get_response")
-        print(" get url_path: ", url_path1)
-        print(get_response.json())
+        # print("\n___get_response")
+        # print(" get url_path: ", url_path1)
 
         assert get_response.status_code == 200
         print("oooof")

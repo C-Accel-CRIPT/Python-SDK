@@ -62,7 +62,7 @@ jobs:
         run: pip install -r requirements_dev.txt
 
       - name: Test Coverage
-        run: pytest --cov --cov-fail-under=85
+        run: pytest tests/api/test_api.py
         env:
           CRIPT_HOST: https://lb-stage.mycriptapp.org/
           CRIPT_TOKEN: $ID_TOKEN

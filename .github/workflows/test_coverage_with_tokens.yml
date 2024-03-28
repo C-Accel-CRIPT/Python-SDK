@@ -45,8 +45,8 @@ jobs:
           
         run: |
           OUTPUT=$(aws cognito-idp "${{ secrets.COGNITO_INIT }}" --user-pool-id "${{ secrets.COGNITO_USER_POOL_ID }}" --client-id "${{ secrets.COGNITO_CLIENT_ID }}" --auth-flow "${{ secrets.COGNITO_AUTH_FLOW }}" --auth-parameters USERNAME="${{ secrets.COGNITO_USERNAME }}",PASSWORD=${{ secrets.COGNITO_PASSWORD }})
-          echo ACCESS_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.AccessToken' | sed 's/^"\(.*\)"$/\1/') >> "$GITHUB_OUTPUT"
-          echo ID_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.IdToken' | sed 's/^"\(.*\)"$/\1/') >> "$GITHUB_OUTPUT"
+          echo ACCESS_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.AccessToken' | sed 's/^"\(.*\)"$/\1/') >> $GITHUB_OUTPUT
+          echo ID_TOKEN=$(echo "$OUTPUT" | jq -r '.AuthenticationResult.IdToken' | sed 's/^"\(.*\)"$/\1/') >> $GITHUB_OUTPUT
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -66,6 +66,6 @@ jobs:
           ACCESS_TOKEN: ${{ steps.cognito-token.outputs.ACCESS_TOKEN }}
           ID_TOKEN: ${{ steps.cognito-token.outputs.ID_TOKEN }}
           CRIPT_HOST: https://lb-stage.mycriptapp.org/
-          CRIPT_TOKEN: $ID_TOKEN
-          CRIPT_STORAGE_TOKEN: $ACCESS_TOKEN
+          CRIPT_TOKEN: $ACCESS_TOKEN
+          CRIPT_STORAGE_TOKEN: $ID_TOKEN
           CRIPT_TESTS: True

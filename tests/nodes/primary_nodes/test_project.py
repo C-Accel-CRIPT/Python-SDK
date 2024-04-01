@@ -100,7 +100,7 @@ def test_integration_project(cript_api, simple_project_node):
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_project_node)
 
 
-@pytest.mark.skip(reason="api")
+# @pytest.mark.skip(reason="api")
 def test_save_project_node(cript_api, simple_project_node, complex_project_node):
     """
     pytest nodes/primary_nodes/test_project.py::test_save_project_node
@@ -119,4 +119,4 @@ def test_save_project_node(cript_api, simple_project_node, complex_project_node)
     # Delete a node
     proj.material[0].property = []
 
-    cript_api.save(proj)
+    cript_api.save_new(proj)

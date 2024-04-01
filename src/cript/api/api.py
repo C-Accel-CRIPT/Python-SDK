@@ -424,7 +424,7 @@ class API:
     def api_version(self):
         return self._api_version
 
-    def save(self, project: Project) -> None:
+    def save_new(self, project: Project) -> None:
         # Member function of API
         ################################################################################
 
@@ -434,7 +434,7 @@ class API:
 
         # node_type=cript.Project this needs to be dynamically loaded with locals ?
 
-        old_node_paginator = self.search(node_type=Project, search_mode=SearchModes.UUID, value_to_search=project)
+        old_node_paginator = self.search(node_type=Project, search_mode=SearchModes.UUID, value_to_search=str(project.uuid))
         old_node_paginator.auto_load_nodes = False
         try:
             # print("old_node_json = next(old_node_paginator)")
@@ -494,7 +494,7 @@ class API:
 
     ################################################################################
 
-    def save_new(self, project: Project) -> None:
+    def save(self, project: Project) -> None:
         """
         This method takes a project node, serializes the class into JSON
         and then sends the JSON to be saved to the API.

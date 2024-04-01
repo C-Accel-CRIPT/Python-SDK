@@ -100,7 +100,7 @@ def test_integration_project(cript_api, simple_project_node):
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_project_node)
 
 
-# @pytest.mark.skip(reason="api")
+@pytest.mark.skip(reason="api")
 def test_save_project_node(cript_api, simple_project_node, complex_project_node):
     """
     pytest nodes/primary_nodes/test_project.py::test_save_project_node
@@ -112,11 +112,32 @@ def test_save_project_node(cript_api, simple_project_node, complex_project_node)
 
     # proj = cript_api.load_nodes_from_json(nodes_json=proj_json)
     # Modify deep in the tree
-    proj = copy.deepcopy(complex_project_node)
+    print("------------\nstarting")
+    proj0 = copy.deepcopy(complex_project_node)
+    proj_json = proj0.get_json().json
+    cript_api.save_new(proj0)
+
+    proj = cript.load_nodes_from_json(nodes_json=json.dumps(proj_json))
+    print("\n----proj_loaded")
+    print(proj)
+
+    print("------------\n1111111")
+    print(type(proj))
+    print("why is this returning a string and not a node?")
+    quit()
+    print(proj.get_json().json)
     material_to_modify = proj.collection[0].inventory[0].material[0]
+    print("\n\nproj.collection[0].inventory[0].material[0]")
+    print(proj.collection[0].inventory[0].material[0])
     material_to_modify.name = "this is sure to be a new name"
 
     # Delete a node
     proj.material[0].property = []
 
     cript_api.save_new(proj)
+
+    # now we need to reload the test in
+
+    print("------------\n2222222")
+    print(proj.get_json().json)
+    quit()

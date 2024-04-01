@@ -485,12 +485,12 @@ class API:
             if not node.shallow_equal(old_node):
                 patch_map[node.uuid] = node
 
-        for uuid in reversed(patch_map.keys_sorted_by_last_modified()):
-            node = patch_map[uuid]
+        for uuid_ in reversed(patch_map.keys_sorted_by_last_modified()):
+            node = patch_map[uuid_]
             print(f"Doing API PATCH for {node.uuid}")
 
-        for uuid in delete_uuid:
-            print(f"Doing API Delete for {uuid}")
+        for uuid_ in delete_uuid:
+            print(f"Doing API Delete for {uuid_}")
 
     ################################################################################
 

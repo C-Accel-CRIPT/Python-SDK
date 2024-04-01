@@ -115,7 +115,11 @@ def test_save_project_node(cript_api, simple_project_node, complex_project_node)
     # Modify deep in the tree
     print("------------\nstarting")
     proj0 = copy.deepcopy(complex_project_node)
-    proj_json = proj0.get_json().json
+
+    proj_json = proj0.get_expanded_json()  # .get_json().json
+
+    # proj2, proj_cache = cript.load_nodes_from_json(nodes_json=proj_json, _use_uuid_cache={})
+
     print("type proj_json")
     print(type(proj_json))
     cript_api.save_new(proj0)
@@ -123,26 +127,38 @@ def test_save_project_node(cript_api, simple_project_node, complex_project_node)
     # proj = cript.load_nodes_from_json(nodes_json=json.dumps(proj_json))
 
     proj = load_nodes_from_json(nodes_json=proj_json)
-    print("\n----proj loaded")
-    print(proj)
+    print("\n----proj.collection[0].inventory[0].material[0]")
+    print(proj.collection[0].inventory[0].material[0].get_json().json)
 
     print("------------\n1111111")
-    print(type(proj))
-    print("why is this returning a string and not a node?")
-    quit()
-    print(proj.get_json().json)
-    material_to_modify = proj.collection[0].inventory[0].material[0]
-    print("\n\nproj.collection[0].inventory[0].material[0]")
-    print(proj.collection[0].inventory[0].material[0])
+    # print(type(proj))
+    # print("why is this returning a string and not a node?")
+    proj_loaded, proj_cache = cript.load_nodes_from_json(nodes_json=proj0.get_expanded_json(), _use_uuid_cache={})
+    # print("\n----proj_loaded")
+    # print(proj_loaded)
+    # quit()
+    # print(proj_loaded.get_json().json)
+    material_to_modify = proj_loaded.collection[0].inventory[0].material[0]
+    print("\n\n  proj_loaded.collection[0].inventory[0].material[0]")
+    print(proj_loaded.collection[0].inventory[0].material[0].get_json().json)
     material_to_modify.name = "this is sure to be a new name"
 
     # Delete a node
-    proj.material[0].property = []
+    proj_loaded.material[0].property = []
 
-    cript_api.save_new(proj)
+    cript_api.save_new(proj_loaded)
 
     # now we need to reload the test in
 
     print("------------\n2222222")
-    print(proj.get_json().json)
+    # print(proj_loaded.get_json().json["property"])
+    # print(proj_loaded2.get_json().json["property"])
+
+    proj_loaded2, proj_cache = cript.load_nodes_from_json(nodes_json=proj_loaded.get_expanded_json(), _use_uuid_cache={})
+    print("\n\n  proj_loaded2.collection[0].inventory[0].material[0]")
+    print(proj_loaded2.collection[0].inventory[0].material[0].get_json().json)
+
+    print("------------\n333333333")
+    # print(proj_loaded2.get_json().json["property"])
+    # print(proj_loaded2.get_json().json["property"])
     quit()

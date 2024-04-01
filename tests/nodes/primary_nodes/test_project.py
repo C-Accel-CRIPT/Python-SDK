@@ -101,46 +101,39 @@ def test_integration_project(cript_api, simple_project_node):
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_project_node)
 
 
-@pytest.mark.skip(reason="api")
-def test_save_project_node(cript_api, simple_project_node, complex_project_node):
+@pytest.mark.skip(reason="api, and we overrode save_new to save ")
+def test_save_project_change_material(cript_api, simple_project_node, complex_project_node):
     """
-    pytest nodes/primary_nodes/test_project.py::test_save_project_node
+    WIP still
+    pytest nodes/primary_nodes/test_project.py::test_save_project_change_material
     """
 
     # with cript.API(host="https://lb-stage.mycriptapp.org/") as api:
     #     with open("new_project.json") as json_handle:
     #         proj_json = json.load(json_handle)
-
     # proj = cript_api.load_nodes_from_json(nodes_json=proj_json)
     # Modify deep in the tree
+
     print("------------\nstarting")
+
     proj0 = copy.deepcopy(complex_project_node)
-
     proj_json = proj0.get_expanded_json()  # .get_json().json
-
-    # proj2, proj_cache = cript.load_nodes_from_json(nodes_json=proj_json, _use_uuid_cache={})
-
-    print("type proj_json")
-    print(type(proj_json))
     cript_api.save_new(proj0)
-    print("---- finished save --- now node")
-    # proj = cript.load_nodes_from_json(nodes_json=json.dumps(proj_json))
+
+    print("---- finished save --- now load node")
 
     proj = load_nodes_from_json(nodes_json=proj_json)
-    print("\n----proj.collection[0].inventory[0].material[0]")
+
+    print("\n----proj.collection[0].inventory[0].material[0]\n")
+
     print(proj.collection[0].inventory[0].material[0].get_json().json)
 
-    print("------------\n1111111")
-    # print(type(proj))
-    # print("why is this returning a string and not a node?")
     proj_loaded, proj_cache = cript.load_nodes_from_json(nodes_json=proj0.get_expanded_json(), _use_uuid_cache={})
-    # print("\n----proj_loaded")
-    # print(proj_loaded)
-    # quit()
-    # print(proj_loaded.get_json().json)
+
     material_to_modify = proj_loaded.collection[0].inventory[0].material[0]
-    print("\n\n  proj_loaded.collection[0].inventory[0].material[0]")
+    print("\n\n   proj_loaded.collection[0].inventory[0].material[0]\n")
     print(proj_loaded.collection[0].inventory[0].material[0].get_json().json)
+
     material_to_modify.name = "this is sure to be a new name"
 
     # Delete a node
@@ -150,15 +143,11 @@ def test_save_project_node(cript_api, simple_project_node, complex_project_node)
 
     # now we need to reload the test in
 
-    print("------------\n2222222")
-    # print(proj_loaded.get_json().json["property"])
-    # print(proj_loaded2.get_json().json["property"])
-
     proj_loaded2, proj_cache = cript.load_nodes_from_json(nodes_json=proj_loaded.get_expanded_json(), _use_uuid_cache={})
-    print("\n\n  proj_loaded2.collection[0].inventory[0].material[0]")
+    print("\n\n  proj_loaded2.collection[0].inventory[0].material[0]\n")
     print(proj_loaded2.collection[0].inventory[0].material[0].get_json().json)
 
-    print("------------\n333333333")
-    # print(proj_loaded2.get_json().json["property"])
-    # print(proj_loaded2.get_json().json["property"])
-    quit()
+    print("asserting")
+    print("")
+    print(proj_loaded2.collection[0].inventory[0].material[0].name)
+    assert proj_loaded2.collection[0].inventory[0].material[0].name == "this is sure to be a new name"

@@ -129,6 +129,11 @@ def delete_integration_node_helper(cript_api: cript.API, node_to_delete: UUIDBas
         value_to_search=str(node_to_delete.uuid),
     )
 
+    print("--------------------")
+    print("my_node_paginator")
+    print(my_node_paginator)
+    print(dir(my_node_paginator))
+
     # be sure API returned at least one result for the node that we searched for
     assert len(my_node_paginator.current_page_results) == 1
 

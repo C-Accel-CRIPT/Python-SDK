@@ -424,7 +424,7 @@ class API:
     def api_version(self):
         return self._api_version
 
-    def save_new(self, project: Project) -> None:
+    def save(self, project: Project) -> None:
         # Member function of API
         ################################################################################
 
@@ -445,7 +445,12 @@ class API:
             old_node_json = next(old_node_paginator)
 
         except StopIteration:  # New Project do POST instead
+
             # Do the POST request call.
+            data = project.get_json().json
+            response = self._capsule_request(url_path="/project/", method="POST", data=data)
+            print("----700----")
+            print(response.json)
             return  # Return here, since we are done after Posting
 
         # This is where a patch is needed
@@ -485,16 +490,27 @@ class API:
             if not node.shallow_equal(old_node):
                 patch_map[node.uuid] = node
 
+        url_path = f"/{self.node_type}/{self.uuid}"
         for uuid_ in reversed(patch_map.keys_sorted_by_last_modified()):
             node = patch_map[uuid_]
+
+            # patch capsule request goes here, we are going down the list in reversed order
             print(f"Doing API PATCH for {node.uuid}")
+            # either link if found or patch json to parent
+            data = node.get_jason().json
+            self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(data))
 
         for uuid_ in delete_uuid:
+            # do the delete
+            #  *unlinking here
+            # actually here we are able to send list of uuids to be deleted - optimize later
             print(f"Doing API Delete for {uuid_}")
+            unlink_payload = {"uuid": str(uuid_)}
+            self._capsule_request(url_path=url_path, method="DELETE", data=json.dumps(unlink_payload))
 
     ################################################################################
 
-    def save(self, project: Project) -> None:
+    def save_old(self, project: Project) -> None:
         """
         This method takes a project node, serializes the class into JSON
         and then sends the JSON to be saved to the API.

@@ -5,6 +5,7 @@ import uuid
 import pytest
 
 import cript
+from cript.nodes.util import load_nodes_from_json
 from tests.utils.integration_test_helper import (
     delete_integration_node_helper,
     save_integration_node_helper,
@@ -115,10 +116,14 @@ def test_save_project_node(cript_api, simple_project_node, complex_project_node)
     print("------------\nstarting")
     proj0 = copy.deepcopy(complex_project_node)
     proj_json = proj0.get_json().json
+    print("type proj_json")
+    print(type(proj_json))
     cript_api.save_new(proj0)
+    print("---- finished save --- now node")
+    # proj = cript.load_nodes_from_json(nodes_json=json.dumps(proj_json))
 
-    proj = cript.load_nodes_from_json(nodes_json=json.dumps(proj_json))
-    print("\n----proj_loaded")
+    proj = load_nodes_from_json(nodes_json=proj_json)
+    print("\n----proj loaded")
     print(proj)
 
     print("------------\n1111111")

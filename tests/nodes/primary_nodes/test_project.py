@@ -1,5 +1,8 @@
+import copy
 import json
 import uuid
+
+import pytest
 
 import cript
 from tests.utils.integration_test_helper import (
@@ -95,3 +98,25 @@ def test_integration_project(cript_api, simple_project_node):
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_project_node)
+
+
+@pytest.mark.skip(reason="api")
+def test_save_project_node(cript_api, simple_project_node, complex_project_node):
+    """
+    pytest nodes/primary_nodes/test_project.py::test_save_project_node
+    """
+
+    # with cript.API(host="https://lb-stage.mycriptapp.org/") as api:
+    #     with open("new_project.json") as json_handle:
+    #         proj_json = json.load(json_handle)
+
+    # proj = cript_api.load_nodes_from_json(nodes_json=proj_json)
+    # Modify deep in the tree
+    proj = copy.deepcopy(complex_project_node)
+    material_to_modify = proj.collection[0].inventory[0].material[0]
+    material_to_modify.name = "this is sure to be a new name"
+
+    # Delete a node
+    proj.material[0].property = []
+
+    cript_api.save(proj)

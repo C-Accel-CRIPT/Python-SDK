@@ -1,9 +1,10 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.util.json import UIDProxy
 
 
 class Experiment(PrimaryBaseNode):
@@ -65,12 +66,12 @@ class Experiment(PrimaryBaseNode):
         all Collection attributes
         """
 
-        process: List[Any] = field(default_factory=list)
-        computation: List[Any] = field(default_factory=list)
-        computation_process: List[Any] = field(default_factory=list)
-        data: List[Any] = field(default_factory=list)
+        process: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        computation: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        computation_process: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        data: List[Union[Any, UIDProxy]] = field(default_factory=list)
         funding: List[str] = field(default_factory=list)
-        citation: List[Any] = field(default_factory=list)
+        citation: List[Union[Any, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -78,12 +79,12 @@ class Experiment(PrimaryBaseNode):
     def __init__(
         self,
         name: str,
-        process: Optional[List[Any]] = None,
-        computation: Optional[List[Any]] = None,
-        computation_process: Optional[List[Any]] = None,
-        data: Optional[List[Any]] = None,
+        process: Optional[List[Union[Any, UIDProxy]]] = None,
+        computation: Optional[List[Union[Any, UIDProxy]]] = None,
+        computation_process: Optional[List[Union[Any, UIDProxy]]] = None,
+        data: Optional[List[Union[Any, UIDProxy]]] = None,
         funding: Optional[List[str]] = None,
-        citation: Optional[List[Any]] = None,
+        citation: Optional[List[Union[Any, UIDProxy]]] = None,
         notes: str = "",
         **kwargs
     ):
@@ -135,7 +136,7 @@ class Experiment(PrimaryBaseNode):
 
         super().__init__(name=name, notes=notes, **kwargs)
 
-        self._json_attrs = replace(
+        new_json_attrs = replace(
             self._json_attrs,
             name=name,
             process=process,
@@ -147,8 +148,7 @@ class Experiment(PrimaryBaseNode):
             notes=notes,
         )
 
-        # check if the code is still valid
-        self.validate()
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype
@@ -245,7 +245,7 @@ class Experiment(PrimaryBaseNode):
         ... )
         >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
         >>> my_material = cript.Material(
-        ...     name="my material name", identifier=[{"bigsmiles": "123456"}]
+        ...     name="my material name", bigsmiles = "123456"
         ... )
         >>> my_quantity = cript.Quantity(
         ... key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"

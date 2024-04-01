@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, replace
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from beartype import beartype
 
@@ -7,6 +7,7 @@ from cript.nodes.primary_nodes.collection import Collection
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.supporting_nodes import User
+from cript.nodes.util.json import UIDProxy
 
 
 class Project(PrimaryBaseNode):
@@ -59,15 +60,15 @@ class Project(PrimaryBaseNode):
         all Project attributes
         """
 
-        member: List[User] = field(default_factory=list)
-        admin: List[User] = field(default_factory=list)
-        collection: List[Collection] = field(default_factory=list)
-        material: List[Material] = field(default_factory=list)
+        member: List[Union[User, UIDProxy]] = field(default_factory=list)
+        admin: List[Union[User, UIDProxy]] = field(default_factory=list)
+        collection: List[Union[Collection, UIDProxy]] = field(default_factory=list)
+        material: List[Union[Material, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, name: str, collection: Optional[List[Collection]] = None, material: Optional[List[Material]] = None, notes: str = "", **kwargs):
+    def __init__(self, name: str, collection: Optional[List[Union[Collection, UIDProxy]]] = None, material: Optional[List[Union[Material, UIDProxy]]] = None, notes: str = "", **kwargs):
         """
         Create a Project node with Project name
 
@@ -101,14 +102,12 @@ class Project(PrimaryBaseNode):
         if material is None:
             material = []
 
-        self._json_attrs = replace(self._json_attrs, name=name, collection=collection, material=material)
-        self.validate()
+        new_json_attrs = replace(self._json_attrs, name=name, collection=collection, material=material)
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     def validate(self, api=None, is_patch=False, force_validation: bool = False):
-        from cript.nodes.exceptions import (
-            CRIPTOrphanedMaterialError,
-            get_orphaned_experiment_exception,
-        )
+        from cript.nodes.exceptions import CRIPTOrphanedMaterialError
+        from cript.nodes.util.core import get_orphaned_experiment_exception
 
         # First validate like other nodes
         super().validate(api=api, is_patch=is_patch, force_validation=force_validation)
@@ -150,17 +149,17 @@ class Project(PrimaryBaseNode):
 
     @property
     @beartype
-    def member(self) -> List[User]:
+    def member(self) -> List[Union[User, UIDProxy]]:
         return self._json_attrs.member.copy()
 
     @property
     @beartype
-    def admin(self) -> List[User]:
+    def admin(self) -> List[Union[User, UIDProxy]]:
         return self._json_attrs.admin
 
     @property
     @beartype
-    def collection(self) -> List[Collection]:
+    def collection(self) -> List[Union[Collection, UIDProxy]]:
         """
         Collection is a Project node's property that can be set during creation in the constructor
         or later by setting the project's property
@@ -181,7 +180,7 @@ class Project(PrimaryBaseNode):
 
     @collection.setter
     @beartype
-    def collection(self, new_collection: List[Collection]) -> None:
+    def collection(self, new_collection: List[Union[Collection, UIDProxy]]) -> None:
         """
         set list of collections for the project node
 
@@ -198,7 +197,7 @@ class Project(PrimaryBaseNode):
 
     @property
     @beartype
-    def material(self) -> List[Material]:
+    def material(self) -> List[Union[Material, UIDProxy]]:
         """
         List of Materials that belong to this Project.
 
@@ -206,8 +205,7 @@ class Project(PrimaryBaseNode):
         --------
         >>> import cript
         >>> my_project = cript.Project(name="my Project name")
-        >>> identifier = [{"bigsmiles": "my big smiles"}]
-        >>> my_material = cript.Material(name="my material", identifier=identifier)
+        >>> my_material = cript.Material(name="my material", bigsmiles="my bigsmiles")
         >>> my_project.material = [my_material]
 
         Returns
@@ -219,7 +217,7 @@ class Project(PrimaryBaseNode):
 
     @material.setter
     @beartype
-    def material(self, new_materials: List[Material]) -> None:
+    def material(self, new_materials: List[Union[Material, UIDProxy]]) -> None:
         """
         set the list of materials for this project
 

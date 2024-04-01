@@ -38,7 +38,6 @@ nav:
       - Computational Forcefield: nodes/subobjects/computational_forcefield.md
       - Condition: nodes/subobjects/condition.md
       - Equipment: nodes/subobjects/equipment.md
-      #      - Identifier: nodes/subobjects/identifier.md
       - Ingredient: nodes/subobjects/ingredient.md
       - Parameter: nodes/subobjects/parameter.md
       - Property: nodes/subobjects/property.md

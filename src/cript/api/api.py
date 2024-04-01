@@ -2,40 +2,34 @@ import copy
 import json
 import logging
 import os
+import traceback
 import uuid
-import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 import boto3
-import jsonschema
 import requests
 from beartype import beartype
 
 from cript.api.api_config import _API_TIMEOUT
+from cript.api.data_schema import DataSchema
 from cript.api.exceptions import (
     APIError,
     CRIPTAPIRequiredError,
     CRIPTAPISaveError,
     CRIPTConnectionError,
     CRIPTDuplicateNameError,
-    InvalidHostError,
-    InvalidVocabulary,
 )
 from cript.api.paginator import Paginator
 from cript.api.utils.aws_s3_utils import get_s3_client
 from cript.api.utils.get_host_token import resolve_host_and_token
-from cript.api.utils.helper_functions import _get_node_type_from_json
 from cript.api.utils.save_helper import (
     _fix_node_save,
-    _get_uuid_from_error_message,
     _identify_suppress_attributes,
     _InternalSaveValues,
 )
 from cript.api.utils.web_file_downloader import download_file_from_url
 from cript.api.valid_search_modes import SearchModes
-from cript.api.vocabulary_categories import VocabCategories
-from cript.nodes.exceptions import CRIPTNodeSchemaError
 from cript.nodes.primary_nodes.project import Project
 
 # Do not use this directly! That includes devs.
@@ -60,17 +54,15 @@ class API:
     """
 
     # dictates whether the user wants to see terminal log statements or not
-    _verbose: bool = True
-    logger: logging.Logger = None  # type: ignore
+    _logger: logging.Logger = None  # type: ignore
 
     _host: str = ""
     _api_token: str = ""
     _storage_token: str = ""
-    _http_headers: dict = {}
-    _vocabulary: dict = {}
-    _db_schema: dict = {}
+    _db_schema: Optional[DataSchema] = None
     _api_prefix: str = "api"
     _api_version: str = "v1"
+    _api_request_session: Union[None, requests.Session] = None
 
     # trunk-ignore-begin(cspell)
     # AWS S3 constants
@@ -82,14 +74,10 @@ class API:
     _internal_s3_client: Any = None  # type: ignore
     # trunk-ignore-end(cspell)
 
-    # Advanced User Tip: Disabling Node Validation
-    # For experienced users, deactivating node validation during creation can be a time-saver.
-    # Note that the complete node graph will still undergo validation before being saved to the back end.
-    # Caution: It's advisable to keep validation active while debugging scripts, as disabling it can delay error notifications and complicate the debugging process.
-    skip_validation: bool = False
+    extra_api_log_debug_info: bool = False
 
     @beartype
-    def __init__(self, host: Union[str, None] = None, api_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: Union[str, Path] = ""):
+    def __init__(self, host: Union[str, None] = None, api_token: Union[str, None] = None, storage_token: Union[str, None] = None, config_file_path: Union[str, Path] = "", default_log_level=logging.INFO):
         """
         Initialize CRIPT API client with host and token.
         Additionally, you can  use a config.json file and specify the file path.
@@ -221,20 +209,12 @@ class API:
             api_token = authentication_dict["api_token"]
             storage_token = authentication_dict["storage_token"]
 
-        self._host = self._prepare_host(host=host)  # type: ignore
+        self._host: str = host.rstrip("/")
         self._api_token = api_token  # type: ignore
         self._storage_token = storage_token  # type: ignore
 
-        # add Bearer to token for HTTP requests
-        self._http_headers = {"Authorization": f"Bearer {self._api_token}", "Content-Type": "application/json"}
-
-        # check that api can connect to CRIPT with host and token
-        self._check_initial_host_connection()
-
-        self._get_db_schema()
-
         # set a logger instance to use for the class logs
-        self._set_logger()
+        self._init_logger(default_log_level)
 
     def __str__(self) -> str:
         """
@@ -249,7 +229,7 @@ class API:
         ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
         ... ) as api:
         ...     print(api)
-        CRIPT API Client - Host URL: 'https://api.criptapp.org/api/v1'
+        CRIPT API Client - Host URL: 'https://api.criptapp.org'
 
         Returns
         -------
@@ -257,7 +237,7 @@ class API:
         """
         return f"CRIPT API Client - Host URL: '{self.host}'"
 
-    def _set_logger(self, verbose: bool = True) -> None:
+    def _init_logger(self, log_level=logging.INFO) -> None:
         """
         Prepare and configure the logger for the API class.
 
@@ -265,7 +245,7 @@ class API:
 
         Parameters
         ----------
-        verbose: bool default True
+        log_level: logging.LEVEL default logging.INFO
             set if you want `cript.API` to give logs to console or not
 
         Returns
@@ -276,11 +256,7 @@ class API:
         # Create a logger instance associated with the current module
         logger = logging.getLogger(__name__)
 
-        # Set the logger's level based on the verbose flag
-        if verbose:
-            logger.setLevel(logging.INFO)  # Display INFO logs
-        else:
-            logger.setLevel(logging.CRITICAL)  # Display no logs
+        logger.setLevel(log_level)
 
         # Create a console handler
         console_handler = logging.StreamHandler()
@@ -295,98 +271,11 @@ class API:
         logger.addHandler(console_handler)
 
         # set logger for the class
-        self.logger = logger
+        self._logger = logger
 
     @property
-    def verbose(self) -> bool:
-        """
-        A boolean flag that controls whether verbose logging is enabled or not.
-
-        When `verbose` is set to `True`, the class will provide additional detailed logging
-        to the terminal. This can be useful for debugging and understanding the internal
-        workings of the class.
-
-        ```bash
-        INFO: Validating Project graph...
-        ```
-
-        When `verbose` is set to `False`, the class will only provide essential logging information,
-        making the terminal output less cluttered and more user-friendly.
-
-        Examples
-        --------
-        >>> import cript
-        >>> with cript.API(
-        ...     host="https://api.criptapp.org/",
-        ...     api_token=os.getenv("CRIPT_TOKEN"),
-        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
-        ... ) as api:
-        ...     # turn off the terminal logs
-        ...     api.verbose = False
-
-        Returns
-        -------
-        bool
-            verbose boolean value
-        """
-        return self._verbose
-
-    @verbose.setter
-    def verbose(self, new_verbose_value: bool) -> None:
-        """
-        sets the verbose value and then sets a new logger for the class
-
-        Parameters
-        ----------
-        new_verbose_value: bool
-            new verbose value to turn the logging ON or OFF
-
-        Returns
-        -------
-        None
-        """
-        self._verbose = new_verbose_value
-        self._set_logger(verbose=new_verbose_value)
-
-    @beartype
-    def _prepare_host(self, host: str) -> str:
-        """
-        Takes the host URL provided by the user during API object construction (e.g., `https://api.criptapp.org`)
-        and standardizes it for internal use. Performs any required string manipulation to ensure uniformity.
-
-        Parameters
-        ----------
-        host: str
-            The host URL specified during API initialization, typically in the form `https://api.criptapp.org`.
-
-        Warnings
-        --------
-        If the specified host uses the unsafe "http://" protocol, a warning will be raised to consider using HTTPS.
-
-        Raises
-        ------
-        InvalidHostError
-            If the host string does not start with either "http" or "https", an InvalidHostError will be raised.
-            Only HTTP protocol is acceptable at this time.
-
-        Returns
-        -------
-        str
-            A standardized host string formatted for internal use.
-
-        """
-        # strip ending slash to make host always uniform
-        host = host.rstrip("/")
-        host = f"{host}/{self._api_prefix}/{self._api_version}"
-
-        # if host is using unsafe "http://" then give a warning
-        if host.startswith("http://"):
-            warnings.warn("HTTP is an unsafe protocol please consider using HTTPS.")
-
-        if not host.startswith("http"):
-            raise InvalidHostError()
-
-        return host
+    def logger(self):
+        return self._logger
 
     # Use a property to ensure delayed init of s3_client
     @property
@@ -424,7 +313,26 @@ class API:
         If this function is called manually, the `API.disconnect` function has to be called later.
 
         For manual connection: nested API object are discouraged.
+
+        Raises
+        -------
+        CRIPTConnectionError
+            raised when the host does not give the expected response
         """
+
+        # Establish a requests session object
+        if self._api_request_session:
+            self.disconnect()
+        self._api_request_session = requests.Session()
+        # add Bearer to token for HTTP requests
+        self._api_request_session.headers = {"Authorization": f"Bearer {self._api_token}", "Content-Type": "application/json"}
+
+        # As a form to check our connection, we pull and establish the data schema
+        try:
+            self._db_schema = DataSchema(self)
+        except APIError as exc:
+            raise CRIPTConnectionError(self.host, self._api_token) from exc
+
         # Store the last active global API (might be None)
         global _global_cached_api
         self._previous_global_cached_api = copy.copy(_global_cached_api)
@@ -441,6 +349,10 @@ class API:
 
         For manual connection: nested API object are discouraged.
         """
+        # Disconnect request session
+        if self._api_request_session:
+            self._api_request_session.close()
+
         # Restore the previously active global API (might be None)
         global _global_cached_api
         _global_cached_api = self._previous_global_cached_api
@@ -475,259 +387,17 @@ class API:
         ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
         ... ) as api:
         ...    print(api.host)
-        https://api.criptapp.org/api/v1
+        https://api.criptapp.org
         """
         return self._host
 
-    def _check_initial_host_connection(self) -> None:
-        """
-        tries to create a connection with host and if the host does not respond or is invalid it raises an error
+    @property
+    def api_prefix(self):
+        return self._api_prefix
 
-        Raises
-        -------
-        CRIPTConnectionError
-            raised when the host does not give the expected response
-
-        Returns
-        -------
-        None
-        """
-        try:
-            pass
-        except Exception as exc:
-            raise CRIPTConnectionError(self.host, self._api_token) from exc
-
-    def _get_vocab(self) -> dict:
-        """
-        gets the entire CRIPT controlled vocabulary and stores it in _vocabulary
-
-        1. loops through all controlled vocabulary categories
-            1. if the category already exists in the controlled vocabulary then skip that category and continue
-            1. if the category does not exist in the `_vocabulary` dict,
-            then request it from the API and append it to the `_vocabulary` dict
-        1. at the end the `_vocabulary` should have all the controlled vocabulary and that will be returned
-
-           Examples
-           --------
-           The vocabulary looks like this
-           ```json
-           {'algorithm_key':
-                [
-                    {
-                    'description': "Velocity-Verlet integration algorithm. Parameters: 'integration_timestep'.",
-                    'name': 'velocity_verlet'
-                    },
-            }
-           ```
-        """
-
-        # loop through all vocabulary categories and make a request to each vocabulary category
-        # and put them all inside of self._vocab with the keys being the vocab category name
-        for category in VocabCategories:
-            if category in self._vocabulary:
-                continue
-
-            self._vocabulary[category.value] = self.get_vocab_by_category(category)
-
-        return self._vocabulary
-
-    @beartype
-    def get_vocab_by_category(self, category: VocabCategories) -> List[dict]:
-        """
-        get the CRIPT controlled vocabulary by category
-
-        Examples
-        --------
-        >>> import os
-        >>> import cript
-        >>> with cript.API(
-        ...     host="https://api.criptapp.org/",
-        ...     api_token=os.getenv("CRIPT_TOKEN"),
-        ...     storage_token=os.getenv("CRIPT_STORAGE_TOKEN")
-        ... ) as api:
-        ...     api.get_vocab_by_category(cript.VocabCategories.MATERIAL_IDENTIFIER_KEY)  # doctest: +SKIP
-
-        Parameters
-        ----------
-        category: str
-            category of
-
-        Returns
-        -------
-        List[dict]
-            list of JSON containing the controlled vocabulary
-        """
-
-        # check if the vocabulary category is already cached
-        if category.value in self._vocabulary:
-            return self._vocabulary[category.value]
-
-        vocabulary_category_url: str = f"{self.host}/cv/{category.value}/"
-
-        # if vocabulary category is not in cache, then get it from API and cache it
-        response: Dict = requests.get(url=vocabulary_category_url, timeout=_API_TIMEOUT).json()
-
-        if response["code"] != 200:
-            raise APIError(api_error=str(response), http_method="GET", api_url=vocabulary_category_url)
-
-        # add to cache
-        self._vocabulary[category.value] = response["data"]
-
-        return self._vocabulary[category.value]
-
-    @beartype
-    def _is_vocab_valid(self, vocab_category: VocabCategories, vocab_word: str) -> bool:
-        """
-        checks if the vocabulary is valid within the CRIPT controlled vocabulary.
-        Either returns True or InvalidVocabulary Exception
-
-        1. if the vocabulary is custom (starts with "+")
-            then it is automatically valid
-        2. if vocabulary is not custom, then it is checked against its category
-            if the word cannot be found in the category then it returns False
-
-        Parameters
-        ----------
-        vocab_category: VocabCategories
-            ControlledVocabularyCategories enums
-        vocab_word: str
-            the vocabulary word e.g. "CAS", "SMILES", "BigSmiles", "+my_custom_key"
-
-        Returns
-        -------
-        a boolean of if the vocabulary is valid
-
-        Raises
-        ------
-        InvalidVocabulary
-            If the vocabulary is invalid then the error gets raised
-        """
-
-        # check if vocab is custom
-        # This is deactivated currently, no custom vocab allowed.
-        if vocab_word.startswith("+"):
-            return True
-
-        # get the entire vocabulary
-        controlled_vocabulary = self._get_vocab()
-        # get just the category needed
-        controlled_vocabulary = controlled_vocabulary[vocab_category.value]
-
-        # TODO this can be faster with a dict of dicts that can do o(1) look up
-        #  looping through an unsorted list is an O(n) look up which is slow
-        # loop through the list
-        for vocab_dict in controlled_vocabulary:
-            # check the name exists within the dict
-            if vocab_dict.get("name") == vocab_word:
-                return True
-
-        raise InvalidVocabulary(vocab=vocab_word, possible_vocab=list(controlled_vocabulary))
-
-    def _get_db_schema(self) -> dict:
-        """
-        Sends a GET request to CRIPT to get the database schema and returns it.
-        The database schema can be used for validating the JSON request
-        before submitting it to CRIPT.
-
-        1. checks if the db schema is already set
-            * if already exists then it skips fetching it from the API and just returns what it already has
-        2. if db schema has not been set yet, then it fetches it from the API
-            * after getting it from the API it saves it in the `_schema` class variable,
-            so it can be easily and efficiently gotten next time
-        """
-
-        # check if db schema is already saved
-        if bool(self._db_schema):
-            return self._db_schema
-
-        # fetch db_schema from API
-        else:
-            # fetch db schema from API
-            response: requests.Response = requests.get(url=f"{self.host}/schema/", timeout=_API_TIMEOUT)
-
-            # raise error if not HTTP 200
-            response.raise_for_status()
-
-            # if no error, take the JSON from the API response
-            response_dict: Dict = response.json()
-
-            # get the data from the API JSON response
-            self._db_schema = response_dict["data"]
-            return self._db_schema
-
-    @beartype
-    def _is_node_schema_valid(self, node_json: str, is_patch: bool = False, force_validation: bool = False) -> Union[bool, None]:
-        """
-        checks a node JSON schema against the db schema to return if it is valid or not.
-
-        1. get db schema
-        1. convert node_json str to dict
-        1. take out the node type from the dict
-            1. "node": ["material"]
-        1. use the node type from dict to tell the db schema which node schema to validate against
-            1. Manipulates the string to be title case to work with db schema
-
-        Parameters
-        ----------
-        node_json: str
-            a node in JSON form string
-        is_patch: bool
-            a boolean flag checking if it needs to validate against `NodePost` or `NodePatch`
-
-        Notes
-        -----
-        This function does not take into consideration vocabulary validation.
-            For vocabulary validation please check `is_vocab_valid`
-
-        Raises
-        ------
-        CRIPTNodeSchemaError
-            in case a node is invalid
-
-        Returns
-        -------
-        bool
-            whether the node JSON is valid or not
-        """
-
-        # Fast exit without validation
-        if self.skip_validation and not force_validation:
-            return None
-
-        db_schema = self._get_db_schema()
-
-        node_type: str = _get_node_type_from_json(node_json=node_json)
-
-        node_dict = json.loads(node_json)
-
-        # logging out info to the terminal for the user feedback
-        # (improve UX because the program is currently slow)
-        log_message = f"Validating {node_type} graph..."
-        if force_validation:
-            log_message = "Forced: " + log_message + " if error occur, try setting `cript.API.skip_validation = False` for debugging."
-        else:
-            log_message += " (Can be disabled by setting `cript.API.skip_validation = True`.)"
-
-        self.logger.info(log_message)
-
-        # set the schema to test against http POST or PATCH of DB Schema
-        schema_http_method: str
-
-        if is_patch:
-            schema_http_method = "Patch"
-        else:
-            schema_http_method = "Post"
-
-        # set which node you are using schema validation for
-        db_schema["$ref"] = f"#/$defs/{node_type}{schema_http_method}"
-
-        try:
-            jsonschema.validate(instance=node_dict, schema=db_schema)
-        except jsonschema.exceptions.ValidationError as error:
-            raise CRIPTNodeSchemaError(node_type=node_dict["node"], json_schema_validation_error=str(error)) from error
-
-        # if validation goes through without any problems return True
-        return True
+    @property
+    def api_version(self):
+        return self._api_version
 
     def save(self, project: Project) -> None:
         """
@@ -794,7 +464,7 @@ class API:
 
             # This checks if the current node exists on the back end.
             # if it does exist we use `patch` if it doesn't `post`.
-            test_get_response: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, timeout=_API_TIMEOUT).json()
+            test_get_response: Dict = self._capsule_request(url_path=f"/{node.node_type_snake_case}/{str(node.uuid)}/", method="GET").json()
             patch_request = test_get_response["code"] == 200
 
             # TODO remove once get works properly
@@ -809,11 +479,19 @@ class API:
                 response = {"code": 200}
                 break
 
+            method = "POST"
+            url_path = f"/{node.node_type_snake_case}/"
             if patch_request:
-                response: Dict = requests.patch(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, data=json_data, timeout=_API_TIMEOUT).json()  # type: ignore
-            else:
-                response: Dict = requests.post(url=f"{self._host}/{node.node_type_snake_case}/", headers=self._http_headers, data=json_data, timeout=_API_TIMEOUT).json()  # type: ignore
+                method = "PATCH"
+                url_path += f"{str(node.uuid)}/"
 
+            response: Dict = self._capsule_request(url_path=url_path, method=method, data=json_data).json()  # type: ignore
+
+            # if node.node_type != "Project":
+            #     test_success: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, timeout=_API_TIMEOUT).json()
+            #     print("XYZ", json_data, save_values, response, test_success)
+
+            # print(json_data, patch_request, response, save_values)
             # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
             # Errors with this code, may be fixable
             if response["code"] in (400, 409):
@@ -828,7 +506,6 @@ class API:
                             raise CRIPTDuplicateNameError(response, json_data, exc) from exc
                     # Else just raise the exception as normal.
                     raise exc
-
                 save_values += returned_save_values
 
             # Handle errors from patching with too many attributes
@@ -841,12 +518,12 @@ class API:
             # Aka we did something to fix the occurring error
             if not save_values > old_save_values:
                 # TODO remove once get works properly
-                if not patch_request and response["code"] == 409 and response["error"].strip().startswith("Duplicate uuid:"):  # type: ignore
-                    duplicate_uuid = _get_uuid_from_error_message(response["error"])  # type: ignore
-                    if str(node.uuid) == duplicate_uuid:
-                        force_patch = True
-                        continue
-
+                if not patch_request:
+                    # and response["code"] == 409 and response["error"].strip().startswith("Duplicate uuid:"):  # type: ignore
+                    # duplicate_uuid = _get_uuid_from_error_message(response["error"])  # type: ignore
+                    # if str(node.uuid) == duplicate_uuid:
+                    force_patch = True
+                    continue
                 break
 
         if response["code"] != 200:
@@ -1027,7 +704,7 @@ class API:
         self,
         node_type: Any,
         search_mode: SearchModes,
-        value_to_search: Optional[str],
+        value_to_search: str = "",
     ) -> Paginator:
         """
         This method is used to perform search on the CRIPT platform.
@@ -1039,16 +716,15 @@ class API:
         --------
         ???+ Example "Search by Node Type"
             ```python
-            materials_paginator = cript_api.search(
+            materials_iterator = cript_api.search(
                 node_type=cript.Material,
                 search_mode=cript.SearchModes.NODE_TYPE,
-                value_to_search=None
             )
             ```
 
         ??? Example "Search by Contains name"
             ```python
-            contains_name_paginator = cript_api.search(
+            contains_name_iterator = cript_api.search(
                 node_type=cript.Process,
                 search_mode=cript.SearchModes.CONTAINS_NAME,
                 value_to_search="poly"
@@ -1057,7 +733,7 @@ class API:
 
         ??? Example "Search by Exact Name"
             ```python
-            exact_name_paginator = cript_api.search(
+            exact_name_iterator = cript_api.search(
                 node_type=cript.Project,
                 search_mode=cript.SearchModes.EXACT_NAME,
                 value_to_search="Sodium polystyrene sulfonate"
@@ -1066,7 +742,7 @@ class API:
 
         ??? Example "Search by UUID"
             ```python
-            uuid_paginator = cript_api.search(
+            uuid_iterator = cript_api.search(
                 node_type=cript.Collection,
                 search_mode=cript.SearchModes.UUID,
                 value_to_search="75fd3ee5-48c2-4fc7-8d0b-842f4fc812b7"
@@ -1075,7 +751,7 @@ class API:
 
         ??? Example "Search by BigSmiles"
             ```python
-            paginator = cript_api.search(
+            iterator = cript_api.search(
                 node_type=cript.Material,
                 search_mode=cript.SearchModes.BIGSMILES,
                 value_to_search="{[][$]CC(C)(C(=O)OCCCC)[$][]}"
@@ -1089,74 +765,54 @@ class API:
         search_mode : SearchModes
             Type of search you want to do. You can search by name, `UUID`, `EXACT_NAME`, etc.
             Refer to [valid search modes](../search_modes)
-        value_to_search : Optional[str]
+        value_to_search : str
             What you are searching for can be either a value, and if you are only searching for
             a `NODE_TYPE`, then this value can be empty or `None`
 
         Returns
         -------
         Paginator
-            paginator object for the user to use to flip through pages of search results
+            An iterator that will present and fetch the results to the user seamlessly
 
         Notes
         -----
         To learn more about working with pagination, please refer to our
         [paginator object documentation](../paginator).
-
-        Additionally, you can utilize the utility function
-        [`load_nodes_from_json(node_json)`](../../utility_functions/#cript.nodes.util.load_nodes_from_json)
-        to convert API JSON responses into Python SDK nodes.
-
-        ???+ Example "Convert API JSON Response to Python SDK Nodes"
-            ```python
-            # Get updated project from API
-            my_paginator = api.search(
-                node_type=cript.Project,
-                search_mode=cript.SearchModes.EXACT_NAME,
-                value_to_search="my project name",
-            )
-
-            # Take specific Project you want from paginator
-            my_project_from_api_dict: dict = my_paginator.current_page_results[0]
-
-            # Deserialize your Project dict into a Project node
-            my_project_node_from_api = cript.load_nodes_from_json(
-                nodes_json=json.dumps(my_project_from_api_dict)
-            )
-            ```
         """
 
         # get node typ from class
         node_type = node_type.node_type_snake_case
 
-        # always putting a page parameter of 0 for all search URLs
-        page_number = 0
-
         api_endpoint: str = ""
+        page_number: Union[int, None] = None
 
-        # requesting a page of some primary node
         if search_mode == SearchModes.NODE_TYPE:
-            api_endpoint = f"{self._host}/{node_type}"
+            api_endpoint = f"/search/{node_type}"
+            page_number = 0
 
         elif search_mode == SearchModes.CONTAINS_NAME:
-            api_endpoint = f"{self._host}/search/{node_type}"
+            api_endpoint = f"/search/{node_type}"
+            page_number = 0
 
         elif search_mode == SearchModes.EXACT_NAME:
-            api_endpoint = f"{self._host}/search/exact/{node_type}"
+            api_endpoint = f"/search/exact/{node_type}"
+            page_number = None
 
         elif search_mode == SearchModes.UUID:
-            api_endpoint = f"{self._host}/{node_type}/{value_to_search}"
+            api_endpoint = f"/{node_type}/{value_to_search}"
             # putting the value_to_search in the URL instead of a query
-            value_to_search = None
+            value_to_search = ""
+            page_number = None
 
         elif search_mode == SearchModes.BIGSMILES:
-            api_endpoint = f"{self._host}/search/bigsmiles/"
+            api_endpoint = "/search/bigsmiles/"
+            page_number = 0
 
         # error handling if none of the API endpoints got hit
         else:
             raise RuntimeError("Internal Error: Failed to recognize any search modes. Please report this bug on https://github.com/C-Accel-CRIPT/Python-SDK/issues.")
 
-        return Paginator(http_headers=self._http_headers, api_endpoint=api_endpoint, query=value_to_search, current_page_number=page_number)
+        return Paginator(api=self, url_path=api_endpoint, page_number=page_number, query=value_to_search)
 
     def delete(self, node) -> None:
         """
@@ -1168,13 +824,13 @@ class API:
         >>> import cript
         >>> my_material_node = cript.Material(
         ...     name="my component material 1",
-        ...     identifier=[{"amino_acid": "component 1 alternative name"}],
+        ...     names = ["component 1 alternative name"],
         ... )
         >>> api.delete(node=my_material_node) # doctest: +SKIP
 
         Notes
         -----
-        After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
+        After the node has been successfully deleted, a log is written to the terminal
 
         ```bash
         INFO: Deleted 'Material' with UUID of '80bfc642-157e-4692-a547-97c470725397' from CRIPT API.
@@ -1252,7 +908,7 @@ class API:
 
         Notes
         -----
-        After the node has been successfully deleted, a log is written to the terminal if `cript.API.verbose = True`
+        After the node has been successfully deleted, a log is written
 
         ```bash
         INFO: Deleted 'Material' with UUID of '80bfc642-157e-4692-a547-97c470725397' from CRIPT API.
@@ -1291,11 +947,56 @@ class API:
         -------
         None
         """
-        delete_node_api_url: str = f"{self._host}/{node_type.lower()}/{node_uuid}/"
 
-        response: Dict = requests.delete(headers=self._http_headers, url=delete_node_api_url, timeout=_API_TIMEOUT).json()
+        response: Dict = self._capsule_request(url_path=f"/{node_type.lower()}/{node_uuid}/", method="DELETE").json()
 
         if response["code"] != 200:
-            raise APIError(api_error=str(response), http_method="DELETE", api_url=delete_node_api_url)
+            raise APIError(api_error=str(response), http_method="DELETE", api_url=f"/{node_type.lower()}/{node_uuid}/")
 
         self.logger.info(f"Deleted '{node_type.title()}' with UUID of '{node_uuid}' from CRIPT API.")
+
+    def _capsule_request(self, url_path: str, method: str, api_request: bool = True, timeout: int = _API_TIMEOUT, **kwargs) -> requests.Response:
+        """Helper function that capsules every request call we make against the backend.
+
+        Please *always* use this methods instead of `requests` directly.
+        We can log all request calls this way, which can help debugging immensely.
+
+        Parameters
+        ----------
+        url_path:str
+          URL path that we want to request from. So every thing that follows api.host. You can omit the api prefix and api version if you use api_request=True they are automatically added.
+
+        method: str
+          One of `GET`, `OPTIONS`, `HEAD`, `POST`, `PUT, `PATCH`, or `DELETE` as this will directly passed to `requests.request(...)`. See https://docs.python-requests.org/en/latest/api/ for details.
+
+        headers: Dict
+          HTTPS headers to use for the request.
+          If None (default) use the once associated with this API object for authentication.
+
+        timeout:int
+          Time out to be used for the request call.
+
+        kwargs
+          additional keyword arguments that are passed to `request.request`
+        """
+
+        url: str = self.host
+        if api_request:
+            url += f"/{self.api_prefix}/{self.api_version}"
+        url += url_path
+
+        pre_log_message: str = f"Requesting {method} from {url}"
+        if self.extra_api_log_debug_info:
+            pre_log_message += f" from {traceback.format_stack(limit=4)} kwargs {kwargs}"
+        pre_log_message += "..."
+        self.logger.debug(pre_log_message)
+
+        if self._api_request_session is None:
+            raise CRIPTAPIRequiredError
+        response: requests.Response = self._api_request_session.request(url=url, method=method, timeout=timeout, **kwargs)
+        post_log_message: str = f"Request return with {response.status_code}"
+        if self.extra_api_log_debug_info:
+            post_log_message += f" {response.text}"
+        self.logger.debug(post_log_message)
+
+        return response

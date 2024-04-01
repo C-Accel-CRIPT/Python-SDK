@@ -74,9 +74,8 @@ class User(UUIDBaseNode):
             user ORCID
         """
         super().__init__(**kwargs)
-        self._json_attrs = replace(self._json_attrs, username=username, email=email, orcid=orcid)
-
-        self.validate()
+        new_json_attrs = replace(self._json_attrs, username=username, email=email, orcid=orcid)
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype

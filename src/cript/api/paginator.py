@@ -1,12 +1,12 @@
-from json import JSONDecodeError
-from typing import Dict, List, Optional, Union
+import json
+from typing import Dict, Union
 from urllib.parse import quote
 
 import requests
 from beartype import beartype
 
-from cript.api.api_config import _API_TIMEOUT
 from cript.api.exceptions import APIError
+from cript.nodes.util import load_nodes_from_json
 
 
 class Paginator:
@@ -14,45 +14,36 @@ class Paginator:
     Paginator is used to flip through different pages of data that the API returns when searching.
     > Instead of the user manipulating the URL and parameters, this object handles all of that for them.
 
-    When conducting any kind of search the API returns pages of data and each page contains 10 results.
-    This is equivalent to conducting a Google search when Google returns a limited number of links on the first page
-    and all other results are on the next pages.
+    Using the Paginator object, the user can simply and easily flip through the results of the search.
+    The details, that results are listed as pages are hidden from the user.
+    The pages are automatically requested from the API as needed.
 
-    Using the Paginator object, the user can simply and easily flip through the pages of data the API provides.
+    This object implements a python iterator, so `for node in Paginator` works as expected.
+    It will loop through all results of the search, returning the nodes one by one.
 
     !!! Warning "Do not create paginator objects"
         Please note that you are not required or advised to create a paginator object, and instead the
         Python SDK API object will create a paginator for you, return it, and let you simply use it
 
-
-    Attributes
-    ----------
-    current_page_results: List[dict]
-        List of JSON dictionary results returned from the API
-        ```python
-        [{result 1}, {result 2}, {result 3}, ...]
-        ```
     """
 
-    _http_headers: dict
-
-    api_endpoint: str
-
-    # if query or page number are None, then it means that api_endpoint does not allow for whatever that is None
-    # and that is not added to the URL
-    # by default the page_number and query are `None` and they can get filled in
-    query: Union[str, None]
-    _current_page_number: int
-
-    current_page_results: List[dict]
+    _url_path: str
+    _query: str
+    _initial_page_number: Union[int, None]
+    _current_position: int
+    _fetched_nodes: list
+    _number_fetched_pages: int = 0
+    _limit_page_fetches: Union[int, None] = None
+    _num_skip_pages: int = 0
+    auto_load_nodes: bool = True
 
     @beartype
     def __init__(
         self,
-        http_headers: dict,
-        api_endpoint: str,
-        query: Optional[str] = None,
-        current_page_number: int = 0,
+        api,
+        url_path: str,
+        page_number: Union[int, None],
+        query: str,
     ):
         """
         create a paginator
@@ -77,130 +68,55 @@ class Paginator:
         None
             instantiate a paginator
         """
-        self._http_headers = http_headers
-        self.api_endpoint = api_endpoint
-        self.query = query
-        self._current_page_number = current_page_number
+        self._api = api
+        self._initial_page_number = page_number
+        self._number_fetched_pages = 0
+        self._fetched_nodes = []
+        self._current_position = 0
 
         # check if it is a string and not None to avoid AttributeError
-        if api_endpoint is not None:
-            # strip the ending slash "/" to make URL uniform and any trailing spaces from either side
-            self.api_endpoint = api_endpoint.rstrip("/").strip()
+        try:
+            self._url_path = quote(url_path.rstrip("/").strip())
+        except Exception as exc:
+            raise RuntimeError(f"Invalid type for api_endpoint {self._url_path} for a paginator.") from exc
 
-        # check if it is a string and not None to avoid AttributeError
-        if query is not None:
-            # URL encode query
-            self.query = quote(query)
-
-        self.fetch_page_from_api()
-
-    def next_page(self):
-        """
-        flip to the next page of data.
-
-        Examples
-        --------
-        ```python
-        my_paginator.next_page()
-        ```
-        """
-        self.current_page_number += 1
-
-    def previous_page(self):
-        """
-        flip to the next page of data.
-
-        Examples
-        --------
-        ```python
-        my_paginator.previous_page()
-        ```
-        """
-        self.current_page_number -= 1
-
-    @property
-    @beartype
-    def current_page_number(self) -> int:
-        """
-        get the current page number that you are on.
-
-        Setting the page will take you to that specific page of results
-
-        Examples
-        --------
-        ```python
-        my_paginator.current_page = 10
-        ```
-
-        Returns
-        -------
-        current page number: int
-            the current page number of the data
-        """
-        return self._current_page_number
-
-    @current_page_number.setter
-    @beartype
-    def current_page_number(self, new_page_number: int) -> None:
-        """
-        flips to a specific page of data that has been requested
-
-        sets the current_page_number and then sends the request to the API and gets the results of this page number
-
-        Parameters
-        ----------
-        new_page_number (int): specific page of data that the user wants to go to
-
-        Examples
-        --------
-        requests.get("https://api.criptapp.org//api?page=2)
-        requests.get(f"{self.query}?page={self.current_page_number - 1}")
-
-        Raises
-        --------
-        InvalidPageRequest, in case the user tries to get a negative page or a page that doesn't exist
-        """
-        if new_page_number < 0:
-            error_message: str = f"Paginator current page number is invalid because it is negative: " f"{self.current_page_number} please set paginator.current_page_number " f"to a positive page number"
-
-            raise RuntimeError(error_message)
-
-        else:
-            self._current_page_number = new_page_number
-            # when new page number is set, it is then fetched from the API
-            self.fetch_page_from_api()
+        self._query = quote(query)
 
     @beartype
-    def fetch_page_from_api(self) -> List[dict]:
+    def _fetch_next_page(self) -> None:
         """
         1. builds the URL from the query and page number
         1. makes the request to the API
         1. API responds with a JSON that has data or JSON that has data and result
-            1. parses it and correctly sets the current_page_results property
+            1. parses the response
+            2. creates cript.Nodes from the response
+            3. Add the nodes to the fetched_data so the iterator can return them
 
         Raises
         ------
         InvalidSearchRequest
             In case the API responds with an error
+        StopIteration
+            In case there are no further results to fetch
+
 
         Returns
         -------
-        current page results: List[dict]
-            makes a request to the API and gets a page of data
+             None
         """
 
-        # temporary variable to not overwrite api_endpoint
-        temp_api_endpoint: str = self.api_endpoint
+        # Check if we are supposed to fetch more pages
+        if self._limit_page_fetches and self._number_fetched_pages >= self._limit_page_fetches:
+            raise StopIteration
 
-        if self.query is not None:
-            temp_api_endpoint = f"{temp_api_endpoint}/?q={self.query}"
+        # Composition of the query URL
+        temp_url_path: str = self._url_path
+        temp_url_path += f"/?q={self._query}"
+        if self._initial_page_number is not None:
+            temp_url_path += f"&page={self.page_number}"
+        self._number_fetched_pages += 1
 
-        elif self.query is None:
-            temp_api_endpoint = f"{temp_api_endpoint}/?q="
-
-        temp_api_endpoint = f"{temp_api_endpoint}&page={self.current_page_number}"
-
-        response: requests.Response = requests.get(url=temp_api_endpoint, headers=self._http_headers, timeout=_API_TIMEOUT)
+        response: requests.Response = self._api._capsule_request(url_path=temp_url_path, method="GET")
 
         # it is expected that the response will be JSON
         # try to convert response to JSON
@@ -210,23 +126,120 @@ class Paginator:
         # if converting API response to JSON gives an error
         # then there must have been an API error, so raise the requests error
         # this is to avoid bad indirect errors and make the errors more direct for users
-        except JSONDecodeError:
-            response.raise_for_status()
+        except json.JSONDecodeError as json_exc:
+            try:
+                response.raise_for_status()
+            except Exception as exc:
+                raise exc from json_exc
 
         # handling both cases in case there is result inside of data or just data
         try:
-            self.current_page_results = api_response["data"]["result"]
+            current_page_results = api_response["data"]["result"]
         except KeyError:
-            self.current_page_results = api_response["data"]
+            current_page_results = api_response["data"]
         except TypeError:
-            self.current_page_results = api_response["data"]
+            current_page_results = api_response["data"]
 
         if api_response["code"] == 404 and api_response["error"] == "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.":
-            self.current_page_results = []
-            return self.current_page_results
-
+            current_page_results = []
+            self._api.logger.debug(f"The paginator hit a 404 HTTP for requesting this {temp_url_path} with GET. We interpret it as no nodes present, but this is brittle at the moment.")
         # if API response is not 200 raise error for the user to debug
-        if api_response["code"] != 200:
-            raise APIError(api_error=str(response.json()), http_method="GET", api_url=temp_api_endpoint)
+        elif api_response["code"] != 200:
+            raise APIError(api_error=str(response.json()), http_method="GET", api_url=temp_url_path)
 
-        return self.current_page_results
+        # Here we only load the JSON into the temporary results.
+        # This delays error checking, and allows users to disable auto node conversion
+        json_list = current_page_results
+        self._fetched_nodes += json_list
+
+    def __next__(self):
+        if self._current_position >= len(self._fetched_nodes):
+            # Without a page number argument, we can only fetch once.
+            if self._initial_page_number is None and self._number_fetched_pages > 0:
+                raise StopIteration
+            self._fetch_next_page()
+
+        try:
+            next_node_json = self._fetched_nodes[self._current_position - 1]
+        except IndexError:  # This is not a random access iteration.
+            # So if fetching a next page wasn't enough to get the index inbound,
+            # The iteration stops
+            raise StopIteration
+
+        if self.auto_load_nodes:
+            return_data = load_nodes_from_json(next_node_json)
+        else:
+            return_data = next_node_json
+
+        # Advance position last, so if an exception occurs, for example when
+        # node decoding fails, we do not advance, and users can try again without decoding
+        self._current_position += 1
+
+        return return_data
+
+    def __iter__(self):
+        self._current_position = 0
+        return self
+
+    @property
+    def page_number(self) -> Union[int, None]:
+        """Obtain the current page number the paginator is fetching next.
+
+        Returns
+        -------
+        int
+          positive number of the next page this paginator is fetching.
+        None
+          if no page number is associated with the pagination
+        """
+        page_number = self._num_skip_pages + self._number_fetched_pages
+        if self._initial_page_number is not None:
+            page_number += self._initial_page_number
+        return page_number
+
+    @beartype
+    def limit_page_fetches(self, max_num_pages: Union[int, None]) -> None:
+        """Limit pagination to a maximum number of pages.
+
+        This can be used for very large searches with the paginator, so the search can be split into
+        smaller portions.
+
+        Parameters
+        ----------
+        max_num_pages: Union[int, None],
+          positive integer with maximum number of page fetches.
+          or None, indicating unlimited number of page fetches are permitted.
+        """
+        self._limit_page_fetches = max_num_pages
+
+    def skip_pages(self, skip_pages: int) -> int:
+        """Skip pages in the pagination.
+
+        Warning this function is advanced usage and may not produce the results you expect.
+        In particular, every search is different, even if we search for the same values there is
+        no guarantee that the results are in the same order. (And results can change if data is
+        added or removed from CRIPT.) So if you break up your search with `limit_page_fetches` and
+        `skip_pages` there is no guarantee that it is the same as one continuous search.
+        If the paginator associated search does not accept pages, there is no effect.
+
+        Parameters
+        ----------
+        skip_pages:int
+          Number of pages that the paginator skips now before fetching the next page.
+          The parameter is added to the internal state, so repeated calls skip more pages.
+
+        Returns
+        -------
+        int
+          The number this paginator is skipping. Internal skip count.
+
+        Raises
+        ------
+        RuntimeError
+          If the total number of skipped pages is negative.
+        """
+        num_skip_pages = self._num_skip_pages + skip_pages
+        if self._num_skip_pages < 0:
+            RuntimeError(f"Invalid number of skipped pages. The total number of pages skipped is negative {num_skip_pages}, requested to skip {skip_pages}.")
+        self._num_skip_pages = num_skip_pages
+        return self._num_skip_pages

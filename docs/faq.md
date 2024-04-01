@@ -55,7 +55,7 @@ tab for developer documentation._
 
 **Q:** Is there documentation detailing the internal workings of the code?
 
-**A:** _Absolutely! For an in-depth look at the CRIPT Python SDK code, 
+**A:** _Absolutely! For an in-depth look at the CRIPT Python SDK code,
 consult the [GitHub repository wiki internal documentation](https://github.com/C-Accel-CRIPT/Python-SDK/wiki)._
 
 ---
@@ -84,7 +84,7 @@ A GitHub account is required._
 
 **Q:** Where can I find the release notes for each SDK version?
 
-**A:** _The release notes can be found on our 
+**A:** _The release notes can be found on our
 [CRIPT Python SDK repository releases section](https://github.com/C-Accel-CRIPT/Python-SDK/releases)_
 
 ---
@@ -96,6 +96,55 @@ the code is written to get a better grasp of it?
 [CRIPT Python SDK Wiki](https://github.com/C-Accel-CRIPT/Python-SDK/wiki).
 There you will find documentation on everything from how our code is structure,
 how we aim to write our documentation, CI/CD, and more._
+
+---
+
+**Q:** What can I do, when my `api.search(...)` fails with a `cript.nodes.exception.CRIPTJsonDeserializationError` or similar?
+
+**A:** _There is a solution for you. Sometimes CRIPT can contain nodes formatted in a way that the Python SDK does not understand. We can disable the automatic conversion from the API response into SDK nodes. Here is an example of how to achieve this:
+```python
+# Create API object in with statement, here it assumes host, token, and storage token are in your environment variables
+with cript.API() as api:
+    # Find the paginator object, which is a python iterator over the search results.
+    materials_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE)
+    # Usually you would do
+    # `materials_list = list(materials_paginator)`
+    # or
+    # for node in materials_paginator:
+    #    #do node stuff
+    # But now we want more control over the iteration to ignore failing node decoding.
+    # And store the result in a list of valid nodes
+    materials_list = []
+    # We use a while True loop to iterate over the results
+    while True:
+        # This first try catches, when we reach the end of the search results.
+	# The `next()` function raises a StopIteration exception in that case
+        try:
+	    # First we try to convert the current response into a node directly
+            try:
+                material_node = next(materials_paginator)
+	    # But if that fails, we catch the exception from CRIPT
+            except cript.CRIPTException as exc:
+                # In case of failure, we disable the auto_load_function temporarily
+                materials_paginator.auto_load_nodes = False
+		# And only obtain the unloaded node JSON instead
+                material_json = next(materials_paginator)
+		# Here you can inspect and manually handle the problem.
+		# In the example, we just print it and ignore it otherwise
+		print(exc, material_json)
+            else:
+		# After a valid node is loaded (try block didn't fail)
+		# we store the valid node in the list
+                materials_list += [material_node]
+            finally:
+	        # No matter what happened, for the next iteration we want to try to obtain
+		# an auto loaded node again, so we reset the paginator state.
+                materials_paginator.auto_load_nodes = True
+        except StopIteration:
+	    # If next() of the paginator indicates an end of the search results, break the loop
+            break
+```
+
 
 _We try to also have type hinting, comments, and docstrings for all the code that we work on so it is clear and easy for anyone reading it to easily understand._
 

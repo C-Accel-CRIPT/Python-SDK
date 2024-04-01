@@ -4,7 +4,7 @@ import json
 import re
 import uuid
 from abc import ABC
-from dataclasses import asdict, dataclass, replace
+from dataclasses import dataclass, replace
 from typing import Dict, List, Optional, Set
 
 from cript.nodes.exceptions import (
@@ -12,6 +12,7 @@ from cript.nodes.exceptions import (
     CRIPTExtraJsonAttributes,
     CRIPTJsonSerializationError,
 )
+from cript.nodes.node_iterator import NodeIterator
 
 tolerated_extra_json = []
 
@@ -102,7 +103,7 @@ class BaseNode(ABC):
         str
             A string representation of the node.
         """
-        return str(asdict(self._json_attrs))
+        return str(self._json_attrs)
 
     @property
     def uid(self):
@@ -154,7 +155,7 @@ class BaseNode(ABC):
 
         if api is None:
             api = _get_global_cached_api()
-        api._is_node_schema_valid(self.get_json(is_patch=is_patch).json, is_patch=is_patch, force_validation=force_validation)
+        api.schema.is_node_schema_valid(self.get_json(is_patch=is_patch).json, is_patch=is_patch, force_validation=force_validation)
 
     @classmethod
     def _from_json(cls, json_dict: dict):
@@ -179,20 +180,13 @@ class BaseNode(ABC):
             if field_name not in arguments:
                 arguments[field_name] = getattr(default_dataclass, field_name)
 
-        # If a node with this UUID already exists, we don't create a new node.
-        # Instead we use the existing node from the cache and just update it.
-        from cript.nodes.uuid_base import UUIDBaseNode
-
-        if "uuid" in json_dict and json_dict["uuid"] in UUIDBaseNode._uuid_cache:
-            node = UUIDBaseNode._uuid_cache[json_dict["uuid"]]
-        else:  # Create a new node
-            try:
-                node = cls(**arguments)
-            # TODO we should not catch all exceptions if we are handling them, and instead let it fail
-            #  to create a good error message that points to the correct place that it failed to make debugging easier
-            except Exception as exc:
-                print(cls, arguments)
-                raise exc
+        try:
+            node = cls(**arguments)
+        # TODO we should not catch all exceptions if we are handling them, and instead let it fail
+        #  to create a good error message that points to the correct place that it failed to make debugging easier
+        except Exception as exc:
+            print(cls, arguments)
+            raise exc
 
         attrs = cls.JsonAttributes(**arguments)
 
@@ -207,12 +201,15 @@ class BaseNode(ABC):
                 attrs = replace(attrs, uid="_:" + attrs.uid)
         except AttributeError:
             pass
+
         # But here we force even usually unwritable fields to be set.
         node._update_json_attrs_if_valid(attrs)
 
         return node
 
     def __deepcopy__(self, memo):
+        from cript.nodes.util.core import get_uuid_from_uid
+
         # Ideally I would call `asdict`, but that is not allowed inside a deepcopy chain.
         # Making a manual transform into a dictionary here.
         arguments = {}
@@ -224,6 +221,8 @@ class BaseNode(ABC):
         # a new uid will prompt the creation of a new matching uuid.
         uid = get_new_uid()
         arguments["uid"] = uid
+        if "uuid" in arguments:
+            arguments["uuid"] = get_uuid_from_uid(uid)
 
         # Create node and init constructor attributes
         node = self.__class__(**arguments)
@@ -244,7 +243,7 @@ class BaseNode(ABC):
         from cript.api.api import _get_global_cached_api
 
         api = _get_global_cached_api()
-        api._is_node_schema_valid(json_string, force_validation=True)
+        api.schema.is_node_schema_valid(json_string, force_validation=True)
 
         return json_string
 
@@ -293,10 +292,10 @@ class BaseNode(ABC):
         >>> my_project = cript.Project(name=f"my_Project")
         >>> my_collection = cript.Collection(name="my collection")
         >>> my_material_1 = cript.Material(
-        ...     name="my material 1", identifier=[{"bigsmiles": "my material 1 bigsmiles"}]
+        ...     name="my material 1", bigsmiles = "my material 1 bigsmiles"
         ... )
         >>> my_material_2 = cript.Material(
-        ...     name="my material 2", identifier=[{"bigsmiles": "my material 2 bigsmiles"}]
+        ...     name="my material 2", bigsmiles = "my material 2 bigsmiles"
         ... )
         >>> my_inventory = cript.Inventory(
         ...     name="my inventory", material=[my_material_1, my_material_2]
@@ -439,6 +438,7 @@ class BaseNode(ABC):
         @dataclass(frozen=True)
         class ReturnTuple:
             json: str
+            json_dict: dict
             handled_ids: set
 
         # Do not check for circular references, since we handle them manually
@@ -463,7 +463,12 @@ class BaseNode(ABC):
         NodeEncoder.condense_to_uuid = condense_to_uuid
 
         try:
-            return ReturnTuple(json.dumps(self, cls=NodeEncoder, **kwargs), NodeEncoder.handled_ids)
+            tmp_json = json.dumps(self, cls=NodeEncoder, **kwargs)
+            tmp_dict = json.loads(tmp_json)
+            if is_patch:
+                del tmp_dict["uuid"]  # patches do not allow UUID is the parent most node
+
+            return ReturnTuple(json.dumps(tmp_dict, **kwargs), tmp_dict, NodeEncoder.handled_ids)
         except Exception as exc:
             # TODO this handling that doesn't tell the user what happened and how they can fix it
             #   this just tells the user that something is wrong
@@ -511,10 +516,10 @@ class BaseNode(ABC):
         >>> my_project = cript.Project(name=f"my_Project")
         >>> my_collection = cript.Collection(name="my collection")
         >>> my_material_1 = cript.Material(
-        ...     name="my material 1", identifier=[{"bigsmiles": "my material 1 bigsmiles"}]
+        ...     name="my material 1", bigsmiles = "my material 1 bigsmiles"
         ... )
         >>> my_material_2 = cript.Material(
-        ...     name="my material 2", identifier=[{"bigsmiles": "my material 2 bigsmiles"}]
+        ...     name="my material 2", bigsmiles = "my material 2 bigsmiles"
         ... )
         >>> my_inventory = cript.Inventory(
         ...     name="my inventory", material=[my_material_1, my_material_2]
@@ -597,40 +602,18 @@ class BaseNode(ABC):
         if handled_nodes is None:
             handled_nodes = []
 
-        # Protect against cycles in graph, by handling every instance of a node only once
-        if self in handled_nodes:
-            return []
-        handled_nodes += [self]
-
         found_children = []
 
-        # In this search we include the calling node itself.
-        # We check for this node if all specified attributes are present by counting them (AND condition).
-        found_attr = 0
-        for key, value in search_attr.items():
-            if is_attr_present(self, key, value):
-                found_attr += 1
-        # If exactly all attributes are found, it matches the search criterion
-        if found_attr == len(search_attr):
-            found_children += [self]
+        node_iterator = NodeIterator(self, search_depth)
+        for node in node_iterator:
+            found_attr = 0
+            for key, value in search_attr.items():
+                if is_attr_present(node, key, value):
+                    found_attr += 1
+            # If exactly all attributes are found, it matches the search criterion
+            if found_attr == len(search_attr):
+                found_children += [node]
 
-        # Recursion according to the recursion depth for all node children.
-        if search_depth != 0:
-            # Loop over all attributes, runtime contribution (none, or constant (max number of attributes of a node)
-            for field in self._json_attrs.__dataclass_fields__:
-                value = getattr(self._json_attrs, field)
-                # To save code paths, I convert non-lists into lists with one element.
-                if not isinstance(value, list):
-                    value = [value]
-                # Run time contribution: number of elements in the attribute list.
-                for v in value:
-                    try:  # Try every attribute for recursion (duck-typing)
-                        found_children += v.find_children(search_attr, search_depth - 1, handled_nodes=handled_nodes)
-                    except AttributeError:
-                        pass
-        # Total runtime, of non-recursive call: O(m*h) + O(k) where k is the number of children for this node,
-        #   h being the depth of the search dictionary, m being the number of nodes in the attribute list.
-        # Total runtime, with recursion: O(n*(k+m*h). A full graph traversal O(n) with a cost per node, that scales with the number of children per node and the search depth of the search dictionary.
         return found_children
 
     def remove_child(self, child) -> bool:

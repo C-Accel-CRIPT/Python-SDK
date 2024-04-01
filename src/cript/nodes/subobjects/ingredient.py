@@ -5,6 +5,7 @@ from beartype import beartype
 
 from cript.nodes.primary_nodes.material import Material
 from cript.nodes.subobjects.quantity import Quantity
+from cript.nodes.util.json import UIDProxy
 from cript.nodes.uuid_base import UUIDBaseNode
 
 
@@ -65,22 +66,21 @@ class Ingredient(UUIDBaseNode):
 
     @dataclass(frozen=True)
     class JsonAttributes(UUIDBaseNode.JsonAttributes):
-        material: Optional[Material] = None
-        quantity: List[Quantity] = field(default_factory=list)
+        material: Optional[Union[Material, UIDProxy]] = None
+        quantity: List[Union[Quantity, UIDProxy]] = field(default_factory=list)
         keyword: List[str] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
     @beartype
-    def __init__(self, material: Material, quantity: List[Quantity], keyword: Optional[List[str]] = None, **kwargs):
+    def __init__(self, material: Union[Material, UIDProxy], quantity: List[Union[Quantity, UIDProxy]], keyword: Optional[List[str]] = None, **kwargs):
         """
         create an ingredient sub-object
 
         Examples
         --------
         >>> import cript
-        >>> my_identifier = [{"bigsmiles": "123456"}]
-        >>> my_material = cript.Material(name="my material", identifier=my_identifier)
+        >>> my_material = cript.Material(name="my material", bigsmiles="my bigsmiles")
         >>> my_quantity = cript.Quantity(
         ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
         ... )
@@ -106,8 +106,8 @@ class Ingredient(UUIDBaseNode):
         super().__init__(**kwargs)
         if keyword is None:
             keyword = []
-        self._json_attrs = replace(self._json_attrs, material=material, quantity=quantity, keyword=keyword)
-        self.validate()
+        new_json_attrs = replace(self._json_attrs, material=material, quantity=quantity, keyword=keyword)
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @classmethod
     def _from_json(cls, json_dict: dict):
@@ -118,7 +118,7 @@ class Ingredient(UUIDBaseNode):
 
     @property
     @beartype
-    def material(self) -> Union[Material, None]:
+    def material(self) -> Union[Material, None, UIDProxy]:
         """
         current material in this ingredient sub-object
 
@@ -131,7 +131,7 @@ class Ingredient(UUIDBaseNode):
 
     @property
     @beartype
-    def quantity(self) -> List[Quantity]:
+    def quantity(self) -> List[Union[Quantity, UIDProxy]]:
         """
         quantity for the ingredient sub-object
 
@@ -143,14 +143,14 @@ class Ingredient(UUIDBaseNode):
         return self._json_attrs.quantity.copy()
 
     @beartype
-    def set_material(self, new_material: Material, new_quantity: List[Quantity]) -> None:
+    def set_material(self, new_material: Union[Material, UIDProxy], new_quantity: List[Union[Quantity, UIDProxy]]) -> None:
         """
         update ingredient sub-object with new material and new list of quantities
 
         Examples
         --------
         >>> import cript
-        >>> my_material = cript.Material(name="my material", identifier=[{"bigsmiles": "123456"}])
+        >>> my_material = cript.Material(name="my material", bigsmiles = "123456")
         >>> my_quantity = cript.Quantity(
         ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
         ... )
@@ -158,7 +158,7 @@ class Ingredient(UUIDBaseNode):
         ...     material=my_material, quantity=[my_quantity], keyword=["catalyst"]
         ... )
         >>> my_new_material = cript.Material(
-        ...     name="my material", identifier=[{"bigsmiles": "78910"}]
+        ...     name="my material", bigsmiles = "78910"
         ... )
         >>> my_new_quantity = cript.Quantity(
         ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
@@ -189,7 +189,7 @@ class Ingredient(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_material = cript.Material(name="my material", identifier=[{"bigsmiles": "123456"}])
+        >>> my_material = cript.Material(name="my material", bigsmiles = "123456")
         >>> my_quantity = cript.Quantity(
         ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
         ... )

@@ -1,9 +1,10 @@
 from dataclasses import dataclass, field, replace
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
+from cript.nodes.util.json import UIDProxy
 
 
 class ComputationProcess(PrimaryBaseNode):
@@ -113,13 +114,13 @@ class ComputationProcess(PrimaryBaseNode):
 
         type: str = ""
         # TODO add proper typing in future, using Any for now to avoid circular import error
-        input_data: List[Any] = field(default_factory=list)
-        output_data: List[Any] = field(default_factory=list)
-        ingredient: List[Any] = field(default_factory=list)
-        software_configuration: List[Any] = field(default_factory=list)
-        condition: List[Any] = field(default_factory=list)
-        property: List[Any] = field(default_factory=list)
-        citation: List[Any] = field(default_factory=list)
+        input_data: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        output_data: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        ingredient: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        software_configuration: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        condition: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        property: List[Union[Any, UIDProxy]] = field(default_factory=list)
+        citation: List[Union[Any, UIDProxy]] = field(default_factory=list)
 
     _json_attrs: JsonAttributes = JsonAttributes()
 
@@ -128,13 +129,13 @@ class ComputationProcess(PrimaryBaseNode):
         self,
         name: str,
         type: str,
-        input_data: List[Any],
-        ingredient: List[Any],
-        output_data: Optional[List[Any]] = None,
-        software_configuration: Optional[List[Any]] = None,
-        condition: Optional[List[Any]] = None,
-        property: Optional[List[Any]] = None,
-        citation: Optional[List[Any]] = None,
+        input_data: List[Union[Any, UIDProxy]],
+        ingredient: List[Union[Any, UIDProxy]],
+        output_data: Optional[List[Union[Any, UIDProxy]]] = None,
+        software_configuration: Optional[List[Union[Any, UIDProxy]]] = None,
+        condition: Optional[List[Union[Any, UIDProxy]]] = None,
+        property: Optional[List[Union[Any, UIDProxy]]] = None,
+        citation: Optional[List[Union[Any, UIDProxy]]] = None,
         notes: str = "",
         **kwargs
     ):
@@ -154,7 +155,7 @@ class ComputationProcess(PrimaryBaseNode):
         >>> input_data = cript.Data(name="my data name", type="afm_amp", file=[data_files])
         >>> my_material = cript.Material(
         ...     name="my material",
-        ...     identifier=[{"alternative_names": "my material alternative name"}]
+        ...     names = ["my material alternative name"]
         ... )
         >>> my_quantity = cript.Quantity(key="mass", value=1.23, unit="kg")
         >>> ingredient = cript.Ingredient(
@@ -220,7 +221,7 @@ class ComputationProcess(PrimaryBaseNode):
         if citation is None:
             citation = []
 
-        self._json_attrs = replace(
+        new_json_attrs = replace(
             self._json_attrs,
             type=type,
             input_data=input_data,
@@ -231,8 +232,7 @@ class ComputationProcess(PrimaryBaseNode):
             property=property,
             citation=citation,
         )
-
-        # self.validate()
+        self._update_json_attrs_if_valid(new_json_attrs)
 
     @property
     @beartype
@@ -369,7 +369,7 @@ class ComputationProcess(PrimaryBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_material = cript.Material(name="my material", identifier=[{"bigsmiles": "123456"}])
+        >>> my_material = cript.Material(name="my material", bigsmiles = "my bigsmiles")
         >>> my_quantity = cript.Quantity(
         ...     key="mass", value=11.2, unit="kg", uncertainty=0.2, uncertainty_type="stdev"
         ... )

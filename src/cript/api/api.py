@@ -31,6 +31,9 @@ from cript.api.utils.save_helper import (
 from cript.api.utils.web_file_downloader import download_file_from_url
 from cript.api.valid_search_modes import SearchModes
 from cript.nodes.primary_nodes.project import Project
+from cript.nodes.util import load_nodes_from_json
+
+# from cript.nodes.core import Project
 
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.
@@ -45,6 +48,25 @@ def _get_global_cached_api():
     if _global_cached_api is None:
         raise CRIPTAPIRequiredError()
     return _global_cached_api
+
+
+class LastModifiedDict(dict):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._order = list(self.keys())
+
+    def __setitem__(self, key, value):
+        super().__setitem__(key, value)
+        if key in self._order:
+            self._order.remove(key)
+        self._order.append(key)
+
+    def keys_sorted_by_last_modified(self):
+        order = []
+        for key in self._order:
+            if key in self:
+                order.append(key)
+        return order
 
 
 class API:
@@ -403,6 +425,76 @@ class API:
         return self._api_version
 
     def save(self, project: Project) -> None:
+        # Member function of API
+        ################################################################################
+
+        # In this mockup, we can't actually do the search:
+        # print("old_node_paginator = self.search(node_type=cript.Project, search_mode=cript.SearchModes.UUID, value_to_search=project)")
+        # print("old_node_paginator.auto_load_nodes = False")
+
+        # node_type=cript.Project this needs to be dynamically loaded with locals ?
+
+        old_node_paginator = self.search(node_type=Project, search_mode=SearchModes.UUID, value_to_search=project)
+        old_node_paginator.auto_load_nodes = False
+        try:
+            # print("old_node_json = next(old_node_paginator)")
+
+            # # Just for this mock-up we load from the file instead
+            # with open("new_project.json") as json_handle:
+            #     old_node_json = json_handle.read()
+            old_node_json = next(old_node_paginator)
+
+        except StopIteration:  # New Project do POST instead
+            # Do the POST request call.
+            return  # Return here, since we are done after Posting
+
+        # This is where a patch is needed
+
+        # Load the project in a separate cache
+        # old_project, old_uuid_map = cript.load_nodes_from_json(nodes_json=old_node_json, _use_uuid_cache={})
+        old_project, old_uuid_map = load_nodes_from_json(nodes_json=old_node_json, _use_uuid_cache={})
+
+        # Check if there is any difference between old and new.
+        # if project.deep_equal(project, old_project):
+        if project.deep_equal(old_project):
+            return  # No save necessary, since nothing changed
+
+        delete_uuid = []
+
+        patch_map = LastModifiedDict()
+
+        # Iterate the new project in DFS
+        for node in project:
+            try:
+                old_node = old_uuid_map[node.uuid]
+            except KeyError:
+                # This node only exists in the new new project,
+                # But it has a parent, that will patch it in, so we don't need to do anything
+                pass
+
+            # Let's see if we need to delete any children, that existed in the old node, but don't exit in the new node.
+            node_child_map = {child.uuid: child for child in node.find_children({}, search_depth=1)}
+            old_child_map = {child.uuid: child for child in old_node.find_children({}, search_depth=1)}
+            for old_uuid in old_child_map:
+                if old_uuid not in node_child_map:
+                    if old_uuid not in delete_uuid:
+                        delete_uuid += [old_uuid]
+
+            # Next we check if the current new node needs a patch
+            # like # project.deep_equal(old_project) or shallow_equal(node, old_node):
+            if not node.shallow_equal(old_node):
+                patch_map[node.uuid] = node
+
+        for uuid in reversed(patch_map.keys_sorted_by_last_modified()):
+            node = patch_map[uuid]
+            print(f"Doing API PATCH for {node.uuid}")
+
+        for uuid in delete_uuid:
+            print(f"Doing API Delete for {uuid}")
+
+    ################################################################################
+
+    def save_new(self, project: Project) -> None:
         """
         This method takes a project node, serializes the class into JSON
         and then sends the JSON to be saved to the API.

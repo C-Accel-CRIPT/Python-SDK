@@ -104,7 +104,7 @@ def test_integration_project(cript_api, simple_project_node):
 @pytest.mark.skip(reason="api, and we overrode save_new to save ")
 def test_save_project_change_material(cript_api, simple_project_node, complex_project_node):
     """
-    WIP still
+
     pytest nodes/primary_nodes/test_project.py::test_save_project_change_material
     """
 
@@ -118,7 +118,7 @@ def test_save_project_change_material(cript_api, simple_project_node, complex_pr
 
     proj0 = copy.deepcopy(complex_project_node)
     proj_json = proj0.get_expanded_json()  # .get_json().json
-    cript_api.save_new(proj0)
+    cript_api.save(proj0)
 
     print("---- finished save --- now load node")
 
@@ -139,7 +139,7 @@ def test_save_project_change_material(cript_api, simple_project_node, complex_pr
     # Delete a node
     proj_loaded.material[0].property = []
 
-    cript_api.save_new(proj_loaded)
+    cript_api.save(proj_loaded)
 
     # now we need to reload the test in
 

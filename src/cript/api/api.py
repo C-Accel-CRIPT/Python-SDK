@@ -11,6 +11,7 @@ import boto3
 import requests
 from beartype import beartype
 
+import cript.nodes.primary_nodes as PrimaryNodes
 from cript.api.api_config import _API_TIMEOUT
 from cript.api.data_schema import DataSchema
 from cript.api.exceptions import (
@@ -30,10 +31,9 @@ from cript.api.utils.save_helper import (
 )
 from cript.api.utils.web_file_downloader import download_file_from_url
 from cript.api.valid_search_modes import SearchModes
+from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
 from cript.nodes.util import load_nodes_from_json
-
-# from cript.nodes.core import Project
 
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.
@@ -424,7 +424,8 @@ class API:
     def api_version(self):
         return self._api_version
 
-    def save(self, project: Project) -> None:
+    # def save(self, project: Project) -> None: #changed bc we need it to be node agnostic
+    def save(self, new_node: PrimaryBaseNode) -> None:
         # Member function of API
         ################################################################################
 
@@ -432,9 +433,17 @@ class API:
         # print("old_node_paginator = self.search(node_type=cript.Project, search_mode=cript.SearchModes.UUID, value_to_search=project)")
         # print("old_node_paginator.auto_load_nodes = False")
 
-        # node_type=cript.Project this needs to be dynamically loaded with locals ?
+        # node_type=Project this needs to be dynamically loaded with locals ?
 
-        old_node_paginator = self.search(node_type=Project, search_mode=SearchModes.UUID, value_to_search=str(project.uuid))
+        # NOTE: Needed to make it node agnostic
+        node_class_name = new_node.node_type.capitalize()
+        NodeClass = getattr(PrimaryNodes, node_class_name)
+
+        # print(node_class_name)
+        # print(NodeClass)
+        # print("----------+++++-----------")
+
+        old_node_paginator = self.search(node_type=NodeClass, search_mode=SearchModes.UUID, value_to_search=str(new_node.uuid))
         old_node_paginator.auto_load_nodes = False
         try:
             # print("old_node_json = next(old_node_paginator)")
@@ -445,15 +454,17 @@ class API:
             old_node_json = next(old_node_paginator)
 
         except StopIteration:  # New Project do POST instead
+            # Do the POST request call. only on project
+            # or else its a patch handled by previous node
 
-            # Do the POST request call.
-            data = project.get_json().json
+            # if new_node.node_type == "project"
+            data = new_node.get_json().json
             response = self._capsule_request(url_path="/project/", method="POST", data=data)
             print("----700----")
             print(response.json)
             return  # Return here, since we are done after Posting
 
-        # This is where a patch is needed
+        # This is where a patch is needed (we do it below)
 
         # Load the project in a separate cache
         # old_project, old_uuid_map = cript.load_nodes_from_json(nodes_json=old_node_json, _use_uuid_cache={})
@@ -461,7 +472,8 @@ class API:
 
         # Check if there is any difference between old and new.
         # if project.deep_equal(project, old_project):
-        if project.deep_equal(old_project):
+
+        if new_node.deep_equal(old_project):
             return  # No save necessary, since nothing changed
 
         delete_uuid = []
@@ -469,7 +481,7 @@ class API:
         patch_map = LastModifiedDict()
 
         # Iterate the new project in DFS
-        for node in project:
+        for node in new_node:
             try:
                 old_node = old_uuid_map[node.uuid]
             except KeyError:
@@ -490,19 +502,25 @@ class API:
             if not node.shallow_equal(old_node):
                 patch_map[node.uuid] = node
 
-        url_path = f"/{self.node_type}/{self.uuid}"
+        # now patch and delete
+
+        # here its project but really it should be a primary base node
+
+        url_path = f"/{new_node.node_type}/{new_node.uuid}"
+        print("url_path")
+        print(url_path)
+
         for uuid_ in reversed(patch_map.keys_sorted_by_last_modified()):
             node = patch_map[uuid_]
 
-            # patch capsule request goes here, we are going down the list in reversed order
             print(f"Doing API PATCH for {node.uuid}")
             # either link if found or patch json to parent
-            data = node.get_jason().json
+            data = node.get_json().json
+            # first level serach will also include attributes?
             self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(data))
 
         for uuid_ in delete_uuid:
-            # do the delete
-            #  *unlinking here
+            # do the delete  *unlinking here
             # actually here we are able to send list of uuids to be deleted - optimize later
             print(f"Doing API Delete for {uuid_}")
             unlink_payload = {"uuid": str(uuid_)}

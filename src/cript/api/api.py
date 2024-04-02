@@ -516,7 +516,7 @@ class API:
             print(f"Doing API PATCH for {node.uuid}")
             # either link if found or patch json to parent
             data = node.get_json().json
-            # first level serach will also include attributes?
+            # first level search will also include attributes?
             self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(data))
 
         for uuid_ in delete_uuid:

@@ -457,11 +457,14 @@ class API:
             # Do the POST request call. only on project
             # or else its a patch handled by previous node
 
-            # if new_node.node_type == "project"
-            data = new_node.get_json().json
-            response = self._capsule_request(url_path="/project/", method="POST", data=data)
-            print("----700----")
-            print(response.json)
+            print("--------900---------")
+            print(new_node.node_type.lower())
+            if new_node.node_type.lower() == "project":
+                data = new_node.get_json().json
+                response = self._capsule_request(url_path="/project/", method="POST", data=data)
+                print("----700----")
+                print(response.json())
+
             return  # Return here, since we are done after Posting
 
         # This is where a patch is needed (we do it below)

@@ -5,7 +5,6 @@ import uuid
 import pytest
 
 import cript
-from cript.nodes.util import load_nodes_from_json
 from tests.utils.integration_test_helper import (
     delete_integration_node_helper,
     save_integration_node_helper,

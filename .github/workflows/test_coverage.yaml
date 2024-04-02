@@ -10,6 +10,7 @@ on:
       - main
       - develop
       - trunk-merge/**
+      - pipeline/*
   pull_request:
     branches:
       - main
@@ -23,6 +24,11 @@ concurrency:
   # Cancel in-progress runs when a new workflow with the same group name is triggered
   cancel-in-progress: true
 
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
 jobs:
   test-coverage:
     runs-on: ubuntu-latest
@@ -30,13 +36,6 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: [3.12]
-
-    env:
-      CRIPT_HOST: https://lb-stage.mycriptapp.org/
-      CRIPT_TOKEN: 125433546
-      CRIPT_STORAGE_TOKEN: 987654321
-      CRIPT_TESTS: False
-
     steps:
       - uses: actions/checkout@v4
 
@@ -54,5 +53,16 @@ jobs:
       - name: Install requirements_dev.txt
         run: pip install -r requirements_dev.txt
 
+      - name: Retrieve Cognito Tokens from AWS Secrets Manager
+        run: |
+          echo "CRIPT_TOKEN=$(aws secretsmanager get-secret-value --secret-id Pipelines_CognitoAccessToken --query SecretString --output text)" >> $GITHUB_ENV
+          echo "CRIPT_STORAGE_TOKEN=$(aws secretsmanager get-secret-value --secret-id Pipelines_CognitoIdToken --query SecretString --output text)" >> $GITHUB_ENV
+
       - name: Test Coverage
+
         run: pytest --cov --cov-fail-under=85
+        env:
+          CRIPT_HOST: https://lb-stage.mycriptapp.org/
+          CRIPT_TOKEN: ${{ env.CRIPT_TOKEN }}
+          CRIPT_STORAGE_TOKEN: ${{ env.CRIPT_STORAGE_TOKEN }}
+          CRIPT_TESTS: True

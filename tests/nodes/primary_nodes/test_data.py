@@ -167,7 +167,7 @@ def test_serialize_data_to_json(simple_data_node) -> None:
     assert ref_dict == expected_data_dict
 
 
-def test_integration_data(cript_api, simple_project_node, simple_data_node):
+def test_integration_data(cript_api, simple_project_node, simple_inventory_node, simple_data_node):
     """
     integration test between Python SDK and API Client
 
@@ -181,6 +181,10 @@ def test_integration_data(cript_api, simple_project_node, simple_data_node):
     """
     # ========= test create =========
     simple_project_node.name = f"test_integration_project_name_{uuid.uuid4().hex}"
+
+    # simple_data_node.material something
+    simple_inventory_node.material = []
+    simple_project_node.collection[0].inventory = [simple_inventory_node]
 
     simple_project_node.collection[0].experiment[0].data = [simple_data_node]
 

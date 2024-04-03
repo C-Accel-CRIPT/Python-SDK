@@ -424,57 +424,27 @@ class API:
     def api_version(self):
         return self._api_version
 
-    # def save(self, project: Project) -> None: #changed bc we need it to be node agnostic
     def save(self, new_node: PrimaryBaseNode) -> None:
-        # Member function of API
-        ################################################################################
-
-        # In this mockup, we can't actually do the search:
-        # print("old_node_paginator = self.search(node_type=cript.Project, search_mode=cript.SearchModes.UUID, value_to_search=project)")
-        # print("old_node_paginator.auto_load_nodes = False")
-
-        # node_type=Project this needs to be dynamically loaded with locals ?
-
         # NOTE: Needed to make it node agnostic
         node_class_name = new_node.node_type.capitalize()
         NodeClass = getattr(PrimaryNodes, node_class_name)
 
-        # print(node_class_name)
-        # print(NodeClass)
-        # print("----------+++++-----------")
-
         old_node_paginator = self.search(node_type=NodeClass, search_mode=SearchModes.UUID, value_to_search=str(new_node.uuid))
         old_node_paginator.auto_load_nodes = False
         try:
-            # print("old_node_json = next(old_node_paginator)")
-
-            # # Just for this mock-up we load from the file instead
-            # with open("new_project.json") as json_handle:
-            #     old_node_json = json_handle.read()
             old_node_json = next(old_node_paginator)
 
         except StopIteration:  # New Project do POST instead
             # Do the POST request call. only on project
             # or else its a patch handled by previous node
 
-            print("--------900---------")
-            print(new_node.node_type.lower())
             if new_node.node_type.lower() == "project":
                 data = new_node.get_json().json
-                response = self._capsule_request(url_path="/project/", method="POST", data=data)
-                print("----700----")
-                print(response.json())
+                self._capsule_request(url_path="/project/", method="POST", data=data)
 
             return  # Return here, since we are done after Posting
 
-        # This is where a patch is needed (we do it below)
-
-        # Load the project in a separate cache
-        # old_project, old_uuid_map = cript.load_nodes_from_json(nodes_json=old_node_json, _use_uuid_cache={})
         old_project, old_uuid_map = load_nodes_from_json(nodes_json=old_node_json, _use_uuid_cache={})
-
-        # Check if there is any difference between old and new.
-        # if project.deep_equal(project, old_project):
 
         if new_node.deep_equal(old_project):
             return  # No save necessary, since nothing changed
@@ -489,10 +459,10 @@ class API:
                 old_node = old_uuid_map[node.uuid]
             except KeyError:
                 # This node only exists in the new new project,
-                # But it has a parent, that will patch it in, so we don't need to do anything
+                # But it has a parent which patches it in, so no action needed
                 pass
 
-            # Let's see if we need to delete any children, that existed in the old node, but don't exit in the new node.
+            # do we need to delete any children, that existed in the old node, but don't exit in the new node.
             node_child_map = {child.uuid: child for child in node.find_children({}, search_depth=1)}
             old_child_map = {child.uuid: child for child in old_node.find_children({}, search_depth=1)}
             for old_uuid in old_child_map:
@@ -500,8 +470,8 @@ class API:
                     if old_uuid not in delete_uuid:
                         delete_uuid += [old_uuid]
 
-            # Next we check if the current new node needs a patch
-            # like # project.deep_equal(old_project) or shallow_equal(node, old_node):
+            # check if the current new node needs a patch
+
             if not node.shallow_equal(old_node):
                 patch_map[node.uuid] = node
 
@@ -510,13 +480,11 @@ class API:
         # here its project but really it should be a primary base node
 
         url_path = f"/{new_node.node_type}/{new_node.uuid}"
-        print("url_path")
-        print(url_path)
 
         for uuid_ in reversed(patch_map.keys_sorted_by_last_modified()):
             node = patch_map[uuid_]
 
-            print(f"Doing API PATCH for {node.uuid}")
+            # "Doing API PATCH for {node.uuid}"
             # either link if found or patch json to parent
             data = node.get_json().json
             # first level search will also include attributes?
@@ -525,7 +493,7 @@ class API:
         for uuid_ in delete_uuid:
             # do the delete  *unlinking here
             # actually here we are able to send list of uuids to be deleted - optimize later
-            print(f"Doing API Delete for {uuid_}")
+            # "Doing API Delete for {uuid_}"
             unlink_payload = {"uuid": str(uuid_)}
             self._capsule_request(url_path=url_path, method="DELETE", data=json.dumps(unlink_payload))
 

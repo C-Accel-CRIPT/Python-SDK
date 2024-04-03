@@ -150,7 +150,7 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
     assert ref_dict == expected_dict
 
 
-def test_integration_computational_process(cript_api, simple_project_node, simple_collection_node, simple_experiment_node, simplest_computational_process_node, simple_material_node, simple_data_node) -> None:
+def test_integration_computational_process(cript_api, simple_project_node, simple_inventory_node, simple_collection_node, simple_experiment_node, simplest_computational_process_node, simple_material_node, simple_data_node) -> None:
     """
     integration test between Python SDK and API Client
 
@@ -165,6 +165,9 @@ def test_integration_computational_process(cript_api, simple_project_node, simpl
     simple_material_node.name = f"{simple_material_node.name}_{uuid.uuid4().hex}"
 
     simple_project_node.material = [simple_material_node]
+
+    simple_inventory_node.material = []
+    simple_project_node.collection[0].inventory = [simple_inventory_node]
 
     simple_project_node.collection = [simple_collection_node]
 

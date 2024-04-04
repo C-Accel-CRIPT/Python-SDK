@@ -424,8 +424,23 @@ class API:
     def api_version(self):
         return self._api_version
 
-    def save(self, new_node: PrimaryBaseNode) -> None:
-        # NOTE: Needed to make it node agnostic
+    # _no_condense_uuid is either active or not
+    def save(self, new_node):
+        self._internal_save(new_node, _no_condense_uuid=True)
+        print("GET_ALI_HERE")
+        quit()
+        self._internal_save(new_node, _no_condense_uuid=False)
+
+    def _internal_save(self, new_node: PrimaryBaseNode, _no_condense_uuid: bool) -> None:
+        print("_no_condense_uuid")
+        print(_no_condense_uuid)
+
+        data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
+
+        print("data")
+        print(data)
+        print("----------\\------------\n")
+
         node_class_name = new_node.node_type.capitalize()
         NodeClass = getattr(PrimaryNodes, node_class_name)
 
@@ -439,13 +454,20 @@ class API:
             # or else its a patch handled by previous node
 
             if new_node.node_type.lower() == "project":
-                data = new_node.get_json().json
+                data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
+
+                print("----   data   -----")
+                print(data)
+                print("----   data end  -----")
+                # if _no_condense_uuid is true do a POST if its false do a patch,
+                # but wouldnt we then just find the existing node above in the generator?
                 response = self._capsule_request(url_path="/project/", method="POST", data=data)
                 if response.status_code in [200, 201]:
                     return  # Return here, since we successfully Posting
-                else:  # debug
+                else:  # debug for now
                     print("GET HERE ALI")
-                    raise APIError
+                    res = response.json()
+                    raise Exception(f"APIError {res}")
 
         old_project, old_uuid_map = load_nodes_from_json(nodes_json=old_node_json, _use_uuid_cache={})
 
@@ -500,7 +522,7 @@ class API:
             unlink_payload = {"uuid": str(uuid_)}
             self._capsule_request(url_path=url_path, method="DELETE", data=json.dumps(unlink_payload))
 
-    ################################################################################
+        ################################################################################
 
     def save_old(self, project: Project) -> None:
         """
@@ -533,7 +555,7 @@ class API:
                     pass
             raise exc from exc
 
-    def _internal_save(self, node, save_values: Optional[_InternalSaveValues] = None) -> _InternalSaveValues:
+    def _internal_save_old(self, node, save_values: Optional[_InternalSaveValues] = None) -> _InternalSaveValues:
         """
         Internal helper function that handles the saving of different nodes (not just project).
 

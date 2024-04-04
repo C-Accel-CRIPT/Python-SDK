@@ -66,6 +66,7 @@ class NodeEncoder(json.JSONEncoder):
     known_uuid: Set[str] = set()
     condense_to_uuid: Dict[str, Set[str]] = dict()
     suppress_attributes: Optional[Dict[str, Set[str]]] = None
+    no_condense_uuid: bool = False
 
     def default(self, obj):
         """
@@ -182,7 +183,10 @@ class NodeEncoder(json.JSONEncoder):
                 except AttributeError:
                     uid = element["uid"]
 
-                element = {"uuid": str(uuid)}
+                if self.no_condense_uuid:
+                    element = ""
+                else:
+                    element = {"uuid": str(uuid)}
                 return element, uid
 
             # Processes an attribute based on its type (list or single element)

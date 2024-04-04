@@ -440,9 +440,12 @@ class API:
 
             if new_node.node_type.lower() == "project":
                 data = new_node.get_json().json
-                self._capsule_request(url_path="/project/", method="POST", data=data)
-
-            return  # Return here, since we are done after Posting
+                response = self._capsule_request(url_path="/project/", method="POST", data=data)
+                if response.status_code in [200, 201]:
+                    return  # Return here, since we successfully Posting
+                else:  # debug
+                    print("GET HERE ALI")
+                    raise APIError
 
         old_project, old_uuid_map = load_nodes_from_json(nodes_json=old_node_json, _use_uuid_cache={})
 

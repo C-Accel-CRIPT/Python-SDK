@@ -426,30 +426,14 @@ class API:
 
     # _no_condense_uuid is either active or not
     def save(self, new_node):
-        self._internal_save(new_node, _no_condense_uuid=True)
+        self._internal_save(new_node)
         print("GET_ALI_HERE")
-        quit()
-        self._internal_save(new_node, _no_condense_uuid=False)
 
-    def _internal_save(self, new_node: PrimaryBaseNode, preknown_uid: str, _no_condense_uuid: bool) -> None:
-        """
-        NOTE: for Ludwig
 
-        WIP NOTES:
+    def _internal_save(self, new_node: PrimaryBaseNode) -> None:
+        new_node.validate(force_validation=True)
+        data = new_node.get_json().json
 
-        unfinished WIP, but the idea is we want to send
-        a preknown_uuid
-
-        I'm imagining something like
-        data = new_node.get_json(preknown_uid="preknown uid into here").json
-        in the same way we did the _no_condense_uuid
-
-        but, then , I see where I would add a preknown uuid
-        scroll down to
-
-        WIP NOTES CONTINUED:
-
-        """
 
         print("----------\\------------\n")
 
@@ -466,12 +450,9 @@ class API:
             # or else its a patch handled by previous node
 
             if new_node.node_type.lower() == "project":
-                # data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
-                # data = new_node.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json  # indent=2
 
-                # data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
+                data = new_node.get_json().json
 
-                data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
 
                 # data = new_node.get_json(condense_to_uuid={}).json
                 print("----   data 2  -----")
@@ -487,7 +468,7 @@ class API:
                 # print("now data\n", data)
                 print("----   data end  -----")
                 # if _no_condense_uuid is true do a POST if its false do a patch,
-                # but wouldnt we then just find the existing node above in the generator?
+                # but wouldn't we then just find the existing node above in the generator?
                 response = self._capsule_request(url_path="/project/", method="POST", data=data)
                 if response.status_code in [200, 201]:
                     print("FINALLY_WORKED!")

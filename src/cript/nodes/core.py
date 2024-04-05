@@ -447,6 +447,7 @@ class BaseNode(ABC):
             "Project": {"member", "admin"},
             "Collection": {"member", "admin"},
         },
+
         **kwargs,
     ):
         """
@@ -486,12 +487,14 @@ class BaseNode(ABC):
         previous_condense_to_uuid = copy.deepcopy(NodeEncoder.condense_to_uuid)
         NodeEncoder.condense_to_uuid = condense_to_uuid
 
+
         known_uid = set()
         for child_node in self:
             known_uid.add(child_node.uid)
 
         previous_known_uid = copy.deepcopy(NodeEncoder.known_uid)
         NodeEncoder.known_uid = known_uid
+
 
         try:
             tmp_json = json.dumps(self, cls=NodeEncoder, **kwargs)
@@ -510,7 +513,9 @@ class BaseNode(ABC):
             NodeEncoder.known_uuid = previous_known_uuid
             NodeEncoder.suppress_attributes = previous_suppress_attributes
             NodeEncoder.condense_to_uuid = previous_condense_to_uuid
+
             NodeEncoder.known_uid = previous_known_uid
+
 
     def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes: Optional[List] = None) -> List:
         """

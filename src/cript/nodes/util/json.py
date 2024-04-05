@@ -1,6 +1,7 @@
 """
 This module contains classes and functions that help with the json serialization and deserialization of nodes.
 """
+
 import dataclasses
 import inspect
 import json
@@ -66,7 +67,9 @@ class NodeEncoder(json.JSONEncoder):
     known_uuid: Set[str] = set()
     condense_to_uuid: Dict[str, Set[str]] = dict()
     suppress_attributes: Optional[Dict[str, Set[str]]] = None
+
     known_uid: Optional[Set[str]] = None
+
 
     def default(self, obj):
         """
@@ -183,12 +186,21 @@ class NodeEncoder(json.JSONEncoder):
                 except AttributeError:
                     uid = element["uid"]
 
+
                 # If this is not the only occurrence of the node, replace it with UID instead of UUID
                 if self.known_uid and uid in self.known_uid:
-                    element = {"uid": uid}
+                    element = {"uid": str(uid)}
                 else:
                     element = {"uuid": str(uuid)}
+
                 return element, uid
+
+                #########################
+                # if self.no_condense_uuid:
+                #     element = ""
+                # else:
+                #     element = {"uuid": str(uuid)}
+                # return element, uid
 
             # Processes an attribute based on its type (list or single element)
             if isinstance(attribute, List):

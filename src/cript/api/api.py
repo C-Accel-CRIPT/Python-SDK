@@ -426,16 +426,12 @@ class API:
 
     # _no_condense_uuid is either active or not
     def save(self, new_node):
-        self._internal_save(new_node, _no_condense_uuid=True)
+        self._internal_save(new_node)
         print("GET_ALI_HERE")
-        quit()
-        self._internal_save(new_node, _no_condense_uuid=False)
 
-    def _internal_save(self, new_node: PrimaryBaseNode, _no_condense_uuid: bool) -> None:
-        print("_no_condense_uuid")
-        print(_no_condense_uuid)
-
-        data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
+    def _internal_save(self, new_node: PrimaryBaseNode) -> None:
+        new_node.validate(force_validation=True)
+        data = new_node.get_json().json
 
         print("data")
         print(data)
@@ -454,13 +450,13 @@ class API:
             # or else its a patch handled by previous node
 
             if new_node.node_type.lower() == "project":
-                data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
+                data = new_node.get_json().json
 
                 print("----   data   -----")
                 print(data)
                 print("----   data end  -----")
                 # if _no_condense_uuid is true do a POST if its false do a patch,
-                # but wouldnt we then just find the existing node above in the generator?
+                # but wouldn't we then just find the existing node above in the generator?
                 response = self._capsule_request(url_path="/project/", method="POST", data=data)
                 if response.status_code in [200, 201]:
                     return  # Return here, since we successfully Posting

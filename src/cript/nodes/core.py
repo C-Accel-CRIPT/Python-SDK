@@ -448,6 +448,7 @@ class BaseNode(ABC):
             "Collection": {"member", "admin"},
         },
         _no_condense_uuid: bool = False,
+        preknown_uid: str = "",
         **kwargs,
     ):
         """
@@ -489,6 +490,7 @@ class BaseNode(ABC):
 
         previous_no_condense_uuid = copy.deepcopy(NodeEncoder.no_condense_uuid)
         NodeEncoder.no_condense_uuid = _no_condense_uuid
+        NodeEncoder.preknown_uid = preknown_uid
 
         try:
             tmp_json = json.dumps(self, cls=NodeEncoder, **kwargs)
@@ -508,6 +510,8 @@ class BaseNode(ABC):
             NodeEncoder.suppress_attributes = previous_suppress_attributes
             NodeEncoder.condense_to_uuid = previous_condense_to_uuid
             NodeEncoder.no_condense_uuid = previous_no_condense_uuid
+            # HERE??
+            # NodeEncoder.preknown_uid = preknown_uid
 
     def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes: Optional[List] = None) -> List:
         """

@@ -431,14 +431,26 @@ class API:
         quit()
         self._internal_save(new_node, _no_condense_uuid=False)
 
-    def _internal_save(self, new_node: PrimaryBaseNode, _no_condense_uuid: bool) -> None:
-        print("_no_condense_uuid")
-        print(_no_condense_uuid)
+    def _internal_save(self, new_node: PrimaryBaseNode, preknown_uid: str, _no_condense_uuid: bool) -> None:
+        """
+        NOTE: for Ludwig
 
-        data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
+        WIP NOTES:
 
-        print("data")
-        print(data)
+        unfinished WIP, but the idea is we want to send
+        a preknown_uuid
+
+        I'm imagining something like
+        data = new_node.get_json(preknown_uid="preknown uid into here").json
+        in the same way we did the _no_condense_uuid
+
+        but, then , I see where I would add a preknown uuid
+        scroll down to
+
+        WIP NOTES CONTINUED:
+
+        """
+
         print("----------\\------------\n")
 
         node_class_name = new_node.node_type.capitalize()
@@ -454,15 +466,31 @@ class API:
             # or else its a patch handled by previous node
 
             if new_node.node_type.lower() == "project":
+                # data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
+                # data = new_node.get_json(sort_keys=False, condense_to_uuid={}, indent=2).json  # indent=2
+
+                # data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
+
                 data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
 
-                print("----   data   -----")
+                # data = new_node.get_json(condense_to_uuid={}).json
+                print("----   data 2  -----")
+                # print(type(data2))
+                # print(type(json.loads(data2)))
+                # data = json.loads(data)
+                # print(type(data))
+                # print(str(data))
                 print(data)
+                # data = str(data)
+                # data = json.dumps(data)
+                # data = data.replace('""', "[]")
+                # print("now data\n", data)
                 print("----   data end  -----")
                 # if _no_condense_uuid is true do a POST if its false do a patch,
                 # but wouldnt we then just find the existing node above in the generator?
                 response = self._capsule_request(url_path="/project/", method="POST", data=data)
                 if response.status_code in [200, 201]:
+                    print("FINALLY_WORKED!")
                     return  # Return here, since we successfully Posting
                 else:  # debug for now
                     print("GET HERE ALI")
@@ -506,6 +534,32 @@ class API:
 
         url_path = f"/{new_node.node_type}/{new_node.uuid}"
 
+        """
+        WIP NOTES CONTINUED:
+
+        this is where we would need to make a map of the uids
+        patch_map[uid_] ? constructed above?
+
+        problem right now is ,
+        we need the uids to be in place for the original POST json 
+        which happens up above
+        so I'm wondeing how to go about that, 
+
+        and I think I would need to rewalk the original get_json for the post 
+        switching any {uuid: "uuid"} for {uid:"uid"}
+
+        AND I TRY TO DO THAT if you look inside
+
+        json.py  , you'd find the following below
+
+        ######## WIP HERE ################
+        if self.preknown_uid:
+            element = {"uid": str(uid)}
+        return element, uid 
+
+        but we need this uid map and i'm not so sure where to put this ?
+        
+        """
         for uuid_ in reversed(patch_map.keys_sorted_by_last_modified()):
             node = patch_map[uuid_]
 

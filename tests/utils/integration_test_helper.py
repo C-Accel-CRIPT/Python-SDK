@@ -87,9 +87,9 @@ def save_integration_node_helper(cript_api: cript.API, project_node: cript.Proje
     #     file_handle.write(str(diff) + "\n")
 
     print("diff", diff)
-    # assert not list(diff.get("values_changed", []))
-    # assert not list(diff.get("dictionary_item_removed", []))
-    # assert not list(diff.get("dictionary_item_added", []))
+    assert not list(diff.get("values_changed", []))
+    assert not list(diff.get("dictionary_item_removed", []))
+    assert not list(diff.get("dictionary_item_added", []))
 
     # try to convert api JSON project to node
     print("\n\n=================== Project Node Deserialized =========================")

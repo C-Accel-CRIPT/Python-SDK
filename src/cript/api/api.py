@@ -10,6 +10,7 @@ from typing import Any, Dict, Optional, Union
 import boto3
 import requests
 from beartype import beartype
+from deepdiff import DeepDiff
 
 import cript.nodes.primary_nodes as PrimaryNodes
 from cript.api.api_config import _API_TIMEOUT
@@ -259,6 +260,80 @@ class API:
         """
         return f"CRIPT API Client - Host URL: '{self.host}'"
 
+    @staticmethod
+    def remove_keys_from_dict(
+        dictionary,
+        keys_to_remove=[
+            "admin",
+            "uuid",
+            "updated_by",
+            "created_by",
+            "member",
+            "experiment_count",
+            "inventory_count",
+            "public",
+            "created_at",
+            "email",
+            "model_version",
+            "orcid",
+            "uid",
+            "updated_at",
+            "username",
+            "admin_count",
+            "collection_count",
+            "locked",
+            "material_count",
+            "member_count",
+            "component_count",
+            "computational_forcefield_count",
+            "identifier_count",
+            "computation_count",
+            "component_count",
+            "citation_count",
+            "condition_count",
+            "sample_preparation_count",
+            "property_count",
+        ],
+    ):
+        """Recursively remove keys from a dictionary."""
+        if not isinstance(dictionary, dict):
+            return dictionary
+        for key in keys_to_remove:
+            dictionary.pop(key, None)
+        for key, value in list(dictionary.items()):  # Use list() to avoid RuntimeError during iteration
+            if isinstance(value, dict):
+                API.remove_keys_from_dict(value, keys_to_remove)
+            elif isinstance(value, list):
+                for item in value:
+                    API.remove_keys_from_dict(item, keys_to_remove)
+        return dictionary
+
+    @staticmethod
+    def extract_differences(new_data, old_data):
+        if isinstance(new_data, dict) and isinstance(old_data, dict):
+            diff = {}
+            for key in new_data:
+                if key in old_data:
+                    if isinstance(new_data[key], (dict, list)) and isinstance(old_data[key], (dict, list)):
+                        result = API.extract_differences(new_data[key], old_data[key])
+                        if result:
+                            diff[key] = result
+                    elif new_data[key] != old_data[key]:
+                        diff[key] = new_data[key]
+                else:
+                    diff[key] = new_data[key]
+            return diff
+        elif isinstance(new_data, list) and isinstance(old_data, list):
+            # Assuming lists are of dicts which are records that need full comparison
+            diff = []
+            for item in new_data:
+                # Find an item in old_data that matches based on a deep comparison
+                matched_item = next((subitem for subitem in old_data if API.extract_differences(item, subitem) == {}), None)
+                if not matched_item:
+                    diff.append(item)
+            return diff
+        return new_data if new_data != old_data else {}
+
     def _init_logger(self, log_level=logging.INFO) -> None:
         """
         Prepare and configure the logger for the API class.
@@ -427,25 +502,57 @@ class API:
     # _no_condense_uuid is either active or not
     def save(self, new_node):
         self._internal_save(new_node, _no_condense_uuid=True)
-        print("GET_ALI_HERE")
-        quit()
+        print("GET_OUT_OF_INTERNALSAVE_HERE")
+        # quit()
+        # print("theres an error in the second internal save \n where it should ")
         self._internal_save(new_node, _no_condense_uuid=False)
 
     def _internal_save(self, new_node: PrimaryBaseNode, _no_condense_uuid: bool) -> None:
-        print("_no_condense_uuid")
-        print(_no_condense_uuid)
+        print("\n\n -----sss----- ")
+        """
+        first time it will be true,
+        second time it will be false,
+
+        need to do post vs patch
+        but !
+
+        why doesn't it get picked up by existing paginator
+        """
+        print(f"_no_condense_uuid: {_no_condense_uuid}")
+        # probably do a check for if
 
         data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
 
         print("data")
         print(data)
-        print("----------\\------------\n")
+
+        data = json.loads(data)
+
+        # print(data["member"])
+        # print(data["admin"])
+
+        # quit()
+
+        # data.pop("member")
+        print("-----///----")
+        # print(data["member"])
+        # print(data["admin"])
+        # data.pop("admin")
+        # or if the dictionary has [''] then pop it off ?
+        print("----------4\------------\n")
+        data = json.dumps(data)
 
         node_class_name = new_node.node_type.capitalize()
         NodeClass = getattr(PrimaryNodes, node_class_name)
 
+        """
+        on the second time around, shouldn't it be picked up here 
+        therefore not get to theStopIteration Exception below ?
+        """
+
         old_node_paginator = self.search(node_type=NodeClass, search_mode=SearchModes.UUID, value_to_search=str(new_node.uuid))
         old_node_paginator.auto_load_nodes = False
+
         try:
             old_node_json = next(old_node_paginator)
 
@@ -456,16 +563,45 @@ class API:
             if new_node.node_type.lower() == "project":
                 data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
 
-                print("----   data   -----")
+                print("----   boogeyman   -----")
+                print("does it cut off")
+                data = json.loads(data)
+                # print(data["member"])
+                # data.pop("member")
+                print("-----///----")
+                # print(data["admin"])
+                # data.pop("admin")
+                # or if the dictionary has [''] then pop it off ?
+
+                print("----   ali 2 data now  -----")
                 print(data)
-                print("----   data end  -----")
                 # if _no_condense_uuid is true do a POST if its false do a patch,
                 # but wouldnt we then just find the existing node above in the generator?
+
+                print("")
+                print(data["material"])
+
+                # if "member" in data:
+                #     print("hey")
+                #     print(data["member"])
+                #     print("should we make member an instance of current member?")
+                #     # data.pop("member")
+                # if "admin" in data:
+                #     print("hey2")
+                #     print(data["admin"])
+                #     print("should we make admin an instance of current admin?")
+                #     # data.pop("admin")
+
+                data = json.dumps(data)
+                print("_ooo_final_data")
+                print("ok if its the second time we need it to be a patch")
+                print(data)
                 response = self._capsule_request(url_path="/project/", method="POST", data=data)
                 if response.status_code in [200, 201]:
+                    print("GOT_200_ALI")
                     return  # Return here, since we successfully Posting
                 else:  # debug for now
-                    print("GET HERE ALI")
+                    print("GET_HERE_ALI_IFNOT_200")
                     res = response.json()
                     raise Exception(f"APIError {res}")
 
@@ -483,6 +619,7 @@ class API:
             try:
                 old_node = old_uuid_map[node.uuid]
             except KeyError:
+                print("key error but passing ?")
                 # This node only exists in the new new project,
                 # But it has a parent which patches it in, so no action needed
                 pass
@@ -500,20 +637,98 @@ class API:
             if not node.shallow_equal(old_node):
                 patch_map[node.uuid] = node
 
-        # now patch and delete
-
-        # here its project but really it should be a primary base node
-
-        url_path = f"/{new_node.node_type}/{new_node.uuid}"
-
         for uuid_ in reversed(patch_map.keys_sorted_by_last_modified()):
+            """
+            so , i think for example, we are comparing some nodes where just the _uid is different
+            maybe need to implement deep diff and ignore _uid
+            """
+
             node = patch_map[uuid_]
 
+            url_path = f"/{node.node_type_snake_case}/{node.uuid}"
+
+            print(uuid_)
+            print(node.uuid)
+            print("----+++++000----")
             # "Doing API PATCH for {node.uuid}"
             # either link if found or patch json to parent
-            data = node.get_json().json
+            data = node.get_json(is_patch=True).json
+            print("FIRSTDATA")
+            print("we need to send differences but , it needs to be specific types of differences ")
+            print("")
+            print(data)
+
+            try:
+                old_node = old_uuid_map[node.uuid]
+            except KeyError:
+                print("we are continuing...")
+                pass  # continue
+
+            # deep diff on old_node and node and remove anything the same
+            # and remove from json anything thats the same from old_node
+            # form the patch json - i'll be taking the new stuff - be taking from node
+            # that what gets sent in this
             # first level search will also include attributes?
-            self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(data))
+            # res = self._capsule_request(url_path=url_path, method="PATCH", data=data)  # maybe dumps or load
+
+            print("\n\nNODEDICT")
+            node_dict = json.loads(node.get_json(is_patch=True).json)
+            node_dict = API.remove_keys_from_dict(node_dict)
+            print(node_dict)
+            print("OLDNODEDICT")
+
+            old_node_dict = json.loads(old_node.get_json(is_patch=True).json)
+            old_node_dict = API.remove_keys_from_dict(old_node_dict)
+            print(old_node_dict)
+            print("~~~~~~~ooo~~~~~~~~~")
+            print(node_dict)
+            print("~~~~~~~iii~~~~~~~~~")
+            print(old_node_dict)
+
+            # node_dict = API.remove_keys_from_dict(node_dict)
+            # old_node_dict = API.remove_keys_from_dict(old_node_dict)
+
+            print("\n\nDATADA")
+            # what they have in common
+            data1 = {key: node_dict[key] for key in node_dict if key in old_node_dict and node_dict[key] == old_node_dict[key]}
+
+            # Removing keys from node_dict where the values are the same in old_node_dict
+            # data2 = {key: node_dict[key] for key in node_dict if key not in old_node_dict or node_dict[key] != old_node_dict[key]}
+
+            # Extract differences
+            data2 = API.extract_differences(node_dict, old_node_dict)
+            print("Differences:", data2)
+
+            print("4 url_path")
+            print(url_path)
+            # print("\ndata 00")
+            # print(data)
+            # print("\ndata01")
+            # print(data1)
+            # print("data02")
+            print("")
+            print(json.dumps(data2))
+            print("type-data02")
+            print(type(data2))
+
+            # data2clean = API.remove_keys_from_dict(data2)#json.loads(data2))
+            print("\ndata2 -")
+            print(json.dumps(data2))
+            print("\nRESRES")
+
+            if data2 != {}:
+                res = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(data2))  # maybe dumps or load
+
+                print(res.json())
+                print("--------@@@------------")
+
+            """
+            make a clause where if we do the diff and it does or doesn't make sense (i.e. like just _uid as difference)
+            then ... we gotta ya know
+            thats why deep diff might be worth it 
+            """
+
+            # res.raise_for_status()
 
         for uuid_ in delete_uuid:
             # do the delete  *unlinking here

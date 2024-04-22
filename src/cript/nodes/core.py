@@ -495,6 +495,17 @@ class BaseNode(ABC):
             tmp_dict = json.loads(tmp_json)
             if is_patch:
                 del tmp_dict["uuid"]  # patches do not allow UUID is the parent most node
+                del tmp_dict["uid"]
+
+                try:
+                    del tmp_dict["created_at"]
+                except KeyError:
+                    pass
+
+                try:
+                    del tmp_dict["orcid"]
+                except KeyError:
+                    pass
 
             return ReturnTuple(json.dumps(tmp_dict, **kwargs), tmp_dict, NodeEncoder.handled_ids)
         except Exception as exc:

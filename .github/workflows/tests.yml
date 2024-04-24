@@ -35,7 +35,7 @@ jobs:
 
       matrix:
         os: [ubuntu-latest, macos-latest]
-        python-version: [3.8, 3.12]
+        python-version: [3.9, 3.12]
 
     env:
       CRIPT_HOST: https://lb-stage.mycriptapp.org/

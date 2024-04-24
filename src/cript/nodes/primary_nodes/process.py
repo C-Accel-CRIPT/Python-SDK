@@ -580,7 +580,7 @@ class Process(PrimaryBaseNode):
         --------
         >>> import cript
         >>> my_process = cript.Process(name="my process name", type="affinity_pure")
-        >>> my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.23, unit="J")
         >>> my_process.property = [my_property]
 
         Returns

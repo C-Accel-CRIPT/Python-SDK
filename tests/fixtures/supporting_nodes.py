@@ -66,6 +66,16 @@ def complex_user_dict(cript_api) -> dict:
     user_dict = json.loads(user_node.get_json().json)
     print("8888888--------")
     print(user_dict)
+
+    # def complex_user_dict() -> dict: #old code
+    #     user_dict = {"node": ["User"]}
+    #     user_dict["created_at"] = str(datetime.datetime.now())
+    #     user_dict["model_version"] = "1.0.1"
+    #     user_dict["picture"] = "/my/picture/path"
+    #     user_dict["updated_at"] = str(datetime.datetime.now())
+    #     user_dict["username"] = "testuser"
+    #     user_dict["email"] = "test@emai.com"
+    #     user_dict["orcid"] = "0000-0002-0000-0000"
     return user_dict
 
 

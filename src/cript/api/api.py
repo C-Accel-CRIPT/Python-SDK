@@ -309,6 +309,39 @@ class API:
         return dictionary
 
     @staticmethod
+    def rearrange_materials(data):
+        if type(data) != dict:
+            data = json.loads(data)
+        # Extract UID references from the top-level material key
+        original_materials = data.get("material", [])
+        uid_refs = {mat["uid"]: {} for mat in original_materials}
+
+        # Helper function to replace material details and collect those details
+        def process_node(node):
+            if isinstance(node, dict):
+                for key, value in list(node.items()):
+                    if key == "material" and "uid" in value and value["uid"] in uid_refs:
+                        # Copy the full material details to the corresponding UID entry in uid_refs
+                        uid_refs[value["uid"]].update(value)
+                        # Replace the material entry with uid-only
+                        node[key] = {"uid": value["uid"]}
+                    else:
+                        process_node(value)
+            elif isinstance(node, list):
+                for item in node:
+                    process_node(item)
+
+        # Process the data starting from the top-level 'node' if it matches 'Project'
+        if "node" in data and data["node"][0] == "Project":
+            process_node(data)
+
+        # Update the top-level material list with the detailed information collected
+        updated_materials = [details for details in uid_refs.values() if details]
+        # Ensure material list is never empty; revert to original if no updates found
+        data["material"] = updated_materials if updated_materials else original_materials
+        return data
+
+    @staticmethod
     def extract_differences(new_data, old_data):
         if isinstance(new_data, dict) and isinstance(old_data, dict):
             diff = {}
@@ -503,12 +536,22 @@ class API:
     def save(self, new_node):
         self._internal_save(new_node, _no_condense_uuid=True)
         print("GET_OUT_OF_INTERNALSAVE_HERE")
-        # quit()
-        # print("theres an error in the second internal save \n where it should ")
+
         self._internal_save(new_node, _no_condense_uuid=False)
+        print("DID_THIS_WORK_SOMEHOW")
+
+        print(new_node)
 
     def _internal_save(self, new_node: PrimaryBaseNode, _no_condense_uuid: bool) -> None:
-        print("\n\n -----sss----- ")
+        print("\n\n\n\n ----- 1001BEGINING_INTERNAL_SAVE ----- ")
+        # try:
+        #     print("\n\n HERE_2 ")
+        #     # print(json.loads(new_node.get_json().json)["collection"][0]["experiment"][0]["data"])
+        #     print(json.loads(new_node.get_json().json)["inventory"])
+        #     print("UYMMM1001")
+        # except:
+        #     print("    222didnt_get_it ")
+
         """
         first time it will be true,
         second time it will be false,
@@ -518,15 +561,18 @@ class API:
 
         why doesn't it get picked up by existing paginator
         """
-        print(f"_no_condense_uuid: {_no_condense_uuid}")
+        print(f"777_no_condense_uuid: {_no_condense_uuid}")
         # probably do a check for if
 
+        print("\n\n HERE_1 ")
+        #!! ah we pass _no_condense_uuid vs not passing and it defaults to false
+        # so first we want it to go for false, then we want it to go for true
         data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
 
-        print("data")
-        print(data)
+        # print("888data")
+        # print(data)
 
-        data = json.loads(data)
+        # data = json.loads(data)
 
         # print(data["member"])
         # print(data["admin"])
@@ -534,12 +580,12 @@ class API:
         # quit()
 
         # data.pop("member")
-        print("-----///----")
+        # print("-----///----")
         # print(data["member"])
         # print(data["admin"])
         # data.pop("admin")
         # or if the dictionary has [''] then pop it off ?
-        print("----------4\------------\n")
+        # print("----------4\------------\n")
         data = json.dumps(data)
 
         node_class_name = new_node.node_type.capitalize()
@@ -561,48 +607,40 @@ class API:
             # or else its a patch handled by previous node
 
             if new_node.node_type.lower() == "project":
+                print("\n\n HERE909")
                 data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
 
-                print("----   boogeyman   -----")
-                print("does it cut off")
-                data = json.loads(data)
-                # print(data["member"])
-                # data.pop("member")
-                print("-----///----")
-                # print(data["admin"])
-                # data.pop("admin")
-                # or if the dictionary has [''] then pop it off ?
+                # data = json.dumps(data)
+                print("****96211703****")
+                # data = API.remove_keys_from_dict(json.loads(data))
+                # data = API.clean_dict(data)
+                # data = json.dumps(data)
 
-                print("----   ali 2 data now  -----")
+                # data = json.loads(data)
+                data = API.rearrange_materials(data)
+
                 print(data)
-                # if _no_condense_uuid is true do a POST if its false do a patch,
-                # but wouldnt we then just find the existing node above in the generator?
-
-                print("")
-                print(data["material"])
-
-                # if "member" in data:
-                #     print("hey")
-                #     print(data["member"])
-                #     print("should we make member an instance of current member?")
-                #     # data.pop("member")
-                # if "admin" in data:
-                #     print("hey2")
-                #     print(data["admin"])
-                #     print("should we make admin an instance of current admin?")
-                #     # data.pop("admin")
+                """
+                if there is an outter node , make sure the outter one is the full node and the inner node is the uuid 
+                def rearrange_uuid:
+                search where the uuid exists , make sure the full node is the 
+                """
 
                 data = json.dumps(data)
-                print("_ooo_final_data")
-                print("ok if its the second time we need it to be a patch")
-                print(data)
+
                 response = self._capsule_request(url_path="/project/", method="POST", data=data)
+
                 if response.status_code in [200, 201]:
-                    print("GOT_200_ALI")
+                    print("GOT_200_current_ALI")
+                    """
+                    try returning a true vs false kinda thing to see if we need to do "internal save" again
+                    """
                     return  # Return here, since we successfully Posting
+
                 else:  # debug for now
-                    print("GET_HERE_ALI_IFNOT_200")
+                    print("GET_HERE_ALI_IFNOT_200_909")
                     res = response.json()
+                    print(res)
                     raise Exception(f"APIError {res}")
 
         old_project, old_uuid_map = load_nodes_from_json(nodes_json=old_node_json, _use_uuid_cache={})
@@ -611,6 +649,8 @@ class API:
             return  # No save necessary, since nothing changed
 
         delete_uuid = []
+
+        master_delete_uuid_dict = {}
 
         patch_map = LastModifiedDict()
 
@@ -625,12 +665,65 @@ class API:
                 pass
 
             # do we need to delete any children, that existed in the old node, but don't exit in the new node.
+
+            # node.find_children that means node is the parent !!
+            # just search depth = 1
             node_child_map = {child.uuid: child for child in node.find_children({}, search_depth=1)}
+
             old_child_map = {child.uuid: child for child in old_node.find_children({}, search_depth=1)}
+
             for old_uuid in old_child_map:
+                # need to keep track of node type I think
+
+                # shit but needs to maybe keep track of parent
+
+                # print("\n\n+++_555_oldchmap_+++")
+                # print(old_child_map[old_uuid].node_type)
+                # print("------")
+                # print(old_uuid)
+
                 if old_uuid not in node_child_map:
                     if old_uuid not in delete_uuid:
-                        delete_uuid += [old_uuid]
+                        delete_uuid += [old_uuid]  # we wanna delete old_uuid
+
+                        del_node_type = old_child_map[old_uuid].node_type_snake_case
+
+                        # node is the parent
+                        parent_node_type = node.node_type.capitalize()
+                        parent_node_uuid = node.uuid
+                        url_parent = f"/{parent_node_type.lower()}/{parent_node_uuid}"
+
+                        if del_node_type.lower() != "user":
+                            # key will be the edge to remove,
+                            # value will be the immediate parent node url
+
+                            if url_parent not in master_delete_uuid_dict:
+                                # Create a new empty data dictionary if not present
+                                master_delete_uuid_dict[url_parent] = {"node": [parent_node_type]}  # Initialize with the node type
+
+                            # Reference the data dictionary for this URL
+                            data = master_delete_uuid_dict[url_parent]
+
+                            # Check if the del_node_type exists in the data dictionary
+                            if del_node_type in data:
+                                # Append a new UUID dictionary to existing list
+                                data[del_node_type].append({"uuid": old_uuid})
+                            else:
+                                # Create a new key with a list containing the UUID dictionary
+                                data[del_node_type] = [{"uuid": old_uuid}]
+
+                            master_delete_uuid_dict[url_parent] = data
+
+                        print("---333---master_delete_uuid_dict")
+                        print(master_delete_uuid_dict)  # [(old_uuid, del_node_type)] = f"/{parent_node_type}/{parent_node_uuid}"
+
+                        # # find the key and append to the json
+                        # url_parent = f"/{parent_node_type}/{parent_node_uuid}"
+                        # del_json = {}
+
+                        # # delete_uuid_dict[(old_uuid, del_node_type)] = f"/{parent_node_type}/{parent_node_uuid}"
+
+                        # master_delete_uuid_dict[f"/{parent_node_type}/{parent_node_uuid}"] = f"/{parent_node_type}/{parent_node_uuid}"
 
             # check if the current new node needs a patch
 
@@ -645,18 +738,28 @@ class API:
 
             node = patch_map[uuid_]
 
+            # print(" \n sub_uuids")
+            # sub_uuids = []
+
+            # while node:
+            #     sub_uuids.append(node.uuid)
+            #     node = next(node)
+
+            # print("sub_uuids")
+            # print(sub_uuids)
+            # quit()
+
+            # print("patch_map.keys()")
+            child_known_uuids = list(patch_map.keys())
+            # print(child_known_uuids)
+            child_known_uuids.remove(str(node.uuid))
+            # print(child_known_uuids)
+            # print("\n++++++++++++++-----[[]]---++++++++++++++++++++++\n")
+
             url_path = f"/{node.node_type_snake_case}/{node.uuid}"
 
-            print(uuid_)
-            print(node.uuid)
-            print("----+++++000----")
-            # "Doing API PATCH for {node.uuid}"
-            # either link if found or patch json to parent
+            print("\n\n HERE1")
             data = node.get_json(is_patch=True).json
-            print("FIRSTDATA")
-            print("we need to send differences but , it needs to be specific types of differences ")
-            print("")
-            print(data)
 
             try:
                 old_node = old_uuid_map[node.uuid]
@@ -664,64 +767,70 @@ class API:
                 print("we are continuing...")
                 pass  # continue
 
-            # deep diff on old_node and node and remove anything the same
-            # and remove from json anything thats the same from old_node
-            # form the patch json - i'll be taking the new stuff - be taking from node
-            # that what gets sent in this
-            # first level search will also include attributes?
-            # res = self._capsule_request(url_path=url_path, method="PATCH", data=data)  # maybe dumps or load
+            #############
+            if _no_condense_uuid:  # first case
+                print("\n\n HERE21")
+                node_dict = json.loads(node.get_json(is_patch=True).json)
 
-            print("\n\nNODEDICT")
-            node_dict = json.loads(node.get_json(is_patch=True).json)
-            node_dict = API.remove_keys_from_dict(node_dict)
-            print(node_dict)
-            print("OLDNODEDICT")
+                print("HERE31")
+                old_node_dict = json.loads(old_node.get_json(is_patch=True).json)
 
-            old_node_dict = json.loads(old_node.get_json(is_patch=True).json)
-            old_node_dict = API.remove_keys_from_dict(old_node_dict)
-            print(old_node_dict)
-            print("~~~~~~~ooo~~~~~~~~~")
-            print(node_dict)
-            print("~~~~~~~iii~~~~~~~~~")
-            print(old_node_dict)
+            else:
+                print("\n\n HERE22")
+                node_dict = json.loads(node.get_json(is_patch=True, known_uuid=child_known_uuids).json)
+                print("HERE32")
+                old_node_dict = json.loads(old_node.get_json(is_patch=True, known_uuid=child_known_uuids).json)
+
+                # print("-------_(((-)))_--------")
+                # print("ok how do we print the schema and , for example, set the material field to inventory \n")
+                # print()
+                # print("\n NODE_DICT")
+                # print(node_dict)
+                # print("\n OLD_NODE_DICT")
+                # print(old_node_dict)
 
             # node_dict = API.remove_keys_from_dict(node_dict)
             # old_node_dict = API.remove_keys_from_dict(old_node_dict)
 
-            print("\n\nDATADA")
+            # print("\n\nDATADA")
             # what they have in common
-            data1 = {key: node_dict[key] for key in node_dict if key in old_node_dict and node_dict[key] == old_node_dict[key]}
+            # data1 = {key: node_dict[key] for key in node_dict if key in old_node_dict and node_dict[key] == old_node_dict[key]}
 
             # Removing keys from node_dict where the values are the same in old_node_dict
             # data2 = {key: node_dict[key] for key in node_dict if key not in old_node_dict or node_dict[key] != old_node_dict[key]}
 
             # Extract differences
-            data2 = API.extract_differences(node_dict, old_node_dict)
-            print("Differences:", data2)
+            data_diff = API.extract_differences(node_dict, old_node_dict)
+            # print("Differences:", data_diff)
 
-            print("4 url_path")
+            print("\n\n4 url_path")
             print(url_path)
             # print("\ndata 00")
             # print(data)
             # print("\ndata01")
             # print(data1)
             # print("data02")
-            print("")
-            print(json.dumps(data2))
-            print("type-data02")
-            print(type(data2))
+            # print("")
+            # print(json.dumps(data_diff))
+            # print("type-data02")
+            # print(type(data_diff))
 
-            # data2clean = API.remove_keys_from_dict(data2)#json.loads(data2))
-            print("\ndata2 -")
-            print(json.dumps(data2))
-            print("\nRESRES")
+            # # data2clean = API.remove_keys_from_dict(data2)#json.loads(data2))
+            # print("\ndata_diff")
+            # print(json.dumps(data_diff))
+            print("\nRESRES data_diff")
+            print(data_diff)
 
-            if data2 != {}:
-                res = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(data2))  # maybe dumps or load
-
+            if data_diff != {}:
+                # add node back here
+                data_diff["node"] = node_dict["node"]
+                print("data_diff_inside")
+                print(data_diff)
+                res = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(data_diff))  # maybe dumps or load
+                print("--------@@@------------")
                 print(res.json())
                 print("--------@@@------------")
-
+            print("______[][][]_______")
             """
             make a clause where if we do the diff and it does or doesn't make sense (i.e. like just _uid as difference)
             then ... we gotta ya know
@@ -730,147 +839,31 @@ class API:
 
             # res.raise_for_status()
 
-        for uuid_ in delete_uuid:
-            # do the delete  *unlinking here
-            # actually here we are able to send list of uuids to be deleted - optimize later
-            # "Doing API Delete for {uuid_}"
-            unlink_payload = {"uuid": str(uuid_)}
-            self._capsule_request(url_path=url_path, method="DELETE", data=json.dumps(unlink_payload))
+        print("\n\n0_delete_uuid_0")
+        print(delete_uuid)
 
+        print("\n\n6_master_delete_uuid_dict_6")
+        print(master_delete_uuid_dict)
+
+        # for uuid_ in delete_uuid:
+
+        for key, value in master_delete_uuid_dict.items():
+            #     # do the delete  *unlinking here
+            #     # actually here we are able to send list of uuids to be deleted - optimize later
+            #     # "Doing API Delete for {uuid_}"
+
+            #     print("\n whats_the_url_path")
+            #     print(url_path)
+
+            #     # delete_uuid_dict[]
+            #     # shit... we need to keep track of parent .....
+            #     unlink_payload = {"uuid": str(uuid_)}
+            url_path = key
+            unlink_payload = value
+            res = self._capsule_request(url_path=url_path, method="DELETE", data=json.dumps(unlink_payload))
+            if res.status_code in [200]:
+                print("\n we_deleted_nodes!")
         ################################################################################
-
-    def save_old(self, project: Project) -> None:
-        """
-        This method takes a project node, serializes the class into JSON
-        and then sends the JSON to be saved to the API.
-        It takes Project node because everything is connected to the Project node,
-        and it can be used to send either a POST or PATCH request to API
-
-        Parameters
-        ----------
-        project: Project
-            the Project Node that the user wants to save
-
-        Raises
-        ------
-        CRIPTAPISaveError
-            If the API responds with anything other than an HTTP of `200`, the API error is displayed to the user
-
-        Returns
-        -------
-        A set of extra saved node UUIDs.
-            Just sends a `POST` or `Patch` request to the API
-        """
-        try:
-            self._internal_save(project)
-        except CRIPTAPISaveError as exc:
-            if exc.pre_saved_nodes:
-                for node_uuid in exc.pre_saved_nodes:
-                    # TODO remove all pre-saved nodes by their uuid.
-                    pass
-            raise exc from exc
-
-    def _internal_save_old(self, node, save_values: Optional[_InternalSaveValues] = None) -> _InternalSaveValues:
-        """
-        Internal helper function that handles the saving of different nodes (not just project).
-
-        If a "Bad UUID" error happens, we find that node with the UUID and save it first.
-        Then we recursively call the _internal_save again.
-        Because it is recursive, this repeats until no "Bad UUID" error happen anymore.
-        This works, because we keep track of "Bad UUID" handled nodes, and represent them in the JSON only as the UUID.
-        """
-
-        if save_values is None:
-            save_values = _InternalSaveValues()
-
-        # saves all the local files to cloud storage right before saving the Project node
-        # Ensure that all file nodes have uploaded there payload before actual save.
-        for file_node in node.find_children({"node": ["File"]}):
-            file_node.ensure_uploaded(api=self)
-
-        node.validate(force_validation=True)
-
-        # Dummy response to have a virtual do-while loop, instead of while loop.
-        response = {"code": -1}
-        # TODO remove once get works properly
-        force_patch = False
-
-        while response["code"] != 200:
-            # Keep a record of how the state was before the loop
-            old_save_values = copy.deepcopy(save_values)
-            # We assemble the JSON to be saved to back end.
-            # Note how we exclude pre-saved uuid nodes.
-            json_data = node.get_json(known_uuid=save_values.saved_uuid, suppress_attributes=save_values.suppress_attributes).json
-
-            # This checks if the current node exists on the back end.
-            # if it does exist we use `patch` if it doesn't `post`.
-            test_get_response: Dict = self._capsule_request(url_path=f"/{node.node_type_snake_case}/{str(node.uuid)}/", method="GET").json()
-            patch_request = test_get_response["code"] == 200
-
-            # TODO remove once get works properly
-            if not patch_request and force_patch:
-                patch_request = True
-                force_patch = False
-            # TODO activate patch validation
-            # node.validate(is_patch=patch_request)
-
-            # If all that is left is a UUID, we don't need to save it, we can just exit the loop.
-            if patch_request and len(json.loads(json_data)) == 1:
-                response = {"code": 200}
-                break
-
-            method = "POST"
-            url_path = f"/{node.node_type_snake_case}/"
-            if patch_request:
-                method = "PATCH"
-                url_path += f"{str(node.uuid)}/"
-
-            response: Dict = self._capsule_request(url_path=url_path, method=method, data=json_data).json()  # type: ignore
-
-            # if node.node_type != "Project":
-            #     test_success: Dict = requests.get(url=f"{self._host}/{node.node_type_snake_case}/{str(node.uuid)}/", headers=self._http_headers, timeout=_API_TIMEOUT).json()
-            #     print("XYZ", json_data, save_values, response, test_success)
-
-            # print(json_data, patch_request, response, save_values)
-            # If we get an error we may be able to fix, we to handle this extra and save the bad node first.
-            # Errors with this code, may be fixable
-            if response["code"] in (400, 409):
-                try:
-                    returned_save_values = _fix_node_save(self, node, response, save_values)
-                except CRIPTAPISaveError as exc:
-                    # If the previous error was a duplicated name issue
-                    if "duplicate item [{'name':" in str(response["error"]):
-                        # And (second condition) the request failed bc of the now suppressed name
-                        if "'name' is a required property" in exc.api_response:
-                            # Raise a save error, with the nice name related error message
-                            raise CRIPTDuplicateNameError(response, json_data, exc) from exc
-                    # Else just raise the exception as normal.
-                    raise exc
-                save_values += returned_save_values
-
-            # Handle errors from patching with too many attributes
-            if patch_request and response["code"] in (400,):
-                suppress_attributes = _identify_suppress_attributes(node, response)
-                new_save_values = _InternalSaveValues(save_values.saved_uuid, suppress_attributes)
-                save_values += new_save_values
-
-            # It is only worthwhile repeating the attempted save loop if our state has improved.
-            # Aka we did something to fix the occurring error
-            if not save_values > old_save_values:
-                # TODO remove once get works properly
-                if not patch_request:
-                    # and response["code"] == 409 and response["error"].strip().startswith("Duplicate uuid:"):  # type: ignore
-                    # duplicate_uuid = _get_uuid_from_error_message(response["error"])  # type: ignore
-                    # if str(node.uuid) == duplicate_uuid:
-                    force_patch = True
-                    continue
-                break
-
-        if response["code"] != 200:
-            raise CRIPTAPISaveError(api_host_domain=self._host, http_code=response["code"], api_response=response["error"], patch_request=patch_request, pre_saved_nodes=save_values.saved_uuid, json_data=json_data)  # type: ignore
-
-        save_values.saved_uuid.add(str(node.uuid))
-        return save_values
 
     def upload_file(self, file_path: Union[Path, str]) -> str:
         # trunk-ignore-begin(cspell)

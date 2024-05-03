@@ -77,6 +77,17 @@ class User(UUIDBaseNode):
         new_json_attrs = replace(self._json_attrs, username=username, email=email, orcid=orcid)
         self._update_json_attrs_if_valid(new_json_attrs)
 
+    @classmethod
+    def _from_json(cls, json_dict: dict):
+        # GOOD CHANGE - ALI
+        # TODO: remove this temporary fix, once back end is working correctly
+        try:
+            if json_dict["model_version"] == "1.0.0":
+                json_dict["model_version"] = "1.0.1"
+        except KeyError:
+            pass
+        return super(User, cls)._from_json(json_dict)
+
     @property
     @beartype
     def created_at(self) -> str:

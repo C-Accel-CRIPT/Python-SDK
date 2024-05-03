@@ -68,7 +68,7 @@ class Condition(UUIDBaseNode):
                     "type":"calibration",
                     "source":"https://criptapp.org",
                     "extension":".csv",
-                    "data_dictionary":"my file's data dictionary"
+                    "data_dictionary":"my files data dictionary"
                 }
             ]
         }],

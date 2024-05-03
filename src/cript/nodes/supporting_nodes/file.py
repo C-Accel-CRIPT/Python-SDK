@@ -108,7 +108,7 @@ class File(PrimaryBaseNode):
         "source": "https://criptapp.org",
         "type": "calibration",
         "extension": ".csv",
-        "data_dictionary": "my file's data dictionary",
+        "data_dictionary": "my files data dictionary",
     }
     ```
     """
@@ -159,7 +159,7 @@ class File(PrimaryBaseNode):
         ...     source="https://pubs.acs.org/doi/suppl/10.1021/acscentsci.3c00011/suppl_file/oc3c00011_si_001.pdf",
         ...     type="calibration",
         ...     extension=".pdf",
-        ...     data_dictionary="my file's data dictionary",
+        ...     data_dictionary="my files data dictionary",
         ...     notes="my notes for this file",
         ... )
 
@@ -170,7 +170,7 @@ class File(PrimaryBaseNode):
         ...     source="/home/user/MIT/project/my_file.csv",
         ...     type="calibration",
         ...     extension=".csv",
-        ...     data_dictionary="my file's data dictionary",
+        ...     data_dictionary="my files data dictionary",
         ...     notes="my notes for this file",
         ... )
         """

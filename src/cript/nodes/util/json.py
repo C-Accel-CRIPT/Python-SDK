@@ -1,6 +1,7 @@
 """
 This module contains classes and functions that help with the json serialization and deserialization of nodes.
 """
+
 import dataclasses
 import inspect
 import json
@@ -183,10 +184,15 @@ class NodeEncoder(json.JSONEncoder):
                 except AttributeError:
                     uid = element["uid"]
 
-                if self.no_condense_uuid:
-                    element = ""
-                else:
+                # old___
+                # if self.no_condense_uuid:
+                #     element = ""
+                # else:
+                #     element = {"uuid": str(uuid)}
+                # GOOD CHANGE - ALI
+                if self.no_condense_uuid is False:
                     element = {"uuid": str(uuid)}
+
                 return element, uid
 
             # Processes an attribute based on its type (list or single element)

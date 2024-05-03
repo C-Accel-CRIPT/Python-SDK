@@ -79,6 +79,15 @@ class BaseNode(ABC):
 
         self_sorted_json = self.get_json(known_uuid=self_child_map.keys(), sort_keys=True, condense_to_uuid={}).json
         other_sorted_json = other.get_json(known_uuid=other_child_map.keys(), sort_keys=True, condense_to_uuid={}).json
+        # maybe bring back
+        # self_sorted_json_dict = json.loads(self_sorted_json)
+        # other_sorted_json_dict = json.loads(other_sorted_json)
+
+        # del self_sorted_json_dict["uid"]
+        # del other_sorted_json_dict["uid"]
+
+        # self_sorted_json = json.dumps(self_sorted_json_dict)
+        # other_sorted_json = json.dumps(other_sorted_json_dict)
 
         return self_sorted_json == other_sorted_json
 
@@ -429,6 +438,15 @@ class BaseNode(ABC):
         """
         return self.get_json(handled_ids=None, known_uuid=None, suppress_attributes=None, is_patch=False, condense_to_uuid={}, **kwargs).json
 
+    # @staticmethod
+    # def clean_dict(data):
+    #     if isinstance(data, dict):
+    #         return {key: BaseNode.clean_dict(value) for key, value in data.items() if value != "" and value != [""]}
+    #     elif isinstance(data, list):
+    #         return [BaseNode.clean_dict(item) for item in data if item != "" and item != [""]]
+    #     else:
+    #         return data
+
     def get_json(
         self,
         handled_ids: Optional[Set[str]] = None,
@@ -439,7 +457,7 @@ class BaseNode(ABC):
             "Material": {"parent_material", "component"},
             "Experiment": {"data"},
             "Inventory": {"material"},
-            "Ingredient": {"material"},
+            # "Ingredient": {"material"},
             "Property": {"component"},
             "ComputationProcess": {"material"},
             "Data": {"material"},
@@ -493,9 +511,32 @@ class BaseNode(ABC):
         try:
             tmp_json = json.dumps(self, cls=NodeEncoder, **kwargs)
             tmp_dict = json.loads(tmp_json)
+            #####
+
+            # try:
+            #     print(tmp_dict)  # ["inventory"])#[0]["experiment"][0]["data"])
+            #     print(f"is_patch: {is_patch}")
+            #     print(f"_no_condense_uuid: {_no_condense_uuid}")
+            #     print(" 🐨🐱🦊 ")
+            # except:
+            #     print(" - ")
+
+            # if tmp_dict["collection"]["experiment"]["data"]:
+            #     print("-----tmp_dict_is_there_a_full data or not")
+            #     print(tmp_dict["collection"]["experiment"]["data"])
+
             if is_patch:
-                del tmp_dict["uuid"]  # patches do not allow UUID is the parent most node
-                del tmp_dict["uid"]
+                # del tmp_dict["uuid"]  # patches do not allow UUID is the parent most node
+
+                # try:  # this should only affect parent
+                #     del tmp_dict["uuid"]
+                # except KeyError:
+                #     pass
+
+                # try:
+                #     del tmp_dict["uid"]
+                # except KeyError:
+                #     pass
 
                 try:
                     del tmp_dict["created_at"]

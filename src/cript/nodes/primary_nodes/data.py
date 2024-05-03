@@ -39,7 +39,7 @@ class Data(PrimaryBaseNode):
     ...    source="https://criptapp.org",
     ...    type="calibration",
     ...    extension=".csv",
-    ...    data_dictionary="my file's data dictionary"
+    ...    data_dictionary="my files data dictionary"
     ... )
     >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
 
@@ -60,7 +60,7 @@ class Data(PrimaryBaseNode):
              "type":"calibration",
              "source":"https://criptapp.org",
              "extension":".csv",
-             "data_dictionary":"my file's data dictionary",
+             "data_dictionary":"my files data dictionary",
           }
        ]
     }
@@ -195,7 +195,7 @@ class Data(PrimaryBaseNode):
         ...    source="https://criptapp.org",
         ...    type="calibration",
         ...    extension=".csv",
-        ...    data_dictionary="my file's data dictionary"
+        ...    data_dictionary="my files data dictionary"
         ... )
         >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
         >>> my_data.type = "nmr_h1"
@@ -240,7 +240,7 @@ class Data(PrimaryBaseNode):
         ...    source="https://criptapp.org",
         ...    type="calibration",
         ...    extension=".csv",
-        ...    data_dictionary="my file's data dictionary"
+        ...    data_dictionary="my files data dictionary"
         ... )
         >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
         >>> my_new_file = cript.File(
@@ -248,7 +248,7 @@ class Data(PrimaryBaseNode):
         ...    source="path/to/local/file",
         ...    type="calibration",
         ...    extension=".csv",
-        ...    data_dictionary="my file's data dictionary"
+        ...    data_dictionary="my files data dictionary"
         ... )
         >>> my_data.file += [my_new_file]
 
@@ -336,7 +336,7 @@ class Data(PrimaryBaseNode):
         ...    source="https://criptapp.org",
         ...    type="calibration",
         ...    extension=".csv",
-        ...    data_dictionary="my file's data dictionary"
+        ...    data_dictionary="my files data dictionary"
         ... )
         >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
         >>> my_computation = cript.Computation(name="my computation name", type="analysis")
@@ -381,7 +381,7 @@ class Data(PrimaryBaseNode):
         ...     source="https://criptapp.org",
         ...     type="calibration",
         ...     extension=".csv",
-        ...     data_dictionary="my file's data dictionary"
+        ...     data_dictionary="my files data dictionary"
         ... )
         >>> my_data = cript.Data(
         ...     name="my data name",
@@ -393,7 +393,7 @@ class Data(PrimaryBaseNode):
         ...     source="https://criptapp.org",
         ...     type="calibration",
         ...     extension=".csv",
-        ...     data_dictionary="my file's data dictionary"
+        ...     data_dictionary="my files data dictionary"
         ... )
         >>> my_second_data_node = cript.Data(
         ...     name="my data name",
@@ -457,7 +457,7 @@ class Data(PrimaryBaseNode):
         ...    source="https://criptapp.org",
         ...    type="calibration",
         ...    extension=".csv",
-        ...    data_dictionary="my file's data dictionary"
+        ...    data_dictionary="my files data dictionary"
         ... )
         >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
         >>> my_material = cript.Material(name="my material name", bigsmiles = "123456")
@@ -501,7 +501,7 @@ class Data(PrimaryBaseNode):
         ...    source="https://criptapp.org",
         ...    type="calibration",
         ...    extension=".csv",
-        ...    data_dictionary="my file's data dictionary"
+        ...    data_dictionary="my files data dictionary"
         ... )
         >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
         >>> my_process = cript.Process(name="my process name", type="affinity_pure")
@@ -553,7 +553,7 @@ class Data(PrimaryBaseNode):
         ...    source="https://criptapp.org",
         ...    type="calibration",
         ...    extension=".csv",
-        ...    data_dictionary="my file's data dictionary"
+        ...    data_dictionary="my files data dictionary"
         ... )
         >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
         >>> my_reference = cript.Reference(type="journal_article", title="'Living' Polymers")

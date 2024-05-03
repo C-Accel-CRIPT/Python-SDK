@@ -55,7 +55,7 @@ def test_is_node_schema_valid(cript_api: cript.API) -> None:
         "source": "https://criptapp.org",
         "type": "calibration",
         "extension": ".csv",
-        "data_dictionary": "my file's data dictionary",
+        "data_dictionary": "my files data dictionary",
     }
 
     # convert dict to JSON string because method expects JSON string

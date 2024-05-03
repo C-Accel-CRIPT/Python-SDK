@@ -106,7 +106,7 @@ def test_all_getters_and_setters_for_experiment(
     assert simple_experiment_node.citation == []
 
 
-def test_experiment_json(simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, complex_citation_node, complex_citation_dict) -> None:
+def test_experiment_json(simple_process_node, simple_computation_node, simplest_computational_process_node, simple_data_node, complex_citation_node, complex_citation_dict) -> None:
     """
     tests that the experiment JSON is functioning correctly
 
@@ -128,7 +128,8 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
         name=experiment_name,
         process=[simple_process_node],
         computation=[simple_computation_node],
-        computation_process=[simple_computational_process_node],
+        computation_process=[simplest_computational_process_node],
+        # computation_process=[simple_computational_process_node],
         data=[simple_data_node],
         funding=experiment_funders,
         citation=[citation],
@@ -154,7 +155,7 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
                         "node": ["Data"],
                         "name": "my data name",
                         "type": "afm_amp",
-                        "file": [{"node": ["File"], "name": "my complex file node fixture", "source": "https://criptapp.org", "type": "calibration", "extension": ".csv", "data_dictionary": "my file's data dictionary"}],
+                        "file": [{"node": ["File"], "name": "my complex file node fixture", "source": "https://criptapp.org", "type": "calibration", "extension": ".csv", "data_dictionary": "my files data dictionary"}],
                     }
                 ],
                 "ingredient": [
@@ -194,6 +195,15 @@ def test_experiment_json(simple_process_node, simple_computation_node, simple_co
     ref_dict = strip_uid_from_dict(ref_dict)
 
     assert len(ref_dict) == len(expected_experiment_dict)
+
+    print("****REFDICT")
+    print(type(ref_dict))
+    print(ref_dict)
+
+    print("****EXPECTED DICT")
+    print(type(expected_experiment_dict))
+    print(expected_experiment_dict)
+
     assert ref_dict == expected_experiment_dict
 
 

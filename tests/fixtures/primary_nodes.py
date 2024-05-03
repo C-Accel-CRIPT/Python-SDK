@@ -26,10 +26,6 @@ def complex_project_dict(complex_collection_node, simple_material_node, complex_
     project_dict = {"node": ["Project"]}
     project_dict["locked"] = True
 
-    # project_dict["model_version"] = "1.0.0"
-    # project_dict["updated_by"] = json.loads(copy.deepcopy(complex_user_node).get_expanded_json())
-    # project_dict["created_by"] = json.loads(complex_user_node.get_expanded_json())
-
     project_dict["model_version"] = "1.0.1"
     # project_dict["updated_by"] = json.loads(copy.deepcopy(complex_user_node).get_expanded_json())
     # project_dict["created_by"] = json.loads(complex_user_node.get_expanded_json())

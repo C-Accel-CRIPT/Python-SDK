@@ -132,7 +132,7 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
                 "node": ["Data"],
                 "name": "my data name",
                 "type": "afm_amp",
-                "file": [{"node": ["File"], "name": "my complex file node fixture", "source": "https://criptapp.org", "type": "calibration", "extension": ".csv", "data_dictionary": "my file's data dictionary"}],
+                "file": [{"node": ["File"], "name": "my complex file node fixture", "source": "https://criptapp.org", "type": "calibration", "extension": ".csv", "data_dictionary": "my files data dictionary"}],
             }
         ],
         "ingredient": [
@@ -150,7 +150,9 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
     assert ref_dict == expected_dict
 
 
-def test_integration_computational_process(cript_api, simple_project_node, simple_inventory_node, simple_collection_node, simple_experiment_node, simplest_computational_process_node, simple_material_node, simple_data_node) -> None:
+def test_integration_computational_process(
+    cript_api, simple_project_node, simple_inventory_node, simple_collection_node, simple_experiment_node, simplest_computational_process_node, simple_material_node, simple_data_node, simple_ingredient_node
+) -> None:
     """
     integration test between Python SDK and API Client
 
@@ -177,6 +179,11 @@ def test_integration_computational_process(cript_api, simple_project_node, simpl
     simple_project_node.collection[0].experiment[0].data = [simple_data_node]
 
     simple_project_node.collection[0].experiment[0].computation_process = [simplest_computational_process_node]
+
+    # print("---")
+    # simple_project_node.collection[0].experiment[0].computation_process[0].ingredient = [simple_ingredient_node]
+    # print("  simple_syrup_ingredients_   project_node")
+    # print(simple_project_node)
 
     save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 

@@ -225,7 +225,8 @@ def complex_ingredient_node(complex_material_node, complex_quantity_node) -> cri
     """
     complex ingredient node with all possible parameters filled
     """
-    complex_ingredient_node = cript.Ingredient(material=complex_material_node, quantity=[complex_quantity_node], keyword=["catalyst"])
+    # complex_ingredient_node = cript.Ingredient(material=complex_material_node, quantity=[complex_quantity_node], keyword=["catalyst"])
+    # complex_ingredient_node = cript.Ingredient(material={}, quantity=[complex_quantity_node], keyword=["catalyst"])
 
     return complex_ingredient_node
 
@@ -248,7 +249,13 @@ def simple_ingredient_node(simple_material_node, complex_quantity_node) -> cript
 
     simple_material_node.name = f"{simple_material_node.name}_{uuid.uuid4().hex}"
 
+    print("!!__!!__simple_syrup_material_node")
+    print(simple_material_node)
+
     my_simple_ingredient = cript.Ingredient(material=simple_material_node, quantity=[complex_quantity_node], keyword=["catalyst"])
+    print("simple_syrup")
+    # quit()
+    # my_simple_ingredient.material = simple_material_node
 
     return my_simple_ingredient
 

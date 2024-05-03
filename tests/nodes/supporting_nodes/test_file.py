@@ -178,7 +178,7 @@ def test_serialize_file_to_json(complex_file_node) -> None:
         "source": "https://criptapp.org",
         "type": "calibration",
         "extension": ".csv",
-        "data_dictionary": "my file's data dictionary",
+        "data_dictionary": "my files data dictionary",
     }
 
     # compare dicts for more accurate comparison

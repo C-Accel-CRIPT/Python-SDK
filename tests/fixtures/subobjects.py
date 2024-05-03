@@ -225,8 +225,7 @@ def complex_ingredient_node(complex_material_node, complex_quantity_node) -> cri
     """
     complex ingredient node with all possible parameters filled
     """
-    # complex_ingredient_node = cript.Ingredient(material=complex_material_node, quantity=[complex_quantity_node], keyword=["catalyst"])
-    # complex_ingredient_node = cript.Ingredient(material={}, quantity=[complex_quantity_node], keyword=["catalyst"])
+    complex_ingredient_node = cript.Ingredient(material=complex_material_node, quantity=[complex_quantity_node], keyword=["catalyst"])
 
     return complex_ingredient_node
 

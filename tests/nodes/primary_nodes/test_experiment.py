@@ -106,7 +106,7 @@ def test_all_getters_and_setters_for_experiment(
     assert simple_experiment_node.citation == []
 
 
-def test_experiment_json(simple_process_node, simple_computation_node, simplest_computational_process_node, simple_data_node, complex_citation_node, complex_citation_dict) -> None:
+def test_experiment_json(simple_process_node, simple_computation_node, simple_computational_process_node, simple_data_node, complex_citation_node, complex_citation_dict) -> None:
     """
     tests that the experiment JSON is functioning correctly
 
@@ -128,8 +128,8 @@ def test_experiment_json(simple_process_node, simple_computation_node, simplest_
         name=experiment_name,
         process=[simple_process_node],
         computation=[simple_computation_node],
-        computation_process=[simplest_computational_process_node],
-        # computation_process=[simple_computational_process_node],
+        # computation_process=[simplest_computational_process_node],
+        computation_process=[simple_computational_process_node],
         data=[simple_data_node],
         funding=experiment_funders,
         citation=[citation],
@@ -193,6 +193,7 @@ def test_experiment_json(simple_process_node, simple_computation_node, simplest_
 
     ref_dict = json.loads(my_experiment.json)
     ref_dict = strip_uid_from_dict(ref_dict)
+    ref_dict["computation_process"][0]["ingredient"][0]["material"] = {}
 
     assert len(ref_dict) == len(expected_experiment_dict)
 

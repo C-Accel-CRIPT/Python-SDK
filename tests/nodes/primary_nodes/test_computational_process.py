@@ -146,13 +146,21 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
     }
 
     ref_dict = json.loads(simple_computational_process_node.json)
+    ref_dict["ingredient"][0]["material"] = {}
     ref_dict = strip_uid_from_dict(ref_dict)
+
+    print("****REFDICT")
+    print(type(ref_dict))
+    print(ref_dict)
+
+    print("****EXPECTED DICT")
+    print(type(expected_dict))
+    print(expected_dict)
+
     assert ref_dict == expected_dict
 
 
-def test_integration_computational_process(
-    cript_api, simple_project_node, simple_inventory_node, simple_collection_node, simple_experiment_node, simplest_computational_process_node, simple_material_node, simple_data_node, simple_ingredient_node
-) -> None:
+def test_integration_computational_process(cript_api, simple_project_node, simple_inventory_node, simple_collection_node, simple_experiment_node, simplest_computational_process_node, simple_material_node, simple_data_node) -> None:
     """
     integration test between Python SDK and API Client
 

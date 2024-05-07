@@ -93,7 +93,7 @@ class ComputationProcess(PrimaryBaseNode):
                    "node":["File"],
                    "source":"https://criptapp.org",
                    "type":"calibration",
-                    "data_dictionary":"my file's data dictionary",
+                    "data_dictionary":"my files data dictionary",
                    "extension":".csv",
                    "uid":"_:ee8153db-4108-49e4-8c5b-ffc26d4e6f71",
                    "uuid":"ee8153db-4108-49e4-8c5b-ffc26d4e6f71"
@@ -150,7 +150,7 @@ class ComputationProcess(PrimaryBaseNode):
         ...     source="https://criptapp.org",
         ...     type="calibration",
         ...     extension=".csv",
-        ...     data_dictionary="my file's data dictionary"
+        ...     data_dictionary="my files data dictionary"
         ... )
         >>> input_data = cript.Data(name="my data name", type="afm_amp", file=[data_files])
         >>> my_material = cript.Material(
@@ -287,7 +287,7 @@ class ComputationProcess(PrimaryBaseNode):
         ...     name="my file node name",
         ...     source="https://criptapp.org",
         ...     type="calibration",
-        ...     data_dictionary="my file's data dictionary",
+        ...     data_dictionary="my files data dictionary",
         ...     extension=".csv",
         ... )
         >>> my_input_data = cript.Data(name="my input data name", type="afm_amp", file=[my_file])
@@ -331,7 +331,7 @@ class ComputationProcess(PrimaryBaseNode):
         ...     source="https://criptapp.org",
         ...     type="calibration",
         ...     extension=".csv",
-        ...     data_dictionary="my file's data dictionary"
+        ...     data_dictionary="my files data dictionary"
         ... )
         >>> my_output_data = cript.Data(name="my output data name", type="afm_amp", file=[my_file])
         >>> my_computation_process.output_data = [my_output_data]    # doctest: +SKIP

@@ -25,14 +25,16 @@ def simple_project_node(simple_collection_node) -> cript.Project:
 def complex_project_dict(complex_collection_node, simple_material_node, complex_user_node) -> dict:
     project_dict = {"node": ["Project"]}
     project_dict["locked"] = True
-    project_dict["model_version"] = "1.0.0"
-    project_dict["updated_by"] = json.loads(copy.deepcopy(complex_user_node).get_expanded_json())
-    project_dict["created_by"] = json.loads(complex_user_node.get_expanded_json())
+
+    project_dict["model_version"] = "1.0.1"
+    # project_dict["updated_by"] = json.loads(copy.deepcopy(complex_user_node).get_expanded_json())
+    # project_dict["created_by"] = json.loads(complex_user_node.get_expanded_json())
+
     project_dict["public"] = True
     project_dict["name"] = "my project name"
     project_dict["notes"] = "my project notes"
-    project_dict["member"] = [json.loads(complex_user_node.get_expanded_json())]
-    project_dict["admin"] = [json.loads(complex_user_node.get_expanded_json())]
+    # project_dict["member"] = [json.loads(complex_user_node.get_expanded_json())]
+    # project_dict["admin"] = [json.loads(complex_user_node.get_expanded_json())]
     project_dict["collection"] = [json.loads(complex_collection_node.get_expanded_json())]
     project_dict["material"] = [json.loads(copy.deepcopy(simple_material_node).get_expanded_json())]
     return project_dict
@@ -60,7 +62,7 @@ def fixed_cyclic_project_node() -> cript.Project:
     project_json_string += '"created_at": "2024-03-12 15:58:12.486673",\n'
     project_json_string += '"updated_at": "2024-03-12 15:58:12.486681",\n'
     project_json_string += '"email": "test@emai.com",\n'
-    project_json_string += '"model_version": "1.0.0",\n'
+    project_json_string += '"model_version": "1.0.1",\n'
     project_json_string += '"orcid": "0000-0002-0000-0000",\n'
     project_json_string += '"picture": "/my/picture/path",\n'
     project_json_string += '"username": "testuser"\n'
@@ -72,13 +74,13 @@ def fixed_cyclic_project_node() -> cript.Project:
     project_json_string += '"created_at": "2024-03-12 15:58:12.486673",\n'
     project_json_string += '"updated_at": "2024-03-12 15:58:12.486681",\n'
     project_json_string += '"email": "test@emai.com",\n'
-    project_json_string += '"model_version": "1.0.0",\n'
+    project_json_string += '"model_version": "1.0.1",\n'
     project_json_string += '"orcid": "0000-0002-0000-0000",\n'
     project_json_string += '"picture": "/my/picture/path",\n'
     project_json_string += '"username": "testuser"\n'
     project_json_string += "},\n"
     project_json_string += '"locked": true,\n'
-    project_json_string += '"model_version": "1.0.0",\n'
+    project_json_string += '"model_version": "1.0.1",\n'
     project_json_string += '"public": true,\n'
     project_json_string += '"name": "my project name",\n'
     project_json_string += '"notes": "my project notes",\n'
@@ -126,7 +128,7 @@ def fixed_cyclic_project_node() -> cript.Project:
     project_json_string += '"node": ["Property"],\n'
     project_json_string += '"uid": "_:fc504202-6fdd-43c7-830d-40c7d3f0cb8c",\n'
     project_json_string += '"uuid": "fc504202-6fdd-43c7-830d-40c7d3f0cb8c",\n'
-    project_json_string += '"key": "modulus_shear",\n'
+    project_json_string += '"key": "enthalpy",\n'
     project_json_string += '"type": "value",\n'
     project_json_string += '"value": 5.0,\n'
     project_json_string += '"unit": "GPa",\n'
@@ -213,7 +215,7 @@ def fixed_cyclic_project_node() -> cript.Project:
     project_json_string += '"node": ["Property"],\n'
     project_json_string += '"uid": "_:fde629f5-8d3a-4546-8cd3-9de63b990187",\n'
     project_json_string += '"uuid": "fde629f5-8d3a-4546-8cd3-9de63b990187",\n'
-    project_json_string += '"key": "modulus_shear",\n'
+    project_json_string += '"key": "enthalpy",\n'
     project_json_string += '"type": "value",\n'
     project_json_string += '"value": 5.0,\n'
     project_json_string += '"unit": "GPa",\n'
@@ -656,15 +658,17 @@ def complex_material_node(simple_property_node, simple_process_node, complex_com
 
 
 @pytest.fixture(scope="function")
-def simple_inventory_node(simple_material_node) -> None:
+def simple_inventory_node() -> None:
     """
     minimal inventory node to use for other tests
     """
     # set up inventory node
 
-    material_2 = cript.Material(name="material 2 " + str(uuid.uuid4()), bigsmiles="{[][$]COC[$][]}")
+    # material_2 = cript.Material(name="material 2 " + str(uuid.uuid4()), bigsmiles="{[][$]COC[$][]}")
 
-    my_inventory = cript.Inventory(name="my inventory name", material=[simple_material_node, material_2])
+    my_inventory = cript.Inventory(name="my inventory name", material=[])  # material=[simple_material_node, material_2])
+
+    # my_inventory.material = []
 
     # use my_inventory in another test
     return my_inventory

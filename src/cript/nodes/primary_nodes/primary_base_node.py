@@ -57,6 +57,17 @@ class PrimaryBaseNode(UUIDBaseNode, ABC):
         """
         return super().__str__()
 
+    @classmethod
+    def _from_json(cls, json_dict: dict):
+        # GOOD CHANGE - ALI
+        # TODO: remove this temporary fix, once back end is working correctly
+        try:
+            if json_dict["model_version"] == "1.0.0":
+                json_dict["model_version"] = "1.0.1"
+        except KeyError:
+            pass
+        return super(PrimaryBaseNode, cls)._from_json(json_dict)
+
     @property
     @beartype
     def locked(self):

@@ -241,7 +241,7 @@ class Experiment(PrimaryBaseNode):
         ...     source="https://criptapp.org",
         ...     type="calibration",
         ...     extension=".csv",
-        ...     data_dictionary="my file's data dictionary",
+        ...     data_dictionary="my files data dictionary",
         ... )
         >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
         >>> my_material = cript.Material(
@@ -301,7 +301,7 @@ class Experiment(PrimaryBaseNode):
         ...    source="https://criptapp.org",
         ...    type="calibration",
         ...    extension=".csv",
-        ...    data_dictionary="my file's data dictionary",
+        ...    data_dictionary="my files data dictionary",
         ... )
         >>> my_data = cript.Data(name="my data name", type="afm_amp", file=[my_file])
         >>> my_experiment.data = [my_data]

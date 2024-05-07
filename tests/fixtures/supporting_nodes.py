@@ -18,7 +18,7 @@ def complex_file_node() -> cript.File:
         source="https://criptapp.org",
         type="calibration",
         extension=".csv",
-        data_dictionary="my file's data dictionary",
+        data_dictionary="my files data dictionary",
     )
 
     return my_file
@@ -60,15 +60,22 @@ def complex_local_file_node(tmp_path_factory) -> cript.File:
 
 
 @pytest.fixture(scope="function")
-def complex_user_dict() -> dict:
-    user_dict = {"node": ["User"]}
-    user_dict["created_at"] = str(datetime.datetime.now())
-    user_dict["model_version"] = "1.0.0"
-    user_dict["picture"] = "/my/picture/path"
-    user_dict["updated_at"] = str(datetime.datetime.now())
-    user_dict["username"] = "testuser"
-    user_dict["email"] = "test@emai.com"
-    user_dict["orcid"] = "0000-0002-0000-0000"
+def complex_user_dict(cript_api) -> dict:
+    user_node = next(cript_api.search(node_type=cript.User, search_mode=cript.SearchModes.NODE_TYPE))
+
+    user_dict = json.loads(user_node.get_json().json)
+    # print("8888888--------")
+    # print(user_dict)
+
+    # def complex_user_dict() -> dict: #old code
+    #     user_dict = {"node": ["User"]}
+    #     user_dict["created_at"] = str(datetime.datetime.now())
+    #     user_dict["model_version"] = "1.0.1"
+    #     user_dict["picture"] = "/my/picture/path"
+    #     user_dict["updated_at"] = str(datetime.datetime.now())
+    #     user_dict["username"] = "testuser"
+    #     user_dict["email"] = "test@emai.com"
+    #     user_dict["orcid"] = "0000-0002-0000-0000"
     return user_dict
 
 

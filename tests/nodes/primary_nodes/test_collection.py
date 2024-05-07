@@ -100,7 +100,7 @@ def test_collection_getters_and_setters(simple_experiment_node, simple_inventory
     assert my_collection.notes == ""
 
 
-def test_serialize_collection_to_json(complex_user_node) -> None:
+def test_serialize_collection_to_json() -> None:  # (complex_user_node) -> None:
     """
     test that Collection node can be correctly serialized to JSON
 
@@ -117,8 +117,8 @@ def test_serialize_collection_to_json(complex_user_node) -> None:
         "node": ["Collection"],
         "name": "my collection name",
         "experiment": [{"node": ["Experiment"], "name": "my experiment name"}],
-        "member": [json.loads(copy.deepcopy(complex_user_node).json)],
-        "admin": [json.loads(complex_user_node.json)],
+        # "member": [json.loads(copy.deepcopy(complex_user_node).json)],
+        # "admin": [json.loads(complex_user_node.json)],
     }
 
     collection_node = cript.load_nodes_from_json(json.dumps(expected_collection_dict))

@@ -211,7 +211,12 @@ def test_integration_reference(cript_api, simple_project_node, complex_citation_
     simple_project_node.name = f"test_integration_reference_name_{uuid.uuid4().hex}"
 
     simple_project_node.collection[0].citation = [complex_citation_node]
+    print("PRINTING_citation_INFO 1")
+    print(simple_project_node.collection[0].citation)
 
+    """
+    right now this test is failing when you try to add citation
+    """
     save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)
 
     # TODO deserialization with citation in collection is wrong
@@ -222,6 +227,10 @@ def test_integration_reference(cript_api, simple_project_node, complex_citation_
     # change simple attribute to trigger update
     #   TODO can enable this later
     #  complex_reference_node.type = "book"
+
+    print("PRINTING_citation_INFO 2")
+    print(simple_project_node.collection[0].citation)
+
     simple_project_node.collection[0].citation[0].reference.title = "reference title UPDATED"
 
     save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)

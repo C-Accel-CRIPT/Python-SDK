@@ -41,7 +41,7 @@ def test_get_and_set_inventory(simple_inventory_node) -> None:
     assert simple_inventory_node.notes == ""
 
 
-def test_inventory_serialization(simple_inventory_node, simple_material_dict) -> None:
+def test_inventory_serialization(simple_inventory_node, simple_material_dict, simple_material_node) -> None:
     """
     test that the inventory is correctly serializing into JSON
 
@@ -49,12 +49,16 @@ def test_inventory_serialization(simple_inventory_node, simple_material_dict) ->
     2. strips the UID from all the nodes within that dict
     3. compares the expected_dict written to what JSON deserializes
     """
+    simple_inventory_node.material = [simple_material_node, cript.load_nodes_from_json({"node": ["Material"], "name": "material 2", "bigsmiles": "{[][$]COC[$][]}"})]
+
     expected_dict = {"node": ["Inventory"], "name": "my inventory name", "material": [simple_material_dict, {"node": ["Material"], "name": "material 2", "bigsmiles": "{[][$]COC[$][]}"}]}
 
     # TODO this needs better testing
     # force not condensing to edge uuid during json serialization
     deserialized_inventory: dict = json.loads(simple_inventory_node.get_json(condense_to_uuid={}).json)
     deserialized_inventory = strip_uid_from_dict(deserialized_inventory)
+    print("deserialized_inventory")
+    print(deserialized_inventory)
     deserialized_inventory["material"][0]["name"] = "my material"
     deserialized_inventory["material"][1]["name"] = "material 2"
 
@@ -75,6 +79,7 @@ def test_integration_inventory(cript_api, simple_project_node, simple_inventory_
     simple_project_node.collection[0].name = f"collection_name_{uuid.uuid4().hex}"
     simple_inventory_node.name = f"inventory_name_{uuid.uuid4().hex}"
 
+    simple_inventory_node.material = []
     simple_project_node.collection[0].inventory = [simple_inventory_node]
 
     save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)

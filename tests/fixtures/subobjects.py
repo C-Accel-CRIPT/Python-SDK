@@ -122,7 +122,7 @@ def complex_property_node(complex_material_node, complex_condition_node, complex
     a maximal property sub-object with all possible fields filled
     """
     my_complex_property = cript.Property(
-        key="modulus_shear",
+        key="enthalpy",
         type="value",
         value=5.0,
         unit="GPa",
@@ -144,7 +144,7 @@ def complex_property_node(complex_material_node, complex_condition_node, complex
 def complex_property_dict(complex_material_node, complex_condition_dict, complex_citation_dict, complex_data_node, simple_process_node, simple_computation_node) -> dict:
     ret_dict = {
         "node": ["Property"],
-        "key": "modulus_shear",
+        "key": "enthalpy",
         "type": "value",
         "value": 5.0,
         "unit": "GPa",
@@ -165,7 +165,7 @@ def complex_property_dict(complex_material_node, complex_condition_dict, complex
 @pytest.fixture(scope="function")
 def simple_property_node() -> cript.Property:
     my_property = cript.Property(
-        key="modulus_shear",
+        key="enthalpy",
         type="value",
         value=5.0,
         unit="GPa",
@@ -177,7 +177,7 @@ def simple_property_node() -> cript.Property:
 def simple_property_dict() -> dict:
     ret_dict = {
         "node": ["Property"],
-        "key": "modulus_shear",
+        "key": "enthalpy",
         "type": "value",
         "value": 5.0,
         "unit": "GPa",
@@ -248,7 +248,13 @@ def simple_ingredient_node(simple_material_node, complex_quantity_node) -> cript
 
     simple_material_node.name = f"{simple_material_node.name}_{uuid.uuid4().hex}"
 
+    # print("!!__!!__simple_syrup_material_node")
+    # print(simple_material_node)
+
     my_simple_ingredient = cript.Ingredient(material=simple_material_node, quantity=[complex_quantity_node], keyword=["catalyst"])
+    # print("simple_syrup")
+    # quit()
+    # my_simple_ingredient.material = simple_material_node
 
     return my_simple_ingredient
 

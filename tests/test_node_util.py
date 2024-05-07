@@ -33,8 +33,8 @@ def test_uid_deserialization(simple_algorithm_node, complex_parameter_node, simp
     material = cript.Material(name="my material", bigsmiles="{[][$]CC[$][]}")
 
     computation = cript.Computation(name="my computation name", type="analysis")
-    property1 = cript.Property("modulus_shear", "value", 5.0, "GPa", computation=[computation])
-    property2 = cript.Property("modulus_loss", "value", 5.0, "GPa", computation=[computation])
+    property1 = cript.Property("enthalpy", "value", 5.0, "GPa", computation=[computation])
+    property2 = cript.Property("rho_z", "value", 5.0, "GPa", computation=[computation])
     material.property = [property1, property2]
 
     material2 = cript.load_nodes_from_json(material.json)
@@ -50,7 +50,7 @@ def test_uid_deserialization(simple_algorithm_node, complex_parameter_node, simp
                 "node": ["Property"],
                 "uid": "_:82e7270e-9f35-4b35-80a2-faa6e7f670be",
                 "uuid": "82e7270e-9f35-4b35-80a2-faa6e7f670be",
-                "key": "modulus_shear",
+                "key": "enthalpy",
                 "type": "value",
                 "value": 5.0,
                 "unit": "GPa",
@@ -60,7 +60,7 @@ def test_uid_deserialization(simple_algorithm_node, complex_parameter_node, simp
                 "node": ["Property"],
                 "uid": "_:fc4dfa5e-742c-4d0b-bb66-2185461f4582",
                 "uuid": "fc4dfa5e-742c-4d0b-bb66-2185461f4582",
-                "key": "modulus_loss",
+                "key": "rho_z",
                 "type": "value",
                 "value": 5.0,
                 "unit": "GPa",
@@ -92,7 +92,7 @@ def test_uid_deserialization(simple_algorithm_node, complex_parameter_node, simp
     #             ],
     #             "uid": "_:82e7270e-9f35-4b35-80a2-faa6e7f670be",
     #             "uuid": "82e7270e-9f35-4b35-80a2-faa6e7f670be",
-    #             "key": "modulus_shear",
+    #             "key": "enthalpy",
     #             "type": "value",
     #             "value": 5.0,
     #             "unit": "GPa",
@@ -111,7 +111,7 @@ def test_uid_deserialization(simple_algorithm_node, complex_parameter_node, simp
     #             ],
     #             "uid": "_:fc4dfa5e-742c-4d0b-bb66-2185461f4582",
     #             "uuid": "fc4dfa5e-742c-4d0b-bb66-2185461f4582",
-    #             "key": "modulus_loss",
+    #             "key": "rho_z",
     #             "type": "value",
     #             "value": 5.0,
     #             "unit": "GPa",

@@ -535,57 +535,14 @@ class API:
     # _no_condense_uuid is either active or not
     def save(self, new_node):
         self._internal_save(new_node, _no_condense_uuid=True)
-        print("GET_OUT_OF_INTERNALSAVE_HERE")
 
         self._internal_save(new_node, _no_condense_uuid=False)
-        print("DID_THIS_WORK_SOMEHOW")
 
         print(new_node)
 
     def _internal_save(self, new_node: PrimaryBaseNode, _no_condense_uuid: bool) -> None:
-        print("\n\n\n\n ----- 1001BEGINING_INTERNAL_SAVE ----- ")
-        # try:
-        #     print("\n\n HERE_2 ")
-        #     # print(json.loads(new_node.get_json().json)["collection"][0]["experiment"][0]["data"])
-        #     print(json.loads(new_node.get_json().json)["inventory"])
-        #     print("UYMMM1001")
-        # except:
-        #     print("    222didnt_get_it ")
-
-        """
-        first time it will be true,
-        second time it will be false,
-
-        need to do post vs patch
-        but !
-
-        why doesn't it get picked up by existing paginator
-        """
-        print(f"777_no_condense_uuid: {_no_condense_uuid}")
-        # probably do a check for if
-
-        print("\n\n HERE_1 ")
-        #!! ah we pass _no_condense_uuid vs not passing and it defaults to false
-        # so first we want it to go for false, then we want it to go for true
         data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
 
-        # print("888data")
-        # print(data)
-
-        # data = json.loads(data)
-
-        # print(data["member"])
-        # print(data["admin"])
-
-        # quit()
-
-        # data.pop("member")
-        # print("-----///----")
-        # print(data["member"])
-        # print(data["admin"])
-        # data.pop("admin")
-        # or if the dictionary has [''] then pop it off ?
-        # print("----------4\------------\n")
         data = json.dumps(data)
 
         node_class_name = new_node.node_type.capitalize()
@@ -607,16 +564,9 @@ class API:
             # or else its a patch handled by previous node
 
             if new_node.node_type.lower() == "project":
-                print("\n\n HERE909")
                 data = new_node.get_json(_no_condense_uuid=_no_condense_uuid).json
 
-                # data = json.dumps(data)
-                print("****96211703****")
-                # data = API.remove_keys_from_dict(json.loads(data))
-                # data = API.clean_dict(data)
-                # data = json.dumps(data)
-
-                # data = json.loads(data)
+                # tried this, doesnt work
                 data = API.rearrange_materials(data)
 
                 print(data)
@@ -631,16 +581,14 @@ class API:
                 response = self._capsule_request(url_path="/project/", method="POST", data=data)
 
                 if response.status_code in [200, 201]:
-                    print("GOT_200_current_ALI")
                     """
                     try returning a true vs false kinda thing to see if we need to do "internal save" again
                     """
-                    return  # Return here, since we successfully Posting
+                    return  # Return here, since we successfully Posting,
 
                 else:  # debug for now
-                    print("GET_HERE_ALI_IFNOT_200_909")
                     res = response.json()
-                    print(res)
+
                     raise Exception(f"APIError {res}")
 
         old_project, old_uuid_map = load_nodes_from_json(nodes_json=old_node_json, _use_uuid_cache={})
@@ -675,13 +623,6 @@ class API:
             for old_uuid in old_child_map:
                 # need to keep track of node type I think
 
-                # shit but needs to maybe keep track of parent
-
-                # print("\n\n+++_555_oldchmap_+++")
-                # print(old_child_map[old_uuid].node_type)
-                # print("------")
-                # print(old_uuid)
-
                 if old_uuid not in node_child_map:
                     if old_uuid not in delete_uuid:
                         delete_uuid += [old_uuid]  # we wanna delete old_uuid
@@ -714,17 +655,6 @@ class API:
 
                             master_delete_uuid_dict[url_parent] = data
 
-                        print("---333---master_delete_uuid_dict")
-                        print(master_delete_uuid_dict)  # [(old_uuid, del_node_type)] = f"/{parent_node_type}/{parent_node_uuid}"
-
-                        # # find the key and append to the json
-                        # url_parent = f"/{parent_node_type}/{parent_node_uuid}"
-                        # del_json = {}
-
-                        # # delete_uuid_dict[(old_uuid, del_node_type)] = f"/{parent_node_type}/{parent_node_uuid}"
-
-                        # master_delete_uuid_dict[f"/{parent_node_type}/{parent_node_uuid}"] = f"/{parent_node_type}/{parent_node_uuid}"
-
             # check if the current new node needs a patch
 
             if not node.shallow_equal(old_node):
@@ -738,88 +668,32 @@ class API:
 
             node = patch_map[uuid_]
 
-            # print(" \n sub_uuids")
-            # sub_uuids = []
-
-            # while node:
-            #     sub_uuids.append(node.uuid)
-            #     node = next(node)
-
-            # print("sub_uuids")
-            # print(sub_uuids)
-            # quit()
-
-            # print("patch_map.keys()")
             child_known_uuids = list(patch_map.keys())
-            # print(child_known_uuids)
+
             child_known_uuids.remove(str(node.uuid))
-            # print(child_known_uuids)
-            # print("\n++++++++++++++-----[[]]---++++++++++++++++++++++\n")
 
             url_path = f"/{node.node_type_snake_case}/{node.uuid}"
 
-            print("\n\n HERE1")
             data = node.get_json(is_patch=True).json
 
             try:
                 old_node = old_uuid_map[node.uuid]
             except KeyError:
-                print("we are continuing...")
-                pass  # continue
+                pass
 
             #############
             if _no_condense_uuid:  # first case
-                print("\n\n HERE21")
                 node_dict = json.loads(node.get_json(is_patch=True).json)
 
-                print("HERE31")
                 old_node_dict = json.loads(old_node.get_json(is_patch=True).json)
 
             else:
-                print("\n\n HERE22")
                 node_dict = json.loads(node.get_json(is_patch=True, known_uuid=child_known_uuids).json)
-                print("HERE32")
+
                 old_node_dict = json.loads(old_node.get_json(is_patch=True, known_uuid=child_known_uuids).json)
-
-                # print("-------_(((-)))_--------")
-                # print("ok how do we print the schema and , for example, set the material field to inventory \n")
-                # print()
-                # print("\n NODE_DICT")
-                # print(node_dict)
-                # print("\n OLD_NODE_DICT")
-                # print(old_node_dict)
-
-            # node_dict = API.remove_keys_from_dict(node_dict)
-            # old_node_dict = API.remove_keys_from_dict(old_node_dict)
-
-            # print("\n\nDATADA")
-            # what they have in common
-            # data1 = {key: node_dict[key] for key in node_dict if key in old_node_dict and node_dict[key] == old_node_dict[key]}
-
-            # Removing keys from node_dict where the values are the same in old_node_dict
-            # data2 = {key: node_dict[key] for key in node_dict if key not in old_node_dict or node_dict[key] != old_node_dict[key]}
 
             # Extract differences
             data_diff = API.extract_differences(node_dict, old_node_dict)
-            # print("Differences:", data_diff)
-
-            print("\n\n4 url_path")
-            print(url_path)
-            # print("\ndata 00")
-            # print(data)
-            # print("\ndata01")
-            # print(data1)
-            # print("data02")
-            # print("")
-            # print(json.dumps(data_diff))
-            # print("type-data02")
-            # print(type(data_diff))
-
-            # # data2clean = API.remove_keys_from_dict(data2)#json.loads(data2))
-            # print("\ndata_diff")
-            # print(json.dumps(data_diff))
-            print("\nRESRES data_diff")
-            print(data_diff)
 
             if data_diff != {}:
                 # add node back here
@@ -827,37 +701,14 @@ class API:
                 print("data_diff_inside")
                 print(data_diff)
                 res = self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(data_diff))  # maybe dumps or load
-                print("--------@@@------------")
-                print(res.json())
-                print("--------@@@------------")
-            print("______[][][]_______")
+
             """
             make a clause where if we do the diff and it does or doesn't make sense (i.e. like just _uid as difference)
             then ... we gotta ya know
             thats why deep diff might be worth it 
             """
 
-            # res.raise_for_status()
-
-        print("\n\n0_delete_uuid_0")
-        print(delete_uuid)
-
-        print("\n\n6_master_delete_uuid_dict_6")
-        print(master_delete_uuid_dict)
-
-        # for uuid_ in delete_uuid:
-
         for key, value in master_delete_uuid_dict.items():
-            #     # do the delete  *unlinking here
-            #     # actually here we are able to send list of uuids to be deleted - optimize later
-            #     # "Doing API Delete for {uuid_}"
-
-            #     print("\n whats_the_url_path")
-            #     print(url_path)
-
-            #     # delete_uuid_dict[]
-            #     # shit... we need to keep track of parent .....
-            #     unlink_payload = {"uuid": str(uuid_)}
             url_path = key
             unlink_payload = value
             res = self._capsule_request(url_path=url_path, method="DELETE", data=json.dumps(unlink_payload))

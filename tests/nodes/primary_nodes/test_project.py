@@ -119,25 +119,25 @@ def test_save_project_change_material(cript_api, simple_project_node, complex_pr
 
     # Modify deep in the tree
     proj0 = copy.deepcopy(complex_project_node)
-    print("----proj0 w name")
+    # print("----proj0 w name")
     epoch_name = str(int(time.time()))
     proj0.name = f"sure to be a new name {epoch_name}"
     print(proj0.name)
 
     proj_json = proj0.get_expanded_json(indent=2)  # .get_json().json
-    print("\n******__helloJSON__******")
-    print(proj_json)
+    # print("\n******__helloJSON__******")
+    # print(proj_json)
     cript_api.save(proj0)
-    print("\n******__hello333__******")
+    # print("\n******__hello333__******")
     # --- finished save --- now load node
     # making sure this is a different object loaded , instead of comparing the same object
     proj_loaded, proj_cache = cript.load_nodes_from_json(nodes_json=proj_json, _use_uuid_cache={})
 
-    print("~~ proj_loaded")
-    print(proj_loaded)
-    print("~~ proj_loaded.collection[0].inventory[0]")
-    print(proj_loaded.collection[0].inventory[0])
-    print("\n")
+    # print("~~ proj_loaded")
+    # print(proj_loaded)
+    # print("~~ proj_loaded.collection[0].inventory[0]")
+    # print(proj_loaded.collection[0].inventory[0])
+    # print("\n")
 
     # print("type ~~ proj_loaded")
     # print(type(proj_loaded))

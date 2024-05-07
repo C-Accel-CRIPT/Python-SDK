@@ -149,13 +149,13 @@ def test_serialize_computational_process_to_json(simple_computational_process_no
     ref_dict["ingredient"][0]["material"] = {}
     ref_dict = strip_uid_from_dict(ref_dict)
 
-    print("****REFDICT")
-    print(type(ref_dict))
-    print(ref_dict)
+    # print("****REFDICT")
+    # print(type(ref_dict))
+    # print(ref_dict)
 
-    print("****EXPECTED DICT")
-    print(type(expected_dict))
-    print(expected_dict)
+    # print("****EXPECTED DICT")
+    # print(type(expected_dict))
+    # print(expected_dict)
 
     assert ref_dict == expected_dict
 

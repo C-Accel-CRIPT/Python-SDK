@@ -64,8 +64,8 @@ def complex_user_dict(cript_api) -> dict:
     user_node = next(cript_api.search(node_type=cript.User, search_mode=cript.SearchModes.NODE_TYPE))
 
     user_dict = json.loads(user_node.get_json().json)
-    print("8888888--------")
-    print(user_dict)
+    # print("8888888--------")
+    # print(user_dict)
 
     # def complex_user_dict() -> dict: #old code
     #     user_dict = {"node": ["User"]}

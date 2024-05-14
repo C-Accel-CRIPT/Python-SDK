@@ -9,12 +9,12 @@ from cript.api.exceptions import APIError
 from cript.nodes.util import load_nodes_from_json
 
 
-def _get_uuid_score_from_json(node_dict: str) -> Tuple[str, Optional[float]]:
+def _get_uuid_score_from_json(node_dict: Dict) -> Tuple[str, Optional[float]]:
     """
     Get the UUID string and search score from a JSON node representation if available.
     """
-    node_uuid = node_dict["uuid"]
-    node_score = node_dict.get("score", None)
+    node_uuid: str = node_dict["uuid"]
+    node_score: Optional[float] = node_dict.get("score", None)
 
     return node_uuid, node_score
 
@@ -41,7 +41,7 @@ class Paginator:
     _query: str
     _current_position: int
     _fetched_nodes: list
-    _uuid_search_score_map: Dict[str, float]
+    _uuid_search_score_map: Dict
     _number_fetched_pages: int = 0
     _limit_node_fetches: Optional[int] = None
     _start_after_uuid: Optional[str] = None

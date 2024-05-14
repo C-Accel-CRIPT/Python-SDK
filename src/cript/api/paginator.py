@@ -1,5 +1,5 @@
 import json
-from typing import Dict, Union
+from typing import Dict, Optional, Tuple
 from urllib.parse import quote
 
 import requests
@@ -7,6 +7,16 @@ from beartype import beartype
 
 from cript.api.exceptions import APIError
 from cript.nodes.util import load_nodes_from_json
+
+
+def _get_uuid_score_from_json(node_dict: str) -> Tuple[str, Optional[float]]:
+    """
+    Get the UUID string and search score from a JSON node representation if available.
+    """
+    node_uuid = node_dict["uuid"]
+    node_score = node_dict.get("score", None)
+
+    return node_uuid, node_score
 
 
 class Paginator:
@@ -29,22 +39,17 @@ class Paginator:
 
     _url_path: str
     _query: str
-    _initial_page_number: Union[int, None]
     _current_position: int
     _fetched_nodes: list
+    _uuid_search_score_map: Dict[str, float]
     _number_fetched_pages: int = 0
-    _limit_page_fetches: Union[int, None] = None
-    _num_skip_pages: int = 0
+    _limit_node_fetches: Optional[int] = None
+    _start_after_uuid: Optional[str] = None
+    _start_after_score: Optional[float] = None
     auto_load_nodes: bool = True
 
     @beartype
-    def __init__(
-        self,
-        api,
-        url_path: str,
-        page_number: Union[int, None],
-        query: str,
-    ):
+    def __init__(self, api, url_path: str, query: str, limit_node_fetches: Optional[int] = None):
         """
         create a paginator
 
@@ -53,15 +58,14 @@ class Paginator:
 
         Parameters
         ----------
-        http_headers: dict
-            get already created http headers from API and just use them in paginator
-        api_endpoint: str
-            api endpoint to send the search requests to
-            it already contains what node the user is looking for
-        current_page_number: int
-            page number to start from. Keep track of current page for user to flip back and forth between pages of data
+        api: cript.API
+           Object through which the API call is routed.
+        url_path: str
+            query URL used.
         query: str
             the value the user is searching for
+        limit_node_fetches: Optional[int] = None
+            limits the number of nodes fetches through this call.
 
         Returns
         -------
@@ -69,18 +73,18 @@ class Paginator:
             instantiate a paginator
         """
         self._api = api
-        self._initial_page_number = page_number
-        self._number_fetched_pages = 0
         self._fetched_nodes = []
         self._current_position = 0
+        self._limit_node_fetches = limit_node_fetches
+        self._uuid_search_score_map = {}
 
         # check if it is a string and not None to avoid AttributeError
         try:
-            self._url_path = quote(url_path.rstrip("/").strip())
+            self._url_path = url_path.rstrip("/").strip()
         except Exception as exc:
             raise RuntimeError(f"Invalid type for api_endpoint {self._url_path} for a paginator.") from exc
 
-        self._query = quote(query)
+        self._query = query
 
     @beartype
     def _fetch_next_page(self) -> None:
@@ -105,16 +109,36 @@ class Paginator:
              None
         """
 
-        # Check if we are supposed to fetch more pages
-        if self._limit_page_fetches and self._number_fetched_pages >= self._limit_page_fetches:
-            raise StopIteration
-
         # Composition of the query URL
-        temp_url_path: str = self._url_path
-        temp_url_path += f"/?q={self._query}"
-        if self._initial_page_number is not None:
-            temp_url_path += f"&page={self.page_number}"
-        self._number_fetched_pages += 1
+        temp_url_path: str = self._url_path + "/"
+
+        query_list = []
+
+        if len(self._query) > 0:
+            query_list += [f"q={self._query}"]
+
+        if self._limit_node_fetches is None or self._limit_node_fetches > 1:  # This limits these parameters
+            if self._start_after_uuid is not None:
+                query_list += [f"after={self._start_after_uuid}"]
+                if self._start_after_score is not None:  # Always None for none BigSMILES searches
+                    query_list += [f"score={self._start_after_score}"]
+
+                # Reset to allow normal search to continue
+                self._start_after_uuid = None
+                self._start_after_score = None
+
+            elif len(self._fetched_nodes) > 0:  # Use known last element
+                node_uuid, node_score = _get_uuid_score_from_json(self._fetched_nodes[-1])
+                query_list += [f"after={node_uuid}"]
+                if node_score is not None:
+                    query_list += [f"score={node_score}"]
+
+        for i, query in enumerate(query_list):
+            if i == 0:
+                temp_url_path += "?"
+            else:
+                temp_url_path += "&"
+            temp_url_path += quote(query, safe="/=&?")
 
         response: requests.Response = self._api._capsule_request(url_path=temp_url_path, method="GET")
 
@@ -153,18 +177,18 @@ class Paginator:
         self._fetched_nodes += json_list
 
     def __next__(self):
+        if self._limit_node_fetches and self._current_position >= self._limit_node_fetches:
+            raise StopIteration
+
         if self._current_position >= len(self._fetched_nodes):
-            # Without a page number argument, we can only fetch once.
-            if self._initial_page_number is None and self._number_fetched_pages > 0:
-                raise StopIteration
             self._fetch_next_page()
 
         try:
             next_node_json = self._fetched_nodes[self._current_position - 1]
-        except IndexError:  # This is not a random access iteration.
+        except IndexError as exc:  # This is not a random access iteration.
             # So if fetching a next page wasn't enough to get the index inbound,
             # The iteration stops
-            raise StopIteration
+            raise StopIteration from exc
 
         if self.auto_load_nodes:
             return_data = load_nodes_from_json(next_node_json)
@@ -181,24 +205,8 @@ class Paginator:
         self._current_position = 0
         return self
 
-    @property
-    def page_number(self) -> Union[int, None]:
-        """Obtain the current page number the paginator is fetching next.
-
-        Returns
-        -------
-        int
-          positive number of the next page this paginator is fetching.
-        None
-          if no page number is associated with the pagination
-        """
-        page_number = self._num_skip_pages + self._number_fetched_pages
-        if self._initial_page_number is not None:
-            page_number += self._initial_page_number
-        return page_number
-
     @beartype
-    def limit_page_fetches(self, max_num_pages: Union[int, None]) -> None:
+    def limit_node_fetches(self, max_num_nodes: Optional[int]) -> None:
         """Limit pagination to a maximum number of pages.
 
         This can be used for very large searches with the paginator, so the search can be split into
@@ -206,40 +214,44 @@ class Paginator:
 
         Parameters
         ----------
-        max_num_pages: Union[int, None],
+        max_num_nodes: Optional[int],
           positive integer with maximum number of page fetches.
           or None, indicating unlimited number of page fetches are permitted.
         """
-        self._limit_page_fetches = max_num_pages
+        self._limit_node_fetches = max_num_nodes
 
-    def skip_pages(self, skip_pages: int) -> int:
-        """Skip pages in the pagination.
-
-        Warning this function is advanced usage and may not produce the results you expect.
-        In particular, every search is different, even if we search for the same values there is
-        no guarantee that the results are in the same order. (And results can change if data is
-        added or removed from CRIPT.) So if you break up your search with `limit_page_fetches` and
-        `skip_pages` there is no guarantee that it is the same as one continuous search.
-        If the paginator associated search does not accept pages, there is no effect.
+    @beartype
+    def start_after_uuid(self, start_after_uuid: str, start_after_score: Optional[float] = None):
+        """
+        This can be used to continue a search from a last known node.
 
         Parameters
         ----------
-        skip_pages:int
-          Number of pages that the paginator skips now before fetching the next page.
-          The parameter is added to the internal state, so repeated calls skip more pages.
+        start_after_uuid: str
+            UUID string of the last node from a previous search
+        start_after_score: float
+            required for BigSMILES searches, the last score from a BigSMILES search.
+            Must be None if not a BigSMILES search.
 
         Returns
         -------
-        int
-          The number this paginator is skipping. Internal skip count.
-
-        Raises
-        ------
-        RuntimeError
-          If the total number of skipped pages is negative.
+        None
         """
-        num_skip_pages = self._num_skip_pages + skip_pages
-        if self._num_skip_pages < 0:
-            RuntimeError(f"Invalid number of skipped pages. The total number of pages skipped is negative {num_skip_pages}, requested to skip {skip_pages}.")
-        self._num_skip_pages = num_skip_pages
-        return self._num_skip_pages
+        self._start_after_uuid = start_after_uuid
+        self._start_after_score = start_after_score
+
+    @beartype
+    def get_bigsmiles_search_score(self, uuid: str):
+        """
+        Get the ranking score for nodes from the BigSMILES search.
+        Will return None if not a BigSMILES search or raise an Exception.
+        """
+        if uuid not in self._uuid_search_score_map.keys():
+            start = len(self._uuid_search_score_map.keys())
+            for node_json in self._fetched_nodes[start:]:
+                node_uuid, node_score = _get_uuid_score_from_json(node_json)
+                self._uuid_search_score_map[node_uuid] = node_score
+        try:
+            return self._uuid_search_score_map[uuid]
+        except KeyError as exc:
+            raise RuntimeError(f"The requested UUID {uuid} is not know from the search. Search scores are limited only to current search.") from exc

@@ -26,7 +26,8 @@ def dynamic_material_data(cript_api: cript.API) -> Dict[str, str]:
 
     exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME, value_to_search=material_name)
 
+    exact_name_paginator.auto_load_nodes = False
     material = next(exact_name_paginator)
-    material_uuid: str = str(material.uuid)
+    material_uuid: str = material["uuid"]
 
     return {"name": material_name, "uuid": material_uuid}

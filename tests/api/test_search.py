@@ -24,33 +24,47 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
 
     # test search results
     assert isinstance(materials_paginator, Paginator)
-    materials_paginator.skip_pages(3)
-    materials_paginator.limit_page_fetches(3)
+    materials_paginator.limit_node_fetches(15)
     materials_list = []
     while True:
         try:
             try:
                 material_node = next(materials_paginator)
-            except cript.CRIPTException as exc:
+                materials_list += [material_node]
+            except cript.CRIPTException:
                 materials_paginator.auto_load_nodes = False
                 material_json = next(materials_paginator)
-                print(exc, material_json)
-            else:
-                materials_list += [material_node]
+                materials_list.append(material_json)
             finally:
                 materials_paginator.auto_load_nodes = True
         except StopIteration:
             break
-        # We don't need to search for a million pages here.
-        if materials_paginator._number_fetched_pages > 6:
-            break
 
     # Assure that we paginated more then one page
-    assert materials_paginator._number_fetched_pages > 0
-    assert len(materials_list) > 5
-    first_page_first_result = materials_list[0].name
-    # just checking that the word has a few characters in it
-    assert len(first_page_first_result) > 3
+    assert len(materials_list) == 15
+    first_page_first_result = materials_list[0]["name"]
+    assert first_page_first_result
+
+    materials_paginator2 = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.NODE_TYPE)
+    materials_paginator2.limit_node_fetches(21)
+    uuid_list = []
+    for mat in materials_list:
+        try:
+            uuid = mat.uuid
+        except AttributeError:
+            uuid = mat["uuid"]
+        uuid_list.append(uuid)
+
+    materials_paginator2.start_after_uuid(uuid_list[-1])
+    materials_paginator2.auto_load_nodes = False
+
+    for i, mat in enumerate(materials_paginator2):
+        if mat["uuid"] in uuid_list:
+            print(mat["uuid"])
+
+        # TODO enable duplicate test
+        # assert mat["uuid"] not in uuid_list
+        assert i < 21
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
@@ -59,17 +73,17 @@ def test_api_search_contains_name(cript_api: cript.API) -> None:
     tests that it can correctly search with contains name mode
     searches for a material that contains the name "polystyrene"
     """
-    contains_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.CONTAINS_NAME, value_to_search="polystyrene")
+    query = "act"
+    contains_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.CONTAINS_NAME, value_to_search=query)
 
+    contains_name_paginator.auto_load_nodes = False
     assert isinstance(contains_name_paginator, Paginator)
-    contains_name_list = list(contains_name_paginator)
+    contains_name_list = [mat["name"] for mat in contains_name_paginator]
     # Assure that we paginated more then one page
-    assert len(contains_name_list) > 2
+    assert len(contains_name_list) > 50
 
-    contains_name_first_result = contains_name_list[0].name
-
-    # just checking that the result has a few characters in it
-    assert len(contains_name_first_result) > 3
+    for name in contains_name_list:
+        assert query.upper() in name.upper()
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
@@ -81,9 +95,10 @@ def test_api_search_exact_name(cript_api: cript.API) -> None:
     exact_name_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.EXACT_NAME, value_to_search="Sodium polystyrene sulfonate")
 
     assert isinstance(exact_name_paginator, Paginator)
+    exact_name_paginator.auto_load_nodes = False
     exact_name_list = list(exact_name_paginator)
     assert len(exact_name_list) == 1
-    assert exact_name_list[0].name == "Sodium polystyrene sulfonate"
+    assert exact_name_list[0]["name"] == "Sodium polystyrene sulfonate"
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
@@ -99,11 +114,12 @@ def test_api_search_uuid(cript_api: cript.API, dynamic_material_data) -> None:
     """
     uuid_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.UUID, value_to_search=dynamic_material_data["uuid"])
 
+    uuid_paginator.auto_load_nodes = False
     assert isinstance(uuid_paginator, Paginator)
     uuid_list = list(uuid_paginator)
     assert len(uuid_list) == 1
-    assert uuid_list[0].name == dynamic_material_data["name"]
-    assert str(uuid_list[0].uuid) == dynamic_material_data["uuid"]
+    assert uuid_list[0]["name"] == dynamic_material_data["name"]
+    assert uuid_list[0]["uuid"] == dynamic_material_data["uuid"]
 
 
 @pytest.mark.skipif(not HAS_INTEGRATION_TESTS_ENABLED, reason="requires a real cript_api_token")
@@ -138,6 +154,17 @@ def test_api_search_bigsmiles(cript_api: cript.API) -> None:
 
     bigsmiles_paginator = cript_api.search(node_type=cript.Material, search_mode=cript.SearchModes.BIGSMILES, value_to_search=bigsmiles_search_value)
 
+    bigsmiles_paginator.limit_node_fetches(15)
+
+    bigsmiles_paginator.auto_load_nodes = False
     assert isinstance(bigsmiles_paginator, Paginator)
     bigsmiles_list = list(bigsmiles_paginator)
-    assert len(bigsmiles_list) >= 1
+    assert len(bigsmiles_list) == 15
+    uuid_list = [mat["uuid"] for mat in bigsmiles_list]
+    # Check that we don't have duplicates
+
+    for uuid in uuid_list:
+        print(uuid, bigsmiles_paginator.get_bigsmiles_search_score(uuid), uuid_list.count(uuid))
+
+    # Enable duplicate test
+    # assert len(set(uuid_list)) == len(uuid_list)

@@ -540,7 +540,7 @@ class Material(PrimaryBaseNode):
         ...     name="my component material 1",
         ...     smiles = "component 1 smiles",
         ... )
-        >>> my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.23, unit="J")
         >>> my_material.property = [my_property]
 
         Returns

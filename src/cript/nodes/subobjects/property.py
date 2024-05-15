@@ -38,7 +38,7 @@ class Property(UUIDBaseNode):
 
     | attribute          | type              | example                                 | description                                                                  | required | vocab |
     |--------------------|-------------------|-----------------------------------------|------------------------------------------------------------------------------|----------|-------|
-    | key                | str               | modulus_shear                           | type of property                                                             | True     | True  |
+    | key                | str               | enthalpy                                | type of property                                                             | True     | True  |
     | type               | str               | min                                     | type of value stored                                                         | True     | True  |
     | value              | Any               | 1.23                                    | value or quantity                                                            | True     |       |
     | unit               | str               | gram                                    | unit for value                                                               | True     |       |
@@ -58,10 +58,10 @@ class Property(UUIDBaseNode):
     ## JSON Representation
     ```json
     {
-       "key":"modulus_shear",
+       "key":"enthalpy",
        "node":["Property"],
        "type":"value",
-       "unit":"GPa",
+       "unit":"J",
        "value":5.0
        "uid":"_:bc3abb68-25b5-4144-aa1b-85d82b7c77e1",
        "uuid":"bc3abb68-25b5-4144-aa1b-85d82b7c77e1",
@@ -149,7 +149,7 @@ class Property(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.00, unit="J")
 
         Returns
         -------
@@ -197,7 +197,7 @@ class Property(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.00, unit="J")
         >>> my_property.key = "angle_rdist"
 
         Returns
@@ -236,7 +236,7 @@ class Property(UUIDBaseNode):
         Examples
         ---------
         >>> import cript
-        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.00, unit="J")
         >>> my_property.type = "max"
 
         Returns
@@ -285,7 +285,7 @@ class Property(UUIDBaseNode):
         Examples
         ---------
         >>> import cript
-        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.00, unit="J")
         >>> my_property.set_value(new_value=1, new_unit="gram")
 
         Parameters
@@ -345,7 +345,7 @@ class Property(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.00, unit="J")
         >>> my_property.set_uncertainty(new_uncertainty=2, new_uncertainty_type="fwhm")
 
         Returns
@@ -380,7 +380,7 @@ class Property(UUIDBaseNode):
         Examples
         ---------
         >>> import cript
-        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.00, unit="J")
         >>> my_material = cript.Material(name="my material", bigsmiles = "123456")
         >>> my_property.component = [my_material]
 
@@ -418,7 +418,7 @@ class Property(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.00, unit="J")
         >>> my_property.structure = "{[][$][C:1][C:1][$],[$][C:2][C:2]([C:2])[$][]}"
 
         Returns
@@ -457,7 +457,7 @@ class Property(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.00, unit="J")
         >>> my_property.method = "ASTM_D3574_Test_A"
 
         Returns
@@ -494,7 +494,7 @@ class Property(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.00, unit="J")
         >>> my_process = cript.Process(name="my process name", type="affinity_pure")
         >>> my_property.sample_preparation = my_process
 
@@ -532,7 +532,7 @@ class Property(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.00, unit="J")
         >>> my_condition = cript.Condition(key="atm", type="max", value=1)
         >>> my_property.condition = [my_condition]
 
@@ -570,7 +570,7 @@ class Property(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.00, unit="J")
         >>> my_file = cript.File(
         ...     name="my file node name",
         ...     source="https://criptapp.org",
@@ -615,7 +615,7 @@ class Property(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.00, unit="J")
         >>> my_computation = cript.Computation(name="my computation name", type="analysis")
         >>> my_property.computation = [my_computation]
 
@@ -653,7 +653,7 @@ class Property(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.00, unit="J")
         >>> title = (
         ...     "Multi-architecture Monte-Carlo (MC) simulation of soft coarse-grained polymeric materials: "
         ...     "Soft coarse grained Monte-Carlo Acceleration (SOMA)"
@@ -707,7 +707,7 @@ class Property(UUIDBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_property = cript.Property(key="air_flow", type="min", value=1.00, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.00, unit="J")
         >>> my_property.notes = "these are my notes"
 
         Returns

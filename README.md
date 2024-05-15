@@ -3,7 +3,7 @@
 [![License](./CRIPT_full_logo_colored_transparent.png)](https://github.com/C-Accel-CRIPT/Python-SDK/blob/develop/LICENSE.md)
 
 [![License](https://img.shields.io/github/license/C-Accel-CRIPT/cript?style=flat-square)](https://github.com/C-Accel-CRIPT/Python-SDK/blob/develop/LICENSE.md)
-[![Python](https://img.shields.io/badge/Language-Python%203.8+-blue?style=flat-square&logo=python)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Language-Python%203.10+-blue?style=flat-square&logo=python)](https://www.python.org/)
 [![Code style is black](https://img.shields.io/badge/Code%20Style-black-000000.svg?style=flat-square&logo=python)](https://github.com/psf/black)
 [![Link to CRIPT website](https://img.shields.io/badge/platform-criptapp.org-blueviolet?style=flat-square)](https://criptapp.org/)
 [![Using Pytest](https://img.shields.io/badge/Dependencies-pytest-green?style=flat-square&logo=Pytest)](https://docs.pytest.org/en/7.2.x/)
@@ -36,7 +36,7 @@ The CRIPT Python SDK allows programmatic access to the [CRIPT platform](https://
 
 ## Installation
 
-CRIPT Python SDK requires Python 3.8+
+CRIPT Python SDK requires Python 3.10+
 
 The latest released of CRIPT Python SDK is available on [Python Package Index (PyPI)](https://pypi.org/project/cript/)
 

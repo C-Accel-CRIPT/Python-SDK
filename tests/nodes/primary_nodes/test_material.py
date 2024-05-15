@@ -34,7 +34,7 @@ def test_create_complex_material(cript_api, simple_material_node, simple_computa
     component = [simple_material_node]
     forcefield = simple_computational_forcefield_node
 
-    my_property = [cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")]
+    my_property = [cript.Property(key="rho_z", type="min", value=1.23, unit="gram")]
 
     my_material = cript.Material(
         name=material_name,

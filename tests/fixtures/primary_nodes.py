@@ -25,7 +25,6 @@ def simple_project_node(simple_collection_node) -> cript.Project:
 def complex_project_dict(complex_collection_node, simple_material_node, complex_user_node) -> dict:
     project_dict = {"node": ["Project"]}
     project_dict["locked"] = True
-    project_dict["model_version"] = "1.0.1"
     project_dict["updated_by"] = json.loads(copy.deepcopy(complex_user_node).get_expanded_json())
     project_dict["created_by"] = json.loads(complex_user_node.get_expanded_json())
     project_dict["public"] = True
@@ -60,7 +59,6 @@ def fixed_cyclic_project_node() -> cript.Project:
     project_json_string += '"created_at": "2024-03-12 15:58:12.486673",\n'
     project_json_string += '"updated_at": "2024-03-12 15:58:12.486681",\n'
     project_json_string += '"email": "test@emai.com",\n'
-    project_json_string += '"model_version": "1.0.1",\n'
     project_json_string += '"orcid": "0000-0002-0000-0000",\n'
     project_json_string += '"picture": "/my/picture/path",\n'
     project_json_string += '"username": "testuser"\n'
@@ -72,13 +70,11 @@ def fixed_cyclic_project_node() -> cript.Project:
     project_json_string += '"created_at": "2024-03-12 15:58:12.486673",\n'
     project_json_string += '"updated_at": "2024-03-12 15:58:12.486681",\n'
     project_json_string += '"email": "test@emai.com",\n'
-    project_json_string += '"model_version": "1.0.1",\n'
     project_json_string += '"orcid": "0000-0002-0000-0000",\n'
     project_json_string += '"picture": "/my/picture/path",\n'
     project_json_string += '"username": "testuser"\n'
     project_json_string += "},\n"
     project_json_string += '"locked": true,\n'
-    project_json_string += '"model_version": "1.0.1",\n'
     project_json_string += '"public": true,\n'
     project_json_string += '"name": "my project name",\n'
     project_json_string += '"notes": "my project notes",\n'

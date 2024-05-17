@@ -20,8 +20,8 @@ def test_json(complex_property_node, complex_property_dict):
 
 
 def test_setter_getter(complex_property_node, simple_material_node, simple_process_node, complex_condition_node, simple_data_node, simple_computation_node, complex_citation_node):
-    complex_property_node.key = "modulus_loss"
-    assert complex_property_node.key == "modulus_loss"
+    complex_property_node.key = "rho_z"
+    assert complex_property_node.key == "rho_z"
 
     complex_property_node.type = "min"
     assert complex_property_node.type == "min"

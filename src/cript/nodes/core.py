@@ -174,6 +174,10 @@ class BaseNode(ABC):
                 pass
             else:
                 arguments[field] = json_dict[field]
+        try:  # TODO remove this hack to work with compatible model versions
+            del arguments["model_version"]
+        except KeyError:
+            pass
 
         # add omitted fields from default (necessary if they are required)
         for field_name in [field.name for field in dataclasses.fields(default_dataclass)]:

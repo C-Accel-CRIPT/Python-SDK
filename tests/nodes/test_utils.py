@@ -35,7 +35,7 @@ def test_load_node_from_json_dict_argument() -> None:
         "uuid": material_uuid,
         "name": material_name,
         "notes": material_notes,
-        "property": [{"node": ["Property"], "uid": "_:aedce614-7acb-49d2-a2f6-47463f15b707", "uuid": "aedce614-7acb-49d2-a2f6-47463f15b707", "key": "modulus_shear", "type": "value", "value": 5.0, "unit": "GPa"}],
+        "property": [{"node": ["Property"], "uid": "_:aedce614-7acb-49d2-a2f6-47463f15b707", "uuid": "aedce614-7acb-49d2-a2f6-47463f15b707", "key": "enthalpy", "type": "value", "value": 5.0, "unit": "GPa"}],
         "computational_forcefield": {"node": ["ComputationalForcefield"], "uid": "_:059952a3-20f2-4739-96bd-a5ea43068065", "uuid": "059952a3-20f2-4739-96bd-a5ea43068065", "key": "amber", "building_block": "atom"},
         "keyword": ["acetylene"],
         "bigsmiles": material_bigsmiles,

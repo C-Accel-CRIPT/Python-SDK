@@ -521,7 +521,7 @@ class ComputationProcess(PrimaryBaseNode):
         Examples
         --------
         >>> import cript
-        >>> my_property = cript.Property(key="modulus_shear", type="min", value=1.23, unit="gram")
+        >>> my_property = cript.Property(key="enthalpy", type="min", value=1.23, unit="J")
         >>> my_computation_process.property = [my_property]     # doctest: +SKIP
 
         Returns

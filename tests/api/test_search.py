@@ -62,8 +62,7 @@ def test_api_search_node_type(cript_api: cript.API) -> None:
         if mat["uuid"] in uuid_list:
             print(mat["uuid"])
 
-        # TODO enable duplicate test
-        # assert mat["uuid"] not in uuid_list
+        assert mat["uuid"] not in uuid_list
         assert i < 21
 
 

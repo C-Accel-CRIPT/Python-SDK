@@ -123,6 +123,9 @@
     "Doctests",
     "linenums",
     "XLYOFNOQVPJJNP",
-    "CRIPTUUID"
+    "CRIPTUUID",
+    "rootdir",
+    "startswith",
+    "pluggy"
   ]
 }

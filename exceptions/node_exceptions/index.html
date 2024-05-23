@@ -1,0 +1,3884 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../api_exceptions/">
+      
+      
+        <link rel="next" href="../../faq/">
+      
+      
+      <link rel="icon" href="../../images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.6">
+    
+    
+      
+        <title>Node Exceptions - CRIPT Python SDK</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.35e1ed30.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.356b1318.min.css">
+      
+      
+  
+  
+    
+    
+  
+  
+  <style>:root{--md-admonition-icon--alert:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>');}</style>
+
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#node-exceptions" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://criptapp.org" title="CRIPT Python SDK" class="md-header__button md-logo" aria-label="CRIPT Python SDK" data-md-component="logo">
+      
+  <img src="../../images/CRIPT_full_logo_colored_transparent.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CRIPT Python SDK
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Node Exceptions
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/C-Accel-CRIPT/Python-SDK" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    C-Accel-CRIPT/Python-SDK
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://criptapp.org" title="CRIPT Python SDK" class="md-nav__button md-logo" aria-label="CRIPT Python SDK" data-md-component="logo">
+      
+  <img src="../../images/CRIPT_full_logo_colored_transparent.png" alt="logo">
+
+    </a>
+    CRIPT Python SDK
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/C-Accel-CRIPT/Python-SDK" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    C-Accel-CRIPT/Python-SDK
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Tutorial
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/cript_installation_guide/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CRIPT Installation Guide
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/how_to_get_api_token/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CRIPT API Token
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Example Code Walkthrough
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Example Code Walkthrough
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/synthesis/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Synthesis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/simulation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Simulation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API Client
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            API Client
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/search_modes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Search Modes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/paginator/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Paginator
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/controlled_vocabulary_categories/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controlled Vocabulary Categories
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Base Nodes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Base Nodes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/base_node/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BaseNode
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/uuid_base/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UUIDBase
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/primary_base_node/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PrimaryBaseNode
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Primary Nodes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Primary Nodes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/collection/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Collection
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/computation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Computation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/computation_process/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Computation Process
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/data/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/experiment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Experiment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/inventory/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inventory
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/material/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Material
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/project/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Project
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/process/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/reference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/software/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Software
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Sub-objects
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Sub-objects
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/algorithm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Algorithm
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/citation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Citation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/computational_forcefield/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Computational Forcefield
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/condition/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Condition
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/equipment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Equipment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/ingredient/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ingredient
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/parameter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parameter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/property/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Property
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/quantity/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Quantity
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/software_configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Software Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Supporting Nodes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Supporting Nodes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/supporting_nodes/user/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    User
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/supporting_nodes/file/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    File
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../utility_functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Utility Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Exceptions
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Exceptions
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_exceptions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Exceptions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Node Exceptions
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Node Exceptions
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#node-exceptions" class="md-nav__link">
+    Node Exceptions
+  </a>
+  
+    <nav class="md-nav" aria-label="Node Exceptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions" class="md-nav__link">
+    exceptions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTAttributeModificationError" class="md-nav__link">
+    CRIPTAttributeModificationError
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTDeserializationUIDError" class="md-nav__link">
+    CRIPTDeserializationUIDError
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTDeserializationUIDError">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTDeserializationUIDError--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTDeserializationUIDError--error-example" class="md-nav__link">
+    Error Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTDeserializationUIDError--valid-example" class="md-nav__link">
+    Valid Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTDeserializationUIDError--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonDeserializationError" class="md-nav__link">
+    CRIPTJsonDeserializationError
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTJsonDeserializationError">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonDeserializationError--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonDeserializationError--error-example" class="md-nav__link">
+    Error Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonDeserializationError--valid-example" class="md-nav__link">
+    Valid Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonDeserializationError--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonNodeError" class="md-nav__link">
+    CRIPTJsonNodeError
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTJsonNodeError">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonNodeError--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonNodeError--example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonNodeError--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonSerializationError" class="md-nav__link">
+    CRIPTJsonSerializationError
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTJsonSerializationError">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonSerializationError--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonSerializationError--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTMaterialIdentifierWarning" class="md-nav__link">
+    CRIPTMaterialIdentifierWarning
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTNodeSchemaError" class="md-nav__link">
+    CRIPTNodeSchemaError
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTNodeSchemaError">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTNodeSchemaError--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTNodeSchemaError--possible-reasons" class="md-nav__link">
+    Possible Reasons
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTNodeSchemaError--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTNodeSchemaError--example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedComputationWarning" class="md-nav__link">
+    CRIPTOrphanedComputationWarning
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTOrphanedComputationWarning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedComputationWarning--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedComputationWarning--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedComputationalProcessWarning" class="md-nav__link">
+    CRIPTOrphanedComputationalProcessWarning
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTOrphanedComputationalProcessWarning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedComputationalProcessWarning--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedComputationalProcessWarning--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedDataWarning" class="md-nav__link">
+    CRIPTOrphanedDataWarning
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTOrphanedDataWarning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedDataWarning--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedDataWarning--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedExperimentWarning" class="md-nav__link">
+    CRIPTOrphanedExperimentWarning
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTOrphanedExperimentWarning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedExperimentWarning--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedExperimentWarning--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedMaterialWarning" class="md-nav__link">
+    CRIPTOrphanedMaterialWarning
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTOrphanedMaterialWarning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedMaterialWarning--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedMaterialWarning--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedNodesWarning" class="md-nav__link">
+    CRIPTOrphanedNodesWarning
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTOrphanedNodesWarning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedNodesWarning--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedNodesWarning--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedProcessWarning" class="md-nav__link">
+    CRIPTOrphanedProcessWarning
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTOrphanedProcessWarning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedProcessWarning--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedProcessWarning--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/C-Accel-CRIPT/Python-SDK/wiki" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Internal Wiki Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/C-Accel-CRIPT/Python-SDK/discussions" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CRIPT Python SDK Discussions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#node-exceptions" class="md-nav__link">
+    Node Exceptions
+  </a>
+  
+    <nav class="md-nav" aria-label="Node Exceptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions" class="md-nav__link">
+    exceptions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTAttributeModificationError" class="md-nav__link">
+    CRIPTAttributeModificationError
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTDeserializationUIDError" class="md-nav__link">
+    CRIPTDeserializationUIDError
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTDeserializationUIDError">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTDeserializationUIDError--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTDeserializationUIDError--error-example" class="md-nav__link">
+    Error Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTDeserializationUIDError--valid-example" class="md-nav__link">
+    Valid Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTDeserializationUIDError--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonDeserializationError" class="md-nav__link">
+    CRIPTJsonDeserializationError
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTJsonDeserializationError">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonDeserializationError--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonDeserializationError--error-example" class="md-nav__link">
+    Error Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonDeserializationError--valid-example" class="md-nav__link">
+    Valid Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonDeserializationError--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonNodeError" class="md-nav__link">
+    CRIPTJsonNodeError
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTJsonNodeError">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonNodeError--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonNodeError--example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonNodeError--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonSerializationError" class="md-nav__link">
+    CRIPTJsonSerializationError
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTJsonSerializationError">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonSerializationError--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTJsonSerializationError--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTMaterialIdentifierWarning" class="md-nav__link">
+    CRIPTMaterialIdentifierWarning
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTNodeSchemaError" class="md-nav__link">
+    CRIPTNodeSchemaError
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTNodeSchemaError">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTNodeSchemaError--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTNodeSchemaError--possible-reasons" class="md-nav__link">
+    Possible Reasons
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTNodeSchemaError--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTNodeSchemaError--example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedComputationWarning" class="md-nav__link">
+    CRIPTOrphanedComputationWarning
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTOrphanedComputationWarning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedComputationWarning--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedComputationWarning--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedComputationalProcessWarning" class="md-nav__link">
+    CRIPTOrphanedComputationalProcessWarning
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTOrphanedComputationalProcessWarning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedComputationalProcessWarning--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedComputationalProcessWarning--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedDataWarning" class="md-nav__link">
+    CRIPTOrphanedDataWarning
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTOrphanedDataWarning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedDataWarning--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedDataWarning--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedExperimentWarning" class="md-nav__link">
+    CRIPTOrphanedExperimentWarning
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTOrphanedExperimentWarning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedExperimentWarning--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedExperimentWarning--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedMaterialWarning" class="md-nav__link">
+    CRIPTOrphanedMaterialWarning
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTOrphanedMaterialWarning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedMaterialWarning--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedMaterialWarning--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedNodesWarning" class="md-nav__link">
+    CRIPTOrphanedNodesWarning
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTOrphanedNodesWarning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedNodesWarning--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedNodesWarning--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedProcessWarning" class="md-nav__link">
+    CRIPTOrphanedProcessWarning
+  </a>
+  
+    <nav class="md-nav" aria-label="CRIPTOrphanedProcessWarning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedProcessWarning--definition" class="md-nav__link">
+    Definition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cript.nodes.exceptions.CRIPTOrphanedProcessWarning--troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Node Exceptions</h1>
+
+<h2 id="node-exceptions">Node Exceptions<a class="headerlink" href="#node-exceptions" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="cript.nodes.exceptions"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cript.nodes.exceptions.CRIPTAttributeModificationError" class="doc doc-heading">
+          <code>CRIPTAttributeModificationError</code>
+
+
+<a href="#cript.nodes.exceptions.CRIPTAttributeModificationError" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="cript.exceptions.CRIPTException">CRIPTException</span></code></p>
+
+  
+      <p>Exception that is thrown when a node attribute is modified, that wasn't intended to be modified.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/cript/nodes/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-252">252</a></span>
+<span class="normal"><a href="#__codelineno-0-253">253</a></span>
+<span class="normal"><a href="#__codelineno-0-254">254</a></span>
+<span class="normal"><a href="#__codelineno-0-255">255</a></span>
+<span class="normal"><a href="#__codelineno-0-256">256</a></span>
+<span class="normal"><a href="#__codelineno-0-257">257</a></span>
+<span class="normal"><a href="#__codelineno-0-258">258</a></span>
+<span class="normal"><a href="#__codelineno-0-259">259</a></span>
+<span class="normal"><a href="#__codelineno-0-260">260</a></span>
+<span class="normal"><a href="#__codelineno-0-261">261</a></span>
+<span class="normal"><a href="#__codelineno-0-262">262</a></span>
+<span class="normal"><a href="#__codelineno-0-263">263</a></span>
+<span class="normal"><a href="#__codelineno-0-264">264</a></span>
+<span class="normal"><a href="#__codelineno-0-265">265</a></span>
+<span class="normal"><a href="#__codelineno-0-266">266</a></span>
+<span class="normal"><a href="#__codelineno-0-267">267</a></span>
+<span class="normal"><a href="#__codelineno-0-268">268</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-252" name="__codelineno-0-252"></a><span class="k">class</span> <span class="nc">CRIPTAttributeModificationError</span><span class="p">(</span><span class="n">CRIPTException</span><span class="p">):</span>
+<a id="__codelineno-0-253" name="__codelineno-0-253"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-254" name="__codelineno-0-254"></a><span class="sd">    Exception that is thrown when a node attribute is modified, that wasn&#39;t intended to be modified.</span>
+<a id="__codelineno-0-255" name="__codelineno-0-255"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-256" name="__codelineno-0-256"></a>
+<a id="__codelineno-0-257" name="__codelineno-0-257"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<a id="__codelineno-0-258" name="__codelineno-0-258"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+<a id="__codelineno-0-259" name="__codelineno-0-259"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
+<a id="__codelineno-0-260" name="__codelineno-0-260"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+<a id="__codelineno-0-261" name="__codelineno-0-261"></a>
+<a id="__codelineno-0-262" name="__codelineno-0-262"></a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-0-263" name="__codelineno-0-263"></a>        <span class="k">return</span> <span class="p">(</span>
+<a id="__codelineno-0-264" name="__codelineno-0-264"></a>            <span class="sa">f</span><span class="s2">&quot;Attempt to modify an attribute of a node (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">) that wasn&#39;t intended to be modified.</span><span class="se">\n</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-265" name="__codelineno-0-265"></a>            <span class="sa">f</span><span class="s2">&quot;Here the non-existing attribute </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> was attempted to be modified.</span><span class="se">\n</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-266" name="__codelineno-0-266"></a>            <span class="s2">&quot;Most likely this is due to a typo in the attribute that was intended to be modified i.e. `project.materials` instead of `project.material`.</span><span class="se">\n</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-267" name="__codelineno-0-267"></a>            <span class="s2">&quot;To ensure compatibility with the underlying CRIPT data model we do not allow custom attributes.</span><span class="se">\n</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-268" name="__codelineno-0-268"></a>        <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cript.nodes.exceptions.CRIPTDeserializationUIDError" class="doc doc-heading">
+          <code>CRIPTDeserializationUIDError</code>
+
+
+<a href="#cript.nodes.exceptions.CRIPTDeserializationUIDError" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="cript.exceptions.CRIPTException">CRIPTException</span></code></p>
+
+  
+      <h5 id="cript.nodes.exceptions.CRIPTDeserializationUIDError--definition">Definition<a class="headerlink" href="#cript.nodes.exceptions.CRIPTDeserializationUIDError--definition" title="Permanent link">&para;</a></h5>
+<p>This exception is raised when converting a node from JSON to Python class fails,
+because a node is specified with its UID only, but not part of the data graph elsewhere.</p>
+<h6 id="cript.nodes.exceptions.CRIPTDeserializationUIDError--error-example">Error Example<a class="headerlink" href="#cript.nodes.exceptions.CRIPTDeserializationUIDError--error-example" title="Permanent link">&para;</a></h6>
+<p>Invalid JSON that cannot be deserialized to a CRIPT Python SDK Node</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">&quot;node&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Algorithm&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mc_barostat&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;barostat&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">&quot;parameter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;node&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Parameter&quot;</span><span class="p">],</span><span class="w"> </span><span class="nt">&quot;uid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uid-string&quot;</span><span class="p">}</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">}</span>
+</code></pre></div>
+Here the algorithm has a parameter attribute, but the parameter is specified as uid only.</p>
+<h6 id="cript.nodes.exceptions.CRIPTDeserializationUIDError--valid-example">Valid Example<a class="headerlink" href="#cript.nodes.exceptions.CRIPTDeserializationUIDError--valid-example" title="Permanent link">&para;</a></h6>
+<p>Valid JSON that can be deserialized to a CRIPT Python SDK Node</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">   </span><span class="nt">&quot;node&quot;</span><span class="p">:[</span><span class="s2">&quot;Algorithm&quot;</span><span class="p">],</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">   </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="s2">&quot;mc_barostat&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;barostat&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">   </span><span class="nt">&quot;parameter&quot;</span><span class="p">:{</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="nt">&quot;node&quot;</span><span class="p">:[</span><span class="s2">&quot;Parameter&quot;</span><span class="p">],</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nt">&quot;uid&quot;</span><span class="p">:</span><span class="s2">&quot;uid-string&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="s2">&quot;update_frequency&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">      </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;1/second&quot;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">   </span><span class="p">}</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="p">}</span>
+</code></pre></div>
+Now the node is fully specified.</p>
+<h5 id="cript.nodes.exceptions.CRIPTDeserializationUIDError--troubleshooting">Troubleshooting<a class="headerlink" href="#cript.nodes.exceptions.CRIPTDeserializationUIDError--troubleshooting" title="Permanent link">&para;</a></h5>
+<p>Specify the full node instead. This error might appear if you try to partially load previously generated JSON.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/cript/nodes/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-114">114</a></span>
+<span class="normal"><a href="#__codelineno-0-115">115</a></span>
+<span class="normal"><a href="#__codelineno-0-116">116</a></span>
+<span class="normal"><a href="#__codelineno-0-117">117</a></span>
+<span class="normal"><a href="#__codelineno-0-118">118</a></span>
+<span class="normal"><a href="#__codelineno-0-119">119</a></span>
+<span class="normal"><a href="#__codelineno-0-120">120</a></span>
+<span class="normal"><a href="#__codelineno-0-121">121</a></span>
+<span class="normal"><a href="#__codelineno-0-122">122</a></span>
+<span class="normal"><a href="#__codelineno-0-123">123</a></span>
+<span class="normal"><a href="#__codelineno-0-124">124</a></span>
+<span class="normal"><a href="#__codelineno-0-125">125</a></span>
+<span class="normal"><a href="#__codelineno-0-126">126</a></span>
+<span class="normal"><a href="#__codelineno-0-127">127</a></span>
+<span class="normal"><a href="#__codelineno-0-128">128</a></span>
+<span class="normal"><a href="#__codelineno-0-129">129</a></span>
+<span class="normal"><a href="#__codelineno-0-130">130</a></span>
+<span class="normal"><a href="#__codelineno-0-131">131</a></span>
+<span class="normal"><a href="#__codelineno-0-132">132</a></span>
+<span class="normal"><a href="#__codelineno-0-133">133</a></span>
+<span class="normal"><a href="#__codelineno-0-134">134</a></span>
+<span class="normal"><a href="#__codelineno-0-135">135</a></span>
+<span class="normal"><a href="#__codelineno-0-136">136</a></span>
+<span class="normal"><a href="#__codelineno-0-137">137</a></span>
+<span class="normal"><a href="#__codelineno-0-138">138</a></span>
+<span class="normal"><a href="#__codelineno-0-139">139</a></span>
+<span class="normal"><a href="#__codelineno-0-140">140</a></span>
+<span class="normal"><a href="#__codelineno-0-141">141</a></span>
+<span class="normal"><a href="#__codelineno-0-142">142</a></span>
+<span class="normal"><a href="#__codelineno-0-143">143</a></span>
+<span class="normal"><a href="#__codelineno-0-144">144</a></span>
+<span class="normal"><a href="#__codelineno-0-145">145</a></span>
+<span class="normal"><a href="#__codelineno-0-146">146</a></span>
+<span class="normal"><a href="#__codelineno-0-147">147</a></span>
+<span class="normal"><a href="#__codelineno-0-148">148</a></span>
+<span class="normal"><a href="#__codelineno-0-149">149</a></span>
+<span class="normal"><a href="#__codelineno-0-150">150</a></span>
+<span class="normal"><a href="#__codelineno-0-151">151</a></span>
+<span class="normal"><a href="#__codelineno-0-152">152</a></span>
+<span class="normal"><a href="#__codelineno-0-153">153</a></span>
+<span class="normal"><a href="#__codelineno-0-154">154</a></span>
+<span class="normal"><a href="#__codelineno-0-155">155</a></span>
+<span class="normal"><a href="#__codelineno-0-156">156</a></span>
+<span class="normal"><a href="#__codelineno-0-157">157</a></span>
+<span class="normal"><a href="#__codelineno-0-158">158</a></span>
+<span class="normal"><a href="#__codelineno-0-159">159</a></span>
+<span class="normal"><a href="#__codelineno-0-160">160</a></span>
+<span class="normal"><a href="#__codelineno-0-161">161</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-114" name="__codelineno-0-114"></a><span class="k">class</span> <span class="nc">CRIPTDeserializationUIDError</span><span class="p">(</span><span class="n">CRIPTException</span><span class="p">):</span>
+<a id="__codelineno-0-115" name="__codelineno-0-115"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-116" name="__codelineno-0-116"></a><span class="sd">    ## Definition</span>
+<a id="__codelineno-0-117" name="__codelineno-0-117"></a><span class="sd">    This exception is raised when converting a node from JSON to Python class fails,</span>
+<a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="sd">    because a node is specified with its UID only, but not part of the data graph elsewhere.</span>
+<a id="__codelineno-0-119" name="__codelineno-0-119"></a>
+<a id="__codelineno-0-120" name="__codelineno-0-120"></a><span class="sd">    ### Error Example</span>
+<a id="__codelineno-0-121" name="__codelineno-0-121"></a><span class="sd">    Invalid JSON that cannot be deserialized to a CRIPT Python SDK Node</span>
+<a id="__codelineno-0-122" name="__codelineno-0-122"></a>
+<a id="__codelineno-0-123" name="__codelineno-0-123"></a><span class="sd">    ```json</span>
+<a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="sd">    {</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="sd">    &quot;node&quot;: [&quot;Algorithm&quot;],</span>
+<a id="__codelineno-0-126" name="__codelineno-0-126"></a><span class="sd">    &quot;key&quot;: &quot;mc_barostat&quot;,</span>
+<a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">    &quot;type&quot;: &quot;barostat&quot;,</span>
+<a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">    &quot;parameter&quot;: {&quot;node&quot;: [&quot;Parameter&quot;], &quot;uid&quot;: &quot;uid-string&quot;}</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">    }</span>
+<a id="__codelineno-0-130" name="__codelineno-0-130"></a><span class="sd">    ```</span>
+<a id="__codelineno-0-131" name="__codelineno-0-131"></a><span class="sd">    Here the algorithm has a parameter attribute, but the parameter is specified as uid only.</span>
+<a id="__codelineno-0-132" name="__codelineno-0-132"></a>
+<a id="__codelineno-0-133" name="__codelineno-0-133"></a><span class="sd">    ### Valid Example</span>
+<a id="__codelineno-0-134" name="__codelineno-0-134"></a><span class="sd">    Valid JSON that can be deserialized to a CRIPT Python SDK Node</span>
+<a id="__codelineno-0-135" name="__codelineno-0-135"></a>
+<a id="__codelineno-0-136" name="__codelineno-0-136"></a><span class="sd">    ```json</span>
+<a id="__codelineno-0-137" name="__codelineno-0-137"></a><span class="sd">    {</span>
+<a id="__codelineno-0-138" name="__codelineno-0-138"></a><span class="sd">       &quot;node&quot;:[&quot;Algorithm&quot;],</span>
+<a id="__codelineno-0-139" name="__codelineno-0-139"></a><span class="sd">       &quot;key&quot;:&quot;mc_barostat&quot;,</span>
+<a id="__codelineno-0-140" name="__codelineno-0-140"></a><span class="sd">       &quot;type&quot;:&quot;barostat&quot;,</span>
+<a id="__codelineno-0-141" name="__codelineno-0-141"></a><span class="sd">       &quot;parameter&quot;:{</span>
+<a id="__codelineno-0-142" name="__codelineno-0-142"></a><span class="sd">          &quot;node&quot;:[&quot;Parameter&quot;],</span>
+<a id="__codelineno-0-143" name="__codelineno-0-143"></a><span class="sd">          &quot;uid&quot;:&quot;uid-string&quot;,</span>
+<a id="__codelineno-0-144" name="__codelineno-0-144"></a><span class="sd">          &quot;key&quot;:&quot;update_frequency&quot;,</span>
+<a id="__codelineno-0-145" name="__codelineno-0-145"></a><span class="sd">          &quot;value&quot;:1,</span>
+<a id="__codelineno-0-146" name="__codelineno-0-146"></a><span class="sd">          &quot;unit&quot;:&quot;1/second&quot;</span>
+<a id="__codelineno-0-147" name="__codelineno-0-147"></a><span class="sd">       }</span>
+<a id="__codelineno-0-148" name="__codelineno-0-148"></a><span class="sd">    }</span>
+<a id="__codelineno-0-149" name="__codelineno-0-149"></a><span class="sd">    ```</span>
+<a id="__codelineno-0-150" name="__codelineno-0-150"></a><span class="sd">    Now the node is fully specified.</span>
+<a id="__codelineno-0-151" name="__codelineno-0-151"></a>
+<a id="__codelineno-0-152" name="__codelineno-0-152"></a><span class="sd">    ## Troubleshooting</span>
+<a id="__codelineno-0-153" name="__codelineno-0-153"></a><span class="sd">    Specify the full node instead. This error might appear if you try to partially load previously generated JSON.</span>
+<a id="__codelineno-0-154" name="__codelineno-0-154"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-155" name="__codelineno-0-155"></a>
+<a id="__codelineno-0-156" name="__codelineno-0-156"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">uid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-157" name="__codelineno-0-157"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">=</span> <span class="n">node_type</span>
+<a id="__codelineno-0-158" name="__codelineno-0-158"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">uid</span> <span class="o">=</span> <span class="n">uid</span>
+<a id="__codelineno-0-159" name="__codelineno-0-159"></a>
+<a id="__codelineno-0-160" name="__codelineno-0-160"></a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-161" name="__codelineno-0-161"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;JSON deserialization failed for node type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">node_type</span><span class="si">}</span><span class="s2"> with unknown UID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cript.nodes.exceptions.CRIPTJsonDeserializationError" class="doc doc-heading">
+          <code>CRIPTJsonDeserializationError</code>
+
+
+<a href="#cript.nodes.exceptions.CRIPTJsonDeserializationError" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="cript.exceptions.CRIPTException">CRIPTException</span></code></p>
+
+  
+      <h5 id="cript.nodes.exceptions.CRIPTJsonDeserializationError--definition">Definition<a class="headerlink" href="#cript.nodes.exceptions.CRIPTJsonDeserializationError--definition" title="Permanent link">&para;</a></h5>
+<p>This exception is raised when converting a node from JSON to Python class fails.
+This process fails when the attributes within the JSON does not match the node's class
+attributes within the <code>JsonAttributes</code> of that specific node</p>
+<h6 id="cript.nodes.exceptions.CRIPTJsonDeserializationError--error-example">Error Example<a class="headerlink" href="#cript.nodes.exceptions.CRIPTJsonDeserializationError--error-example" title="Permanent link">&para;</a></h6>
+<p>Invalid JSON that cannot be deserialized to a CRIPT Python SDK Node</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>
+</code></pre></div>
+<h6 id="cript.nodes.exceptions.CRIPTJsonDeserializationError--valid-example">Valid Example<a class="headerlink" href="#cript.nodes.exceptions.CRIPTJsonDeserializationError--valid-example" title="Permanent link">&para;</a></h6>
+<p>Valid JSON that can be deserialized to a CRIPT Python SDK Node</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
+</code></pre></div>
+<h5 id="cript.nodes.exceptions.CRIPTJsonDeserializationError--troubleshooting">Troubleshooting<a class="headerlink" href="#cript.nodes.exceptions.CRIPTJsonDeserializationError--troubleshooting" title="Permanent link">&para;</a></h5>
+
+            <details class="quote">
+              <summary>Source code in <code>src/cript/nodes/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-83"> 83</a></span>
+<span class="normal"><a href="#__codelineno-0-84"> 84</a></span>
+<span class="normal"><a href="#__codelineno-0-85"> 85</a></span>
+<span class="normal"><a href="#__codelineno-0-86"> 86</a></span>
+<span class="normal"><a href="#__codelineno-0-87"> 87</a></span>
+<span class="normal"><a href="#__codelineno-0-88"> 88</a></span>
+<span class="normal"><a href="#__codelineno-0-89"> 89</a></span>
+<span class="normal"><a href="#__codelineno-0-90"> 90</a></span>
+<span class="normal"><a href="#__codelineno-0-91"> 91</a></span>
+<span class="normal"><a href="#__codelineno-0-92"> 92</a></span>
+<span class="normal"><a href="#__codelineno-0-93"> 93</a></span>
+<span class="normal"><a href="#__codelineno-0-94"> 94</a></span>
+<span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
+<span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
+<span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
+<span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
+<span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
+<span class="normal"><a href="#__codelineno-0-100">100</a></span>
+<span class="normal"><a href="#__codelineno-0-101">101</a></span>
+<span class="normal"><a href="#__codelineno-0-102">102</a></span>
+<span class="normal"><a href="#__codelineno-0-103">103</a></span>
+<span class="normal"><a href="#__codelineno-0-104">104</a></span>
+<span class="normal"><a href="#__codelineno-0-105">105</a></span>
+<span class="normal"><a href="#__codelineno-0-106">106</a></span>
+<span class="normal"><a href="#__codelineno-0-107">107</a></span>
+<span class="normal"><a href="#__codelineno-0-108">108</a></span>
+<span class="normal"><a href="#__codelineno-0-109">109</a></span>
+<span class="normal"><a href="#__codelineno-0-110">110</a></span>
+<span class="normal"><a href="#__codelineno-0-111">111</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-83" name="__codelineno-0-83"></a><span class="k">class</span> <span class="nc">CRIPTJsonDeserializationError</span><span class="p">(</span><span class="n">CRIPTException</span><span class="p">):</span>
+<a id="__codelineno-0-84" name="__codelineno-0-84"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85"></a><span class="sd">    ## Definition</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86"></a><span class="sd">    This exception is raised when converting a node from JSON to Python class fails.</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87"></a><span class="sd">    This process fails when the attributes within the JSON does not match the node&#39;s class</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a><span class="sd">    attributes within the `JsonAttributes` of that specific node</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89"></a>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a><span class="sd">    ### Error Example</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="sd">    Invalid JSON that cannot be deserialized to a CRIPT Python SDK Node</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92"></a>
+<a id="__codelineno-0-93" name="__codelineno-0-93"></a><span class="sd">    ```json</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="sd">    ```</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95"></a>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="sd">    ### Valid Example</span>
+<a id="__codelineno-0-98" name="__codelineno-0-98"></a><span class="sd">    Valid JSON that can be deserialized to a CRIPT Python SDK Node</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a>
+<a id="__codelineno-0-100" name="__codelineno-0-100"></a><span class="sd">    ```json</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a><span class="sd">    ```</span>
+<a id="__codelineno-0-102" name="__codelineno-0-102"></a>
+<a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="sd">    ## Troubleshooting</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a>
+<a id="__codelineno-0-106" name="__codelineno-0-106"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">json_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-107" name="__codelineno-0-107"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">=</span> <span class="n">node_type</span>
+<a id="__codelineno-0-108" name="__codelineno-0-108"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">json_str</span> <span class="o">=</span> <span class="n">json_str</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109"></a>
+<a id="__codelineno-0-110" name="__codelineno-0-110"></a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-111" name="__codelineno-0-111"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;JSON deserialization failed for node type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">node_type</span><span class="si">}</span><span class="s2"> with JSON str: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">json_str</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cript.nodes.exceptions.CRIPTJsonNodeError" class="doc doc-heading">
+          <code>CRIPTJsonNodeError</code>
+
+
+<a href="#cript.nodes.exceptions.CRIPTJsonNodeError" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><a class="autorefs autorefs-internal" title="cript.nodes.exceptions.CRIPTJsonDeserializationError" href="#cript.nodes.exceptions.CRIPTJsonDeserializationError">CRIPTJsonDeserializationError</a></code></p>
+
+  
+      <h5 id="cript.nodes.exceptions.CRIPTJsonNodeError--definition">Definition<a class="headerlink" href="#cript.nodes.exceptions.CRIPTJsonNodeError--definition" title="Permanent link">&para;</a></h5>
+<p>This exception is raised if a <code>node</code> attribute is present in JSON,
+but the list has more or less than exactly one type of node type.</p>
+<blockquote>
+<p>Note: It is expected that there is only a single node type per JSON object.</p>
+</blockquote>
+<h6 id="cript.nodes.exceptions.CRIPTJsonNodeError--example">Example<a class="headerlink" href="#cript.nodes.exceptions.CRIPTJsonNodeError--example" title="Permanent link">&para;</a></h6>
+<div class="admonition example">
+<p class="admonition-title">Valid JSON representation of a Material node</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;node&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="s2">&quot;Material&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Whey protein isolate&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">&quot;uid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;_:Whey protein isolate&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">},</span>
+</code></pre></div>
+</div>
+<details class="example">
+<summary>Invalid JSON representation of a Material node</summary>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;node&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="s2">&quot;Material&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="s2">&quot;Property&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Whey protein isolate&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">&quot;uid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;_:Whey protein isolate&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">},</span>
+</code></pre></div>
+<hr />
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;node&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Whey protein isolate&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">&quot;uid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;_:Whey protein isolate&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">},</span>
+</code></pre></div>
+</details>
+<h5 id="cript.nodes.exceptions.CRIPTJsonNodeError--troubleshooting">Troubleshooting<a class="headerlink" href="#cript.nodes.exceptions.CRIPTJsonNodeError--troubleshooting" title="Permanent link">&para;</a></h5>
+<p>Debugging skills are most helpful here as there is no one-size-fits-all approach.</p>
+<p>It is best to identify whether the invalid JSON was created in the Python SDK
+or if the invalid JSON was given from the API.</p>
+<p>If the Python SDK created invalid JSON during serialization, then it is helpful to track down and
+identify the point where the invalid JSON was started.</p>
+<p>You may consider, inspecting the python objects to see if the node type are written incorrectly in python
+and the issue is only being caught during serialization or if the Python node is written correctly
+and the issue is created during serialization.</p>
+<p>If the problem is with the Python SDK or API, it is best to leave an issue or create a discussion within the
+<a href="https://github.com/C-Accel-CRIPT/Python-SDK">Python SDK GitHub repository</a> for one of the members of the
+CRIPT team to look into any issues that there could have been.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/cript/nodes/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-164">164</a></span>
+<span class="normal"><a href="#__codelineno-0-165">165</a></span>
+<span class="normal"><a href="#__codelineno-0-166">166</a></span>
+<span class="normal"><a href="#__codelineno-0-167">167</a></span>
+<span class="normal"><a href="#__codelineno-0-168">168</a></span>
+<span class="normal"><a href="#__codelineno-0-169">169</a></span>
+<span class="normal"><a href="#__codelineno-0-170">170</a></span>
+<span class="normal"><a href="#__codelineno-0-171">171</a></span>
+<span class="normal"><a href="#__codelineno-0-172">172</a></span>
+<span class="normal"><a href="#__codelineno-0-173">173</a></span>
+<span class="normal"><a href="#__codelineno-0-174">174</a></span>
+<span class="normal"><a href="#__codelineno-0-175">175</a></span>
+<span class="normal"><a href="#__codelineno-0-176">176</a></span>
+<span class="normal"><a href="#__codelineno-0-177">177</a></span>
+<span class="normal"><a href="#__codelineno-0-178">178</a></span>
+<span class="normal"><a href="#__codelineno-0-179">179</a></span>
+<span class="normal"><a href="#__codelineno-0-180">180</a></span>
+<span class="normal"><a href="#__codelineno-0-181">181</a></span>
+<span class="normal"><a href="#__codelineno-0-182">182</a></span>
+<span class="normal"><a href="#__codelineno-0-183">183</a></span>
+<span class="normal"><a href="#__codelineno-0-184">184</a></span>
+<span class="normal"><a href="#__codelineno-0-185">185</a></span>
+<span class="normal"><a href="#__codelineno-0-186">186</a></span>
+<span class="normal"><a href="#__codelineno-0-187">187</a></span>
+<span class="normal"><a href="#__codelineno-0-188">188</a></span>
+<span class="normal"><a href="#__codelineno-0-189">189</a></span>
+<span class="normal"><a href="#__codelineno-0-190">190</a></span>
+<span class="normal"><a href="#__codelineno-0-191">191</a></span>
+<span class="normal"><a href="#__codelineno-0-192">192</a></span>
+<span class="normal"><a href="#__codelineno-0-193">193</a></span>
+<span class="normal"><a href="#__codelineno-0-194">194</a></span>
+<span class="normal"><a href="#__codelineno-0-195">195</a></span>
+<span class="normal"><a href="#__codelineno-0-196">196</a></span>
+<span class="normal"><a href="#__codelineno-0-197">197</a></span>
+<span class="normal"><a href="#__codelineno-0-198">198</a></span>
+<span class="normal"><a href="#__codelineno-0-199">199</a></span>
+<span class="normal"><a href="#__codelineno-0-200">200</a></span>
+<span class="normal"><a href="#__codelineno-0-201">201</a></span>
+<span class="normal"><a href="#__codelineno-0-202">202</a></span>
+<span class="normal"><a href="#__codelineno-0-203">203</a></span>
+<span class="normal"><a href="#__codelineno-0-204">204</a></span>
+<span class="normal"><a href="#__codelineno-0-205">205</a></span>
+<span class="normal"><a href="#__codelineno-0-206">206</a></span>
+<span class="normal"><a href="#__codelineno-0-207">207</a></span>
+<span class="normal"><a href="#__codelineno-0-208">208</a></span>
+<span class="normal"><a href="#__codelineno-0-209">209</a></span>
+<span class="normal"><a href="#__codelineno-0-210">210</a></span>
+<span class="normal"><a href="#__codelineno-0-211">211</a></span>
+<span class="normal"><a href="#__codelineno-0-212">212</a></span>
+<span class="normal"><a href="#__codelineno-0-213">213</a></span>
+<span class="normal"><a href="#__codelineno-0-214">214</a></span>
+<span class="normal"><a href="#__codelineno-0-215">215</a></span>
+<span class="normal"><a href="#__codelineno-0-216">216</a></span>
+<span class="normal"><a href="#__codelineno-0-217">217</a></span>
+<span class="normal"><a href="#__codelineno-0-218">218</a></span>
+<span class="normal"><a href="#__codelineno-0-219">219</a></span>
+<span class="normal"><a href="#__codelineno-0-220">220</a></span>
+<span class="normal"><a href="#__codelineno-0-221">221</a></span>
+<span class="normal"><a href="#__codelineno-0-222">222</a></span>
+<span class="normal"><a href="#__codelineno-0-223">223</a></span>
+<span class="normal"><a href="#__codelineno-0-224">224</a></span>
+<span class="normal"><a href="#__codelineno-0-225">225</a></span>
+<span class="normal"><a href="#__codelineno-0-226">226</a></span>
+<span class="normal"><a href="#__codelineno-0-227">227</a></span>
+<span class="normal"><a href="#__codelineno-0-228">228</a></span>
+<span class="normal"><a href="#__codelineno-0-229">229</a></span>
+<span class="normal"><a href="#__codelineno-0-230">230</a></span>
+<span class="normal"><a href="#__codelineno-0-231">231</a></span>
+<span class="normal"><a href="#__codelineno-0-232">232</a></span>
+<span class="normal"><a href="#__codelineno-0-233">233</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="k">class</span> <span class="nc">CRIPTJsonNodeError</span><span class="p">(</span><span class="n">CRIPTJsonDeserializationError</span><span class="p">):</span>
+<a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">    ## Definition</span>
+<a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">    This exception is raised if a `node` attribute is present in JSON,</span>
+<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    but the list has more or less than exactly one type of node type.</span>
+<a id="__codelineno-0-169" name="__codelineno-0-169"></a>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">    &gt; Note: It is expected that there is only a single node type per JSON object.</span>
+<a id="__codelineno-0-171" name="__codelineno-0-171"></a>
+<a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="sd">    ### Example</span>
+<a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">    !!! Example &quot;Valid JSON representation of a Material node&quot;</span>
+<a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">        ```json</span>
+<a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">        {</span>
+<a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="sd">          &quot;node&quot;: [</span>
+<a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">            &quot;Material&quot;</span>
+<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="sd">          ],</span>
+<a id="__codelineno-0-179" name="__codelineno-0-179"></a><span class="sd">          &quot;name&quot;: &quot;Whey protein isolate&quot;,</span>
+<a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">          &quot;uid&quot;: &quot;_:Whey protein isolate&quot;</span>
+<a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">        },</span>
+<a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="sd">        ```</span>
+<a id="__codelineno-0-183" name="__codelineno-0-183"></a>
+<a id="__codelineno-0-184" name="__codelineno-0-184"></a><span class="sd">    ??? Example &quot;Invalid JSON representation of a Material node&quot;</span>
+<a id="__codelineno-0-185" name="__codelineno-0-185"></a>
+<a id="__codelineno-0-186" name="__codelineno-0-186"></a><span class="sd">        ```json</span>
+<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="sd">        {</span>
+<a id="__codelineno-0-188" name="__codelineno-0-188"></a><span class="sd">          &quot;node&quot;: [</span>
+<a id="__codelineno-0-189" name="__codelineno-0-189"></a><span class="sd">            &quot;Material&quot;,</span>
+<a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="sd">            &quot;Property&quot;</span>
+<a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="sd">          ],</span>
+<a id="__codelineno-0-192" name="__codelineno-0-192"></a><span class="sd">          &quot;name&quot;: &quot;Whey protein isolate&quot;,</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="sd">          &quot;uid&quot;: &quot;_:Whey protein isolate&quot;</span>
+<a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">        },</span>
+<a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="sd">        ```</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196"></a>
+<a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="sd">        ---</span>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a>
+<a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">        ```json</span>
+<a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">        {</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">          &quot;node&quot;: [],</span>
+<a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">          &quot;name&quot;: &quot;Whey protein isolate&quot;,</span>
+<a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">          &quot;uid&quot;: &quot;_:Whey protein isolate&quot;</span>
+<a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="sd">        },</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">        ```</span>
+<a id="__codelineno-0-206" name="__codelineno-0-206"></a>
+<a id="__codelineno-0-207" name="__codelineno-0-207"></a>
+<a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="sd">    ## Troubleshooting</span>
+<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">    Debugging skills are most helpful here as there is no one-size-fits-all approach.</span>
+<a id="__codelineno-0-210" name="__codelineno-0-210"></a>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    It is best to identify whether the invalid JSON was created in the Python SDK</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    or if the invalid JSON was given from the API.</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a>
+<a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">    If the Python SDK created invalid JSON during serialization, then it is helpful to track down and</span>
+<a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">    identify the point where the invalid JSON was started.</span>
+<a id="__codelineno-0-216" name="__codelineno-0-216"></a>
+<a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="sd">    You may consider, inspecting the python objects to see if the node type are written incorrectly in python</span>
+<a id="__codelineno-0-218" name="__codelineno-0-218"></a><span class="sd">    and the issue is only being caught during serialization or if the Python node is written correctly</span>
+<a id="__codelineno-0-219" name="__codelineno-0-219"></a><span class="sd">    and the issue is created during serialization.</span>
+<a id="__codelineno-0-220" name="__codelineno-0-220"></a>
+<a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">    If the problem is with the Python SDK or API, it is best to leave an issue or create a discussion within the</span>
+<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">    [Python SDK GitHub repository](https://github.com/C-Accel-CRIPT/Python-SDK) for one of the members of the</span>
+<a id="__codelineno-0-223" name="__codelineno-0-223"></a><span class="sd">    CRIPT team to look into any issues that there could have been.</span>
+<a id="__codelineno-0-224" name="__codelineno-0-224"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-225" name="__codelineno-0-225"></a>
+<a id="__codelineno-0-226" name="__codelineno-0-226"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_list</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">json_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-227" name="__codelineno-0-227"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">node_list</span> <span class="o">=</span> <span class="n">node_list</span>
+<a id="__codelineno-0-228" name="__codelineno-0-228"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">json_str</span> <span class="o">=</span> <span class="n">json_str</span>
+<a id="__codelineno-0-229" name="__codelineno-0-229"></a>
+<a id="__codelineno-0-230" name="__codelineno-0-230"></a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-231" name="__codelineno-0-231"></a>        <span class="n">error_message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;The &#39;node&#39; attribute in the JSON string must be a single element list with the node name &quot;</span> <span class="sa">f</span><span class="s2">&quot; such as `&#39;node: [&#39;Material&#39;]`. The `node` attribute provided was: `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">node_list</span><span class="si">}</span><span class="s2">`&quot;</span> <span class="sa">f</span><span class="s2">&quot;The full JSON was: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">json_str</span><span class="si">}</span><span class="s2">.&quot;</span>
+<a id="__codelineno-0-232" name="__codelineno-0-232"></a>
+<a id="__codelineno-0-233" name="__codelineno-0-233"></a>        <span class="k">return</span> <span class="n">error_message</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cript.nodes.exceptions.CRIPTJsonSerializationError" class="doc doc-heading">
+          <code>CRIPTJsonSerializationError</code>
+
+
+<a href="#cript.nodes.exceptions.CRIPTJsonSerializationError" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="cript.exceptions.CRIPTException">CRIPTException</span></code></p>
+
+  
+      <h5 id="cript.nodes.exceptions.CRIPTJsonSerializationError--definition">Definition<a class="headerlink" href="#cript.nodes.exceptions.CRIPTJsonSerializationError--definition" title="Permanent link">&para;</a></h5>
+<p>This Exception is raised if serialization of node from JSON to Python Object fails.</p>
+<h5 id="cript.nodes.exceptions.CRIPTJsonSerializationError--troubleshooting">Troubleshooting<a class="headerlink" href="#cript.nodes.exceptions.CRIPTJsonSerializationError--troubleshooting" title="Permanent link">&para;</a></h5>
+
+            <details class="quote">
+              <summary>Source code in <code>src/cript/nodes/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-236">236</a></span>
+<span class="normal"><a href="#__codelineno-0-237">237</a></span>
+<span class="normal"><a href="#__codelineno-0-238">238</a></span>
+<span class="normal"><a href="#__codelineno-0-239">239</a></span>
+<span class="normal"><a href="#__codelineno-0-240">240</a></span>
+<span class="normal"><a href="#__codelineno-0-241">241</a></span>
+<span class="normal"><a href="#__codelineno-0-242">242</a></span>
+<span class="normal"><a href="#__codelineno-0-243">243</a></span>
+<span class="normal"><a href="#__codelineno-0-244">244</a></span>
+<span class="normal"><a href="#__codelineno-0-245">245</a></span>
+<span class="normal"><a href="#__codelineno-0-246">246</a></span>
+<span class="normal"><a href="#__codelineno-0-247">247</a></span>
+<span class="normal"><a href="#__codelineno-0-248">248</a></span>
+<span class="normal"><a href="#__codelineno-0-249">249</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-236" name="__codelineno-0-236"></a><span class="k">class</span> <span class="nc">CRIPTJsonSerializationError</span><span class="p">(</span><span class="n">CRIPTException</span><span class="p">):</span>
+<a id="__codelineno-0-237" name="__codelineno-0-237"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-238" name="__codelineno-0-238"></a><span class="sd">    ## Definition</span>
+<a id="__codelineno-0-239" name="__codelineno-0-239"></a><span class="sd">    This Exception is raised if serialization of node from JSON to Python Object fails.</span>
+<a id="__codelineno-0-240" name="__codelineno-0-240"></a>
+<a id="__codelineno-0-241" name="__codelineno-0-241"></a><span class="sd">    ## Troubleshooting</span>
+<a id="__codelineno-0-242" name="__codelineno-0-242"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-243" name="__codelineno-0-243"></a>
+<a id="__codelineno-0-244" name="__codelineno-0-244"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">json_dict</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-245" name="__codelineno-0-245"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">=</span> <span class="n">node_type</span>
+<a id="__codelineno-0-246" name="__codelineno-0-246"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">json_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">json_dict</span><span class="p">)</span>
+<a id="__codelineno-0-247" name="__codelineno-0-247"></a>
+<a id="__codelineno-0-248" name="__codelineno-0-248"></a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-249" name="__codelineno-0-249"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;JSON Serialization failed for node type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">node_type</span><span class="si">}</span><span class="s2"> with JSON dict: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">json_str</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cript.nodes.exceptions.CRIPTMaterialIdentifierWarning" class="doc doc-heading">
+          <code>CRIPTMaterialIdentifierWarning</code>
+
+
+<a href="#cript.nodes.exceptions.CRIPTMaterialIdentifierWarning" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="cript.exceptions.CRIPTWarning">CRIPTWarning</span></code></p>
+
+  
+      <p>Every material node needs to have at least one identifier set.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/cript/nodes/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#__codelineno-0-73">73</a></span>
+<span class="normal"><a href="#__codelineno-0-74">74</a></span>
+<span class="normal"><a href="#__codelineno-0-75">75</a></span>
+<span class="normal"><a href="#__codelineno-0-76">76</a></span>
+<span class="normal"><a href="#__codelineno-0-77">77</a></span>
+<span class="normal"><a href="#__codelineno-0-78">78</a></span>
+<span class="normal"><a href="#__codelineno-0-79">79</a></span>
+<span class="normal"><a href="#__codelineno-0-80">80</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="k">class</span> <span class="nc">CRIPTMaterialIdentifierWarning</span><span class="p">(</span><span class="n">CRIPTWarning</span><span class="p">):</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Every material node needs to have at least one identifier set.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_node</span><span class="p">):</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">material_node</span> <span class="o">=</span> <span class="n">material_node</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a>        <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;Every Material node needs at least one identifier from &quot;</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78"></a>        <span class="n">error_message</span> <span class="o">+=</span> <span class="s2">&quot; [ &#39;amino_acid&#39;, &#39;bigsmiles&#39;, &#39;chem_formula&#39;, &#39;chem_repeat&#39;, &#39;chemical_id&#39;, &#39;inchi&#39;, &#39;lot_number&#39;, &#39;names&#39;, &#39;pubchem_cid&#39;, &#39;smiles&#39;,&#39;vendor&#39;] set.&quot;</span>
+<a id="__codelineno-0-79" name="__codelineno-0-79"></a>        <span class="n">error_message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; This node </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">material_node</span><span class="si">}</span><span class="s2"> has none set.&quot;</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a>        <span class="k">return</span> <span class="n">error_message</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cript.nodes.exceptions.CRIPTNodeSchemaError" class="doc doc-heading">
+          <code>CRIPTNodeSchemaError</code>
+
+
+<a href="#cript.nodes.exceptions.CRIPTNodeSchemaError" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="cript.exceptions.CRIPTException">CRIPTException</span></code></p>
+
+  
+      <h5 id="cript.nodes.exceptions.CRIPTNodeSchemaError--definition">Definition<a class="headerlink" href="#cript.nodes.exceptions.CRIPTNodeSchemaError--definition" title="Permanent link">&para;</a></h5>
+<p>This error is raised when the CRIPT <a href="https://json-schema.org/">json database schema</a>
+validation fails for a node.</p>
+<p>Please keep in mind that the CRIPT Python SDK converts all the Python nodes inside the
+<a href="../../nodes/primary_nodes/project">Project</a> into a giant JSON
+and sends an HTTP <code>POST</code> or <code>PATCH</code> request to the API to be processed.</p>
+<p>However, before a request is sent to the API, the JSON is validated against API database schema
+via the <a href="https://python-jsonschema.readthedocs.io/en/stable/">JSON Schema library</a>,
+and if the database schema validation fails for whatever reason this error is shown.</p>
+<h6 id="cript.nodes.exceptions.CRIPTNodeSchemaError--possible-reasons">Possible Reasons<a class="headerlink" href="#cript.nodes.exceptions.CRIPTNodeSchemaError--possible-reasons" title="Permanent link">&para;</a></h6>
+<ol>
+<li>There was a mistake in nesting of the nodes</li>
+<li>There was a mistake in creating the nodes</li>
+<li>Nodes are missing</li>
+<li>Nodes have invalid vocabulary<ul>
+<li>The database schema wants something a different controlled vocabulary than what is provided</li>
+</ul>
+</li>
+<li>There was an error with the way the JSON was created within the Python SDK<ul>
+<li>The format of the JSON the CRIPT Python SDK created was invalid</li>
+</ul>
+</li>
+<li>There is something wrong with the database schema</li>
+</ol>
+<h5 id="cript.nodes.exceptions.CRIPTNodeSchemaError--troubleshooting">Troubleshooting<a class="headerlink" href="#cript.nodes.exceptions.CRIPTNodeSchemaError--troubleshooting" title="Permanent link">&para;</a></h5>
+<p>The easiest way to troubleshoot this is to examine the JSON that the SDK created via printing out the
+<a href="../../nodes/primary_nodes/project">Project</a> node's JSON and checking the place that the schema validation
+says failed</p>
+<h6 id="cript.nodes.exceptions.CRIPTNodeSchemaError--example">Example<a class="headerlink" href="#cript.nodes.exceptions.CRIPTNodeSchemaError--example" title="Permanent link">&para;</a></h6>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">my_project</span><span class="o">.</span><span class="n">json</span><span class="p">)</span>
+</code></pre></div>
+
+            <details class="quote">
+              <summary>Source code in <code>src/cript/nodes/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-20">20</a></span>
+<span class="normal"><a href="#__codelineno-0-21">21</a></span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span>
+<span class="normal"><a href="#__codelineno-0-24">24</a></span>
+<span class="normal"><a href="#__codelineno-0-25">25</a></span>
+<span class="normal"><a href="#__codelineno-0-26">26</a></span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span>
+<span class="normal"><a href="#__codelineno-0-31">31</a></span>
+<span class="normal"><a href="#__codelineno-0-32">32</a></span>
+<span class="normal"><a href="#__codelineno-0-33">33</a></span>
+<span class="normal"><a href="#__codelineno-0-34">34</a></span>
+<span class="normal"><a href="#__codelineno-0-35">35</a></span>
+<span class="normal"><a href="#__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+<span class="normal"><a href="#__codelineno-0-38">38</a></span>
+<span class="normal"><a href="#__codelineno-0-39">39</a></span>
+<span class="normal"><a href="#__codelineno-0-40">40</a></span>
+<span class="normal"><a href="#__codelineno-0-41">41</a></span>
+<span class="normal"><a href="#__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#__codelineno-0-43">43</a></span>
+<span class="normal"><a href="#__codelineno-0-44">44</a></span>
+<span class="normal"><a href="#__codelineno-0-45">45</a></span>
+<span class="normal"><a href="#__codelineno-0-46">46</a></span>
+<span class="normal"><a href="#__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#__codelineno-0-51">51</a></span>
+<span class="normal"><a href="#__codelineno-0-52">52</a></span>
+<span class="normal"><a href="#__codelineno-0-53">53</a></span>
+<span class="normal"><a href="#__codelineno-0-54">54</a></span>
+<span class="normal"><a href="#__codelineno-0-55">55</a></span>
+<span class="normal"><a href="#__codelineno-0-56">56</a></span>
+<span class="normal"><a href="#__codelineno-0-57">57</a></span>
+<span class="normal"><a href="#__codelineno-0-58">58</a></span>
+<span class="normal"><a href="#__codelineno-0-59">59</a></span>
+<span class="normal"><a href="#__codelineno-0-60">60</a></span>
+<span class="normal"><a href="#__codelineno-0-61">61</a></span>
+<span class="normal"><a href="#__codelineno-0-62">62</a></span>
+<span class="normal"><a href="#__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="k">class</span> <span class="nc">CRIPTNodeSchemaError</span><span class="p">(</span><span class="n">CRIPTException</span><span class="p">):</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">    ## Definition</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="sd">    This error is raised when the CRIPT [json database schema](https://json-schema.org/)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="sd">    validation fails for a node.</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">    Please keep in mind that the CRIPT Python SDK converts all the Python nodes inside the</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="sd">    [Project](../../nodes/primary_nodes/project) into a giant JSON</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="sd">    and sends an HTTP `POST` or `PATCH` request to the API to be processed.</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">    However, before a request is sent to the API, the JSON is validated against API database schema</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="sd">    via the [JSON Schema library](https://python-jsonschema.readthedocs.io/en/stable/),</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="sd">    and if the database schema validation fails for whatever reason this error is shown.</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">    ### Possible Reasons</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">    1. There was a mistake in nesting of the nodes</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">    1. There was a mistake in creating the nodes</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">    1. Nodes are missing</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">    1. Nodes have invalid vocabulary</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">        * The database schema wants something a different controlled vocabulary than what is provided</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">    1. There was an error with the way the JSON was created within the Python SDK</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">        * The format of the JSON the CRIPT Python SDK created was invalid</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">    1. There is something wrong with the database schema</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">    ## Troubleshooting</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">    The easiest way to troubleshoot this is to examine the JSON that the SDK created via printing out the</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">    [Project](../../nodes/primary_nodes/project) node&#39;s JSON and checking the place that the schema validation</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="sd">    says failed</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">    ### Example</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="sd">    ```python</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">    print(my_project.json)</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">    ```</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="n">node_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="n">json_schema_validation_error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">json_schema_validation_error</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">json_schema_validation_error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">json_schema_validation_error</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">=</span> <span class="n">node_type</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>        <span class="n">error_message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;JSON database schema validation for node </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">node_type</span><span class="si">}</span><span class="s2"> failed.&quot;</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="n">error_message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">json_schema_validation_error</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a>        <span class="k">return</span> <span class="n">error_message</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cript.nodes.exceptions.CRIPTOrphanedComputationWarning" class="doc doc-heading">
+          <code>CRIPTOrphanedComputationWarning</code>
+
+
+<a href="#cript.nodes.exceptions.CRIPTOrphanedComputationWarning" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><a class="autorefs autorefs-internal" title="cript.nodes.exceptions.CRIPTOrphanedExperimentWarning" href="#cript.nodes.exceptions.CRIPTOrphanedExperimentWarning">CRIPTOrphanedExperimentWarning</a></code></p>
+
+  
+      <h5 id="cript.nodes.exceptions.CRIPTOrphanedComputationWarning--definition">Definition<a class="headerlink" href="#cript.nodes.exceptions.CRIPTOrphanedComputationWarning--definition" title="Permanent link">&para;</a></h5>
+<p>CRIPTOrphanedExperimentWarning, but specific for orphaned Computation node that should be
+listed in one of the experiments.</p>
+<h5 id="cript.nodes.exceptions.CRIPTOrphanedComputationWarning--troubleshooting">Troubleshooting<a class="headerlink" href="#cript.nodes.exceptions.CRIPTOrphanedComputationWarning--troubleshooting" title="Permanent link">&para;</a></h5>
+<p>Handle this error by adding the orphaned node into one the parent project's experiments
+<code>Computation</code> attribute.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/cript/nodes/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-379">379</a></span>
+<span class="normal"><a href="#__codelineno-0-380">380</a></span>
+<span class="normal"><a href="#__codelineno-0-381">381</a></span>
+<span class="normal"><a href="#__codelineno-0-382">382</a></span>
+<span class="normal"><a href="#__codelineno-0-383">383</a></span>
+<span class="normal"><a href="#__codelineno-0-384">384</a></span>
+<span class="normal"><a href="#__codelineno-0-385">385</a></span>
+<span class="normal"><a href="#__codelineno-0-386">386</a></span>
+<span class="normal"><a href="#__codelineno-0-387">387</a></span>
+<span class="normal"><a href="#__codelineno-0-388">388</a></span>
+<span class="normal"><a href="#__codelineno-0-389">389</a></span>
+<span class="normal"><a href="#__codelineno-0-390">390</a></span>
+<span class="normal"><a href="#__codelineno-0-391">391</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-379" name="__codelineno-0-379"></a><span class="k">class</span> <span class="nc">CRIPTOrphanedComputationWarning</span><span class="p">(</span><span class="n">CRIPTOrphanedExperimentWarning</span><span class="p">):</span>
+<a id="__codelineno-0-380" name="__codelineno-0-380"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-381" name="__codelineno-0-381"></a><span class="sd">    ## Definition</span>
+<a id="__codelineno-0-382" name="__codelineno-0-382"></a><span class="sd">    CRIPTOrphanedExperimentWarning, but specific for orphaned Computation node that should be</span>
+<a id="__codelineno-0-383" name="__codelineno-0-383"></a><span class="sd">    listed in one of the experiments.</span>
+<a id="__codelineno-0-384" name="__codelineno-0-384"></a>
+<a id="__codelineno-0-385" name="__codelineno-0-385"></a><span class="sd">    ## Troubleshooting</span>
+<a id="__codelineno-0-386" name="__codelineno-0-386"></a><span class="sd">    Handle this error by adding the orphaned node into one the parent project&#39;s experiments</span>
+<a id="__codelineno-0-387" name="__codelineno-0-387"></a><span class="sd">    `Computation` attribute.</span>
+<a id="__codelineno-0-388" name="__codelineno-0-388"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-389" name="__codelineno-0-389"></a>
+<a id="__codelineno-0-390" name="__codelineno-0-390"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orphaned_node</span><span class="p">):</span>
+<a id="__codelineno-0-391" name="__codelineno-0-391"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">orphaned_node</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cript.nodes.exceptions.CRIPTOrphanedComputationalProcessWarning" class="doc doc-heading">
+          <code>CRIPTOrphanedComputationalProcessWarning</code>
+
+
+<a href="#cript.nodes.exceptions.CRIPTOrphanedComputationalProcessWarning" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><a class="autorefs autorefs-internal" title="cript.nodes.exceptions.CRIPTOrphanedExperimentWarning" href="#cript.nodes.exceptions.CRIPTOrphanedExperimentWarning">CRIPTOrphanedExperimentWarning</a></code></p>
+
+  
+      <h5 id="cript.nodes.exceptions.CRIPTOrphanedComputationalProcessWarning--definition">Definition<a class="headerlink" href="#cript.nodes.exceptions.CRIPTOrphanedComputationalProcessWarning--definition" title="Permanent link">&para;</a></h5>
+<p>CRIPTOrphanedExperimentWarning, but specific for orphaned ComputationalProcess
+node that should be listed in one of the experiments.</p>
+<h5 id="cript.nodes.exceptions.CRIPTOrphanedComputationalProcessWarning--troubleshooting">Troubleshooting<a class="headerlink" href="#cript.nodes.exceptions.CRIPTOrphanedComputationalProcessWarning--troubleshooting" title="Permanent link">&para;</a></h5>
+<p>Handle this error by adding the orphaned node into one the parent project's experiments
+<code>ComputationalProcess</code> attribute.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/cript/nodes/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-394">394</a></span>
+<span class="normal"><a href="#__codelineno-0-395">395</a></span>
+<span class="normal"><a href="#__codelineno-0-396">396</a></span>
+<span class="normal"><a href="#__codelineno-0-397">397</a></span>
+<span class="normal"><a href="#__codelineno-0-398">398</a></span>
+<span class="normal"><a href="#__codelineno-0-399">399</a></span>
+<span class="normal"><a href="#__codelineno-0-400">400</a></span>
+<span class="normal"><a href="#__codelineno-0-401">401</a></span>
+<span class="normal"><a href="#__codelineno-0-402">402</a></span>
+<span class="normal"><a href="#__codelineno-0-403">403</a></span>
+<span class="normal"><a href="#__codelineno-0-404">404</a></span>
+<span class="normal"><a href="#__codelineno-0-405">405</a></span>
+<span class="normal"><a href="#__codelineno-0-406">406</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-394" name="__codelineno-0-394"></a><span class="k">class</span> <span class="nc">CRIPTOrphanedComputationalProcessWarning</span><span class="p">(</span><span class="n">CRIPTOrphanedExperimentWarning</span><span class="p">):</span>
+<a id="__codelineno-0-395" name="__codelineno-0-395"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-396" name="__codelineno-0-396"></a><span class="sd">    ## Definition</span>
+<a id="__codelineno-0-397" name="__codelineno-0-397"></a><span class="sd">    CRIPTOrphanedExperimentWarning, but specific for orphaned ComputationalProcess</span>
+<a id="__codelineno-0-398" name="__codelineno-0-398"></a><span class="sd">    node that should be listed in one of the experiments.</span>
+<a id="__codelineno-0-399" name="__codelineno-0-399"></a>
+<a id="__codelineno-0-400" name="__codelineno-0-400"></a><span class="sd">    ## Troubleshooting</span>
+<a id="__codelineno-0-401" name="__codelineno-0-401"></a><span class="sd">    Handle this error by adding the orphaned node into one the parent project&#39;s experiments</span>
+<a id="__codelineno-0-402" name="__codelineno-0-402"></a><span class="sd">    `ComputationalProcess` attribute.</span>
+<a id="__codelineno-0-403" name="__codelineno-0-403"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-404" name="__codelineno-0-404"></a>
+<a id="__codelineno-0-405" name="__codelineno-0-405"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orphaned_node</span><span class="p">):</span>
+<a id="__codelineno-0-406" name="__codelineno-0-406"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">orphaned_node</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cript.nodes.exceptions.CRIPTOrphanedDataWarning" class="doc doc-heading">
+          <code>CRIPTOrphanedDataWarning</code>
+
+
+<a href="#cript.nodes.exceptions.CRIPTOrphanedDataWarning" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><a class="autorefs autorefs-internal" title="cript.nodes.exceptions.CRIPTOrphanedExperimentWarning" href="#cript.nodes.exceptions.CRIPTOrphanedExperimentWarning">CRIPTOrphanedExperimentWarning</a></code></p>
+
+  
+      <h5 id="cript.nodes.exceptions.CRIPTOrphanedDataWarning--definition">Definition<a class="headerlink" href="#cript.nodes.exceptions.CRIPTOrphanedDataWarning--definition" title="Permanent link">&para;</a></h5>
+<p>CRIPTOrphanedExperimentWarning, but specific for orphaned Data node that should be listed in one of the experiments.</p>
+<h5 id="cript.nodes.exceptions.CRIPTOrphanedDataWarning--troubleshooting">Troubleshooting<a class="headerlink" href="#cript.nodes.exceptions.CRIPTOrphanedDataWarning--troubleshooting" title="Permanent link">&para;</a></h5>
+<p>Handle this error by adding the orphaned node into one the parent project's experiments <code>data</code> attribute.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/cript/nodes/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-351">351</a></span>
+<span class="normal"><a href="#__codelineno-0-352">352</a></span>
+<span class="normal"><a href="#__codelineno-0-353">353</a></span>
+<span class="normal"><a href="#__codelineno-0-354">354</a></span>
+<span class="normal"><a href="#__codelineno-0-355">355</a></span>
+<span class="normal"><a href="#__codelineno-0-356">356</a></span>
+<span class="normal"><a href="#__codelineno-0-357">357</a></span>
+<span class="normal"><a href="#__codelineno-0-358">358</a></span>
+<span class="normal"><a href="#__codelineno-0-359">359</a></span>
+<span class="normal"><a href="#__codelineno-0-360">360</a></span>
+<span class="normal"><a href="#__codelineno-0-361">361</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-351" name="__codelineno-0-351"></a><span class="k">class</span> <span class="nc">CRIPTOrphanedDataWarning</span><span class="p">(</span><span class="n">CRIPTOrphanedExperimentWarning</span><span class="p">):</span>
+<a id="__codelineno-0-352" name="__codelineno-0-352"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-353" name="__codelineno-0-353"></a><span class="sd">    ## Definition</span>
+<a id="__codelineno-0-354" name="__codelineno-0-354"></a><span class="sd">    CRIPTOrphanedExperimentWarning, but specific for orphaned Data node that should be listed in one of the experiments.</span>
+<a id="__codelineno-0-355" name="__codelineno-0-355"></a>
+<a id="__codelineno-0-356" name="__codelineno-0-356"></a><span class="sd">    ## Troubleshooting</span>
+<a id="__codelineno-0-357" name="__codelineno-0-357"></a><span class="sd">    Handle this error by adding the orphaned node into one the parent project&#39;s experiments `data` attribute.</span>
+<a id="__codelineno-0-358" name="__codelineno-0-358"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-359" name="__codelineno-0-359"></a>
+<a id="__codelineno-0-360" name="__codelineno-0-360"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orphaned_node</span><span class="p">):</span>
+<a id="__codelineno-0-361" name="__codelineno-0-361"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">orphaned_node</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cript.nodes.exceptions.CRIPTOrphanedExperimentWarning" class="doc doc-heading">
+          <code>CRIPTOrphanedExperimentWarning</code>
+
+
+<a href="#cript.nodes.exceptions.CRIPTOrphanedExperimentWarning" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><a class="autorefs autorefs-internal" title="cript.nodes.exceptions.CRIPTOrphanedNodesWarning" href="#cript.nodes.exceptions.CRIPTOrphanedNodesWarning">CRIPTOrphanedNodesWarning</a></code></p>
+
+  
+      <h5 id="cript.nodes.exceptions.CRIPTOrphanedExperimentWarning--definition">Definition<a class="headerlink" href="#cript.nodes.exceptions.CRIPTOrphanedExperimentWarning--definition" title="Permanent link">&para;</a></h5>
+<p>CRIPTOrphanedNodesWarning, but specific for orphaned nodes that should be listed in one of the experiments.</p>
+<h5 id="cript.nodes.exceptions.CRIPTOrphanedExperimentWarning--troubleshooting">Troubleshooting<a class="headerlink" href="#cript.nodes.exceptions.CRIPTOrphanedExperimentWarning--troubleshooting" title="Permanent link">&para;</a></h5>
+<p>Handle this error by adding the orphaned node into one the parent project's experiments.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/cript/nodes/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-330">330</a></span>
+<span class="normal"><a href="#__codelineno-0-331">331</a></span>
+<span class="normal"><a href="#__codelineno-0-332">332</a></span>
+<span class="normal"><a href="#__codelineno-0-333">333</a></span>
+<span class="normal"><a href="#__codelineno-0-334">334</a></span>
+<span class="normal"><a href="#__codelineno-0-335">335</a></span>
+<span class="normal"><a href="#__codelineno-0-336">336</a></span>
+<span class="normal"><a href="#__codelineno-0-337">337</a></span>
+<span class="normal"><a href="#__codelineno-0-338">338</a></span>
+<span class="normal"><a href="#__codelineno-0-339">339</a></span>
+<span class="normal"><a href="#__codelineno-0-340">340</a></span>
+<span class="normal"><a href="#__codelineno-0-341">341</a></span>
+<span class="normal"><a href="#__codelineno-0-342">342</a></span>
+<span class="normal"><a href="#__codelineno-0-343">343</a></span>
+<span class="normal"><a href="#__codelineno-0-344">344</a></span>
+<span class="normal"><a href="#__codelineno-0-345">345</a></span>
+<span class="normal"><a href="#__codelineno-0-346">346</a></span>
+<span class="normal"><a href="#__codelineno-0-347">347</a></span>
+<span class="normal"><a href="#__codelineno-0-348">348</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-330" name="__codelineno-0-330"></a><span class="k">class</span> <span class="nc">CRIPTOrphanedExperimentWarning</span><span class="p">(</span><span class="n">CRIPTOrphanedNodesWarning</span><span class="p">):</span>
+<a id="__codelineno-0-331" name="__codelineno-0-331"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-332" name="__codelineno-0-332"></a><span class="sd">    ## Definition</span>
+<a id="__codelineno-0-333" name="__codelineno-0-333"></a><span class="sd">    CRIPTOrphanedNodesWarning, but specific for orphaned nodes that should be listed in one of the experiments.</span>
+<a id="__codelineno-0-334" name="__codelineno-0-334"></a>
+<a id="__codelineno-0-335" name="__codelineno-0-335"></a><span class="sd">    ## Troubleshooting</span>
+<a id="__codelineno-0-336" name="__codelineno-0-336"></a><span class="sd">    Handle this error by adding the orphaned node into one the parent project&#39;s experiments.</span>
+<a id="__codelineno-0-337" name="__codelineno-0-337"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-338" name="__codelineno-0-338"></a>
+<a id="__codelineno-0-339" name="__codelineno-0-339"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orphaned_node</span><span class="p">):</span>
+<a id="__codelineno-0-340" name="__codelineno-0-340"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">orphaned_node</span><span class="p">)</span>
+<a id="__codelineno-0-341" name="__codelineno-0-341"></a>
+<a id="__codelineno-0-342" name="__codelineno-0-342"></a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-343" name="__codelineno-0-343"></a>        <span class="n">node_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">orphaned_node</span><span class="o">.</span><span class="n">node_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<a id="__codelineno-0-344" name="__codelineno-0-344"></a>        <span class="n">ret_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;While validating a project graph, an orphaned </span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2"> node was found. &quot;</span>
+<a id="__codelineno-0-345" name="__codelineno-0-345"></a>        <span class="n">ret_string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;This </span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2"> node is present in the graph, but not listed in any of the experiments of the  project. &quot;</span>
+<a id="__codelineno-0-346" name="__codelineno-0-346"></a>        <span class="n">ret_string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Please add the node like: `your_experiment.</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2"> += [orphaned_</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2">]`. &quot;</span>
+<a id="__codelineno-0-347" name="__codelineno-0-347"></a>        <span class="n">ret_string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;The orphaned </span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2"> was </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">orphaned_node</span><span class="si">}</span><span class="s2">.&quot;</span>
+<a id="__codelineno-0-348" name="__codelineno-0-348"></a>        <span class="k">return</span> <span class="n">ret_string</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cript.nodes.exceptions.CRIPTOrphanedMaterialWarning" class="doc doc-heading">
+          <code>CRIPTOrphanedMaterialWarning</code>
+
+
+<a href="#cript.nodes.exceptions.CRIPTOrphanedMaterialWarning" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><a class="autorefs autorefs-internal" title="cript.nodes.exceptions.CRIPTOrphanedNodesWarning" href="#cript.nodes.exceptions.CRIPTOrphanedNodesWarning">CRIPTOrphanedNodesWarning</a></code></p>
+
+  
+      <h5 id="cript.nodes.exceptions.CRIPTOrphanedMaterialWarning--definition">Definition<a class="headerlink" href="#cript.nodes.exceptions.CRIPTOrphanedMaterialWarning--definition" title="Permanent link">&para;</a></h5>
+<p>CRIPTOrphanedNodesWarning, but specific for orphaned materials.</p>
+<h5 id="cript.nodes.exceptions.CRIPTOrphanedMaterialWarning--troubleshooting">Troubleshooting<a class="headerlink" href="#cript.nodes.exceptions.CRIPTOrphanedMaterialWarning--troubleshooting" title="Permanent link">&para;</a></h5>
+<p>Handle this error by adding the orphaned materials into the parent project or its inventories.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/cript/nodes/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-310">310</a></span>
+<span class="normal"><a href="#__codelineno-0-311">311</a></span>
+<span class="normal"><a href="#__codelineno-0-312">312</a></span>
+<span class="normal"><a href="#__codelineno-0-313">313</a></span>
+<span class="normal"><a href="#__codelineno-0-314">314</a></span>
+<span class="normal"><a href="#__codelineno-0-315">315</a></span>
+<span class="normal"><a href="#__codelineno-0-316">316</a></span>
+<span class="normal"><a href="#__codelineno-0-317">317</a></span>
+<span class="normal"><a href="#__codelineno-0-318">318</a></span>
+<span class="normal"><a href="#__codelineno-0-319">319</a></span>
+<span class="normal"><a href="#__codelineno-0-320">320</a></span>
+<span class="normal"><a href="#__codelineno-0-321">321</a></span>
+<span class="normal"><a href="#__codelineno-0-322">322</a></span>
+<span class="normal"><a href="#__codelineno-0-323">323</a></span>
+<span class="normal"><a href="#__codelineno-0-324">324</a></span>
+<span class="normal"><a href="#__codelineno-0-325">325</a></span>
+<span class="normal"><a href="#__codelineno-0-326">326</a></span>
+<span class="normal"><a href="#__codelineno-0-327">327</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-310" name="__codelineno-0-310"></a><span class="k">class</span> <span class="nc">CRIPTOrphanedMaterialWarning</span><span class="p">(</span><span class="n">CRIPTOrphanedNodesWarning</span><span class="p">):</span>
+<a id="__codelineno-0-311" name="__codelineno-0-311"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-312" name="__codelineno-0-312"></a><span class="sd">    ## Definition</span>
+<a id="__codelineno-0-313" name="__codelineno-0-313"></a><span class="sd">    CRIPTOrphanedNodesWarning, but specific for orphaned materials.</span>
+<a id="__codelineno-0-314" name="__codelineno-0-314"></a>
+<a id="__codelineno-0-315" name="__codelineno-0-315"></a><span class="sd">    ## Troubleshooting</span>
+<a id="__codelineno-0-316" name="__codelineno-0-316"></a><span class="sd">    Handle this error by adding the orphaned materials into the parent project or its inventories.</span>
+<a id="__codelineno-0-317" name="__codelineno-0-317"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-318" name="__codelineno-0-318"></a>
+<a id="__codelineno-0-319" name="__codelineno-0-319"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orphaned_node</span><span class="p">):</span>
+<a id="__codelineno-0-320" name="__codelineno-0-320"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">orphaned_node</span><span class="p">)</span>
+<a id="__codelineno-0-321" name="__codelineno-0-321"></a>
+<a id="__codelineno-0-322" name="__codelineno-0-322"></a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-0-323" name="__codelineno-0-323"></a>        <span class="n">ret_string</span> <span class="o">=</span> <span class="s2">&quot;While validating a project graph, an orphaned material node was found. &quot;</span>
+<a id="__codelineno-0-324" name="__codelineno-0-324"></a>        <span class="n">ret_string</span> <span class="o">+=</span> <span class="s2">&quot;This material is present in the graph, but not listed in the project. &quot;</span>
+<a id="__codelineno-0-325" name="__codelineno-0-325"></a>        <span class="n">ret_string</span> <span class="o">+=</span> <span class="s2">&quot;Please add the node like: `my_project.material += [orphaned_material]`. &quot;</span>
+<a id="__codelineno-0-326" name="__codelineno-0-326"></a>        <span class="n">ret_string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;The orphaned material was </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">orphaned_node</span><span class="si">}</span><span class="s2">.&quot;</span>
+<a id="__codelineno-0-327" name="__codelineno-0-327"></a>        <span class="k">return</span> <span class="n">ret_string</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cript.nodes.exceptions.CRIPTOrphanedNodesWarning" class="doc doc-heading">
+          <code>CRIPTOrphanedNodesWarning</code>
+
+
+<a href="#cript.nodes.exceptions.CRIPTOrphanedNodesWarning" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="cript.exceptions.CRIPTWarning">CRIPTWarning</span></code>, <code><span title="abc.ABC">ABC</span></code></p>
+
+  
+      <h5 id="cript.nodes.exceptions.CRIPTOrphanedNodesWarning--definition">Definition<a class="headerlink" href="#cript.nodes.exceptions.CRIPTOrphanedNodesWarning--definition" title="Permanent link">&para;</a></h5>
+<p>This error is raised when a child node is not attached to the
+appropriate parent node. For example, all material nodes used
+within a project must belong to the project inventory or are explicitly listed as material of that project.
+If there is a material node that is used within a project but not a part of the
+inventory and the validation code finds it then it raises an <code>CRIPTOrphanedNodeWarning</code></p>
+<h5 id="cript.nodes.exceptions.CRIPTOrphanedNodesWarning--troubleshooting">Troubleshooting<a class="headerlink" href="#cript.nodes.exceptions.CRIPTOrphanedNodesWarning--troubleshooting" title="Permanent link">&para;</a></h5>
+<p>Fixing this is simple and easy, just take the node that CRIPT Python SDK
+found a problem with and associate it with the appropriate parent via</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>my_project.material += my_orphaned_material_node
+</code></pre></div>
+
+            <details class="quote">
+              <summary>Source code in <code>src/cript/nodes/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-284">284</a></span>
+<span class="normal"><a href="#__codelineno-0-285">285</a></span>
+<span class="normal"><a href="#__codelineno-0-286">286</a></span>
+<span class="normal"><a href="#__codelineno-0-287">287</a></span>
+<span class="normal"><a href="#__codelineno-0-288">288</a></span>
+<span class="normal"><a href="#__codelineno-0-289">289</a></span>
+<span class="normal"><a href="#__codelineno-0-290">290</a></span>
+<span class="normal"><a href="#__codelineno-0-291">291</a></span>
+<span class="normal"><a href="#__codelineno-0-292">292</a></span>
+<span class="normal"><a href="#__codelineno-0-293">293</a></span>
+<span class="normal"><a href="#__codelineno-0-294">294</a></span>
+<span class="normal"><a href="#__codelineno-0-295">295</a></span>
+<span class="normal"><a href="#__codelineno-0-296">296</a></span>
+<span class="normal"><a href="#__codelineno-0-297">297</a></span>
+<span class="normal"><a href="#__codelineno-0-298">298</a></span>
+<span class="normal"><a href="#__codelineno-0-299">299</a></span>
+<span class="normal"><a href="#__codelineno-0-300">300</a></span>
+<span class="normal"><a href="#__codelineno-0-301">301</a></span>
+<span class="normal"><a href="#__codelineno-0-302">302</a></span>
+<span class="normal"><a href="#__codelineno-0-303">303</a></span>
+<span class="normal"><a href="#__codelineno-0-304">304</a></span>
+<span class="normal"><a href="#__codelineno-0-305">305</a></span>
+<span class="normal"><a href="#__codelineno-0-306">306</a></span>
+<span class="normal"><a href="#__codelineno-0-307">307</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-284" name="__codelineno-0-284"></a><span class="k">class</span> <span class="nc">CRIPTOrphanedNodesWarning</span><span class="p">(</span><span class="n">CRIPTWarning</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+<a id="__codelineno-0-285" name="__codelineno-0-285"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-286" name="__codelineno-0-286"></a><span class="sd">    ## Definition</span>
+<a id="__codelineno-0-287" name="__codelineno-0-287"></a><span class="sd">    This error is raised when a child node is not attached to the</span>
+<a id="__codelineno-0-288" name="__codelineno-0-288"></a><span class="sd">    appropriate parent node. For example, all material nodes used</span>
+<a id="__codelineno-0-289" name="__codelineno-0-289"></a><span class="sd">    within a project must belong to the project inventory or are explicitly listed as material of that project.</span>
+<a id="__codelineno-0-290" name="__codelineno-0-290"></a><span class="sd">    If there is a material node that is used within a project but not a part of the</span>
+<a id="__codelineno-0-291" name="__codelineno-0-291"></a><span class="sd">    inventory and the validation code finds it then it raises an `CRIPTOrphanedNodeWarning`</span>
+<a id="__codelineno-0-292" name="__codelineno-0-292"></a>
+<a id="__codelineno-0-293" name="__codelineno-0-293"></a><span class="sd">    ## Troubleshooting</span>
+<a id="__codelineno-0-294" name="__codelineno-0-294"></a><span class="sd">    Fixing this is simple and easy, just take the node that CRIPT Python SDK</span>
+<a id="__codelineno-0-295" name="__codelineno-0-295"></a><span class="sd">    found a problem with and associate it with the appropriate parent via</span>
+<a id="__codelineno-0-296" name="__codelineno-0-296"></a>
+<a id="__codelineno-0-297" name="__codelineno-0-297"></a><span class="sd">    ```</span>
+<a id="__codelineno-0-298" name="__codelineno-0-298"></a><span class="sd">    my_project.material += my_orphaned_material_node</span>
+<a id="__codelineno-0-299" name="__codelineno-0-299"></a><span class="sd">    ```</span>
+<a id="__codelineno-0-300" name="__codelineno-0-300"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-301" name="__codelineno-0-301"></a>
+<a id="__codelineno-0-302" name="__codelineno-0-302"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orphaned_node</span><span class="p">):</span>
+<a id="__codelineno-0-303" name="__codelineno-0-303"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">orphaned_node</span> <span class="o">=</span> <span class="n">orphaned_node</span>
+<a id="__codelineno-0-304" name="__codelineno-0-304"></a>
+<a id="__codelineno-0-305" name="__codelineno-0-305"></a>    <span class="nd">@abstractmethod</span>
+<a id="__codelineno-0-306" name="__codelineno-0-306"></a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-0-307" name="__codelineno-0-307"></a>        <span class="k">pass</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cript.nodes.exceptions.CRIPTOrphanedProcessWarning" class="doc doc-heading">
+          <code>CRIPTOrphanedProcessWarning</code>
+
+
+<a href="#cript.nodes.exceptions.CRIPTOrphanedProcessWarning" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><a class="autorefs autorefs-internal" title="cript.nodes.exceptions.CRIPTOrphanedExperimentWarning" href="#cript.nodes.exceptions.CRIPTOrphanedExperimentWarning">CRIPTOrphanedExperimentWarning</a></code></p>
+
+  
+      <h5 id="cript.nodes.exceptions.CRIPTOrphanedProcessWarning--definition">Definition<a class="headerlink" href="#cript.nodes.exceptions.CRIPTOrphanedProcessWarning--definition" title="Permanent link">&para;</a></h5>
+<p>CRIPTOrphanedExperimentWarning, but specific for orphaned Process node that should be
+listed in one of the experiments.</p>
+<h5 id="cript.nodes.exceptions.CRIPTOrphanedProcessWarning--troubleshooting">Troubleshooting<a class="headerlink" href="#cript.nodes.exceptions.CRIPTOrphanedProcessWarning--troubleshooting" title="Permanent link">&para;</a></h5>
+<p>Handle this error by adding the orphaned node into one the parent project's experiments
+<code>process</code> attribute.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/cript/nodes/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-364">364</a></span>
+<span class="normal"><a href="#__codelineno-0-365">365</a></span>
+<span class="normal"><a href="#__codelineno-0-366">366</a></span>
+<span class="normal"><a href="#__codelineno-0-367">367</a></span>
+<span class="normal"><a href="#__codelineno-0-368">368</a></span>
+<span class="normal"><a href="#__codelineno-0-369">369</a></span>
+<span class="normal"><a href="#__codelineno-0-370">370</a></span>
+<span class="normal"><a href="#__codelineno-0-371">371</a></span>
+<span class="normal"><a href="#__codelineno-0-372">372</a></span>
+<span class="normal"><a href="#__codelineno-0-373">373</a></span>
+<span class="normal"><a href="#__codelineno-0-374">374</a></span>
+<span class="normal"><a href="#__codelineno-0-375">375</a></span>
+<span class="normal"><a href="#__codelineno-0-376">376</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-364" name="__codelineno-0-364"></a><span class="k">class</span> <span class="nc">CRIPTOrphanedProcessWarning</span><span class="p">(</span><span class="n">CRIPTOrphanedExperimentWarning</span><span class="p">):</span>
+<a id="__codelineno-0-365" name="__codelineno-0-365"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-366" name="__codelineno-0-366"></a><span class="sd">    ## Definition</span>
+<a id="__codelineno-0-367" name="__codelineno-0-367"></a><span class="sd">    CRIPTOrphanedExperimentWarning, but specific for orphaned Process node that should be</span>
+<a id="__codelineno-0-368" name="__codelineno-0-368"></a><span class="sd">    listed in one of the experiments.</span>
+<a id="__codelineno-0-369" name="__codelineno-0-369"></a>
+<a id="__codelineno-0-370" name="__codelineno-0-370"></a><span class="sd">    ## Troubleshooting</span>
+<a id="__codelineno-0-371" name="__codelineno-0-371"></a><span class="sd">    Handle this error by adding the orphaned node into one the parent project&#39;s experiments</span>
+<a id="__codelineno-0-372" name="__codelineno-0-372"></a><span class="sd">    `process` attribute.</span>
+<a id="__codelineno-0-373" name="__codelineno-0-373"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-374" name="__codelineno-0-374"></a>
+<a id="__codelineno-0-375" name="__codelineno-0-375"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orphaned_node</span><span class="p">):</span>
+<a id="__codelineno-0-376" name="__codelineno-0-376"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">orphaned_node</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../api_exceptions/" class="md-footer__link md-footer__link--prev" aria-label="Previous: API Exceptions">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                API Exceptions
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../faq/" class="md-footer__link md-footer__link--next" aria-label="Next: FAQ">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                FAQ
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © 2023 MIT | All Rights Reserved
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "navigation.path", "navigation.tracking", "navigation.footer"], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.aecac24b.min.js"></script>
+      
+    
+  </body>
+</html>

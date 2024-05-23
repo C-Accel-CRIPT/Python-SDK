@@ -1,0 +1,2135 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../synthesis/">
+      
+      
+        <link rel="next" href="../../api/api/">
+      
+      
+      <link rel="icon" href="../../images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.6">
+    
+    
+      
+        <title>Simulation - CRIPT Python SDK</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.35e1ed30.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.356b1318.min.css">
+      
+      
+  
+  
+    
+    
+  
+  
+  <style>:root{--md-admonition-icon--alert:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/></svg>');}</style>
+
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#installation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://criptapp.org" title="CRIPT Python SDK" class="md-header__button md-logo" aria-label="CRIPT Python SDK" data-md-component="logo">
+      
+  <img src="../../images/CRIPT_full_logo_colored_transparent.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CRIPT Python SDK
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Simulation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/C-Accel-CRIPT/Python-SDK" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    C-Accel-CRIPT/Python-SDK
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://criptapp.org" title="CRIPT Python SDK" class="md-nav__button md-logo" aria-label="CRIPT Python SDK" data-md-component="logo">
+      
+  <img src="../../images/CRIPT_full_logo_colored_transparent.png" alt="logo">
+
+    </a>
+    CRIPT Python SDK
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/C-Accel-CRIPT/Python-SDK" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    C-Accel-CRIPT/Python-SDK
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Tutorial
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/cript_installation_guide/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CRIPT Installation Guide
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/how_to_get_api_token/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CRIPT API Token
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Example Code Walkthrough
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Example Code Walkthrough
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synthesis/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Synthesis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Simulation
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Simulation
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connect-to-cript" class="md-nav__link">
+    Connect to CRIPT
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-project" class="md-nav__link">
+    Create a Project
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-collection-node" class="md-nav__link">
+    Create a Collection node
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-experiment-node" class="md-nav__link">
+    Create an Experiment node
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-relevant-software-nodes" class="md-nav__link">
+    Create relevant Software nodes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-software-configuration" class="md-nav__link">
+    Create Software Configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-computations" class="md-nav__link">
+    Create Computations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-and-upload-files-nodes" class="md-nav__link">
+    Create and Upload Files nodes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-data" class="md-nav__link">
+    Create Data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-virtual-material" class="md-nav__link">
+    Create a virtual Material
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-property-sub-objects" class="md-nav__link">
+    Add Property sub-objects
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-computationalforcefield" class="md-nav__link">
+    Create ComputationalForcefield
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate-cript-project-node" class="md-nav__link">
+    Validate CRIPT Project Node
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API Client
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            API Client
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/search_modes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Search Modes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/paginator/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Paginator
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/controlled_vocabulary_categories/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controlled Vocabulary Categories
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Base Nodes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Base Nodes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/base_node/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BaseNode
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/uuid_base/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UUIDBase
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/primary_base_node/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PrimaryBaseNode
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Primary Nodes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Primary Nodes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/collection/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Collection
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/computation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Computation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/computation_process/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Computation Process
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/data/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/experiment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Experiment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/inventory/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inventory
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/material/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Material
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/project/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Project
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/process/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/reference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/primary_nodes/software/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Software
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Sub-objects
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Sub-objects
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/algorithm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Algorithm
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/citation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Citation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/computational_forcefield/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Computational Forcefield
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/condition/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Condition
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/equipment/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Equipment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/ingredient/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ingredient
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/parameter/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parameter
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/property/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Property
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/quantity/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Quantity
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/subobjects/software_configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Software Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Supporting Nodes
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Supporting Nodes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/supporting_nodes/user/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    User
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nodes/supporting_nodes/file/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    File
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../utility_functions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Utility Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Exceptions
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Exceptions
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../exceptions/api_exceptions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Exceptions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../exceptions/node_exceptions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Node Exceptions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/C-Accel-CRIPT/Python-SDK/wiki" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Internal Wiki Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/C-Accel-CRIPT/Python-SDK/discussions" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CRIPT Python SDK Discussions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connect-to-cript" class="md-nav__link">
+    Connect to CRIPT
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-project" class="md-nav__link">
+    Create a Project
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-collection-node" class="md-nav__link">
+    Create a Collection node
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-experiment-node" class="md-nav__link">
+    Create an Experiment node
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-relevant-software-nodes" class="md-nav__link">
+    Create relevant Software nodes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-software-configuration" class="md-nav__link">
+    Create Software Configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-computations" class="md-nav__link">
+    Create Computations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-and-upload-files-nodes" class="md-nav__link">
+    Create and Upload Files nodes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-data" class="md-nav__link">
+    Create Data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-virtual-material" class="md-nav__link">
+    Create a virtual Material
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-property-sub-objects" class="md-nav__link">
+    Add Property sub-objects
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-computationalforcefield" class="md-nav__link">
+    Create ComputationalForcefield
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate-cript-project-node" class="md-nav__link">
+    Validate CRIPT Project Node
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Simulation</h1>
+
+<div class="admonition abstract">
+<p class="admonition-title">Abstract</p>
+<p>This tutorial guides you through an example material synthesis workflow using the
+<a href="https://pypi.org/project/cript/">CRIPT Python SDK</a>.</p>
+</div>
+<h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
+<p>Before you start, be sure the <a href="https://pypi.org/project/cript/">cript python package</a> is installed.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>cript
+</code></pre></div>
+<h3 id="connect-to-cript">Connect to CRIPT<a class="headerlink" href="#connect-to-cript" title="Permanent link">&para;</a></h3>
+<p>To connect to CRIPT, you must enter a <code>host</code> and an <code>API Token</code>. For most users, <code>host</code> will be <code>https://api.criptapp.org/</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Keep API Token Secure</p>
+<p>To ensure security, avoid storing sensitive information like tokens directly in your code.
+Instead, use environment variables.
+Storing tokens in code shared on platforms like GitHub can lead to security incidents.
+Anyone that possesses your token can impersonate you on the <a href="https://criptapp.org/">CRIPT</a> platform.
+Consider <a href="https://c-accel-cript.github.io/Python-SDK/api/api/#cript.api.api.API.__init__">alternative methods for loading tokens with the CRIPT API Client</a>.
+In case your token is exposed be sure to immediately generate a new token to revoke the access of the old one
+and keep the new token safe.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span> <span class="nn">cript</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">with</span> <span class="n">cript</span><span class="o">.</span><span class="n">API</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;https://api.criptapp.org/&quot;</span><span class="p">,</span> <span class="n">api_token</span><span class="o">=</span><span class="s2">&quot;123456&quot;</span><span class="p">,</span> <span class="n">storage_token</span><span class="o">=</span><span class="s2">&quot;987654&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="k">pass</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You may notice, that we are not executing any code inside the context manager block.
+If you were to write a python script, compared to a jupyter notebook, you would add all the following code inside that block.
+Here in a jupyter notebook, we need to connect manually. We just have to remember to disconnect at the end.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">api</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">API</span><span class="p">(</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;https://api.criptapp.org/&quot;</span><span class="p">,</span> <span class="n">api_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">storage_token</span><span class="o">=</span><span class="s2">&quot;123456&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">api</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="create-a-project">Create a Project<a class="headerlink" href="#create-a-project" title="Permanent link">&para;</a></h3>
+<p>All data uploaded to CRIPT must be associated with a <a href="../../nodes/primary_nodes/project"><code>Project</code></a> node.
+<a href="../../nodes/primary_nodes/project"><code>Project</code></a> can be thought of as an overarching research goal.
+For example, finding a replacement for an existing material from a sustainable feedstock.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># create a new project in the CRIPT database</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">project</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Project</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;My simulation project.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="create-a-collection-node">Create a <a href="../../nodes/primary_nodes/collection">Collection node</a><a class="headerlink" href="#create-a-collection-node" title="Permanent link">&para;</a></h3>
+<p>For this project, you can create multiple collections, which represent a set of experiments.
+For example, you can create a collection for a specific manuscript,
+or you can create a collection for initial screening of candidates and one for later refinements etc.</p>
+<p>So, let's create a collection node and add it to the project.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">collection</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Collection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Initial simulation screening&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># We add this collection to the project as a list.</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">project</span><span class="o">.</span><span class="n">collection</span> <span class="o">+=</span> <span class="p">[</span><span class="n">collection</span><span class="p">]</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Viewing CRIPT JSON</p>
+<p>Note, that if you are interested into the inner workings of CRIPT,
+you can obtain a JSON representation of your data at any time to see what is being sent to the API
+through HTTP JSON requests.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">json</span><span class="p">)</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Format JSON in terminal</p>
+<p>Format the JSON within the terminal for easier reading
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<h3 id="create-an-experiment-node">Create an <a href="../../nodes/primary_nodes/experiment">Experiment node</a><a class="headerlink" href="#create-an-experiment-node" title="Permanent link">&para;</a></h3>
+<p>The <a href="../../nodes/primary_nodes/collection">Collection node</a> holds a series of
+<a href="../../nodes/primary_nodes/experiment">Experiment nodes</a> nodes.</p>
+<p>And we can add this experiment to the collection of the project.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">experiment</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Experiment</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Simulation for the first candidate&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">collection</span><span class="o">.</span><span class="n">experiment</span> <span class="o">+=</span> <span class="p">[</span><span class="n">experiment</span><span class="p">]</span>
+</code></pre></div>
+<h3 id="create-relevant-software-nodes">Create relevant <a href="../../nodes/primary_nodes/software">Software nodes</a><a class="headerlink" href="#create-relevant-software-nodes" title="Permanent link">&para;</a></h3>
+<p><a href="../../nodes/primary_nodes/software"><code>Software</code></a> nodes refer to software that you use during your simulation experiment.
+In general <a href="../../nodes/primary_nodes/software"><code>Software</code></a> nodes can be shared between project, and it is encouraged to do so if the software you are using is already present in the CRIPT project use it.</p>
+<p>If They are not, you can create them as follows:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">python</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Software</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;3.9&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">rdkit</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Software</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;rdkit&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;2020.9&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">stage</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Software</span><span class="p">(</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;stage&quot;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s2">&quot;https://doi.org/10.1021/jp505332p&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;N/A&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p">)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="n">packmol</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Software</span><span class="p">(</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Packmol&quot;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s2">&quot;http://m3g.iqm.unicamp.br/packmol&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;N/A&quot;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="n">openmm</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Software</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;openmm&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;7.5&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Generally, provide as much information about the software as possible this helps to make your results reproducible.
+Even a software is not publicly available, like an in-house code, we encourage you to specify them in CRIPT.
+If a version is not available, consider using git-hashes.</p>
+<h3 id="create-software-configuration">Create <a href="../../nodes/subobjects/software_configuration/">Software Configuration</a><a class="headerlink" href="#create-software-configuration" title="Permanent link">&para;</a></h3>
+<p>Now that we have our <a href="../../nodes/primary_nodes/software"><code>Software</code></a> nodes, we can create 
+<a href="../../nodes/subobjects/software_configuration/"><code>SoftwareConfiguration</code></a> nodes. <a href="../../nodes/subobjects/software_configuration/"><code>SoftwareConfigurations</code></a> nodes are designed to let you specify details, about which algorithms from the software package you are using and log parameters for these algorithms.</p>
+<p>The <a href="../../nodes/subobjects/software_configuration/"><code>SoftwareConfigurations</code></a> are then used for constructing our <a href="../../nodes/primary_nodes/computation/"><code>Computation</code></a> node, which describe the actual computation you are performing.</p>
+<p>We can also attach <a href="../../nodes/subobjects/algorithm"><code>Algorithm</code></a> nodes to a <a href="../../nodes/subobjects/software_configuration"><code>SoftwareConfiguration</code></a> 
+node. The <a href="../../nodes/subobjects/algorithm"><code>Algorithm</code></a> nodes may contain nested <a href="../../nodes/subobjects/parameter"><code>Parameter</code></a> nodes, as shown in the example below.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># create some software configuration nodes</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">python_config</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">SoftwareConfiguration</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="n">python</span><span class="p">)</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">rdkit_config</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">SoftwareConfiguration</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="n">rdkit</span><span class="p">)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">stage_config</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">SoftwareConfiguration</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="n">stage</span><span class="p">)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># create a software configuration node with a child Algorithm node</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">openmm_config</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">SoftwareConfiguration</span><span class="p">(</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="n">software</span><span class="o">=</span><span class="n">openmm</span><span class="p">,</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="n">algorithm</span><span class="o">=</span><span class="p">[</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        <span class="n">cript</span><span class="o">.</span><span class="n">Algorithm</span><span class="p">(</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>            <span class="n">key</span><span class="o">=</span><span class="s2">&quot;energy_minimization&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;initialization&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>        <span class="p">),</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    <span class="p">],</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="p">)</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="n">packmol_config</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">SoftwareConfiguration</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="n">packmol</span><span class="p">)</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Algorithm keys</p>
+<p>The allowed <a href="../../nodes/subobjects/algorithm/"><code>Algorithm</code></a> keys are listed under 
+<a href="https://app.criptapp.org/vocab/algorithm_key">algorithm keys</a> in the CRIPT controlled vocabulary.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Parameter keys</p>
+<p>The allowed <a href="../../nodes/subobjects/property/"><code>Parameter</code></a> keys are listed under <a href="https://app.criptapp.org/vocab/parameter_key">parameter keys</a> in the CRIPT controlled vocabulary.</p>
+</div>
+<h3 id="create-computations">Create <a href="../../nodes/primary_nodes/computation">Computations</a><a class="headerlink" href="#create-computations" title="Permanent link">&para;</a></h3>
+<p>Now that we've created some <a href="../../nodes/subobjects/software_configuration"><code>SoftwareConfiguration</code></a> nodes, we can used them to build full <a href="../../nodes/primary_nodes/computation"><code>Computation</code></a> nodes.
+In some cases, we may also want to add <a href="../../nodes/subobjects/condition"><code>Condition</code></a> nodes to our computation, to specify the conditions at which the computation was carried out. An example of this is shown below.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Create a ComputationNode</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># This block of code represents the computation involved in generating forces.</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># It also details the initial placement of molecules within a simulation box.</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">init</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Computation</span><span class="p">(</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Initial snapshot and force-field generation&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;initialization&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">software_configuration</span><span class="o">=</span><span class="p">[</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>        <span class="n">python_config</span><span class="p">,</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>        <span class="n">rdkit_config</span><span class="p">,</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>        <span class="n">stage_config</span><span class="p">,</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="n">packmol_config</span><span class="p">,</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>        <span class="n">openmm_config</span><span class="p">,</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="p">],</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="p">)</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Initiate the simulation equilibration using a separate node.</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># The equilibration process is governed by specific conditions and a </span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># set equilibration time.</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1"># Given this is an NPT (Number of particles, Pressure, Temperature) </span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="c1"># simulation, conditions such as the number of chains, temperature, </span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="c1"># and pressure are specified.</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="n">equilibration</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Computation</span><span class="p">(</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Equilibrate data prior to measurement&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;MD&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>    <span class="n">software_configuration</span><span class="o">=</span><span class="p">[</span><span class="n">python_config</span><span class="p">,</span> <span class="n">openmm_config</span><span class="p">],</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>    <span class="n">condition</span><span class="o">=</span><span class="p">[</span>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>        <span class="n">cript</span><span class="o">.</span><span class="n">Condition</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;time_duration&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ns&quot;</span><span class="p">),</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>        <span class="n">cript</span><span class="o">.</span><span class="n">Condition</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;temperature&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">450.0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">),</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>        <span class="n">cript</span><span class="o">.</span><span class="n">Condition</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;pressure&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">),</span>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>        <span class="n">cript</span><span class="o">.</span><span class="n">Condition</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">31</span><span class="p">),</span>
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>    <span class="p">],</span>
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>    <span class="n">prerequisite_computation</span><span class="o">=</span><span class="n">init</span><span class="p">,</span>
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a><span class="p">)</span>
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a>
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a><span class="c1"># This section involves the actual data measurement.</span>
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a><span class="c1"># Note that we use the previously computed data as a prerequisite. </span>
+<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a><span class="c1"># Additionally, we incorporate the input data at a later stage.</span>
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a><span class="n">bulk</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Computation</span><span class="p">(</span>
+<a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Bulk simulation for measurement&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a>    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;MD&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a>    <span class="n">software_configuration</span><span class="o">=</span><span class="p">[</span><span class="n">python_config</span><span class="p">,</span> <span class="n">openmm_config</span><span class="p">],</span>
+<a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a>    <span class="n">condition</span><span class="o">=</span><span class="p">[</span>
+<a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a>        <span class="n">cript</span><span class="o">.</span><span class="n">Condition</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;time_duration&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">50.0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ns&quot;</span><span class="p">),</span>
+<a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a>        <span class="n">cript</span><span class="o">.</span><span class="n">Condition</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;temperature&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">450.0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">),</span>
+<a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a>        <span class="n">cript</span><span class="o">.</span><span class="n">Condition</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;pressure&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">),</span>
+<a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a>        <span class="n">cript</span><span class="o">.</span><span class="n">Condition</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">31</span><span class="p">),</span>
+<a id="__codelineno-10-47" name="__codelineno-10-47" href="#__codelineno-10-47"></a>    <span class="p">],</span>
+<a id="__codelineno-10-48" name="__codelineno-10-48" href="#__codelineno-10-48"></a>    <span class="n">prerequisite_computation</span><span class="o">=</span><span class="n">equilibration</span><span class="p">,</span>
+<a id="__codelineno-10-49" name="__codelineno-10-49" href="#__codelineno-10-49"></a><span class="p">)</span>
+<a id="__codelineno-10-50" name="__codelineno-10-50" href="#__codelineno-10-50"></a>
+<a id="__codelineno-10-51" name="__codelineno-10-51" href="#__codelineno-10-51"></a><span class="c1"># The following step involves analyzing the data </span>
+<a id="__codelineno-10-52" name="__codelineno-10-52" href="#__codelineno-10-52"></a><span class="c1"># from the measurement run to ascertain a specific property.</span>
+<a id="__codelineno-10-53" name="__codelineno-10-53" href="#__codelineno-10-53"></a><span class="n">ana</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Computation</span><span class="p">(</span>
+<a id="__codelineno-10-54" name="__codelineno-10-54" href="#__codelineno-10-54"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Density analysis&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-55" name="__codelineno-10-55" href="#__codelineno-10-55"></a>    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;analysis&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-56" name="__codelineno-10-56" href="#__codelineno-10-56"></a>    <span class="n">software_configuration</span><span class="o">=</span><span class="p">[</span><span class="n">python_config</span><span class="p">],</span>
+<a id="__codelineno-10-57" name="__codelineno-10-57" href="#__codelineno-10-57"></a>    <span class="n">prerequisite_computation</span><span class="o">=</span><span class="n">bulk</span><span class="p">,</span>
+<a id="__codelineno-10-58" name="__codelineno-10-58" href="#__codelineno-10-58"></a><span class="p">)</span>
+<a id="__codelineno-10-59" name="__codelineno-10-59" href="#__codelineno-10-59"></a>
+<a id="__codelineno-10-60" name="__codelineno-10-60" href="#__codelineno-10-60"></a><span class="c1"># Add all these computations to the experiment.</span>
+<a id="__codelineno-10-61" name="__codelineno-10-61" href="#__codelineno-10-61"></a><span class="n">experiment</span><span class="o">.</span><span class="n">computation</span> <span class="o">+=</span> <span class="p">[</span><span class="n">init</span><span class="p">,</span> <span class="n">equilibration</span><span class="p">,</span> <span class="n">bulk</span><span class="p">,</span> <span class="n">ana</span><span class="p">]</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Computation types</p>
+<p>The allowed <a href="../../nodes/primary_nodes/computation"><code>Computation</code></a> types are listed under <a href="https://app.criptapp.org/vocab/computation_type">computation types</a> in the CRIPT controlled vocabulary.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Condition keys</p>
+<p>The allowed <a href="../../nodes/subobjects/condition"><code>Condition</code></a> keys are listed under <a href="https://app.criptapp.org/vocab/condition_key">condition keys</a> in the CRIPT controlled vocabulary.</p>
+</div>
+<h3 id="create-and-upload-files-nodes">Create and Upload <a href="../../nodes/supporting_nodes/file">Files nodes</a><a class="headerlink" href="#create-and-upload-files-nodes" title="Permanent link">&para;</a></h3>
+<p>New we'd like to upload files associated with our simulation. First, we'll instantiate our File nodes under a specific project.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">packing_file</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">File</span><span class="p">(</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Initial simulation box snapshot with roughly packed molecules&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;computation_snapshot&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">source</span><span class="o">=</span><span class="s2">&quot;path/to/local/file&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">extension</span><span class="o">=</span><span class="s2">&quot;.csv&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="p">)</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="n">forcefield_file</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">File</span><span class="p">(</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Forcefield definition file&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    <span class="n">source</span><span class="o">=</span><span class="s2">&quot;path/to/local/file&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="n">extension</span><span class="o">=</span><span class="s2">&quot;.pdf&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="p">)</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="n">snap_file</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">File</span><span class="p">(</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Bulk measurement initial system snap shot&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;computation_snapshot&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>    <span class="n">source</span><span class="o">=</span><span class="s2">&quot;path/to/local/file&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>    <span class="n">extension</span><span class="o">=</span><span class="s2">&quot;.png&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="p">)</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="n">final_file</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">File</span><span class="p">(</span>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Final snapshot of the system at the end the simulations&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;computation_snapshot&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>    <span class="n">source</span><span class="o">=</span><span class="s2">&quot;path/to/local/file&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>    <span class="n">extension</span><span class="o">=</span><span class="s2">&quot;.jpeg&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="p">)</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <a href="../../nodes/supporting_nodes/file/#cript.nodes.supporting_nodes.file.File.source">source field</a> should point to any file on your local filesystem
+or a web URL to where the file can be found. </p>
+<blockquote>
+<p>For example, 
+<a href="https://criptscripts.org/cript_graph_json/JSON/cao_protein.json">CRIPT protein JSON file on CRIPTScripts</a> </p>
+</blockquote>
+</div>
+<p>Note, that we haven't uploaded the files to CRIPT yet, this is automatically performed, when the project is uploaded via <code>api.save(project)</code>.</p>
+<h3 id="create-data">Create Data<a class="headerlink" href="#create-data" title="Permanent link">&para;</a></h3>
+<p>Next, we'll create a <a href="../../nodes/primary_nodes/data"><code>Data</code></a> node which helps organize our <a href="../../nodes/supporting_nodes/file"><code>File</code></a> nodes and links back to our <a href="../../nodes/primary_nodes/computation"><code>Computation</code></a> objects.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">packing_data</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Data</span><span class="p">(</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Loosely packed chains&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;computation_config&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">file</span><span class="o">=</span><span class="p">[</span><span class="n">packing_file</span><span class="p">],</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">computation</span><span class="o">=</span><span class="p">[</span><span class="n">init</span><span class="p">],</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">notes</span><span class="o">=</span><span class="s2">&quot;PDB file without topology describing an initial system.&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="p">)</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="n">forcefield_data</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Data</span><span class="p">(</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;OpenMM forcefield&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;computation_forcefield&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="n">file</span><span class="o">=</span><span class="p">[</span><span class="n">forcefield_file</span><span class="p">],</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    <span class="n">computation</span><span class="o">=</span><span class="p">[</span><span class="n">init</span><span class="p">],</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>    <span class="n">notes</span><span class="o">=</span><span class="s2">&quot;Full forcefield definition and topology.&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="p">)</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="n">equilibration_snap</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Data</span><span class="p">(</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Equilibrated simulation snapshot&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;computation_config&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>    <span class="n">file</span><span class="o">=</span><span class="p">[</span><span class="n">snap_file</span><span class="p">],</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    <span class="n">computation</span><span class="o">=</span><span class="p">[</span><span class="n">equilibration</span><span class="p">],</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="p">)</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="n">final_data</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Data</span><span class="p">(</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Logged volume during simulation&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;computation_trajectory&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>    <span class="n">file</span><span class="o">=</span><span class="p">[</span><span class="n">final_file</span><span class="p">],</span>
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>    <span class="n">computation</span><span class="o">=</span><span class="p">[</span><span class="n">bulk</span><span class="p">],</span>
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="p">)</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Data types</p>
+<p>The allowed <a href="../../nodes/primary_nodes/data"><code>Data</code></a> types are listed under the <a href="https://app.criptapp.org/vocab/data_type">data types</a> in the CRIPT controlled vocabulary.</p>
+</div>
+<p>Next, we'll link these <a href="../../nodes/primary_nodes/data"><code>Data</code></a> nodes to the appropriate <a href="../../nodes/primary_nodes/computation"><code>Computation</code></a> nodes.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Observe how this step also forms a continuous graph, </span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># enabling data to flow from one computation to the next.</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># The sequence initiates with the computation process </span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># and culminates with the determination of the material property.</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="n">init</span><span class="o">.</span><span class="n">output_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">packing_data</span><span class="p">,</span> <span class="n">forcefield_data</span><span class="p">]</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="n">equilibration</span><span class="o">.</span><span class="n">input_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">packing_data</span><span class="p">,</span> <span class="n">forcefield_data</span><span class="p">]</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="n">equilibration</span><span class="o">.</span><span class="n">output_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">equilibration_snap</span><span class="p">]</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="n">ana</span><span class="o">.</span><span class="n">input_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">final_data</span><span class="p">]</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="n">bulk</span><span class="o">.</span><span class="n">output_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">final_data</span><span class="p">]</span>
+</code></pre></div>
+<h3 id="create-a-virtual-material">Create a virtual Material<a class="headerlink" href="#create-a-virtual-material" title="Permanent link">&para;</a></h3>
+<p>First, we'll create a virtual material with identifiers to make it easier to search for.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># create a material node object with identifiers</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">polystyrene</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;virtual polystyrene&quot;</span><span class="p">,</span> <span class="n">bigsmiles</span><span class="o">=</span><span class="s2">&quot;[H]{[&gt;][&lt;]C(C[&gt;])c1ccccc1[&lt;]}C(C)CC&quot;</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;poly(styrene)&quot;</span><span class="p">,</span> <span class="s2">&quot;poly(vinylbenzene)&quot;</span><span class="p">],</span> <span class="n">chem_repeat</span><span class="o">=</span> <span class="p">[</span><span class="s2">&quot;C8H8&quot;</span><span class="p">])</span>
+</code></pre></div>
+<h3 id="add-property-sub-objects">Add <a href="../../nodes/subobjects/property"><code>Property</code></a> sub-objects<a class="headerlink" href="#add-property-sub-objects" title="Permanent link">&para;</a></h3>
+<p>Let's also add some <a href="../../nodes/subobjects/property"><code>Property</code></a> nodes to the <a href="../../nodes/primary_nodes/material"><code>Material</code></a>, which represent its physical or virtual (in the case of a simulated material) properties.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">phase</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Property</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;phase&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;solid&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="n">color</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">Property</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;color&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="n">polystyrene</span><span class="o">.</span><span class="n">property</span> <span class="o">+=</span> <span class="p">[</span><span class="n">phase</span><span class="p">]</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">polystyrene</span><span class="o">.</span><span class="n">property</span> <span class="o">+=</span> <span class="p">[</span><span class="n">color</span><span class="p">]</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Material property keys</p>
+<p>The allowed material <a href="../../nodes/subobjects/property"><code>Property</code></a> keys are listed in the <a href="https://app.criptapp.org/vocab/material_property_key">material property keys</a> in the CRIPT controlled vocabulary.</p>
+</div>
+<h3 id="create-computationalforcefield">Create <a href="../../nodes/subobjects/computational_forcefield"><code>ComputationalForcefield</code></a><a class="headerlink" href="#create-computationalforcefield" title="Permanent link">&para;</a></h3>
+<p>Finally, we'll create a <a href="../../nodes/subobjects/computational_forcefield"><code>ComputationalForcefield</code></a> node and link it to the Material.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">forcefield</span> <span class="o">=</span> <span class="n">cript</span><span class="o">.</span><span class="n">ComputationalForcefield</span><span class="p">(</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="n">key</span><span class="o">=</span><span class="s2">&quot;opls_aa&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">building_block</span><span class="o">=</span><span class="s2">&quot;atom&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">source</span><span class="o">=</span><span class="s2">&quot;Custom determination via STAGE&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">forcefield_data</span><span class="p">],</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="p">)</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="n">polystyrene</span><span class="o">.</span><span class="n">computational_forcefield</span> <span class="o">=</span> <span class="n">forcefield</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Computational forcefield keys</p>
+<p>The allowed <a href="../../nodes/subobjects/computational_forcefield/"><code>ComputationalForcefield</code></a> keys are listed under the <a href="https://app.criptapp.org/vocab/computational_forcefield_key">computational forcefield keys</a> in the CRIPT controlled vocabulary.</p>
+</div>
+<p>Now we can save the project to CRIPT (and upload the files) or inspect the JSON output</p>
+<h3 id="validate-cript-project-node">Validate CRIPT Project Node<a class="headerlink" href="#validate-cript-project-node" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Before we can save it, we should add all the orphaned nodes to the experiments.</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># It is important to do this for every experiment separately, </span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1"># but here we only have one.</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="n">cript</span><span class="o">.</span><span class="n">add_orphaned_nodes_to_project</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">active_experiment</span><span class="o">=</span><span class="n">experiment</span><span class="p">)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="n">project</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># api.save(project)</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">)</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># Let&#39;s not forget to close the API connection after everything is done.</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="n">api</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h3>
+<p>You made it! We hope this tutorial has been helpful.</p>
+<p>Please let us know how you think it could be improved.
+Feel free to reach out to us on our <a href="https://github.com/C-Accel-CRIPT/Python-SDK">CRIPT Python SDK GitHub</a>.
+We'd love your inputs and contributions!</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../synthesis/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Synthesis">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Synthesis
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../api/api/" class="md-footer__link md-footer__link--next" aria-label="Next: API">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                API
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © 2023 MIT | All Rights Reserved
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "navigation.path", "navigation.tracking", "navigation.footer"], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.aecac24b.min.js"></script>
+      
+    
+  </body>
+</html>

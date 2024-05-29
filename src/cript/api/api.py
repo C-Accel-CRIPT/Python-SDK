@@ -478,20 +478,25 @@ class API:
         for node in project:
             reverse_order_dict[node.uuid] = node
 
-        new_uuid_set = {}
+        new_uuid_set = set()
         # Go through the nodes and save them one by one
-        for uuid in reverse_order_dict.keys_sorted_by_last_modified():
+        for uuid in reversed(reverse_order_dict.keys_sorted_by_last_modified()):
             node = reverse_order_dict[uuid]
 
             known_uuid_without_node = set(old_uuid_map.keys())
+            known_uuid_without_node = known_uuid_without_node.union(new_uuid_set)
+
             # Remove current UUID, without raising error if it doesn't exist.
             known_uuid_without_node.discard(node.uuid)
 
             if uuid not in old_uuid_map:
                 # This is a POST
                 post_data = node.get_json(known_uuid=known_uuid_without_node, is_patch=False)
-                self._capsule_request(url_path=f"{node.node_type_snake_case}/{node.uuid}", method="POST", data=post_data.json)
-                new_uuid_set += post_data.handled_ids
+                response = self._capsule_request(url_path=f"/{node.node_type_snake_case}", method="POST", data=post_data.json)
+                response.raise_for_status()
+
+                for uid in post_data.handled_ids:
+                    new_uuid_set = new_uuid_set.union(set((uid[2:],)))
             else:
                 # This is a PATCH
                 patch_data = node.get_json(known_uuid=known_uuid_without_node, is_patch=True)
@@ -499,8 +504,10 @@ class API:
                 # Remove duplicates here.
                 diff_data = extract_differences(patch_data.json_dict, old_data.json_dict)
                 if len(diff_data) > 0:
-                    self._capsule_request(url_path=f"{node.node_type_snake_case}/{node.uuid}", method="PATCH", data=json.dumps(diff_data))
-                    new_uuid_set += post_data.handled_ids
+                    response = self._capsule_request(url_path=f"/{node.node_type_snake_case}/{node.uuid}", method="PATCH", data=json.dumps(diff_data))
+                    response.raise_for_status()
+                    for uid in patch_data.handled_ids:
+                        new_uuid_set = new_uuid_set.union(set((uid[2:],)))
 
     def upload_file(self, file_path: Union[Path, str]) -> str:
         # trunk-ignore-begin(cspell)

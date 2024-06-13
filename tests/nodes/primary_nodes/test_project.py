@@ -1,5 +1,8 @@
+import copy
 import json
 import uuid
+
+import pytest
 
 import cript
 from tests.utils.integration_test_helper import (
@@ -95,3 +98,28 @@ def test_integration_project(cript_api, simple_project_node):
 
     # ========= test delete =========
     delete_integration_node_helper(cript_api=cript_api, node_to_delete=simple_project_node)
+
+
+@pytest.mark.skip(reason="api, and we overrode save_new to save ")
+def test_save_project_change_material(cript_api, simple_project_node, complex_project_node):
+    """
+
+    pytest nodes/primary_nodes/test_project.py::test_save_project_change_material
+    """
+
+    # Modify deep in the tree
+    proj0 = copy.deepcopy(complex_project_node)
+    proj_json = proj0.get_expanded_json()  # .get_json().json
+    cript_api.save(proj0)
+    # --- finished save --- now load node
+    # making sure this is a different object loaded , instead of comparing the same object
+    proj_loaded, proj_cache = cript.load_nodes_from_json(nodes_json=proj_json, _use_uuid_cache={})
+    material_to_modify = proj_loaded.collection[0].inventory[0].material[0]
+    material_to_modify.name = "this is sure to be a new name"
+    # Delete a node
+    proj_loaded.material[0].property = []
+    cript_api.save(proj_loaded)
+    # now we need to reload the test in
+    proj_loaded2, proj2_cache = cript.load_nodes_from_json(nodes_json=proj_loaded.get_expanded_json(), _use_uuid_cache={})
+    # asserting
+    assert proj_loaded2.collection[0].inventory[0].material[0].name == "this is sure to be a new name"

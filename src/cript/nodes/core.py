@@ -68,6 +68,30 @@ class BaseNode(ABC):
         snake_case = re.sub(r"(?<!^)(?=[A-Z])", "_", camel_case).lower()
         return snake_case
 
+    ################################################################################
+
+    # Member function of BaseNode
+    def shallow_equal(self, other):
+        self_child_map = {child.uuid: child for child in self.find_children({}, search_depth=1)}
+        del self_child_map[self.uuid]
+        other_child_map = {child.uuid: child for child in other.find_children({}, search_depth=1)}
+        del other_child_map[other.uuid]
+
+        self_sorted_json = self.get_json(known_uuid=self_child_map.keys(), sort_keys=True, condense_to_uuid={}).json
+        other_sorted_json = other.get_json(known_uuid=other_child_map.keys(), sort_keys=True, condense_to_uuid={}).json
+
+        return self_sorted_json == other_sorted_json
+
+    # Member function of BaseNode
+    def deep_equal(self, other):
+        self_sorted_json = self.get_expanded_json(sort_keys=True)
+        other_sorted_json = other.get_expanded_json(sort_keys=True)
+        return self_sorted_json == other_sorted_json
+
+    ################################################################################
+
+    ################################################################################
+
     # Prevent new attributes being set.
     # This might just be temporary, but for now, I don't want to accidentally add new attributes, when I mean to modify one.
     def __setattr__(self, key, value):
@@ -427,7 +451,8 @@ class BaseNode(ABC):
             "Project": {"member", "admin"},
             "Collection": {"member", "admin"},
         },
-        **kwargs
+
+        **kwargs,
     ):
         """
         User facing access to get the JSON of a node.
@@ -466,6 +491,15 @@ class BaseNode(ABC):
         previous_condense_to_uuid = copy.deepcopy(NodeEncoder.condense_to_uuid)
         NodeEncoder.condense_to_uuid = condense_to_uuid
 
+
+        known_uid = set()
+        for child_node in self:
+            known_uid.add(child_node.uid)
+
+        previous_known_uid = copy.deepcopy(NodeEncoder.known_uid)
+        NodeEncoder.known_uid = known_uid
+
+
         try:
             tmp_json = json.dumps(self, cls=NodeEncoder, **kwargs)
             tmp_dict = json.loads(tmp_json)
@@ -483,6 +517,9 @@ class BaseNode(ABC):
             NodeEncoder.known_uuid = previous_known_uuid
             NodeEncoder.suppress_attributes = previous_suppress_attributes
             NodeEncoder.condense_to_uuid = previous_condense_to_uuid
+
+            NodeEncoder.known_uid = previous_known_uid
+
 
     def find_children(self, search_attr: dict, search_depth: int = -1, handled_nodes: Optional[List] = None) -> List:
         """

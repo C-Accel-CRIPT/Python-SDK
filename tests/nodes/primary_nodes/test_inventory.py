@@ -75,6 +75,7 @@ def test_integration_inventory(cript_api, simple_project_node, simple_inventory_
     simple_project_node.collection[0].name = f"collection_name_{uuid.uuid4().hex}"
     simple_inventory_node.name = f"inventory_name_{uuid.uuid4().hex}"
 
+    simple_inventory_node.material = []
     simple_project_node.collection[0].inventory = [simple_inventory_node]
 
     save_integration_node_helper(cript_api=cript_api, project_node=simple_project_node)

@@ -128,9 +128,8 @@ def delete_integration_node_helper(cript_api: cript.API, node_to_delete: UUIDBas
         search_mode=cript.SearchModes.UUID,
         value_to_search=str(node_to_delete.uuid),
     )
-
     # be sure API returned at least one result for the node that we searched for
-    assert len(my_node_paginator.current_page_results) == 1
+    next(my_node_paginator)
 
     # DELETE the node from the API
     cript_api.delete(node=node_to_delete)
@@ -139,4 +138,5 @@ def delete_integration_node_helper(cript_api: cript.API, node_to_delete: UUIDBas
     deleted_node_paginator = cript_api.search(node_type=node_to_delete, search_mode=cript.SearchModes.UUID, value_to_search=str(node_to_delete.uuid))
 
     # be sure API responded with empty results
-    assert len(deleted_node_paginator.current_page_results) == 0
+    with pytest.raises(StopIteration):
+        next(deleted_node_paginator)

@@ -11,6 +11,7 @@ import boto3
 import requests
 from beartype import beartype
 
+import cript.nodes.primary_nodes as PrimaryNodes
 from cript.api.api_config import _API_TIMEOUT
 from cript.api.data_schema import DataSchema
 from cript.api.exceptions import (
@@ -30,7 +31,9 @@ from cript.api.utils.save_helper import (
 )
 from cript.api.utils.web_file_downloader import download_file_from_url
 from cript.api.valid_search_modes import SearchModes
+from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.project import Project
+from cript.nodes.util import load_nodes_from_json
 
 # Do not use this directly! That includes devs.
 # Use the `_get_global_cached_api for access.
@@ -45,6 +48,25 @@ def _get_global_cached_api():
     if _global_cached_api is None:
         raise CRIPTAPIRequiredError()
     return _global_cached_api
+
+
+class LastModifiedDict(dict):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._order = list(self.keys())
+
+    def __setitem__(self, key, value):
+        super().__setitem__(key, value)
+        if key in self._order:
+            self._order.remove(key)
+        self._order.append(key)
+
+    def keys_sorted_by_last_modified(self):
+        order = []
+        for key in self._order:
+            if key in self:
+                order.append(key)
+        return order
 
 
 class API:
@@ -402,7 +424,142 @@ class API:
     def api_version(self):
         return self._api_version
 
-    def save(self, project: Project) -> None:
+    # _no_condense_uuid is either active or not
+    def save(self, new_node):
+        self._internal_save(new_node)
+        print("GET_ALI_HERE")
+
+
+    def _internal_save(self, new_node: PrimaryBaseNode) -> None:
+        new_node.validate(force_validation=True)
+        data = new_node.get_json().json
+
+
+        print("----------\\------------\n")
+
+        node_class_name = new_node.node_type.capitalize()
+        NodeClass = getattr(PrimaryNodes, node_class_name)
+
+        old_node_paginator = self.search(node_type=NodeClass, search_mode=SearchModes.UUID, value_to_search=str(new_node.uuid))
+        old_node_paginator.auto_load_nodes = False
+        try:
+            old_node_json = next(old_node_paginator)
+
+        except StopIteration:  # New Project do POST instead
+            # Do the POST request call. only on project
+            # or else its a patch handled by previous node
+
+            if new_node.node_type.lower() == "project":
+
+                data = new_node.get_json().json
+
+
+                # data = new_node.get_json(condense_to_uuid={}).json
+                print("----   data 2  -----")
+                # print(type(data2))
+                # print(type(json.loads(data2)))
+                # data = json.loads(data)
+                # print(type(data))
+                # print(str(data))
+                print(data)
+                # data = str(data)
+                # data = json.dumps(data)
+                # data = data.replace('""', "[]")
+                # print("now data\n", data)
+                print("----   data end  -----")
+                # if _no_condense_uuid is true do a POST if its false do a patch,
+                # but wouldn't we then just find the existing node above in the generator?
+                response = self._capsule_request(url_path="/project/", method="POST", data=data)
+                if response.status_code in [200, 201]:
+                    print("FINALLY_WORKED!")
+                    return  # Return here, since we successfully Posting
+                else:  # debug for now
+                    print("GET HERE ALI")
+                    res = response.json()
+                    raise Exception(f"APIError {res}")
+
+        old_project, old_uuid_map = load_nodes_from_json(nodes_json=old_node_json, _use_uuid_cache={})
+
+        if new_node.deep_equal(old_project):
+            return  # No save necessary, since nothing changed
+
+        delete_uuid = []
+
+        patch_map = LastModifiedDict()
+
+        # Iterate the new project in DFS
+        for node in new_node:
+            try:
+                old_node = old_uuid_map[node.uuid]
+            except KeyError:
+                # This node only exists in the new new project,
+                # But it has a parent which patches it in, so no action needed
+                pass
+
+            # do we need to delete any children, that existed in the old node, but don't exit in the new node.
+            node_child_map = {child.uuid: child for child in node.find_children({}, search_depth=1)}
+            old_child_map = {child.uuid: child for child in old_node.find_children({}, search_depth=1)}
+            for old_uuid in old_child_map:
+                if old_uuid not in node_child_map:
+                    if old_uuid not in delete_uuid:
+                        delete_uuid += [old_uuid]
+
+            # check if the current new node needs a patch
+
+            if not node.shallow_equal(old_node):
+                patch_map[node.uuid] = node
+
+        # now patch and delete
+
+        # here its project but really it should be a primary base node
+
+        url_path = f"/{new_node.node_type}/{new_node.uuid}"
+
+        """
+        WIP NOTES CONTINUED:
+
+        this is where we would need to make a map of the uids
+        patch_map[uid_] ? constructed above?
+
+        problem right now is ,
+        we need the uids to be in place for the original POST json 
+        which happens up above
+        so I'm wondeing how to go about that, 
+
+        and I think I would need to rewalk the original get_json for the post 
+        switching any {uuid: "uuid"} for {uid:"uid"}
+
+        AND I TRY TO DO THAT if you look inside
+
+        json.py  , you'd find the following below
+
+        ######## WIP HERE ################
+        if self.preknown_uid:
+            element = {"uid": str(uid)}
+        return element, uid 
+
+        but we need this uid map and i'm not so sure where to put this ?
+        
+        """
+        for uuid_ in reversed(patch_map.keys_sorted_by_last_modified()):
+            node = patch_map[uuid_]
+
+            # "Doing API PATCH for {node.uuid}"
+            # either link if found or patch json to parent
+            data = node.get_json().json
+            # first level search will also include attributes?
+            self._capsule_request(url_path=url_path, method="PATCH", data=json.dumps(data))
+
+        for uuid_ in delete_uuid:
+            # do the delete  *unlinking here
+            # actually here we are able to send list of uuids to be deleted - optimize later
+            # "Doing API Delete for {uuid_}"
+            unlink_payload = {"uuid": str(uuid_)}
+            self._capsule_request(url_path=url_path, method="DELETE", data=json.dumps(unlink_payload))
+
+        ################################################################################
+
+    def save_old(self, project: Project) -> None:
         """
         This method takes a project node, serializes the class into JSON
         and then sends the JSON to be saved to the API.
@@ -433,7 +590,7 @@ class API:
                     pass
             raise exc from exc
 
-    def _internal_save(self, node, save_values: Optional[_InternalSaveValues] = None) -> _InternalSaveValues:
+    def _internal_save_old(self, node, save_values: Optional[_InternalSaveValues] = None) -> _InternalSaveValues:
         """
         Internal helper function that handles the saving of different nodes (not just project).
 

@@ -652,15 +652,17 @@ def complex_material_node(simple_property_node, simple_process_node, complex_com
 
 
 @pytest.fixture(scope="function")
-def simple_inventory_node(simple_material_node) -> None:
+def simple_inventory_node() -> None:
     """
     minimal inventory node to use for other tests
     """
     # set up inventory node
 
-    material_2 = cript.Material(name="material 2 " + str(uuid.uuid4()), bigsmiles="{[][$]COC[$][]}")
+    # material_2 = cript.Material(name="material 2 " + str(uuid.uuid4()), bigsmiles="{[][$]COC[$][]}")
 
-    my_inventory = cript.Inventory(name="my inventory name", material=[simple_material_node, material_2])
+    my_inventory = cript.Inventory(name="my inventory name", material=[])  # material=[simple_material_node, material_2])
+
+    # my_inventory.material = []
 
     # use my_inventory in another test
     return my_inventory

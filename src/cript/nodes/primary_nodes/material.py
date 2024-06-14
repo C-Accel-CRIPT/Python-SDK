@@ -1,10 +1,10 @@
-import warnings
+# import warnings
 from dataclasses import dataclass, field, replace
 from typing import Any, List, Optional, Union
 
 from beartype import beartype
 
-from cript.nodes.exceptions import CRIPTMaterialIdentifierWarning
+# from cript.nodes.exceptions import CRIPTMaterialIdentifierWarning
 from cript.nodes.primary_nodes.primary_base_node import PrimaryBaseNode
 from cript.nodes.primary_nodes.process import Process
 from cript.nodes.util.json import UIDProxy
@@ -205,21 +205,22 @@ class Material(PrimaryBaseNode):
     def validate(self, api=None, is_patch: bool = False, force_validation: bool = False) -> None:
         super().validate(api=api, is_patch=is_patch, force_validation=force_validation)
 
-        if (
-            self.amino_acid is None
-            and self.bigsmiles is None
-            and self.chem_formula is None
-            and len(self.chem_repeat) == 0
-            and self.chemical_id is None
-            and self.inchi_key is None
-            and self.inchi is None
-            and self.lot_number is None
-            and len(self.names) == 0
-            and self.pubchem_cid is None
-            and self.smiles is None
-            and self.vendor is None
-        ):
-            warnings.warn(CRIPTMaterialIdentifierWarning(self))
+        #### Temporarily Disabled
+        # if (
+        #     self.amino_acid is None
+        #     and self.bigsmiles is None
+        #     and self.chem_formula is None
+        #     and len(self.chem_repeat) == 0
+        #     and self.chemical_id is None
+        #     and self.inchi_key is None
+        #     and self.inchi is None
+        #     and self.lot_number is None
+        #     and len(self.names) == 0
+        #     and self.pubchem_cid is None
+        #     and self.smiles is None
+        #     and self.vendor is None
+        # ):
+        #     warnings.warn(CRIPTMaterialIdentifierWarning(self)) #raise CRIPTMaterialIdentifierError(self)
 
     @property
     @beartype

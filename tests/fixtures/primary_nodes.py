@@ -37,6 +37,33 @@ def complex_project_dict(complex_collection_node, simple_material_node, complex_
     return project_dict
 
 
+# ALi's new fixture (or do it the cyclic way)
+@pytest.fixture(scope="function")
+def complex_project_dict_without_inventory(complex_collection_node_without_inventory, simple_material_node, complex_user_node) -> dict:
+    project_dict = {"node": ["Project"]}
+    project_dict["locked"] = True
+    project_dict["model_version"] = "1.0.0"
+    project_dict["updated_by"] = json.loads(copy.deepcopy(complex_user_node).get_expanded_json())
+    project_dict["created_by"] = json.loads(complex_user_node.get_expanded_json())
+    project_dict["public"] = True
+    project_dict["name"] = "my project name"
+    project_dict["notes"] = "my project notes"
+    project_dict["member"] = [json.loads(complex_user_node.get_expanded_json())]
+    project_dict["admin"] = [json.loads(complex_user_node.get_expanded_json())]
+    project_dict["collection"] = [json.loads(complex_collection_node_without_inventory.get_expanded_json())]
+    project_dict["material"] = [json.loads(copy.deepcopy(simple_material_node).get_expanded_json())]
+    return project_dict
+
+
+@pytest.fixture(scope="function")
+def complex_project_node_without_inventory(complex_project_dict_without_inventory) -> cript.Project:
+    """
+    a complex Project node that includes all possible optional arguments that are themselves complex as well
+    """
+    complex_project = cript.load_nodes_from_json(json.dumps(complex_project_dict_without_inventory))
+    return complex_project
+
+
 @pytest.fixture(scope="function")
 def complex_project_node(complex_project_dict) -> cript.Project:
     """
@@ -455,6 +482,25 @@ def complex_collection_node(simple_experiment_node, simple_inventory_node, compl
         name=my_collection_name,
         experiment=[simple_experiment_node],
         inventory=[simple_inventory_node],
+        doi=my_cript_doi,
+        citation=[complex_citation_node],
+    )
+
+    return my_collection
+
+
+@pytest.fixture(scope="function")
+def complex_collection_node_without_inventory(simple_experiment_node, simple_inventory_node, complex_citation_node) -> cript.Collection:
+    """
+    Collection node with all optional arguments
+    """
+    my_collection_name = "my complex collection name"
+    my_cript_doi = "10.1038/1781168a0"
+
+    my_collection = cript.Collection(
+        name=my_collection_name,
+        experiment=[simple_experiment_node],
+        inventory=[],
         doi=my_cript_doi,
         citation=[complex_citation_node],
     )
